@@ -1,6 +1,8 @@
 # SICP Exercises
 
-These are my solutions to the exercises from _Structure and Interpretation of Computer Programs_.
+These are my solutions to the exercises from _Structure and Interpretation of Computer Programs_. I am using [Gambit Scheme][1] rather than MIT/GNU Scheme, so there are some slight differences with respect to built-in procedures (usually just their names).
+
+[1]: http://www.iro.umontreal.ca/~gambit/
 
 ## License
 
