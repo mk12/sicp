@@ -1,8 +1,15 @@
 # SICP Exercises
 
-These are my solutions to the exercises from _Structure and Interpretation of Computer Programs_. I am using [Gambit Scheme][1] rather than MIT/GNU Scheme, so there are some slight differences with respect to built-in procedures (usually just their names).
+These are my solutions to the exercises from _Structure and Interpretation of Computer Programs_. I am using [Gambit Scheme][1] rather than MIT/GNU Scheme, so there are some slight differences with respect to built-in procedures (usually just their names). On OS X, you can get Gambit Scheme using [Homebrew][2]:
+
+	$ brew install gambit-scheme
+
+This will install the REPL `gsi` and the compiler `gsc`.
+
+For the exercises that ask for mathematical proofs, I have prepared LaTeX documents. The compiled PDFs are also included in this repository.
 
 [1]: http://www.iro.umontreal.ca/~gambit/
+[2]: http://brew.sh
 
 ## License
 
