@@ -1691,16 +1691,287 @@
           (unique-triples n)))
 
 ;;; ex 2.42
+(define empty-board '())
+(define (make-position row col)
+  (cons row col))
+(define (adjoin-position pos rest-of-queens)
+  (cons pos rest-of-queens))
+(define get-row car)
+(define get-col cdr)
+(define (safe? positions)
+  (let ((row (get-row (car positions))))
+    (define (ssafe? poss over)
+      (or (null? poss)
+          (let ((rrow (get-row (car poss))))
+            (and (not (= rrow row))
+                 (not (= rrow (- row over)))
+                 (not (= rrow (+ row over)))
+                 (ssafe? (cdr poss) (+ over 1))))))
+    (or (null? (cdr positions))
+        (ssafe? (cdr positions) 1))))
 (define (queens board-size)
   (define (queen-cols k)
     (if (= k 0)
       (list empty-board)
       (filter
-        (lambda (positions) (safe? k positions))
+        (lambda (positions) (safe? positions))
         (mapcat
           (lambda (rest-of-queens)
             (map (lambda (new-row)
-                   (adjoin-position new-row k rest-of-queens))
+                   (adjoin-position
+                     (make-position new-row k)
+                     rest-of-queens))
                  (enum-interval 1 board-size)))
           (queen-cols (- k 1))))))
   (queen-cols board-size))
+
+;;; ex 2.43
+;; The interchange makes the program run slowly because it evaluates the
+;; recursive call to queen-cols multiple times. Instead of doing the recursive
+;; call and then adjoining all possible new positions to each set of positions
+;; for the k-1 case, Louis Reasoner's procedure enumerates the interval for the
+;; possible new positions once and then for each one does the same recursive
+;; call to get the set of positions for the k-1 case. The original procedure
+;; evaluates the enumeration multiple times, which does not significantly affect
+;; performance. Evaluating the rercusive call multiple times is wasteful. Louis
+;; Reasoner could still use the interchanged version if he bound the value of
+;; the recursive call in a let-binding surrounding the flatmap application.
+
+;;; example 2.2.4 (picture language)
+(define (flipped-pairs painter)
+  (let ((painter2 (beside painter (flip-vert painter))))
+    (below painter2 painter2)))
+(define (right-split painter n)
+  (if (= n 0)
+    painter
+    (let ((smaller (right-split painter (- n 1))))
+      (beside painter (below smaller smaller)))))
+(define (corner-split painter n)
+  (if (= n 0)
+    painter
+    (let ((up (up-split painter (- n 1)))
+          (right (right-split painter (- n 1))))
+      (let ((top-left (beside up up))
+            (bottom-right (below right right))
+            (corner (corner-split painter (- n 1))))
+        (beside (below painter top-left)
+                (below bottom-right corner))))))
+(define (square-limit painter n)
+  (let ((quarter (corner-split painter n)))
+    (let ((half (beside (flip-horiz quarter) quarter)))
+      (below (flip-vert half) half))))
+
+;;; ex 2.44
+(define (up-split painter n)
+  (if (= n 0)
+    painter
+    (let ((smaller (up-split painter (- n 1))))
+      (below painter (beside smaller smaller)))))
+
+;;; example 2.2.4 (picture language)
+(define (square-of-four tl tr bl br)
+  (lambda (painter)
+    (let ((top (beside (tl painter) (tr painter)))
+          (bottom (beside (bl painter) (br painter))))
+      (below bottom top))))
+
+;;; ex 2.45
+(define (split comb split-comb)
+  (define (splitter painter n)
+    (if (= n 0)
+      painter
+      (let ((smaller (splitter painter (- n 1))))
+        (comb painter (split-comb smaller smaller)))))
+  splitter)
+(define right-split (split beside below))
+(define up-split (split below beside))
+
+;;; example 2.2.4 (picture language)
+;; This is a curried procedure.
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+      (origin-frame frame)
+      (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
+                (scale-vect (ycor-vect v) (edge2-frame frame))))))
+
+;;; ex 2.46
+(define make-vect cons)
+(define xcor-vect car)
+(define ycor-vect cdr)
+(define (add-vect u v)
+  (make-vect (+ (xcor-vect u) (xcor-vect v))
+             (+ (ycor-vect u) (ycor-vect v))))
+(define (sub-vect u v)
+  (make-vect (- (xcor-vect u) (xcor-vect v))
+             (- (ycor-vect u) (ycor-vect v))))
+(define (scale-vect s v)
+  (make-vect (* s (xcor-vect v))
+             (* s (ycor-vect v))))
+
+;;; ex 2.47
+;; first representation
+(define (make-frame origin edge1 edge2)
+  (list origin edge1 edge2))
+(define origin-frame car)
+(define edge1-frame cadr)
+(define edge2-frame caddr)
+;; second representation
+(define (make-frame origin edge1 edge2)
+  (cons origin (cons edge1 edge2)))
+(define origin-frame car)
+(define edge1-frame cadr)
+(define edge2-frame cddr)
+
+;;; example 2.2.4 (picture language)
+(define (segments->painter segment-list)
+  (lambda (frame)
+    (for-each
+      (lambda (segment)
+        (draw-line
+          ((frame-coord-map frame)
+           (start-segment segment))
+          ((frame-coord-map frame)
+           (end-segment segment))))
+      segment-list)))
+
+;;; ex 2.48
+(define make-segment cons)
+(define start-segment car)
+(define end-segment cdr)
+
+;;; ex 2.49
+;; (a) outline of the frame
+(define paint-outline
+  (segments->painter
+    (list (make-segment (make-vect 0 0) (make-vect 1 0))
+          (make-segment (make-vect 0 1) (make-vect 1 1))
+          (make-segment (make-vect 0 0) (make-vect 0 1))
+          (make-segment (make-vect 1 0) (make-vect 1 1)))))
+;; (b) X in the frame (corners)
+(define paint-x
+  (segments->painter
+    (list (make-segment (make-vect 0 0) (make-vect 1 1))
+          (make-segment (make-vect 0 1) (make-vect 1 0)))))
+;; (c) diamond in the frame (midpoints)
+(define paint-diamond
+  (segments->painter
+    (list (make-segment (make-vect 0.5 0) (make-vect 1 0.5))
+          (make-segment (make-vect 0 0.5) (make-vect 0.5 1))
+          (make-segment (make-vect 0 0.5) (make-vect 0.5 0))
+          (make-segment (make-vect 0.5 1) (make-vect 1 0.5)))))
+;; (d) wave painter
+;; I don't feel like doing this.
+
+;;; example 2.2.4 (picture language)
+(define (transform-painter painter origin corner1 corner2)
+  (lambda (frame)
+    (let ((m (frame-coord-map frame)))
+      (let ((new-orig (m origin)))
+        (painter (make-frame new-origin
+                             (sub-vect (m corner1) new-origin)
+                             (sub-vect (m corner2) new-origin)))))))
+(define (flip-vert painter)
+  (transform-painter
+    painter
+    (make-vect 0 1)
+    (make-vect 0 0)
+    (make-vect 1 1)))
+(define (shrink-to-upper-right painter)
+  (transform-painter
+    painter
+    (make-vect 0.5 0.5)
+    (make-vect 1 0.5)
+    (make-vect 0.5 1)))
+(define (rotate90-ccw painter)
+  (transform-painter
+    painter
+    (make-vect 1 0)
+    (make-vect 0 0)
+    (make-vect 1 1)))
+(define (squash-inwards painter)
+  (transform-painter
+    (make-vect 0 0)
+    (make-vect 0.65 0.35)
+    (make-vect 0.35 0.65)))
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0)))
+    (let ((paint-left
+            (transform-painter
+              painter1
+              (make-vect 0 0)
+              split-point
+              (make-vect 0 1)))
+          (paint-right
+            (transform-painter
+              painter2
+              split-point
+              (make-vect 1 0)
+              (make-vect 0.5 1))))
+      (lambda (frame)
+        (paint-left frame)
+        (paint-right frame)))))
+
+;;; ex 2.50
+(define (flip-horiz painter)
+  (transform-painter
+    painter
+    (make-vect 1 0)
+    (make-vect 0 0)
+    (make-vect 1 1)))
+(define (rotate180-ccw painter)
+  (transform-painter
+    painter
+    (make-vect 1 1)
+    (make-vect 0 1)
+    (make-vect 1 0)))
+(define (rotate270-ccw painter)
+  (tranform-painter
+    painter
+    (make-vect 0 1)
+    (make-vect 0 0)
+    (make-vect 1 1)))
+
+;;; ex 2.51
+(define (below painter1 painter2)
+  (let ((split-point (make-vect 0 0.5)))
+    (let ((paint-bottom
+            (transform-painter
+              painter1
+              (make-vect 0 0)
+              (make-vect 1 0.5)
+              split-point))
+          (paint-top
+            (transform-painter
+              painter2
+              split-point
+              (make-vect 1 0.5)
+              (make-vect 0 1))))
+      (lambda (frame)
+        (paint-bottom frame)
+        (paint-top frame)))))
+(define (below painter1 painter2)
+  (rotate90-ccw
+    (beside
+      (rotate270-ccw painter1)
+      (rotate270-ccw painter2))))
+
+;;; ex 2.52
+;; (a) add a smile to the wave
+;; I don't feel like doing this.
+;; (b) change the corner-split pattern
+(define (corner-split painter n)
+  (if (= n 0)
+    painter
+    (let ((up (up-split painter (- n 1)))
+          (right (right-split painter (- n 1)))
+          (corner (corner-split painter (- n 1))))
+      (beside (below painter up)
+              (below right corner)))))
+;; (c) change orientation of corners in square-limit
+(define (square-limit painter n)
+  (let ((quarter (corner-split painter n)))
+    (let ((flipped (flip-horiz quarter)))
+      (square-of-four flipped quarter flipped quarter))))
+
+;;;; Section 2.3: Symbolic data
