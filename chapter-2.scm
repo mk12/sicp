@@ -1242,3 +1242,588 @@
       (if (< x1 x2)
         (cons x1 (union-set (cdr set1) set2))
         (cons x2 (union-set set1 (cdr set2)))))))
+
+;;; example 2.3.3 (sets as binary trees)
+(define entry car)
+(define left-branch cadr)
+(define right-branch caddr)
+(define make-tree list)
+(define (element-of-set? x set)
+  (and (not (null? set))
+       (or (= x (entry set))
+           (and (< x (entry set))
+                (element-of-set? x (left-branch set)))
+           (and (> x (entry-set))
+                (element-of-set? x (right-branch set))))))
+(define (adjoin-set x set)
+  (cond ((null? set) (make-tree x '() '()))
+        ((= x (entry set)) set)
+        ((< x (entry set))
+         (make-tree (entry set)
+                    (adjoin-set x (left-branch set))
+                    (right-branch set)))
+        ((> x (entry set))
+         (make-tree (entry set)
+                    (left-branch set)
+                    (adjoin-set x (right-branch set))))))
+
+;;; ex 2.63
+(define (tree->list-1 tree)
+  (if (null? tree)
+    '()
+    (append (tree->list-1 (left-branch tree))
+            (cons (entry tree)
+                  (tree->list-1 (right-branch tree))))))
+(define (tree->list-2 tree)
+  (define (copy-to-list tree result-list)
+    (if (null? tree)
+      result-list
+      (copy-to-list
+        (left-branch tree)
+        (cons (entry tree)
+              (copy-to-list (right-branch tree)
+                            result-list)))))
+  (copy-to-list tree '()))
+(define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
+(define t2 '(4 (3 (1 () ()) (2 () ())) (5 () (6 () ()))))
+(define t3 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
+(define t4 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
+(define t5 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
+(tree->list-1 t1) ; => (1 2 3 4 5 6)
+(tree->list-2 t1) ; => (1 2 3 4 5 6)
+(tree->list-1 t2) ; => (1 3 2 4 5 6)
+(tree->list-2 t2) ; => (1 3 2 4 5 6)
+(tree->list-1 t3) ; => (1 3 5 7 9 11)
+(tree->list-2 t3) ; => (1 3 5 7 9 11)
+(tree->list-1 t4) ; => (1 3 5 7 9 11)
+(tree->list-1 t5) ; => (1 3 5 7 9 11)
+(tree->list-2 t5) ; => (1 3 5 7 9 11)
+;; (a) Yes, the two procedures produce the same result for every tree. Also,
+;; from this sample input, it seems that they always produce a sorted list,
+;; which means that different trees (balanced or otherwise) representing the
+;; same set get transformed into the same list. The trees t3, t4, and t5 and the
+;; trees from Figure 2.16.
+;; (b) The second procedure performs one cons operation for each node of the
+;; tree, so it has order of growth Θ(n). The first procedure uses append. Append
+;; is Θ(n). In the worst case, we would have n append steps for each of the n
+;; nodes, meaning Θ(n^2). However, the tree is balanced, so the number of append
+;; steps is cut in half on each recursive application. We have that for each of
+;; the n steps, and so the order of growth is Θ(n*log(n)).
+
+;;; ex 2.64
+(define (list->tree elements)
+  (car (partial-tree elements (length elements))))
+(define (partial-tree elts n)
+  (if (= n 0)
+    (cons '() elts)
+    (let* ((left-size (quotient (- n 1) 2))
+           (left-result (partial-tree elts left-size))
+           (left-tree (car left-result))
+           (non-left-elts (cdr left-result))
+           (this-entry (car non-left-elts))
+           (right-size (- n (+ left-size 1)))
+           (right-result (partial-tree (cdr non-left-elts) right-size))
+           (right-tree (car right-result))
+           (remaining-elts (cdr right-result)))
+      (cons (make-tree this-entry left-tree right-tree)
+            remaining-elts))))
+;; (a) The procedure partial-tree accepts a list elts and a number n as
+;; arguments. It returns a new list which is like elts but has the first n
+;; elements replaced by a tree representing that sublist. It does this by
+;; recursively calling partial-tree on first and second half of the n elements,
+;; then creating a tree with those subtrees (the car of the recursive
+;; application) and with the middle value (the n/2th element of elts) as the
+;; node value. This the tree producd by (list->tree '(1 3 5 7 9 11)):
+;   5
+;  / \
+; 1  9
+; \  /\
+; 3 7 11
+;; (b) The procedure list->tree only needs to visit each element in the list
+;; once, and it applies cons for each one, so it has Θ(n) time complexity. Just
+;; because it is tree-recursive does not imply Θ(n^2) or Θ(log(n)) or any other
+;; specific order of growth.
+
+;;; ex 2.65
+;; The tree->list conversion, the union/intersection on ordered lists, and the
+;; list->tree conversion are all Θ(n), so combined they are still Θ(n).
+(define (union-set set1 set2)
+  (define (union-list l1 l2)
+    (cond ((null? l1) l2)
+          ((null? l2) l1)
+          ((= (car l1) (car l2))
+           (cons (car l1) (union-list (cdr l1) (cdr l2))))
+          ((< (car l1) (car l2))
+           (cons (car l1) (union-list (cdr l1) l2)))
+          ((> (car l1) (car l2))
+           (cons (car l2) (union-list l1 (cdr l2))))))
+  (list->tree
+    (union-list (tree->list-2 set1)
+                (tree->list-2 set2))))
+(define (intersection-set set1 set2)
+  (define (intersection-list l1 l2)
+    (cond ((null? l1) '())
+          ((null? l2) '())
+          ((= (car l1) (car l2))
+           (cons (car l1) (intersection-list (cdr l1) (cdr l2))))
+          ((< (car l1) (car l2))
+           (intersection-list (cdr l1) l2))
+          ((> (car l1) (car l2))
+           (intersection-list l1 (cdr l2)))))
+  (list->tree
+    (intersection-list (tree->list-2 set1)
+                (tree->list-2 set2))))
+
+;;; example 2.3.3 (sets and info retrieval)
+(define (lookup given-key set-of-records)
+  (cond ((null? set-of-records) #f)
+        ((equal? given-key (key (car set-of-records)))
+         (car set-of-records))
+        (else (lookup given-key (cdr set-of-records)))))
+
+;;; ex 2.66
+(define (lookup given-key set-of-records)
+  (if (null? set-of-records)
+    #f
+    (let* ((record (entry set-of-records))
+           (rec-key (key record)))
+      (cond ((= given-key rec-key) record)
+            ((< given-key rec-key)
+             (lookup given-key (left-branch set-of-records)))
+            ((> given-key rec-key)
+             (lookup given-key (right-branch set-of-records)))))))
+
+;;; example 2.3.4 (representing huffman trees)
+(define (make-leaf symbol weight) (list 'leaf symbol weight))
+(define (leaf? object) (eq? (car object) 'leaf))
+(define symbol-leaf cadr)
+(define weight-leaf caddr)
+(define (make-code-tree left right)
+  (list left
+        right
+        (append (symbols left) (symbols right))
+        (+ (weight left) (weight right))))
+(define left-branch car)
+(define right-branch cadr)
+(define (symbols tree)
+  (if (leaf? tree)
+    (list (symbol-leaf tree))
+    (caddr tree)))
+(define (weight tree)
+  (if (leaf? tree)
+    (weight-leaf tree)
+    (cadddr tree)))
+
+;;; example 2.3.4 (decoding proc)
+(define (choose-branch bit branch)
+  (cond ((= bit 0) (left-branch branch))
+        ((= bit 1) (right-branch branch))
+        (else (error "bad bit: CHOOSE-BRANCH" bit))))
+(define (decode bits tree)
+  (define (decode-1 bits current-branch)
+    (if (null? bits)
+      '()
+      (let ((next-branch (choose-branch (car bits) current-branch)))
+        (if (leaf? next-branch)
+          (cons (symbol-leaf next-branch)
+                (decode-1 (cdr bits) tree))
+          (decode-1 (cdr bits) next-branch)))))
+  (decode-1 bits tree))
+
+;;; example 2.3.4 (sets of weighted elements)
+(define (adjoin-set x set)
+  (cond ((null? set) (list x))
+        ((< (weight x) (weight (car set)))
+         (cons x set))
+        (else (cons (car set)
+                    (adjoin-set x (cdr set))))))
+(define (make-leaf-set pairs)
+  (if (null? pairs)
+    '()
+    (let ((pair (car pairs)))
+      (adjoin-set (make-leaf (car pair) (cadr pair))
+                  (make-leaf-set (cdr pairs))))))
+
+;;; ex 2.67
+(define sample-tree
+  (make-code-tree (make-leaf 'A 4)
+                  (make-code-tree
+                    (make-leaf 'B 2)
+                    (make-code-tree
+                      (make-leaf 'D 1)
+                      (make-leaf 'C 1)))))
+(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+(decode sample-message sample-tree) ; => (A D A B B C A)
+
+;;; ex 2.68
+(define (encode message tree)
+  (if (null? message)
+    '()
+    (append (encode-symbol (car message) tree)
+            (encode (cdr message) tree))))
+(define (encode-symbol symbol tree)
+  (cond ((leaf? tree) '())
+        ((element-of-set? symbol (symbols (left-branch tree)))
+         (cons 0 (encode-symbol symbol (left-branch tree))))
+        ((element-of-set? symbol (symbols (right-branch tree)))
+         (cons 1 (encode-symbol symbol (right-branch tree))))
+        (else (error "symbol not in tree: ENCODE-SYMBOL" symbol))))
+(define (element-of-set? x set)
+  (and (not (null? set))
+       (or (eq? x (car set))
+           (element-of-set? x (cdr set)))))
+(encode '(A D A B B C A) sample-tree) ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
+sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
+
+;;; ex 2.69
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+(define (successive-merge set)
+  (reduce-left make-code-tree (car set) (cdr set)))
+(define (reduce-left f init xs)
+  (if (null? xs)
+    init
+    (reduce-left f (f init (car xs)) (cdr xs))))
+
+;;; ex 2.70
+(define rock-tree
+  (generate-huffman-tree
+    '((a 2) (get 2) (sha 3) (wah 1) (boom 1) (job 2) (na 16) (yip 9))))
+(define song
+  '(get a job sha na na na na na na na na
+    get a job sha na na na na na na na na
+    wah yip yip yip yip yip yip yip yip yip
+    sha boom))
+(encode song rock-tree)
+;; => (0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0
+;;     0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+;;     1 0 1 0 0 1 0 0 0 0 0 0 0)
+;; The encoding requires 87 bits. There are eight symbols, so a fixed-length
+;; code would require log(8)/log(2) = 3 bits per symbol. The song has a total of
+;; 36 symbols, so the fixed-length coded message would need at least 108 bits.
+;; The variable-length encoding saves about 19% storage.
+
+;;; ex 2.71
+;; We have a Huffman tree for an alphabet of n symbols. The relative frequency
+;; of the nth symbol is 2^(n-1). For n = 5, we have the following tree:
+;         *
+;        /\
+;       * 16
+;      /\
+;     * 8
+;    /\
+;   * 4
+;  /\
+; 1 2
+;; For n = 10, the tree looks like this (right is left; down is right):
+;  *----*----*---*---*---*---*--*--*--1
+;  |    |    |   |   |   |   |  |  |
+; 512  256  128  64  32  16  8  4  2
+;; In general, the most frequent symbol requires one bit and the least frequent
+;; symbol requires n-1 bits.
+
+;;; ex 2.72
+;; The number of steps required to encode the most frequent symbol in the
+;; alphabet of n symbols with encode-symbol grows as Θ(n). The procedure only
+;; looks down one branch, and so it must apply the procedure element-of-set?
+;; once. This procedure has linear time complexity with resepct to the number of
+;; elements in the set, since it is represented as an unordered list. For the
+;; least frequent symbol, the number of steps grows as Θ(n^2). At each of n
+;; nodes through the depth of the tree, we have at most n comparisons when
+;; checking if the symbol is in the set. (If the tree were balanced, it would be
+;; Θ(n*log(n)), but we didn't talk about that at all for Huffman trees.)
+
+;;;;; Section 2.4: Multiple representations for abstract data
+
+;;; ssec 2.4.1 (representations for complex numbers)
+(define (add-complex z1 z2)
+  (make-from-real-imag
+    (+ (real-part z1) (real-part z2))
+    (+ (imag-part z1) (imag-part z2))))
+(define (sub-complex z1 z2)
+  (make-from-real-imag
+    (- (real-part z1) (real-part z2))
+    (- (imag-part z1) (imag-part z2))))
+(define (mul-complex z1 z2)
+  (make-from-mag-ang
+    (* (magnitude z1) (magnitude z2))
+    (+ (angle z1) (angle z2))))
+(define (div-complex z1 z2)
+  (make-from-mag-ang
+    (/ (magnitude z1) (magnitude z2))
+    (- (angle z1) (angle z2))))
+;; Ben's representation (rectangular form)
+(define real-part car)
+(define imag-part cdr)
+(define (magnitude z)
+  (sqrt (+ (square (real-part z))
+           (square (imag-part z)))))
+(define (angle z)
+  (atan (imag-part z) (real-part z)))
+(define make-from-real-imag cons)
+(define (make-from-mag-ang r a)
+  (cons (* r (cos a)) (* r (sin a))))
+;; Alyssa's representation (polar form)
+(define (real-part z) (* (magnitude z) (cos (angle z))))
+(define (imag-part z) (* (magnitude z) (sin (angle z))))
+(define magnitude car)
+(define angle cdr)
+(define (make-from-real-imag a b)
+  (cons (sqrt (+ (square a) (square b)))
+        (atan b a)))
+(define make-from-mag-ang cons)
+
+;;; ssec 2.4.2 (tagged data)
+(define (attach-tag type-tag contents)
+  (cons type-tag contents))
+(define (type-tag datum)
+  (if (pair? datum)
+    (car datum)
+    (error "Bad tagged datum: TYPE-TAG" datum)))
+(define (contents datum)
+  (if (pair? datum)
+    (cdr datum)
+    (error "Bad tagged datum: CONTENTS" datum)))
+(define (rectangular? z) (eq? (type-tag z) 'rectangular))
+(define (polar? z) (eq? (type-tag z) 'polar))
+;; Ben's representation (rectangular form)
+(define real-part-rectangular car)
+(define imag-part-rectangular cdr)
+(define (magnitude-rectangular z)
+  (sqrt (+ (square (real-part-rectangular z))
+           (square (imag-part-rectangular z)))))
+(define (angle-rectangular z)
+  (atan (imag-part-rectangular z)
+        (real-part-rectangular z)))
+(define (make-from-real-imag-rectangular a b)
+  (attach-tag 'rectangular (cons a b)))
+(define (make-from-mag-ang-rectangular r a)
+  (attach-tag 'rectangular
+              (cons (* r (cos a))
+                    (* r (sin a)))))
+;; Alyssa's representation (polar form)
+(define (real-part-polar z)
+  (* (magnitude-polar z) (cos (angle-polar z))))
+(define (imag-part-polar z)
+  (* (magnitude-polar z) (sin (angle-polar z))))
+(define magnitude-polar car)
+(define angle-polar cdr)
+(define (make-from-real-imag-polar a b)
+  (attach-tag 'polar
+              (cons (sqrt (+ (square a) (square b)))
+                    (atan b a))))
+(define (make-from-mag-ang-polar r a)
+  (attach-tag 'polar (cons r a)))
+;; generic selectors
+(define (real-part z)
+  (cond ((rectangular? z)
+         (real-part-rectangular (contents z)))
+        ((polar? z)
+         (real-part-polar (contents z)))
+        (else (error "Unknown type: REAL-PART" z))))
+(define (imag-part z)
+  (cond ((rectangular? z)
+         (imag-part-rectangular (contents z)))
+        ((polar? z)
+         (imag-part-polar (contents z)))
+        (else (error "Unknown type: IMAG-PART" z))))
+(define (magnitude z)
+  (cond ((rectangular? z)
+         (magnitude-rectangular (contents z)))
+        ((polar? z)
+         (magnitude-polar (contents z)))
+        (else (error "Unknown type: MAGNITUDE" z))))
+(define (angle z)
+  (cond ((rectangular? z)
+         (angle-rectangular (contents z)))
+        ((polar? z)
+         (angle-polar (contents z)))
+        (else (error "Unknown type: ANGLE" z))))
+;; generic constructors
+(define make-from-real-imag make-from-real-imag-rectangular)
+(define make-from-mag-and make-from-mag-ang-polar)
+;; add, sub, mul, div are the same as 2.4.1
+
+;;; ssec 2.4.3 (data-directed programming & additivity)
+(define (install-rectangular-package)
+  (define real-part car)
+  (define imag-part cdr)
+  (define make-from-real-imag cons)
+  (define (magnitude z)
+    (sqrt (+ (square (real-part z))
+             (square (imag-part z)))))
+  (define (angle z)
+    (atan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (* r (cos a)) (* r (sin a))))
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (a b) (tag (make-from-real-imag a b))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+(define (install-polar-package)
+  (define magnitude car)
+  (define angle cdr)
+  (define make-from-mag-ang cons)
+  (define (real-part z)
+    (* (magnitude z) (cos (angle z))))
+  (define (imag-part z)
+    (* (magnitude z) (sin (angle z))))
+  (define (make-from-real-imag a b)
+    (cons (sqrt (+ (square a) (square b)))
+          (atan b a)))
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (a b) (tag (make-from-real-imag a b))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+(define (apply-generic op . args)
+  (let* ((type-tags (map type-tag args))
+         (proc (get op type-tags)))
+    (if proc
+      (apply proc (map contents args))
+      (error
+        "No method for these types: APPLY-GENERIC"
+        (list op type-tags)))))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+(define (make-from-real-imag a b)
+  ((get 'make-from-real-imag 'rectangular) a b))
+(define (make-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'polar) r a))
+
+;;; ex 2.73
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        (else ((get 'deriv (operator exp))
+               (operands exp) var))))
+(define operator car)
+(define operands cdr)
+;; (a) We wrote the deriv procedure as a data-direction type dispatch. The
+;; procedure dispatches on the operator, which is the car of an expression. We
+;; can't assimilate atomic types like numbers and variables (which are symbols)
+;; into this dispatch because they don't have an identifying tag in the car --
+;; they have no car or cdr at all. If we really wanted to, we could assimilate
+;; them by dispatching not on the operator, but on the (type exp) using this:
+(define (type exp)
+  (cond ((number? exp) 'number)
+        ((variable? exp) 'variable)
+        (else (car exp))))
+;; (b) packages for sums and products
+(define (install-sum-package)
+  (define (deriv-sum terms var)
+    (reduce make-sum (map (lambda (t) (deriv t var)) terms)))
+  (put 'deriv '+ deriv-sum)
+  'done)
+(define (install-product-package)
+  (define (deriv-product-2 a b var)
+    (make-sum (make-product a (deriv b var))
+              (make-product b (deriv a var))))
+  (define (deriv-product factors var)
+    (reduce (lambda (a b) (deriv-product-2 a b var))
+            factors))
+  (put 'deriv '* deriv-product)
+  'done)
+;; (c) package for powers
+(define (install-power-package)
+  (define base car)
+  (define exponent cadr)
+  (define (deriv-power power)
+    (make-product
+      (make-product
+        (exponent power)
+        (make-power (base power)
+                    (make-sum (exponent power) -1)))
+      (deriv (base power) var)))
+  (put 'deriv '** deriv-power)
+  'done)
+;; (d) If we wanted to instead use (get (operator exp) 'deriv) to get the
+;; appropriate procedure, we have to change the order of the arguments given to
+;; `put` in the package installation procedures.
+
+;;; ex 2.74
+;; (a) Each division must implement the get-record procedure. This gets
+;; dispatched based on the divison symbol, the type tag on the file. We have
+;; chosen the structure (division file), where the car is the type information
+;; and the cdr is the division-specific set of records.
+(define (make-file division records)
+  (cons division file))
+(define file-division car)
+(define file-records cdr)
+(define (get-record file employee-name)
+  ((get 'get-record (file-division file))
+   (file-records file)
+   employee-name))
+;; (b) The record must also be tagged with the division symbol.
+(define (make-record division set)
+  (cons division set))
+(define record-division car)
+(define record-set cdr)
+(define (get-salary record)
+  ((get 'get-salary (record-divison record))
+   (record-set record)))
+;; (c) This procedure imposes no additional requirements on implementations.
+(define (find-employee-record employee-name files)
+  (if (null? files)
+    #f
+    (or (get-record (car files) employee-name)
+        (find-employee-record employee-name (cdr files)))))
+;; (d) They must install 'get-record and 'get-salary generic procedures into the
+;; data-directed dispatch system. These procedures must use the division's name
+;; as their dispatch key.
+
+;;; ssec 2.4.3 (message passing)
+(define (make-from-real-imag a b)
+  (lambda (op)
+    (cond ((eq? op 'real-part) a)
+          ((eq? op 'imag-part) b)
+          ((eq? op 'magnitude) (sqrt (+ (square a) (square b))))
+          ((eq? op 'angle) (atan b a))
+          (else (error "Unknown op: MAKE-FROM-REAL-IMAG" op)))))
+(define (apply-generic op arg) (arg op))
+
+;;; ex 2.75
+(define (make-from-mag-ang r a)
+  (lambda (op)
+    (cond ((eq? op 'real-part) (* r (cos a)))
+          ((eq? op 'imag-part) (* r (sin a)))
+          ((eq? op 'magnitude) r)
+          ((eq? op 'angle) a)
+          (else (error "Unknown op: MAKE-FROM-MAG-ANG" op)))))
+
+;;; ex 2.76
+;; 1. generic operations with explicit dispatch
+;; [types] After implementing specific procedures for the new type, you must add
+;; a new clause to the dispatcher of all the generic operations (time consuming
+;; and error-prone).
+;; [ops] After implementing a new specific procedure for each exisiting type,
+;; you must write a generic operation procedure with explicit dispatch.
+;; 2. data-directed style
+;; [types] It's easy: you just need to write new specific procedures and install
+;; them into the system with their identifying dispatch type.
+;; [ops] After implementing a new specific procedure in each of the package
+;; installer procedures, you must write a procedure that invokes apply-generic.
+;; 3. message-passing style
+;; [types] Simply create a new type that responds to the same message.
+;; [ops] Write a specific procedure for all existing types so that they respond
+;; to the new message.
+;; ---
+;; When new types must often be added, or when new operations must often be
+;; added, data-directed style and message-passing style both work. Data-directed
+;; style is a bit more work overall, but it doesn't have the limitation of only
+;; working with a single argument.
+
+;;;;; Section 2.5: Systems with generic operations
