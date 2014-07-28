@@ -2448,3 +2448,65 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   (put 'div '(polynomial polynomial)
        (lambda (p1 p2) (map tag (div p1 p2))))
   'done)
+
+;;; ex 2.92
+(define (single-term t)
+  (adjoin-term t (empty-sparse-termlist)))
+(define (poly-wrapped var term)
+  (make-term 0 (make-poly var (single-term term))))
+(define (install-polynomial)
+  (define make-poly cons)
+  (define variable car)
+  (define term-list cdr)
+  (define variable? symbol?)
+  (define same-variable? eq?)
+  (define (variable<? a b)
+    (string<? (symbol->string a)
+              (symbol->string b)))
+  (define (principal-variable p1 p2)
+    (let ((v1 (variable p1))
+          (v2 (variable p2)))
+      (if (variable<? v1 v2) v1 v2)))
+  (define (coerce-termlist tl from to)
+    (if (empty-termlist? tl)
+      (empty-sparse-termlist)
+      (let ((ft (first-term tl)))
+        (add-terms
+          (if (polynomial? (coeff ft))
+            (mul-term-by-all-terms
+              (poly-wrapped from (make-term (order ft) (make-scheme-number 1)))
+              (coerce-poly (coeff ft) to))
+            (single-term (poly-wrapped from ft)
+          (coerce-termlist (rest-terms tl) from to)))))))
+  (define (coerce-poly p var)
+    (if (same-variable? (variable p) var)
+      p
+      (make-poly var
+                 (coerce-termlist (term-list p) (variable p) var))))
+  (define (binary-poly-op f)
+    (lambda (p1 p2)
+      (let ((var (principal-variable p1 p2)))
+        (f (coerce-poly p1 var)
+           (coerce-poly p2 var)))))
+  (define add-poly
+    (binary-poly-op
+      (lambda (p1 p2)
+        (make-poly
+          (variable p1)
+          (add-terms (term-list p1) (term-list p2))))))
+  (define mul-poly
+    (binary-poly-op
+      (lambda (p1 p2)
+        (make-poly
+          (variable p1)
+          (mul-terms (term-list p1) (term-list p2))))))
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  'done)
+
+;;; extended ex (rational functions)
