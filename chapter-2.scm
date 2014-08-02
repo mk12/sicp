@@ -2451,9 +2451,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
         (list (make-polynomial var (car result))
               (make-polynomial var (cadr result))))
       (error "Polys not in same var: DIV-POLY" (list p1 p2))))
-  (put 'div '(polynomial polynomial)
-       (lambda (p1 p2)
-         (attach-tag 'polynomial (div-poly p1 p2))))
+  (put 'div '(polynomial polynomial) div-poly)
   'done)
 
 ;;; ex 2.92
@@ -2566,7 +2564,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
     (if (same-variable? (variable p1) (variable p2))
       (let ((tl (gcd-terms (term-list p1) (term-list p2))))
         (make-polynomial (variable p1) tl))
-      (error "polys not in same variable: GCD-POLY" (list p1 p2))))
+      (error "Polys not in same variable: GCD-POLY" (list p1 p2))))
   (put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
   (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly)
   'done)
@@ -2578,3 +2576,54 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; => (polynomial x . (sparse-termlist (2 -1) (1 1)))
 ;; This is correct, according to WolframAlpha:
 ;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
+
+;;; ex 2.95
+(define p1 (make-polynomial 'x '(sparse-termlist (2 1) (1 -2) (0 1))))
+(define p2 (make-polynomial 'x '(sparse-termlist (2 11) (0 7))))
+(define p3 (make-polynomial 'x '(sparse-termlist (1 13) (0 5))))
+(define q1 (mul p1 p2))
+(define q2 (mul p1 p3))
+(greatest-common-divisor q1 q2)
+;; => (polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
+;; The greatest-common-divisor procedure uses gcd-terms. This recurs by taking
+;; the GCD of q2 and the remainder of dividing q1 by q2:
+(cadr (div q1 q2))
+;; => (polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
+;; This remainder polynomial has noninteger coefficients, so the final GCD
+;; returned also has noninteger coefficients. However, if we look closely at the
+;; GCD of q1 and q2, it is clear that we can factor out 1458/169 to get p1:
+(equal? p1
+        (mul (greatest-common-divisor q1 q2)
+             (make-polynomial 'x '(sparse-termlist (0 169/1458)))))
+;; => #t
+
+;;; ex 2.96
+;; (a) pseudoremainder-terms
+(define (pseudoremainder-terms l1 l2)
+  (let* ((o1 (order (first-term l1)))
+         (o2 (order (first-term l2)))
+         (c (coeff (first-term l2)))
+         (integerizing-factor (expt c (+ 1 o1 (- o2))))
+         (term (make-term 0 integerizing-factor))
+         (ml1 (mul-term-by-all-terms term l1)))
+    (cadr (div-terms ml1 l2))))
+(define (gcd-terms a b)
+  (if (empty-termlist? b)
+    a
+    (gcd-terms b (pseudoremainder-terms a b))))
+(greatest-common-divisor q1 q2)
+;; => (polynomial x . (sparse-termlist (2 1458) (1 -2916) (0 1458)))
+;; (b) removing common factors
+(define (termlist-coeffs tl)
+  (if (empty-termlist? tl)
+    '()
+    (cons (coeff (first-term tl))
+          (termlist-coeffs (rest-terms tl)))))
+(define (gcd-terms a b)
+  (if (empty-termlist? b)
+    (let ((coeff-gcd (reduce greatest-common-divisor (termlist-coeffs a))))
+      (car (div-terms a (single-term (make-term 0 coeff-gcd)))))
+    (gcd-terms b (pseudoremainder-terms a b))))
+(greatest-common-divisor q1 q2)
+;; => (polynomial x . (sparse-termlist (2 1) (1 -2) (0 1)))
+(equal? p1 (greatest-common-divisor q1 q2)) ; => #t
