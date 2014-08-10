@@ -49,6 +49,11 @@
     '()
     (cons a (range (+ a 1) b))))
 
+(define (random high)
+  (if (integer? high)
+    (random-integer high)
+    (* high (random-real))))
+
 ;;;; Other
 
 (define (identity x) x)
