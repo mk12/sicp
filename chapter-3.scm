@@ -126,3 +126,46 @@
              (lambda (new-x)
                (set! x new-x)))
             (else (error "message not recognized: RAND" (list message)))))))
+
+;;; ex 3.7
+(define (make-joint pp-acc password new-password)
+  (lambda (p m)
+    (if (eq? p new-password)
+      (pp-acc password m)
+      (error "Incorrect password"))))
+
+;;; ex 3.8
+(define f
+  (let ((x 0))
+    (lambda (y)
+      (let ((old-x x))
+        (set! x y)
+        old-x))))
+
+;;;;; Section 3.2: The environment model of evaluation
+
+;;; ex 3.9
+(define (factorial n)
+  (if (= n 1) 1 (* n (factorial (- n 1)))))
+;; Six environments are created:
+; E1 -> [n: 6]
+; E2 -> [n: 5]
+; E3 -> [n: 4]
+; E4 -> [n: 3]
+; E5 -> [n: 2]
+; E6 -> [n: 1]
+(define (factorial n) (fact-iter 1 1 n))
+(define (fact-iter product counter max-count)
+  (if (> counter max-count) product
+    (fact-iter (* counter product)
+               (+ counter 1)
+               max-count)))
+;; Eight environments are created:
+; E1 -> [n: 6]
+; E2 -> [p: 1,   c: 1, m: 6]
+; E3 -> [p: 1,   c: 2, m: 6]
+; E4 -> [p: 2,   c: 3, m: 6]
+; E5 -> [p: 6,   c: 4, m: 6]
+; E6 -> [p: 24,  c: 5, m: 6]
+; E7 -> [p: 120, c: 6, m: 6]
+; E8 -> [p: 720, c: 7, m: 6]
