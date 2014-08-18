@@ -1,48 +1,48 @@
-\documentclass{article}
+\startcomponent exercise-1.35
+\product proofs
 
-\title{Golden Ratio Fixed Point}
-\author{Mitchell Kember}
-\date{26 May 2014}
+\define\p{\math{\varphi}}
 
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{commath}
+\starttext
 
-\newcommand*{\p}{\ensuremath{\varphi}}
-
-\begin{document}
-\maketitle
-
-\noindent Exercise 1.13 of \emph{Structure and Interpretation of Computer Programs} asks us to
-\begin{quote}
-Show that the golden ratio \p{} (Section 1.2.2) is a fixed point of the transformation \(x\mapsto 1+1/x\), and use this fact to compute \p{} by means of the \texttt{fixed-point} procedure.
-\end{quote}
-
-\section*{Definitions}
+\startproblem
+Show that the golden ratio \p{} (Section 1.2.2) is a fixed point of the
+transformation $x\mapsto 1+1/x$, and use this fact to compute \p{} by means of
+the \code{fixed-point} procedure.
+\stopproblem
 The golden ratio \p{} is the positive real number that satisfies
-\[\p = 1 + \frac{1}{\p}.\]
+\startformula
+\p = 1 + \frac{1}{\p}.
+\stopformula
 Multiplying by \p{}, we get another property of the golden ratio:
-\[\p^2 = \p + 1.\]
+\startformula
+\p^2 = \p + 1.
+\stopformula
+\startproof
+We would like to prove that each transformation $x\mapsto 1+1/x$ causes the
+value of $x$ to become closer to \p{}. Given an initial guess $x>1$, let
+$y=1+1/x$ be the improved guess. We must prove that $\abs{y-\p} < \,\abs{x-\p}$.
+To begin, we will simplify the left-hand side of the inequality:
+\startformula\startalign
+\NC \abs{y-\p} \NC = \abs{1+\frac1x-\p} \NR
+\NC \NC = \abs{\frac{x+1-\p x}{x}} \NR
+\NC \NC = \abs{\frac{x+1-(1+1/\p)x}{x}} \NR
+\NC \NC = \abs{\frac{x+1-x-x/\p}{x}} \NR
+\NC \NC = \abs{\frac{\p-x}{x\p}} \NR
+\NC \NC = \frac{\abs{x-\p}}{\abs{x\p}}.
+\stopalign\stopformula
+We now have a relation between $\abs{y-\p}$ and $\abs{x-\p}$. To prove that
+$\abs{y-\p}<\abs{x-\p}$, we must show that $\abs{x\p}>1$, because dividing the
+original error by a number greater than one will produce a smaller value as the
+new error. We already stipulated that $x>1$, and we know the value of the golden
+ratio is $\p=(1+\sqrt{5})/2 \approx 1.618 > 1$, therefore $x\p>1$ and $\abs{x\p}>1$.
 
-\section*{Proof}
-We would like to prove that each transformation \(x\mapsto 1+1/x\) causes the value of \(x\) to become closer to \p{}. Given an initial guess \(x>1\), let \(y=1+1/x\) be the improved guess. We must prove that \(\abs{y-\p} < \,\abs{x-\p}\). To begin, we will simplify the left-hand side of the inequality:
+Since $\abs{xp}>1$ and $\abs{y-\p} = \abs{x-\p}/\abs{xp}$, we have
+\startformula
+\abs{y-\p}<\abs{x-\p},
+\stopformula
+therefore each transformation $x\mapsto y$ brings $x$ closer to \p{}, and
+consequently \p{} is a fixed point of the transformation $x\mapsto 1+1/x$.
+\stopproof
 
-\begin{align*}
-\abs{y-\p}
-&= \abs{1+\frac1x-\p}\\
-&= \abs{\frac{x+1-\p x}{x}}\\
-&= \abs{\frac{x+1-(1+1/\p)x}{x}}\\
-&= \abs{\frac{x+1-x-x/\p}{x}}\\
-&= \abs{\frac{\p-x}{x\p}}.
-\end{align*}
-
-The error of the improved guess, \(\abs{y-\p}\), is related to the error of the orignal guess, \(\abs{x-\p}\). We can rearrange a bit more to make this clear:
-\[\abs{y-\p} = \abs{\frac{\p-x}{x\p}} = \frac{\abs{x-\p}}{\abs{x\p}}.\]
-To prove that \(\abs{y-\p}<\abs{x-\p}\), we must show that \(\abs{x\p}>1\), because dividing the original error by a number greater than one will produce a new error smaller than the original. We already stipulated that \(x>1\), and we know the value of the golden ratio is \(\p=(1+\sqrt{5})/2\), therefore \(x\p>1\) and \(\abs{x\p}>1\).
-
-Since \(\abs{xp}>1\) and \(\abs{y-\p} = \abs{x-\p}/\abs{xp}\), we have
-\[\abs{y-\p}<\abs{x-\p},\]
-therefore each transformation \(x\mapsto y\) brings \(x\) closer to \p{}, and consequently \p{} is a fixed point of the transformation \(x\mapsto 1+1/x\). \(\blacksquare\)
-
-
-\end{document}
+\stoptext

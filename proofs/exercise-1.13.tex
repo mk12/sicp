@@ -1,78 +1,112 @@
-\documentclass{article}
+\startcomponent exercise-1.13
+\product proofs
 
-\title{Fibonacci and the Golden Ratio}
-\author{Mitchell Kember}
-\date{18 May 2014}
+\definemathcommand[Fib]{\mfunction{Fib}}
 
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{multicol}
-\usepackage{commath}
+\starttext
 
-\begin{document}
-\maketitle
+\startproblem
+Prove that $\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$, where
+$\varphi=(1+\sqrt5)/2$. Hint: Let $\psi=(1-\sqrt5)/2$. Use
+induction to prove that $\Fib(n)=(\varphi^n-\psi^n)/\sqrt5$.
+\stopproblem
+The constants $\varphi$ and $\psi$ are the positive and negative solutions to the
+golden ratio equation for a rectangle with side lengths of 1 and $x$:
+\startformula
+\frac{1}{x}=\frac{x}{1+x}.
+\stopformula
+Both $\varphi$ and $\psi$ satisfy two properties:
+\startformula
+1+x=x^2 \quad \text{and} \quad \frac{1}{x} + 1 = x, \quad \forall x \in
+\{\varphi,\psi\}.
+\stopformula
+The Fibonacci sequence begins with 0 and 1; each subsequent element is the sum
+of the two elements preceding it:
+\startformula
+0, 1, 1, 2, 3, 5, 8, 13, 21, \dots.
+\stopformula
+Using the Fib function, we can define the sequence recursively with
+\startformula\startalign
+\NC \Fib(0) \NC = 0; \NR
+\NC \Fib(1) \NC = 1; \NR
+\NC \Fib(n) \NC = \Fib(n-1) + \Fib(n-2).
+\stopalign\stopformula
+\startproof
+We will begin by proving by induction that
+\placeformula[eq:fib]
+\startformula
+\Fib(n)=\frac{\varphi^n-\psi^n}{\sqrt5}.
+\stopformula
+First, we will demonstrate that \in{equation}[eq:fib] is true for the three
+base cases: $\Fib(0)$, $\Fib(1)$, and $\Fib(2)$. When $n=0$,
+$\text{LS}=\Fib(0)=0$ and
+\startformula
+\text{RS}
+= \frac{\varphi^0-\psi^0}{\sqrt5}
+= \frac{1-1}{\sqrt5} \NR
+= 0.
+\stopformula
+When $n=1$, $\text{LS}=\Fib(1)=1$ and
+\startformula
+\text{RS}
+= \frac{\varphi^1-\psi^1}{\sqrt5}
+= \frac{\frac{1+\sqrt5}{2}-\frac{1-\sqrt5}{2}}{\sqrt5}
+= \frac{\frac{2\sqrt5}{2}}{\sqrt5}
+= 1.
+\stopformula
+When $n=2$, $\text{LS}=\Fib(2)=1$ and
+\startformula\startalign
+\NC \text{RS} \NC = \frac{\varphi^2-\psi^2}{\sqrt5} \NR
+\NC \NC = \frac{\left(\frac{1+\sqrt5}{2}\right)^2
+          - \left(\frac{1-\sqrt5}{2}\right)^2}{\sqrt5} \NR
+\NC \NC = \frac{\frac{(1+\sqrt5)^2-(1-\sqrt5)^2}{4}}{\sqrt5} \NR
+\NC \NC = \frac{\left(\left(1+\sqrt5\right)-\left(1-\sqrt5\right)\right)
+          \left(\left(1+\sqrt5\right)+\left(1-\sqrt5\right)\right)}{4\sqrt5} \NR
+\NC \NC = \frac{\left(2\sqrt5\right)(2)}{4\sqrt5} \NR
+\NC \NC = 1.
+\stopalign\stopformula
 
-\noindent Exercise 1.13 of \emph{Structure and Interpretation of Computer Programs} asks us to
-\begin{quote}
-Prove that Fib(\(n\)) is the closest integer to \(\varphi^n/\sqrt{5}\), where \(\varphi=(1+\sqrt{5})/2\). Hint: Let \(\psi=(1-\sqrt{5})/2\). Use induction to prove that Fib(\(n)=(\varphi^n-\psi^n)/\sqrt{5}\).
-\end{quote}
+Now comes the inductive step. For \in{equation}[eq:fib] to be true for the
+entire sequence, we must be able to prove that
+\startformula
+\Fib(n) = \Fib(n-1) + \Fib(n-2)
+\stopformula
+using \in{equation}[eq:fib] as the definiton of Fib. We know that
+$\text{LS}=(\varphi^n-\psi^n)/\sqrt5$. We can show that the right-hand side is
+equal:
+\startformula\startalign
+\NC \text{RS} \NC = \frac{\varphi^{n-1}-\psi^{n-1}}{\sqrt5}
+                    + \frac{\varphi^{n-2}-\psi^{n-2}}{\sqrt{5}} \NR
+\NC \NC = \frac{\left(\varphi^{n-1}+\varphi^{n-2}\right)
+          - \left(\psi^{n-1}+\psi^{n-2}\right)}{\sqrt5} \NR
+\NC \NC = \frac{\varphi^n\left(\varphi^{-1}+\varphi^{-2}\right)
+          - \psi^n\left(\psi^{-1}+\psi^{-2}\right)}{\sqrt5} \NR
+\NC \NC = \frac{\varphi^n\varphi^{-1}\left(1+\varphi^{-1}\right)
+          - \psi^n\psi^{-1}\left(1+\psi^{-1}\right)}{\sqrt5} \NR
+\NC \NC = \frac{\varphi^n\varphi^{-1}\left(\varphi\right)
+          - \psi^n\psi^{-1}\left(\psi\right)}{\sqrt5} \NR
+\NC \NC = \frac{\varphi^n-\psi^n}{\sqrt5}.
+\stopalign\stopformula
+This completes the proof of \in{equation}[eq:fib].
 
-\section*{Definitions}
+Now we must show that $\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$.
+The absolute difference between these two values must remain less than or equal
+to one half for the latter to round to the former:
+\placeformula[eq:round]
+\startformula\startalign
+\NC \abs{\Fib(n)-\frac{\varphi^n}{\sqrt5}} \NC \le \frac12 \NR[+]
+\NC \abs{\frac{\varphi^n-\psi^n}{\sqrt5} - \frac{\varphi^n}{\sqrt5}} \NC
+    \le \frac12 \NR
+\NC \abs{-\frac{\psi^n}{\sqrt5}} \NC \le \frac12 \NR
+\NC \frac{\abs{-\psi^n}}{\sqrt5} \NC \le \frac12 \NR
+\NC \abs{\psi^n} \NC \le \frac{\sqrt5}{2}.
+\stopalign\stopformula
+The value of $\psi$ is about $-0.618$, therefore its absolute value is about
+0.618. For all nonnegative values of $n$, $\abs{\psi^n}\le1$. The value of
+$\sqrt5/2$ is about 1.12, which is greater than 1. Therefore,
+\in{equation}[eq:round] is true and $\varphi^n/\sqrt5$ will always round to
+$\Fib(n)$.
+\stopproof
 
-The constants \(\varphi\) and \(\psi\) are the positive and negative solutions to the golden ratio equation for a rectangle with side lengths of 1 and \(x\): \[\frac1x=\frac{x}{1+x}.\] Both \(\varphi\) and \(\psi\) satisfy the following properties: \[1+x=x^2 \qquad \textup{and} \qquad \frac1x + 1 = x.\]
-
-The Fibonacci sequence begins with 0 and 1; each subsequent element is the sum of the two elements preceding it: \[0, 1, 1, 2, 3, 5, 8, 13, 21, \dots.\] Using the Fib function, we can define the sequence recursively with
-\begin{align*}
-\textup{Fib}(0) &= 0;\\
-\textup{Fib}(1) &= 1;\\
-\textup{Fib}(n) &= \textup{Fib}(n-1) + \textup{Fib}(n-2).
-\end{align*}
-
-\section*{Proof}
-
-We will begin by proving by induction that \begin{equation}\label{eqn:phi-psi}\textup{Fib}(n)=\frac{\varphi^n-\psi^n}{\sqrt{5}}.\end{equation}
-First, we will demonstrate that equation~\eqref{eqn:phi-psi} is true for the three base cases: Fib(0), Fib(1), and Fib(2).
-When \(n=0\), \(\textup{LS}=\textup{Fib}(0)=0\) and
-\begin{align*}
-\textup{RS} &= \frac{\varphi^0-\psi^0}{\sqrt{5}}\\
-&= \frac{1-1}{\sqrt5}\\
-&= 0.
-\end{align*}
-When \(n=1\), \(\textup{LS}=\textup{Fib}(1)=1\) and
-\begin{align*}
-\textup{RS} &=  \frac{\varphi^1-\psi^1}{\sqrt{5}}\\
-&= \frac{\frac{1+\sqrt5}{2}-\frac{1-\sqrt5}{2}}{\sqrt5}\\
-&= \frac{\frac{2\sqrt5}{2}}{\sqrt5}\\
-&= 1.
-\end{align*}
-When \(n=2\), \(\textup{LS}=\textup{Fib}(2)=1\) and
-\begin{align*}
-\textup{RS} &=  \frac{\varphi^2-\psi^2}{\sqrt{5}}\\
-&= \frac{\left(\frac{1+\sqrt5}{2}\right)^2-
-\left(\frac{1-\sqrt5}{2}\right)^2}{\sqrt5}\\
-&= \frac{\frac{(1+\sqrt5)^2-(1-\sqrt5)^2}{4}}{\sqrt5}\\
-&= \frac{\left(\left(1+\sqrt5\right) - \left(1-\sqrt5\right)\right)\left(\left(1+\sqrt5\right)+\left(1-\sqrt5\right)\right)}{4\sqrt5}\\
-&= \frac{\left(2\sqrt5\right)\left(2\right)}{4\sqrt5}\\
-&= 1.
-\end{align*}
-
-Now comes the inductive step. For equation~\eqref{eqn:phi-psi} to be true for the entire sequence, we must be able to prove that \[\textup{Fib}(n) = \textup{Fib}(n-1) + \textup{Fib}(n-2)\] using equation~\eqref{eqn:phi-psi} as the definiton of Fib. We know that \(\textup{LS}=(\varphi^n-\psi^n)/\sqrt{5}\). We can show that the right-hand side is equal:
-\begin{align*}
-\textup{RS} &= \frac{\varphi^{n-1}-\psi^{n-1}}{\sqrt{5}} + \frac{\varphi^{n-2}-\psi^{n-2}}{\sqrt{5}}\\
-&= \frac{\left(\varphi^{n-1}+\varphi^{n-2}\right)-\left(\psi^{n-1}+\psi^{n-2}\right)}{\sqrt5}\\
-&= \frac{\varphi^n\left(\varphi^{-1}+\varphi^{-2}\right)-\psi^n\left(\psi^{-1}+\psi^{-2}\right)}{\sqrt5}\\
-&= \frac{\varphi^n\varphi^{-1}\left(1+\varphi^{-1}\right)-\psi^n\psi^{-1}\left(1+\psi^{-1}\right)}{\sqrt5}\\
-&= \frac{\varphi^n\varphi^{-1}\left(\varphi\right)-\psi^n\psi^{-1}\left(\psi\right)}{\sqrt5}\\
-&= \frac{\varphi^n-\psi^n}{\sqrt5}.
-\end{align*}
-
-Now we must show that Fib(\(n\)) is the closest integer to \(\varphi^n/\sqrt{5}\). The absolute difference between these two values must remain less than or equal to one half for the latter to round to the former:
-\begin{align*}
-\abs{\textup{Fib}(n)-\frac{\varphi^n}{\sqrt5}} &\le \frac12\\
-\abs{\frac{\varphi^n-\psi^n}{\sqrt5} - \frac{\varphi^n}{\sqrt5}} &\le \frac12\\
-\abs{-\frac{\psi^n}{\sqrt5}} &\le \frac12\\
-\frac{\abs{-\psi^n}}{\sqrt5} &\le \frac12\\
-\abs{\psi^n} &\le \frac{\sqrt5}{2}.
-\end{align*}
-The value of \(\psi\) is about \(-0.618\), therefore its absolute value is about \(0.618\). For all nonnegative values of \(n\), \(\abs{\psi^n}\le1\). The value of \(\sqrt5/2\) is about 1.12, which is greater than 1. Therefore, the equation above is true and  \(\varphi^n/\sqrt{5}\) will always round to Fib(\(n\)). \(\blacksquare\)
-\end{document}
+\stoptext
+\stopcomponent
