@@ -169,3 +169,173 @@
 ; E6 -> [p: 24,  c: 5, m: 6]
 ; E7 -> [p: 120, c: 6, m: 6]
 ; E8 -> [p: 720, c: 7, m: 6]
+
+;;; ex 3.10
+;; With or without the explicit state variable, `make-withdraw` creates objects
+;; with the same behaviour. The only difference with the expllicit variable in
+;; the let-form is that there is an extra environment. Applying `make-writhdraw`
+;; creates E1 to bind 100 to `initial-amount`, and then the let-form dsugars to
+;; a lambda application, creating a new environment E2. This environment holds
+;; `balance`, beginning with the same value as `initial amount`. When we
+;; evaluate `(W1 20)`, we create the environment E3 that binds `amount` to 20.
+;; The assignment in the code for W2 changes the value of `balance` from 100 to
+;; 80. The value of `initial-amount` remains the same, because it was never
+;; changed in a `set!` assignment. The behaviour is no different with the
+;; let-form because, although we are now saving the original balance, we aren't
+;; doing anything with it. We can't access it outside of the procedure.
+;                ____________________
+; global env -->| make-withdraw: ... |
+;               | W2: ---------+     |
+;               | W1:          |     |<--------------------+
+;               |_|____________|_____|               E3    |
+;                 |        ^   |                      [initial-amount: 100]
+;                 |  E1    |   +--------------->[*|*]      ^
+;                 |   [initial-amount: 100]      | |   E4  |
+;                 |        ^                     | +--->[balance: 60]
+;                 V    E2  |                     |         ^
+;               [*|*]-->[balance: 80]            |         |
+;                V              ^                |         |
+;       parameters: amount }<---|----------------+         |
+;             body: ...    }    |                          |
+;                               |          (W2 40) [amount: 40]
+;                               |
+;      (W1 20) [amount: 20]-----+
+
+;;; ex 3.11
+(define (make-account balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+      (begin (set! balance (- balance amount))
+             balance)
+      "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit) deposit)
+          (else (error "Unknown request: MAKE-ACCOUNT" m))))
+  dispatch)
+;; First, we just have a procedure bound in the global environment.
+; global env --> [make-account: ...]
+(define acc (make-account 50))
+;; Now, we have `acc` in the global frame as well. It is bound to a procedure
+;; whose environment pointer points to E1, the environment created when we
+;; evaluated `(make-account 50)`. It first bound the formal parameter `balance`
+;; to 50, and then three internal procedures were defined and bound in the same
+;; frame. One of them, `dispatch`, points to the same procedure as `acc`.
+;                 __________________
+; global env --> | make-account: ...|
+;                | acc:             |
+;                |__|_______________|
+;                   |           ^
+;                   V      E1___|____________
+;                 [*|*]---->| balance: 50    |<-----+
+;                  V        | withdraw:------|-->[*|*]
+;         parameters: m     | deposit:-------|-+  +-----> parameters: amount
+;               body: ...   | dipspatch:-+   | |                body: ...
+;            ~~~~~~~~~~~~<---------------+   | +->[*|*]
+;                           |________________|<----|-+
+;                                                  +----> parameters: amount
+;                                                               body: ...
+((acc 'deposit) 40) ; => 90
+;; First we evaluate `(acc 'deposit)`. We create E2 to bind `m` to the symbol
+;; `deposit`, and then we evaluate the body of `acc`, which is the same as the
+;; body of `dispatch`. The enclosing environment of E2 is E1, because that is
+;; pointed to by the procedure. This application returns the value of `deposit`
+;; from E1. Now we evaluate `((#<deposit> 40)`. We create E3 to bind `amount` to
+;; the value 40, and the enclosing environment is E1 (pointed to by the
+;; procedure `deposit`). This finally assigns 90 to `balance` in E1, and then
+;; returns that value.
+; E2 [m: deposit]--+
+;                  +----> E1 [balance:90, ...]
+; E3 [amount: 40]--+
+((acc 'withdraw) 60) ; => 30
+;; This is almost the same, except the procedure returns the `withdraw`
+;; procedures instead. I am reusing the names E2 and E3 because they have been
+;; used and are no longer relevant, since nothing poitns to them.
+; E2 [m: withdraw]--+
+;                   +---> E1 [balance: 30, ...]
+; E3 [amount: 60]---+
+;; All this time, the local state for `acc` is kept in E1, the environment
+;; originally created to apply the `make-account` procedure. If we define
+;; another account with `(define acc2 (make-account 100))`, it will have its own
+;; environment containing `balance` and bindings for the interal procedures. The
+;; only thing shared between `acc` and `acc2` is (possibly) the code for the
+;; internal procedures, including `dispatch`, which the accounts really are.
+;; This sharing is an implementation detail, though.
+
+;;;;; Section 3.3: Modeling with mutable data
+
+;;; ex 3.12
+(define (append x y)
+  (if (null? x)
+    y
+    (cons (car x) (append (cdr x) y))))
+(define (append! x y)
+  (set-cdr! (last-pair x) y)
+  x)
+(define (last-pair x)
+  (if (null? (cdr x))
+    x
+    (last-pair (cdr x))))
+(define x (list 'a 'b))
+(define y (list 'c 'd))
+(define z (append x y))
+z ; => (a b c d)
+(cdr x) ; => (b)
+; x->[*|*]->[*|X]
+;     |      |
+;     V      V
+;     a      b
+(define w (append! x y))
+w ; => (a b c d)
+(cdr x) ; => (b c d)
+;                 y
+;                 |
+; x->[*|*]->[*|*]->[*|*]->[*|X]
+; w/  |      |      |      |
+;     V      V      V      V
+;     a      b      c      d
+
+;;; ex 3.13
+(define (make-cycle x)
+  (set-cdr! (last-pair x) x)
+  x)
+(define z (make-cycle (list 'a 'b 'c)))
+;    +-------------------+
+;    V                   |
+; z->[*|*]->[*|*]->[*|*]-+
+;     |      |      |
+;     V      V      V
+;     a      b      c
+;; If we try to compute `(last-pair z)`, we will never finish because the list
+;; is not null-terminated and so `null?` will never be true. We will be stuck in
+;; an infinite recursion.
+
+;;; ex 3.14
+(define (mystery x)
+  (define (loop x y)
+    (if (null? x)
+      y
+      (let ((temp (cdr x)))
+        (set-cdr! x y)
+        (loop temp x))))
+  (loop x '()))
+;; In general, `mystery` reverses the list `x`. It does this by walking through
+;; the list, setting the `cdr` of each pair to point to the previous pair
+;; instead of the next. For the very first pair, it sets the `cdr` to null.
+(define v (list 'a 'b 'c 'd))
+; v->[*|*]->[*|*]->[*|*]->[*|X]
+;     |      |      |      |
+;     V      V      V      V
+;     a      b      c      d
+(define w (mystery v))
+v ; => (a)
+w ; => (d c b a)
+; v->[*|X]<-[*|*]<-[*|*]<-[*|*]<-w
+;     |      |      |      |
+;     V      V      V      V
+;     a      b      c      d
+;; These box-and-pointer diagrams make it obvious that `mystery` simply changes
+;; the directions of all the arrows.
