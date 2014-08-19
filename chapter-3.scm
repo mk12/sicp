@@ -339,3 +339,106 @@ w ; => (d c b a)
 ;     a      b      c      d
 ;; These box-and-pointer diagrams make it obvious that `mystery` simply changes
 ;; the directions of all the arrows.
+
+;;; ex 3.15
+(define (set-to-wow! x) (set-car! (car x) 'wow) x)
+(define x (list 'a 'b))
+(define z1 (cons x x))
+z1 ; => ((a b) a b)
+;; The `car` and the `cdr` of `z1` both point to `x`.
+; z1->[*|*]
+;      | |
+;      V V
+;  x->[*|*]->[*|X]
+;      |      |
+;      V      V
+;      a      b
+(set-to-wow! z1) ; => ((wow b) wow b)
+;; Since the `cdr` points to the same `x`, its `a` also becomes `wow`. In
+;; `set-to-wow!`, it makes no difference whether we use `(car x)` or `(cdr x)`
+;; as the first argument to `set-car!` because they are the same in this case.
+; z1->[*|*]
+;      | |
+;      V V
+;  x->[*|*]->[*|X]
+;      |      |
+;      V      V
+;     wow     b
+(define z2 (cons (list 'a 'b) (list 'a 'b)))
+z2 ; => ((a b) a b)
+;; This is a straightforward list that happens to look "the same" as `z1`.
+; z2->[*|*]->[*|*]->[*|X]
+;      |      |      |
+;      |      +-> a  +-> b
+;      V
+;    [*|*]->[*|X]
+;     |      |
+;     +-> a  +-> b
+(set-to-wow! z2) ; => ((wow b) a b)
+;; Since the `car` and `cdr` of `z2` point to different `(a b)` lists (there is
+;; no sharing), only the first `a` changes to `wow`.
+; z2->[*|*]->[*|*]->[*|X]
+;      |      |      |
+;      |      +-> a  +-> b
+;      V
+;    [*|*]--->[*|X]
+;     |        |
+;     +-> wow  +-> b
+
+;;; ex 3.16
+(define (count-pairs x)
+  (if (not (pair? x))
+    0
+    (+ (count-pairs (car x))
+       (count-pairs (cdr x))
+       1)))
+;; The procedure `count-pairs` is wrong because it assumes there is no sharing.
+;; All of the lists named `three-N` consist of three pairs, but `count-pairs`
+;; thinks that they have `N` pairs.
+(define p (cons 'a '())) ; a single pair
+(define three-3 (cons 'a (cons 'a (cons 'a '())))) ; three pairs
+(count-pairs three-3) ; => 3
+(define three-4 (cons 'a (cons p p))) ; two pairs + p = three pairs
+(count-pairs three-4) ; => 4
+(define ab (cons 'a (cons 'b '()))) ; two pairs
+(define three-5 (cons ab ab)) ; one pair + ab = three pairs
+(count-pairs three-5) ; => 5
+(define aa (cons p p)) ; => one pair + p = two pairs
+(define three-7 (cons aa aa)) ; => one pair + aa = three pairs
+(count-pairs three-7) ; => 7
+
+;;; ex 3.17
+(define (count-pairs x)
+  (let ((seen '()))
+    (define (iter x)
+      (if (or (not (pair? x)) (memq x seen))
+        0
+        (begin (set! seen (cons x seen))
+               (+ (iter (car x))
+                  (iter (cdr x))
+                  1))))
+    (iter x)))
+(count-pairs three-3) ; => 3
+(count-pairs three-4) ; => 3
+(count-pairs three-5) ; => 3
+(count-pairs three-7) ; => 3
+
+;;; ex 3.18
+(define (cycle? ls)
+  (define (iter ls seen)
+    (and (pair? x)
+         (or (memq ls seen)
+             (iter (cdr ls) (cons ls seen)))))
+  (iter ls '()))
+
+;;; ex 3.19
+;; This is Floyd's cycle-finding algorithm (the tortoise and the hare). I had
+;; already seen it before; otherwise, I probably wouldn't have come up with it.
+(define (cycle? ls)
+  (define (iter t h)
+    (and (pair? h)
+         (pair? (cdr h))
+         (or (eq? t h)
+             (iter (cdr t) (cddr h)))))
+  (and (pair? ls)
+       (iter ls (cdr ls))))
