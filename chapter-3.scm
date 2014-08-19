@@ -432,8 +432,7 @@ z2 ; => ((a b) a b)
   (iter ls '()))
 
 ;;; ex 3.19
-;; This is Floyd's cycle-finding algorithm (the tortoise and the hare). I had
-;; already seen it before; otherwise, I probably wouldn't have come up with it.
+;; This is Floyd's cycle-finding algorithm (the tortoise and the hare).
 (define (cycle? ls)
   (define (iter t h)
     (and (pair? h)
@@ -442,3 +441,225 @@ z2 ; => ((a b) a b)
              (iter (cdr t) (cddr h)))))
   (and (pair? ls)
        (iter ls (cdr ls))))
+
+;;; ssec 3.3.1 (mutation is just assignment)
+(define (cons x y)
+  (define (set-x! v) (set! x v))
+  (define (set-y! v) (set! y v))
+  (define (dispatch m)
+    (cond ((eq? m 'car) x)
+          ((eq? m 'cdr) y)
+          ((eq? m 'set-car!) set-x!)
+          ((eq? m 'set-cdr!) set-y!)
+          (else (error "Undefined operation: CONS" m))))
+  dispatch)
+(define (car p) (p 'car))
+(define (cdr p) (p 'cdr))
+(define (set-car! p v) ((p 'set-car!) v) p)
+(define (set-cdr! p v) ((p 'set-cdr!) v) p)
+
+;;; ex 3.20
+(define x (cons 1 2))
+(define z (cons x x))
+(set-car! (cdr z) 17)
+(car x) ; => 17
+;; Following the arrows in the environment diagram below, we see that the `cdr`
+;; of `z` is the same pair pointed to by `x`. By changing the `car` of this pair
+;; to 17, we change `x` from `(1 2)` to `(17 2)`.
+;               ______________
+; global env ->| x: -+  z: ---|-----------------+
+;              |_____|________|<----------------|------+
+;                    |    ^                     V     _|___________
+;                    | E1_|___________        [*|*]->| set-x!: ... |
+;                    |  | x: 1   y: 2 |        |     | set-y!: ... |
+;                    |  | set-x!: ... |        V     | dispatch: --|-+
+;                    |  | set-y!: ... |  params: m   | x:+   y:+   | |
+;                    |  | dispatch:+  |    body: ... |___|_____|___| |
+;                    |  |__________|__|  ~~~~~~~~~~~     |     |     |
+;                    |   ^         |            ^--------|-----|-----+
+;                    |   |         |                     |     |
+;                    | +-|-----<---+---------<-----------+--<--+
+;                    | | |
+;                    V V |
+;                  [*|*]-+
+; paramters: m   }<-+
+;      body: ... }
+
+;;; ssec 3.3.2 (representing queues)
+(define front-ptr car)
+(define rear-ptr cdr)
+(define set-front-ptr! set-car!)
+(define set-rear-ptr! set-cdr!)
+(define (empty-queue? q) (null? (front-ptr q)))
+(define (make-queue) (cons '() ()))
+(define (front-queue q)
+  (if (empty-queue? q)
+    (error "FRONT called with an empty queue" q)
+    (car (front-ptr q))))
+(define (insert-queue! q x)
+  (let ((new-pair (cons x '())))
+    (cond ((empty-queue? q)
+           (set-front-ptr! q new-pair)
+           (set-rear-ptr! q new-pair)
+           q)
+          (else
+            (set-cdr! (rear-ptr q) new-pair)
+            (set-rear-ptr! q new-pair)
+            q))))
+(define (delete-queue! q)
+  (cond ((empty-queue? q)
+         (error "DELETE! called with an empty queue" q))
+        (else (set-front-ptr! q (cdr (front-ptr q)))
+              q)))
+
+;;; ex 3.21
+(define q1 (make-queue))
+(insert-queue! q1 'a) ; => ((a) a)
+(insert-queue! q1 'b) ; => ((a b) b)
+(delete-queue! q1)    ; => ((b) b)
+(delete-queue! q1)    ; => (() b)
+;; Eva Lu Ator points out that Lisp is trying to print the list structure that
+;; makes up the queue. It doesn't know anything special about our queue
+;; representation. The interpreter's response isn't a list of things in the
+;; queue, it is the queue as we decided to represent it. It is a bit more clear
+;; if we print the lists in dotted cons notation:
+; list repr.      front    rear
+; ((a) a)     =   ((a)   . (a))
+; ((a b) b)   =   ((a b) . (b))
+; ((b) b)     =   ((b)   . (b))
+; (() b)      =   (()    . (b))
+;; Now, it is clear that Lisp is showing us the front pointer and the rear
+;; pointer, interpreting both as ordinary lists. This works fine for the front
+;; pointer, and in fact we can just look at it by itself to see everything in
+;; our queue. The rear pointer is always displayed as a list with one item
+;; because the `cdr` of the last item is always null. Even when we delete all
+;; the items, we still see the last item in the queue because of the way we
+;; implemented `delete-queue!`.
+(define (print-queue q)
+  (display (front-ptr q))
+  (newline))
+
+;;; ex 3.22
+;; It's interesting how I ended up using `dispatch` like you would use the
+;; `this` keyword in object-oriented languages. Another interesting point is the
+;; application of procedures in `dispatch`. For procedures that take arguments
+;; other than the queue itself, like for insertion, we have to return the
+;; procedure that can then be applied to the argument(s). In this case, the
+;; rease of the operations take no other arguments. It might be more consistent
+;; to return a procedure of zero arguments -- then we would need double
+;; parentheses, like `((my-queue 'front-queue))` -- but this seems a bit
+;; strange. Instead, we apply the procedure right away in `dispatch` and
+;; pass on the return value.
+(define (make-queue)
+  (let ((front-ptr '())
+        (rear-ptr '()))
+    (define (empty?)
+      (null? front-ptr))
+    (define (insert! x)
+      (let ((new-pair (cons x '())))
+        (cond ((empty?)
+               (set! front-ptr new-pair)
+               (set! rear-ptr new-pair)
+               dispatch)
+              (else (set-cdr! rear-ptr new-pair)
+                    (set! rear-ptr new-pair)
+                    dispatch))))
+    (define (delete!)
+      (if (empty?)
+        (error "DELETE! called with an empty queue")
+        (begin (set! front-ptr (cdr front-ptr))
+               dispatch)))
+    (define (dispatch m)
+      (cond ((eq? m 'empty-queue?) (empty?))
+            ((eq? m 'front-queue)
+             (if (empty?)
+               (error "FRONT called with an empty queue")
+               (car front-ptr)))
+            ((eq? m 'insert-queue!) insert!)
+            ((eq? m 'delete-queue!) (delete!))
+            (else (error "Undefined operation: MAKE-QUEUE" m))))
+    dispatch))
+
+;;; ex 3.23
+;; I have implemented the deqeue as a doubly-linked list. Instead of pointing to
+;; the next element, the `cdr` of each item is a pair whose `car` points to the
+;; previous item and whose `cdr` points to the next. We call the items nodes:
+(define (make-node x prev next)
+  (cons x (cons prev next)))
+(define (data-node node) (car node))
+(define (prev-node node) (cadr node))
+(define (next-node node) (cddr node))
+(define (set-prev! node prev) (set-car! (cdr node) prev))
+(define (set-next! node next) (set-cdr! (cdr node) next))
+;; deque representation
+(define (front-ptr dq) (car dq))
+(define (rear-ptr dq)  (cdr dq))
+(define (set-front-ptr! dq x) (set-car! dq x))
+(define (set-rear-ptr!  dq x) (set-cdr! dq x))
+(define (make-deque) (cons '() '()))
+;;; deque operations
+(define (empty-deque? dq) (null? (front-ptr dq)))
+(define (front-deque dq)
+  (if (empty-deque? dq)
+    (error "FRONT called with an empty deque" dq)
+    (data-node (front-ptr dq))))
+(define (rear-deque dq)
+  (if (empty-deque? dq)
+    (error "REAR called with an empty deque" dq)
+    (data-node (rear-ptr dq))))
+(define (front-insert-deque! dq x)
+  (cond ((empty-deque? dq)
+         (let ((node (make-node x '() '())))
+           (set-front-ptr! dq node)
+           (set-rear-ptr! dq node)
+           dq))
+        (else
+          (let* ((old-front (front-ptr dq))
+                 (new-front (make-node x '() old-front)))
+            (set-prev! old-front new-front)
+            (set-front-ptr! dq new-front)
+            dq))))
+(define (rear-insert-deque! dq x)
+  (cond ((empty-deque? dq)
+         (front-insert-deque! dq x))
+        (else
+          (let* ((old-rear (rear-ptr dq))
+                 (new-rear (make-node x old-rear '())))
+            (set-next! old-rear new-rear)
+            (set-rear-ptr! dq new-rear)
+            dq))))
+(define (front-delete-deque! dq)
+  (cond ((empty-deque? dq)
+         (error "FRONT-DELETE! called with an empty deque" dq))
+        (else
+          (let* ((old-front (front-ptr dq))
+                 (new-front (next-node old-front)))
+            (cond ((null? new-front)
+                   (set-front-ptr! dq '())
+                   (set-rear-ptr! dq '())
+                   dq)
+                  (else (set-prev! new-front '())
+                        (set-front-ptr! dq new-front)
+                        dq))))))
+(define (rear-delete-deque! dq)
+  (cond ((empty-deque? dq)
+         (error "REAR-DELETE! called with an empty deque" dq))
+        (else
+          (let* ((old-rear (rear-ptr dq))
+                 (new-rear (prev-node old-rear)))
+            (cond ((null? new-rear)
+                   (front-delete-deque! dq))
+                  (else (set-next! new-rear '())
+                        (set-rear-ptr! dq new-rear)
+                        dq))))))
+(define (print-deque dq)
+  (define (iter node first)
+    (cond
+      ((not (null? node))
+       (if (not first) (display ", "))
+       (display (data-node node))
+       (iter (next-node node) #f))))
+  (display "[")
+  (iter (front-ptr dq) #t)
+  (display "]")
+  (newline))
