@@ -42,7 +42,7 @@
 ;;; ex 1.4
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
-;; The operator evaluates to + (addition) when b is positive, and to -
+;; The operator evaluates to `+` (addition) when b is positive, and to `-`
 ;; (subtraction) when b is negative. Subtracting a negative is equivalent to
 ;; adding its absolute value, so this procedure performs a + |b| in all cases.
 
@@ -52,8 +52,8 @@
   (if (= x 0) 0 y))
 (test 0 (p)) ; => no value
 ;; applicative: The expression will never return a value because the interpreter
-;; tries to evaluate (p) and enters endless recursion.
-;; normal: The expression will evaluate to zero. The (p) expression is never
+;; tries to evaluate `(p)` and enters endless recursion.
+;; normal: The expression will evaluate to zero. The `(p)` expression is never
 ;; evaluated because it is not necessary to do so.
 
 ;;; example 1.1.7 (Newton sqrt)
@@ -78,7 +78,7 @@
 ;; never end.
 
 ;;; ex 1.7
-;; The good-enough? predicate does not work well for small numbers because the
+;; The `good-enough?` predicate does not work well for small numbers because the
 ;; tolerance is a fixed amount. It can't be too small or else it will take too
 ;; long to compute the square roots of large numbers, but at the same time, it
 ;; is impossible to use the procedure for values smaller than the tolerance.
@@ -134,7 +134,7 @@
   (if (= a 0)
     b
     (i+ (dec a) (inc b))))
-;; r+ generates a recursive process
+;; `r+` generates a recursive process.
 (r+ 4 5)
 (inc (r+ 3 5))
 (inc (inc (r+ 2 5)))             ; expanding
@@ -145,7 +145,7 @@
 (inc (inc 7))
 (inc 8)
 9
-;; i+ generates an iterative process
+;; `i+` generates an iterative process.
 (i+ 4 5)
 (i+ 3 6)
 (i+ 2 7)
@@ -154,7 +154,6 @@
 9
 
 ;;; ex 1.10
-
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
@@ -166,7 +165,7 @@
 (A 3 3)  ; => 65536
 (define (f n) (A 0 n))   ; 2n
 (define (g n) (A 1 n))   ; 2^n
-(define (h n) (A 2 n))   ; 2^2^2... (n 2s)
+(define (h n) (A 2 n))   ; 2^2^2^... (n 2s)
 (define (k n) (* 5 n n)) ; 5n^2
 
 ;;; ssec 1.2.2 (Fibonacci)
@@ -219,14 +218,14 @@
        (pascal-tri (- i 1) j))))
 
 ;;; ex 1.13
-;; see exercise-1.13.pdf
+;; see proofs.pdf
 
 ;;; ex 1.14
 ;; count-change
-;; steps: Θ(n^5) because there are 5 types of coins
-;; space: Θ(n) because the max depth of the tree grows linearly
+;; steps: O(n^5) because there are 5 types of coins
+;; space: O(n) because the max depth of the tree grows linearly
 ;; Remember: for a tree-recursive process, space is proportional to the maximum
-;; depth of the tree, and the number of steps is the number of 
+;; depth of the tree, and the number of steps is the number of leaves.
 
 ;;; ex 1.15
 (define (cube x) (* x x x))
@@ -235,34 +234,33 @@
   (if (<= (abs theta) 0.1)
     theta
     (p (sine (/ theta 3.0)))))
-;; (a) The procedure p is evaluated five times when (sine 12.15 is evaluated:
+;; (a) The procedure `p` is evaluated five times when `(sine 12.15)` is eval'd.
 (sine 12.15)
 (p (sine 4.05))
 (p (p (sine 1.35)))
 (p (p (p (sine 0.45))))
 (p (p (p (p (sine 0.15)))))
-(p (p (p (p (p (sine 0.05)))))) ; five times when theta ≤ 0.1
+(p (p (p (p (p (sine 0.05)))))) ; five times when theta <= 0.1
 ;; (b) The order of growth for sine:
-;; During the process, p is evaluated n times such that a/3^n ≤ 0.1. Solving for
-;; n gives us n = log(10a)/log(3), therefore the number of steps for sine grows
-;; as Θ(log(n)).
-;; The interpreter must maintain the stack for that number of calls to p,
-;; therfore the space complexity is also Θ(log(n)).
+;; During the process, `p` is evaluated n times such that a/3^n <= 0.1. Solving
+;; for n gives us n = log(10a)/log(3), therefore the number of steps for sine
+;; grows as O(log(n)). The interpreter must maintain the stack for that number
+;; of calls to `p`, therfore the space complexity is also O(log(n)).
 
 ;;; ssec 1.2.4 (exponentiation)
-;; steps Θ(n), space Θ(n)
+;; steps O(n), space O(n)
 (define (expt-rec b n)
   (if (= n 0)
     1
     (* b (expt-rec b (- n 1)))))
-;; steps Θ(n), space Θ(1)
+;; steps O(n), space O(1)
 (define (expt-it b n)
   (define (helper counter prod)
     (if (= counter 0)
       prod
       (helper (- count 1) (* prod b))))
   (helper n 1))
-;; steps Θ(log(n)), space Θ(log(n))
+;; steps O(log(n)), space O(log(n))
 (define (fast-expt-rec b n)
   (cond ((= n 0) 1)
         ((even? n) (square (fast-expt-rec b (/ n 2))))
@@ -312,7 +310,7 @@
   (helper 1 0 0 1 n))
 
 ;;; ssec 1.2.5 (GCD)
-;; iterative, steps θ(log(n))
+;; iterative; O(log(n)) steps
 (define (gcd a b)
   (if (= b 0)
     a
@@ -331,8 +329,8 @@
 (gcd 2 0)
 2
 ;; normal order: 18 remainder operations
-;; Each b gets evaluated once in the (= b 0) predicate (14 ops).
-;; The final a gets evaluated in the end (4 ops).
+;; Each `b` gets evaluated once in the `(= b 0)` predicate (14 ops).
+;; The final `a` gets evaluated in the end (4 ops).
 ;; 14 + 4 = 18
 (gcd 206 40)
 (gcd 40 (remainder 206 40))
@@ -424,7 +422,7 @@
 ; 1000003 *** .0013530254364013672
 ; 1000033 *** .0011339187622070312
 ; 1000037 *** .0013699531555175781
-;; The data seems to bear out the Θ(sqrt(n)) prediction. The larger the numbers,
+;; The data seems to bear out the O(sqrt(n)) prediction. The larger the numbers,
 ;; the closer the growth between powers of ten is to the square root of ten.
 ;; This result is compatible with the notion that programs on the machine run in
 ;; time proportional to the number of steps required for the computation.
@@ -459,7 +457,7 @@
 ; 1000033 *** .001055002212524414  (0.930x)
 ; 1000037 *** .0010900497436523438 (0.796x)
 ;; The expectation of half time was not confirmed. In fact, this method is
-;; actually SLOWER for primes under 10000. Even for seven-figure primes, this
+;; actually slower for primes under 10000. Even for seven-figure primes, this
 ;; method only shaves off 20% of the time. There was probably some error in
 ;; these measurements -- the time measured is too small. Other processes on the
 ;; computer and random factors might have played a role. I was surprised that
@@ -492,27 +490,27 @@
 ; 1000003 *** .005592823028564453
 ; 1000033 *** .004972934722900391
 ; 1000037 *** .0043179988861083984
-;; Since the Fermat test has Θ(log(n)) grwoth, I expected the time to the primes
+;; Since the Fermat test has O(log(n)) grwoth, I expected the time to the primes
 ;; near 1000000 to be only a bit greater than the time needed to test primes
 ;; near 1000. The data bears this out -- for each additional order of magnitude
 ;; of the primes, the time required increases by a small, constant amount.
 ;; Specifically, primes that are 10 times larger take about 0.001 seconds longer
 ;; to test using the Fermat method. It should be noted that these results may be
-;; dependent on the choice of 100 as the second argument to fast-prime? (the
+;; dependent on the choice of 100 as the second argument to `fast-prime?` (the
 ;; exercise did not specify what value to use).
 
 ;;; ex 1.25
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
-;; This procedure works, but it is not as efficient. The Fermat test takes MUCH
+;; This procedure works, but it is not as efficient. The Fermat test takes much
 ;; longer using this version of expmod -- longer by three orders of magnitude.
-;; While fast-expt is reasonably fast, the original expmod procedure is much
+;; While `fast-expt` is reasonably fast, the original `expmod` procedure is much
 ;; faster. The key to its implmentation is not only successive squaring (which
-;; fast-expt does as well in this new procedure), but that it calls remainder
+;; `fast-expt` does as well in this new procedure), but that it calls remainder
 ;; between each squaring. This new procedure does not, so the value becomes
 ;; enormous (requiring bignums, which is slow) by the time the remainder is
-;; finally taken. Suppose we test the primality of n = 9, choosing a = 5.
-;; Using the old definiton of expmod, the process will evolve like so:
+;; finally taken. Suppose we test the primality of n = 9, choosing a = 5. Using
+;; the old definiton of `expmod`, the process will evolve like so:
 (define r remainder)
 (define s square)
 (expmod 5 9 9)
@@ -532,23 +530,23 @@
 (r (* 5 7) 9)
 (r 35 9)
 8
-;; Compare this to the evolution of the process using the new expmod:
+;; Compare this to the evolution of the process using the new `expmod`:
 (expmod 5 9 9)
 (r (fast-expt 5 9) 9)
 (r 1953125 9)
-;; The original expmod doesn't need to deal with numbers anywhere near that
+;; The original `expmod` doesn't need to deal with numbers anywhere near that
 ;; size, so it is much more efficient. This number may seem okay, but it will
 ;; grow exponentially with n (by definition), and will quickly require arbitrary
 ;; precision integer math (bignum), which is much slower than 32-bit arithmetic.
 
 ;;; ex 1.26
-;; When the square combination is evaluated, the expmod combiantion is evaluated
-;; once and then its value is substituted into the square compound procedure
-;; according to the substitution model. When the squaring is written as an
-;; explicit multiplication, the expmod combination is evaluated TWICE. The
-;; interpreter has no way of knowing that they will have the same value. This
-;; transforms a linear recusive process into a tree-recursive process. The time
-;; complexity of this tree-recursive process is Θ(log(2^n)), or simply Θ(n).
+;; When the `square` combination is evaluated, the `expmod` combination is
+;; evaluated once and then its value is substituted into the `square` compound
+;; procedure according to the substitution model. When the squaring is written
+;; as an explicit multiplication, the `expmod` combination is evaluated twice.
+;; The interpreter has no way of knowing that they will have the same value.
+;; This transforms a linear recusive process into a tree-recursive process. The
+;; time complexity of this tree-recursive process is O(log(2^n)), or O(n).
 
 ;;; ex 1.27
 (define (fermat-all? n)
@@ -631,7 +629,7 @@
            1
            (+ 2 (* 2 (remainder k 2))))))
     (* h (sum term 0 inc n))))
-;; The integral procedure is a bit inaccurate, whereas the simpson procedure
+;; The integral procedure is a bit inaccurate, whereas the `simpson` procedure
 ;; gives the exact answer even when n = 2. This is much better.
 (integral cube 0 1 0.01)  ; => 0.24998750000000042
 (integral cube 0 1 0.001) ; => 0.249999875000001
@@ -722,7 +720,7 @@
 (define (f g) (g 2))
 (f square) ; => 4
 (f (lambda (z) (* z (+ z 1)))) ; => 6
-;; If we try evaluating the combination (f f), we get the following process:
+;; If we try evaluating the combination `(f f)`, we get the following process:
 (f f)
 (f 2)
 (2 2)
@@ -731,7 +729,7 @@
 
 ;;; ssec 1.3.3 (procs as general methods)
 ;; half-interval method for finding zeros
-;; time complexity: Θ(log(L/T)) where L is original |a-b| and T is tolerance
+;; time complexity: O(log(L/T)) where L is original |a - b| and T is tolerance
 (define tolerance 0.00001)
 (define (close-enough? x y)
   (< (abs (- x y)) tolerance))
@@ -766,7 +764,8 @@
 (fixed-point cos 1.0) ; => 0.7390822985224023
 
 ;;; ex 1.35
-;; see exercise-1.35.pdf
+;; see proofs.pdf
+(/ (+ 1 (sqrt 5)) 2)                        ; => 1.618033988749895
 (fixed-point (lambda (x) (+ 1 (/ x))) 42.0) ; => 1.6180328499442242
 
 ;;; ex 1.36
@@ -891,8 +890,10 @@
 ((double (double (double (lambda (x) (inc (inc x)))))) 5)
 ((double (double (lambda (x) (inc (inc (inc (inc x))))))) 5)
 ((double (lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc x)))))))))) 5)
-((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc x))))))))))))))))) 5)
-(inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc 5))))))))))))))))
+((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
+   (inc (inc (inc x))))))))))))))))) 5)
+(inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
+   (inc 5))))))))))))))))
 21
 
 ;;; ex 1.42

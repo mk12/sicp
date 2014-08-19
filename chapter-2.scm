@@ -263,7 +263,7 @@
 ;; for the approximate percent tolerance of the product of two intervals in
 ;; terms of the tolerances of the factors: it is their sum. Assuming all numbers
 ;; are positive, we have
-;;     [a,b] × [c,d] = [ac,bd].
+;;     [a,b] * [c,d] = [ac,bd].
 ;; We can define a single interval in terms of its centre and percentage:
 ;;     i = [c-cp/100,c+cp/100].
 ;; Factoring out the centre gives us
@@ -301,7 +301,7 @@
       (add-interval (div-interval one r1)
                     (div-interval one r2)))))
 ;; Lem is right. The uncertainty of the result is different for mathematically
-;; equivalent expressions calculated by par1 and par2:
+;; equivalent expressions calculated by `par1` and `par2`:
 (define r1 (make-center-percent 10000 5))
 (define r2 (make-center-percent 330 10))
 (percent (par1 r1 r2)) ; => 19.931607019958708
@@ -331,7 +331,7 @@
 ;;; ex 2.16
 ;; In general, equivalent expressions may lead to different answers because
 ;; identical intervals are treated indepedently even if they represent the same
-;; measurement. This is called the _dependency problem_. For complicated
+;; measurement. This is called the dependency problem. For complicated
 ;; functions, it is not always possible to eliminate repetitions of an interval
 ;; in the expression, so there is an unwanted expansion in the resulting
 ;; intervals. It is not possible to write an interval arithmetic package that
@@ -381,12 +381,12 @@
              coins)))))
 (cc 100 us-coins) ; => 292
 (cc 100 uk-coins) ; => 104561
-;; The order of the coin value list does not affect the answer produced by cc:
+;; The order of the coin value list does not affect the answer produced by `cc`:
 (cc 100 us-coins)            ; => 292
 (cc 100 (reverse us-coins))  ; => 292
 (cc 100 (list 5 50 1 25 10)) ; => 292
 ;; This is because the cc algorithm does not assume the coin values are sorted
-;; in any particular order. It recurs on the cdr of the list, so it will always
+;; in any particular order. It recurs on the `cdr` of the list, so it will always
 ;; be able to reach the end of the list unless it reaches one of the other base
 ;; cases first.
 
@@ -442,8 +442,8 @@
 ;; (in that it is made up of pairs), but this is not a sequence. Louis is trying
 ;; to use cons to add an element to the end a sequence, but this is not
 ;; possible. To add something to the end of a sequence, you must walk all the
-;; way to its end. He could use append instead of cons to achieve this, but this
-;; would end up being much less efficient than the recursive map.
+;; way to its end. He could use `append` instead of `cons` to achieve this, but
+;; this would end up being much less efficient than the recursive map.
 
 ;;; ex 1.23
 (define (for-each f xs)
@@ -593,10 +593,10 @@
               (map (lambda (set) (cons first-item set))
                    rest)))))
 ;; This works because we can define the powerset recursively like this:
-;; 1. The powerset of an empty set is (()).
+;; 1. The powerset of an empty set is {{}}.
 ;; 2. Given a set S and its powerset P(S), the powerset of S' (the set formed by
 ;;    adding the element x to S) is P(S'), and P(S') is equal to the union of
-;;    P(S) and {R ∪ {x} | R ∈ P(S)}.
+;;    P(S) and {R union {x} | R in P(S)}.
 ;; These form the base case and the natural recursion for the poweset procedure,
 ;; and they are sufficient to construct the powerset of any set.
 
@@ -781,7 +781,7 @@
 ;; evaluates the enumeration multiple times, which does not significantly affect
 ;; performance. Evaluating the rercusive call multiple times is wasteful. Louis
 ;; Reasoner could still use the interchanged version if he bound the value of
-;; the recursive call in a let-binding surrounding the flatmap application.
+;; the recursive call in a let-binding surrounding the `flatmap` application.
 
 ;;; example 2.2.4 (picture language)
 (define (flipped-pairs painter)
@@ -1043,10 +1043,10 @@
 (equal? '(this is a list) '(this (is a) list)) ; => #f
 
 ;;; ex 2.55
-;; The expression ''abracadabra is a shortant for (quote (quote abracadabra)).
-;; This is the same as '(quote abracadabra), and it evaluates to a list with two
-;; symbols: (quote abracadabra). Taking the car of this gives you the first
-;; item, which is the symbol quote. This is what the interpreter prints.
+;; `''abracadabra` is a shortant for `(quote (quote abracadabra))`. This is the
+;; same as `'(quote abracadabra)`, and it evaluates to a list with two symbols:
+;; `(quote abracadabra)`. Taking the car of this gives you the first item, which
+;; is the symbol `quote`. This is what the interpreter prints.
 
 ;;; example 2.3.2 (symbolic differentiation)
 (define (deriv expr var)
@@ -1197,14 +1197,14 @@
 (define adjoin-set cons)
 (define union-set append)
 ;; intersection-set stays the same
-;; Efficiency: element-of-set? is still Θ(n); adjoin-set is Θ(1).
+;; Efficiency: element-of-set? is still O(n); adjoin-set is O(1).
 ;; +------------------+----------+--------+
 ;; | Function         | no dupes | dupes  |
 ;; +------------------+----------+--------+
-;; | element-of-set   | Θ(n)     | Θ(n)   |
-;; | adjoin-set       | Θ(n)     | Θ(1)   |
-;; | union-set        | Θ(n^2)   | Θ(n)   |
-;; | intersection-set | Θ(n^2)   | Θ(n^2) |
+;; | element-of-set   | O(n)     | O(n)   |
+;; | adjoin-set       | O(n)     | O(1)   |
+;; | union-set        | O(n^2)   | O(n)   |
+;; | intersection-set | O(n^2)   | O(n^2) |
 ;; +------------------+----------+--------+
 ;; It looks like it is always more efficient with duplicates. However, the n
 ;; values become much larger with duplicates for obvious reasons. For small sets
@@ -1301,14 +1301,14 @@
 ;; (a) Yes, the two procedures produce the same result for every tree. Also,
 ;; from this sample input, it seems that they always produce a sorted list,
 ;; which means that different trees (balanced or otherwise) representing the
-;; same set get transformed into the same list. The trees t3, t4, and t5 and the
-;; trees from Figure 2.16.
+;; same set get transformed into the same list. The trees `t3`, `t4`, and `t5`
+;; and the trees from figure 2.16.
 ;; (b) The second procedure performs one cons operation for each node of the
-;; tree, so it has order of growth Θ(n). The first procedure uses append. Append
-;; is Θ(n). In the worst case, we would have n append steps for each of the n
-;; nodes, meaning Θ(n^2). However, the tree is balanced, so the number of append
-;; steps is cut in half on each recursive application. We have that for each of
-;; the n steps, and so the order of growth is Θ(n*log(n)).
+;; tree, so it has order of growth O(n). The first procedure uses `append`,
+;; which is O(n). In the worst case, we would have n `append` steps for each of
+;; the n nodes, meaning O(n^2). However, the tree is balanced, so the number of
+;; `append` steps is cut in half on each recursive application. We have that for
+;; each of the n steps, and so the order of growth is O(n*log(n)).
 
 ;;; ex 2.64
 (define (list->tree elements)
@@ -1327,26 +1327,27 @@
            (remaining-elts (cdr right-result)))
       (cons (make-tree this-entry left-tree right-tree)
             remaining-elts))))
-;; (a) The procedure partial-tree accepts a list elts and a number n as
-;; arguments. It returns a new list which is like elts but has the first n
+;; (a) The procedure `partial-tree` accepts a list `elts` and a number `n` as
+;; arguments. It returns a new list which is like `elts` but has the first `n`
 ;; elements replaced by a tree representing that sublist. It does this by
-;; recursively calling partial-tree on first and second half of the n elements,
-;; then creating a tree with those subtrees (the car of the recursive
-;; application) and with the middle value (the n/2th element of elts) as the
-;; node value. This the tree producd by (list->tree '(1 3 5 7 9 11)):
+;; recursively calling `partial-tree` on first and second half of the `n`
+;; elements, then creating a tree with those subtrees (the `car` of the
+;; recursive application) and with the middle value (the n/2th element of
+;; `elts`) as the node value.
+;; This the tree produced by `(list->tree '(1 3 5 7 9 11))`:
 ;   5
 ;  / \
 ; 1  9
 ; \  /\
 ; 3 7 11
-;; (b) The procedure list->tree only needs to visit each element in the list
-;; once, and it applies cons for each one, so it has Θ(n) time complexity. Just
-;; because it is tree-recursive does not imply Θ(n^2) or Θ(log(n)) or any other
+;; (b) The procedure `list->tree` only needs to visit each element in the list
+;; once, and it applies cons for each one, so it has O(n) time complexity. Just
+;; because it is tree-recursive does not imply O(n^2) or O(log(n)) or any other
 ;; specific order of growth.
 
 ;;; ex 2.65
-;; The tree->list conversion, the union/intersection on ordered lists, and the
-;; list->tree conversion are all Θ(n), so combined they are still Θ(n).
+;; The `tree->list` conversion, the union/intersection on ordered lists, and the
+;; `list->tree` conversion are all O(n), so combined they are still O(n).
 (define (union-set set1 set2)
   (define (union-list l1 l2)
     (cond ((null? l1) l2)
@@ -1524,11 +1525,11 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 
 ;;; ex 2.72
 ;; The number of steps required to encode the most frequent symbol in the
-;; alphabet of n symbols with encode-symbol grows as Θ(n). The procedure only
-;; looks down one branch, and so it must apply the procedure element-of-set?
+;; alphabet of n symbols with `encode-symbol` grows as O(n). The procedure only
+;; looks down one branch, and so it must apply the procedure `element-of-set?`
 ;; once. This procedure has linear time complexity with resepct to the number of
 ;; elements in the set, since it is represented as an unordered list. For the
-;; least frequent symbol, the number of steps grows as Θ(n^2). At each of n
+;; least frequent symbol, the number of steps grows as O(n^2). At each of n
 ;; nodes through the depth of the tree, we have at most n comparisons when
 ;; checking if the symbol is in the set. (If the tree were balanced, it would be
 ;; Θ(n*log(n)), but we didn't talk about that at all for Huffman trees.)
@@ -1713,11 +1714,12 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (define operator car)
 (define operands cdr)
 ;; (a) We wrote the deriv procedure as a data-direction type dispatch. The
-;; procedure dispatches on the operator, which is the car of an expression. We
+;; procedure dispatches on the operator, which is the `car` of an expression. We
 ;; can't assimilate atomic types like numbers and variables (which are symbols)
-;; into this dispatch because they don't have an identifying tag in the car --
-;; they have no car or cdr at all. If we really wanted to, we could assimilate
-;; them by dispatching not on the operator, but on the (type exp) using this:
+;; into this dispatch because they don't have an identifying tag in the `car` --
+;; they have no `car` or `cdr` at all. If we really wanted to, we could
+;; assimilate them by dispatching not on the operator, but on the `(type exp)`
+;; using this:
 (define (type exp)
   (cond ((number? exp) 'number)
         ((variable? exp) 'variable)
@@ -1750,15 +1752,15 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
       (deriv (base power) var)))
   (put 'deriv '** deriv-power)
   'done)
-;; (d) If we wanted to instead use (get (operator exp) 'deriv) to get the
+;; (d) If we wanted to instead use `(get (operator exp) 'deriv)` to get the
 ;; appropriate procedure, we have to change the order of the arguments given to
 ;; `put` in the package installation procedures.
 
 ;;; ex 2.74
-;; (a) Each division must implement the get-record procedure. This gets
+;; (a) Each division must implement the `get-record` procedure. This gets
 ;; dispatched based on the divison symbol, the type tag on the file. We have
-;; chosen the structure (division file), where the car is the type information
-;; and the cdr is the division-specific set of records.
+;; chosen the structure `(division . file)`, where the `car` is the type
+;; information and the `cdr` is the division-specific set of records.
 (define (make-file division records)
   (cons division file))
 (define file-division car)
@@ -1781,9 +1783,9 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
     #f
     (or (get-record (car files) employee-name)
         (find-employee-record employee-name (cdr files)))))
-;; (d) They must install 'get-record and 'get-salary generic procedures into the
-;; data-directed dispatch system. These procedures must use the division's name
-;; as their dispatch key.
+;; (d) They must install `'get-record` and `'get-salary` generic procedures into
+;; the data-directed dispatch system. These procedures must use the division's
+;; name as their dispatch key.
 
 ;;; ssec 2.4.3 (message passing)
 (define (make-from-real-imag a b)
@@ -1815,7 +1817,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; [types] It's easy: you just need to write new specific procedures and install
 ;; them into the system with their identifying dispatch type.
 ;; [ops] After implementing a new specific procedure in each of the package
-;; installer procedures, you must write a procedure that invokes apply-generic.
+;; installer procedures, you must write a procedure invoking `apply-generic`.
 ;; 3. message-passing style
 ;; [types] Simply create a new type that responds to the same message.
 ;; [ops] Write a specific procedure for all existing types so that they respond
@@ -1911,10 +1913,10 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   ((get 'make-from-mag-ang 'complex) r a))
 
 ;;; ex 2.77
-;; This works because this allows apply-generic to dispatch to the complex
-;; number package, stripping away the 'complex tag and going down to the
-;; 'rectangular or 'polar level. Here is the process generateed when we try to
-;; find the magnitude of the object shown in Figure 2.24:
+;; This works because this allows `apply-generic` to dispatch to the complex
+;; number package, stripping away the `'complex` tag and going down to the
+;; `'rectangular` or `'polar` level. Here is the process generateed when we try
+;; to find the magnitude of the object shown in figure 2.24:
 (magnitude z)
 (magnitude '(complex rectangular 3 . 4))
 (apply-generic 'magnitude '(complex rectangular 3 . 4))
@@ -1929,8 +1931,8 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (sqrt (+ 9 16))
 (sqrt 25)
 5
-;; Apply-generic is invoked twice. Once on the complex number z and once on the
-;; rectangular representation within the complex number package we defined
+;; `apply-generic` is invoked twice. Once on the complex number `z` and once on
+;; the rectangular representation within the complex number package we defined
 ;; earlier. Each generic application strips off one of the two type tags.
 
 ;;; ex 2.78
@@ -1998,17 +2000,17 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (put-coercion 'complex 'complex identity)
 (define (exp x y) (apply-generic 'exp x y))
 (put 'exp '(scheme-number scheme-number) (lambda (x y) (tag (expt x y))))
-;; (a) If we call exp with two complex numbers as arguments, the process will be
-;; stuck in an infinite recursion because it keeps coercing the first argument
-;; to the type of the second, although this brings it no closer to being able to
-;; find a correct procedure.
+;; (a) If we call `exp` with two complex numbers as arguments, the process will
+;; be stuck in an infinite recursion because it keeps coercing the first
+;; argument to the type of the second, although this brings it no closer to
+;; being able to find a correct procedure.
 ;; (b) Louis is wrong. Nothing needs to be done to handle coercion with
 ;; arguments of the same type, because if there is no procedure installed for
 ;; that type then coercion doesn't help. This is assuming that the package
 ;; consists only of operations on two arguments of the same type. If an
 ;; operation had two arguments of different types, there may be multiple
 ;; possible coercions that would succeed in finding a specific procedure.
-;; (c) This apply-generic doesn't coerce if two arguments are of the same type.
+;; (c) This `apply-generic` doesn't coerce two arguments of the same type.
 (define (apply-generic-error op type-tags)
   (error "No method for these types" (list op type-tags)))
 (define (apply-generic op . args)
@@ -2164,11 +2166,12 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
           (else (apply-generic-error op type-tags)))))
 
 ;;; ex 2.86
-;; The procedures add, sub, mul, and div use apply-generic on their respective
-;; operations (see ssec 2.5.1, immediately after section 2.5). The main changes
-;; for this exercise are replacing instances of primitive operations like +, -,
-;; *, and / with the generic procedures. Also, we are assuming that sin, cos,
-;; and atan are implemented as generic procedures -- I don't feel like doing it.
+;; The procedures `add`, `sub`, `mul`, and `div` use `apply-generic` on their
+;; respective operations (see subsection 2.5.1, immediately after section 2.5).
+;; The main changes for this exercise are replacing instances of primitive
+;; operations like `+`, `-`, `*`, and `/` with the generic procedures. Also, we
+;; are assuming that `sin`, `cos`, and `atan` are implemented as generic
+;; procedures -- I don't feel like doing it.
 (define (square x) (mul x x))
 (define (install-rectangular-package)
   (define real-part car)
@@ -2370,8 +2373,8 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (define (first-term term-list)
   (make-term (- (length term-list) 1)
              (car term-list)))
-;; Procedures the-empty-termlist, rest-terms, empty-termlist?, make-term, order,
-;; and coeff remain the same as before.
+;; Procedures `the-empty-termlist`, `rest-terms`, `empty-termlist?`,
+;; `make-term`, `order`, and `coeff` remain the same as before.
 
 ;;; ex 2.90
 (define make-term list)
@@ -2585,13 +2588,13 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (define q2 (mul p1 p3))
 (greatest-common-divisor q1 q2)
 ;; => (polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
-;; The greatest-common-divisor procedure uses gcd-terms. This recurs by taking
-;; the GCD of q2 and the remainder of dividing q1 by q2:
+;; The `greatest-common-divisor` procedure uses `gcd-terms`. This recurs by
+;; taking the GCD of q2 and the remainder of dividing q1 by q2:
 (cadr (div q1 q2))
 ;; => (polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
 ;; This remainder polynomial has noninteger coefficients, so the final GCD
 ;; returned also has noninteger coefficients. However, if we look closely at the
-;; GCD of q1 and q2, it is clear that we can factor out 1458/169 to get p1:
+;; GCD of `q1` and `q2`, it is clear that we can factor out 1458/169:
 (equal? p1
         (mul (greatest-common-divisor q1 q2)
              (make-polynomial 'x '(sparse-termlist (0 169/1458)))))
