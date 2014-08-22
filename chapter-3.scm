@@ -663,3 +663,140 @@ z2 ; => ((a b) a b)
   (iter (front-ptr dq) #t)
   (display "]")
   (newline))
+
+;;; ssec 3.3.3 (representing tables)
+;; one-dimesional tables
+(define (lookup key table)
+  (let ((record (assoc key (cdr table))))
+    (if record
+      (cdr record)
+      #f)))
+(define (assoc key records)
+  (cond ((null? records) #f)
+        ((equal? key (caar records)) (car records))
+        (else (assoc key (cdr records)))))
+(define (insert! key value table)
+  (let ((record (assoc key (cdr table))))
+    (if record
+      (set-cdr! record value)
+      (set-cdr! table
+                (cons (cons key value)
+                      (cdr table)))))
+  'ok)
+(define (make-table) (list '*table*))
+;; two-dimensional tables
+(define (lookup key-1 key-2 table)
+  (let ((subtable (assoc key-1 (cdr table))))
+    (if subtable
+      (let ((record (assoc key-2 (cdr subtable))))
+        (if record
+          (cdr record)
+          #f))
+      #f)))
+(define (insert! key-1 key-2 value table)
+  (let ((subtable (assoc key-1 (cdr table))))
+    (if subtable
+      (let ((record (assoc key-2 (cdr subtable))))
+        (if record
+          (set-cdr! record value)
+          (set-cdr! subtable
+                    (cons (cons key-2 value)
+                          (cdr subtable)))))
+      (set-cdr! table
+                (cons (list key-1 (cons key-2 value))
+                      (cdr table)))))
+  'ok)
+;; procedural implementation
+(define (make-table)
+  (let ((local-table (list '*table*)))
+    (define (lookup key-1 key-2)
+      (let ((subtable (assoc key-1 (cdr local-table))))
+        (if subtable
+          (let ((record (assoc key-2 (cdr subtable))))
+            (if record (cdr record) #f))
+          #f)))
+    (define (insert! key-1 key-2 value)
+      (let ((subtable (assoc key-1 (cdr table))))
+        (if subtable
+          (let ((record (assoc key-2 (cdr subtable))))
+            (if record
+              (set-cdr! record value)
+              (set-cdr! subtable
+                        (cons (cons key-2 value)
+                              (cdr subtable)))))
+          (set-cdr! table
+                    (cons (list key-1 (cons key-2 value))
+                          (cdr table)))))
+      'ok)
+    (define (dispatch m)
+      (cond ((eq? m 'lookup-proc) lookup)
+            ((eq? m 'insert-proc!) insert!)
+            (else (error "Unknown operation: TABLE" m))))
+    dispatch))
+(define operation-table (make-table))
+(define get (operation-table 'lookup-proc))
+(define put (operation-table 'insert-proc!))
+
+;;; ex 3.24
+;; Other than the argument `same-key?` and the interal procedure `assoc`, this
+;; is the same code as above.
+(define (make-table same-key?)
+  (define (assoc key records)
+    (cond ((null? records) #f)
+          ((same-key? key (caar records)) (car records))
+          (else (assoc key (cdr records)))))
+  (let ((local-table (list '*table*)))
+    (define (lookup key-1 key-2)
+      (let ((subtable (assoc key-1 (cdr local-table))))
+        (if subtable
+          (let ((record (assoc key-2 (cdr subtable))))
+            (if record (cdr record) #f))
+          #f)))
+    (define (insert! key-1 key-2 value)
+      (let ((subtable (assoc key-1 (cdr table))))
+        (if subtable
+          (let ((record (assoc key-2 (cdr subtable))))
+            (if record
+              (set-cdr! record value)
+              (set-cdr! subtable
+                        (cons (cons key-2 value)
+                              (cdr subtable)))))
+          (set-cdr! table
+                    (cons (list key-1 (cons key-2 value))
+                          (cdr table)))))
+      'ok)
+    (define (dispatch m)
+      (cond ((eq? m 'lookup-proc) lookup)
+            ((eq? m 'insert-proc!) insert!)
+            (else (error "Unknown operation: TABLE" m))))
+    dispatch))
+
+;;; ex 3.25
+;; The generalized n-dimensional table procedures are implemented recursively.
+;; On each recursive call, a key is stripped off the keys list and a deeper
+;; subtable is entered. The base case for the null list is not necessarily
+;; useful, but it makes sense. Not every entry needs to have a specific number
+;; of dimensions, but you cannot, for example, insert something at `'(a b)` and
+;; then try to insert something else at `'(a b c)`, because the former location
+;; already has an atomic value. The `assoc` and `make-table` procedures remain
+;; the same as before.
+(define (lookup keys table)
+  (if (null? keys)
+    (cdr table)
+    (let ((record (assoc (car keys) (cdr table))))
+      (if record
+        (lookup (cdr keys) record)
+        #f))))
+(define (insert! keys value table)
+  (define (iter keys table)
+    (if (null? keys)
+      (set-cdr! table value)
+      (let ((record (assoc (car keys) (cdr table))))
+        (if record
+          (iter (cdr keys) record)
+          (let ((record (list (car keys))))
+            (set-cdr! table (cons record (cdr table)))
+            (iter (cdr keys) record))))))
+  (iter keys table))
+
+;;; ex 3.26
