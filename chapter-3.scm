@@ -172,9 +172,9 @@
 
 ;;; ex 3.10
 ;; With or without the explicit state variable, `make-withdraw` creates objects
-;; with the same behaviour. The only difference with the expllicit variable in
+;; with the same behaviour. The only difference with the explicit variable in
 ;; the let-form is that there is an extra environment. Applying `make-writhdraw`
-;; creates E1 to bind 100 to `initial-amount`, and then the let-form dsugars to
+;; creates E1 to bind 100 to `initial-amount`, and then the let-form desugars to
 ;; a lambda application, creating a new environment E2. This environment holds
 ;; `balance`, beginning with the same value as `initial amount`. When we
 ;; evaluate `(W1 20)`, we create the environment E3 that binds `amount` to 20.
@@ -774,29 +774,150 @@ z2 ; => ((a b) a b)
 ;;; ex 3.25
 ;; The generalized n-dimensional table procedures are implemented recursively.
 ;; On each recursive call, a key is stripped off the keys list and a deeper
-;; subtable is entered. The base case for the null list is not necessarily
-;; useful, but it makes sense. Not every entry needs to have a specific number
-;; of dimensions, but you cannot, for example, insert something at `'(a b)` and
-;; then try to insert something else at `'(a b c)`, because the former location
-;; already has an atomic value. The `assoc` and `make-table` procedures remain
-;; the same as before.
-(define (lookup keys table)
-  (if (null? keys)
-    (cdr table)
-    (let ((record (assoc (car keys) (cdr table))))
-      (if record
-        (lookup (cdr keys) record)
-        #f))))
-(define (insert! keys value table)
-  (define (iter keys table)
+;; subtable is entered. The procedures `lookup` and `insert!` have an argument
+;; named `tor`, which means "table or record." A table is treated as a record
+;; whose key is its name and whose value is a list of records. The base case for
+;; the null list of keys is not necessarily useful, but it makes sense. The
+;; dimensions of the table do not need to be consistent, but be careful: If you
+;; have a value stored at `'(a b)` and then insert something at `'(a b c)`, that
+;; value will be overwitten with a fresh subtable for `c`.
+(define record-key car)
+(define record-val cdr)
+(define set-key! set-car!)
+(define set-val! set-cdr!)
+(define make-record cons)
+(define table-name record-key)
+(define table-records record-val)
+(define set-name! set-key!)
+(define set-records! set-val!)
+(define make-table make-record)
+(define (make-empty-table) (make-table '*table* '()))
+(define (assoc key records)
+  (cond ((null? records) #f)
+        ((equal? key (record-key (car records)))
+         (car records))
+        (else (assoc key (cdr records)))))
+(define (lookup keys tor)
+  (let ((val (record-val tor)))
     (if (null? keys)
-      (set-cdr! table value)
-      (let ((record (assoc (car keys) (cdr table))))
-        (if record
-          (iter (cdr keys) record)
-          (let ((record (list (car keys))))
-            (set-cdr! table (cons record (cdr table)))
-            (iter (cdr keys) record))))))
-  (iter keys table))
+      val
+      (if (list? val) ; tor is a table, val is a list of records
+        (let ((subtor (assoc (car keys) val)))
+          (if subtor
+            (lookup (cdr keys) subtor)
+            #f))
+        #f))))
+(define (insert! keys value tor)
+  (define (iter keys tor)
+    (if (null? keys)
+      (set-val! tor value)
+      (let ((records (table-records tor)))
+        (if (list? records)
+          (let ((subtor (assoc (car keys) records)))
+            (if subtor
+              (iter (cdr keys) subtor)
+              (let ((new-subtor (make-table (car keys) '())))
+                (set-records! tor (cons new-subtor records))
+                (iter (cdr keys) new-subtor))))
+          (begin (set-val! tor '())
+                 (iter keys tor))))))
+  (iter keys tor))
 
 ;;; ex 3.26
+;; In our current implementation, a table is the pair `(cons n rs)` where `n` is
+;; the name of the table and `rs` is a list of records, each record being a key
+;; consed to a value. With a binary tree implementation, instead of a list of
+;; records, we could have three things: a record (consisting of a key and a
+;; value), a left branch, and a right branch. Records down the left branch have
+;; smaller keys, and records down the right branch have larger keys. The keys
+;; can be anything, but the procdure `compare` must be defined on them such that
+;; `(compare k1 k2)` returns either `'=`, `'<`, or `'>`. We wouldn't need to
+;; have `'*table*` in this setup because we don't need to maintain an identity
+;; for a changing "first record." We can always navigate down the tree to insert
+;; a new record.
+(define record-key car)
+(define record-val cdr)
+(define set-key! set-car!)
+(define set-val! set-cdr!)
+(define make-record cons)
+(define table-record car)
+(define table-left cadr)
+(define table-right cddr)
+(define set-record! set-car!)
+(define (set-left!  table left)  (set-car! (cdr table) left))
+(define (set-right! table right) (set-cdr! (cdr table) right))
+(define (make-table record left right)
+  (cons record (cons left right)))
+(define (make-empty-table)
+  (make-table '() '() '()))
+(define (make-singleton key value)
+  (make-table (make-record key value) '() '()))
+(define (empty-table? table)
+  (null? (table-record table)))
+(define (lookup key table)
+  (define (iter table)
+    (if (or (null? table) (empty-table? table))
+      #f
+      (let* ((record (table-record table))
+             (order (compare key (record-key record))))
+        (cond ((eq? order '=) (record-val record))
+              ((eq? order '<) (iter (table-left table)))
+              ((eq? order '>) (iter (table-right table)))))))
+  (iter table))
+(define (insert! key value table)
+  (define (iter table)
+    (cond
+      ((null? table)
+       (error "Cannot insert into null: INSERT!" (list key value table)))
+      ((empty-table? table)
+       (set-record! table (make-record key value)))
+      (else
+        (let* ((record (table-record table))
+               (order (compare key (record-key record))))
+          (cond ((eq? order '=)
+                 (set-val! record value))
+                ((eq? order '<)
+                 (let ((subtable (table-left table)))
+                   (if (null? subtable)
+                     (set-left! table (make-singleton key value))
+                     (iter subtable))))
+                ((eq? order '>)
+                 (let ((subtable (table-right table)))
+                   (if (null? subtable)
+                     (set-right! table (make-singleton key value))
+                     (iter subtable)))))))))
+  (iter table))
+
+;;; ex 3.27
+(define memo-fib
+  (memoize
+    (lambda (n)
+      (cond ((= n 0) 0)
+            ((= n 1) 1)
+            (else (+ (memo-fib (- n 1))
+                     (memo-fib (- n 2))))))))
+(define (memoize f)
+  (let ((table (make-table)))
+    (lambda (x)
+      (let ((cached (lookup x table)))
+        (or cached
+            (let ((result (f x)))
+              (insert! x result table)
+              result))))))
+;; For the environment diagram, see `whiteboard/exercise-3.27.jpg`.
+;; The memoized procedure `memo-fib` computes the nth Fibonacci number in a
+;; number of steps proportional to `n` because it simply takes the sum of `n`
+;; numbers. When we evaluate `(memo-fib n)`, a tree-recursive process is
+;; generated and the tree descends until it reaches 0 and 1. These are the base
+;; cases of the recursive Fibonacci implementation. The results for these inputs
+;; are placed in the table, and then `(memo-fib 2)` requires only one step, the
+;; addition of 0 and 1, because the values are taken from the cache table. The
+;; pattern continues: `(memo-fib 3)` recurses on 1 and 2, and both return early
+;; because they are in the table. In general, we descend to the bottom of the
+;; tree once and then ascent it, never again going down and reaching duplicate
+;; leaves. This is twice `n` steps, so it grows as O(n). If we had defined
+;; `memo-fib` as `(memoize fib)`, this would not work because recursive calls
+;; would use `fib`, not `memo-fib`, and so we would still have an exponential
+;; number of steps. However, this aspect of the memoization would still work: if
+;; you evaluated `(memo-fib 42)` twice, the second time would take only the step
+;; of looking up a value in the table.
