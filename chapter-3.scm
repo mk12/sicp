@@ -491,7 +491,7 @@ z2 ; => ((a b) a b)
 (define set-front-ptr! set-car!)
 (define set-rear-ptr! set-cdr!)
 (define (empty-queue? q) (null? (front-ptr q)))
-(define (make-queue) (cons '() ()))
+(define (make-queue) (cons '() '()))
 (define (front-queue q)
   (if (empty-queue? q)
     (error "FRONT called with an empty queue" q)
@@ -990,4 +990,249 @@ z2 ; => ((a b) a b)
     (and-gate na nb c)
     (inverter c out)
     'ok))
-;; The time delay is `(+ and-gate-delay (* 2 inverter-delay))`.
+(define or-gate-delay
+  (+ and-gate-delay
+     (* 2 inverter-delay)))
+
+;;; ex 3.30
+;; The ripple carry adder circuit adds binary numbers in little endian order.
+;; The first wire in `as` represents the least significant bit of the number.
+(define (ripple-carry-adder as bs ss carry)
+  (define (iter as bs c-in ss)
+    (if (null? (cdr as))
+      (full-adder (car as) (car bs) c-in (car ss) carry)
+      (let ((c (make-wire)))
+        (full-adder (car as) (car bs) c-in (car ss) c)
+        (iter (cdr as) (cdr bs) c (cdr ss)))))
+  (define (fail msg)
+    (error (string-append msg ": RIPPLE-CARRY-ADDER")
+           (list as bs ss carry)))
+  (cond ((not (= (length as) (length bs) (length ss)))
+         (fail "Number size mismatch"))
+        ((null? as)
+         (error "Cannot add zero bits"))
+        (else (let ((c-in (make-wire)))
+                (set-signal! c-in 0)
+                (iter as bs c-in ss)
+                'ok))))
+(define half-adder-delay
+  (+ (max or-gate-delay
+          (+ and-gate-delay inverter-delay))
+     or-gate-delay))
+(define full-adder-delay
+  (+ (* 2 half-adder-delay)
+     or-gate-delay))
+(define (ripple-carry-adder-delay n)
+  (* n full-adder-delay))
+
+;;; ssec 3.3.4 (representing wires)
+(define (make-wire)
+  (let ((signal-value 0)
+        (action-procedures '()))
+    (define (set-signal! s)
+      (if (not (= signal-value s))
+        (begin (set! signal-value s)
+               (call-each action-procedures))
+        'done))
+    (define (add-action! proc)
+      (set! action-procedures
+        (cons proc action-procedures))
+      (proc))
+    (define (dispatch m)
+      (cond ((eq? m 'get-signal) signal-value)
+            ((eq? m 'set-signal!) set-signal!)
+            ((eq? m 'add-action!) add-action!)
+            (else (error "Unkown operation: WIRE" m))))
+    dispatch))
+(define (call-each procs)
+  (if (null? procs)
+    'done
+    (begin ((car procs))
+           (call-each (cdr procs)))))
+(define (get-signal wire) (wire 'get-signal))
+(define (set-signal! wire s) ((wire 'set-signal!) s))
+(define (add-action! wire a) ((wire 'add-action!) a))
+(define (after-delay delay-time action)
+  (add-to-agenda! (+ delay-time (current-time the-agenda))
+                  action
+                  the-agenda))
+(define (propagate)
+  (if (empty-agenda? the-agenda)
+    'done
+    (let ((first-item (first-agenda-item the-agenda)))
+      (first-item)
+      (remove-first-agenda-item! the-agenda)
+      (propagate))))
+
+;;; ssec 3.3.4 (sample simulation)
+(define (probe name wire)
+  (add-action!
+    wire
+    (lambda ()
+      (newline)
+      (display name)
+      (display " ")
+      (display (current-time the-agenda))
+      (display " New-value = ")
+      (display (get-signal wire)))))
+(define the-agenda (make-agenda))
+(define inverter-delay 2)
+(define and-gate-delay 3)
+(define or-gate-delay 5)
+(define input-1 (make-wire))
+(define input-2 (make-wire))
+(define sum (make-wire))
+(define carry (make-wire))
+(probe 'sum sum)     ; => sum 0 New-value = 0
+(probe 'carry carry) ; => carry 0 New-value = 0
+(half-adder input-1 input-2 sum carry) ; => ok
+(set-signal! input-1 1) ; => done
+(propagate)
+;; => sum 8 New-value = 1
+;;    done
+(set-signal! input-2 1) ; => done
+(propagate)
+;; => carry 11 New-value = 1
+;;    sum 16 New-value = 0
+;;    done
+
+;;; ex 3.31
+;; We have to call the action right after registering it because the wire could
+;; either have the signal 0 or 1 when we add the action. Suppose we are just
+;; talking about an inverter: `(inverter a b)`. This adds an action to `a` such
+;; that whenever the signal of `a` changes, we execute `(set-signal! b s)`
+;; where `s` is the logical negation of the new signal of `a`. Now, suppose we
+;; have `a` and `b` defined like this:
+(define a (make-wire))
+(define b (make-wire))
+;; We can check their signals:
+(get-signal a) ; => 0
+(get-signal b) ; => 0
+;; Now we add the inverter:
+(inverter a b) ; => 'ok
+;; Assuming `add-action!` is implemented so that it doesn't call the action
+;; procedure right away, we've now added an action to `a` but it has not been
+;; executed. Therefore the signals haven't changed:
+(get-signal a) ; => 0
+(get-signal b) ; => 0
+;; This is an incorrect state: if `a` is 0, `b` should be `1`. But we wuold
+;; have to flip `a` on and back off for this to fix itself. We must always
+;; execute the action right after adding it to ensure that the circuit is
+;; always in a stable state. Otherwise, the initial values don't get
+;; propagated. A more realistic model would execute the actions continuously;
+;; we only execute them at the beginning and on changes because it is a waste
+;; to do more, since function boxes have referential transparency (the same
+;; input will always produce the same output). Let's trace through the previous
+;; example without calling actions when they are added. The difference is that
+;; the probes don't display the initial signals on the sum and carry wires
+;; because they haven't changed yet. Other than that, it still works because
+;; the correct state for the outputs happens to be 0 when the inputs are 0.
+(probe 'sum sum)
+(probe 'carry carry)
+(half-adder input-1 input-2 sum carry) ; => ok
+(set-signal! input-1 1) ; => done
+(propagate)
+;; => sum 8 New-value = 1
+;;    done
+(set-signal! input-2 1) ; => done
+(propagate)
+;; => carry 11 New-value = 1
+;;    sum 16 New-value = 0
+;;    done
+
+;;; ssec 3.3.4 (implementing the agenda)
+(define segment-time car)
+(define segment-queue cdr)
+(define make-time-segment cons)
+(define (make-agenda) (list 0))
+(define (current-time agenda) (car agenda))
+(define (set-current-time! agenda time)
+  (set-car! agenda time))
+(define (segments agenda) (cdr agenda))
+(define (set-segments! agenda segments)
+  (set-cdr! agenda segments))
+(define (first-segment agenda) (car (segments agenda)))
+(define (rest-segments agenda)  (cdr (segments agenda)))
+(define (empty-agenda? agenda)
+  (null? (segments agenda)))
+(define (add-to-agenda! time action agenda)
+  (define (belongs-before? segments)
+    (or (null? segments)
+        (< time (segment-time (car segments)))))
+  (define (make-new-time-segment time action)
+    (let ((q (make-queue)))
+      (insert-queue! q action)
+      (make-time-segment time q)))
+  (define (add-to-segments! segments)
+    (if (= (segment-time (car segments)) time)
+      (insert-queue! (segment-queue (car segments)) action)
+      (let ((rest (cdr segments)))
+        (if (belongs-before? rest)
+          (set-cdr! segments
+                    (cons (make-new-time-segment time action)
+                          (cdr segments)))
+          (add-to-segments! rest)))))
+  (let ((segments (segments agenda)))
+    (if (belongs-before? segments)
+      (set-segments!
+        agenda
+        (cons (make-new-time-segment time action)
+              segments))
+      (add-to-segments! segments))))
+(define (remove-first-agenda-item! agenda)
+  (let ((q (segment-queue (first-segment agenda))))
+    (delete-queue! q)
+    (if (empty-queue? q)
+      (set-segments! agenda (rest-segments agenda)))))
+(define (first-agenda-item agenda)
+  (if (empty-agenda? agenda)
+    (error "Agenda is empty: FIRST-AGENDA-ITEM")
+    (let ((first-seg (first-segment agenda)))
+      (set-current-time! agenda (segment-time first-seg))
+      (front-queue (segment-queue first-seg)))))
+
+;;; ex 3.32
+;; The FIFO order for the queue of procedures for each segment must be used
+;; because this causes the actions to be executed in the same order as they
+;; were triggered and added to the agenda. If actions A1, A2, and A3 occur in
+;; that order, they will be inserted into the queue in that order, and they
+;; will also pop out in that order. Executing the procedures in reverse order
+;; leads to different, incorrect behaviour. Consider the case of an and-gate
+;; whose inputs change from 0, 1 to 1, 0:
+(define and-gate-delay 2)
+(define a (make-wire))
+(define b (make-wire))
+(define c (make-wire))
+(set-signal! a 0) ; => done
+(set-signal! b 1) ; => done
+(and-gate a b c)  ; => ok
+(probe 'c c)      ; => c 0 New-value = 0
+(set-signal! a 1)  ; => done
+(set-signal! b 0)  ; => done
+(propagate)
+;; => c 3 New-value = 1
+;;    c 3 New-value = 0
+;;    done
+;; Notice the value goes to 1, and then back to 0. If we changed the order of
+;; the actions, so that we first set the signal of `b` to 0 and then change the
+;; signal of `a` to 1, the ouput signal would never be 1 because we would
+;; neveer have two wires with 1 at the same time. This would be equivalent to
+;; leaving the `set-signal!` order alone and using a stack (FILO) rather than a
+;; queue (FIFO) for the actions. You might think that this is irrelevant
+;; because the actions are carried out by the agenda when we call `propagate`
+;; after setting both signals, so by that time `a` and `b` will both have
+;; signals of 1. This is not the case due to the implementation of `and-gate`.
+;; The action captures the values of the signals before using `after-delay`:
+(define (and-gate a b out)
+  (define (action)
+    ;; This logical-and gets evaluated right away.
+    (let ((new-signal (logical-and (get-signal a) (get-signal b))))
+      (after-delay
+        and-gate-delay
+        ;; Only this part goes into the agenda. `new-signal` is not calculated
+        ;; on the spot; it is from the let-binding.
+        (lambda ()
+          (set-signal! out new-signal)))))
+  (add-action! a action)
+  (add-action! b action)
+  'ok)
