@@ -921,3 +921,73 @@ z2 ; => ((a b) a b)
 ;; number of steps. However, this aspect of the memoization would still work: if
 ;; you evaluated `(memo-fib 42)` twice, the second time would take only the step
 ;; of looking up a value in the table.
+
+;;; ssec 3.3.4 (digital circuit simulation)
+(define (half-adder a b sum carry)
+  (let ((d (make-wire))
+        (e (make-wire)))
+    (or-gate a b d)
+    (and-gate a b carry)
+    (inverter carry e)
+    (and-gate d e sum)
+    'ok))
+(define (full-adder a b c-in sum c-out)
+  (let ((s (make-wire))
+        (c1 (make-wire))
+        (c2 (make-wire)))
+    (half-adder a b s c1)
+    (half-adder c-in s sum c2)
+    (or-gate c1 c2 c-out)
+    'ok))
+(define (inverter input output)
+  (add-action!
+    input
+    (lambda ()
+      (let ((new-signal (logical-not (get-signal input))))
+        (after-delay
+          inverter-delay
+          (lambda ()
+            (set-signal! output new-signal))))))
+  'ok)
+(define (logical-not s)
+  (cond ((= s 0) 1)
+        ((= s 1) 0)
+        (else (error "Invalid signal" s))))
+(define (and-gate a b out)
+  (define (action)
+    (let ((new-signal (logical-and (get-signal a) (get-signal b))))
+      (after-delay
+        and-gate-delay
+        (lambda ()
+          (set-signal! out new-signal)))))
+  (add-action! a action)
+  (add-action! b action)
+  'ok)
+(define (logical-and a b)
+  (if (and (= a 1) (= b 1)) 1 0))
+
+;;; ex 3.28
+(define (or-gate a b out)
+  (define (action)
+    (let ((new-signal (logical-or (get-signal a) (get-signal b))))
+      (after-delay
+        or-gate-delay
+        (lambda ()
+          (set-signal! out new-signal)))))
+  (add-action! a action)
+  (add-action! b action)
+  'ok)
+(define (logical-or a b)
+  (if (or (= a 1) (= b 1)) 1 0))
+
+;;; ex 3.29
+(define (or-gate a b out)
+  (let ((na (make-wire))
+        (nb (make-wire))
+        (c (make-wire)))
+    (inverter a na)
+    (inverter b nb)
+    (and-gate na nb c)
+    (inverter c out)
+    'ok))
+;; The time delay is `(+ and-gate-delay (* 2 inverter-delay))`.
