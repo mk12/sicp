@@ -218,7 +218,7 @@
        (pascal-tri (- i 1) j))))
 
 ;;; ex 1.13
-;; see proofs.pdf
+;; See the relevant section of `proofs/proofs.pdf`.
 
 ;;; ex 1.14
 ;; count-change
@@ -764,7 +764,7 @@
 (fixed-point cos 1.0) ; => 0.7390822985224023
 
 ;;; ex 1.35
-;; see proofs.pdf
+;; See the relevant section of `proofs/proofs.pdf`.
 (/ (+ 1 (sqrt 5)) 2)                        ; => 1.618033988749895
 (fixed-point (lambda (x) (+ 1 (/ x))) 42.0) ; => 1.6180328499442242
 
