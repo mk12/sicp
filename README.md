@@ -6,7 +6,7 @@ These are my solutions to the exercises from _Structure and Interpretation of Co
 
 This will install the REPL `gsi` and the compiler `gsc`.
 
-For the exercises that ask for mathematical proofs, I have prepared LaTeX documents. The compiled PDFs are also included in this repository.
+For the exercises that ask for mathematical proofs, I have prepared ConTeXt documents. The compiled PDFs are also included in this repository. For diagrams that are to tedious to do in ASCII, I have included photos of whiteboard drawings.
 
 [1]: http://www.iro.umontreal.ca/~gambit/
 [2]: http://brew.sh
