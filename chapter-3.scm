@@ -1486,3 +1486,171 @@ z2 ; => ((a b) a b)
     z))
 
 ;;;;; Section 3.4: Concurrency: time is of the essence
+
+;;; ex 3.38
+(define balance 100)
+;; These three assignments are executed concurrently:
+(set! balance (+ balance 10))
+(set! balance (- balance 20))
+(set! balance (- balance (/ balance 2)))
+;; (a) Possible values:
+(or (= balance 35)
+    (= balance 40)
+    (= balance 45)
+    (= balance 50))
+;; (b) These other values are equivalent to what you can get when you leave out
+;; one or more of the assignments, since the new value is overwritten before
+;; being read. We could have 110, 90, 80, 55, ....
+
+;;; ssec 3.4.2 (serializers)
+(define x 10)
+(parallel-execute
+  (lambda () (set! x (* x x)))
+  (lambda () (set! x (+ x 1))))
+;; There are five possible final values:
+(or (= x 101) (= x 121) (= x 110) (= x 11) (= x 100))
+;; Using a serializer, we narrow it down:
+(define x 10)
+(define s (make-serializer))
+(paralell-execute
+  (s (lambda () (set! x (* x x))))
+  (s (lambda () (set! x (+ x 1)))))
+;; There are just two possible values:
+(or (= x 101) (= x 121))
+
+;;; ex 3.39
+(define x 10)
+(define s (make-serializer))
+(parallel-execute
+  (lambda () (set! x ((s (lambda () (* x x))))))
+  (s (lambda () (set! x (+ x 1)))))
+;; Three of the five values are still ossible:
+(or (= x 101)  ; squared, then incremented
+    (= x 121)  ; incremented, then squared
+    (= x 100)) ; incremented between squarer read and write
+
+;;; ex 3.40
+(define x 10)
+(parallel-execute
+  (lambda () (set! x (* x x)))
+;; process S:  3        1 2
+  (lambda () (set! x (* x x x))))
+;; process C:  7        4 5 6
+;; There are seven relevant steps taken above: three in S, four in C. Steps 1,
+;; 2, 4, 5, and 6 are reads; steps 3 and 7 are writes. This conccurent
+;; execution is not serialized at all, so the steps can interleave.
+(define steps-s-read '(1 2))
+(define steps-s-write '(3))
+(define steps-c-read '(4 5 6))
+(define steps-c-write '(7))
+(define steps-s (append steps-s-read steps-s-write))
+(define steps-c (append steps-c-read steps-c-write))
+(define steps (append steps-s steps-c))
+;; We will calculate all possible orderings using permutations and a filter.
+(define (permutations xs)
+  (if (null? xs)
+    '(())
+    (mappend
+      (lambda (p)
+        (map (lambda (q) (cons p q))
+             (permutations (remove p xs))))
+      xs)))
+(define (good-interleave? p)
+  (define (iter latest-s latest-c p)
+    (or (null? p)
+        (and (memv (car p) steps-s)
+             (> (car p) latest-s)
+             (iter (car p) latest-c (cdr p)))
+        (and (memv (car p) steps-c)
+             (> (car p) latest-c)
+             (iter latest-s (car p) (cdr p)))))
+  (iter 0 0 p))
+(define possible-orders
+  (filter good-interleave?
+          (permutations steps)))
+(length possible-orders) ; => 35
+;; There are 35 possibilities. Some may produce the same value, so there are 35
+;; or less possible final values for `x`. We will automate this part as well:
+(define (execute-steps steps x)
+  (define (iter s-reads c-reads steps x)
+    (cond ((null? steps) x)
+          ((memv (car steps) steps-s-read)
+           (iter (cons x s-reads) c-reads (cdr steps) x))
+          ((memv (car steps) steps-c-read)
+           (iter s-reads (cons x c-reads) (cdr steps) x))
+          ((memv (car steps) steps-s-write)
+           (iter s-reads c-reads (cdr steps) (apply * s-reads)))
+          ((memv (car steps) steps-c-write)
+           (iter s-reads c-reads (cdr steps) (apply * c-reads)))
+          (else (error "Unknown step number: EXECUTE-STEPS" (car steps)))))
+  (iter '() '() steps x))
+;; Now, we can see the values that produced by all 35 possibilities:
+(define final-values
+  (map (lambda (ss) (execute-steps ss 10))
+     possible-orders))
+final-values
+;; => (1000000 100000 10000 1000 100 100000 10000
+;;     1000 100 10000 1000 100 1000 100
+;;     10000 100000 10000 1000 100 10000 1000
+;;     100 1000 100 10000 10000 1000 100
+;;     1000 100 10000 1000 100 10000 1000000)
+;; Quite a range of different values! But there are some duplicates. Let's see
+;; how many of each value there is.
+(define (group xs)
+  (let ((occurence-table (make-table)))
+    (define (iter xs)
+      (if (null? xs)
+        occurence-table
+        (let ((n (lookup (car xs) occurence-table)))
+          (insert! (car xs)
+                   (if n (inc n) 1)
+                   occurence-table)
+          (iter (cdr xs)))))
+    (iter xs)))
+(group final-values)
+;; => (*table* (100     . 10)
+;;             (1000    . 10)
+;;             (10000   . 10)
+;;             (100000  .  3)
+;;             (1000000 .  2))
+;; The smaller values are more frequent. The largest value, 1000000, is the
+;; correct value, and we can check that:
+(execute-steps '(1 2 3 4 5 6 7) 10) ; => 1000000
+;; This is squaring and then cubing. Notice there are 2 occurences of this
+;; value. The only other way is to cube and then square:
+(execute-steps '(4 5 6 7 1 2 3) 10) ; => 1000000
+;; If we serialize the two procedures, this is the only value we get.
+
+;;; ex 3.41
+;; Ben Bitdiddle is dead wrong. It would be unnecessary to serialize access to
+;; the bank balance because it would make no difference. If we serialize it,
+;; then the value will be read either before or after (in sequence) it is
+;; written, assuming someone is withdrawing or depositing concurrently.
+;; However, if we don't serialize it, we still get one value or the other.
+;; There is nothing that can be interleaved because reading the balance takes
+;; only one step. Any problems below this level are handled in the hardware.
+;; Therefore it is useless to serialize access to the bank balance. Now, you
+;; might think that it matters when we withdraw or deposit an amount which is a
+;; function of the present balance. Consider this:
+(define account (make-account 100))
+(parallel-execute
+  (lambda () ((account 'deposit) 10))
+  (lambda () ((account 'withdraw) (account 'balance))))
+;; We should think that the balance ends up either 0 or 10. If I have 10 in my
+;; pocket at the beginning, then the total 110 should be conserved. Either I
+;; put 10 in first, and then withdraw the 110, leaving 0 in the bank and 110 in
+;; my pocket; or I withdraw the 100 first, and then deposit 10, leaving 10 in
+;; the bank and 100 in my pocket. We need serialization for this, because there
+;; are other possibilities due to the fact that the deposit can happen in
+;; between reading of the balance and the withdrawal. (Note that the deposit
+;; cannot interleave with the withdrawal because they are serialized.) However,
+;; Ben Bitdiddle is still wrong, because serializing access to the balance
+;; wouldn't change a think. It would only seal up the balance access, still
+;; leaving a hole between that and the withdrawal. We would have to create a
+;; procedure that does both, and then serialize that. In any case, Ben is wrong.
+
+;;; ex 3.42
+;; This is a safe change to make. Each bank account still has one serializer and
+;; the deposit and withdraw procedures returned from the dispatcher are always
+;; protected by it. It makes no difference in what concurrency is allowed. If it
+;; did, then the specification of `make-serializer` must be incorrect.
