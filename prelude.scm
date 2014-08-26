@@ -20,7 +20,7 @@
            (every? (cdr xs)))))
 
 (define (remove x xs)
-  (filter (lambda (y) (not (= x y))) seq))
+  (filter (lambda (y) (not (= x y))) xs))
 
 (define (fold-right f init xs)
   (if (null? xs)
