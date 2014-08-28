@@ -1654,3 +1654,92 @@ final-values
 ;; the deposit and withdraw procedures returned from the dispatcher are always
 ;; protected by it. It makes no difference in what concurrency is allowed. If it
 ;; did, then the specification of `make-serializer` must be incorrect.
+
+;;; ex 3.43
+;; The balances in the three accounts start out as $10, $20, and $30. The
+;; exchange of balances A and B works by calculating D = A - B, and then
+;; withdrawing to get A' = A - D and depositing to get B' = B + D. Substituting
+;; for D, we have A' = A - (A - B) = B, and B' = B + (A - B) = A. The new value
+;; of A is A' = B, and the new value of B is B' = A. The initial set of balances
+;; {A,B} and the final set of balances {B,A} are equal. This proves that the
+;; account balances remain $10, $20, and $30 in some order after an exchange.
+;; With `serialized-exchange`, the exchanging is serialized on both accounts.
+;; This means that if A and B are beight exchanged, no other exchange involving
+;; either A or B can occur until it is finished. If one exchange preserves the
+;; set of balances {10,20,30}, then so will another, and another: a sequence of
+;; exchanges, or serialized concurrent exchanges, will preserve {10,20,30}.
+;; Using the first definition of the account-exchange program, where only the
+;; individual deposits and withdrawals are serialized (and only on one account),
+;; the {10,20,30} set will not be preserved. This is because the four steps of
+;; the exchange can interleave with the four steps of another. Let us refer to
+;; the steps of concurrent processes P and Q by P1, Q1, P2, Q2, etc.:
+(define (exchange acc1 acc2)
+  (let ((diff (- (acc1 'balance)    ; (1)
+                 (acc2 'balance)))) ; (2)
+    ((acc1 'withdraw) diff)         ; (3)
+    ((acc2 'deposit) diff)))        ; (4)
+;; Suppose the three accounts A, B, and C begin with $10, $20, and $30
+;; respectively. Process P exchanges A and B while concurrent process Q
+;; exchanges A and C. We interleave the steps like so: P1, Q1, Q2, Q3, Q4, P2,
+;; P3, P4. Now, P finds the balance of A to be $10. Then Q carries out all its
+;; steps: A and C are exchanged, and P's read operation does not affect this.
+;; Therefore A, B, and C now have balances $30, $20, and $10 respectively. Now
+;; process P carries out its three remaining steps. It finds B to have $20. It
+;; calculates the difference `(- 10 20)`, which is -10. It withdraws this from
+;; A, leaving A with a balance of 30 - (-10), or 40. It deposits this in B,
+;; leaving B with a balance of 20 + (-10) = 10. Now the balances of A, B, and C
+;; are $40, $10, and $10 respectively. This is {10,20,30}. This proves that the
+;; balances {10,20,30} are not preserved with the original implementation. Now,
+;; although it violates this condition, it does preserve the sum of the
+;; balances, $60. This is the case in our example: 10 + 20 + 30 = 40 + 10 + 10.
+;; It is true in general because, no matter how wrong the value of `diff` is, it
+;; is calculated once only. It is then withdrawn from one account and deposited
+;; into another, and these two operations are serialized. The sum of the
+;; balances is preserved, because A' + B' = B + A = A + B. No interleaving of
+;; the four exchanging steps can alter this. It matters only that the individual
+;; withdrawals and deposits are serialized. This proves that the original
+;; implementation preserves the sum of the balances. Finally, if we used the
+;; original implementation but changed `make-account` so that it did no
+;; serializing, the sum would not be preserved. This is because the steps
+;; of the deposits and withdrawals of concurrent processes will interleave, and
+;; we have already seen that this does not ensure that the total amount of money
+;; is preserved. I will not bother detailing an example for this case.
+
+;;; ex 3.44
+(define (transfer from-acc to-acc amount)
+  ((from-acc 'withdraw) amount) ; (1)
+  ((to-acc 'deposit) amount))   ; (2)
+;; Ben Bitdiddle is correct. This procedure will behave correctly, even with
+;; multiple conccurent transfers involving the same accounts. Suppose we
+;; transfer $10 between A and B (process P), and concurrently transfer $20
+;; between A and C (process Q). P1 and Q1 will be in the same serialization set,
+;; because they both withdraw from A. P2 and Q2 will neither be in that set nor
+;; in each other's set. One deposits to B, and the other deposits to C. They
+;; cannot interfere with each other. We can safely ignore P2 and Q2 -- all we
+;; care about is that they will happen at some time. That leaves us with P1 and
+;; Q1. These are serialized, so we either have P1 followed by Q1, or the other
+;; way around. We either withdraw $10 from A and then $20 from A, or we do it in
+;; the opposite order. In either case, A loses $30. B is guaranteed to gain $10,
+;; and C will likewise gain $20. Correctness is ensured. Louis Reasoner is
+;; wrong; we do not need a more sophisticated method. The essential difference
+;; between the transfer problem and the exchange problem is that the exchange
+;; amount depends on the current balances, and so it must include steps that
+;; read the balance, thereby introducing a hole into which a concurrent step can
+;; be interleaved, unless the whole exchange is serialized. The `transfer`
+;; procedure takes `amount` as an argument, and there is no way this can be
+;; messed up. The serialization of deposits and withdrawals guarantees that the
+;; deposit and withdrawal of `amount` will behave correctly. It should be noted
+;; that if `(from-account 'balance)` is passed as the `amount`, or some
+;; similar expression involving a reading of the balance, then this argument is
+;; invalid and we would need serialization as in the exchange example. I have
+;; been assuming that `amount` is a constant.
+
+;;; ex 3.45
+;; Louis Reasoner is wrong. The problem with automatically serializing all
+;; deposits and withdrawals is that, when we create our own multi-step
+;; operations such as the exchange or the transfer, and we serialize them, we
+;; end up with nested serialization. When `serialized-exchange` is called, it
+;; will never return. It will be stuck forever, because as soon as it tries
+;; withdraw from the first account, the system will not be able to proceed
+;; because the account is already locked. It will try to wait for the exchanging
+;; procedure to finish before it makes the withdrawal, which is impossible.
