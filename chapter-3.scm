@@ -1743,3 +1743,97 @@ final-values
 ;; withdraw from the first account, the system will not be able to proceed
 ;; because the account is already locked. It will try to wait for the exchanging
 ;; procedure to finish before it makes the withdrawal, which is impossible.
+
+;;; ssec 3.4.2 (implementing serializers)
+(define (make-serializer)
+  (let ((mutex (make-mutex)))
+    (lambda (p)
+      (lambda args
+        (mutex 'acquire)
+        (let ((val (apply p args)))
+          (mutex 'release)
+          val)))))
+(define (make-mutex)
+  (let ((cell (list #f)))
+    (define (the-mutex m)
+      (cond ((eq? m 'acquire)
+             (if (test-and-set! cell)
+               (the-mutex 'acquire))) ; retry
+            ((eq? m 'release) (clear! cell))))
+    the-mutex))
+(define (clear! cell) (set-car! cell #f))
+
+(define (test-and-set! cell)
+  (if (car cell)
+    #t
+    (begin (set-car! cell #t)
+           #f)))
+
+;;; ex 3.46
+;; Suppose we use the above implementation of `test-and-set!` and execute this:
+(let ((x 100)
+      (s (make-serializer)))
+  (parallel-execute
+    (s (lambda () (set! x (+ 100 x)))) ; process P
+    (s (lambda () (set! x (/ x 2)))))) ; process Q
+;; Properly serialized, we would expect only two possibilities:
+(or (= x 100)  ; add 100, then divide by 2
+    (= x 150)) ; divide by 2, then add 100
+;; Since `test-and-set!` is not atomic, the mutex will not work. Processes P and
+;; Q will execute in parallel. Here is a representation of the serialized
+;; procedure that `s` creates for process P:
+(lambda ()
+  (mutex 'acquire)
+  (let ((val (set! x (+ 100 x)))) ; (*)
+    (mutex 'release)
+    val))
+;; We expect the line marked by (*) to be atomic. That is, since the mutex is
+;; locked, Q should not be able to acquire the mutex and do anything during this
+;; time. This is false, because of the way we implemented `test-and-set!`. When
+;; `(mutex 'acquire)` is executed, `test-and-set!` is called on the cell:
+(define (test-and-set! cell)
+  (if (car cell)              ; (1)
+    #t
+    (begin (set-car! cell #t) ; (2)
+           #f)))
+;; Each process performs two operations when they test and set. We have P1, P2,
+;; Q1, and Q2. Since the procedure is not atomic, these can be interleaved.
+;; Suppose both processes try to acquire the mutex at the same time, and we get
+;; P1, Q1, Q2, P2. Both P1 and Q1 find the contents of the cell to be false.
+;; Process Q sets it to `#t` in Q2, locking the mutex, and then P2 locks the
+;; already-locked mutex. Both processes think they have the lock. Now everything
+;; will happen in parallel and it is as if we hadn't used a serializer. We could
+;; end up with a final value of 50 for `x`, for example.
+
+;;; ex 3.47
+;; in terms of mutexes
+(define (make-semaphore n)
+  (let ((mutex (make-mutex))
+        (users 0))
+    (lambda (m)
+      (cond ((eq? m 'acquire)
+             (let ((u (inc users)))
+              (if (>= u n)
+                (mutex 'acquire))
+              (set! users u)))
+            ((eq? m 1) users)
+            ((eq? m 'release)
+             (if (= users n)
+               (mutex 'release))
+             (set! users (dec users)))))))
+;; in terms of atomic `test-and-set!` operations
+(define (make-semaphore n)
+  (let ((users 0)
+        (cell (list #f)))
+    (define (the-semaphore m)
+      (cond ((eq? m 'acquire)
+             (let ((u (inc users)))
+               (if (>= u n)
+                 (if (test-and-set! cell)
+                   (the-semaphore 'acquire)))
+               (set! users u)))
+            ((eq? m 'release)
+             (if (= users n)
+               (clear! cell))
+             (set! users (dec users)))))
+    the-semaphore))
