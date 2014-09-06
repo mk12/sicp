@@ -1837,3 +1837,166 @@ final-values
                (clear! cell))
              (set! users (dec users)))))
     the-semaphore))
+
+;;; ex 3.48
+;; Before we locked the `exchange` operation using the serializers of both
+;; accounts. This can lead to deadlock if lock sequences A, B and B, A are
+;; interleaved such that both processes are trying to acquire the mutex that the
+;; other has already acquired. They wait forever, and neither is released. This
+;; problem is solved when we lock accounts in a particular order because that
+;; interleaving wouldn't work. Both processes would have the lock sequence A, B,
+;; and the second process cannot acquire A after the first already has. The
+;; first is then free to acquire B, perform its operations, and release both.
+(define *uuid* 0)
+(define (gen-uuid)
+  (set! *uuid* (inc *uuid*))
+  *uuid*)
+(define (make-account balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+      (begin (set! balance (- balance amount))
+             balance)
+      "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (let ((id (gen-uuid))
+        (s (make-serializer)))
+    (define (dispatch m)
+      (cond ((eq? m 'withdraw) withdraw)
+            ((eq? m 'deposit) deposit)
+            ((eq? m 'balance) balance)
+            ((eq? m 'serializer) s)
+            ((eq? m 'identifier) id)
+            (else (error "Unknown request: MAKE-ACCOUNT" m))))
+    dispatch))
+(define (exchange a1 a2)
+  (let ((diff (- (a1 'balance) (a2 'balance))))
+    ((a1 'withdraw) diff)
+    ((a2 'deposit) diff)))
+(define (serialized-exchange a1 a2)
+  (let ((s1 (a1 'serializer))
+        (s2 (a2 'serializer)))
+    ((if (< (a1 'identifier) (a2 'identifier))
+       (s1 (s2 exchange))
+       (s2 (s1 exchange)))
+     a1
+     a2)))
+
+;;; ex 3.49
+;; The deadlock avoidance mechanism used in 3.48 would not work with
+;; `(contrived-exchange acc)`, which exchanges the balance of `acc` with that of
+;; the account whose balance is closest to the balance of `acc`. We must either
+;; always lock `acc` first (without the ordering mechanism of 3.48, allowing
+;; deadlocks), or we must lock after accessing `acc`, creating a hole into which
+;; other operations can be interleaved.
+
+;;;;; Section 3.5: Streams
+
+;;; ssec 3.5.1 (streams are delayed lists)
+(define the-empty-stream '())
+(define stream-null? null?)
+(define (stream-ref s n)
+  (if (zero? n)
+    (stream-car s)
+    (stream-ref (stream-cdr s) (dec n))))
+(define (stream-map f s)
+  (if (stream-null? s)
+    the-empty-stream
+    (cons-stream (f (stream-car s))
+                 (stream-map f (stream-cdr s)))))
+(define (stream-for-each f s)
+  (if (stream-null? s)
+    'done
+    (begin (f (stream-car s))
+           (stream-for-each f (stream-cdr s)))))
+(define (stream-filter pred s)
+  (cond ((stream-null? s) the-empty-stream)
+        ((pred (stream-car s))
+         (cons-stream (stream-car s)
+                      (stream-filter pred (stream-cdr s))))
+        (else (stream-filter pred (stream-cdr stream)))))
+(define (display-stream s)
+  (stream-for-each display-line s))
+(define (display-line x) (display x) (newline))
+(define (stream-car s) (car s ))
+(define (stream-cdr s) (force (cdr s)))
+(define-syntax cons-stream
+  (syntax-rules ()
+    ((_ x y) (cons x (delay y)))))
+
+;;; ssec 3.5.1 (implementing promises)
+(define (memo-proc proc)
+  (let ((already-run? #f)
+        (result #f))
+    (lambda ()
+      (if (not already-run?)
+        (begin (set! result (proc))
+               (set! already-run? #t)
+               result)
+        result))))
+(define-syntax delay
+  (syntax-rules ()
+    ((_ e) (memo-proc (lambda () e)))))
+(define (force p) (p))
+
+;;; ex 3.50
+(define (stream-map proc . ss)
+  (if (null? (car ss))
+    the-empty-stream
+    (cons-stream
+      (apply proc (map stream-car ss))
+      (apply stream-map
+             (cons proc (map stream-cdr ss))))))
+
+;;; ex 3.51
+(define (show x) (display-line x) x)
+(define x
+  (stream-map show
+              (stream-enumerate-interval 0 10)))
+;; 0
+;; => (0 . #<promise #2>)
+(stream-ref x 5)
+;; 1
+;; 2
+;; 3
+;; 4
+;; 5
+;; => 5
+(stream-ref x 7)
+;; 6
+;; 7
+;; => 7
+
+;;; ex 3.52
+(define sum 0)
+(define (accum x) (set! sum (+ x sum)) sum)
+(define seq
+  (stream-map accum
+              (stream-enumerate-interval 1 20)))
+;; [sum = 1]
+(define y (stream-filter even? seq))
+;; [sum = 6]
+(define z
+  (stream-filter (lambda (x) (= (remainder x 5) 0))
+                 seq))
+;; [sum = 10]
+(stream-ref y 7) ; => 120
+;; [sum = 120]
+(display-stream z)
+;; 10
+;; 15
+;; 45
+;; 55
+;; 105
+;; 120
+;; 190
+;; 210
+;; => done
+;; Yes, the responses would differ if we had not memoized the procedure created
+;; by `delay`. The stream `seq` would get its `cdr` evaluated multiple times,
+;; and it would be different each time because `sum` would keep getting added
+;; to. Instead of 1, 6, 10, and 120, we would see 1, 6, 15, and 162. Then, when
+;; we display `z`, we would see only one element, 15. The rest of seq gets
+;; generated using a much higher `sum`, and none of those end up being divisible
+;; by five.
