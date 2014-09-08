@@ -2000,3 +2000,96 @@ final-values
 ;; we display `z`, we would see only one element, 15. The rest of seq gets
 ;; generated using a much higher `sum`, and none of those end up being divisible
 ;; by five.
+
+;;; ssec 3.5.2 (infinite streams)
+(define (integers-starting-from n)
+  (stream-cons n (integers-starting-from (inc n))))
+(define (sieve s)
+  (cons-stream
+    (stream-car s)
+    (sieve (stream-filter
+             (lambda (x)
+               (not (divisible? x (stream-car s))))
+             (stream-cdr s)))))
+(define primes (sieve (integers-starting-from 2)))
+
+;;; ssec 3.5.2 (defining streams implicitly)
+(define primes
+  (cons-stream
+    2
+    (stream-filter prime? (integers-starting-from 3))))
+(define (prime? n)
+  (define (iter ps)
+    (or (> (square (stream-car ps)) n)
+        (and (not (divisible? n (stream-car ps)))
+             (iter (stream-cdr ps)))))
+  (iter primes))
+
+;;; ex 3.53
+(define s (cons-stream 1 (add-streams s s)))
+;; This produces all powers of two. It is similar to an earlier example:
+(= (add-streams s s) (scale-stream s 2))
+
+;;; ex 3.54
+(define (mul-streams s1 s2) (stream-map * s1 s2))
+(define from-two (integers-starting-from 2))
+(define factorials
+  (cons-stream 1 (mul-streams factorials from-two)))
+
+;;; ex 3.55
+(define (partial-sums s)
+  (cons-stream (stream-car s)
+               (add-streams (partial-sums s) (stream-cdr s))))
+;; The following procedure is more efficient because it uses itself via
+;; corecursion rather than calling the procedure recursively, which would
+;; prevent the memoizing from working. I could be wrong.
+(define (partial-sums s)
+  (define ps
+    (cons-stream (stream-car s)
+                 (add-streams ps (stream-cdr s))))
+  ps)
+
+;;; ex 3.56
+(define (merge s1 s2)
+  (cond ((stream-null? s1) s2)
+        ((stream-null? s2) s1)
+        (else
+          (let ((s1car (stream-car s1))
+                (s2car (stream-car s2)))
+            (cond ((< s1car s2car)
+                   (cons-stream
+                     s1car
+                     (merge (stream-cdr s1) s2)))
+                  ((> s1car s2car)
+                   (cons-stream
+                     s2car
+                     (merge s1 (stream-cdr s2))))
+                  (else
+                    (cons-stream
+                      s1car
+                      (merge (stream-cdr s1)
+                             (stream-cdr s2)))))))))
+(define S
+  (cons-stream 1 (merge (scale-stream S 2)
+                        (merge (scale-stream S 3)
+                               (scale-stream S 5)))))
+
+;;; ex 3.57
+(define fibs
+  (cons-stream
+    0
+    (cons-stream 1 (add-streams fibs (stream-cdr fibs)))))
+;; See the relevant section of `proofs/proofs.pdf`.
+
+;;; ex 3.58
+(define (expand num den radix)
+  (cons-stream
+    (quotient (* num radix) den)
+    (expand (remainder (* num radix) den) den radix)))
+;; This procedure produces the stream of digits in the base given by `radix`
+;; that represent the quotient of `num` and `den`. It does it without using
+;; floating-point operations.
+(expand 1 7 10)          ; => (1 4 2 8 5 7 ...)
+(exact->inexact (/ 1 7)) ; => .14285714285714285
+(expand 3 8 10)          ; => (3 7 5 0 0 0 ...)
+(exact->inexact (/ 3 8)) ; => .375
