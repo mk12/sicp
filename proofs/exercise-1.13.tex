@@ -1,8 +1,6 @@
 \startcomponent exercise-1.13
 \product proofs
 
-\definemathcommand[Fib]{\mfunction{Fib}}
-
 \starttext
 
 \startproblem
@@ -27,16 +25,20 @@ of the two elements preceding it:
 \stopformula
 Using the Fib function, we can define the sequence recursively with
 \startformula\startalign
-\NC \Fib(0) \NC = 0; \NR
-\NC \Fib(1) \NC = 1; \NR
+\NC \Fib(0) \NC = 0, \NR
+\NC \Fib(1) \NC = 1, \NR
 \NC \Fib(n) \NC = \Fib(n-1) + \Fib(n-2).
 \stopalign\stopformula
-\startproof
-We will begin by proving by induction that
+
+\startlemma
+The exact value of $\Fib(n)$ is given by
 \placeformula[eq:fib]
 \startformula
 \Fib(n)=\frac{\varphi^n-\psi^n}{\sqrt5}.
 \stopformula
+\stoplemma
+
+\startproof
 First, we will demonstrate that \in{equation}[eq:fib] is true for the three
 base cases: $\Fib(0)$, $\Fib(1)$, and $\Fib(2)$. When $n=0$,
 $\text{LS}=\Fib(0)=0$ and
@@ -88,8 +90,14 @@ equal:
 \NC \NC = \frac{\varphi^n-\psi^n}{\sqrt5}.
 \stopalign\stopformula
 This completes the proof of \in{equation}[eq:fib].
+\stopproof
 
-Now we must show that $\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$.
+\starttheorem
+$\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$, where
+$\varphi=(1+\sqrt5)/2$.
+\stoptheorem
+
+\startproof
 The absolute difference between these two values must remain less than or equal
 to one half for the latter to round to the former:
 \placeformula[eq:round]

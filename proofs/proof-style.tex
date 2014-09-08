@@ -40,12 +40,19 @@
 \definestartstop[problem][
 	before={\blank[blocksep]\startnarrower\noindent},
 	after={\stopnarrower\blank[blocksep]\noindent}]
+\defineenumeration[theorem][
+	headstyle=\bf,text={Theorem},alternative=serried,stopper={.},
+	distance=1ex,width=fit]
+\defineenumeration[lemma][
+	headstyle=\bf,text={Lemma},alternative=serried,stopper={.},
+	distance=1ex,width=fit]
+\definestartstop[proof][
+	before={\blank[blocksep]\noindent\italic{Proof.}\space},
+	after={\hfill\square\par\blank[blocksep]}]
 
 % Math
 \setupformulas[indentnext=auto] 
-\definestartstop[proof][
-	before={\italic{Proof.}\space},
-	after={\hfill\square}]
 \define[1]\abs{\left\lvert#1\right\rvert}
+\definemathcommand[Fib]{\mfunction{Fib}}
 
 \stopenvironment

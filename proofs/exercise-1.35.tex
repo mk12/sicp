@@ -18,10 +18,15 @@ Multiplying by \p{}, we get another property of the golden ratio:
 \startformula
 \p^2 = \p + 1.
 \stopformula
+For \p{} to be a fixed point, each repeated transformation $x\mapsto 1+1/x$ must
+cause the value of $x$ to become closer to \p{}. 
+
+\starttheorem
+Given any $x>1$ and $y=1/1+x$, $y$ is closer than $x$ to \p{}, meaning $x$ and
+$y$ satisfy $\abs{y-\p} < \,\abs{x-\p}$.
+\stoptheorem
+
 \startproof
-We would like to prove that each transformation $x\mapsto 1+1/x$ causes the
-value of $x$ to become closer to \p{}. Given an initial guess $x>1$, let
-$y=1+1/x$ be the improved guess. We must prove that $\abs{y-\p} < \,\abs{x-\p}$.
 To begin, we will simplify the left-hand side of the inequality:
 \startformula\startalign
 \NC \abs{y-\p} \NC = \abs{1+\frac1x-\p} \NR
@@ -31,18 +36,15 @@ To begin, we will simplify the left-hand side of the inequality:
 \NC \NC = \abs{\frac{\p-x}{x\p}} \NR
 \NC \NC = \frac{\abs{x-\p}}{\abs{x\p}}.
 \stopalign\stopformula
-We now have a relation between $\abs{y-\p}$ and $\abs{x-\p}$. To prove that
-$\abs{y-\p}<\abs{x-\p}$, we must show that $\abs{x\p}>1$, because dividing the
-original error by a number greater than one will produce a smaller value as the
-new error. We already stipulated that $x>1$, and we know the value of the golden
-ratio is $\p=(1+\sqrt{5})/2 \approx 1.618 > 1$, therefore $x\p>1$ and $\abs{x\p}>1$.
+We already stipulated that $x>1$, and we know the value of the golden ratio is
+$\p=(1+\sqrt{5})/2 \approx 1.618 > 1$, therefore $x\p>1$ and $\abs{x\p}>1$.
 
 Since $\abs{xp}>1$ and $\abs{y-\p} = \abs{x-\p}/\abs{xp}$, we have
 \startformula
 \abs{y-\p}<\abs{x-\p},
 \stopformula
-therefore each transformation $x\mapsto y$ brings $x$ closer to \p{}, and
-consequently \p{} is a fixed point of the transformation $x\mapsto 1+1/x$.
+therefore $y$ is closer than $x$ to \p{}, and consequently \p{} is a fixed point
+of the transformation $x\mapsto 1+1/x$.
 \stopproof
 
 \stoptext
