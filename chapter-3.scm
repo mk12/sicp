@@ -1948,6 +1948,12 @@ final-values
       (apply proc (map stream-car ss))
       (apply stream-map
              (cons proc (map stream-cdr ss))))))
+(define (add-streams s1 s2)
+  (stream-map + s1 s2))
+(define (scale-stream s k)
+  (stream-map (lambda (x) (* x k)) s))
+(define (negate-stream s)
+  (stream-map (lambda (x) (- x)) s))
 
 ;;; ex 3.51
 (define (show x) (display-line x) x)
@@ -2003,7 +2009,7 @@ final-values
 
 ;;; ssec 3.5.2 (infinite streams)
 (define (integers-starting-from n)
-  (stream-cons n (integers-starting-from (inc n))))
+  (cons-stream n (integers-starting-from (inc n))))
 (define (sieve s)
   (cons-stream
     (stream-car s)
@@ -2093,3 +2099,45 @@ final-values
 (exact->inexact (/ 1 7)) ; => .14285714285714285
 (expand 3 8 10)          ; => (3 7 5 0 0 0 ...)
 (exact->inexact (/ 3 8)) ; => .375
+
+;;; ex 3.59
+;; (a) integration
+(define (integrate-series ps)
+  (stream-map / ps (integers-starting-from 1)))
+;; (b) exponential, sine, cosine
+(define exp-series
+  (cons-stream 1 (integrate-series exp-series)))
+(define cosine-series
+  (cons-stream 1 (negate-stream (integrate-series sine-series))))
+(define sine-series
+  (cons-stream 0 (integrate-series cosine-series)))
+
+;;; ex 3.60
+(define (mul-series s1 s2)
+  (cons-stream (* (stream-car s1) (stream-car s2))
+               (add-streams (scale-stream (stream-cdr s2) (stream-car s1))
+                            (mul-series (stream-cdr s1) s2))))
+
+;; ex 3.61
+(define (invert-unit-series s)
+  (cons-stream
+    1
+    (negate-stream (mul-series (stream-cdr s)
+                               (invert-unit-series s)))))
+;; `invert-series` requires a nonzero constant term.
+(define (invert-series s)
+  (let ((fst (stream-car s)))
+    (if (= fst 1)
+      (invert-unit-series s)
+      (scale-stream
+        (invert-unit-series (scale-stream s (/ fst)))
+        (/ fst)))))
+
+;;; ex 3.62
+(define (div-series s1 s2)
+  (let ((den-car (stream-car s2)))
+    (if (zero? den-car)
+      (error "Can't divide by zero: DIV-SERIES" (list s1 s2))
+      (mul-series s1 (invert-series s2)))))
+(define tangent-series
+  (div-series sine-series cosine-series))
