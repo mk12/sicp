@@ -1953,7 +1953,7 @@ final-values
 (define (scale-stream s k)
   (stream-map (lambda (x) (* x k)) s))
 (define (negate-stream s)
-  (stream-map (lambda (x) (- x)) s))
+  (stream-map - s))
 
 ;;; ex 3.51
 (define (show x) (display-line x) x)
@@ -2141,3 +2141,94 @@ final-values
       (mul-series s1 (invert-series s2)))))
 (define tangent-series
   (div-series sine-series cosine-series))
+
+;;; ssec 3.5.3 (iterations as stream procs)
+(define (sqrt-stream x)
+  (define guesses
+    (cons-stream
+      1.0
+      (stream-map (lambda (guess) (sqrt-improve guess x))
+                  guesses)))
+  guesses)
+(define (pi-summands n)
+  (cons-stream (/ n)
+               (stream-map - (pi-summands (+ n 2)))))
+(define pi-stream
+  (scale-stream (partial-sums (pi-summands 1)) 4))
+(define (euler-transform s)
+  (let ((s0 (stream-ref s 0))
+        (s1 (stream-ref s 1))
+        (s2 (stream-ref s 2)))
+    (cons-stream (- s2 (/ (square (- s2 s1))
+                          (+ s0 (* -2 s1) s2)))
+                 (euler-transform (stream-cdr s)))))
+(define (make-tableau transform s)
+  (cons-stream s (make-tableau transform (transform s))))
+(define (accelerated-sequence transform s)
+  (stream-map stream-car (make-tableau transform s)))
+
+;;; ex 3.63
+(define (sqrt-stream x)
+  (cons-stream
+    1.0
+    (stream-map
+      (lambda (guess) (sqrt-improve guess x))
+      (sqrt-stream x))))
+;; This implementation is less efficient because it doesn't take advantage of
+;; memoization, so it does redundant computation. This procedure improves the
+;; first guess to get the second item, but then it must do that all over again
+;; in the recursive call to improve the second guess. This is because calling
+;; `(sqrt-stream x)` creates a new stream, distinct from the one being returned
+;; in the context of the current procedure evaluation. It will have it's own
+;; cons cell to begin it, and therefore values in one will not be memoized in
+;; the other. In general, to get the next element of the stream, we must restart
+;; from the beginning every time. If our implementation of `delay` didn't use
+;; the optimization provided by `memo-proc`, then there would be no difference
+;; in efficiency between the original procedure and this one.
+
+;;; ex 3.64
+(define (stream-limit s tolerance)
+  (define (iter prev s)
+    (let ((next (stream-car s)))
+      (if (< (abs (- prev next)) tolerance)
+        next
+        (iter next (stream-cdr s)))))
+  (iter (stream-car s) (stream-cdr s)))
+(define (sqrt x tolerance)
+  (stream-limit (sqrt-stream x) tolerance))
+
+;;; ex 3.65
+(define (ln-2-summands n)
+  (cons-stream (/ n)
+               (negate-stream (ln-2-summands (inc n)))))
+(define ln-2-stream
+  (partial-sums (ln-2-summands 1)))
+;; This converges fairly slowly on its own:
+(log 2) ; => 0.6931471805599453
+(display-stream (stream-map exact->inexact ln-2-stream))
+;; => 1.0
+;;    0.5
+;;    0.8333333333333334
+;;    0.5833333333333334
+;;    0.7833333333333333
+;;    0.6166666666666667
+;;    0.7595238095238095
+;;    0.6345238095238095
+;;    0.7456349206349207
+;;    0.6456349206349207
+;;    ...
+;; The accelerated sequence converges much faster:
+(define accel-ln-2 (accelerated-sequence euler-transform ln-2-stream))
+(display-stream (stream-map exact->inexact accel-ln-2))
+;; => 1.0
+;;    0.7
+;;    0.6932773109243697
+;;    0.6931488693329254
+;;    0.6931471960735491
+;;    0.6931471806635636
+;;    0.6931471805604039
+;;    0.6931471805599444
+;;    0.6931471805599435
+;;    0.6931471805599453
+;; The tenth item looks identical to the printed value of `(log 2)`. That's
+;; sixteen decimal places.
