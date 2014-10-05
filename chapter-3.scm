@@ -2232,3 +2232,148 @@ final-values
 ;;    0.6931471805599453
 ;; The tenth item looks identical to the printed value of `(log 2)`. That's
 ;; sixteen decimal places.
+
+;;; ssec 3.5.3 (infinite streams of pairs)
+(define (pairs s t)
+  (cons-stream
+    (list (stream-car s) (stream-car t))
+    (interleave
+      (stream-map (lambda (x) (list (stream-car s) x))
+                  (stream-cdr t))
+      (pairs (stream-cdr s) (stream-cdr t)))))
+(define (interleave s1 s2)
+  (if (stream-null? s1)
+    s2
+    (cons-stream (stream-car s1)
+                 (interleave s2 (stream-cdr s1)))))
+
+;;; ex 3.66
+;; Let f(n) represent the nth pair in the stream, starting from one.
+;; f(1)  = (1,1); f(i) = (1,x) when i = 2  + 2N
+;; f(3)  = (2,2); f(i) = (2,x) when i = 5  + 4N
+;; f(7)  = (3,3); f(i) = (3,x) when i = 11 + 8N
+;; f(15) = (4,4); f(i) = (4,x) when i = 23 + 16N
+;; ...
+;; The next row (where the first number in the pair is incremented once) always
+;; gets updated half as often as the previous row.
+;; In general,
+;; f(2^x - 1) = (x,x);
+;; f(2^x - 1 + (2N-1)*2^(x-1)) = (x,x+N), N > 0.
+;; The pair (1,100) is the 198th pair in the stream.
+;; The pair (99,100) is the 9.507e29th in the stream.
+;; The pair (100,100) is (2^100-1)th in the stream.
+;; See `whiteboard/exercise-3.66.jpg` for the function from indices to pairs,
+;; and its inverse (from pairs to indices).
+
+;;; ex 3.67
+(define (pairs s t)
+  (cons-stream
+    (list (stream-car s) (stream-car t))
+    (interleave
+      (stream-map (lambda (x) (list (stream-car s) x))
+                  (stream-cdr t))
+      (interleave
+        (stream-map (lambda (x) (list (stream-car t) x))
+                    (stream-cdr s))
+        (pairs (stream-cdr s) (stream-cdr t))))))
+
+;;; ex 3.68
+(define (pairs s t)
+  (interleave
+    (stream-map (lambda (x) (list (stream-car s) x))
+                t)
+    (pairs (stream-cdr s) (stream-cdr t))))
+;; No, this will not work, because there will be an infinite loop. The recursive
+;; call `(pairs (stream-cdr s) (stream-cdr t))` is not delayed by a
+;; `cons-stream`, so the procedure will never return.
+
+;;; ex 3.69
+(define (triples s t u)
+  (cons-stream
+    (list (stream-car s) (stream-car t) (stream-car u))
+    (interleave
+      (stream-map (lambda (x) (cons (stream-car s) x))
+                  (pairs t u))
+      (triples (stream-cdr s)
+               (stream-cdr t)
+               (stream-cdr u)))))
+(define (pythagorean-triples)
+  (stream-filter
+    (lambda (x)
+      (= (+ (square (car x) (cadr x))) (square (caddr x))))
+    (triples integers integers integers)))
+
+;;; ex 3.70
+(define (merge-weighted s1 s2 weight)
+  (cond ((stream-null? s1) s2)
+        ((stream-null? s2) s1)
+        (else
+          (let ((s1car (stream-car s1))
+                (s2car (stream-car s2)))
+            (if (<= (weight s1car) (weight s2car))
+              (cons-stream s1car
+                           (merge (stream-cdr s1) s2))
+              (cons-stream s2car
+                           (merge s1 (stream-cdr s2))))))))
+(define (weighted-pairs s t weight)
+  (cons-stream
+    (list (stream-car s) (stream-car s))
+    (merge-weighted
+      (stream-map (lambda (x) (list (stream-car s) x))
+                  (stream-cdr t))
+      (weighted-pairs (stream-cdr s) (stream-cdr t) weight)
+      weight)))
+(define part-a
+  (weighted-pairs integers
+                  integers
+                  (lambda (p) (apply + p))))
+(define part-b
+  (define not-235
+    (stream-filter
+      (lambda (x)
+        (not (or (divisible? x 2)
+                 (divisible? x 3)
+                 (divisible? x 5))))
+      integers))
+  (weighted-pairs not-235
+                  not-235
+                  (lambda (p)
+                    (+ (* 2 (car p))
+                       (* 3 (cadr p))
+                       (* 5 (car p) (cadr p))))))
+
+;;; ex 3.71
+(define ramanujan-numbers
+  (define (cube x)
+    (* x x x))
+  (define (weight a b)
+    (+ (cube a) (cube b)))
+  (define (analyze pairs)
+    (let ((w1 (weight (stream-car pairs)))
+          (w2 (weight (stream-car (stream-cdr pairs)))))
+      (if (= w1 w2)
+        (stream-cons
+          (list w1 (stream-car pairs) (stream-car (stream-cdr pairs)))
+          (analyze (stream-cdr (stream-cdr pairs))))
+        (analyze (stream-cdr pairs)))))
+  (analyze (weighted-pairs integers integers weight)))
+;; first six Ramanujan numbers: 1729, 4104, 13832, 20683, 32832, 39312
+
+;;; ex 3.72
+(define thrice-square-sums
+  (define (weight a b)
+    (+ (square a) (square b)))
+  (define (analyze pairs)
+    (let ((w1 (weight (stream-car pairs)))
+          (w2 (weight (stream-car (stream-cdr pairs))))
+          (w3 (weight (stream-car (stream-cdr (stream-cdr pairs))))))
+      (if (= w1 w2 w3)
+        (stream-cons
+          (list w1
+                (stream-car pairs)
+                (stream-car (stream-cdr pairs))
+                (stream-car (stream-cdr (stream-cdr pairs))))
+          (analyze (stream-cdr (stream-cdr (stream-cdr pairs)))))
+        (analyze (stream-cdr pairs)))))
+  (analyze (weighted-pairs integers integers weight)))
+
