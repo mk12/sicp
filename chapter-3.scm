@@ -1915,7 +1915,7 @@ final-values
         ((pred (stream-car s))
          (cons-stream (stream-car s)
                       (stream-filter pred (stream-cdr s))))
-        (else (stream-filter pred (stream-cdr stream)))))
+        (else (stream-filter pred (stream-cdr s)))))
 (define (display-stream s)
   (stream-for-each display-line s))
 (define (display-line x) (display x) (newline))
@@ -2376,4 +2376,6 @@ final-values
           (analyze (stream-cdr (stream-cdr (stream-cdr pairs)))))
         (analyze (stream-cdr pairs)))))
   (analyze (weighted-pairs integers integers weight)))
+
+;; ex 3.73
 
