@@ -1,33 +1,38 @@
-;;; Copyright 2014 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 ;;; Structure and Interpretation of Computer Programs
 ;;; Chapter 1: Building Abstractions with Procedures
+
+(load "prelude.scm")
 
 ;;;;; Section 1.1: The elements of programming
 
 ;;; ex 1.1
-10 ; => 10
-(+ 5 3 4) ; => 12
-(- 9 1) ; => 8
-(/ 6 2) ; => 3
-(+ (* 2 4) (- 4 6)) ; => -16
-(define a 3)
-(define b (+ a 1))
-(+ a b (* a b)) ; => 19
-(= a b) ; => #f
-(if (and (> b a) (< b (* a b))) b a) ; => 4
-(cond ((= a 4) 6)
-      ((= b 4) (+ 6 7 a))
-      (else 25))
-;; => 16
-(* (cond ((> a b) a)
-         ((< a b) b)
-         (else -1))
-   (+ a 1))
-;; => 16
+(check
+  10 => 10
+  (+ 5 3 4) => 12
+  (- 9 1) => 8
+  (/ 6 2) => 3
+  (+ (* 2 4) (- 4 6)) => 6
+  (define a 3)
+  (define b (+ a 1))
+  (+ a b (* a b)) => 19
+  (= a b) => #f
+  (if (and (> b a) (< b (* a b))) b a) => 4
+  (cond ((= a 4) 6)
+        ((= b 4) (+ 6 7 a))
+        (else 25))
+  => 16
+  (* (cond ((> a b) a)
+          ((< a b) b)
+          (else -1))
+    (+ a 1))
+  => 16)
 
 ;;; ex 1.2
-(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5)))))
-   (* 3 (- 6 2) (- 2 7)))
+(check
+  (/ (+ 5 4 (- 2 (- 3 (+ 6 4/5))))
+     (* 3 (- 6 2) (- 2 7)))
+  => -37/150)
 
 ;;; ex 1.3
 (define (ex-1.3 a b c)
@@ -47,16 +52,19 @@
 ;; adding its absolute value, so this procedure performs a + |b| in all cases.
 
 ;;; ex 1.5
-(define (p) (p))
-(define (test x y)
-  (if (= x 0) 0 y))
-(test 0 (p)) ; => no value
+(define (ex-1.5)
+  (define (p) (p))
+  (define (test x y)
+    (if (= x 0) 0 y))
+  (test 0 (p)))
 ;; applicative: The expression will never return a value because the interpreter
 ;; tries to evaluate `(p)` and enters endless recursion.
 ;; normal: The expression will evaluate to zero. The `(p)` expression is never
 ;; evaluated because it is not necessary to do so.
 
 ;;; example 1.1.7 (Newton sqrt)
+(define (square x)
+  (* x x))
 (define (average x y)
   (/ (+ x y) 2))
 (define (improve guess x)
@@ -67,7 +75,7 @@
   (if (good-enough? guess x)
     guess
     (sqrt-iter (improve guess x) x)))
-(define (sqrt x)
+(define (my-sqrt x)
   (sqrt-iter 1.0 x))
 
 ;;; ex 1.6
@@ -82,8 +90,9 @@
 ;; tolerance is a fixed amount. It can't be too small or else it will take too
 ;; long to compute the square roots of large numbers, but at the same time, it
 ;; is impossible to use the procedure for values smaller than the tolerance.
-(sqrt 0.000002) ; => 0.0312713096020622 (should be 0.0014142...)
-(square (sqrt 0.000002)) ; => 0.000977894804228028
+(check
+  (my-sqrt 0.000002) ~> 0.0312713096020622 ; (should be 0.0014142...)
+  (square (my-sqrt 0.000002)) ~> 0.000977894804228028)
 ;; The test is inadequate for very large numbers because, with limited
 ;; precision, it is impossible to represent small differences between very large
 ;; numbers. The good-enough? difference will eventually become zero, but it
@@ -97,8 +106,9 @@
     (if (good-enough? guess better)
       better
       (sqrt-iter better x))))
-(sqrt 0.000002) ; => 0.00141421356261785
-(square (sqrt 0.000002)) ; => 2.00000000069227e-06
+(check
+  (my-sqrt 0.000002) ~> 0.00141421356261785
+  (square (my-sqrt 0.000002)) ~> 2.00000000069227e-06)
 
 ;;; ex 1.8
 (define (improve guess x)
@@ -135,23 +145,25 @@
     b
     (i+ (dec a) (inc b))))
 ;; `r+` generates a recursive process.
-(r+ 4 5)
-(inc (r+ 3 5))
-(inc (inc (r+ 2 5)))             ; expanding
-(inc (inc (inc (r+ 1 5))))
-(inc (inc (inc (inc (r+ 0 5))))) ; 4 deffered operations
-(inc (inc (inc (inc 5))))
-(inc (inc (inc 6)))              ; contracting
-(inc (inc 7))
-(inc 8)
-9
+(check
+  (r+ 4 5)
+  => (inc (r+ 3 5))
+  => (inc (inc (r+ 2 5)))             ; expanding
+  => (inc (inc (inc (r+ 1 5))))
+  => (inc (inc (inc (inc (r+ 0 5))))) ; 4 deferred operations
+  => (inc (inc (inc (inc 5))))
+  => (inc (inc (inc 6)))              ; contracting
+  => (inc (inc 7))
+  => (inc 8)
+  => 9)
 ;; `i+` generates an iterative process.
-(i+ 4 5)
-(i+ 3 6)
-(i+ 2 7)
-(i+ 1 8)
-(i+ 0 9)
-9
+(check
+  (i+ 4 5)
+  => (i+ 3 6)
+  => (i+ 2 7)
+  => (i+ 1 8)
+  => (i+ 0 9)
+  => 9)
 
 ;;; ex 1.10
 (define (A x y)
@@ -160,9 +172,10 @@
         ((= y 1) 2)
         (else (A (- x 1)
                  (A x (- y 1))))))
-(A 1 10) ; => 1024
-(A 2 4)  ; => 65536
-(A 3 3)  ; => 65536
+(check
+  (A 1 10) => 1024
+  (A 2 4) => 65536
+  (A 3 3) => 65536)
 (define (f n) (A 0 n))   ; 2n
 (define (g n) (A 1 n))   ; 2^n
 (define (h n) (A 2 n))   ; 2^2^2^... (n 2s)
@@ -235,12 +248,13 @@
     theta
     (p (sine (/ theta 3.0)))))
 ;; (a) The procedure `p` is evaluated five times when `(sine 12.15)` is eval'd.
-(sine 12.15)
-(p (sine 4.05))
-(p (p (sine 1.35)))
-(p (p (p (sine 0.45))))
-(p (p (p (p (sine 0.15)))))
-(p (p (p (p (p (sine 0.05)))))) ; five times when theta <= 0.1
+(check
+  (sine 12.15)
+  => (p (sine 4.05))
+  => (p (p (sine 1.35)))
+  => (p (p (p (sine 0.45))))
+  => (p (p (p (p (sine 0.15)))))
+  => (p (p (p (p (p (sine 0.05))))))) ; five times when theta <= 0.1
 ;; (b) The order of growth for sine:
 ;; During the process, `p` is evaluated n times such that a/3^n <= 0.1. Solving
 ;; for n gives us n = log(10a)/log(3), therefore the number of steps for sine
@@ -318,46 +332,48 @@
 
 ;;; ex 1.20
 ;; applicative order: 4 remainder operations
-(gcd 206 40)
-(gcd 40 (remainder 206 40))
-(gcd 40 6)
-(gcd 6 (remainder 40 6))
-(gcd 6 4)
-(gcd 4 (remainder 6 4))
-(gcd 4 2)
-(gcd 2 (remainder 4 2))
-(gcd 2 0)
-2
+(check
+  (gcd 206 40)
+  => (gcd 40 (remainder 206 40))
+  => (gcd 40 6)
+  => (gcd 6 (remainder 40 6))
+  => (gcd 6 4)
+  => (gcd 4 (remainder 6 4))
+  => (gcd 4 2)
+  => (gcd 2 (remainder 4 2))
+  => (gcd 2 0)
+  => 2)
 ;; normal order: 18 remainder operations
 ;; Each `b` gets evaluated once in the `(= b 0)` predicate (14 ops).
 ;; The final `a` gets evaluated in the end (4 ops).
 ;; 14 + 4 = 18
-(gcd 206 40)
-(gcd 40 (remainder 206 40))
-(gcd (remainder 206 40)
-     (remainder 40 (remainder 206 40)))
-(gcd (remainder 40 (remainder 206 40))
-     (remainder (remainder 206 40)
+(check
+  (gcd 206 40)
+  => (gcd 40 (remainder 206 40))
+  => (gcd (remainder 206 40)
+          (remainder 40 (remainder 206 40)))
+  => (gcd (remainder 40 (remainder 206 40))
+          (remainder (remainder 206 40)
+                      (remainder 40 (remainder 206 40))))
+  => (gcd (remainder (remainder 206 40)
+                      (remainder 40 (remainder 206 40)))
+          (remainder (remainder 40 (remainder 206 40))
+                      (remainder (remainder 206 40)
+                                (remainder 40 (remainder 206 40)))))
+  => (remainder (remainder 206 40)
                 (remainder 40 (remainder 206 40))))
-(gcd (remainder (remainder 206 40)
-                (remainder 40 (remainder 206 40)))
-     (remainder (remainder 40 (remainder 206 40))
-                (remainder (remainder 206 40)
-                           (remainder 40 (remainder 206 40)))))
-(remainder (remainder 206 40)
-           (remainder 40 (remainder 206 40)))
 
 ;;; ssec 1.2.6 (primality)
 ;; trial division
+(define (divides? a b)
+  (= (remainder b a) 0))
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+(define (smallest-divisor n)
+  (find-divisor n 2))
 (define (prime? n)
-  (define (divides? a b)
-    (= (remainder b a) 0))
-  (define (find-divisor n test-divisor)
-    (cond ((> (square test-divisor) n) n)
-          ((divides? test-divisor n) test-divisor)
-          (else (find-divisor n (+ test-divisor 1)))))
-  (define (smallest-divisor n)
-    (find-divisor n 2))
   (= n (smallest-divisor n)))
 ;; Fermat test
 (define (expmod base exp m)
@@ -377,13 +393,16 @@
            (fast-prime? n (- times 1)))))
 
 ;;; ex 1.21
-(smallest-divisor 199)   ; => 199
-(smallest-divisor 1999)  ; => 1999
-(smallest-divisor 19999) ; => 7
- 
+(check
+  (smallest-divisor 199) => 199
+  (smallest-divisor 1999) => 1999
+  (smallest-divisor 19999) => 7)
+
 ;;; ex 1.22
 (define (runtime)
-  (time->seconds (current-time)))
+  (let ((t (current-time)))
+    (+ (time-second t)
+       (/ (time-nanosecond t) 1e9))))
 (define (timed-prime-test n)
   (newline)
   (display n)
@@ -500,6 +519,7 @@
 ;; exercise did not specify what value to use).
 
 ;;; ex 1.25
+(define fast-expt fast-expt-it)
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
 ;; This procedure works, but it is not as efficient. The Fermat test takes much
@@ -513,27 +533,29 @@
 ;; the old definiton of `expmod`, the process will evolve like so:
 (define r remainder)
 (define s square)
-(expmod 5 9 9)
-(r (* 5 (expmod 5 8 9)) 9)
-(r (* 5 (r (s (expmod 5 4 9)) 9)) 9)
-(r (* 5 (r (s (r (s (expmod 5 2 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s (r (s (expmod 5 1 9)) 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s (r (s (r (* 5 (expmod 5 0 9)) 9)) 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s (r (s (r (* 5 1) 9)) 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s (r (s (r 5 9)) 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s (r (s 5) 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s (r 25 9)) 9)) 9)) 9)
-(r (* 5 (r (s (r (s 7) 9)) 9)) 9)
-(r (* 5 (r (s (r 49 9)) 9)) 9)
-(r (* 5 (r (s 4) 9)) 9)
-(r (* 5 (r 16 9)) 9)
-(r (* 5 7) 9)
-(r 35 9)
-8
+(check
+  (expmod 5 9 9)
+  => (r (* 5 (expmod 5 8 9)) 9)
+  => (r (* 5 (r (s (expmod 5 4 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (expmod 5 2 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (r (s (expmod 5 1 9)) 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (r (s (r (* 5 (expmod 5 0 9)) 9)) 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (r (s (r (* 5 1) 9)) 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (r (s (r 5 9)) 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (r (s 5) 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s (r 25 9)) 9)) 9)) 9)
+  => (r (* 5 (r (s (r (s 7) 9)) 9)) 9)
+  => (r (* 5 (r (s (r 49 9)) 9)) 9)
+  => (r (* 5 (r (s 4) 9)) 9)
+  => (r (* 5 (r 16 9)) 9)
+  => (r (* 5 7) 9)
+  => (r 35 9)
+  => 8)
 ;; Compare this to the evolution of the process using the new `expmod`:
-(expmod 5 9 9)
-(r (fast-expt 5 9) 9)
-(r 1953125 9)
+(check
+  (expmod 5 9 9)
+  => (r (fast-expt 5 9) 9)
+  => (r 1953125 9))
 ;; The original `expmod` doesn't need to deal with numbers anywhere near that
 ;; size, so it is much more efficient. This number may seem okay, but it will
 ;; grow exponentially with n (by definition), and will quickly require arbitrary
@@ -557,19 +579,22 @@
       #t))
   (helper 1))
 ;; These Carmichael numbers pass the Fermat tests for all values of a < n:
-(fermat-all? 561)  ; => #t
-(fermat-all? 1105) ; => #t
-(fermat-all? 1729) ; => #t
-(fermat-all? 2465) ; => #t
-(fermat-all? 2821) ; => #t
-(fermat-all? 6601) ; => #t
+(slow
+  (check
+    (fermat-all? 561) => #t
+    (fermat-all? 1105) => #t
+    (fermat-all? 1729) => #t
+    (fermat-all? 2465) => #t
+    (fermat-all? 2821) => #t
+    (fermat-all? 6601) => #t))
 ;; According to the trial divison procedure, none of them are prime:
-(prime? 561)  ; => #f
-(prime? 1105) ; => #f
-(prime? 1729) ; => #f
-(prime? 2465) ; => #f
-(prime? 2821) ; => #f
-(prime? 6601) ; => #f
+(check
+  (prime? 561) => #f
+  (prime? 1105) => #f
+  (prime? 1729) => #f
+  (prime? 2465) => #f
+  (prime? 2821) => #f
+  (prime? 6601) => #f)
 
 ;;; ex 1.28
 (define (square-check x m)
@@ -594,20 +619,23 @@
            (fast-prime? n (- times 1)))))
 (define (p? n) (fast-prime? n 100))
 ;; known composite numbers
-(p? 32)      ; => #f
-(p? 100)     ; => #f
-(p? 1000004) ; => #f 
+(check
+  (p? 32) => #f
+  (p? 100) => #f
+  (p? 1000004) => #f)
 ;; known prime numbers
-(p? 5)       ; => #t
-(p? 997)     ; => #t
-(p? 1000037) ; => #t
+(check
+  (p? 5) => #t
+  (p? 997) => #t
+  (p? 1000037) => #t)
 ;; known Carmichael numbers
-(p? 561)     ; => #f
-(p? 1105)    ; => #f
-(p? 1729)    ; => #f
-(p? 2465)    ; => #f
-(p? 2821)    ; => #f
-(p? 6601)    ; => #f
+(check
+  (p? 561) => #f
+  (p? 1105) => #f
+  (p? 1729) => #f
+  (p? 2465) => #f
+  (p? 2821) => #f
+  (p? 6601) => #f)
 
 ;;;;; Section 1.3: Formulating abstractions with higher-order procedures
 
@@ -617,8 +645,11 @@
     0
     (+ (term a)
        (sum term (next a) next b))))
-(define (indentity x) x)
-(define (inc x) (+ x 1))
+(define (integral f a b dx)
+  (define (add-dx x)
+    (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
 
 ;;; ex 1.29
 (define (simpson f a b n)
@@ -631,11 +662,12 @@
     (* h (sum term 0 inc n))))
 ;; The integral procedure is a bit inaccurate, whereas the `simpson` procedure
 ;; gives the exact answer even when n = 2. This is much better.
-(integral cube 0 1 0.01)  ; => 0.24998750000000042
-(integral cube 0 1 0.001) ; => 0.249999875000001
-(simpson cube 0 1 2)      ; => 3/4
-(simpson cube 0 1 100)    ; => 3/4
-(simpson cube 0 1 1000)   ; => 3/4
+(check
+  (integral cube 0 1 0.01) ~> 0.24998750000000042
+  (integral cube 0 1 0.001) ~> 0.249999875000001
+  (simpson cube 0 1 2) => 3/4
+  (simpson cube 0 1 100) => 3/4
+  (simpson cube 0 1 1000) => 3/4)
 
 ;;; ex 1.30
 (define (sum term a next b)
@@ -660,18 +692,20 @@
 (define product product-it)
 (define (factorial n)
   (product identity 1 inc n))
-(factorial 5) ; => 120
-(factorial 7) ; => 5040
+(check
+  (factorial 5) => 120
+  (factorial 7) => 5040)
 (define (approx-qpi n)
   (define (term k)
     (let ((r (remainder k 2)))
       (/ (+ k 2 (- r))
          (+ k 1 r))))
   (product term 1.0 inc n))
-(* 4 (approx-qpi 10))    ; => 3.2751010413348065
-(* 4 (approx-qpi 100))   ; => 3.1570301764551654
-(* 4 (approx-qpi 1000))  ; => 3.1431607055322552
-(* 4 (approx-qpi 10000)) ; => 3.1417497057380084
+(check
+  (* 4 (approx-qpi 10)) ~> 3.2751010413348065
+  (* 4 (approx-qpi 100)) ~> 3.1570301764551654
+  (* 4 (approx-qpi 1000)) ~> 3.1431607055322552
+  (* 4 (approx-qpi 10000)) ~> 3.1417497057380084)
 
 ;;; ex 1.32
 (define (accumulate-rec combine id term a next b)
@@ -718,12 +752,13 @@
 
 ;;; ex 1.34
 (define (f g) (g 2))
-(f square) ; => 4
-(f (lambda (z) (* z (+ z 1)))) ; => 6
+(check
+  (f square) => 4
+  (f (lambda (z) (* z (+ z 1)))) => 6)
 ;; If we try evaluating the combination `(f f)`, we get the following process:
-(f f)
-(f 2)
-(2 2)
+; (f f)
+; (f 2)
+; (2 2)
 ;; This gives an error, since 2 does not evaluate to a procedure. We cannot
 ;; apply 2 to the argument 2 because that doesn't make any sense.
 
@@ -752,7 +787,8 @@
            (search f b a))
           (else
             (error "Values are not of opposite sign" a b)))))
-(half-interval-method sin 2.0 4.0) ; => 3.141590118408203
+(check
+  (half-interval-method sin 2.0 4.0) ~> 3.141590118408203)
 ;; fixed point
 (define (fixed-point f first-guess)
   (define (try guess)
@@ -761,15 +797,17 @@
         next
         (try next))))
   (try first-guess))
-(fixed-point cos 1.0) ; => 0.7390822985224023
+(check
+  (fixed-point cos 1.0) ~> 0.7390822985224023)
 
 ;;; ex 1.35
 ;; See the relevant section of `proofs/proofs.pdf`.
-(/ (+ 1 (sqrt 5)) 2)                        ; => 1.618033988749895
-(fixed-point (lambda (x) (+ 1 (/ x))) 42.0) ; => 1.6180328499442242
+(check
+  (/ (+ 1 (sqrt 5)) 2) ~> 1.618033988749895
+  (fixed-point (lambda (x) (+ 1 (/ x))) 42.0) ~> 1.6180328499442242)
 
 ;;; ex 1.36
-(define (fixed-point f first-guess)
+(define (fixed-point-verbose f first-guess)
   (define (try guess)
     (let ((next (f guess)))
       (display next)
@@ -779,14 +817,12 @@
         (try next))))
   (try first-guess))
 (define (f x) (/ (log 1000) (log x)))
-(fixed-point f 5)
-4.29202967422018
-; ... 27 approximations ...
-4.555539314360711
-(fixed-point (lambda (x) (average x (f x))) 5)
-4.64601483711009
-; ... 7 approximations ...
-4.5555361005218895
+(hide-output
+  (check
+    (fixed-point-verbose f 5)
+    ~> 4.555539314360711 ; 29 approximations
+    (fixed-point-verbose (lambda (x) (average x (f x))) 5)
+    ~> 4.5555361005218895)) ; 9 approximations
 ;; Without average damping, it requires 20 more approximations.
 
 ;;; ex 1.37
@@ -807,17 +843,18 @@
 (define count-frac count-frac-it)
 (define (always-one i) 1.0)
 (define (approx-gr k) (count-frac always-one always-one k))
-(approx-gr 1)  ; => 1.0
-(approx-gr 2)  ; => 0.5
-(approx-gr 3)  ; => 0.6666666666666666
-(approx-gr 4)  ; => 0.6000000000000001
-(approx-gr 5)  ; => 0.625
-(approx-gr 6)  ; => 0.6153846153846154
-(approx-gr 7)  ; => 0.6190476190476191
-(approx-gr 8)  ; => 0.6176470588235294
-(approx-gr 9)  ; => 0.6181818181818182
-(approx-gr 10) ; => 0.6179775280898876
-(approx-gr 11) ; => 0.6180555555555556
+(check
+  (approx-gr 1) ~> 1.0
+  (approx-gr 2) ~> 0.5
+  (approx-gr 3) ~> 0.6666666666666666
+  (approx-gr 4) ~> 0.6000000000000001
+  (approx-gr 5) ~> 0.625
+  (approx-gr 6) ~> 0.6153846153846154
+  (approx-gr 7) ~> 0.6190476190476191
+  (approx-gr 8) ~> 0.6176470588235294
+  (approx-gr 9) ~> 0.6181818181818182
+  (approx-gr 10) ~> 0.6179775280898876
+  (approx-gr 11) ~> 0.6180555555555556)
 ;; When k = 11, the value is accurate to 4 decimal places.
 
 ;;; ex 1.38
@@ -827,12 +864,13 @@
       (* 2/3 (+ i 1))
       1))
   (+ 2 (count-frac always-one d k)))
-(approx-e 1)    ; => 3.0
-(approx-e 2)    ; => 2.6666666666666665
-(approx-e 3)    ; => 2.75
-(approx-e 4)    ; => 2.7142857142857144
-(approx-e 5)    ; => 2.71875
-(approx-e 1000) ; => 2.7182818284590455
+(check
+  (approx-e 1) ~> 3.0
+  (approx-e 2) ~> 2.6666666666666665
+  (approx-e 3) ~> 2.75
+  (approx-e 4) ~> 2.7142857142857144
+  (approx-e 5) ~> 2.71875
+  (approx-e 1000) ~> 2.7182818284590455)
 
 ;;; ex 1.39
 (define (tan-cf x k)
@@ -840,18 +878,19 @@
     (lambda (i) (if (= i 1) x (- (square x))))
     (lambda (i) (- (* i 2) 1))
     k))
-(define pi (/ (arctan 1) 4))
-(tan-cf (/ pi 3) 1) ; => 1.0471975511965976
-(tan-cf (/ pi 3) 2) ; => 1.650535956338694
-(tan-cf (/ pi 3) 3) ; => 1.7291124259895505
-(tan-cf (/ pi 3) 4) ; => 1.7319971836379957
-(tan-cf (/ pi 3) 5) ; => 1.7320501979592633
-(tan (/ pi 3))      ; => 1.7320508075688767
+(define pi (* (atan 1) 4))
+(check
+  (tan-cf (/ pi 3) 1) ~> 1.0471975511965976
+  (tan-cf (/ pi 3) 2) ~> 1.650535956338694
+  (tan-cf (/ pi 3) 3) ~> 1.7291124259895505
+  (tan-cf (/ pi 3) 4) ~> 1.7319971836379957
+  (tan-cf (/ pi 3) 5) ~> 1.7320501979592633
+  (tan (/ pi 3)) ~> 1.7320508075688767)
 
 ;;; ssec 1.3.4 (returning procs)
 (define (average-damp f)
   (lambda (x) (average x (f x))))
-(define (sqrt x)
+(define (my-sqrt x)
   (fixed-point
     (average-damp (lambda (y) (/ x y)))
     1.0))
@@ -865,7 +904,7 @@
     (fixed-point
       (lambda (x) (- x (/ (f x) (df x))))
       guess)))
-(define (sqrt x)
+(define (my-sqrt x)
   (newton
     (lambda (y) (- (square y) x))
     1.0))
@@ -883,31 +922,34 @@
 (define (double f)
   (lambda (x)
     (f (f x))))
-(((double (double double)) inc) 5)
-(((double (lambda (f) (double (double f)))) inc) 5)
-(((lambda (f) (double (double (double (double f))))) inc) 5)
-((double (double (double (double inc)))) 5)
-((double (double (double (lambda (x) (inc (inc x)))))) 5)
-((double (double (lambda (x) (inc (inc (inc (inc x))))))) 5)
-((double (lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc x)))))))))) 5)
-((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
-   (inc (inc (inc x))))))))))))))))) 5)
-(inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
-   (inc 5))))))))))))))))
-21
+(check
+  (((double (double double)) inc) 5)
+  => (((double (lambda (f) (double (double f)))) inc) 5)
+  => (((lambda (f) (double (double (double (double f))))) inc) 5)
+  => ((double (double (double (double inc)))) 5)
+  => ((double (double (double (lambda (x) (inc (inc x)))))) 5)
+  => ((double (double (lambda (x) (inc (inc (inc (inc x))))))) 5)
+  => ((double (lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc x)))))))))) 5)
+  => ((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
+       (inc (inc (inc (inc x))))))))))))))))) 5)
+  => (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
+       (inc 5))))))))))))))))
+  => 21)
 
 ;;; ex 1.42
 (define (compose f g)
   (lambda (x)
     (f (g x))))
-((compose square inc) 6) ; => 49
+(check
+  ((compose square inc) 6) => 49)
 
 ;;; ex 1.43
 (define (repeated f n)
   (if (= n 1)
     f
     (compose (repeated f (- n 1)) f)))
-((repeated square) 5) ; => 625
+(check
+  ((repeated square 2) 5) => 625)
 
 ;;; ex 1.44
 (define dx 0.1)
@@ -917,11 +959,12 @@
           (f x)
           (f (+ x dx)))
        3)))
-((smooth square) 2)              ; => 4.006666666666667
-(((repeated smooth 5) square) 2) ; => 4.033333333333333
+(check
+  ((smooth square) 2) ~> 4.006666666666667
+  (((repeated smooth 5) square) 2) ~> 4.033333333333333)
 
 ;;; ex 1.45
-(define (sqrt x)
+(define (my-sqrt x)
   (fixed-point
     (average-damp (lambda (y) (/ x y)))
     1.0))
@@ -935,9 +978,10 @@
                (floor (/ (log n) (log 2))))
      (lambda (y) (/ x (expt y (- n 1)))))
     1.0))
-(nth-root 4 2)        ; => 2.000000000000002
-(nth-root 256 8)      ; => 2.0000000000039666
-(nth-root 1048576 20) ; => 1.999999063225966
+(check
+  (nth-root 4 2) ~> 2.000000000000002
+  (nth-root 256 8) ~> 2.0000000000039666
+  (nth-root 1048576 20) ~> 1.999999063225966)
 
 ;;; ex 1.46
 (define (iterative-improve good-enough? improve)
@@ -946,10 +990,23 @@
       guess
       (iter (improve guess))))
   iter)
-(define (sqrt x)
+(define (my-sqrt x)
   ((iterative-improve
      (lambda (guess)
-       (< (abs (- square guess) x) tolerance))
+       (< (abs (- (square guess) x)) tolerance))
      (lambda (guess)
        (average guess (/ x guess))))
    1.0))
+(check
+  (my-sqrt 2) ~> 1.4142156862745097)
+(define (fixed-point f first-guess)
+  ((iterative-improve
+     (lambda (guess)
+       (< (abs (- guess (f guess))) tolerance))
+     f)
+   first-guess))
+(check
+  (fixed-point cos 1.0) ~> 0.7390893414033928)
+;; This is slightly different from the original fixed-point implementation
+;; because it returns `guess` when it's good enough, not `next` (that is, the
+;; original always does one more improvement).

@@ -1,5 +1,53 @@
-;;; Copyright 2014 Mitchell Kember. Subject to the MIT License.
-;;; Basic functional procedures for Schemes lacking them.
+;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
+;;; Procedures available for use in all chapters.
+
+;;;;; Syntax
+
+(define run-slow #f)
+(define-syntax slow
+  (syntax-rules ()
+    ((_ e* ...) (when run-slow e* ...))))
+
+(define-syntax check
+  (syntax-rules (=> ~>)
+    ((_) (void))
+    ((_ e1 => e2 e* ...)
+      (begin
+        (assert-equal e1 e2)
+        (check e2 e* ...)))
+    ((_ e1 ~> e2 e* ...)
+      (begin
+        (assert-close e1 e2)
+        (check e2 e* ...)))
+    ((_ e e* ...)
+      (begin e (check e* ...)))))
+
+(define-syntax assert-equal
+  (syntax-rules ()
+    ((_ e1 e2)
+      (unless (equal? e1 e2)
+        (syntax-error
+          #'e1
+          (format
+            "assert-equal failed!\n\nleft: ~s\n => ~s\n\nright: ~s\n => ~s\n\n"
+            'e1 e1 'e2 e2))))))
+
+(define-syntax assert-close
+  (syntax-rules ()
+    ((_ e1 e2)
+      (unless (close? e1 e2)
+        (syntax-error
+          #'e1
+          (format
+            (string-append
+              "assert-close failed!\n\nleft: ~s\n => ~s\n\nright: ~s\n => ~s"
+              "\n\ndelta: ~s > ~s\n\n")
+            'e1 e1 'e2 e2 (abs (- e1 e2)) epsilon))))))
+
+(define-syntax hide-output
+  (syntax-rules ()
+    ((_ e* ...)
+      (parameterize ([current-output-port (open-output-string)]) e* ...))))
 
 ;;;;; Lists
 
@@ -36,7 +84,7 @@
 (define (reduce f xs)
   (fold-left f (car xs) (cdr xs)))
 
-(define (mappend f . xss)
+(define (flat-map f . xss)
   (apply append (apply map f xss)))
 
 ;;;;; Math
@@ -49,12 +97,17 @@
     '()
     (cons a (range (+ a 1) b))))
 
-(define (random high)
-  (if (integer? high)
-    (random-integer high)
-    (* high (random-real))))
+(define epsilon 1e-10)
+(define (close? a b)
+  (< (abs (- a b)) epsilon))
 
-;;;; Other
+(random-seed
+  (+ 1 (remainder (time-second (current-time))
+                  (- (expt 2 32) 2))))
+(define random-integer random)
+(define (random-real) (random 1.0))
+
+;;;;; Functions
 
 (define (identity x) x)
 (define (comp f g) (lambda (x) (f (g x))))
