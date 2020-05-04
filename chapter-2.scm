@@ -1,6 +1,8 @@
-;;; Copyright 2014 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 ;;; Structure and Interpretation of Computer Programs
 ;;; Chapter 2: Building Abstractions with Data
+
+(load "prelude.scm")
 
 ;;;;; Section 2.1: Introduction to data abstraction
 
@@ -43,10 +45,11 @@
         (s (* (sgn n) (sgn d))))
     (cons (* s (/ (abs n) g))
           (/ (abs d) g))))
-(make-rat 5 10)   ; => (1 . 2)
-(make-rat -5 10)  ; => (-1 . 2)
-(make-rat -5 -10) ; => (1 . 2)
-(make-rat 5 -10)  ; => (-1 . 2)
+(check
+  (make-rat 5 10) => '(1 . 2)
+  (make-rat -5 10) => '(-1 . 2)
+  (make-rat -5 -10) => '(1 . 2)
+  (make-rat 5 -10) => '(-1 . 2))
 
 ;;; ex 2.2
 (define make-point cons)
@@ -68,10 +71,11 @@
   (display ",")
   (display (y-point p))
   (display ")"))
-(midpoint-segment
-  (make-segment (make-point 6 5)
-                (make-point 12 13)))
-;; => (9 . 9)
+(check
+  (midpoint-segment
+    (make-segment (make-point 6 5)
+                  (make-point 12 13)))
+  => '(9 . 9))
 
 ;;; ex 2.3
 ;; two corners
@@ -101,17 +105,20 @@
      (height-rect rect)))
 
 ;;; ex 2.4
-(define (cons x y)
+(define (my-cons x y)
   (lambda (m) (m x y)))
-(define (car z)
+(define (my-car z)
   (z (lambda (x y) x)))
-(define (cdr z)
+(define (my-cdr z)
   (z (lambda (x y) y)))
+(check
+  (my-car (my-cons 7 12)) => 7
+  (my-cdr (my-cons 7 12)) => 12)
 
 ;;; ex 2.5
 ;; Due to the fundamental theorem of arithmetic, 2^a*3^b will always produce a
 ;; unique product given a unique pair of integers a and b.
-(define (cons x y)
+(define (my-cons x y)
   (* (expt 2 x) (expt 3 y)))
 (define (count-divides a b)
   (define (count a n)
@@ -120,35 +127,37 @@
         (count q (+ n 1))
         n)))
   (count a 0))
-(define (car z)
+(define (my-car z)
   (count-divides z 2))
-(define (cdr z)
+(define (my-cdr z)
   (count-divides z 3))
-(car (cons 7 12)) ; => 7
-(cdr (cons 7 12)) ; => 12
+(check
+  (my-car (my-cons 7 12)) => 7
+  (my-cdr (my-cons 7 12)) => 12)
 
 ;;; ex 2.6
-(define zero (lambda (f) (lambda (x) x)))
-(define (inc n)
+(define church0 (lambda (f) (lambda (x) x)))
+(define (church-inc n)
   (lambda (f)
     (lambda (x)
       (f ((n f) x)))))
-(define one (lambda (f) (lambda (x) (f x))))
-(define two (lambda (f) (lambda (x) (f (f x)))))
-(define (+ a b)
+(define church1 (lambda (f) (lambda (x) (f x))))
+(define church2 (lambda (f) (lambda (x) (f (f x)))))
+(define (church+ a b)
   (lambda (f)
     (lambda (x)
       ((a f) ((b f) x)))))
-(define (count n)
+(define (church->number n)
   ((n (lambda (x) (+ x 1))) 0))
-(count zero)         ; => 0
-(count one)          ; => 1
-(count two)          ; => 2
-(count (inc two))    ; => 3
-(coint (+ one zero)) ; => 1
-(coint (+ zero two)) ; => 2
-(coint (+ one two))  ; => 3
-(coint (+ two two))  ; => 4
+(check
+  (church->number church0) => 0
+  (church->number church1) => 1
+  (church->number church2) => 2
+  (church->number (church-inc church2)) => 3
+  (church->number (church+ church1 church0)) => 1
+  (church->number (church+ church0 church2)) => 2
+  (church->number (church+ church1 church2)) => 3
+  (church->number (church+ church2 church2)) => 4)
 
 ;;; extended ex 2.1.4 (interval arithmetic)
 (define (add-interval x y)
@@ -184,31 +193,43 @@
 ;;; ex 2.9
 (define (width x)
   (/ (- (upper-bound x) (lower-bound x)) 2))
-;; The width of a sum or difference of two intervals is a functin only of the
+;; The width of a sum or difference of two intervals is a function only of the
 ;; widths of the intervals being added or subtracted. Given intervals x and y,
-(define x (make-interval x1 x2))
-(define y (make-interval y1 y2))
-(= (width x) (/ (- x2 x1) 2))
-(= (width y) (/ (- y2 y1) 2))
+(let* ((x1 (random-integer 1000))
+       (x2 (random-integer 1000))
+       (y1 (random-integer 1000))
+       (y2 (random-integer 1000))
+       (x (make-interval x1 x2))
+       (y (make-interval y1 y2)))
+  (check
+    (width x) => (/ (- x2 x1) 2)
+    (width y) => (/ (- y2 y1) 2))
 ;; we can calculate the width of the sum:
-(width (add-interval x y))
-(width (make-interval (+ x1 y1) (+ x2 y2)))
-(/ (- (+ x2 y2) (+ x1 y1)) 2)
-(/ (+ (- x2 x1) (- y2 y1)) 2)
-(+ (/ (- x2 x1) 2) (/ (- y2 y1) 2))
-(+ (width x) (width y))
+  (check
+    (width (add-interval x y))
+    => (width (make-interval (+ x1 y1) (+ x2 y2)))
+    => (/ (- (+ x2 y2) (+ x1 y1)) 2)
+    => (/ (+ (- x2 x1) (- y2 y1)) 2)
+    => (+ (/ (- x2 x1) 2) (/ (- y2 y1) 2))
+    => (+ (width x) (width y))))
 ;; The width of the sum is the sum of the widths. This also applies for
 ;; subtraction because (- x y) is the same as (+ x z) where z is -y. On the
 ;; other hand, the width of a product or quotient is not a function only of the
 ;; widths of the intervals being multiplied or divided. A counterexample:
-(define x (make-interval 0 10)) ; => width 5
-(define y (make-interval 0 2))  ; => width 1
-(add-interval x y)              ; => width 10
+(check
+  (define x (make-interval 0 10))
+  (define y (make-interval 0 2))
+  (width x) => 5
+  (width y) => 1
+  (width (mul-interval x y)) => 10)
 ;; The same input widths, 5 and 1, can produce a different product width,
 ;; therefore the product width is not a function of only the input widths:
-(define x (make-interval -5 5)) ; => width 5
-(define y (make-interval -1 1)) ; => width 1
-(add-interval x y)              ; => width 5
+(check
+  (define x (make-interval -5 5))
+  (define y (make-interval -1 1))
+  (width x) => 5
+  (width y) => 1
+  (width (mul-interval x y)) => 5)
 ;; This also applies to divison since any division can be restated as a
 ;; multiplication problem: (/ x y) becomes (* x (/ y)).
 
@@ -217,7 +238,7 @@
   (let ((y1 (lower-bound y))
         (y2 (upper-bound y)))
     (if (<= y1 0 y2)
-      (error "Can't divide by an interval spanning zero.")
+      (error 'div-interval "Can't divide by an interval spanning zero.")
       (mul-interval
         x
         (make-interval (/ y2) (/ y1))))))
@@ -233,7 +254,7 @@
        (cond
          ((> y1 0) (make-interval (* x1 y1) (* x2 y2)))
          ((< y2 0) (make-interval (* x2 y1) (* x1 y2)))
-         (else (make-interval (* x2 y1) (* x2 y2))))
+         (else (make-interval (* x2 y1) (* x2 y2)))))
       ((< x2 0)
        (cond
          ((> y1 0) (make-interval (* x1 y2) (* x2 y1)))
@@ -244,7 +265,7 @@
          ((> y1 0) (make-interval (* x1 y2) (* x2 y2)))
          ((< y2 0) (make-interval (* x2 y1) (* x1 y1)))
          (else (make-interval (min (* x1 y2) (x2 y1))
-                              (max (* x1 y1) (x2 y2))))))))))
+                              (max (* x1 y1) (x2 y2)))))))))
 
 ;;; ex 2.12
 (define (make-center-width c w)
@@ -284,11 +305,12 @@
 ;; This is back into centre & percent form. The centre of the product interval
 ;; is ci*cj, and its percentage uncertainty is pi + pj -- the sum. We can try it
 ;; out to make sure:
-(define i (make-center-percent 30 1))
-(define j (make-center-percent 25 3))
-(define i*j (mul-interval i j))
-(+ (percent i) (percent j))    ; => 4
-(exact->inexact (percent i*j)) ; => 3.9988003598920323
+(check
+  (define i (make-center-percent 30 1))
+  (define j (make-center-percent 25 3))
+  (define i*j (mul-interval i j))
+  (+ (percent i) (percent j)) => 4
+  (percent i*j) ~> 3.9988003598920323)
 
 ;;; ex 2.14
 (define (par1 r1 r2)
@@ -302,19 +324,21 @@
                     (div-interval one r2)))))
 ;; Lem is right. The uncertainty of the result is different for mathematically
 ;; equivalent expressions calculated by `par1` and `par2`:
-(define r1 (make-center-percent 10000 5))
-(define r2 (make-center-percent 330 10))
-(percent (par1 r1 r2)) ; => 19.931607019958708
-(percent (par2 r1 r2)) ; => 9.841433938087881
+(check
+  (define r1 (make-center-percent 10000 5))
+  (define r2 (make-center-percent 330 10))
+  (percent (par1 r1 r2)) ~> 19.931607019958708
+  (percent (par2 r1 r2)) ~> 9.841433938087881)
 ;; When we divide an interval by itself, we should get exactly one. Instead, we
 ;; get an interval whose center is an approximation of one, and it still has a
 ;; fair amount of uncertainty.
-(define i (make-center-percent 5000 2))
-(define j (make-center-percent 2500 1))
-(center (div-interval i i))  ; => 1.000800320128051 (should be 1)
-(percent (div-interval i i)) ; => 3.998400639744109 (should be 0%)
-(center (div-interval i j))  ; => 2.000600060006000 (correct)
-(percent (div-interval i j)) ; => 2.999400119975999 (correct)
+(check
+  (define i (make-center-percent 5000 2))
+  (define j (make-center-percent 2500 1))
+  (center (div-interval i i)) ~> 1.000800320128051 ; ideally should be 1
+  (percent (div-interval i i)) ~> 3.998400639744109 ; ideally should be 0%
+  (center (div-interval i j)) ~> 2.000600060006000 ; correct
+  (percent (div-interval i j)) ~> 2.999400119975999) ; correct
 
 ;;; ex 2.15
 ;; Yes, Eva is right. The interval calculation system produces different
@@ -359,9 +383,9 @@
       ys
       (iter (cdr xs)
             (cons (car xs) ys))))
-  (iter xs nil))
-(define reverse reverse-it)
-(reverse (list 1 4 9 16 25)) ; => (25 16 9 4 1)
+  (iter xs '()))
+(check
+  (reverse-it (list 1 4 9 16 25)) => '(25 16 9 4 1))
 
 ;;; ex 2.19
 (define us-coins (list 50 25 10 5 1))
@@ -379,12 +403,14 @@
              (except-first-denom coins))
          (cc (- amount (first-denom coins))
              coins)))))
-(cc 100 us-coins) ; => 292
-(cc 100 uk-coins) ; => 104561
+(slow
+  (check
+    (cc 100 uk-coins) => 104561))
 ;; The order of the coin value list does not affect the answer produced by `cc`:
-(cc 100 us-coins)            ; => 292
-(cc 100 (reverse us-coins))  ; => 292
-(cc 100 (list 5 50 1 25 10)) ; => 292
+(check
+  (cc 100 us-coins) => 292
+  (cc 100 (reverse us-coins)) => 292
+  (cc 100 (list 5 50 1 25 10)) => 292)
 ;; This is because the cc algorithm does not assume the coin values are sorted
 ;; in any particular order. It recurs on the `cdr` of the list, so it will always
 ;; be able to reach the end of the list unless it reaches one of the other base
@@ -403,13 +429,14 @@
     ((null? xs) xs)
     ((even? (car xs)) (helper even? xs))
     (else (helper odd? xs))))
-(same-parity 1 2 3 4 5 6 7) ; => (1 3 5 7)
-(same-parity 2 3 4 5 6 7)   ; => (2 4 6)
+(check
+  (same-parity 1 2 3 4 5 6 7) => '(1 3 5 7)
+  (same-parity 2 3 4 5 6 7) => '(2 4 6))
 
 ;;; ex 2.21
 (define (square-list-1 xs)
   (if (null? xs)
-    nil
+    '()
     (cons (square x)
           (square-list-1 (cdr xs)))))
 (define (square-list-2 xs)
@@ -423,7 +450,7 @@
       (iter (cdr things)
             (cons (square (car things))
                   answer))))
-  (iter items nil))
+  (iter items '()))
 ;; This reverses the order of the list because he is building up a new list in
 ;; the reverse order that the original one was constructed. The first element to
 ;; be consed onto the original list is its last element. Consing in reverse
@@ -435,8 +462,9 @@
       (iter (cdr things)
             (cons answer
                   (square (car things))))))
-  (iter items nil))
-(square-list (list 1 2 3 4 5)) ; => (((((() . 1) . 4) . 9) . 16) . 25)
+  (iter items '()))
+(check
+  (square-list (list 1 2 3 4 5)) => '(((((() . 1) . 4) . 9) . 16) . 25))
 ;; When Louis interchanges the arguments to cons, it doesn't work because he is
 ;; trying to cons a list onto a single element. This creates a list structure
 ;; (in that it is made up of pairs), but this is not a sequence. Louis is trying
@@ -445,23 +473,24 @@
 ;; way to its end. He could use `append` instead of `cons` to achieve this, but
 ;; this would end up being much less efficient than the recursive map.
 
-;;; ex 1.23
-(define (for-each f xs)
+;;; ex 2.23
+(define (my-for-each f xs)
   (cond
-    ((null? xs) #t)
+    ((null? xs) (void))
     (else (f (car xs))
           (for-each f (cdr xs)))))
-(for-each
-  (lambda (x)
-    (newline)
-    (display x))
-  (list 57 321 88))
-;; 57
-;; 321
-;; 88
+(check
+  (capture-output
+    (my-for-each
+      (lambda (x)
+        (newline)
+        (display x))
+      (list 57 321 88)))
+  => "\n57\n321\n88")
 
 ;;; ex 2.24
-(list 1 (list 2 (list 3 4))) ; => (1 (2 (3 4)))
+(check
+  (list 1 (list 2 (list 3 4))) => '(1 (2 (3 4))))
 ;; box-and-pointer structure
 ; [*|*]--->[*|X]
 ;  |        |
@@ -478,30 +507,36 @@
 ;    3 4
 
 ;;; ex 2.25
-(car (cdr (car (cdr (cdr '(1 3 (5 7) 9)))))) ; => 7
-(car (car '((7)))) ; => 7
-(car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
-  '(1 (2 (3 (4 (5 (6 7)))))))))))))))))) ; => 7
+(check
+  (car (cdr (car (cdr (cdr '(1 3 (5 7) 9))))))
+  => 7
+  (car (car '((7))))
+  => 7
+  (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
+    '(1 (2 (3 (4 (5 (6 7))))))))))))))))))
+  => 7)
 
 ;;; ex 2.26
-(define x (list 1 2 3))
-(define y (list 4 5 6))
-(append x y) ; => (1 2 3 4 5 6)
-(cons x y)   ; => ((1 2 3) 4 5 6)
-(list x y)   ; => ((1 2 3) (4 5 6))
+(check
+  (define x (list 1 2 3))
+  (define y (list 4 5 6))
+  (append x y) => '(1 2 3 4 5 6)
+  (cons x y) => '((1 2 3) 4 5 6)
+  (list x y) => '((1 2 3) (4 5 6)))
 
 ;;; ex 2.27
 (define (deep-reverse-rec x)
   (if (pair? x)
-    (append (deep-reverse (cdr x))
-            (list (deep-reverse (car x))))
+    (append (deep-reverse-rec (cdr x))
+            (list (deep-reverse-rec (car x))))
     x))
 (define (deep-reverse-it x)
   (if (pair? x)
     (map deep-reverse-it (reverse x))
     x))
-(deep-reverse-rec '((1 2) (3 4))) ; => ((4 3) (2 1))
-(deep-reverse-it '((1 2) (3 4)))  ; => ((4 3) (2 1))
+(check
+  (deep-reverse-rec '((1 2) (3 4))) => '((4 3) (2 1))
+  (deep-reverse-it '((1 2) (3 4))) => '((4 3) (2 1)))
 
 ;;; ex 2.28
 (define (fringe t)
@@ -512,8 +547,9 @@
              (fringe (cdr t))))
     (else (cons (car t)
                 (fringe (cdr t))))))
-(fringe '((1 2) (3 4)))         ; => (1 2 3 4)
-(fringe '((((5) 2) ((3 2) 9)))) ; => (5 2 3 2 9)
+(check
+  (fringe '((1 2) (3 4))) => '(1 2 3 4)
+  (fringe '((((5) 2) ((3 2) 9)))) => '(5 2 3 2 9))
 
 ;;; ex 2.29
 (define make-mobile list)
@@ -555,7 +591,7 @@
 ;;; ex 2.30
 (define (square-tree-1 t)
   (cond
-    ((null? t) nil)
+    ((null? t) '())
     ((not (pair? t)) (square t))
     (else (cons (square-tree (car t))
                 (square-tree (cdr t))))))
@@ -566,12 +602,13 @@
            (square t)))
        t))
 (define square-tree square-tree-1)
-(square-tree '(1 (2 (3 4) 5) (6 7))) ; => (1 (4 (9 16) 25) (36 49))
+(check
+  (square-tree '(1 (2 (3 4) 5) (6 7))) => '(1 (4 (9 16) 25) (36 49)))
 
 ;;; ex 2.31
 (define (tree-map-1 f t)
   (cond
-    ((null? t) nil)
+    ((null? t) '())
     ((not (pair? t)) (f t))
     (else (cons (tree-map-1 f (car t))
                 (tree-map-1 f (cdr t))))))
@@ -586,7 +623,7 @@
 ;;; ex 2.32
 (define (powerset s)
   (if (null? s)
-    (list nil)
+    (list '())
     (let ((first-item (car s))
           (subsets-rest (subsets (cdr s))))
       (append subsets-rest
@@ -601,12 +638,12 @@
 ;; and they are sufficient to construct the powerset of any set.
 
 ;;; ssec 2.2.3 (seq ops)
-(define (filter pred xs)
+(define (my-filter pred xs)
   (cond
-    ((null? xs) nil)
+    ((null? xs) '())
     ((pred (car xs))
-     (cons (car xs) (filter pred (cdr xs))))
-    (else (filter pred (cdr xs)))))
+     (cons (car xs) (my-filter pred (cdr xs))))
+    (else (my-filter pred (cdr xs)))))
 (define (reduce op initial xs)
   (if (null? xs)
     initial
@@ -614,25 +651,25 @@
         (reduce op initial (cdr xs)))))
 (define (range a b)
   (if (> a b)
-    nil
+    '()
     (cons a (range (+ a 1) b))))
 (define (leaves t)
   (cond
-    ((null? t) nil)
+    ((null? t) '())
     ((not (pair? t)) (list t))
     (else (append (leaves (car t))
                   (leaves (cdr t))))))
 (define (sum-odd-squares t)
   (reduce + 0 (map square (filter odd? (leaves t)))))
 (define (even-fibs n)
-  (reduce cons nil (filter even? (map fib (range 0 n)))))
+  (reduce cons '() (filter even? (map fib (range 0 n)))))
 
 ;;; ex 2.33
-(define (map f xs)
-  (reduce (lambda (x y) (cons (f x) y)) nil xs))
-(define (append xs ys)
+(define (my-map f xs)
+  (reduce (lambda (x y) (cons (f x) y)) '() xs))
+(define (my-append xs ys)
   (reduce cons ys xs))
-(define (length xs)
+(define (my-length xs)
   (reduce (lambda (x n) (+ n 1)) 0 xs))
 
 ;;; ex 2.34
@@ -641,7 +678,8 @@
             (+ (* higher-terms x) coef))
           0
           coefs))
-(horner-eval 2 (list 1 3 0 5 0 1)) ; => 79
+(check
+  (horner-eval 2 (list 1 3 0 5 0 1)) => 79)
 
 ;;; ex 2.35
 (define (count-leaves t)
@@ -651,7 +689,7 @@
 ;;; ex 2.36
 (define (reduce-n op init seqs)
   (if (null? (car seqs))
-    nil
+    '()
     (cons (reduce op init (map car seqs))
           (reduce-n op init (map cdr seqs)))))
 
@@ -679,24 +717,24 @@
             (cdr rest))))
   (iter init xs))
 (define fold-right reduce)
-(fold-right / 1 (list 1 2 3))      ; => 3/2
-(fold-left / 1 (list 1 2 3))       ; => 1/6
-(fold-right list nil (list 1 2 3)) ; => (1 (2 (3 ())))
-(fold-left list nil (list 1 2 3))  ; => (((() 1) 2) 3)
+(check
+  (fold-right / 1 (list 1 2 3)) => 3/2
+  (fold-left / 1 (list 1 2 3)) => 1/6
+  (fold-right list '() (list 1 2 3)) => '(1 (2 (3 ())))
+  (fold-left list '() (list 1 2 3)) => '(((() 1) 2) 3))
 ;; If op satisfies the commutative property (= (op x y) (op y x)), then
 ;; fold-right and fold-left will produce the same values for any sequence.
 
 ;;; ex 2.39
 (define (reverse-l xs)
-  (fold-right (lambda (x y) (append y (list x))) nil xs))
+  (fold-right (lambda (x y) (append y (list x))) '() xs))
 (define (reverse-r xs)
-  (fold-left (lambda (x y) (cons y x)) nil xs))
-(reverse-l (list 1 2 3 4 5)) ; => (5 4 3 2 1)
-(reverse-r (list 1 2 3 4 5)) ; => (5 4 3 2 1)
+  (fold-left (lambda (x y) (cons y x)) '() xs))
+(check
+  (reverse-l (list 1 2 3 4 5)) => '(5 4 3 2 1)
+  (reverse-r (list 1 2 3 4 5)) => '(5 4 3 2 1))
 
 ;;; ssec 2.2.3 (nested mappings)
-(define (mapcat f xs)
-  (reduce append nil (map f xs)))
 (define (prime-sum? pair)
   (prime? (+ (car pair) (cadr pair))))
 (define (make-pair-sum pair)
@@ -705,32 +743,35 @@
   (map make-pair-sum
        (filter prime-sum?
                (unique-pairs n))))
-(define (remove item seq)
+(define (my-remove item seq)
   (filter (lambda (x) (not (= x item))) seq))
 ;; wishful thinking!
 (define (permutations s)
   (if (null? s)
-    (list nil)
-    (mapcat (lambda (x)
-              (map (lambda (p) (cons x p))
-                   (permutations (remove x s))))
-            s)))
+    (list '())
+    (flatmap (lambda (x)
+               (map (lambda (p) (cons x p))
+                    (permutations (remove x s))))
+             s)))
+(check
+  (permutations '(1 2 3))
+  => '((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1)))
 
 ;;; ex 2.40
 (define (unique-pairs n)
-  (mapcat (lambda (i)
-            (map (lambda (j) (list i j))
-                 (enum-interval 1 (- i 1))))
-          (enum-interval 1 n)))
+  (flatmap (lambda (i)
+             (map (lambda (j) (list i j))
+                  (enum-interval 1 (- i 1))))
+           (enum-interval 1 n)))
 
 ;;; ex 2.41
 (define (unique-triples n)
-  (mapcat (lambda (i)
-            (mapcat (lambda (j)
-                      (map (lambda (k) (list i j k))
-                           (enum-interval 1 j)))
-                    (enum-interval 1 i)))
-          (enum-interval 1 n)))
+  (flatmap (lambda (i)
+             (flatmap (lambda (j)
+                       (map (lambda (k) (list i j k))
+                            (enum-interval 1 j)))
+                     (enum-interval 1 i)))
+           (enum-interval 1 n)))
 (define (triple-sums n s)
   (filter (lambda (t)
             (= s (+ (car t) (cadr t) (caddr t))))
@@ -761,13 +802,13 @@
       (list empty-board)
       (filter
         (lambda (positions) (safe? positions))
-        (mapcat
+        (flatmap
           (lambda (rest-of-queens)
             (map (lambda (new-row)
                    (adjoin-position
                      (make-position new-row k)
                      rest-of-queens))
-                 (enum-interval 1 board-size)))
+                 (range 1 board-size)))
           (queen-cols (- k 1))))))
   (queen-cols board-size))
 
@@ -829,8 +870,6 @@
       (let ((smaller (splitter painter (- n 1))))
         (comb painter (split-comb smaller smaller)))))
   splitter)
-(define right-split (split beside below))
-(define up-split (split below beside))
 
 ;;; example 2.2.4 (frames)
 ;; This is a curried procedure.
@@ -1023,24 +1062,26 @@
 ;;;;; Section 2.3: Symbolic data
 
 ;;; ex 2.53
-(list 'a 'b 'c)                         ; => (a b c)
-(list (list 'george))                   ; => ((george))
-(cdr '((x1 x2) (y1 y2)))                ; => ((y1 y2))
-(cadr '((x1 x2) (y1 y2)))               ; => (y1 y2)
-(pair? (car '(a short list)))           ; => #f
-(memq 'red '((red shoes) (blue socks))) ; => #f
-(memq 'red '(red shoes blue socks))     ; => (red shoes blue socks)
+(check
+  (list 'a 'b 'c) => '(a b c)
+  (list (list 'george)) => '((george))
+  (cdr '((x1 x2) (y1 y2))) => '((y1 y2))
+  (cadr '((x1 x2) (y1 y2))) => '(y1 y2)
+  (pair? (car '(a short list))) => #f
+  (memq 'red '((red shoes) (blue socks))) => #f
+  (memq 'red '(red shoes blue socks)) => '(red shoes blue socks))
 
 ;;; ex 2.54
-(define (equal? list1 list2)
+(define (my-equal? list1 list2)
   (let ((null1 (null? list1))
         (null2 (null? list2)))
     (or (and null1 null2)
         (and (not (or null1 null2))
              (eq? (car list1) (car list2))
-             (equal? (cdr list1) (cdr list2))))))
-(equal? '(this is a list) '(this is a list))   ; => #t
-(equal? '(this is a list) '(this (is a) list)) ; => #f
+             (my-equal? (cdr list1) (cdr list2))))))
+(check
+  (equal? '(this is a list) '(this is a list)) => #t
+  (equal? '(this is a list) '(this (is a) list)) => #f)
 
 ;;; ex 2.55
 ;; `''abracadabra` is a shortant for `(quote (quote abracadabra))`. This is the
@@ -1062,7 +1103,7 @@
                          (deriv (multiplicand expr) var))
            (make-product (deriv (multiplier expr) var)
                          (multiplicand expr))))
-        (else (error "unknown expr type" expr))))
+        (else (errorf 'deriv "Unknown expr type: ~s" expr))))
 (define variable? symbol?)
 (define same-variable? eq?)
 (define (=number? expr num)
@@ -1088,7 +1129,9 @@
   (and (pair? expr) (eq? (car expr) '*)))
 (define multiplier cadr)
 (define multiplicand caddr)
-(deriv '(* (* x y) (+ x 3)) 'x) ; => (+ (* x y) (* y (+ x 3)))
+(check
+  (deriv '(* (* x y) (+ x 3)) 'x)
+  => '(+ (* x y) (* y (+ x 3))))
 
 ;;; ex 2.56
 (define (deriv expr var)
@@ -1110,7 +1153,7 @@
            (make-product
              (make-exponentiation (base expr) (- (exponent expr) 1))
              (deriv (base expr) var))))
-        (else (error "unknown expr type" expr))))
+        (else (errorf 'deriv "Unknown expr type: ~s" expr))))
 (define (exponentiation? expr)
   (and (pair? expr) (eq? (car expr) '**)))
 (define base cadr)
@@ -1125,7 +1168,9 @@
 (define multiplier cadr)
 (define (multiplicand product)
   (reduce make-product 1 (cddr product)))
-(deriv '(* x y (+ x 3)) 'x) ; => (+ (* x y) (* y (+ x 3)))
+(check
+  (deriv '(* x y (+ x 3)) 'x)
+  => '(+ (* x y) (* y (+ x 3))))
 
 ;;; ex 2.58
 ;; (a) fully parenthesized infix form with two arguments
@@ -1150,7 +1195,8 @@
   (and (pair? expr) (eq? (cadr expr) '*)))
 (define multiplier car)
 (define multiplicand caddr)
-(deriv '(x + (3 * (x + (y + 2)))) 'x) ; => 4
+(check
+  (deriv '(x + (3 * (x + (y + 2)))) 'x) => 4)
 ;; (b) standard algebraic notation
 ;; This doesn't always work, but it's a start. Actually doing it properly is
 ;; complicated -- it would be much easier to implement it from scratch rather
@@ -1169,7 +1215,8 @@
   (if (null? (cdddr expr))
     (caddr expr)
     (cddr expr)))
-(deriv '(x + 3 * (x + y + 2)) 'x) ; => 4
+(check
+  (deriv '(x + 3 * (x + y + 2)) 'x) => 4)
 
 ;;; example 2.3.3 (sets as unordered lists)
 (define (element-of-set? x set)
@@ -1284,20 +1331,21 @@
               (copy-to-list (right-branch tree)
                             result-list)))))
   (copy-to-list tree '()))
-(define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
-(define t2 '(4 (3 (1 () ()) (2 () ())) (5 () (6 () ()))))
-(define t3 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
-(define t4 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
-(define t5 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
-(tree->list-1 t1) ; => (1 2 3 4 5 6)
-(tree->list-2 t1) ; => (1 2 3 4 5 6)
-(tree->list-1 t2) ; => (1 3 2 4 5 6)
-(tree->list-2 t2) ; => (1 3 2 4 5 6)
-(tree->list-1 t3) ; => (1 3 5 7 9 11)
-(tree->list-2 t3) ; => (1 3 5 7 9 11)
-(tree->list-1 t4) ; => (1 3 5 7 9 11)
-(tree->list-1 t5) ; => (1 3 5 7 9 11)
-(tree->list-2 t5) ; => (1 3 5 7 9 11)
+(check
+  (define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
+  (define t2 '(4 (3 (1 () ()) (2 () ())) (5 () (6 () ()))))
+  (define t3 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
+  (define t4 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
+  (define t5 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
+  (tree->list-1 t1) => '(1 2 3 4 5 6)
+  (tree->list-2 t1) => '(1 2 3 4 5 6)
+  (tree->list-1 t2) => '(1 3 2 4 5 6)
+  (tree->list-2 t2) => '(1 3 2 4 5 6)
+  (tree->list-1 t3) => '(1 3 5 7 9 11)
+  (tree->list-2 t3) => '(1 3 5 7 9 11)
+  (tree->list-1 t4) => '(1 3 5 7 9 11)
+  (tree->list-1 t5) => '(1 3 5 7 9 11)
+  (tree->list-2 t5) => '(1 3 5 7 9 11))
 ;; (a) Yes, the two procedures produce the same result for every tree. Also,
 ;; from this sample input, it seems that they always produce a sorted list,
 ;; which means that different trees (balanced or otherwise) representing the
@@ -1419,7 +1467,7 @@
 (define (choose-branch bit branch)
   (cond ((= bit 0) (left-branch branch))
         ((= bit 1) (right-branch branch))
-        (else (error "bad bit: CHOOSE-BRANCH" bit))))
+        (else (errorf 'choose-branch "Bit should be 0 or 1: ~s" bit))))
 (define (decode bits tree)
   (define (decode-1 bits current-branch)
     (if (null? bits)
@@ -1454,7 +1502,8 @@
                       (make-leaf 'D 1)
                       (make-leaf 'C 1)))))
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
-(decode sample-message sample-tree) ; => (A D A B B C A)
+(check
+  (decode sample-message sample-tree) => '(A D A B B C A))
 
 ;;; ex 2.68
 (define (encode message tree)
@@ -1473,18 +1522,14 @@
   (and (not (null? set))
        (or (eq? x (car set))
            (element-of-set? x (cdr set)))))
-(encode '(A D A B B C A) sample-tree) ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
-sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
+(check
+  (encode '(A D A B B C A) sample-tree) => sample-message)
 
 ;;; ex 2.69
 (define (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
 (define (successive-merge set)
-  (reduce-left make-code-tree (car set) (cdr set)))
-(define (reduce-left f init xs)
-  (if (null? xs)
-    init
-    (reduce-left f (f init (car xs)) (cdr xs))))
+  (fold-left make-code-tree (car set) (cdr set)))
 
 ;;; ex 2.70
 (define rock-tree
@@ -1495,10 +1540,11 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
     get a job sha na na na na na na na na
     wah yip yip yip yip yip yip yip yip yip
     sha boom))
-(encode song rock-tree)
-;; => (0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0
-;;     0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
-;;     1 0 1 0 0 1 0 0 0 0 0 0 0)
+(check
+  (encode song rock-tree)
+  => '(0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0
+       0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+       1 0 1 0 0 1 0 0 0 0 0 0 0))
 ;; The encoding requires 87 bits. There are eight symbols, so a fixed-length
 ;; code would require log(8)/log(2) = 3 bits per symbol. The song has a total of
 ;; 36 symbols, so the fixed-length coded message would need at least 108 bits.
@@ -1580,11 +1626,11 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (define (type-tag datum)
   (if (pair? datum)
     (car datum)
-    (error "Bad tagged datum: TYPE-TAG" datum)))
+    (errorf 'type-tag "Bad tagged datum: ~s" datum)))
 (define (contents datum)
   (if (pair? datum)
     (cdr datum)
-    (error "Bad tagged datum: CONTENTS" datum)))
+    (errorf 'contents "Bad tagged datum: ~s" datum)))
 (define (rectangular? z) (eq? (type-tag z) 'rectangular))
 (define (polar? z) (eq? (type-tag z) 'polar))
 ;; Ben's representation (rectangular form)
@@ -1621,25 +1667,25 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
          (real-part-rectangular (contents z)))
         ((polar? z)
          (real-part-polar (contents z)))
-        (else (error "Unknown type: REAL-PART" z))))
+        (else (errorf 'real-part "Unknown type: ~s" z))))
 (define (imag-part z)
   (cond ((rectangular? z)
          (imag-part-rectangular (contents z)))
         ((polar? z)
          (imag-part-polar (contents z)))
-        (else (error "Unknown type: IMAG-PART" z))))
+        (else (errorf 'imag-part "Unknown type: ~s" z))))
 (define (magnitude z)
   (cond ((rectangular? z)
          (magnitude-rectangular (contents z)))
         ((polar? z)
          (magnitude-polar (contents z)))
-        (else (error "Unknown type: MAGNITUDE" z))))
+        (else (errorf 'magnitude "Unknown type: ~s" z))))
 (define (angle z)
   (cond ((rectangular? z)
          (angle-rectangular (contents z)))
         ((polar? z)
          (angle-polar (contents z)))
-        (else (error "Unknown type: ANGLE" z))))
+        (else (errorf 'angle "Unknown type: ~s" z))))
 ;; generic constructors
 (define make-from-real-imag make-from-real-imag-rectangular)
 (define make-from-mag-and make-from-mag-ang-polar)
@@ -1693,9 +1739,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
          (proc (get op type-tags)))
     (if proc
       (apply proc (map contents args))
-      (error
-        "No method for these types: APPLY-GENERIC"
-        (list op type-tags)))))
+      (errorf 'apply-generic "No method '~s for types '~s" op type-tags))))
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
@@ -1788,23 +1832,23 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; name as their dispatch key.
 
 ;;; ssec 2.4.3 (message passing)
-(define (make-from-real-imag a b)
+(define (make-from-real-imag-mp a b)
   (lambda (op)
     (cond ((eq? op 'real-part) a)
           ((eq? op 'imag-part) b)
           ((eq? op 'magnitude) (sqrt (+ (square a) (square b))))
           ((eq? op 'angle) (atan b a))
-          (else (error "Unknown op: MAKE-FROM-REAL-IMAG" op)))))
-(define (apply-generic op arg) (arg op))
+          (else (errorf 'make-from-real-imag-mp "Unknown op: ~s" op)))))
+(define (apply-generic-mp op arg) (arg op))
 
 ;;; ex 2.75
-(define (make-from-mag-ang r a)
+(define (make-from-mag-ang-mp r a)
   (lambda (op)
     (cond ((eq? op 'real-part) (* r (cos a)))
           ((eq? op 'imag-part) (* r (sin a)))
           ((eq? op 'magnitude) r)
           ((eq? op 'angle) a)
-          (else (error "Unknown op: MAKE-FROM-MAG-ANG" op)))))
+          (else (errorf 'make-from-mag-ang-mp "Unknown op: ~s" op)))))
 
 ;;; ex 2.76
 ;; 1. generic operations with explicit dispatch
@@ -1881,7 +1925,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; complex numbers
 (define (install-complex-package)
   (define (make-from-real-imag a b)
-    ((get 'make-from-real-imag 'rectangular) x y))
+    ((get 'make-from-real-imag 'rectangular) a b))
   (define (make-from-mag-ang r a)
     ((get 'make-from-mag-ang 'polar) r a))
   (define (add-complex z1 z2)
@@ -1898,6 +1942,10 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
                        (- (angle z1) (angle z2))))
   (define (tag z) (attach-tag 'complex z))
   (define two-c '(complex complex))
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle)
   (put 'add two-c (lambda (z1 z2) (tag (add-complex z1 z2))))
   (put 'sub two-c (lambda (z1 z2) (tag (sub-complex z1 z2))))
   (put 'mul two-c (lambda (z1 z2) (tag (mul-complex z1 z2))))
@@ -1917,20 +1965,21 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; number package, stripping away the `'complex` tag and going down to the
 ;; `'rectangular` or `'polar` level. Here is the process generateed when we try
 ;; to find the magnitude of the object shown in figure 2.24:
-(magnitude z)
-(magnitude '(complex rectangular 3 . 4))
-(apply-generic 'magnitude '(complex rectangular 3 . 4))
-(apply (get 'magnitude '(complex)) '((rectangular 3 . 4)))
-(magnitude '(rectangular 3 . 4))
-(apply-generic 'magnitude '(rectangular 3 . 4))
-(apply (get 'magnitude '(rectangular)) '((3 . 4)))
-(magnitude '(3 . 4))
-(sqrt (+ (square (real-part '(3 . 4)))
-         (square (imag-part '(3 . 4)))))
-(sqrt (+ (square 3) (square 4)))
-(sqrt (+ 9 16))
-(sqrt 25)
-5
+(check
+  (install-rectangular-package)
+  (install-complex-package)
+  (define z (make-complex-from-real-imag 3 4))
+  (magnitude z)
+  => (magnitude '(complex rectangular 3 . 4))
+  => (apply-generic 'magnitude '(complex rectangular 3 . 4))
+  => (apply (get 'magnitude '(complex)) '((rectangular 3 . 4)))
+  => (magnitude '(rectangular 3 . 4))
+  => (apply-generic 'magnitude '(rectangular 3 . 4))
+  => (apply (get 'magnitude '(rectangular)) '((3 . 4)))
+  => (sqrt (+ (square 3) (square 4)))
+  => (sqrt (+ 9 16))
+  => (sqrt 25)
+  => 5)
 ;; `apply-generic` is invoked twice. Once on the complex number `z` and once on
 ;; the rectangular representation within the complex number package we defined
 ;; earlier. Each generic application strips off one of the two type tags.
@@ -1943,11 +1992,11 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (define (type-tag datum)
   (cond ((pair? datum) (car datum))
         ((number? datum) 'scheme-number)
-        (else (error "Bad tagged datum: TYPE-TAG" datum))))
+        (else (errorf 'type-tag "Bad tagged datum: ~s" datum))))
 (define (contents datum)
   (cond ((pair? datum) (cdr datum))
         ((number? datum) datum)
-        (else (error "Bad tagged datum: CONTENTS" datum))))
+        (else (errorf 'contents "Bad tagged datum: ~s" datum))))
 
 ;;; ex 2.79
 (define (equ? x y) (apply-generic 'equ? x y))
@@ -1975,7 +2024,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   'done)
 
 ;;; ssec 2.5.2 (coercion)
-(define (apply-generic op . args)
+(define (apply-generic-coerce-1 op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
     (if proc
@@ -1987,19 +2036,22 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
                (a2 (cadr args))
                (t1->t2 (get-coercion type1 type2))
                (t2->t1 (get-coercion type2 type1)))
-          (cond (t1->t2 (apply-generic op (t1->t2 a1) a2))
-                (t2->t1 (apply-generic op a1 (t2->t1 a2)))
-                (else (error "No method for these types"
-                             (list op type-tags)))))
-        (error "No method for these types"
-               (list op type-tags))))))
+          (cond (t1->t2 (apply-generic-coerce-1 op (t1->t2 a1) a2))
+                (t2->t1 (apply-generic-coerce-1 op a1 (t2->t1 a2)))
+                (else (errorf 'apply-generic-coerce-1
+                        "No method '~s for types '~s"
+                        op type-tags))))
+        (errorf 'apply-generic-coerce-1
+          "No method '~s types '~s"
+          op type-tags)))))
 
 ;;; ex 2.81
-(define (identity x) x)
-(put-coercion 'scheme-number 'scheme-number identity)
-(put-coercion 'complex 'complex identity)
-(define (exp x y) (apply-generic 'exp x y))
-(put 'exp '(scheme-number scheme-number) (lambda (x y) (tag (expt x y))))
+(define (ex-2.81 put-coercion)
+  (define (exp x y) (apply-generic 'exp x y))
+  (put-coercion 'scheme-number 'scheme-number identity)
+  (put-coercion 'complex 'complex identity)
+  (put 'exp '(scheme-number scheme-number)
+    (lambda (x y) (tag (expt x y)))))
 ;; (a) If we call `exp` with two complex numbers as arguments, the process will
 ;; be stuck in an infinite recursion because it keeps coercing the first
 ;; argument to the type of the second, although this brings it no closer to
@@ -2012,8 +2064,8 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; possible coercions that would succeed in finding a specific procedure.
 ;; (c) This `apply-generic` doesn't coerce two arguments of the same type.
 (define (apply-generic-error op type-tags)
-  (error "No method for these types" (list op type-tags)))
-(define (apply-generic op . args)
+  (errorf 'applyg-generic "No method '~s for types '~s" op type-tags))
+(define (apply-generic-coerce-2 op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
     (if proc
@@ -2027,9 +2079,9 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
                   (a2 (cadr args))
                   (t1->t2 (get-coercion type1 type2))
                   (t2->t1 (get-coercion type2 type1)))
-              (cond (t1->t2 (apply-generic op (t1->t2 a1) a2))
-                    (t2->t1 (apply-generic op a1 (t2->t1 a2)))
-                    (else (apply-generic-err op type-tags))))))
+              (cond (t1->t2 (apply-generic-coerce-2 op (t1->t2 a1) a2))
+                    (t2->t1 (apply-generic-coerce-2 op a1 (t2->t1 a2)))
+                    (else (apply-generic-error op type-tags))))))
         (apply-generic-error op type-tags)))))
 
 ;;; ex 2.82
@@ -2046,7 +2098,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
     (if (all-good? cs)
       (map (lambda (c v) (c v)) cs vals)
       #f)))
-(define (apply-generic op . args)
+(define (apply-generic-coerce-3 op . args)
   (let* ((type-tags (map type-tag args))
          (vals (map contents args))
          (proc (get op type-tags)))
@@ -2085,18 +2137,18 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;;; ex 2.84
 (define numeric-tower '(integer rational real complex))
 (define (top? t)
-  (let (ls (memq t numeric-tower))
+  (let ((ls (memq t numeric-tower)))
     (and (list? ls) (= (length ls) 1))))
 (define t= eq?)
 (define (t< t1 t2)
   (define (search tower)
-    (cond ((null? tower) (error "Types not in tower: T<" t1 t2))
+    (cond ((null? tower) (errorf 't< "Types not in tower: ~s, ~s" t1 t2))
           ((eq? (car tower) t1) #t)
           ((eq? (car tower) t2) #f)
           (else (search (cdr tower)))))
   (and (not (t= t1 t2))
        (search numeric-tower)))
-(define (apply-generic op . args)
+(define (apply-generic-coerce-4 op . args)
   (let* ((type-tags (map type-tag args))
          (vals (map contents args))
          (proc (get op type-tags)))
@@ -2104,7 +2156,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
           ((= (length args) 1)
            (if (top? (car type-tags))
              (apply-generic-error op type-tags)
-             (apply-generic op (list (raise (car args))))))
+             (apply-generic-coerce-4 op (list (raise (car args))))))
           ((= (length args) 2)
            (let ((a1 (car args))
                  (a2 (cadr args))
@@ -2112,8 +2164,8 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
                  (t2 (cadr type-tags)))
              (cond ((eq? t1 t2) (apply-generic-error op type-tags))
                    ((t< t1 t1)
-                    (apply-generic op (list (raise a1) a2)))
-                   (else (apply-generic op (list a1 (raise a2)))))))
+                    (apply-generic-coerce-4 op (list (raise a1) a2)))
+                   (else (apply-generic-coerce-4 op (list a1 (raise a2)))))))
           (else (apply-generic-error op type-tags)))))
 
 ;;; ex 2.85
@@ -2133,15 +2185,14 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
     (if (eq? (type-tag x) to-type)
       x
       (climb (raise x) to-type)))
-  (let ((orig-type (type-tag x)))
-    (if (memq orig-type numeric-tower)
-      x
-      (let ((proj (project x))
-            (returned (climb proj orig-type)))
-        (if (equ? x returned)
-          proj
-          x)))
-(define (apply-generic op . args)
+  (if (not (memq (type-tag x) numeric-tower))
+    x
+    (let ((proj (project x))
+          (returned (climb proj (type-tag x))))
+      (if (equ? x returned)
+        proj
+        x))))
+(define (apply-generic-coerce-5 op . args)
   (let* ((type-tags (map type-tag args))
          (vals (map contents args))
          (proc (get op type-tags)))
@@ -2153,7 +2204,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
           ((= (length args) 1)
            (if (top? (car type-tags))
              (apply-generic-error op type-tags)
-             (apply-generic op (list (raise (car args))))))
+             (apply-generic-coerce-5 op (list (raise (car args))))))
           ((= (length args) 2)
            (let ((a1 (car args))
                  (a2 (cadr args))
@@ -2161,8 +2212,8 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
                  (t2 (cadr type-tags)))
              (cond ((eq? t1 t2) (apply-generic-error op type-tags))
                    ((t< t1 t1)
-                    (apply-generic op (list (raise a1) a2)))
-                   (else (apply-generic op (list a1 (raise a2)))))))
+                    (apply-generic-coerce-5 op (list (raise a1) a2)))
+                   (else (apply-generic-coerce-5 op (list a1 (raise a2)))))))
           (else (apply-generic-error op type-tags)))))
 
 ;;; ex 2.86
@@ -2259,12 +2310,12 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
     (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
                  (add-terms (term-list p1) (term-list p2)))
-      (error "Polys not in same var: ADD-POLY" (list p1 p2))))
+      (errorf 'add-poly "Polys not in same var: ~s" (list p1 p2))))
   (define (mul-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
                  (mul-terms (term-list p1) (term-list p2)))
-      (error "Polys not in same var: MUL-POLY" (list p1 p2))))
+      (errorf 'mul-poly "Polys not in same var: ~s" (list p1 p2))))
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 p2))))
@@ -2453,7 +2504,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
             (result (div-terms (term-list p1) (term-list p2))))
         (list (make-polynomial var (car result))
               (make-polynomial var (cadr result))))
-      (error "Polys not in same var: DIV-POLY" (list p1 p2))))
+      (errorf 'div-poly "Polys not in same var: ~s" (list p1 p2))))
   (put 'div '(polynomial polynomial) div-poly)
   'done)
 
@@ -2546,14 +2597,20 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   'done)
 (define (make-rational n d)
   ((get 'make 'rational) n d))
-(define p1 (make-polynomial 'x '(sparse-termlist (2 1) (0 1))))
-(define p2 (make-polynomial 'x '(sparse-termlist (3 1) (0 1))))
-(define rf (make-rational p2 p1))
-(add rf rf)
-;; => (rational
-;;     (polynomial x . (sparse-termlist (5 2) (3 2) (2 2) (0 2)))
-;;     .
-;;     (polynomial x . (sparse-termlist (4 1) (2 2) (0 1))))
+(check
+  (install-polynomial)
+  (install-rational-package)
+  (install-sparse-termlist)
+  (install-scheme-number-package)
+  (install-=zero?)
+  (define p1 (make-polynomial 'x '(sparse-termlist (2 1) (0 1))))
+  (define p2 (make-polynomial 'x '(sparse-termlist (3 1) (0 1))))
+  (define rf (make-rational p2 p1))
+  (add rf rf)
+  => '(rational
+        (polynomial x . (sparse-termlist (5 2) (3 2) (2 2) (0 2)))
+        .
+        (polynomial x . (sparse-termlist (4 1) (2 2) (0 1)))))
 
 ;;; ex 2.94
 (define (remainder-terms l1 l2)
@@ -2573,10 +2630,13 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   'done)
 (define (greatest-common-divisor a b)
   (apply-generic 'greatest-common-divisor a b))
-(define p1 (make-polynomial 'x '(sparse-termlist (4 1) (3 -1) (2 -2) (1 2))))
-(define p2 (make-polynomial 'x '(sparse-termlist (3 1) (1 -1))))
-(greatest-common-divisor p1 p2)
-;; => (polynomial x . (sparse-termlist (2 -1) (1 1)))
+(check
+  (install-negate)
+  (install-greatest-common-divisor)
+  (define p1 (make-polynomial 'x '(sparse-termlist (4 1) (3 -1) (2 -2) (1 2))))
+  (define p2 (make-polynomial 'x '(sparse-termlist (3 1) (1 -1))))
+  (greatest-common-divisor p1 p2)
+  => '(polynomial x . (sparse-termlist (2 -1) (1 1))))
 ;; This is correct, according to WolframAlpha:
 ;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
 
@@ -2586,19 +2646,20 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 (define p3 (make-polynomial 'x '(sparse-termlist (1 13) (0 5))))
 (define q1 (mul p1 p2))
 (define q2 (mul p1 p3))
-(greatest-common-divisor q1 q2)
-;; => (polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
+(check
+  (install-poly-div)
+  (greatest-common-divisor q1 q2)
+  => '(polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
 ;; The `greatest-common-divisor` procedure uses `gcd-terms`. This recurs by
 ;; taking the GCD of q2 and the remainder of dividing q1 by q2:
-(cadr (div q1 q2))
-;; => (polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
+  (cadr (div q1 q2))
+  => '(polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
 ;; This remainder polynomial has noninteger coefficients, so the final GCD
 ;; returned also has noninteger coefficients. However, if we look closely at the
 ;; GCD of `q1` and `q2`, it is clear that we can factor out 1458/169:
-(equal? p1
-        (mul (greatest-common-divisor q1 q2)
-             (make-polynomial 'x '(sparse-termlist (0 169/1458)))))
-;; => #t
+  (mul (greatest-common-divisor q1 q2)
+       (make-polynomial 'x '(sparse-termlist (0 169/1458))))
+  => p1)
 
 ;;; ex 2.96
 ;; (a) pseudoremainder-terms
@@ -2614,8 +2675,9 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   (if (empty-termlist? b)
     a
     (gcd-terms b (pseudoremainder-terms a b))))
-(greatest-common-divisor q1 q2)
-;; => (polynomial x . (sparse-termlist (2 1458) (1 -2916) (0 1458)))
+(check
+  (greatest-common-divisor q1 q2)
+  => '(polynomial x . (sparse-termlist (2 1458) (1 -2916) (0 1458))))
 ;; (b) removing common factors
 (define (termlist-coeffs tl)
   (if (empty-termlist? tl)
@@ -2624,12 +2686,14 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
           (termlist-coeffs (rest-terms tl)))))
 (define (gcd-terms a b)
   (if (empty-termlist? b)
-    (let ((coeff-gcd (reduce greatest-common-divisor (termlist-coeffs a))))
+    (let* ((cs (termlist-coeffs a))
+           (coeff-gcd (reduce greatest-common-divisor (car cs) (cdr cs))))
       (car (div-terms a (single-term (make-term 0 coeff-gcd)))))
     (gcd-terms b (pseudoremainder-terms a b))))
-(greatest-common-divisor q1 q2)
-;; => (polynomial x . (sparse-termlist (2 1) (1 -2) (0 1)))
-(equal? p1 (greatest-common-divisor q1 q2)) ; => #t
+(check
+  (greatest-common-divisor q1 q2)
+  => '(polynomial x . (sparse-termlist (2 1) (1 -2) (0 1)))
+  => p1)
 
 ;;; ex 2.97
 ;; (a) reduce-terms
@@ -2647,9 +2711,10 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
          (term (make-term 0 integerizing-factor))
          (n/gcd (quotient-terms (mul-term-by-all-terms term n) nd-gcd))
          (d/gcd (quotient-terms (mul-term-by-all-terms term d) nd-gcd))
+         (all-coeffs (append (termlist-coeffs n/gcd)
+                             (termlist-coeffs d/gcd)))
          (coef-gcd (reduce greatest-common-divisor
-                           (append (termlist-coeffs n/gcd)
-                                   (termlist-coeffs d/gcd))))
+                     (car all-coeffs) (cdr all-coeffs)))
          (tl (single-term (make-term 0 coef-gcd)))
          (nn (quotient-terms n/gcd tl))
          (dd (quotient-terms d/gcd tl)))
@@ -2661,7 +2726,7 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
             (reduced (reduce-terms (term-list n) (term-list d))))
         (list (make-polynomial var (car reduced))
               (make-polynomial var (cadr reduced))))
-      (error "Polys not in same variable: REDUCE-POLY" (list n d))))
+      (errorf 'reduce-poly "Polys not in same variable: ~s" (list n d))))
   (put 'reduce '(polynomial polynomial) reduce-poly)
   'done)
 ;; (b) reduce-integers
@@ -2701,15 +2766,19 @@ sample-message                        ; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
   'done)
 (define (make-rational n d)
   ((get 'make 'rational) n d))
-(define p1 (make-polynomial 'x '(sparse-termlist (1 1) (0 1))))
-(define p2 (make-polynomial 'x '(sparse-termlist (3 1) (0 -1))))
-(define p3 (make-polynomial 'x '(sparse-termlist (1 1))))
-(define p4 (make-polynomial 'x '(sparse-termlist (2 1) (0 -1))))
-(define rf1 (make-rational p1 p2))
-(define rf2 (make-rational p3 p4))
-(add rf1 rf2)
-;; => (rational
-;;     (polynomial x . (sparse-termlist (3 1) (2 2) (1 3) (0 1)))
-;;     .
-;;     (polynomial x . (sparse-termlist (4 1) (3 1) (1 -1) (0 -1))))
+(check
+  (install-reduce-poly)
+  (install-reduce-integers)
+  (install-rational-package)
+  (define p1 (make-polynomial 'x '(sparse-termlist (1 1) (0 1))))
+  (define p2 (make-polynomial 'x '(sparse-termlist (3 1) (0 -1))))
+  (define p3 (make-polynomial 'x '(sparse-termlist (1 1))))
+  (define p4 (make-polynomial 'x '(sparse-termlist (2 1) (0 -1))))
+  (define rf1 (make-rational p1 p2))
+  (define rf2 (make-rational p3 p4))
+  (add rf1 rf2)
+  => '(rational
+       (polynomial x . (sparse-termlist (3 1) (2 2) (1 3) (0 1)))
+       .
+       (polynomial x . (sparse-termlist (4 1) (3 1) (1 -1) (0 -1)))))
 ;; This is the correct answer in lowest terms.

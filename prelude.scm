@@ -1,5 +1,5 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
-;;; Procedures available for use in all chapters.
+;;; Common code available for use in all chapters.
 
 ;;;;; Syntax
 
@@ -12,15 +12,15 @@
   (syntax-rules (=> ~>)
     ((_) (void))
     ((_ e1 => e2 e* ...)
-      (begin
+      (let ()
         (assert-equal e1 e2)
         (check e2 e* ...)))
     ((_ e1 ~> e2 e* ...)
-      (begin
+      (let ()
         (assert-close e1 e2)
         (check e2 e* ...)))
     ((_ e e* ...)
-      (begin e (check e* ...)))))
+      (let () e (check e* ...)))))
 
 (define-syntax assert-equal
   (syntax-rules ()
@@ -44,18 +44,17 @@
               "\n\ndelta: ~s > ~s\n\n")
             'e1 e1 'e2 e2 (abs (- e1 e2)) epsilon))))))
 
+(define-syntax capture-output
+  (syntax-rules ()
+    ((_ e* ...)
+      (with-output-to-string (lambda () e* ...)))))
+
 (define-syntax hide-output
   (syntax-rules ()
     ((_ e* ...)
       (parameterize ([current-output-port (open-output-string)]) e* ...))))
 
 ;;;;; Lists
-
-(define (filter pred xs)
-  (cond ((null? xs) '())
-        ((pred (car xs))
-         (cons (car xs) (filter pred (cdr xs))))
-        (else (filter pred (cdr xs)))))
 
 (define (any? pred xs)
   (and (not (null? xs))
@@ -67,30 +66,19 @@
       (and (pred (car xs))
            (every? (cdr xs)))))
 
-(define (remove x xs)
-  (filter (lambda (y) (not (= x y))) xs))
-
-(define (fold-right f init xs)
-  (if (null? xs)
-    init
-    (f (car xs)
-       (fold-right f init (cdr xs)))))
-
-(define (fold-left f init xs)
-  (if (null? xs)
-    init
-    (fold-left f (f init (car xs)) (cdr xs))))
-
-(define (reduce f xs)
-  (fold-left f (car xs) (cdr xs)))
-
-(define (flat-map f . xss)
+(define (flatmap f . xss)
   (apply append (apply map f xss)))
 
 ;;;;; Math
 
 (define (inc x) (+ x 1))
 (define (dec x) (- x 1))
+
+(define (square x) (* x x))
+(define (cube x) (* x x x))
+
+(define (average x y)
+  (/ (+ x y) 2))
 
 (define (range a b)
   (if (> a b)
@@ -112,3 +100,34 @@
 (define (identity x) x)
 (define (comp f g) (lambda (x) (f (g x))))
 (define (complement pred) (lambda (x) (not (pred x))))
+
+;;;;; Generic map
+
+;;; A global map (associative list) where generic operations are installed,
+;;; indexed by operation symbol and argument types.
+(define *generic-map* '())
+
+;;; Map entry (key-value pairs) constructor and selectors.
+(define (make-entry k v) (list k v))
+(define (key entry) (car entry))
+(define (value entry) (cadr entry))
+
+;;; Installs the item into the generic map. The item should implement the
+;;; operation represented by op for the given type or type list. If such an item
+;;; alredy exists, it will be overwritten.
+(define (put op type item)
+  (define (put-helper k array)
+    (cond ((null? array) (list (make-entry k item)))
+          ((equal? (key (car array)) k)
+           (cons (make-entry k item) (cdr array)))
+          (else (cons (car array) (put-helper k (cdr array))))))
+  (set! *generic-map* (put-helper (list op type) *generic-map*)))
+
+;;; Retrieves the operation represented by op for the given type or type list
+;;; from the generic map. Returns #f if such an item does not exist.
+(define (get op type)
+  (define (get-helper k array)
+    (cond ((null? array) #f)
+          ((equal? (key (car array)) k) (value (car array)))
+          (else (get-helper k (cdr array)))))
+  (get-helper (list op type) *generic-map*))

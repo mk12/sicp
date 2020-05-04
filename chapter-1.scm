@@ -786,7 +786,8 @@
           ((and (negative? b-value) (positive? a-value))
            (search f b a))
           (else
-            (error "Values are not of opposite sign" a b)))))
+            (errorf 'half-interval-method
+              "Values are not of opposite sign: ~s, ~s" a b)))))
 (check
   (half-interval-method sin 2.0 4.0) ~> 3.141590118408203)
 ;; fixed point
