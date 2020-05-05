@@ -1,6 +1,8 @@
-;;; Copyright 2014 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 ;;; Structure and Interpretation of Computer Programs
 ;;; Chapter 3: Modularity, Objects, and State
+
+(load "prelude.scm")
 
 ;;;;; Section 3.1: Assignment and local state
 
@@ -9,9 +11,10 @@
   (lambda (increment)
     (set! amount (+ amount increment))
     amount))
-(define A (make-accumulator 5))
-(A 10) ; => 15
-(A 10) ; => 25
+(check
+  (define A (make-accumulator 5))
+  (A 10) => 15
+  (A 10) => 25)
 
 ;;; ex 3.2
 (define (make-monitored f)
@@ -21,9 +24,14 @@
             ((eq? x 'reset-count) (set! n-calls 0))
             (else (set! n-calls (+ n-calls 1))
                   (f x))))))
-(define s (make-monitored sqrt))
-(s 100)              ; => 10
-(s 'how-many-calls?) ; => 1
+(check
+  (define s (make-monitored sqrt))
+  (s 100) => 10
+  (s 'how-many-calls?) => 1
+  (s 25) => 5
+  (s 'how-many-calls?) => 2
+  (s 'reset-count)
+  (s 'how-many-calls?) => 0)
 
 ;;; ex 3.3
 (define (make-account balance password)
@@ -38,12 +46,13 @@
     (if (eq? p password)
       (cond ((eq? m 'withdraw) withdraw)
             ((eq? m 'deposit) deposit)
-            (else (error "Unknown request: MAKE-ACCOUNT" m)))
+            (else (errorf 'dispatch "Unknown request: ~s" m)))
       (lambda (_) "Incorrect password")))
   dispatch)
-(define acc (make-account 100 'secret-password))
-((acc 'secret-password 'withdraw) 40)    ; => 60
-((acc 'some-other-password 'deposit) 50) ; => "Incorrect password"
+(check
+  (define acc (make-account 100 'secret-password))
+  ((acc 'secret-password 'withdraw) 40) => 60
+  ((acc 'some-other-password 'deposit) 50) => "Incorrect password")
 
 ;;; ex 3.4
 (define (make-account balance password)
@@ -67,17 +76,24 @@
             "Incorrect password"))))
     dispatch))
 (define (call-the-cops) "PUT YOUR HANDS UP!")
-(define acc (make-account 'securw 100))
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "Incorrect password"
-((acc 'secure 'withdraw) 100) ; => "PUT YOUR HANDS UP!"
+(check
+  (define acc (make-account 'right 100))
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
+  ((acc 'wrong 'withdraw) 100) => "PUT YOUR HANDS UP!")
 
 ;;; ssec 3.1.2 (benefits of assignment)
+(define random-init 1)
+;; Tausworthe PRNG: https://stackoverflow.com/a/23875298
+(define (rand-update x0)
+  (let* ((x1 (fxlogxor x0 (fxsrl x0 13)))
+         (x2 (fxlogxor x1 (fxsll x1 18))))
+     (logand x2 #x7fffffff)))
 (define rand
   (let ((x random-init))
     (lambda ()
@@ -113,7 +129,6 @@
   (let ((pred (lambda (x y)
                 (<= (+ (square x) (square y)) 1))))
     (estimate-integral pred -1 1 -1 1 trials)))
-(estimate-pi 100000.0) ; => 3.14016
 
 ;;; ex 3.6
 (define rand
@@ -125,14 +140,14 @@
             ((eq? message 'reset)
              (lambda (new-x)
                (set! x new-x)))
-            (else (error "message not recognized: RAND" (list message)))))))
+            (else (errorf 'rand "message not recognized: ~s" message))))))
 
 ;;; ex 3.7
 (define (make-joint pp-acc password new-password)
   (lambda (p m)
     (if (eq? p new-password)
       (pp-acc password m)
-      (error "Incorrect password"))))
+      (error 'make-joint "Incorrect password"))))
 
 ;;; ex 3.8
 (define f
@@ -214,11 +229,12 @@
   (define (dispatch m)
     (cond ((eq? m 'withdraw) withdraw)
           ((eq? m 'deposit) deposit)
-          (else (error "Unknown request: MAKE-ACCOUNT" m))))
+          (else (errorf 'dispatch "Unknown request: ~s" m))))
   dispatch)
 ;; First, we just have a procedure bound in the global environment.
 ; global env --> [make-account: ...]
-(define acc (make-account 50))
+(check
+  (define acc (make-account 50))
 ;; Now, we have `acc` in the global frame as well. It is bound to a procedure
 ;; whose environment pointer points to E1, the environment created when we
 ;; evaluated `(make-account 50)`. It first bound the formal parameter `balance`
@@ -238,7 +254,7 @@
 ;                           |________________|<----|-+
 ;                                                  +----> parameters: amount
 ;                                                               body: ...
-((acc 'deposit) 40) ; => 90
+  ((acc 'deposit) 40) => 90
 ;; First we evaluate `(acc 'deposit)`. We create E2 to bind `m` to the symbol
 ;; `deposit`, and then we evaluate the body of `acc`, which is the same as the
 ;; body of `dispatch`. The enclosing environment of E2 is E1, because that is
@@ -250,7 +266,7 @@
 ; E2 [m: deposit]--+
 ;                  +----> E1 [balance:90, ...]
 ; E3 [amount: 40]--+
-((acc 'withdraw) 60) ; => 30
+  ((acc 'withdraw) 60) => 30)
 ;; This is almost the same, except the procedure returns the `withdraw`
 ;; procedures instead. I am reusing the names E2 and E3 because they have been
 ;; used and are no longer relevant, since nothing poitns to them.
@@ -268,29 +284,30 @@
 ;;;;; Section 3.3: Modeling with mutable data
 
 ;;; ex 3.12
-(define (append x y)
+(define (my-append x y)
   (if (null? x)
     y
-    (cons (car x) (append (cdr x) y))))
-(define (append! x y)
-  (set-cdr! (last-pair x) y)
+    (cons (car x) (my-append (cdr x) y))))
+(define (my-append! x y)
+  (set-cdr! (my-last-pair x) y)
   x)
-(define (last-pair x)
+(define (my-last-pair x)
   (if (null? (cdr x))
     x
-    (last-pair (cdr x))))
-(define x (list 'a 'b))
-(define y (list 'c 'd))
-(define z (append x y))
-z ; => (a b c d)
-(cdr x) ; => (b)
+    (my-last-pair (cdr x))))
+(check
+  (define x (list 'a 'b))
+  (define y (list 'c 'd))
+  (define z (append x y))
+  z => '(a b c d)
+  (cdr x) => '(b)
 ; x->[*|*]->[*|X]
 ;     |      |
 ;     V      V
 ;     a      b
-(define w (append! x y))
-w ; => (a b c d)
-(cdr x) ; => (b c d)
+  (define w (append! x y))
+  w => '(a b c d)
+  (cdr x) => '(b c d))
 ;                 y
 ;                 |
 ; x->[*|*]->[*|*]->[*|*]->[*|X]
@@ -302,7 +319,9 @@ w ; => (a b c d)
 (define (make-cycle x)
   (set-cdr! (last-pair x) x)
   x)
-(define z (make-cycle (list 'a 'b 'c)))
+(check
+  (define z (make-cycle (list 'a 'b 'c)))
+  (cadddr z) => 'a)
 ;    +-------------------+
 ;    V                   |
 ; z->[*|*]->[*|*]->[*|*]-+
@@ -325,14 +344,15 @@ w ; => (a b c d)
 ;; In general, `mystery` reverses the list `x`. It does this by walking through
 ;; the list, setting the `cdr` of each pair to point to the previous pair
 ;; instead of the next. For the very first pair, it sets the `cdr` to null.
-(define v (list 'a 'b 'c 'd))
+(check
+  (define v (list 'a 'b 'c 'd))
 ; v->[*|*]->[*|*]->[*|*]->[*|X]
 ;     |      |      |      |
 ;     V      V      V      V
 ;     a      b      c      d
-(define w (mystery v))
-v ; => (a)
-w ; => (d c b a)
+  (define w (mystery v))
+  v => '(a)
+  w => '(d c b a))
 ; v->[*|X]<-[*|*]<-[*|*]<-[*|*]<-w
 ;     |      |      |      |
 ;     V      V      V      V
@@ -342,9 +362,10 @@ w ; => (d c b a)
 
 ;;; ex 3.15
 (define (set-to-wow! x) (set-car! (car x) 'wow) x)
-(define x (list 'a 'b))
-(define z1 (cons x x))
-z1 ; => ((a b) a b)
+(check
+  (define x (list 'a 'b))
+  (define z1 (cons x x))
+  z1 => '((a b) a b)
 ;; The `car` and the `cdr` of `z1` both point to `x`.
 ; z1->[*|*]
 ;      | |
@@ -353,7 +374,7 @@ z1 ; => ((a b) a b)
 ;      |      |
 ;      V      V
 ;      a      b
-(set-to-wow! z1) ; => ((wow b) wow b)
+  (set-to-wow! z1) => '((wow b) wow b)
 ;; Since the `cdr` points to the same `x`, its `a` also becomes `wow`. In
 ;; `set-to-wow!`, it makes no difference whether we use `(car x)` or `(cdr x)`
 ;; as the first argument to `set-car!` because they are the same in this case.
@@ -364,8 +385,8 @@ z1 ; => ((a b) a b)
 ;      |      |
 ;      V      V
 ;     wow     b
-(define z2 (cons (list 'a 'b) (list 'a 'b)))
-z2 ; => ((a b) a b)
+  (define z2 (cons (list 'a 'b) (list 'a 'b)))
+  z2 => '((a b) a b)
 ;; This is a straightforward list that happens to look "the same" as `z1`.
 ; z2->[*|*]->[*|*]->[*|X]
 ;      |      |      |
@@ -374,7 +395,7 @@ z2 ; => ((a b) a b)
 ;    [*|*]->[*|X]
 ;     |      |
 ;     +-> a  +-> b
-(set-to-wow! z2) ; => ((wow b) a b)
+  (set-to-wow! z2) => '((wow b) a b))
 ;; Since the `car` and `cdr` of `z2` point to different `(a b)` lists (there is
 ;; no sharing), only the first `a` changes to `wow`.
 ; z2->[*|*]->[*|*]->[*|X]
@@ -397,15 +418,16 @@ z2 ; => ((a b) a b)
 ;; thinks that they have `N` pairs.
 (define p (cons 'a '())) ; a single pair
 (define three-3 (cons 'a (cons 'a (cons 'a '())))) ; three pairs
-(count-pairs three-3) ; => 3
 (define three-4 (cons 'a (cons p p))) ; two pairs + p = three pairs
-(count-pairs three-4) ; => 4
 (define ab (cons 'a (cons 'b '()))) ; two pairs
 (define three-5 (cons ab ab)) ; one pair + ab = three pairs
-(count-pairs three-5) ; => 5
-(define aa (cons p p)) ; => one pair + p = two pairs
-(define three-7 (cons aa aa)) ; => one pair + aa = three pairs
-(count-pairs three-7) ; => 7
+(define aa (cons p p)) ; one pair + p = two pairs
+(define three-7 (cons aa aa)) ; one pair + aa = three pairs
+(check
+  (count-pairs three-3) => 3
+  (count-pairs three-4) => 4
+  (count-pairs three-5) => 5
+  (count-pairs three-7) => 7)
 
 ;;; ex 3.17
 (define (count-pairs x)
@@ -418,18 +440,22 @@ z2 ; => ((a b) a b)
                   (iter (cdr x))
                   1))))
     (iter x)))
-(count-pairs three-3) ; => 3
-(count-pairs three-4) ; => 3
-(count-pairs three-5) ; => 3
-(count-pairs three-7) ; => 3
+(check
+  (count-pairs three-3) => 3
+  (count-pairs three-4) => 3
+  (count-pairs three-5) => 3
+  (count-pairs three-7) => 3)
 
 ;;; ex 3.18
 (define (cycle? ls)
   (define (iter ls seen)
-    (and (pair? x)
+    (and (pair? ls)
          (or (memq ls seen)
              (iter (cdr ls) (cons ls seen)))))
-  (iter ls '()))
+  (bool (iter ls '())))
+(check
+  (cycle? (list 1 2 3)) => #f
+  (cycle? (make-cycle (list 1 2 3))) => #t)
 
 ;;; ex 3.19
 ;; This is Floyd's cycle-finding algorithm (the tortoise and the hare).
@@ -441,9 +467,12 @@ z2 ; => ((a b) a b)
              (iter (cdr t) (cddr h)))))
   (and (pair? ls)
        (iter ls (cdr ls))))
+(check
+  (cycle? (list 1 2 3)) => #f
+  (cycle? (make-cycle (list 1 2 3))) => #t)
 
 ;;; ssec 3.3.1 (mutation is just assignment)
-(define (cons x y)
+(define (my-cons x y)
   (define (set-x! v) (set! x v))
   (define (set-y! v) (set! y v))
   (define (dispatch m)
@@ -451,18 +480,19 @@ z2 ; => ((a b) a b)
           ((eq? m 'cdr) y)
           ((eq? m 'set-car!) set-x!)
           ((eq? m 'set-cdr!) set-y!)
-          (else (error "Undefined operation: CONS" m))))
+          (else (errorf 'dispatch "Undefined operation: ~s" m))))
   dispatch)
-(define (car p) (p 'car))
-(define (cdr p) (p 'cdr))
-(define (set-car! p v) ((p 'set-car!) v) p)
-(define (set-cdr! p v) ((p 'set-cdr!) v) p)
+(define (my-car p) (p 'car))
+(define (my-cdr p) (p 'cdr))
+(define (my-set-car! p v) ((p 'set-car!) v) p)
+(define (my-set-cdr! p v) ((p 'set-cdr!) v) p)
 
 ;;; ex 3.20
-(define x (cons 1 2))
-(define z (cons x x))
-(set-car! (cdr z) 17)
-(car x) ; => 17
+(check
+  (define x (my-cons 1 2))
+  (define z (my-cons x x))
+  (my-set-car! (my-cdr z) 17)
+  (my-car x) => 17)
 ;; Following the arrows in the environment diagram below, we see that the `cdr`
 ;; of `z` is the same pair pointed to by `x`. By changing the `car` of this pair
 ;; to 17, we change `x` from `(1 2)` to `(17 2)`.
@@ -494,7 +524,7 @@ z2 ; => ((a b) a b)
 (define (make-queue) (cons '() '()))
 (define (front-queue q)
   (if (empty-queue? q)
-    (error "FRONT called with an empty queue" q)
+    (errorf 'front-queue "Called with an empty queue: ~s" q)
     (car (front-ptr q))))
 (define (insert-queue! q x)
   (let ((new-pair (cons x '())))
@@ -508,16 +538,17 @@ z2 ; => ((a b) a b)
             q))))
 (define (delete-queue! q)
   (cond ((empty-queue? q)
-         (error "DELETE! called with an empty queue" q))
+         (errorf 'delete-queue! "Called with an empty queue: ~s" q))
         (else (set-front-ptr! q (cdr (front-ptr q)))
               q)))
 
 ;;; ex 3.21
-(define q1 (make-queue))
-(insert-queue! q1 'a) ; => ((a) a)
-(insert-queue! q1 'b) ; => ((a b) b)
-(delete-queue! q1)    ; => ((b) b)
-(delete-queue! q1)    ; => (() b)
+(check
+  (define q1 (make-queue))
+  (insert-queue! q1 'a) => '((a) a)
+  (insert-queue! q1 'b) => '((a b) b)
+  (delete-queue! q1) => '((b) b)
+  (delete-queue! q1) => '(() b))
 ;; Eva Lu Ator points out that Lisp is trying to print the list structure that
 ;; makes up the queue. It doesn't know anything special about our queue
 ;; representation. The interpreter's response isn't a list of things in the
@@ -550,7 +581,7 @@ z2 ; => ((a b) a b)
 ;; parentheses, like `((my-queue 'front-queue))` -- but this seems a bit
 ;; strange. Instead, we apply the procedure right away in `dispatch` and
 ;; pass on the return value.
-(define (make-queue)
+(define (make-queue-object)
   (let ((front-ptr '())
         (rear-ptr '()))
     (define (empty?)
@@ -566,18 +597,18 @@ z2 ; => ((a b) a b)
                     dispatch))))
     (define (delete!)
       (if (empty?)
-        (error "DELETE! called with an empty queue")
+        (error 'delete! "Called with an empty queue")
         (begin (set! front-ptr (cdr front-ptr))
                dispatch)))
     (define (dispatch m)
       (cond ((eq? m 'empty-queue?) (empty?))
             ((eq? m 'front-queue)
              (if (empty?)
-               (error "FRONT called with an empty queue")
+               (error 'front-queue "Called with an empty queue")
                (car front-ptr)))
             ((eq? m 'insert-queue!) insert!)
             ((eq? m 'delete-queue!) (delete!))
-            (else (error "Undefined operation: MAKE-QUEUE" m))))
+            (else (errorf 'dispatch "Undefined operation: ~s" m))))
     dispatch))
 
 ;;; ex 3.23
@@ -601,11 +632,11 @@ z2 ; => ((a b) a b)
 (define (empty-deque? dq) (null? (front-ptr dq)))
 (define (front-deque dq)
   (if (empty-deque? dq)
-    (error "FRONT called with an empty deque" dq)
+    (errorf 'front-deque "Called with an empty deque: ~s" dq)
     (data-node (front-ptr dq))))
 (define (rear-deque dq)
   (if (empty-deque? dq)
-    (error "REAR called with an empty deque" dq)
+    (errorf 'rear-deque "Called with an empty deque: ~s" dq)
     (data-node (rear-ptr dq))))
 (define (front-insert-deque! dq x)
   (cond ((empty-deque? dq)
@@ -630,7 +661,7 @@ z2 ; => ((a b) a b)
             dq))))
 (define (front-delete-deque! dq)
   (cond ((empty-deque? dq)
-         (error "FRONT-DELETE! called with an empty deque" dq))
+         (errorf 'front-delete-deque! "Called with an empty deque: ~s" dq))
         (else
           (let* ((old-front (front-ptr dq))
                  (new-front (next-node old-front)))
@@ -643,7 +674,7 @@ z2 ; => ((a b) a b)
                         dq))))))
 (define (rear-delete-deque! dq)
   (cond ((empty-deque? dq)
-         (error "REAR-DELETE! called with an empty deque" dq))
+         (errorf 'rear-delete-deque "Called with an empty deque: ~s" dq))
         (else
           (let* ((old-rear (rear-ptr dq))
                  (new-rear (prev-node old-rear)))
@@ -666,17 +697,17 @@ z2 ; => ((a b) a b)
 
 ;;; ssec 3.3.3 (representing tables)
 ;; one-dimesional tables
-(define (lookup key table)
-  (let ((record (assoc key (cdr table))))
+(define (table-lookup key table)
+  (let ((record (table-assoc key (cdr table))))
     (if record
       (cdr record)
       #f)))
-(define (assoc key records)
+(define (table-assoc key records)
   (cond ((null? records) #f)
         ((equal? key (caar records)) (car records))
-        (else (assoc key (cdr records)))))
-(define (insert! key value table)
-  (let ((record (assoc key (cdr table))))
+        (else (table-assoc key (cdr records)))))
+(define (table-insert! key value table)
+  (let ((record (table-assoc key (cdr table))))
     (if record
       (set-cdr! record value)
       (set-cdr! table
@@ -685,18 +716,18 @@ z2 ; => ((a b) a b)
   'ok)
 (define (make-table) (list '*table*))
 ;; two-dimensional tables
-(define (lookup key-1 key-2 table)
-  (let ((subtable (assoc key-1 (cdr table))))
+(define (table-2d-lookup key-1 key-2 table)
+  (let ((subtable (table-assoc key-1 (cdr table))))
     (if subtable
-      (let ((record (assoc key-2 (cdr subtable))))
+      (let ((record (table-assoc key-2 (cdr subtable))))
         (if record
           (cdr record)
           #f))
       #f)))
-(define (insert! key-1 key-2 value table)
-  (let ((subtable (assoc key-1 (cdr table))))
+(define (table-2d-insert! key-1 key-2 value table)
+  (let ((subtable (table-assoc key-1 (cdr table))))
     (if subtable
-      (let ((record (assoc key-2 (cdr subtable))))
+      (let ((record (table-assoc key-2 (cdr subtable))))
         (if record
           (set-cdr! record value)
           (set-cdr! subtable
@@ -707,18 +738,18 @@ z2 ; => ((a b) a b)
                       (cdr table)))))
   'ok)
 ;; procedural implementation
-(define (make-table)
+(define (make-table-object)
   (let ((local-table (list '*table*)))
     (define (lookup key-1 key-2)
-      (let ((subtable (assoc key-1 (cdr local-table))))
+      (let ((subtable (table-assoc key-1 (cdr local-table))))
         (if subtable
-          (let ((record (assoc key-2 (cdr subtable))))
+          (let ((record (table-assoc key-2 (cdr subtable))))
             (if record (cdr record) #f))
           #f)))
     (define (insert! key-1 key-2 value)
-      (let ((subtable (assoc key-1 (cdr table))))
+      (let ((subtable (table-assoc key-1 (cdr table))))
         (if subtable
-          (let ((record (assoc key-2 (cdr subtable))))
+          (let ((record (table-assoc key-2 (cdr subtable))))
             (if record
               (set-cdr! record value)
               (set-cdr! subtable
@@ -731,16 +762,16 @@ z2 ; => ((a b) a b)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
-            (else (error "Unknown operation: TABLE" m))))
+            (else (errorf 'dispatch "Unknown operation: ~s" m))))
     dispatch))
-(define operation-table (make-table))
-(define get (operation-table 'lookup-proc))
-(define put (operation-table 'insert-proc!))
+(define operation-table (make-table-object))
+(define get-operation (operation-table 'lookup-proc))
+(define put-operation (operation-table 'insert-proc!))
 
 ;;; ex 3.24
 ;; Other than the argument `same-key?` and the interal procedure `assoc`, this
 ;; is the same code as above.
-(define (make-table same-key?)
+(define (make-table-custom-eq same-key?)
   (define (assoc key records)
     (cond ((null? records) #f)
           ((same-key? key (caar records)) (car records))
@@ -768,7 +799,7 @@ z2 ; => ((a b) a b)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
-            (else (error "Unknown operation: TABLE" m))))
+            (else (errorf 'dispatch "Unknown operation: ~s" m))))
     dispatch))
 
 ;;; ex 3.25
@@ -781,47 +812,48 @@ z2 ; => ((a b) a b)
 ;; dimensions of the table do not need to be consistent, but be careful: If you
 ;; have a value stored at `'(a b)` and then insert something at `'(a b c)`, that
 ;; value will be overwitten with a fresh subtable for `c`.
-(define record-key car)
-(define record-val cdr)
-(define set-key! set-car!)
-(define set-val! set-cdr!)
-(define make-record cons)
-(define table-name record-key)
-(define table-records record-val)
-(define set-name! set-key!)
-(define set-records! set-val!)
-(define make-table make-record)
-(define (make-empty-table) (make-table '*table* '()))
-(define (assoc key records)
-  (cond ((null? records) #f)
-        ((equal? key (record-key (car records)))
-         (car records))
-        (else (assoc key (cdr records)))))
-(define (lookup keys tor)
-  (let ((val (record-val tor)))
-    (if (null? keys)
-      val
-      (if (list? val) ; tor is a table, val is a list of records
-        (let ((subtor (assoc (car keys) val)))
-          (if subtor
-            (lookup (cdr keys) subtor)
-            #f))
-        #f))))
-(define (insert! keys value tor)
-  (define (iter keys tor)
-    (if (null? keys)
-      (set-val! tor value)
-      (let ((records (table-records tor)))
-        (if (list? records)
-          (let ((subtor (assoc (car keys) records)))
+(scope
+  (define record-key car)
+  (define record-val cdr)
+  (define set-key! set-car!)
+  (define set-val! set-cdr!)
+  (define make-record cons)
+  (define table-name record-key)
+  (define table-records record-val)
+  (define set-name! set-key!)
+  (define set-records! set-val!)
+  (define make-table make-record)
+  (define (make-empty-table) (make-table '*table* '()))
+  (define (table-assoc key records)
+    (cond ((null? records) #f)
+          ((equal? key (record-key (car records)))
+          (car records))
+          (else (table-assoc key (cdr records)))))
+  (define (table-lookup keys tor)
+    (let ((val (record-val tor)))
+      (if (null? keys)
+        val
+        (if (list? val) ; tor is a table, val is a list of records
+          (let ((subtor (table-assoc (car keys) val)))
             (if subtor
-              (iter (cdr keys) subtor)
-              (let ((new-subtor (make-table (car keys) '())))
-                (set-records! tor (cons new-subtor records))
-                (iter (cdr keys) new-subtor))))
-          (begin (set-val! tor '())
-                 (iter keys tor))))))
-  (iter keys tor))
+              (table-lookup (cdr keys) subtor)
+              #f))
+          #f))))
+  (define (table-insert! keys value tor)
+    (define (iter keys tor)
+      (if (null? keys)
+        (set-val! tor value)
+        (let ((records (table-records tor)))
+          (if (list? records)
+            (let ((subtor (table-assoc (car keys) records)))
+              (if subtor
+                (iter (cdr keys) subtor)
+                (let ((new-subtor (make-table (car keys) '())))
+                  (set-records! tor (cons new-subtor records))
+                  (iter (cdr keys) new-subtor))))
+            (begin (set-val! tor '())
+                  (iter keys tor))))))
+    (iter keys tor)))
 
 ;;; ex 3.26
 ;; In our current implementation, a table is the pair `(cons n rs)` where `n` is
@@ -835,60 +867,70 @@ z2 ; => ((a b) a b)
 ;; have `'*table*` in this setup because we don't need to maintain an identity
 ;; for a changing "first record." We can always navigate down the tree to insert
 ;; a new record.
-(define record-key car)
-(define record-val cdr)
-(define set-key! set-car!)
-(define set-val! set-cdr!)
-(define make-record cons)
-(define table-record car)
-(define table-left cadr)
-(define table-right cddr)
-(define set-record! set-car!)
-(define (set-left!  table left)  (set-car! (cdr table) left))
-(define (set-right! table right) (set-cdr! (cdr table) right))
-(define (make-table record left right)
-  (cons record (cons left right)))
-(define (make-empty-table)
-  (make-table '() '() '()))
-(define (make-singleton key value)
-  (make-table (make-record key value) '() '()))
-(define (empty-table? table)
-  (null? (table-record table)))
-(define (lookup key table)
-  (define (iter table)
-    (if (or (null? table) (empty-table? table))
-      #f
-      (let* ((record (table-record table))
-             (order (compare key (record-key record))))
-        (cond ((eq? order '=) (record-val record))
-              ((eq? order '<) (iter (table-left table)))
-              ((eq? order '>) (iter (table-right table)))))))
-  (iter table))
-(define (insert! key value table)
-  (define (iter table)
-    (cond
-      ((null? table)
-       (error "Cannot insert into null: INSERT!" (list key value table)))
-      ((empty-table? table)
-       (set-record! table (make-record key value)))
-      (else
+(scope
+  (define record-key car)
+  (define record-val cdr)
+  (define set-key! set-car!)
+  (define set-val! set-cdr!)
+  (define make-record cons)
+  (define table-record car)
+  (define table-left cadr)
+  (define table-right cddr)
+  (define set-record! set-car!)
+  (define (set-left!  table left)  (set-car! (cdr table) left))
+  (define (set-right! table right) (set-cdr! (cdr table) right))
+  (define (make-tree-table record left right)
+    (cons record (cons left right)))
+  (define (make-empty-table)
+    (make-tree-table '() '() '()))
+  (define (make-singleton key value)
+    (make-table (make-record key value) '() '()))
+  (define (empty-table? table)
+    (null? (table-record table)))
+  (define (table-lookup key table)
+    (define (iter table)
+      (if (or (null? table) (empty-table? table))
+        #f
         (let* ((record (table-record table))
-               (order (compare key (record-key record))))
-          (cond ((eq? order '=)
-                 (set-val! record value))
-                ((eq? order '<)
-                 (let ((subtable (table-left table)))
-                   (if (null? subtable)
-                     (set-left! table (make-singleton key value))
-                     (iter subtable))))
-                ((eq? order '>)
-                 (let ((subtable (table-right table)))
-                   (if (null? subtable)
-                     (set-right! table (make-singleton key value))
-                     (iter subtable)))))))))
-  (iter table))
+              (order (compare key (record-key record))))
+          (cond ((eq? order '=) (record-val record))
+                ((eq? order '<) (iter (table-left table)))
+                ((eq? order '>) (iter (table-right table)))))))
+    (iter table))
+  (define (table-insert! key value table)
+    (define (iter table)
+      (cond
+        ((null? table)
+        (errorf 'table-insert!
+          "Cannot insert (~s, ~s) into null table ~s" key value table))
+        ((empty-table? table)
+        (set-record! table (make-record key value)))
+        (else
+          (let* ((record (table-record table))
+                (order (compare key (record-key record))))
+            (cond ((eq? order '=)
+                  (set-val! record value))
+                  ((eq? order '<)
+                  (let ((subtable (table-left table)))
+                    (if (null? subtable)
+                      (set-left! table (make-singleton key value))
+                      (iter subtable))))
+                  ((eq? order '>)
+                  (let ((subtable (table-right table)))
+                    (if (null? subtable)
+                      (set-right! table (make-singleton key value))
+                      (iter subtable)))))))))
+    (iter table)))
 
 ;;; ex 3.27
+(define (memoize f)
+  (let ((table (make-table)))
+    (lambda (x)
+      (let ((cached (table-lookup x table)))
+        (or cached
+            (let ((result (f x)))
+              (table-insert! x result table)
+              result))))))
 (define memo-fib
   (memoize
     (lambda (n)
@@ -896,14 +938,6 @@ z2 ; => ((a b) a b)
             ((= n 1) 1)
             (else (+ (memo-fib (- n 1))
                      (memo-fib (- n 2))))))))
-(define (memoize f)
-  (let ((table (make-table)))
-    (lambda (x)
-      (let ((cached (lookup x table)))
-        (or cached
-            (let ((result (f x)))
-              (insert! x result table)
-              result))))))
 ;; For the environment diagram, see `whiteboard/exercise-3.27.jpg`.
 ;; The memoized procedure `memo-fib` computes the nth Fibonacci number in a
 ;; number of steps proportional to `n` because it simply takes the sum of `n`
@@ -981,18 +1015,19 @@ z2 ; => ((a b) a b)
   (if (or (= a 1) (= b 1)) 1 0))
 
 ;;; ex 3.29
-(define (or-gate a b out)
-  (let ((na (make-wire))
-        (nb (make-wire))
-        (c (make-wire)))
-    (inverter a na)
-    (inverter b nb)
-    (and-gate na nb c)
-    (inverter c out)
-    'ok))
-(define or-gate-delay
-  (+ and-gate-delay
-     (* 2 inverter-delay)))
+(scope
+  (define (or-gate a b out)
+    (let ((na (make-wire))
+          (nb (make-wire))
+          (c (make-wire)))
+      (inverter a na)
+      (inverter b nb)
+      (and-gate na nb c)
+      (inverter c out)
+      'ok))
+  (define (or-gate-delay)
+    (+ and-gate-delay
+      (* 2 inverter-delay))))
 
 ;;; ex 3.30
 ;; The ripple carry adder circuit adds binary numbers in little endian order.
@@ -1005,25 +1040,25 @@ z2 ; => ((a b) a b)
         (full-adder (car as) (car bs) c-in (car ss) c)
         (iter (cdr as) (cdr bs) c (cdr ss)))))
   (define (fail msg)
-    (error (string-append msg ": RIPPLE-CARRY-ADDER")
-           (list as bs ss carry)))
+    (errorf 'ripple-carry-adder
+      "~s: as=~s bs=~s ss=~s carry=~s" msg as bs ss carry))
   (cond ((not (= (length as) (length bs) (length ss)))
          (fail "Number size mismatch"))
         ((null? as)
-         (error "Cannot add zero bits"))
+         (fail "Cannot add zero bits"))
         (else (let ((c-in (make-wire)))
                 (set-signal! c-in 0)
                 (iter as bs c-in ss)
                 'ok))))
-(define half-adder-delay
+(define (half-adder-delay)
   (+ (max or-gate-delay
           (+ and-gate-delay inverter-delay))
      or-gate-delay))
-(define full-adder-delay
-  (+ (* 2 half-adder-delay)
+(define (full-adder-delay)
+  (+ (* 2 (half-adder-delay))
      or-gate-delay))
 (define (ripple-carry-adder-delay n)
-  (* n full-adder-delay))
+  (* n (full-adder-delay)))
 
 ;;; ssec 3.3.4 (representing wires)
 (define (make-wire)
@@ -1042,7 +1077,7 @@ z2 ; => ((a b) a b)
       (cond ((eq? m 'get-signal) signal-value)
             ((eq? m 'set-signal!) set-signal!)
             ((eq? m 'add-action!) add-action!)
-            (else (error "Unkown operation: WIRE" m))))
+            (else (errorf 'dispatch "Unknown operation: ~s" m))))
     dispatch))
 (define (call-each procs)
   (if (null? procs)
@@ -1053,7 +1088,7 @@ z2 ; => ((a b) a b)
 (define (set-signal! wire s) ((wire 'set-signal!) s))
 (define (add-action! wire a) ((wire 'add-action!) a))
 (define (after-delay delay-time action)
-  (add-to-agenda! (+ delay-time (current-time the-agenda))
+  (add-to-agenda! (+ delay-time (simulation-time the-agenda))
                   action
                   the-agenda))
 (define (propagate)
@@ -1064,89 +1099,13 @@ z2 ; => ((a b) a b)
       (remove-first-agenda-item! the-agenda)
       (propagate))))
 
-;;; ssec 3.3.4 (sample simulation)
-(define (probe name wire)
-  (add-action!
-    wire
-    (lambda ()
-      (newline)
-      (display name)
-      (display " ")
-      (display (current-time the-agenda))
-      (display " New-value = ")
-      (display (get-signal wire)))))
-(define the-agenda (make-agenda))
-(define inverter-delay 2)
-(define and-gate-delay 3)
-(define or-gate-delay 5)
-(define input-1 (make-wire))
-(define input-2 (make-wire))
-(define sum (make-wire))
-(define carry (make-wire))
-(probe 'sum sum)     ; => sum 0 New-value = 0
-(probe 'carry carry) ; => carry 0 New-value = 0
-(half-adder input-1 input-2 sum carry) ; => ok
-(set-signal! input-1 1) ; => done
-(propagate)
-;; => sum 8 New-value = 1
-;;    done
-(set-signal! input-2 1) ; => done
-(propagate)
-;; => carry 11 New-value = 1
-;;    sum 16 New-value = 0
-;;    done
-
-;;; ex 3.31
-;; We have to call the action right after registering it because the wire could
-;; either have the signal 0 or 1 when we add the action. Suppose we are just
-;; talking about an inverter: `(inverter a b)`. This adds an action to `a` such
-;; that whenever the signal of `a` changes, we execute `(set-signal! b s)`
-;; where `s` is the logical negation of the new signal of `a`. Now, suppose we
-;; have `a` and `b` defined like this:
-(define a (make-wire))
-(define b (make-wire))
-;; We can check their signals:
-(get-signal a) ; => 0
-(get-signal b) ; => 0
-;; Now we add the inverter:
-(inverter a b) ; => 'ok
-;; Assuming `add-action!` is implemented so that it doesn't call the action
-;; procedure right away, we've now added an action to `a` but it has not been
-;; executed. Therefore the signals haven't changed:
-(get-signal a) ; => 0
-(get-signal b) ; => 0
-;; This is an incorrect state: if `a` is 0, `b` should be `1`. But we wuold
-;; have to flip `a` on and back off for this to fix itself. We must always
-;; execute the action right after adding it to ensure that the circuit is
-;; always in a stable state. Otherwise, the initial values don't get
-;; propagated. A more realistic model would execute the actions continuously;
-;; we only execute them at the beginning and on changes because it is a waste
-;; to do more, since function boxes have referential transparency (the same
-;; input will always produce the same output). Let's trace through the previous
-;; example without calling actions when they are added. The difference is that
-;; the probes don't display the initial signals on the sum and carry wires
-;; because they haven't changed yet. Other than that, it still works because
-;; the correct state for the outputs happens to be 0 when the inputs are 0.
-(probe 'sum sum)
-(probe 'carry carry)
-(half-adder input-1 input-2 sum carry) ; => ok
-(set-signal! input-1 1) ; => done
-(propagate)
-;; => sum 8 New-value = 1
-;;    done
-(set-signal! input-2 1) ; => done
-(propagate)
-;; => carry 11 New-value = 1
-;;    sum 16 New-value = 0
-;;    done
-
 ;;; ssec 3.3.4 (implementing the agenda)
 (define segment-time car)
 (define segment-queue cdr)
 (define make-time-segment cons)
 (define (make-agenda) (list 0))
-(define (current-time agenda) (car agenda))
-(define (set-current-time! agenda time)
+(define (simulation-time agenda) (car agenda))
+(define (set-simulation-time! agenda time)
   (set-car! agenda time))
 (define (segments agenda) (cdr agenda))
 (define (set-segments! agenda segments)
@@ -1186,11 +1145,117 @@ z2 ; => ((a b) a b)
       (set-segments! agenda (rest-segments agenda)))))
 (define (first-agenda-item agenda)
   (if (empty-agenda? agenda)
-    (error "Agenda is empty: FIRST-AGENDA-ITEM")
+    (error 'first-agenda-item "Agenda is empty")
     (let ((first-seg (first-segment agenda)))
-      (set-current-time! agenda (segment-time first-seg))
+      (set-simulation-time! agenda (segment-time first-seg))
       (front-queue (segment-queue first-seg)))))
 
+;;; ssec 3.3.4 (sample simulation)
+;; This comes before the previous section, but we can't evaluate it in the book
+;; order because the agenda was not implemented yet.
+(define (probe name wire)
+  (add-action!
+    wire
+    (lambda ()
+      (newline)
+      (display name)
+      (display " ")
+      (display (simulation-time the-agenda))
+      (display " New-value = ")
+      (display (get-signal wire)))))
+(define the-agenda)
+(define inverter-delay 2)
+(define and-gate-delay 3)
+(define or-gate-delay 5)
+(check
+  (set! the-agenda (make-agenda))
+  (define input-1 (make-wire))
+  (define input-2 (make-wire))
+  (define sum (make-wire))
+  (define carry (make-wire))
+  (capture-output (probe 'sum sum))
+  => "\nsum 0 New-value = 0"
+  (capture-output (probe 'carry carry))
+  => "\ncarry 0 New-value = 0"
+  (half-adder input-1 input-2 sum carry) => 'ok
+  (set-signal! input-1 1) => 'done
+  (capture-output (propagate))
+  => "\nsum 8 New-value = 1"
+  (set-signal! input-2 1) => 'done
+  (capture-output (propagate))
+  => "\ncarry 11 New-value = 1\nsum 16 New-value = 0")
+
+;;; ex 3.31
+;; We can change `make-wire` so that it does not call actions immediately when
+;; they are added by wrapping the action in a procedure that does nothing the
+;; first time it is called:
+(check
+  (set! the-agenda (make-agenda))
+  (define old-make-wire make-wire)
+  (define (make-wire)
+    (let ((wire (old-make-wire)))
+      (lambda (m)
+        (if (not (eq? m 'add-action!))
+          (wire m)
+          (lambda (action)
+            ((wire 'add-action!)
+              (let ((first #t))
+                (lambda ()
+                  (if first
+                    (begin (set! first #f) 'done)
+                    (action))))))))))
+;; We have to call the action right after registering it because the wire could
+;; either have the signal 0 or 1 when we add the action. Suppose we are just
+;; talking about an inverter: `(inverter a b)`. This adds an action to `a` such
+;; that whenever the signal of `a` changes, we execute `(set-signal! b s)`
+;; where `s` is the logical negation of the new signal of `a`. Now, suppose we
+;; have `a` and `b` defined like this:
+  (define a (make-wire))
+  (define b (make-wire))
+;; We can check their signals:
+  (get-signal a) => 0
+  (get-signal b) => 0
+;; Now we add the inverter:
+  (inverter a b) => 'ok
+;; Since `add-action!` is implemented so that it doesn't call the action
+;; procedure right away, we've now added an action to `a` but it has not been
+;; executed. Therefore the signals haven't changed:
+  (get-signal a) => 0
+  (get-signal b) => 0
+;; This is an incorrect state: if `a` is 0, `b` should be `1`. But we wuold
+;; have to flip `a` on and back off for this to fix itself. We must always
+;; execute the action right after adding it to ensure that the circuit is
+;; always in a stable state. Otherwise, the initial values don't get
+;; propagated. A more realistic model would execute the actions continuously;
+;; we only execute them at the beginning and on changes because it is a waste
+;; to do more, since function boxes have referential transparency (the same
+;; input will always produce the same output).
+;;
+;; Let's trace through the previous example without calling actions when they
+;; are added. Nothing is printed when we call `probe` because the printing
+;; action is not called immediately. Nothing is printed when we propagate
+;; setting `input-1` to 1 either: it flows through the OR gate, but not through
+;; the AND gate because the latter does not know its other input is 1 (that
+;; would have required propagating the 0 from `input-2` through the other AND
+;; gate and the inverter). Finally, when we set `input-2` to 1 and propagate,
+;; it flows through the circuit leaving `sum` at 0 (still no printing), but
+;; changing `carry` to 1 (which becomes the only thing printed).
+  (define input-1 (make-wire))
+  (define input-2 (make-wire))
+  (define sum (make-wire))
+  (define carry (make-wire))
+  (capture-output (probe 'sum sum))
+  => ""
+  (capture-output (probe 'carry carry))
+  => ""
+  (half-adder input-1 input-2 sum carry) => 'ok
+  (set-signal! input-1 1) => 'done
+  (capture-output (propagate))
+  => ""
+  (set-signal! input-2 1) => 'done
+  (capture-output (propagate))
+  => "\ncarry 11 New-value = 1")
+#|
 ;;; ex 3.32
 ;; The FIFO order for the queue of procedures for each segment must be used
 ;; because this causes the actions to be executed in the same order as they
@@ -1550,7 +1615,7 @@ z2 ; => ((a b) a b)
 (define (permutations xs)
   (if (null? xs)
     '(())
-    (mappend
+    (flat-map
       (lambda (p)
         (map (lambda (q) (cons p q))
              (permutations (remove p xs))))
@@ -1601,7 +1666,7 @@ final-values
     (define (iter xs)
       (if (null? xs)
         occurence-table
-        (let ((n (lookup (car xs) occurence-table)))
+        (let ((n (table-lookup (car xs) occurence-table)))
           (insert! (car xs)
                    (if n (inc n) 1)
                    occurence-table)
@@ -2378,4 +2443,10 @@ final-values
   (analyze (weighted-pairs integers integers weight)))
 
 ;; ex 3.73
-
+(define (integral integrand initial-value dt)
+  (define int
+    (cons-stream initial-value
+                 (add-streams (scale-stream integrand dt)
+                              int)))
+  int)
+|#

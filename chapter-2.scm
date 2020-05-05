@@ -1080,8 +1080,8 @@
              (eq? (car list1) (car list2))
              (my-equal? (cdr list1) (cdr list2))))))
 (check
-  (equal? '(this is a list) '(this is a list)) => #t
-  (equal? '(this is a list) '(this (is a) list)) => #f)
+  (my-equal? '(this is a list) '(this is a list)) => #t
+  (my-equal? '(this is a list) '(this (is a) list)) => #f)
 
 ;;; ex 2.55
 ;; `''abracadabra` is a shortant for `(quote (quote abracadabra))`. This is the

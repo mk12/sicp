@@ -8,6 +8,10 @@
   (syntax-rules ()
     ((_ e* ...) (when run-slow e* ...))))
 
+(define-syntax scope
+  (syntax-rules ()
+    ((_ e* ...) ((lambda () e* ... (void))))))
+
 (define-syntax check
   (syntax-rules (=> ~>)
     ((_) (void))
@@ -25,24 +29,33 @@
 (define-syntax assert-equal
   (syntax-rules ()
     ((_ e1 e2)
-      (unless (equal? e1 e2)
-        (syntax-error
-          #'e1
-          (format
-            "assert-equal failed!\n\nleft: ~s\n => ~s\n\nright: ~s\n => ~s\n\n"
-            'e1 e1 'e2 e2))))))
+      (let ((v1 e1)
+            (v2 e2))
+        (unless (equal? v1 v2)
+          (syntax-error
+            #'e1
+            (format
+              (string-append
+                "assert-equal failed!"
+                "\n\nleft: ~s\n => ~s"
+                "\n\nright: ~s\n => ~s\n\n")
+              'e1 v1 'e2 v2)))))))
 
 (define-syntax assert-close
   (syntax-rules ()
     ((_ e1 e2)
-      (unless (close? e1 e2)
-        (syntax-error
-          #'e1
-          (format
-            (string-append
-              "assert-close failed!\n\nleft: ~s\n => ~s\n\nright: ~s\n => ~s"
-              "\n\ndelta: ~s > ~s\n\n")
-            'e1 e1 'e2 e2 (abs (- e1 e2)) epsilon))))))
+      (let ((v1 e1)
+            (v2 e2))
+        (unless (close? v1 v2)
+          (syntax-error
+            #'e1
+            (format
+              (string-append
+                "assert-close failed!"
+                "\n\nleft: ~s\n => ~s"
+                "\n\nright: ~s\n => ~s\n\n"
+                "\n\ndelta: ~s > ~s\n\n")
+              'e1 v1 'e2 v2 (abs (- e1 e2)) epsilon)))))))
 
 (define-syntax capture-output
   (syntax-rules ()
@@ -95,11 +108,12 @@
 (define random-integer random)
 (define (random-real) (random 1.0))
 
-;;;;; Functions
+;;;;; Other
 
 (define (identity x) x)
 (define (comp f g) (lambda (x) (f (g x))))
-(define (complement pred) (lambda (x) (not (pred x))))
+(define (bool x) (if x #t #f))
+(define (complement pred) (comp not pred))
 
 ;;;;; Generic map
 
