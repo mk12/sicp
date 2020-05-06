@@ -1255,7 +1255,7 @@
   (set-signal! input-2 1) => 'done
   (capture-output (propagate))
   => "\ncarry 11 New-value = 1")
-#|
+
 ;;; ex 3.32
 ;; The FIFO order for the queue of procedures for each segment must be used
 ;; because this causes the actions to be executed in the same order as they
@@ -1264,30 +1264,26 @@
 ;; will also pop out in that order. Executing the procedures in reverse order
 ;; leads to different, incorrect behaviour. Consider the case of an and-gate
 ;; whose inputs change from 0, 1 to 1, 0:
-(define and-gate-delay 2)
-(define a (make-wire))
-(define b (make-wire))
-(define c (make-wire))
-(set-signal! a 0) ; => done
-(set-signal! b 1) ; => done
-(and-gate a b c)  ; => ok
-(probe 'c c)      ; => c 0 New-value = 0
-(set-signal! a 1)  ; => done
-(set-signal! b 0)  ; => done
-(propagate)
-;; => c 3 New-value = 1
-;;    c 3 New-value = 0
-;;    done
-;; Notice the value goes to 1, and then back to 0. If we changed the order of
-;; the actions, so that we first set the signal of `b` to 0 and then change the
-;; signal of `a` to 1, the ouput signal would never be 1 because we would
-;; neveer have two wires with 1 at the same time. This would be equivalent to
-;; leaving the `set-signal!` order alone and using a stack (FILO) rather than a
-;; queue (FIFO) for the actions. You might think that this is irrelevant
-;; because the actions are carried out by the agenda when we call `propagate`
-;; after setting both signals, so by that time `a` and `b` will both have
-;; signals of 1. This is not the case due to the implementation of `and-gate`.
-;; The action captures the values of the signals before using `after-delay`:
+(check
+  (set! the-agenda (make-agenda))
+  (define a (make-wire))
+  (define b (make-wire))
+  (define c (make-wire))
+  (set-signal! a 0) => 'done
+  (set-signal! b 1) => 'done
+  (and-gate a b c) => 'ok
+  (capture-output (probe 'c c))
+  => "\nc 0 New-value = 0"
+  (capture-output (propagate))
+  => ""
+  (set-signal! a 1) => 'done
+  (set-signal! b 0) => 'done
+  (capture-output (propagate))
+  => "\nc 6 New-value = 1\nc 6 New-value = 0")
+;; The value of `c` goes to 1, but settles on 0 once all actions are processed.
+;; If we use a stack (FILO) rather than a queue (FIFO) for the actions, there
+;; will be a mismatch between the order of execution and the calculation of wire
+;; values when adding actions. Recall the definition of and-gate:
 (define (and-gate a b out)
   (define (action)
     ;; This logical-and gets evaluated right away.
@@ -1301,7 +1297,37 @@
   (add-action! a action)
   (add-action! b action)
   'ok)
-
+;; When actions have FILO behaviour, `(set-signal! a 1)` will create an action
+;; to set `c` to 1 (since `a` and `b` are 1). Then `(set-signal! b 0)` will
+;; create an action to set `c` to 0, the correct final value. But the actions
+;; exeucte in reverse order, so `c` ends up incorrectly at 1. We can test this:
+(fluid-let
+  ((empty-queue? (comp null? car))
+   (make-queue (lambda () (cons '() '())))
+   (front-queue caar)
+   (insert-queue!
+    (lambda (q x)
+      (set-car! q (cons x (car q)))))
+   (delete-queue!
+    (lambda (q)
+      (set-car! q (cdar q)))))
+  (check
+    (set! the-agenda (make-agenda))
+    (define a (make-wire))
+    (define b (make-wire))
+    (define c (make-wire))
+    (set-signal! a 0) => 'done
+    (set-signal! b 1) => 'done
+    (and-gate a b c) => 'ok
+    (capture-output (probe 'c c))
+    => "\nc 0 New-value = 0"
+    (capture-output (propagate))
+    => ""
+    (set-signal! a 1) => 'done
+    (set-signal! b 0) => 'done
+    (capture-output (propagate))
+    => "\nc 6 New-value = 1"))
+#|
 ;;; ssec 3.3.5 (using the constraint system)
 (define (celsius-fahrenheit-converter c f)
   (let ((u (make-connector))
