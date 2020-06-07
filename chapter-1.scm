@@ -1,41 +1,120 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
-;;; Structure and Interpretation of Computer Programs
-;;; Chapter 1: Building Abstractions with Procedures
 
-(load "prelude.scm")
+(chapter 1 "Building Abstractions with Procedures")
 
-;;;;; Section 1.1: The elements of programming
+(section 1.1 "The Elements of Programming")
 
-;;; ex 1.1
-(check
-  10 => 10
-  (+ 5 3 4) => 12
-  (- 9 1) => 8
-  (/ 6 2) => 3
-  (+ (* 2 4) (- 4 6)) => 6
-  (define a 3)
-  (define b (+ a 1))
-  (+ a b (* a b)) => 19
-  (= a b) => #f
-  (if (and (> b a) (< b (* a b))) b a) => 4
-  (cond ((= a 4) 6)
-        ((= b 4) (+ 6 7 a))
-        (else 25))
-  => 16
-  (* (cond ((> a b) a)
-          ((< a b) b)
-          (else -1))
-    (+ a 1))
-  => 16)
+(subsection 1.1.1 "Expressions")
 
-;;; ex 1.2
-(check
-  (/ (+ 5 4 (- 2 (- 3 (+ 6 4/5))))
-     (* 3 (- 6 2) (- 2 7)))
-  => -37/150)
+486 => 486
+(+ 137 349) => 486
+(- 1000 334) => 666
+(* 5 99) => 495
+(/ 10 5) => 2
+(+ 2.7 10) => 12.7
+(+ 21 35 12 7) => 75
+(* 25 4 12) => 1200
+(+ (* 3 5) (- 10 6)) => 19
+(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
 
-;;; ex 1.3
-(define (ex-1.3 a b c)
+(subsection 1.1.2 "Naming and the Environment")
+
+(define size 2)
+size => 2
+(* 5 size) => 10
+(define pi 3.14159)
+(define radius 10)
+(* pi (* radius radius)) => 314.159
+(define circumference (* 2 pi radius))
+circumference => 62.8318
+
+(subsection 1.1.3 "Evaluating Combinations")
+
+(* (+ 2 (* 4 6))
+  (+ 3 5 7))
+=> 390
+
+(subsection 1.1.4 "Compound Procedures")
+
+(define (square x) (* x x))
+(define (sum-of-squares x y) (+ (square x) (square y)))
+(sum-of-squares 3 4) => 25
+(define (f a)
+  (sum-of-squares (+ a 1) (* a 2)))
+(f 5) => 136
+
+(subsection 1.1.5 "The Substitution Model for Procedure Application"
+  (use (1.1.4)))
+
+;; Applicative-order evaluation:
+(f 5)
+=> (sum-of-squares (+ 5 1) (* 5 2))
+=> (+ (square 6) (square 10))
+=> (+ (* 6 6) (* 10 10))
+=> (+ 36 100)
+=> 136
+
+;; Normal-order evaluation:
+(f 5)
+=> (sum-of-squares (+ 5 1) (* 5 2))
+=> (+ (square (+ 5 1)) (square (* 5 2)))
+=> (+ (* (+ 5 1) (+ 5 1)) (* (* 5 2) (* 5 2)))
+=> (+ (* 6 6 ) (* 10 10))
+=> (+ 36 100)
+=> 136
+
+(subsection 1.1.6 "Conditional Expressions and Predicates")
+
+(define (abs x)
+  (cond
+    ((> x 0) x)
+    ((= x 0) 0)
+    ((< x 0) (- x))))
+
+(define (abs x)
+  (cond
+    ((< x 0) (- x))
+    (else x)))
+
+(define (abs x)
+  (if (< x 0)
+    (- x)
+    x))
+
+(define (>= x y) (or (> x y) (= x y)))
+(define (>= x y) (not (< x y)))
+
+(exercise 1.1)
+
+10 => 10
+(+ 5 3 4) => 12
+(- 9 1) => 8
+(/ 6 2) => 3
+(+ (* 2 4) (- 4 6)) => 6
+(define a 3)
+(define b (+ a 1))
+(+ a b (* a b)) => 19
+(= a b) => #f
+(if (and (> b a) (< b (* a b))) b a) => 4
+(cond ((= a 4) 6)
+      ((= b 4) (+ 6 7 a))
+      (else 25))
+=> 16
+(* (cond ((> a b) a)
+         ((< a b) b)
+         (else -1))
+  (+ a 1))
+=> 16
+
+(exercise 1.2)
+
+(/ (+ 5 4 (- 2 (- 3 (+ 6 4/5))))
+    (* 3 (- 6 2) (- 2 7)))
+=> -37/150
+
+(exercise 1.3)
+
+(define (f a b c)
   (cond
     ((and (<= a b) (<= a c))
      (+ (* b b) (* c c)))
@@ -44,27 +123,31 @@
     ((and (<= c a) (<= c b))
      (+ (* a a) (* b b)))))
 
-;;; ex 1.4
+(exercise 1.4)
+
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
+
 ;; The operator evaluates to `+` (addition) when b is positive, and to `-`
 ;; (subtraction) when b is negative. Subtracting a negative is equivalent to
-;; adding its absolute value, so this procedure performs a + |b| in all cases.
+;; adding its absolute value, so this procedure performs `a + |b|` in all cases.
 
-;;; ex 1.5
-(define (ex-1.5)
-  (define (p) (p))
-  (define (test x y)
-    (if (= x 0) 0 y))
-  (test 0 (p)))
-;; applicative: The expression will never return a value because the interpreter
-;; tries to evaluate `(p)` and enters endless recursion.
-;; normal: The expression will evaluate to zero. The `(p)` expression is never
-;; evaluated because it is not necessary to do so.
+(exercise 1.5)
 
-;;; example 1.1.7 (Newton sqrt)
-(define (square x)
-  (* x x))
+(define (p) (p))
+(define (test x y)
+  (if (= x 0) 0 y))
+; (test 0 (p))
+
+;; With applicative-order evaluation, the expression will never return a value
+;; because the interpreter tries to evaluate `(p)` and enters endless recursion.
+;;
+;; With normal-order evaluation, the expression will evaluate to zero. The `(p)`
+;; expression is never evaluated because it is not necessary to do so.
+
+(subsection 1.1.7 "Example: Square Roots by Newton's Method"
+  (use (1.1.4 square)))
+
 (define (average x y)
   (/ (+ x y) 2))
 (define (improve guess x)
@@ -75,29 +158,55 @@
   (if (good-enough? guess x)
     guess
     (sqrt-iter (improve guess x) x)))
-(define (my-sqrt x)
+(define (sqrt x)
   (sqrt-iter 1.0 x))
 
-;;; ex 1.6
+(sqrt 9)
+~> 3.00009155413138
+(sqrt (+ 100 37))
+~> 11.704699917758145
+(sqrt (+ (sqrt 2) (sqrt 3)))
+~> 1.7739279023207892
+(square (sqrt 1000))
+~> 1000.000369924366
+
+(exercise 1.6)
+
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+
+(new-if (= 2 3) 0 5) => 5
+(new-if (= 1 1) 0 5) => 0
+
+(define (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (sqrt-iter (improve guess x) x)))
+
 ;; When Alyssa attempts to use this to compute square roots, it will not work.
 ;; The sqrt procedure will never return a value because it gets stuck in
 ;; sqrt-iter due to infinite recursion. The new-if combination always evaluates
-;; the else-clause, which contains the recursive call, so the reucursion will
+;; the else-clause, which contains the recursive call, so the recursion will
 ;; never end.
 
-;;; ex 1.7
+(exercise 1.7
+  (use (1.1.7 sqrt)))
+
 ;; The `good-enough?` predicate does not work well for small numbers because the
 ;; tolerance is a fixed amount. It can't be too small or else it will take too
 ;; long to compute the square roots of large numbers, but at the same time, it
 ;; is impossible to use the procedure for values smaller than the tolerance.
-(check
-  (my-sqrt 0.000002) ~> 0.0312713096020622 ; (should be 0.0014142...)
-  (square (my-sqrt 0.000002)) ~> 0.000977894804228028)
+
+(sqrt 0.000002) ~> 0.0312713096020622 ; (should be 0.0014142...)
+(square (sqrt 0.000002)) ~> 0.000977894804228028
+
 ;; The test is inadequate for very large numbers because, with limited
 ;; precision, it is impossible to represent small differences between very large
 ;; numbers. The good-enough? difference will eventually become zero, but it
 ;; might actually be much greater than the tolerance if calculated with infinite
 ;; precision.
+
 (define (good-enough? g1 g2)
   (< (/ (abs (- g2 g1)) g1)
      0.001))
@@ -106,11 +215,14 @@
     (if (good-enough? guess better)
       better
       (sqrt-iter better x))))
-(check
-  (my-sqrt 0.000002) ~> 0.00141421356261785
-  (square (my-sqrt 0.000002)) ~> 2.00000000069227e-06)
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
 
-;;; ex 1.8
+(sqrt 0.000002) ~> 0.00141421356261785
+(square (sqrt 0.000002)) ~> 2.00000000069227e-06
+
+(exercise 1.8)
+
 (define (improve guess x)
   (/ (+ (/ x (square guess))
         (* 2 guess))
@@ -120,10 +232,47 @@
     (if (good-enough? guess better)
       better
       (cbrt-iter better x))))
+(define (cbrt x)
+  (cbrt-iter 1.0 x))
 
-;;;;; Section 1.2: Procedures and the processes they generate
+(cbrt 8) ~> 2
 
-;;; ssec 1.2.1 (factorial)
+(subsection 1.1.8 "Procedures as Black-Box Abstractions")
+
+;; The following two procedures should be indistinguishable:
+(define (square x) (* x x))
+(define (square x) (exp (double (log x))))
+
+;; These should be indistinguishable as well:
+(define (square x) (* x x))
+(define (square y) (* y y))
+
+;; Using block structure:
+(define (sqrt x)
+  (define (good-enough? guess x)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess x) (average guess (/ x guess)))
+  (define (sqrt-iter guess x)
+    (if (good-enough? guess x) guess
+      (sqrt-iter (improve guess x) x)))
+  (sqrt-iter 1.0 x))
+
+;; Without passing `x` around:
+(define (sqrt x)
+  (define (good-enough? guess)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (sqrt-iter guess)
+    (if (good-enough? guess) guess
+      (sqrt-iter (improve guess))))
+  (sqrt-iter 1.0))
+
+(section 1.2 "Procedures and the Processes They Generate")
+
+#|
+(subsection 1.2.1 "Linear Recursion and Iteration")
+
 (define (factorial-rec n)
   (if (= n 1)
     1
@@ -520,7 +669,7 @@
 
 ;;; ex 1.25
 (define fast-expt fast-expt-it)
-(define (expmod base exp m)
+(define (new-expmod base exp m)
   (remainder (fast-expt base exp) m))
 ;; This procedure works, but it is not as efficient. The Fermat test takes much
 ;; longer using this version of expmod -- longer by three orders of magnitude.
@@ -531,9 +680,9 @@
 ;; enormous (requiring bignums, which is slow) by the time the remainder is
 ;; finally taken. Suppose we test the primality of n = 9, choosing a = 5. Using
 ;; the old definiton of `expmod`, the process will evolve like so:
-(define r remainder)
-(define s square)
 (check
+  (define r remainder)
+  (define s square)
   (expmod 5 9 9)
   => (r (* 5 (expmod 5 8 9)) 9)
   => (r (* 5 (r (s (expmod 5 4 9)) 9)) 9)
@@ -550,9 +699,8 @@
   => (r (* 5 (r 16 9)) 9)
   => (r (* 5 7) 9)
   => (r 35 9)
-  => 8)
+  => 8
 ;; Compare this to the evolution of the process using the new `expmod`:
-(check
   (expmod 5 9 9)
   => (r (fast-expt 5 9) 9)
   => (r 1953125 9))
@@ -1011,3 +1159,4 @@
 ;; This is slightly different from the original fixed-point implementation
 ;; because it returns `guess` when it's good enough, not `next` (that is, the
 ;; original always does one more improvement).
+|#

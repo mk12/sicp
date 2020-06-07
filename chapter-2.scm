@@ -2,8 +2,6 @@
 ;;; Structure and Interpretation of Computer Programs
 ;;; Chapter 2: Building Abstractions with Data
 
-(load "prelude.scm")
-
 ;;;;; Section 2.1: Introduction to data abstraction
 
 ;;; example 2.1.1 (rational ops)

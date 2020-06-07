@@ -1,16 +1,11 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 ;;; Common code available for use in all chapters.
 
-;;;;; Syntax
-
-(define run-slow #f)
-(define-syntax slow
-  (syntax-rules ()
-    ((_ e* ...) (when run-slow e* ...))))
-
-(define-syntax scope
-  (syntax-rules ()
-    ((_ e* ...) ((lambda () e* ... (void))))))
+(define *chapter* 'undefined)
+(define *section* 'undefined)
+(define *subsection* 'undefined)
+(define *exercise* 'undefined)
+(define *check-table* '())
 
 (define-syntax check
   (syntax-rules (=> ~>)
@@ -67,17 +62,9 @@
     ((_ e* ...)
       (parameterize ([current-output-port (open-output-string)]) e* ...))))
 
+;; TODO: REMOVE ALL THE REST!
+
 ;;;;; Lists
-
-(define (any? pred xs)
-  (and (not (null? xs))
-       (or (pred (car xs))
-           (any? pred (cdr xs)))))
-
-(define (every? pred xs)
-  (or (null? xs)
-      (and (pred (car xs))
-           (every? (cdr xs)))))
 
 (define (flatmap f . xss)
   (apply append (apply map f xss)))
