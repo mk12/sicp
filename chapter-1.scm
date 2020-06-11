@@ -1,10 +1,12 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
-(chapter 1 "Building Abstractions with Procedures")
+(SICP
 
-(section 1.1 "The Elements of Programming")
+(Chapter 1 "Building Abstractions with Procedures")
 
-(subsection 1.1.1 "Expressions")
+(Section 1.1 "The Elements of Programming")
+
+(Subsection 1.1.1 "Expressions")
 
 486 => 486
 (+ 137 349) => 486
@@ -17,7 +19,7 @@
 (+ (* 3 5) (- 10 6)) => 19
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
 
-(subsection 1.1.2 "Naming and the Environment")
+(Subsection 1.1.2 "Naming and the Environment")
 
 (define size 2)
 size => 2
@@ -28,13 +30,13 @@ size => 2
 (define circumference (* 2 pi radius))
 circumference => 62.8318
 
-(subsection 1.1.3 "Evaluating Combinations")
+(Subsection 1.1.3 "Evaluating Combinations")
 
 (* (+ 2 (* 4 6))
   (+ 3 5 7))
 => 390
 
-(subsection 1.1.4 "Compound Procedures")
+(Subsection 1.1.4 "Compound Procedures")
 
 (define (square x) (* x x))
 (define (sum-of-squares x y) (+ (square x) (square y)))
@@ -43,8 +45,8 @@ circumference => 62.8318
   (sum-of-squares (+ a 1) (* a 2)))
 (f 5) => 136
 
-(subsection 1.1.5 "The Substitution Model for Procedure Application"
-  (use (1.1.4)))
+(Subsection 1.1.5 "The Substitution Model for Procedure Application"
+  (use 1.1.4))
 
 ;; Applicative-order evaluation:
 (f 5)
@@ -63,7 +65,7 @@ circumference => 62.8318
 => (+ 36 100)
 => 136
 
-(subsection 1.1.6 "Conditional Expressions and Predicates")
+(Subsection 1.1.6 "Conditional Expressions and Predicates")
 
 (define (abs x)
   (cond
@@ -84,7 +86,7 @@ circumference => 62.8318
 (define (>= x y) (or (> x y) (= x y)))
 (define (>= x y) (not (< x y)))
 
-(exercise 1.1)
+(Exercise 1.1)
 
 10 => 10
 (+ 5 3 4) => 12
@@ -106,13 +108,13 @@ circumference => 62.8318
   (+ a 1))
 => 16
 
-(exercise 1.2)
+(Exercise 1.2)
 
 (/ (+ 5 4 (- 2 (- 3 (+ 6 4/5))))
     (* 3 (- 6 2) (- 2 7)))
 => -37/150
 
-(exercise 1.3)
+(Exercise 1.3)
 
 (define (f a b c)
   (cond
@@ -123,7 +125,7 @@ circumference => 62.8318
     ((and (<= c a) (<= c b))
      (+ (* a a) (* b b)))))
 
-(exercise 1.4)
+(Exercise 1.4)
 
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
@@ -132,7 +134,7 @@ circumference => 62.8318
 ;; (subtraction) when b is negative. Subtracting a negative is equivalent to
 ;; adding its absolute value, so this procedure performs `a + |b|` in all cases.
 
-(exercise 1.5)
+(Exercise 1.5)
 
 (define (p) (p))
 (define (test x y)
@@ -145,7 +147,7 @@ circumference => 62.8318
 ;; With normal-order evaluation, the expression will evaluate to zero. The `(p)`
 ;; expression is never evaluated because it is not necessary to do so.
 
-(subsection 1.1.7 "Example: Square Roots by Newton's Method"
+(Subsection 1.1.7 "Example: Square Roots by Newton's Method"
   (use (1.1.4 square)))
 
 (define (average x y)
@@ -170,7 +172,7 @@ circumference => 62.8318
 (square (sqrt 1000))
 ~> 1000.000369924366
 
-(exercise 1.6)
+(Exercise 1.6)
 
 (define (new-if predicate then-clause else-clause)
   (cond (predicate then-clause)
@@ -190,7 +192,7 @@ circumference => 62.8318
 ;; the else-clause, which contains the recursive call, so the recursion will
 ;; never end.
 
-(exercise 1.7
+(Exercise 1.7
   (use (1.1.7 sqrt)))
 
 ;; The `good-enough?` predicate does not work well for small numbers because the
@@ -221,7 +223,7 @@ circumference => 62.8318
 (sqrt 0.000002) ~> 0.00141421356261785
 (square (sqrt 0.000002)) ~> 2.00000000069227e-06
 
-(exercise 1.8)
+(Exercise 1.8)
 
 (define (improve guess x)
   (/ (+ (/ x (square guess))
@@ -237,7 +239,7 @@ circumference => 62.8318
 
 (cbrt 8) ~> 2
 
-(subsection 1.1.8 "Procedures as Black-Box Abstractions")
+(Subsection 1.1.8 "Procedures as Black-Box Abstractions")
 
 ;; The following two procedures should be indistinguishable:
 (define (square x) (* x x))
@@ -269,6 +271,8 @@ circumference => 62.8318
   (sqrt-iter 1.0))
 
 (section 1.2 "Procedures and the Processes They Generate")
+
+) ; end of SICP
 
 #|
 (subsection 1.2.1 "Linear Recursion and Iteration")

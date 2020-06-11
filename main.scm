@@ -1,63 +1,59 @@
 #!/usr/bin/env chez --script
 
-(let*
-  ((argv (command-line))
-   (program (car argv))
-   (arguments (cdr argv))
-   (usage-message
-    (format "usage: ~s [CHAPTER]\n" program))
-   (chapters '(1 2))
-   (fail
-     (lambda ()
-       (display usage-message
-                (standard-error-port 'none (current-transcoder)))
-       (exit 1)))
-   (chapter
-    (case (length arguments)
-      ((0) 'all)
-      ((1) (case (car arguments)
-             (("-h" "--help")
-              (display usage-message)
-              (exit 0))
-             (("1" "2" "3")
-              (string->number (car arguments)))
-             (else (fail))))
-      (else (fail))))
-   (check?
-     (lambda (ch)
-       (or (eq? 'all chapter) (= ch chapter)))))
-  (load "syntax.scm")
-  (load "chapter-1.scm")
-  (load "chapter-2.scm")
-  (when (check? 1))
-     )
-       )
-     )))
+(module (main)
+  (define (usage program)
+    (format "\
+usage: ~A [-hsv] [CHAPTER]
 
-(let ()
-  (define argv (command-line))
-  (define program (car argv))
-  (define arguments (cdr argv))
-  (define usage-message
-    (format "usage: ~s [CHAPTER]\n" program))
-  (define (fail)
-    (display usage-message
-             (standard-error-port 'none (current-transcoder)))
+Tests code samples and exercises from SICP.
+If CHAPTER is omitted, runs all chapters.
+
+options:
+
+  -h, --help       show this help message
+  -s, --slow       run slow tests too
+  -v, --verbose    verbose output
+" program))
+
+  (define (main argv)
+    (let ((program (car argv))
+          (options (parse-options (cdr argv))))
+      (cond
+        ((assq 'error options)
+         (die (usage program)))
+        ((assq 'help options)
+         (display (usage program))
+         (exit 0))
+        (else
+          (run (assq 'chapter options)
+               (assq 'slow options)
+               (assq 'verbose options))))))
+
+  (define (die msg)
+    (display msg (standard-error-port 'none (current-transcoder)))
     (exit 1))
-  (define chapter
-    (case (length arguments)
-      ((0) 'all)
-      ((1) (case (car arguments)
-             (("-h" "--help")
-              (display usage-message)
-              (exit 0))
-             (("1" "2" "3")
-              (string->number (car arguments)))
-             (else (fail))))
-      (else (fail))))
-  (load "prelude.scm")
-  (load "chapter-1.scm")
-  (load "chapter-2.scm")
+
+  (define (parse-options args)
+    (define (go args options)
+      (if (null? args)
+          options
+          (case (car args)
+            (("-h" "--help") '((help)))
+            (("-s" "--slow")
+             (go (cdr args) (cons '(slow) options)))
+            (("-v" "--verbose")
+             (go (cdr args) (cons '(verbose) options)))
+            (("1" "2" "3")
+             (go (cdr args) (cons `(chapter ,(string->number (car args)))
+                                  options)))
+            (else '((error))))))
+    (go args '((chapter all))))
+  
+  (define (run chapter slow verbose)
+    (load "syntax.scm")
+    (load "chapter-1.scm")
+    ; TODO
+    )
   )
 
 (main (command-line))
