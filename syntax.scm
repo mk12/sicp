@@ -1,9 +1,66 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
+(module helpers ()
+  ;; A tag identifies a chapter, section, subsection, or exercise. It consists
+  ;; of `exercise?`, #t for exercises; and `num`, a symbol like '1.2.3. This
+  ;; representation is used because chapters, sections, and subsections use
+  ;; nested `num` values, but exercises are only nested within chapters, so they
+  ;; can collide with section `num` values.
+  (define-record-type tag
+    (fields
+      (immutable exercise?)
+      (immutable num)))
+
+  ;; Converts a tag to a module name, as a symbol.
+  (define (tag->module-name tag)
+    (string->symbol
+      (string-append
+        (if (tag-exercise? tag) "sicp-ex-" "sicp-")
+        (symbol->string (tag-num tag)))))
+
+  ;; Converts a syntax element in `(use ...)` to a tag.
+  (define (use->tag-and-module use)
+    (let* ((sym (syntax->datum use))
+           (str (symbol->string sym)))
+      (if (string=? "ex-" (substring str 0 3))
+          (make-tag #t (string->symbol (substring str 3 (string-length str))))
+          (make-tag #f sym))))
+
+  ;; An entry stores code from a chaption, section, subsection, or exercise. It
+  ;; consists of a tag, a title string (or #f), a list of tags it imports, and a
+  ;; thunk -- a function that returns a module.
+  (define-record-type entry
+    (fields
+      (immutable tag)
+      (immutable title)
+      (immutable imports)
+      (immutable thunk)))
+
+  ;; Global log of entries.
+  (define *entries* (make-log))
+  (define (add-entry! . args)
+    (append-log! *entries* (apply make-entry args)))
+
+
+        )
+
 (module ((SICP assert-equal assert-close add-entry!)
          capture-output hide-output
          *entries* entry-thunk assert-equal ; TODO remove
          )
+
+  ;; Captures standard output in a string.
+  (define-syntax capture-output
+    (syntax-rules ()
+      ((_ e* ...)
+        (with-output-to-string (lambda () e* ...)))))
+
+  ;; Supresses printing to standard output.
+  (define-syntax hide-output
+    (syntax-rules ()
+      ((_ e* ...)
+        (parameterize ((current-output-port (open-output-string)))
+          e* ...))))
 
   ;; Asserts that all elements in `vals` are the same, according to `equal?`.
   ;; Expects `exprs` to contain syntax objects for each value in `vals`.
@@ -67,95 +124,8 @@
       (else (cons (cons (car xs) (cadr xs))
                   (pairs (cdr xs))))))
 
-  ; (define-syntax foo
-  ;   (syntax-rules ()
-  ;     ((_ bar e* ...)
-  ;      (bar (list e* ...) #'(e* ...)))))
-
-  ;; Asserts that two or more expressions evaluate to the same value, where
-  ;; "same" means `equal?`. It only evaluates each expression once.
-  (define-syntax assert-pairs
-    (lambda (x)
-      (define (gen-vars id exprs)
-        (map
-          (lambda (e)
-            (datum->syntax id (gensym)))
-          exprs))
-      (define (bindings vars exprs)
-        (with-syntax (((v* ...) vars)
-                      ((e* ...) exprs))
-          #'((v* e*) ...)))
-      (define (asserts vars exprs)
-        (map
-          (lambda (vpair epair)
-            (with-syntax (((v1 . v2) vpair)
-                          ((e1 . e2) epair))
-              #'(unless (equal? v1 v2)
-                  (syntax-error
-                    #'e1
-                    (format
-                      (string-append
-                        "assert-equal failed!"
-                        "\n\nleft: ~s\n => ~s"
-                        "\n\nright: ~s\n => ~s\n\n")
-                      'e1 v1 'e2 v2)))))
-          (pairs vars)
-          (pairs exprs)))
-      (syntax-case x ()
-        ((a e1 e2 e* ...)
-         (let* ((exprs #'(e1 e2 e* ...))
-                (vars (gen-vars #'a exprs)))
-           #`(let #,(bindings vars exprs)
-               (assert-p #,vars #,exprs)
-               #,@(asserts vars exprs)))))))
-
-      ; (syntax-case x ()
-      ;   ((_ e1 e2)
-      ;   (let ((v1 e1)
-      ;         (v2 e2))
-      ;     (unless (equal? v1 v2)
-      ;       (syntax-error
-      ;         #'e1
-      ;         (format
-      ;           (string-append
-      ;             "assert-equal failed!"
-      ;             "\n\nleft: ~s\n => ~s"
-      ;             "\n\nright: ~s\n => ~s\n\n")
-      ;           'e1 v1 'e2 v2)))))))
-
-  ;; Asserts that two inexact numbers are close together.
-  (define-syntax assert-close
-    (syntax-rules ()
-      ((_ e1 e2)
-       (let ((v1 e1)
-             (v2 e2)
-             (delta (abs (- v1 v2)))
-             (max-delta 1e-10))
-         (when (> delta max-delta)
-           (syntax-error
-             #'e1
-             (format
-               (string-append
-                 "assert-close failed!"
-                 "\n\nleft: ~s\n => ~s"
-                 "\n\nright: ~s\n => ~s\n\n"
-                 "\n\ndelta: ~s > ~s\n\n")
-               'e1 v1 'e2 v2 delta max-delta)))))))
-
-  ;; Captures standard output in a string.
-  (define-syntax capture-output
-    (syntax-rules ()
-      ((_ e* ...)
-        (with-output-to-string (lambda () e* ...)))))
-
-  ;; Supresses printing to standard output.
-  (define-syntax hide-output
-    (syntax-rules ()
-      ((_ e* ...)
-        (parameterize ((current-output-port (open-output-string)))
-          e* ...))))
-
-  ;; A log is an append-only list.
+  ;; A log is an append-only list. It maintains a pointer to the end so that
+  ;; appending an element is a constant time operation.
   (define (make-log)
     (cons '() '()))
   (define (empty-log? d)
@@ -170,71 +140,70 @@
           (set-cdr! (cdr d) new-pair)
           (set-cdr! d new-pair)))))
 
-  ;; An entry stores code from a chaption, section, subsection, or exercise. The
-  ;; thunk is a lambda that returns a module.
-  (define-record-type entry
-    (fields
-      (immutable kind)
-      (immutable num)
-      (immutable title)
-      (immutable thunk)))
-
-  ;; Global log of entries.
-  (define *entries* (make-log))
-  (define (add-entry! . args)
-    (append-log! *entries* (apply make-entry args)))
-
   ;; A DSL for SICP code samples and exercises.
-  (define-syntax SICP
-    (lambda (x)
-      (define (finish header code)
-        (if (null? code)
-            #f #f))
-      (define (go x header exports body out)
-        (define (flush)
-          (if (null? body)
-              out
-              #`(#,@out)
-              ; TODO
-              ))
-        (syntax-case x (Chapter Section Subsection Exercise define => ~>)
-          (() (flush))
-          (((Chapter e1* ...) e2* ...)
-           (go #'(e2* ...) #'('chapter e1* ...) #'() #'() (flush)))
-          (((Section e1* ...) e2* ...)
-           (go #'(e2* ...) #'('section e1* ...) #'() #'() (flush)))
-          (((Subsection e1* ...) e2* ...)
-           (go #'(e2* ...) #'('subsection e1* ...) #'() #'() (flush)))
-          (((Exercise e1* ...) e2* ...)
-           (go #'(e2* ...) #'('exercise e1* ...) #'() #'() (flush)))
-          ((e1 => e2 e* ...)
-           (go=> #'(e2 e* ...) #'(e1 e2) header exports body out))
-          ((e1 ~> e2 e* ...)
-           (go~> #'(e2 e* ...) #'(e1 e2) header exports body out))
-          (((define (name . args) e1* ...) e2* ...)
-           (with-syntax (((def _* ...) x))
-             (go #'(e2* ...) header #`(#,@exports name) #`(#,@body def) out)))
-          (((define name e1* ...) e2* ...)
-           (identifier? #'name)
-           (with-syntax (((def _* ...) x))
-             (go #'(e2* ...) header #`(#,@exports name) #`(#,@body def) out)))
-          ((e e* ...)
-           (helper #'(e* ...) header exports #`(#,@body e) out))))
-      (define (go=> x terms header exports body out)
-        (syntax-case x (=>)
-          ((e2 => e3 e* ...)
-           (go=> #'(e3 e* ...) #'(#,@terms e3) header exports body out))
-          ((e2 e* ...)
-           (let ((new-body #'(#,@body (assert-equal #,@terms))))
-             (go #'(e* ...) header exports new-body out)))))
-      (define (go~> x terms header exports body out)
-        (syntax-case x (~>)
-          ((e2 ~> e3 e* ...)
-           (go=> #'(e3 e* ...) #'(#,@terms e3) header exports body out))
-          ((e2 e* ...)
-           (let ((new-body #'(#,@body (assert-close #,@terms))))
-             (go #'(e* ...) header exports new-body out)))))
-
-      (with-syntax (((_ e* ...) x))
-        (go #'(e* ...) #f #f #f #'()))
-      )))
+  (define-syntax (SICP x)
+    ;; Recursive implementation of the macro. It takes:
+    ;; x       - the remaining forms to be processed
+    ;; header  - the last seen chapter/section/subsection/exercise header
+    ;; exports - names of definitions made since the last header
+    ;; body    - code encountered since the last header
+    ;; out     - accumulated result of the macro
+    (define (go x header exports body out)
+      (define (flush)
+        (if (null? body) out #`(#,@out #,(build-entry))))
+      (define (build-entry)
+        (with-syntax (((exercise? num title e* ...) header))
+          (let ((thunk #`(lambda () (module NAME #,exports #,body))))
+            #`(#,@out (add-entry! kind num title #,thunk)))))
+      (define (imports)
+        (let ((uses
+                (syntax-case header (use)
+                  ((_ _ (use e* ...)) #'(e* ...))
+                  ((_ _ _ (use e* ...)) #'(e* ...)))))
+          (map
+            (lambda (e)
+              (syntax-case e ()
+                ((ref e* ...) #'(import (only F funs)))
+                (ref #'(import ref (make-tag)))))
+            exprs)))
+      (syntax-case x (Chapter Section Subsection Exercise define => ~>)
+        (() (flush))
+        (((Chapter e1* ...) e2* ...)
+          (go #'(e2* ...) #'(#f e1* ...) #'() #'() (flush)))
+        (((Section e1* ...) e2* ...)
+          (go #'(e2* ...) #'(#f e1* ...) #'() #'() (flush)))
+        (((Subsection e1* ...) e2* ...)
+          (go #'(e2* ...) #'(#f e1* ...) #'() #'() (flush)))
+        (((Exercise e1* ...) e2* ...)
+          (go #'(e2* ...) #'(#t e1* ...) #'() #'() (flush)))
+        ((e1 => e2 e* ...)
+          (go=> #'(e2 e* ...) #'(e1 e2) header exports body out))
+        ((e1 ~> e2 e* ...)
+          (go~> #'(e2 e* ...) #'(e1 e2) header exports body out))
+        (((define (name . args) e1* ...) e2* ...)
+          (with-syntax (((def _* ...) x))
+            (go #'(e2* ...) header #`(#,@exports name) #`(#,@body def) out)))
+        (((define name e1* ...) e2* ...)
+          (identifier? #'name)
+          (with-syntax (((def _* ...) x))
+            (go #'(e2* ...) header #`(#,@exports name) #`(#,@body def) out)))
+        ((e e* ...)
+          (helper #'(e* ...) header exports #`(#,@body e) out))))
+    (define (go=> x terms header exports body out)
+      (syntax-case x (=>)
+        ((e2 => e3 e* ...)
+          (go=> #'(e3 e* ...) #`(#,@terms e3) header exports body out))
+        ((e2 e* ...)
+          (let ((new-body
+                  #`(#,@body (assert-equal (list #,@terms) #'#,terms))))
+            (go #'(e* ...) header exports new-body out)))))
+    (define (go~> x terms header exports body out)
+      (syntax-case x (~>)
+        ((e2 ~> e3 e* ...)
+          (go=> #'(e3 e* ...) #`(#,@terms e3) header exports body out))
+        ((e2 e* ...)
+          (let ((new-body
+                  #`(#,@body (assert-close (list #,@terms) #'#,terms))))
+            (go #'(e* ...) header exports new-body out)))))
+    (with-syntax (((_ e* ...) x))
+      (go #'(e* ...) #f #f #f #'()))))
