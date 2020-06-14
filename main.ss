@@ -3,14 +3,13 @@
 #!r6rs
 
 (import (rnrs (6))
-        (src utils))
+        (src compat impl))
 
 (define (usage program)
   (format "\
 usage: ~A [-hsv] [CHAPTER]
 
-Tests code samples and exercises from SICP.
-If CHAPTER is omitted, runs all chapters.
+Executes SICP code. If CHAPTER is omitted, runs all chapters.
 
 options:
 
@@ -20,34 +19,20 @@ options:
 " program))
 
 (define (die msg)
-  (display msg (standard-error-port))
+  (display msg (current-error-port))
   (exit 1))
 
 (define (parse-options args)
   (define (go args options)
-    ; (define (is . flags) (member (carg args) flags))
-    ; (define (stop opt) `((,opt)))
-    ; (define (next opt) (go (cdr args) (cons opt options)))
-    ; (cond
-    ;   ((null? args) options)
-    ;   ((member (car args) '("-h --help"))
-    ;    '((help)))
-    ;   ((member (car args) '("-s" "--slow"))
-    ;    (go (cdr args) (cons '(slow) options)))
-    ;   ((member (car args) '("-v" "--verbose"))
-    ;    (go (cdr args))))
-    (if (null? args)
-        options
-        (case (car args)
-          (("-h" "--help") '((help)))
-          (("-s" "--slow")
-            (go (cdr args) (cons '(slow) options)))
-          (("-v" "--verbose")
-            (go (cdr args) (cons '(verbose) options)))
-          (("1" "2" "3")
-            (go (cdr args) (cons `(chapter ,(string->number (car args)))
-                                options)))
-          (else '((error))))))
+    (define (is? . flags) (member (car args) flags))
+    (define (add opt) (go (cdr args) (cons opt options)))
+    (cond
+      ((null? args) options)
+      ((is? "-h" "--help") '((help)))
+      ((is? "-s" "--slow") (add '(slow)))
+      ((is? "-v" "--verbose") (add '(verbose)))
+      ((is? "1" "2" "3") (add `(chapter ,(string->number (car args)))))
+      (else '((error)))))
   (go args '((chapter all))))
 
 (define (run chapter slow verbose)
@@ -62,13 +47,13 @@ options:
         (options (parse-options (cdr argv))))
     (cond
       ((assq 'error options)
-        (die (usage program)))
+       (die (usage program)))
       ((assq 'help options)
-        (display (usage program))
-        (exit 0))
+       (display (usage program))
+       (exit 0))
       (else
         (run (assq 'chapter options)
-              (assq 'slow options)
-              (assq 'verbose options))))))
+             (assq 'slow options)
+             (assq 'verbose options))))))
 
 (main (command-line))
