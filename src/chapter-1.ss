@@ -3,16 +3,19 @@
 #!r6rs
 
 (library (src chapter-1)
-  (export)
-  (import (src lang syntax))
+  (export prepare-chapter1)
+  (import (rnrs base (6))
+          (src lang syntax))
+
+(define prepare-chapter1)
 
 (SICP
 
-(Chapter 1 "Building Abstractions with Procedures")
+(Chapter :1 "Building Abstractions with Procedures")
 
-(Section 1.1 "The Elements of Programming")
+(Section :1.1 "The Elements of Programming")
 
-(Subsection 1.1.1 "Expressions")
+(Subsection :1.1.1 "Expressions")
 
 486 => 486
 (+ 137 349) => 486
@@ -25,6 +28,10 @@
 (+ (* 3 5) (- 10 6)) => 19
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
 
+) ; end of SICP
+) ; end of library
+
+#|
 (Subsection 1.1.2 "Naming and the Environment")
 
 (define size 2)
@@ -278,10 +285,8 @@ circumference => 62.8318
 
 (section 1.2 "Procedures and the Processes They Generate")
 
-) ; end of SICP
-) ; end of library
+;;; NOTE THIS WAS THE PREVIOUS PLACE I HAD GOTTEN TO
 
-#|
 (subsection 1.2.1 "Linear Recursion and Iteration")
 
 (define (factorial-rec n)

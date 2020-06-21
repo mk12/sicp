@@ -3,7 +3,9 @@
 #!r6rs
 
 (import (rnrs (6))
-        (src compat impl))
+        (src compat impl)
+        (src lang syntax)
+        (src chapter-1))
 
 (define (usage program)
   (format "\
@@ -37,9 +39,10 @@ options:
   (go args (just 'chapter 'all)))
 
 (define (run chapter slow verbose)
-  (display "Hi\n")
-  (load "src/lang/syntax.ss")
-  (load "sicptest.ss")
+  prepare-chapter1
+  (write (get-entries))
+  ; (load "src/lang/syntax.ss")
+  ; (load "sicptest.ss")
   ; (load "chapter-1.scm")
   ; TODO
   )

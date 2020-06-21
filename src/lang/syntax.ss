@@ -3,7 +3,10 @@
 #!r6rs
 
 (library (src lang syntax)
-  (export SICP capture-output hide-output define => ~>)
+  (export SICP Chapter Section Subsection Exercise define => ~>
+          capture-output hide-output
+          get-entries ; remove
+          )
   (import (rnrs (6))
           (rnrs mutable-pairs (6))
           (src compat impl))
@@ -89,11 +92,12 @@
                   (pairs (cdr xs))))))
 
   ;; An entry stores code from a part of the textbook. It consists of a unique
-  ;; symbol identifier, a kind ('chapter, 'section, 'subsection, or 'exercise),
+  ;; symbol `id`, a kind ('chapter, 'section, 'subsection, or 'exercise), a
+  ;; string `num` containing a dotted chapter/section/etc. number like "1.2.3",
   ;; a title string (or #f), a list of imported names from other entries
   ;; formatted as `((id name ...) ...)`, a list of exported names, and a thunk
-  ;; that takes all the imported names as one flat list of arguments, and
-  ;; returns the exported values in the same order as `exports`.
+  ;; that takes all the imported names as one flat list of arguments and returns
+  ;; the exported values in the same order as `exports`.
   (define-record-type entry
     (fields id kind num title imports exports thunk))
 
@@ -119,26 +123,35 @@
     (append-log! *entries*
                  (make-entry id kind num title imports exports thunk)))
 
-  ;; In order for `SICP` to match on the auxiliary keyword `~>`, we must export
-  ;; it. That implies giving it a definition. We don't need to do this to export
-  ;; `define` and `=>` because they already have definitions in rnrs (the latter
-  ;; is the auxiliary keyoward used in `cond`).
-  (define-syntax ~>
-    (lambda (x)
-      (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
+  ;; TODO: REMOVE
+  (define (get-entries) (car *entries*))
+
+  ;; In order for `SICP` to match on auxiliary keywords, we must export them.
+  ;; That implies giving them definitions. We don't need to do this for `define`
+  ;; and `=>` because we instead re-export the rnrs definitions (the latter is
+  ;; already an auxiliary keyword used in `cond`).
+  (let-syntax
+    ((auxiliary
+       (syntax-rules ()
+         ((_ lit ...)
+          (begin
+            (define-syntax lit
+              (lambda (x)
+                (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
+            ...)))))
+    (auxiliary Chapter Section Subsection Exercise ~>))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
     ;; Use the `SICP` syntax form in `datum->syntax` calls.
     (define sicp (with-syntax (((s e* ...) x)) #'s))
 
-    ;; Converts a syntax object, assumed to be a number or symbol, to a string.
+    ;; Converts a syntax object, assumed to be an identifier, to a string.
     (define (syntax->string s)
       (let ((datum (syntax->datum s)))
         (cond
-          ((number? datum) (number->string datum))
           ((symbol? datum) (symbol->string datum))
-          (else (error 'syntax->string datum)))))
+          (else (error 'syntax->string "not a symbol" datum)))))
 
     ;; Creates an entry id from its kind and num.
     (define (kind-and-num->id kind num)
@@ -163,7 +176,7 @@
               (string-append "sicp-ex-" (substring str 3 (string-length str)))
               (string-append "sicp-" str))))))
 
-    ;; Converts the `(use ...)` syntax to a list of parameters for `thunk.`
+    ;; Converts the `(use ...)` syntax to a list of parameters for `thunk`.
     (define (build-params uses)
       (with-syntax ((((ref name ...) ...) uses))
         #'(name ... ...)))
@@ -192,11 +205,15 @@
       (define (flush)
         ; #`(write '#,body)
         ; #'(display "hi\n"))
-        (syntax-case body ()
-          (() out)
-          (_ #`(#,@out #,(build-entry))))
+        ; (syntax-case body ()
+          ; (() out)
+          ; (_ 
+          (if (eq? header 'no-header)
+            out
+            #`(#,@out #,(build-entry))))
+      ;)
         ; (if (null? body) out #`(#,@out #,(build-entry)))
-        )
+        ; )
       (define (build-entry)
         (with-syntax (((kind num _ ...) header))
           (let ((uses (get-uses)))
@@ -228,7 +245,6 @@
       (syntax-case x (Chapter Section Subsection Exercise define => ~>)
         (() (flush))
         (((Chapter e1* ...) e2* ...)
-         ; #'(display "chapter\n"))
           (go #'(e2* ...) #'(chapter e1* ...) #'() #'() (flush)))
         (((Section e1* ...) e2* ...)
           (go #'(e2* ...) #'(section e1* ...) #'() #'() (flush)))
@@ -250,9 +266,9 @@
             (go #'(e2* ...) header (add-export #'name) #`(#,@body set) out)))
         ((e e* ...)
          ; #'(write 'e)
-         (begin (write #'(e e* ...)) (newline) (newline)
+         ; (begin (write #'(e e* ...)) (newline) (newline)
           (go #'(e* ...) header exports #`(#,@body e) out)
-          )
+          ; )
           )))
 
     ;; Helper recursive function when parsing `=>` operators.
@@ -280,11 +296,11 @@
       ; #`(write '(e* ...))
 
       ;; PRINT MACRO OUTPUT
-      #`(write '(begin #,@(go #'(e* ...) 'no-header #'() #'() #'())))
+      ; #`(write '(begin #,@(go #'(e* ...) 'no-header #'() #'() #'())))
 
       ;; PRINT *entries*
       ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()) (write *entries*))
 
       ;; NORMAL
-      ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()))
+      #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()))
       ))))
