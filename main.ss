@@ -2,10 +2,7 @@
 
 #!r6rs
 
-(import (rnrs base (6))
-        (rnrs io simple (6))
-        (rnrs lists (6))
-        (rnrs programs (6))
+(import (rnrs (6))
         (src compat impl))
 
 (define (usage program)

@@ -52,7 +52,7 @@ circumference => 62.8318
 (f 5) => 136
 
 (Subsection 1.1.5 "The Substitution Model for Procedure Application"
-  (use 1.1.4))
+  (use (1.1.4 square sum-of-squares f)))
 
 ;; Applicative-order evaluation:
 (f 5)

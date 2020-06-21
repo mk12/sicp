@@ -3,15 +3,9 @@
 #!r6rs
 
 (library (src lang syntax)
-  (export SICP capture-output hide-output
-          *entries* ; TODO remove
-          )
-  (import (rnrs base (6))
-          (rnrs control (6))
-          (rnrs io simple (6))
+  (export SICP capture-output hide-output define => ~>)
+  (import (rnrs (6))
           (rnrs mutable-pairs (6))
-          (rnrs records syntactic (6))
-          (rnrs syntax-case (6))
           (src compat impl))
 
   ;; Captures standard output in a string.
@@ -96,10 +90,12 @@
 
   ;; An entry stores code from a part of the textbook. It consists of a unique
   ;; symbol identifier, a kind ('chapter, 'section, 'subsection, or 'exercise),
-  ;; a title string (or #f), a list of imported `id`s, and a thunk -- a function
-  ;; that returns a library named `id`.
+  ;; a title string (or #f), a list of imported names from other entries
+  ;; formatted as `((id name ...) ...)`, a list of exported names, and a thunk
+  ;; that takes all the imported names as one flat list of arguments, and
+  ;; returns the exported values in the same order as `exports`.
   (define-record-type entry
-    (fields id kind num title imports thunk))
+    (fields id kind num title imports exports thunk))
 
   ;; A log is an append-only list. It maintains a pointer to the end so that
   ;; appending an element is a constant time operation.
@@ -119,20 +115,34 @@
 
   ;; Global log of entries. The `SICP` macro produces calls to `add-entry!`.
   (define *entries* (make-log))
-  (define (add-entry! id kind num title imports thunk)
+  (define (add-entry! id kind num title imports exports thunk)
     (append-log! *entries*
-                 (make-entry id kind num title imports thunk)))
+                 (make-entry id kind num title imports exports thunk)))
+
+  ;; In order for `SICP` to match on the auxiliary keyword `~>`, we must export
+  ;; it. That implies giving it a definition. We don't need to do this to export
+  ;; `define` and `=>` because they already have definitions in rnrs (the latter
+  ;; is the auxiliary keyoward used in `cond`).
+  (define-syntax ~>
+    (lambda (x)
+      (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
     ;; Use the `SICP` syntax form in `datum->syntax` calls.
     (define sicp (with-syntax (((s e* ...) x)) #'s))
 
+    ;; Converts a syntax object, assumed to be a number or symbol, to a string.
+    (define (syntax->string s)
+      (let ((datum (syntax->datum s)))
+        (cond
+          ((number? datum) (number->string datum))
+          ((symbol? datum) (symbol->string datum))
+          (else (error 'syntax->string datum)))))
+
     ;; Creates an entry id from its kind and num.
     (define (kind-and-num->id kind num)
-      (let* ((num-datum (syntax->datum num))
-             (num-str ((if (number? num-datum) number->string symbol->string)
-                       num-datum)))
+      (let ((num-str (syntax->string num)))
         (datum->syntax sicp
           (case (syntax->datum kind)
             ((exercise)
@@ -145,12 +155,32 @@
     ;; 1.2.3 is a subsection). The exception is exercises -- they can clash with
     ;; sections, so they use a different format: ex-1.2 means exercise 1.2.
     (define (use->id use)
-      (let ((str (symbol->string (syntax->datum use))))
+      (let ((str (syntax->string use)))
         (datum->syntax sicp
           (string->symbol
-            (if (string=? "ex-" (substring str 0 3))
+            (if (and (>= (string-length str) 3)
+                     (string=? "ex-" (substring str 0 3)))
               (string-append "sicp-ex-" (substring str 3 (string-length str)))
               (string-append "sicp-" str))))))
+
+    ;; Converts the `(use ...)` syntax to a list of parameters for `thunk.`
+    (define (build-params uses)
+      (with-syntax ((((ref name ...) ...) uses))
+        #'(name ... ...)))
+
+    ;; Like `map`, but works better on lists of syntax. In particular, Racket
+    ;; reports a contract violation when mapping over #'() with `map`.
+    (define (smap f xs)
+      (syntax-case xs ()
+        (() #'())
+        ((e e* ...) (cons (f #'e) (smap f #'(e* ...))))))
+
+    ;; Converts the `(use ...)` syntax to `imports` for the entry.
+    (define (build-imports uses)
+      (smap (lambda (e)
+              (with-syntax (((ref name ...) e))
+                #`(#,(use->id #'ref) name ...)))
+            uses))
 
     ;; Recursive implementation of the macro. It takes:
     ;; x       - the remaining forms to be processed
@@ -160,7 +190,7 @@
     ;; out     - accumulated result of the macro
     (define (go x header exports body out)
       (define (flush)
-        ; #`(write '#,body))
+        ; #`(write '#,body)
         ; #'(display "hi\n"))
         (syntax-case body ()
           (() out)
@@ -168,38 +198,33 @@
         ; (if (null? body) out #`(#,@out #,(build-entry)))
         )
       (define (build-entry)
-        (with-syntax (((kind num title e* ...) header))
-          (let-values (((import-ids imports) (build-imports)))
-            (let* ((id (kind-and-num->id #'kind #'num))
-                   ; (thunk #`(lambda ()
-                   ;            (library (#,id)
-                   ;              (export #,@exports)
-                   ;              (import #,@imports)
-                   ;              #,body)))
-                   )
-              #`(#,@out
-                 (add-entry! '#,id 'kind 'num title '#,import-ids
-                             ;#,thunk
-                             #f
-                             ))))))
-      (define (build-imports)
-        (let ((uses (syntax-case header (use)
-                      ((_ _ (use e* ...)) #'(e* ...))
-                      ((_ _ _ (use e* ...)) #'(e* ...))
-                      (_ '()))))
-          (values
-            (map
-              (lambda (e)
-                (syntax-case e ()
-                  ((ref e* ...) (use->id #'ref))
-                  (ref (use->id #'ref))))
-              uses)
-            (map
-              (lambda (e)
-                (syntax-case e ()
-                  ((ref e* ...) #`(only (#,(use->id #'ref)) e* ...))
-                  (ref #`(#,(use->id #'ref)))))
-              uses))))
+        (with-syntax (((kind num _ ...) header))
+          (let ((uses (get-uses)))
+            #`(add-entry!
+                '#,(kind-and-num->id #'kind #'num)
+                'kind
+                'num
+                #,(get-title)
+                '#,(build-imports uses)
+                '#,exports
+                (lambda #,(build-params uses)
+                  #,@(smap (lambda (name) #`(define #,name)) exports)
+                  #,@body
+                  (list #,@exports))))))
+      (define (get-title)
+        (syntax-case header ()
+          ((_ _ title _ ...) (string? (syntax->datum #'title)) #'title)
+          (_ #'#f)))
+      (define (get-uses)
+        (syntax-case header (use)
+          ((_ _ (use e* ...)) #'(e* ...))
+          ((_ _ _ (use e* ...)) #'(e* ...))
+          (_ '())))
+      (define (add-export name)
+        (if (memq (syntax->datum name)
+                  (syntax->datum exports))
+          exports
+          #`(#,@exports #,name)))
       (syntax-case x (Chapter Section Subsection Exercise define => ~>)
         (() (flush))
         (((Chapter e1* ...) e2* ...)
@@ -212,20 +237,22 @@
         (((Exercise e1* ...) e2* ...)
           (go #'(e2* ...) #'(exercise e1* ...) #'() #'() (flush)))
         ((e1 => e2 e* ...)
-          (go=> #'(e2 e* ...) #'(e1 e2) header exports body out))
+         (go=> #'(e2 e* ...) #'(e1 e2) header exports body out))
         ((e1 ~> e2 e* ...)
-          (go~> #'(e2 e* ...) #'(e1 e2) header exports body out))
+         (go~> #'(e2 e* ...) #'(e1 e2) header exports body out))
         (((define (name . args) e1* ...) e2* ...)
           (identifier? #'name)
-          (with-syntax (((def _* ...) x))
-            (go #'(e2* ...) header #`(#,@exports name) #`(#,@body def) out)))
+          (with-syntax ((set #'(set! name (lambda args e1* ...))))
+            (go #'(e2* ...) header (add-export #'name) #`(#,@body set) out)))
         (((define name e1* ...) e2* ...)
           (identifier? #'name)
-          (with-syntax (((def _* ...) x))
-            (go #'(e2* ...) header #`(#,@exports name) #`(#,@body def) out)))
+          (with-syntax ((set #'(set! name e1* ...)))
+            (go #'(e2* ...) header (add-export #'name) #`(#,@body set) out)))
         ((e e* ...)
          ; #'(write 'e)
+         (begin (write #'(e e* ...)) (newline) (newline)
           (go #'(e* ...) header exports #`(#,@body e) out)
+          )
           )))
 
     ;; Helper recursive function when parsing `=>` operators.
@@ -249,6 +276,15 @@
             (go #'(e* ...) header exports new-body out)))))
 
     (with-syntax (((_ e* ...) x))
+      ;; PRINT INPUT
       ; #`(write '(e* ...))
-      #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()))
+
+      ;; PRINT MACRO OUTPUT
+      #`(write '(begin #,@(go #'(e* ...) 'no-header #'() #'() #'())))
+
+      ;; PRINT *entries*
+      ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()) (write *entries*))
+
+      ;; NORMAL
+      ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()))
       ))))
