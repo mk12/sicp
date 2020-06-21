@@ -1,5 +1,11 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
+#!r6rs
+
+(library (src chapter-1)
+  (export)
+  (import (src lang syntax))
+
 (SICP
 
 (Chapter 1 "Building Abstractions with Procedures")
@@ -273,6 +279,7 @@ circumference => 62.8318
 (section 1.2 "Procedures and the Processes They Generate")
 
 ) ; end of SICP
+) ; end of library
 
 #|
 (subsection 1.2.1 "Linear Recursion and Iteration")

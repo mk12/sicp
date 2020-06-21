@@ -3,5 +3,13 @@
 #!r6rs
 
 (library (src compat impl)
-  (export format)
-  (import (only (chezscheme) format)))
+  (export format load syntax->location)
+  (import (rnrs base (6))
+          (only (chezscheme) annotation-source format load
+                locate-source-object-source syntax->annotation))
+
+  (define (syntax->location s)
+    (locate-source-object-source
+      (annotation-source (syntax->annotation s))
+      #t    ; get the start, not end
+      #t))) ; use the cache
