@@ -3,11 +3,11 @@
 #!r6rs
 
 (library (src chapter-1)
-  (export prepare-chapter1)
+  (export chapter-1-effects)
   (import (rnrs base (6))
-          (src lang syntax))
+          (src lang sicp))
 
-(define prepare-chapter1)
+(define chapter-1-effects)
 
 (SICP
 
@@ -18,15 +18,15 @@
 (Subsection :1.1.1 "Expressions")
 
 486 => 486
-(+ 137 349) => 486
-(- 1000 334) => 666
-(* 5 99) => 495
-(/ 10 5) => 2
-(+ 2.7 10) => 12.7
-(+ 21 35 12 7) => 75
-(* 25 4 12) => 1200
-(+ (* 3 5) (- 10 6)) => 19
-(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
+; (+ 137 349) => 486
+; (- 1000 334) => 666
+; (* 5 99) => 495
+; (/ 10 5) => 2
+; (+ 2.7 10) => 12.7
+; (+ 21 35 12 7) => 75
+; (* 25 4 12) => 1200
+; (+ (* 3 5) (- 10 6)) => 19
+; (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
 
 ) ; end of SICP
 ) ; end of library

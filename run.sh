@@ -19,15 +19,16 @@ shift
 case $arg in
     -h|--help) usage; exit ;;
     chez)
-        ln -sf chez.ss src/compat/impl.ss
+        ln -sf chez.ss src/compat/active.ss
         chez --program main.ss "$@"
         ;;
     guile)
-        ln -sf guile.ss src/compat/impl.ss
+        ln -sf guile.ss src/compat/active.ss
         guile --r6rs -L . -x .ss main.ss "$@"
         ;;
     racket)
-        ln -sf racket.ss src/compat/impl.ss
+        ln -sf racket.ss src/compat/active.ss
+        # TODO: --compile first?
         plt-r6rs ++path . main.ss "$@"
         ;;
     *) usage >&2; exit 1 ;;

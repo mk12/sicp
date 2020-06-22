@@ -2,7 +2,7 @@
 
 #!r6rs
 
-(library (src compat impl)
+(library (src compat active)
   (export format load syntax->location)
   (import (rnrs base (6))
           (only (racket base)

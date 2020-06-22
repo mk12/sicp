@@ -3,15 +3,25 @@
 #!r6rs
 
 (import (rnrs (6))
-        (src compat impl)
-        (src lang syntax)
+        (only (src compat active) format)
+        (only (src lang core) run-sicp)
         (src chapter-1))
 
 (define (usage program)
   (format "\
-usage: ~A [-hsv] [CHAPTER]
+usage: ~A [-hsv] [FILTER ...]
 
-Runs SICP code and tests. If CHAPTER is omitted, runs all chapters.
+Runs SICP code and tests. If FILTER is provided, only runs the parts whose id
+starts with one of the FILTER arguments. For example:
+
+  1       chapter 1
+  1 2     chapters 1 and 2
+  :1      chapter 1, minus exercises
+  :1.2    section 1.2, including subsections
+  :1.2.3  subsection 1.2.3
+  =1.12   exercise 1.12
+
+It will also run all transitive dependencies of the specified parts.
 
 options:
 
@@ -28,24 +38,31 @@ options:
   (define (just . opt) (list opt))
   (define (go args options)
     (define (is? . flags) (member (car args) flags))
+    (define (startswith? c)
+      (and (> (string-length (car args)) 0)
+           (char=? c (string-ref (car args) 0))))
     (define (add . opt) (go (cdr args) (cons opt options)))
     (cond
       ((null? args) options)
       ((is? "-h" "--help") (just 'help))
       ((is? "-s" "--slow") (add 'slow))
       ((is? "-v" "--verbose") (add 'verbose))
-      ((is? "1" "2" "3") (add 'chapter (string->number (car args))))
+      ((not (startswith? #\-)) (add 'filter (car args)))
       (else (just 'error))))
-  (go args (just 'chapter 'all)))
+  (go args '()))
 
-(define (run chapter slow verbose)
-  prepare-chapter1
-  (write (get-entries))
-  ; (load "src/lang/syntax.ss")
-  ; (load "sicptest.ss")
-  ; (load "chapter-1.scm")
-  ; TODO
-  )
+(define (collq key alist)
+  (define (go alist res)
+    (cond
+      ((null? alist) res)
+      ((eq? key (caar alist))
+       (go (cdr alist) (cons (cadar alist) res)))
+      (else (go (cdr alist) res))))
+  (go alist '()))
+
+(define (run filters slow verbose)
+  chapter-1-effects
+  (run-sicp filters slow verbose))
 
 (define (main argv)
   (let ((program (car argv))
@@ -56,7 +73,7 @@ options:
       ((assq 'help options)
        (display (usage program)))
       (else
-        (run (cadr (assq 'chapter options))
+        (run (collq 'filter options)
              (assq 'slow options)
              (assq 'verbose options))))))
 
