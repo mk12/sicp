@@ -35,8 +35,8 @@
       (lambda (v1 v2 e1 e2)
         (format
           (string-append
-            "left: ~s\n => ~s\n\n"
-            "right: ~s\n => ~s\n\n")
+            "left: ~s\n=> ~s\n\n"
+            "right: ~s\n=> ~s\n\n")
           e1 v1 e2 v2))
       vals
       exprs))
@@ -67,7 +67,7 @@
   ;; increments `*passes*` or `*fails*` based on the result.
   (define (assert-on-pairs pred? make-msg vals exprs)
     (for-each
-      (lambda (epair vpair)
+      (lambda (vpair epair)
         (let ((v1 (car vpair))
               (v2 (cdr vpair))
               (e1 (car epair))
@@ -82,8 +82,16 @@
                   (display
                     (format "~a:~a:~a: assertion failed\n~a"
                             file line col msg))))))))
-      (pairs exprs)
-      (pairs vals)))
+      (pairs vals)
+      (pairs (syntax->list exprs))))
+
+  ;; Converts a syntax object to a list of syntax objects.
+  ;; https://www.scheme.com/csug8/syntax.html#./syntax:s6
+  (define syntax->list
+    (lambda (ls)
+      (syntax-case ls ()
+        (() '())
+        ((x . r) (cons #'x (syntax->list #'r)))))) 
 
   ;; Returns a list of the adjacent pairs of elements in `xs` For example, given
   ;; the list `(a b c d)` it returns `((a . b) (b . c) (c . d))`.
@@ -122,8 +130,8 @@
   (define-record-type entry
     (fields id kind num title imports exports thunk))
 
-  ;; A queue supports constant time appending to the back and popping from the
-  ;; front. It also maintains constant time access to its length.
+  ;; A queue supports constant time appending to the back, popping from the
+  ;; front, and accessing the length.
   (define-record-type (queue make-raw-queue queue?)
     (fields (mutable length) (mutable front) (mutable back)))
   (define (make-queue)
@@ -167,45 +175,138 @@
       (queue-front *entries*))
     table)
 
-  ;; Returns a hashtable of dependencies in `*entries*` from source `id` to a
-  ;; list of dependency `id`s.
-  (define (entries-graph)
-    (define table (make-eq-hashtable (queue-length *entries*)))
+  ;; Returns a hashtable from entries in `*entries*` to their in-degrees (the
+  ;; number of times they are imported). Includes only entries that satisfy
+  ;; `pred?` and all their transitive dependencies. Requires `by-id`, a
+  ;; hashtable produced by `entries-by-id`.
+  (define (entries-to-in-degrees by-id pred?)
+    (define in-degrees (make-eq-hashtable))
+    (define q (make-queue))
     (for-each
       (lambda (entry)
-        (hashtable-set! table (entry-id entry) (map car (entry-imports entry))))
+        (when (pred? entry)
+          (queue-push-back! q entry)))
       (queue-front *entries*))
-    table)
+    (let loop ()
+      (if (queue-empty? q)
+          in-degrees
+          (let ((e (queue-pop-front! q)))
+            (let ((deps (map (lambda (import-list)
+                               (hashtable-ref by-id (car import-list) #f))
+                             (entry-imports e))))
+              (if (hashtable-contains? in-degrees e)
+                  (hashtable-update! in-degrees e (lambda (x) (+ x 1)) #f)
+                  (begin
+                    (hashtable-set! in-degrees e 0)
+                    (for-each
+                      (lambda (d)
+                        (queue-push-back! q d))
+                      deps)))
+              (loop))))))
+
+  ;; Topologically sorts entries from `*entries*`, including only those that
+  ;; satisfy `pred?` and all their transitive dependencies. Requires `by-id`, a
+  ;; hashtable produced by `entries-by-id`. Raises an error if sorting fails
+  ;; because of a cycle.
+  (define (sort-entries by-id pred?)
+    (define in-degrees (entries-to-in-degrees by-id pred?))
+    (define sources (make-queue))
+    (define sorted '())
+    (for-each
+      (lambda (entry)
+        (when (zero? (hashtable-ref in-degrees entry -1))
+          (queue-push-back! sources entry)))
+      (reverse (queue-front *entries*)))
+    (let loop ()
+      (unless (queue-empty? sources)
+        (let ((node (queue-pop-front! sources)))
+          (set! sorted (cons node sorted))
+          (for-each
+            (lambda (import-list)
+              (let* ((e (hashtable-ref by-id (car import-list) #f))
+                     (deg (hashtable-ref in-degrees e #f))
+                     (new-deg (- deg 1)))
+                (hashtable-set! in-degrees e new-deg)
+                (when (zero? new-deg)
+                  (queue-push-back! sources e))))
+            (entry-imports node))
+          (loop))))
+    (let-values (((entries degrees) (hashtable-entries in-degrees)))
+      (vector-for-each
+        (lambda (e deg)
+          (unless (zero? deg)
+            (error 'sort-entries "import cycle in entries" (entry-id e))))
+        entries
+        degrees))
+    sorted)
 
   ;; Executes the code in `*entries*`. If `slow` is true, runs slow tests. If
   ;; `verbose` is true, prints more verbose information about all tests. If
-  ;; `filters` is nonempty, only runs entries whose `id` starts with one of the
-  ;; the items in `filters`.
-  (define (run-sicp filters slow verbose)
+  ;; `color` is true, prints color output. If `filters` is nonempty, only runs
+  ;; entries whose `id` matches at least one of the items in `filters` (and all
+  ;; their transitive depedencies). Returns #t if all tests passed.
+  (define (run-sicp filters slow verbose color)
+    (define (include-entry? entry)
+      (define (match? s)
+        (let ((s-len (string-length s)))
+          (and (> s-len 0)
+               (let* ((sigil (memv (string-ref s 0) '(#\: #\?)))
+                      (e (if sigil
+                             (symbol->string (entry-id entry))
+                             (entry-num entry))))
+                 (or (string=? s e)
+                     (and sigil (= s-len 1) (string=? s (substring e 0 1)))
+                     (and (< s-len (string-length e))
+                          (string=? s (substring e 0 s-len))
+                          (char=? #\. (string-ref e s-len))))))))
+      (or (null? filters)
+          (exists match? filters)))
+    (define by-id (entries-by-id))
+    (define sorted (sort-entries by-id include-entry?))
+    (define results (make-eq-hashtable))
+    (define (gather-args importer)
+      (define (gather import-list)
+        (let* ((exporter (hashtable-ref by-id (car import-list) #f))
+               (import-names (cdr import-list))
+               (export-names (entry-exports exporter))
+               (export-values (hashtable-ref results exporter #f)))
+          (define (find-value name)
+            (let loop ((en export-names)
+                       (ev export-values))
+              (if (or (null? en) (null? ev))
+                  (error 'run-sicp
+                         (format "~a imports nonexistent (~a ~a)"
+                                 (entry-id importer)
+                                 name
+                                 (entry-id exporter))))))
+          (map find-value import-names)))
+      (fold-left append '() (map gather (entry-imports importer))))
+    (when slow (set! *slow* #t))
+    (for-each
+      (lambda (e)
+        (when verbose
+          (display
+            (format "* ~a ~a~a\n\n"
+                    (string-titlecase (symbol->string (entry-kind e)))
+                    (entry-num e)
+                    (if (entry-title e)
+                      (string-append ": " (entry-title e))
+                      ""))))
+        (hashtable-set!
+          results
+          e
+          (apply (entry-thunk e) (gather-args e))))
+      sorted)
+    (display
+      (format "~a passed; ~a failed; ~a skipped\n"
+              *passes* *fails* *skips*))
+    (zero? *fails*)
     ;; PRINT INFO
-    (write filters) (newline)
-    (write slow) (newline)
-    (write verbose) (newline)
-    (write *entries*) (newline)
-    ; (define table (entries-by-id))
-    ; (define graph (entries-graph))
-    ; (define sources (make-queue))
-    ; (define topo (make-queue))
-    ; (for-each
-    ;   (lambda (entry)
-    ;     (when (null? (entry-imports entry))
-    ;       (queue-push-back! sources (entry-id entry))))
-    ;   (queue-front *entries*))
-    ; (let loop ()
-    ;   (cond
-    ;     ((queue-empty? sources) topo)
-    ;     (else
-    ;       (let (node (queue-pop-front! sources))
-    ;         (queue-push-back! topo node)
-    ;         (for-each
-    ;           (hashtable-ref graph ))
-    ;       )))
-
+    ; (write filters) (newline)
+    ; (write slow) (newline)
+    ; (write verbose) (newline)
+    ; (write *entries*) (newline)
+    ; (write (map entry-id sorted))
     )
 
   ;; In order for `SICP` to match on auxiliary keywords, we must export them.

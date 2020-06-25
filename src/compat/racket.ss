@@ -17,4 +17,4 @@
   (define (syntax->location s)
     (values (path->string (syntax-source s))
             (syntax-line s)
-            (syntax-column s))))
+            (+ 1 (syntax-column s))))) ; convert to 1-based

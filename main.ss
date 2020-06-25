@@ -12,14 +12,14 @@
 usage: ~A [-hsv] [FILTER ...]
 
 Runs SICP code and tests. If FILTER is provided, only runs the parts whose id
-starts with one of the FILTER arguments. For example:
+matches one of the FILTER arguments. For example:
 
   1       chapter 1
   1 2     chapters 1 and 2
   :1      chapter 1, minus exercises
   :1.2    section 1.2, including subsections
   :1.2.3  subsection 1.2.3
-  =1.12   exercise 1.12
+  ?1.12   exercise 1.12
 
 It will also run all transitive dependencies of the specified parts.
 
@@ -28,6 +28,7 @@ options:
   -h, --help       show this help message
   -s, --slow       run slow tests too
   -v, --verbose    verbose output
+  -n, --no-color   disable color
 " program))
 
 (define (die msg)
@@ -47,6 +48,7 @@ options:
       ((is? "-h" "--help") (just 'help))
       ((is? "-s" "--slow") (add 'slow))
       ((is? "-v" "--verbose") (add 'verbose))
+      ((is? "-n" "--no-color") (add 'no-color))
       ((not (startswith? #\-)) (add 'filter (car args)))
       (else (just 'error))))
   (go args '()))
@@ -60,9 +62,10 @@ options:
       (else (go (cdr alist) res))))
   (go alist '()))
 
-(define (run filters slow verbose)
+(define (run filters slow verbose color)
   chapter-1-effects
-  (run-sicp filters slow verbose))
+  (unless (run-sicp filters slow verbose color)
+    (exit 1)))
 
 (define (main argv)
   (let ((program (car argv))
@@ -75,6 +78,7 @@ options:
       (else
         (run (collq 'filter options)
              (assq 'slow options)
-             (assq 'verbose options))))))
+             (assq 'verbose options)
+             (not (assq 'no-color options)))))))
 
 (main (command-line))

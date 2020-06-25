@@ -13,6 +13,9 @@
 
   (define (syntax->location s)
     (let ((props (syntax-source s)))
-      (values (source-property props 'filename)
-              (+ 1 (source-property props 'line)) ; convert to 1-based
-              (source-property props 'column)))))
+      (if props
+          (values (source-property props 'filename)
+                  (+ 1 (source-property props 'line)) ; convert to 1-based
+                  (source-property props 'column))
+          ;; Guile doesn't store source properties for individual atoms.
+          (values "unknown" 0 0)))))
