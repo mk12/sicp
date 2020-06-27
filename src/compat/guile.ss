@@ -3,9 +3,12 @@
 #!r6rs
 
 (library (src compat active)
-  (export format load syntax->location)
+  (export current-output-port format open-output-string parameterize
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
-          (only (guile) load source-property syntax-source)
+          (only (guile)
+                current-output-port open-output-string parameterize
+                source-property syntax-source with-output-to-string)
           (prefix (only (guile) format) guile-))
 
   (define (format . args)

@@ -4,28 +4,40 @@
 
 (library (src lang core)
   (export SICP Chapter Section Subsection Exercise define => ~> slow=> slow~>
-          capture-output hide-output run-sicp)
-  (import (rnrs (6))
+          run-sicp)
+  (import (except (rnrs (6)) current-output-port)
           (rnrs mutable-pairs (6))
           (src compat active))
 
-  ;; Captures standard output in a string.
-  (define-syntax capture-output
-    (syntax-rules ()
-      ((_ e* ...)
-        (with-output-to-string (lambda () e* ...)))))
+  ;; Global flag for whether to use ANSI color in output.
+  (define *color* #f)
 
-  ;; Supresses printing to standard output.
-  (define-syntax hide-output
-    (syntax-rules ()
-      ((_ e* ...)
-        (parameterize ((current-output-port (open-output-string)))
-          e* ...))))
+  ;; Returns `str` with ANSI escape codes to make it `color`, if `*color*` is
+  ;; set. Otherwise, returns `str` unchanged.
+  (define (ansi color str)
+    (if *color*
+      (let ((code (case color
+                    ((bold) "1")
+                    ((bold-red) "1;31")
+                    ((green) "32")
+                    ((yellow) "33")
+                    ((blue) "34"))))
+        (string-append "\x1b;[" code "m" str "\x1b;[0m"))
+      str))
 
   ;; Global test counters, used for reporting and for setting the exit status.
+  ;; When running without a filter, total = passes + fails + skips. Otherwise,
+  ;; the difference is equal to the number of tests filtered out.
+  (define *total* 0)
   (define *passes* 0)
   (define *fails* 0)
   (define *skips* 0)
+
+  ;; Increases `*total*` by `n` tests. We need a separate function for this
+  ;; because using `*total*` in macros would indirectly export it, meaning it
+  ;; would have to be immutable.
+  (define (increase-total-tests! n)
+    (set! *total* (+ *total* n)))
 
   ;; Asserts that all elements in `vals` are the same, according to `equal?`.
   ;; Expects `exprs` to contain syntax objects for each value in `vals`.
@@ -35,8 +47,8 @@
       (lambda (v1 v2 e1 e2)
         (format
           (string-append
-            "left: ~s\n=> ~s\n\n"
-            "right: ~s\n=> ~s\n\n")
+            "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+            "right: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n")
           e1 v1 e2 v2))
       vals
       exprs))
@@ -52,9 +64,9 @@
       (lambda (v1 v2 e1 e2)
         (format
           (string-append
-            "left: ~s\n => ~s\n\n"
-            "right: ~s\n => ~s\n\n"
-            "delta: ~s > ~s\n\n")
+            "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+            "right: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+            "delta: " (ansi 'green "~s") " > ~s\n\n")
           e1 v1 e2 v2 (delta v1 v2) max-delta))
       vals
       exprs))
@@ -80,8 +92,11 @@
                 (let ((msg (make-msg
                             v1 v2 (syntax->datum e1) (syntax->datum e2))))
                   (display
-                    (format "~a:~a:~a: assertion failed\n~a"
-                            file line col msg))))))))
+                    (format
+                      (string-append
+                        (ansi 'bold "~a:~a:~a: assertion failed")
+                        "\n~a")
+                      file line col msg))))))))
       (pairs vals)
       (pairs (syntax->list exprs))))
 
@@ -282,24 +297,29 @@
           (map find-value import-names)))
       (fold-left append '() (map gather (entry-imports importer))))
     (when slow (set! *slow* #t))
+    (when color (set! *color* #t))
     (for-each
       (lambda (e)
         (when verbose
           (display
-            (format "* ~a ~a~a\n\n"
-                    (string-titlecase (symbol->string (entry-kind e)))
-                    (entry-num e)
-                    (if (entry-title e)
-                      (string-append ": " (entry-title e))
-                      ""))))
+            (ansi 'yellow
+                  (format "* ~a ~a~a\n"
+                          (string-titlecase (symbol->string (entry-kind e)))
+                          (entry-num e)
+                          (if (entry-title e)
+                            (string-append ": " (entry-title e))
+                            "")))))
         (hashtable-set!
           results
           e
           (apply (entry-thunk e) (gather-args e))))
       sorted)
+    (when verbose (newline))
     (display
-      (format "~a passed; ~a failed; ~a skipped\n"
-              *passes* *fails* *skips*))
+      (format
+        "test result: ~a. ~a passed; ~a failed; ~a skipped; ~a filtered out\n"
+        (if (zero? *fails*) (ansi 'green "ok") (ansi 'bold-red "FAIL"))
+        *passes* *fails* *skips* (- *total* *passes* *fails* *skips*)))
     (zero? *fails*)
     ;; PRINT INFO
     ; (write filters) (newline)
@@ -341,8 +361,9 @@
     ;; header  - the last seen chapter/section/subsection/exercise header
     ;; exports - names of definitions made since the last header
     ;; body    - code encountered since the last header
+    ;; ntests  - number of tests/asserted processed so far
     ;; out     - accumulated result of the macro
-    (define (go x header exports body out)
+    (define (go x header exports body ntests out)
       (define (flush)
           (if (eq? header 'no-header)
             out
@@ -384,51 +405,55 @@
           #`(#,@exports #,name)))
       (syntax-case x (Chapter Section Subsection Exercise
                       define => ~> slow=> slow~>)
-        (() (flush))
+        (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
-          (go #'(e2* ...) #'(chapter e1* ...) #'() #'() (flush)))
+          (go #'(e2* ...) #'(chapter e1* ...) #'() #'() ntests (flush)))
         (((Section e1* ...) e2* ...)
-          (go #'(e2* ...) #'(section e1* ...) #'() #'() (flush)))
+          (go #'(e2* ...) #'(section e1* ...) #'() #'() ntests (flush)))
         (((Subsection e1* ...) e2* ...)
-          (go #'(e2* ...) #'(subsection e1* ...) #'() #'() (flush)))
+          (go #'(e2* ...) #'(subsection e1* ...) #'() #'() ntests (flush)))
         (((Exercise e1* ...) e2* ...)
-          (go #'(e2* ...) #'(exercise e1* ...) #'() #'() (flush)))
+          (go #'(e2* ...) #'(exercise e1* ...) #'() #'() ntests (flush)))
         ((e1 => e2 e* ...)
-         (go=> #f #'(e2 e* ...) #'(e1 e2) header exports body out))
+         (go=> #f #'(e2 e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 ~> e2 e* ...)
-         (go~> #f #'(e2 e* ...) #'(e1 e2) header exports body out))
+         (go~> #f #'(e2 e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 slow=> e2 e* ...)
-         (go=> #t #'(e2 e* ...) #'(e1 e2) header exports body out))
+         (go=> #t #'(e2 e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 slow~> e2 e* ...)
-         (go~> #t #'(e2 e* ...) #'(e1 e2) header exports body out))
+         (go~> #t #'(e2 e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         (((define (name . args) e1* ...) e2* ...)
           (identifier? #'name)
           (with-syntax ((set #'(set! name (lambda args e1* ...))))
-            (go #'(e2* ...) header (add-export #'name) #`(#,@body set) out)))
+            (go #'(e2* ...)
+                header (add-export #'name) #`(#,@body set) ntests out)))
         (((define name e1* ...) e2* ...)
           (identifier? #'name)
           (with-syntax ((set #'(set! name e1* ...)))
-            (go #'(e2* ...) header (add-export #'name) #`(#,@body set) out)))
+            (go #'(e2* ...)
+                header (add-export #'name) #`(#,@body set) ntests out)))
         ((e e* ...)
-          (go #'(e* ...) header exports #`(#,@body e) out))))
+          (go #'(e* ...) header exports #`(#,@body e) ntests out))))
 
     ;; Helper recursive function when parsing `=>` operators.
-    (define (go=> slow x terms header exports body out)
+    (define (go=> slow x terms header exports body ntests out)
       (syntax-case x (=>)
         ((e2 => e3 e* ...)
-          (go=> slow #'(e3 e* ...) #`(#,@terms e3) header exports body out))
+          (go=> slow #'(e3 e* ...)
+                #`(#,@terms e3) header exports body (+ ntests 1) out))
         ((e2 e* ...)
           (let ((new-body (add-assertion slow #'assert-equal terms body)))
-            (go #'(e* ...) header exports new-body out)))))
+            (go #'(e* ...) header exports new-body ntests out)))))
 
     ;; Helper recursive function when parsing `~>` operators.
-    (define (go~> slow x terms header exports body out)
+    (define (go~> slow x terms header exports body ntests out)
       (syntax-case x (~>)
         ((e2 ~> e3 e* ...)
-          (go=> slow #'(e3 e* ...) #`(#,@terms e3) header exports body out))
+          (go=> slow #'(e3 e* ...)
+                #`(#,@terms e3) header exports body (+ ntests 1) out))
         ((e2 e* ...)
           (let ((new-body (add-assertion slow #'assert-close terms body)))
-            (go #'(e* ...) header exports new-body out)))))
+            (go #'(e* ...) header exports new-body ntests out)))))
 
     ;; Helper used by `go=>` and `go~>` to add an assertion to `body`.
     (define (add-assertion slow assert terms body)
@@ -447,5 +472,5 @@
       ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()) (write *entries*))
 
       ;; NORMAL
-      #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()))
+      #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))
       ))))

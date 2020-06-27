@@ -4,7 +4,7 @@
 
 (library (src chapter-1)
   (export chapter-1-effects)
-  (import (rnrs base (6))
+  (import (rnrs (6))
           (src lang sicp))
 
 (define chapter-1-effects)
@@ -17,8 +17,7 @@
 
 (Subsection :1.1.1 "Expressions")
 
-(+ 1 1) slow=> (+ 1 2)
-486 => 487
+486 => 486
 (+ 137 349) => 486
 (- 1000 334) => 666
 (* 5 99) => 495

@@ -3,16 +3,14 @@
 #!r6rs
 
 (library (src compat active)
-  (export format load syntax->location)
+  (export current-output-port format open-output-string parameterize
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
           (only (racket base)
-                current-namespace format make-base-namespace parameterize
+                current-output-port format open-output-string parameterize
                 path->string syntax-column syntax-line syntax-source)
-          (prefix (only (racket base) load) racket-))
-
-  (define (load name)
-    (parameterize ([current-namespace (make-base-namespace)])
-      (racket-load name)))
+          (only (racket port)
+                with-output-to-string))
 
   (define (syntax->location s)
     (values (path->string (syntax-source s))

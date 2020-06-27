@@ -3,11 +3,13 @@
 #!r6rs
 
 (library (src compat active)
-  (export format load syntax->location)
+  (export current-output-port format open-output-string parameterize
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
           (only (chezscheme)
-                annotation-source format load locate-source-object-source
-                syntax->annotation))
+                annotation-source current-output-port format
+                locate-source-object-source open-output-string parameterize
+                syntax->annotation with-output-to-string))
 
   (define (syntax->location s)
     (locate-source-object-source

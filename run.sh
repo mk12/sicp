@@ -16,6 +16,10 @@ fi
 readonly arg=$1
 shift
 
+if ! [[ -t 1 ]]; then
+    set -- "--no-color" "$@"
+fi
+
 case $arg in
     -h|--help) usage; exit ;;
     chez)
