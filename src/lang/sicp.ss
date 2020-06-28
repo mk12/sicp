@@ -3,8 +3,10 @@
 #!r6rs
 
 (library (src lang sicp)
-  (export SICP Chapter Section Subsection Exercise define => ~> slow=> slow~>
-          capture-output hide-output display format)
+  (export SICP Chapter Section Subsection Example Exercise
+          define => ~> slow=> slow~>
+          capture-output hide-output
+          display format)
   (import (rnrs base (6))
           (only (rnrs io simple (6)) display)
           (src lang core)

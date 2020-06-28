@@ -85,15 +85,13 @@ circumference ~> 62.8318
 (Subsection :1.1.6 "Conditional Expressions and Predicates")
 
 (define (abs x)
-  (cond
-    ((> x 0) x)
-    ((= x 0) 0)
-    ((< x 0) (- x))))
+  (cond ((> x 0) x)
+        ((= x 0) 0)
+        ((< x 0) (- x))))
 
 (define (abs x)
-  (cond
-    ((< x 0) (- x))
-    (else x)))
+  (cond ((< x 0) (- x))
+        (else x)))
 
 (define (abs x)
   (if (< x 0)
@@ -141,13 +139,15 @@ circumference ~> 62.8318
 (Exercise ?1.3)
 
 (define (f a b c)
-  (cond
-    ((and (<= a b) (<= a c))
-     (+ (* b b) (* c c)))
-    ((and (<= b a) (<= b c))
-     (+ (* a a) (* c c)))
-    ((and (<= c a) (<= c b))
-     (+ (* a a) (* b b)))))
+  (cond ((and (<= a b) (<= a c))
+         (+ (* b b) (* c c)))
+        ((and (<= b a) (<= b c))
+         (+ (* a a) (* c c)))
+        ((and (<= c a) (<= c b))
+         (+ (* a a) (* b b)))))
+
+(f 1 2 3) => 13
+(f 3 2 1) => 13
 
 (Exercise ?1.4)
 
@@ -270,30 +270,31 @@ circumference ~> 62.8318
 (sqrt 1e14) ~> 1.0000029650278373e7
 (sqrt 1e20) ~> 1.0000021484861237e10
 
-) ; end of SICP
-) ; end of library
-#|
-(Exercise ?1.8)
+(Exercise ?1.8
+  (use (:1.1.4 square)))
 
+(define (cube x) (* x x x))
+(define (cbrt-iter guess x)
+  (if (good-enough? guess x)
+    guess
+    (cbrt-iter (improve guess x) x)))
 (define (improve guess x)
   (/ (+ (/ x (square guess))
         (* 2 guess))
      3))
-(define (cbrt-iter guess x)
-  (let ((better (improve guess x)))
-    (if (good-enough? guess better)
-      better
-      (cbrt-iter better x))))
+(define (good-enough? guess x)
+  (< (abs (- (cube guess) x)) 0.001))
 (define (cbrt x)
   (cbrt-iter 1.0 x))
 
-(cbrt 8) ~> 2
+(cbrt 8) ~> 2.000004911675504
 
-(Subsection :1.1.8 "Procedures as Black-Box Abstractions")
+(Subsection :1.1.8 "Procedures as Black-Box Abstractions"
+  (use (:1.1.7 average)))
 
 ;; The following two procedures should be indistinguishable:
 (define (square x) (* x x))
-(define (square x) (exp (double (log x))))
+(define (square x) (exp (+ (log x) (log x))))
 
 ;; These should be indistinguishable as well:
 (define (square x) (* x x))
@@ -306,7 +307,7 @@ circumference ~> 62.8318
   (define (improve guess x) (average guess (/ x guess)))
   (define (sqrt-iter guess x)
     (if (good-enough? guess x) guess
-      (sqrt-iter (improve guess x) x)))
+        (sqrt-iter (improve guess x) x)))
   (sqrt-iter 1.0 x))
 
 ;; Without passing `x` around:
@@ -320,81 +321,125 @@ circumference ~> 62.8318
       (sqrt-iter (improve guess))))
   (sqrt-iter 1.0))
 
-(section 1.2 "Procedures and the Processes They Generate")
+(Section :1.2 "Procedures and the Processes They Generate")
 
-;;; NOTE THIS WAS THE PREVIOUS PLACE I HAD GOTTEN TO
+(Subsection :1.2.1 "Linear Recursion and Iteration")
 
-(subsection 1.2.1 "Linear Recursion and Iteration")
-
-(define (factorial-rec n)
+(define (factorial n)
   (if (= n 1)
     1
-    (* n (factorial-rec (- n 1)))))
-(define (factorial-it n)
-  (define (helper counter prod)
-    (if (> counter n)
-      prod
-      (helper (+ counter 1) (* prod counter))))
-  (helper 1 1))
+    (* n (factorial (- n 1)))))
 
-;;; ex 1.9
+;; Linear recursive process:
+(factorial 6)
+=> (* 6 (factorial 5))
+=> (* 6 (* 5 (factorial 4)))
+=> (* 6 (* 5 (* 4 (factorial 3))))
+=> (* 6 (* 5 (* 4 (* 3 (factorial 2)))))
+=> (* 6 (* 5 (* 4 (* 3 (* 2 (factorial 1))))))
+=> (* 6 (* 5 (* 4 (* 3 (* 2 1)))))
+=> (* 6 (* 5 (* 4 (* 3 2))))
+=> (* 6 (* 5 (* 4 6)))
+=> (* 6 (* 5 24))
+=> (* 6 120)
+=> 720
+
+(define (factorial n)
+  (fact-iter 1 1 n))
+(define (fact-iter product counter max-count)
+  (if (> counter max-count)
+      product
+      (fact-iter (* counter product)
+                 (+ counter 1) max-count)))
+
+;; Linear iterative process:
+(factorial 6)
+=> (fact-iter 1 1 6)
+=> (fact-iter 1 2 6)
+=> (fact-iter 2 3 6)
+=> (fact-iter 6 4 6)
+=> (fact-iter 24 5 6)
+=> (fact-iter 120 6 6)
+=> (fact-iter 720 7 6)
+=> 720
+
+(Exercise ?1.9)
+
+(define (inc x) (+ x 1))
+(define (dec x) (- x 1))
+
 (define (r+ a b)
-  (if (= a 0)
-    b
-    (inc (r+ (dec a) b))))
-(define (i+ a b)
-  (if (= a 0)
-    b
-    (i+ (dec a) (inc b))))
-;; `r+` generates a recursive process.
-(check
-  (r+ 4 5)
-  => (inc (r+ 3 5))
-  => (inc (inc (r+ 2 5)))             ; expanding
-  => (inc (inc (inc (r+ 1 5))))
-  => (inc (inc (inc (inc (r+ 0 5))))) ; 4 deferred operations
-  => (inc (inc (inc (inc 5))))
-  => (inc (inc (inc 6)))              ; contracting
-  => (inc (inc 7))
-  => (inc 8)
-  => 9)
-;; `i+` generates an iterative process.
-(check
-  (i+ 4 5)
-  => (i+ 3 6)
-  => (i+ 2 7)
-  => (i+ 1 8)
-  => (i+ 0 9)
-  => 9)
+  (if (= a 0) b (inc (r+ (dec a) b))))
 
-;;; ex 1.10
+(define (i+ a b)
+  (if (= a 0) b (i+ (dec a) (inc b))))
+
+;; `r+` generates a recursive process:
+(r+ 4 5)
+=> (inc (r+ 3 5))
+=> (inc (inc (r+ 2 5)))             ; expanding
+=> (inc (inc (inc (r+ 1 5))))
+=> (inc (inc (inc (inc (r+ 0 5))))) ; 4 deferred operations
+=> (inc (inc (inc (inc 5))))
+=> (inc (inc (inc 6)))              ; contracting
+=> (inc (inc 7))
+=> (inc 8)
+=> 9
+
+;; `i+` generates an iterative process:
+(i+ 4 5)
+=> (i+ 3 6)
+=> (i+ 2 7)
+=> (i+ 1 8)
+=> (i+ 0 9)
+=> 9
+
+(Exercise ?1.10)
+
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
         ((= y 1) 2)
         (else (A (- x 1)
                  (A x (- y 1))))))
-(check
-  (A 1 10) => 1024
-  (A 2 4) => 65536
-  (A 3 3) => 65536)
-(define (f n) (A 0 n))   ; 2n
-(define (g n) (A 1 n))   ; 2^n
-(define (h n) (A 2 n))   ; 2^2^2^... (n 2s)
-(define (k n) (* 5 n n)) ; 5n^2
 
-;;; ssec 1.2.2 (Fibonacci)
-(define (fib-rec n)
+(A 1 10) => 1024
+(A 2 4) => 65536
+(A 3 3) => 65536
+
+(define (f n) (A 0 n))
+;; 2n
+;; (f n) => (A 0 n) => (* 2 n)
+
+(define (g n) (A 1 n))
+;; 2^n
+;; (g n) => (A 1 n) => (A 0 (A 1 (- n 1))) => (f (g (- n 1))) => ...
+
+(define (h n) (A 2 n))
+;; 2^2^2^...^2 (repeated n times)
+;; (h n) => (A 2 n) => (A 1 (A 2 (- n 1))) => (g (h (- n 1))) => ...
+
+(define (k n) (* 5 n n))
+;; 5n^2
+
+(Subsection :1.2.2 "Tree Recursion")
+
+(define (fib n)
   (cond ((= n 0) 0)
         ((= n 1) 1)
         (else (+ (fib (- n 1))
                  (fib (- n 2))))))
-(define (fib-it n)
-  (define (helper a b count)
+
+(fib 6) => 8
+
+(define (fib n)
+  (define (iter a b count)
     (if (= count 0)
       a
-      (helper b (+ a b) (- count 1))))
-  (helper 0 1 n))
+      (iter b (+ a b) (- count 1))))
+  (iter 0 1 n))
+
+(fib 6) => 8
 
 ;;; example (counting change)
 (define (first-denom n-kinds)
@@ -411,6 +456,9 @@ circumference ~> 62.8318
                (cc (- a (first-denom n)) n)))))
   (cc amount 5))
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 1.11
 (define (f-rec n)
   (if (< n 3)
@@ -443,7 +491,8 @@ circumference ~> 62.8318
 ;; depth of the tree, and the number of steps is the number of leaves.
 
 ;;; ex 1.15
-(define (cube x) (* x x x))
+; (define (cube x) (* x x x))   - use from ex 1.8 (OR NOT - it's provided in
+; text so maybe just use it here..)
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine theta)
   (if (<= (abs theta) 0.1)
