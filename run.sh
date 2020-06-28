@@ -26,6 +26,10 @@ case $arg in
         ln -sf chez.ss src/compat/active.ss
         chez --program main.ss "$@"
         ;;
+    chezd)
+        ln -sf chez.ss src/compat/active.ss
+        chez --debug-on-exception --program main.ss "$@"
+        ;;
     guile)
         ln -sf guile.ss src/compat/active.ss
         guile --r6rs -L . -x .ss main.ss "$@"
