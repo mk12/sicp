@@ -3,7 +3,7 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Subsection Example Exercise
+  (export SICP Chapter Section Subsection Exercise
           define => ~> slow=> slow~>
           run-sicp)
   (import (except (rnrs (6)) current-output-port)
@@ -137,7 +137,7 @@
       ((_ e) (if (slow-enabled?) e (skip-slow-test)))))
 
   ;; An entry stores code from a part of the textbook. It consists of a unique
-  ;; symbol `id`, a kind (Chapter, Section, Subsection, Example, or Exercise), a
+  ;; symbol `id`, a kind ('chapter, 'section, 'subsection, or 'exercise), a
   ;; string `num` containing a dotted chapter/section/etc. number like "1.2.3",
   ;; a title string (or #f), a list of imported names from other entries
   ;; formatted as `((id name ...) ...)`, a list of exported names, and a thunk
@@ -381,7 +381,7 @@
               (lambda (x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
             ...)))))
-    (auxiliary Chapter Section Subsection Example Exercise ~> slow=> slow~>))
+    (auxiliary Chapter Section Subsection Exercise ~> slow=> slow~>))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
@@ -396,8 +396,8 @@
         (substring str 1 (string-length str))))
 
     ;; Recursive implementation of the macro. It takes:
-    ;; x       - remaining forms to be processed
-    ;; header  - last seen chapter/section/subsection/example/exercise header
+    ;; x       - the remaining forms to be processed
+    ;; header  - the last seen chapter/section/subsection/exercise header
     ;; exports - names of definitions made since the last header
     ;; body    - code encountered since the last header
     ;; ntests  - number of tests/asserted processed so far
@@ -456,7 +456,7 @@
                   (syntax->datum exports))
           exports
           #`(#,@exports #,name)))
-      (syntax-case x (Chapter Section Subsection Example Exercise
+      (syntax-case x (Chapter Section Subsection Exercise
                       define => ~> slow=> slow~>)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
@@ -464,8 +464,6 @@
         (((Section e1* ...) e2* ...)
           (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Subsection e1* ...) e2* ...)
-          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
-        (((Example e1* ...) e2* ...)
           (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Exercise e1* ...) e2* ...)
           (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -504,7 +502,7 @@
     (define (go~> slow x terms header exports body ntests out)
       (syntax-case x (~>)
         ((e2 ~> e3 e* ...)
-          (go=> slow #'(e3 e* ...)
+          (go~> slow #'(e3 e* ...)
                 #`(#,@terms e3) header exports body (+ ntests 1) out))
         ((e2 e* ...)
           (let ((new-body (add-assertion slow #'assert-close terms body)))
