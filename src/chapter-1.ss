@@ -4,7 +4,7 @@
 
 (library (src chapter-1)
   (export chapter-1-effects)
-  (import (rnrs (6))
+  (import (rnrs base (6))
           (src lang sicp))
 
 (define chapter-1-effects)
@@ -28,40 +28,42 @@
 (+ (* 3 5) (- 10 6)) => 19
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
 
-(Exercise ?1.1)
-
-) ; end of SICP
-) ; end of library
-
-#|
-(Subsection 1.1.2 "Naming and the Environment")
+(Subsection :1.1.2 "Naming and the Environment")
 
 (define size 2)
 size => 2
 (* 5 size) => 10
+
 (define pi 3.14159)
 (define radius 10)
-(* pi (* radius radius)) => 314.159
-(define circumference (* 2 pi radius))
-circumference => 62.8318
+(* pi (* radius radius)) ~> 314.159
 
-(Subsection 1.1.3 "Evaluating Combinations")
+(define circumference (* 2 pi radius))
+circumference ~> 62.8318
+
+(Subsection :1.1.3 "Evaluating Combinations")
 
 (* (+ 2 (* 4 6))
-  (+ 3 5 7))
+   (+ 3 5 7))
 => 390
 
-(Subsection 1.1.4 "Compound Procedures")
+(Subsection :1.1.4 "Compound Procedures")
 
 (define (square x) (* x x))
-(define (sum-of-squares x y) (+ (square x) (square y)))
+(square 21) => 441
+(square (+ 2 5)) => 49
+(square (square 3)) => 81
+
+(define (sum-of-squares x y)
+  (+ (square x) (square y)))
 (sum-of-squares 3 4) => 25
+
 (define (f a)
   (sum-of-squares (+ a 1) (* a 2)))
 (f 5) => 136
 
-(Subsection 1.1.5 "The Substitution Model for Procedure Application"
-  (use (1.1.4 square sum-of-squares f)))
+(Subsection :1.1.5 "The Substitution Model for Procedure Application"
+  (use (:1.1.4 square sum-of-squares f)))
 
 ;; Applicative-order evaluation:
 (f 5)
@@ -80,7 +82,7 @@ circumference => 62.8318
 => (+ 36 100)
 => 136
 
-(Subsection 1.1.6 "Conditional Expressions and Predicates")
+(Subsection :1.1.6 "Conditional Expressions and Predicates")
 
 (define (abs x)
   (cond
@@ -101,7 +103,7 @@ circumference => 62.8318
 (define (>= x y) (or (> x y) (= x y)))
 (define (>= x y) (not (< x y)))
 
-(Exercise 1.1)
+(Exercise ?1.1)
 
 10 => 10
 (+ 5 3 4) => 12
@@ -112,24 +114,31 @@ circumference => 62.8318
 (define b (+ a 1))
 (+ a b (* a b)) => 19
 (= a b) => #f
-(if (and (> b a) (< b (* a b))) b a) => 4
+(if (and (> b a) (< b (* a b)))
+    b
+    a)
+=> 4
+
 (cond ((= a 4) 6)
       ((= b 4) (+ 6 7 a))
       (else 25))
 => 16
+
+(+ 2 (if (> b a) b a)) => 6
+
 (* (cond ((> a b) a)
          ((< a b) b)
          (else -1))
   (+ a 1))
 => 16
 
-(Exercise 1.2)
+(Exercise ?1.2)
 
 (/ (+ 5 4 (- 2 (- 3 (+ 6 4/5))))
     (* 3 (- 6 2) (- 2 7)))
 => -37/150
 
-(Exercise 1.3)
+(Exercise ?1.3)
 
 (define (f a b c)
   (cond
@@ -140,7 +149,7 @@ circumference => 62.8318
     ((and (<= c a) (<= c b))
      (+ (* a a) (* b b)))))
 
-(Exercise 1.4)
+(Exercise ?1.4)
 
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
@@ -149,12 +158,13 @@ circumference => 62.8318
 ;; (subtraction) when b is negative. Subtracting a negative is equivalent to
 ;; adding its absolute value, so this procedure performs `a + |b|` in all cases.
 
-(Exercise 1.5)
+(Exercise ?1.5)
 
 (define (p) (p))
 (define (test x y)
   (if (= x 0) 0 y))
-; (test 0 (p))
+ 
+; (test 0 (p)) ; never terminates
 
 ;; With applicative-order evaluation, the expression will never return a value
 ;; because the interpreter tries to evaluate `(p)` and enters endless recursion.
@@ -162,19 +172,19 @@ circumference => 62.8318
 ;; With normal-order evaluation, the expression will evaluate to zero. The `(p)`
 ;; expression is never evaluated because it is not necessary to do so.
 
-(Subsection 1.1.7 "Example: Square Roots by Newton's Method"
-  (use (1.1.4 square)))
+(Subsection :1.1.7 "Example: Square Roots by Newton's Method"
+  (use (:1.1.4 square)))
 
-(define (average x y)
-  (/ (+ x y) 2))
-(define (improve guess x)
-  (average guess (/ x guess)))
-(define (good-enough? guess x)
-  (< (abs (- (square guess) x)) 0.001))
 (define (sqrt-iter guess x)
   (if (good-enough? guess x)
     guess
     (sqrt-iter (improve guess x) x)))
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (average x y)
+  (/ (+ x y) 2))
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 
@@ -187,7 +197,8 @@ circumference => 62.8318
 (square (sqrt 1000))
 ~> 1000.000369924366
 
-(Exercise 1.6)
+(Exercise ?1.6
+  (use (:1.1.7 improve good-enough?)))
 
 (define (new-if predicate then-clause else-clause)
   (cond (predicate then-clause)
@@ -202,43 +213,67 @@ circumference => 62.8318
           (sqrt-iter (improve guess x) x)))
 
 ;; When Alyssa attempts to use this to compute square roots, it will not work.
-;; The sqrt procedure will never return a value because it gets stuck in
-;; sqrt-iter due to infinite recursion. The new-if combination always evaluates
-;; the else-clause, which contains the recursive call, so the recursion will
-;; never end.
+;; The `sqrt` procedure will never return a value because it gets stuck in
+;; `sqrt-iter` due to infinite recursion. The `new-if` combination always
+;; evaluates the else-clause, which contains the recursive call, so the
+;; recursion will never end.
 
-(Exercise 1.7
-  (use (1.1.7 sqrt)))
+(Exercise ?1.7.1
+  (use (:1.1.7 sqrt)))
 
 ;; The `good-enough?` predicate does not work well for small numbers because the
-;; tolerance is a fixed amount. It can't be too small or else it will take too
-;; long to compute the square roots of large numbers, but at the same time, it
-;; is impossible to use the procedure for values smaller than the tolerance.
+;; tolerance is fixed. If the number is smaller than the tolerance, the result
+;; will be hopelessly inaccurate, like measuring an atom with a yard stick.
 
-(sqrt 0.000002) ~> 0.0312713096020622 ; (should be 0.0014142...)
-(square (sqrt 0.000002)) ~> 0.000977894804228028
+(sqrt 0) ~> 0.03125     ; should be 0
+(sqrt 1e-20) ~> 0.03125 ; should be 1e-10
 
-;; The test is inadequate for very large numbers because, with limited
-;; precision, it is impossible to represent small differences between very large
-;; numbers. The good-enough? difference will eventually become zero, but it
-;; might actually be much greater than the tolerance if calculated with infinite
-;; precision.
+;; The test is inadequate for very large numbers. With limited precision, it is
+;; impossible to represent small differences between very large numbers. This
+;; means the algorithm might never terminate, because the guess never satisfies
+;; `good-enough?` no matter how many times `improve` is called.
+
+(sqrt 1e14) ~> 1e7
+; (sqrt 1e20) ; never terminates
+
+(Exercise ?1.7.2
+  (use (:1.1.7 improve)))
+
+;; Here is an alternative implementation of `sqrt` that watches how `guess`
+;; changes from one iteration to the next and stops when the change is a very
+;; small fraction of the guess.
 
 (define (good-enough? g1 g2)
-  (< (/ (abs (- g2 g1)) g1)
-     0.001))
+  ;; Note: unlike `infinite?`, the negation of `finite?` will catch NaN.
+  (or (not (finite? g2))
+      (< (/ (abs (- g2 g1)) g1)
+         0.001)))
 (define (sqrt-iter guess x)
   (let ((better (improve guess x)))
     (if (good-enough? guess better)
-      better
-      (sqrt-iter better x))))
+        guess
+        (sqrt-iter better x))))
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 
-(sqrt 0.000002) ~> 0.00141421356261785
-(square (sqrt 0.000002)) ~> 2.00000000069227e-06
+;; It works much better for small numbers. For zero, it works because even
+;; though the `guess` change is always a 50% reduction, it eventually gets so
+;; small that it becomes NaN, and the algorithm terminates.
 
-(Exercise 1.8)
+(sqrt 0) ~> 0
+(sqrt 1e-20) ~> 1e-10
+
+;; For large numbers, it works better in that it always terminates. However,
+;; the results are less precise because "a small fraction" change in `guess` can
+;; be fairly large when the guesses themselves are very large.
+
+(sqrt 1e14) ~> 1.0000029650278373e7
+(sqrt 1e20) ~> 1.0000021484861237e10
+
+) ; end of SICP
+) ; end of library
+#|
+(Exercise ?1.8)
 
 (define (improve guess x)
   (/ (+ (/ x (square guess))
@@ -254,7 +289,7 @@ circumference => 62.8318
 
 (cbrt 8) ~> 2
 
-(Subsection 1.1.8 "Procedures as Black-Box Abstractions")
+(Subsection :1.1.8 "Procedures as Black-Box Abstractions")
 
 ;; The following two procedures should be indistinguishable:
 (define (square x) (* x x))

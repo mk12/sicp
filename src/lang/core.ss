@@ -146,7 +146,8 @@
     (fields id kind num title imports exports thunk))
 
   ;; A queue supports constant time appending to the back, popping from the
-  ;; front, and accessing the length.
+  ;; front, and accessing the length. (It also supports pushing to the front,
+  ;; making it more of a deque, but I didn't feel like renaming everything).
   (define-record-type (queue make-raw-queue queue?)
     (fields (mutable length) (mutable front) (mutable back)))
   (define (make-queue)
@@ -174,6 +175,10 @@
             (else
               (queue-front-set! q (cdr (queue-front q)))))
           result)))
+  (define (queue-push-front! q x)
+    (if (queue-empty? q)
+      (queue-push-back! q x)
+      (queue-front-set! q (cons x (queue-front q)))))
 
   ;; Global queue of entries. The `SICP` macro produces calls to `add-entry!`.
   (define *entries* (make-queue))
@@ -181,19 +186,20 @@
     (queue-push-back! *entries*
                       (make-entry id kind num title imports exports thunk)))
 
-  ;; Returns a hashtable from `id` to objects in `*entries*`.
+  ;; Converts a queue of entries to a hashtable from `id` to entries.
   (define (entries-by-id)
-    (define table (make-eq-hashtable (queue-length *entries*)))
+    (define by-id (make-eq-hashtable (queue-length *entries*)))
     (for-each
       (lambda (entry)
-        (hashtable-set! table (entry-id entry) entry))
+        (hashtable-set! by-id (entry-id entry) entry))
       (queue-front *entries*))
-    table)
+    by-id)
 
   ;; Returns a hashtable from entries in `*entries*` to their in-degrees (the
   ;; number of times they are imported). Includes only entries that satisfy
-  ;; `pred?` and all their transitive dependencies. Requires `by-id`, a
-  ;; hashtable produced by `entries-by-id`.
+  ;; `pred?` and all their transitive dependencies. Edges from excluded entries
+  ;; do not count towards in-degree counts for the included entres. Requires
+  ;; `by-id`, a hashtable produced by `entries-by-id`.
   (define (entries-to-in-degrees by-id pred?)
     (define in-degrees (make-eq-hashtable))
     (define q (make-queue))
@@ -201,37 +207,56 @@
       (lambda (entry)
         (when (pred? entry)
           (queue-push-back! q entry)))
-      (queue-front *entries*))
+      (queue-front *entries*)) 
+    ;; Explore entries reachable from those satisfying `pred?` using BFS.
     (let loop ()
-      (if (queue-empty? q)
-          in-degrees
-          (let ((e (queue-pop-front! q)))
-            (let ((deps (map (lambda (import-list)
-                               (hashtable-ref by-id (car import-list) #f))
-                             (entry-imports e))))
-              (if (hashtable-contains? in-degrees e)
-                  (hashtable-update! in-degrees e (lambda (x) (+ x 1)) #f)
-                  (begin
-                    (hashtable-set! in-degrees e 0)
-                    (for-each
-                      (lambda (d)
-                        (queue-push-back! q d))
-                      deps)))
-              (loop))))))
+      (unless (queue-empty? q)
+        (let* ((e (queue-pop-front! q))
+               (deps (map (lambda (import-list)
+                            (hashtable-ref by-id (car import-list) #f))
+                          (entry-imports e))))
+          (hashtable-set! in-degrees e 0)
+          (for-each
+            (lambda (d)
+              (unless (hashtable-contains? in-degrees d)
+                (queue-push-back! q d)))
+            deps)
+          (loop))))
+    ;; Iterate over the entries and calculate in-degrees.
+    (vector-for-each
+      (lambda (e)
+        (for-each
+          (lambda (import-list)
+            (let ((d (hashtable-ref by-id (car import-list) #f)))
+              (when (hashtable-contains? in-degrees d)
+                (hashtable-update! in-degrees d (lambda (x) (+ x 1)) #f))))
+          (entry-imports e)))
+      (hashtable-keys in-degrees))
+    in-degrees)
 
   ;; Topologically sorts entries from `*entries*`, including only those that
   ;; satisfy `pred?` and all their transitive dependencies. Requires `by-id`, a
   ;; hashtable produced by `entries-by-id`. Raises an error if sorting fails
-  ;; because of a cycle.
+  ;; because of an import cycle.
   (define (sort-entries by-id pred?)
     (define in-degrees (entries-to-in-degrees by-id pred?))
     (define sources (make-queue))
     (define sorted '())
+    ; DEBUG: PRINT IN DEGREES
+    ; (let-values (((keys vals) (hashtable-entries in-degrees)))
+    ;   (write (vector-map entry-id keys)) (newline)
+    ;   (write vals)(newline)
+    ;   (write 'done)(newline))
     (for-each
       (lambda (entry)
         (when (zero? (hashtable-ref in-degrees entry -1))
           (queue-push-back! sources entry)))
+      ;; Go through all of `*entries*` in reverse, rather than just the entries
+      ;; filtered by `pred?`, so that in the absence of forward dependencies
+      ;; entries will be executed in source order.
       (reverse (queue-front *entries*)))
+    ; DEBUG: PRINT INITIAL SOURCE QUEUE
+    ; (display (format "source queue: ~s\n" (map entry-id (queue-front sources))))
     (let loop ()
       (unless (queue-empty? sources)
         (let ((node (queue-pop-front! sources)))
@@ -243,13 +268,19 @@
                      (new-deg (- deg 1)))
                 (hashtable-set! in-degrees e new-deg)
                 (when (zero? new-deg)
-                  (queue-push-back! sources e))))
+                  ;; Push to front so that we add entries as soon as they turn
+                  ;; into sources. The result is that dependencies are moved
+                  ;; to occur just before they are used, and no earlier.
+                  (queue-push-front! sources e))))
             (entry-imports node))
           (loop))))
     (let-values (((entries degrees) (hashtable-entries in-degrees)))
       (vector-for-each
         (lambda (e deg)
           (unless (zero? deg)
+            ; DEBUG: PRINT IN-DEGREES POST-SORT
+            ; (write (vector-map entry-id entries)) (newline)
+            ; (write degrees) (newline)
             (error 'sort-entries "import cycle in entries" (entry-id e))))
         entries
         degrees))
@@ -288,12 +319,15 @@
           (define (find-value name)
             (let loop ((en export-names)
                        (ev export-values))
-              (if (or (null? en) (null? ev))
-                  (error 'run-sicp
-                         (format "~a imports nonexistent (~a ~a)"
-                                 (entry-id importer)
-                                 name
-                                 (entry-id exporter))))))
+              (cond
+                ((or (null? en) (null? ev))
+                 (error 'run-sicp
+                        (format "~a imports nonexistent (~a ~a)"
+                                (entry-id importer)
+                                name
+                                (entry-id exporter))))
+                ((eq? name (car en)) (car ev))
+                (else (loop (cdr en) (cdr ev))))))
           (map find-value import-names)))
       (fold-left append '() (map gather (entry-imports importer))))
     (when slow (set! *slow* #t))
@@ -304,15 +338,19 @@
           (display
             (ansi 'yellow
                   (format "* ~a ~a~a\n"
-                          (string-titlecase (symbol->string (entry-kind e)))
+                          (symbol->string (entry-kind e))
                           (entry-num e)
                           (if (entry-title e)
                             (string-append ": " (entry-title e))
                             "")))))
+        ; (display (format "ARGS FOR ~s: ~s\n" (entry-id e) (gather-args e)))
         (hashtable-set!
           results
           e
-          (apply (entry-thunk e) (gather-args e))))
+          (apply (entry-thunk e) (gather-args e)))
+        ; (let-values (((keys vals) (hashtable-entries results)))
+        ;   (display "RESULTS: ") (write (vector-map entry-id keys)) (write vals) (newline))
+        )
       sorted)
     (when verbose (newline))
     (display
@@ -372,12 +410,26 @@
         (with-syntax (((kind id _ ...) header)
                       (((import-id import-name ...) ...) (get-uses))
                       ((export-name ...) exports))
-              ;; PRINT THE THUNK
-              ; (write (syntax->datum #`(lambda (import-name ... ...)
-              ;   (define export-name) ...
-              ;   #,@body
-              ;   (list export-name ...))))
-              ; (newline)(newline)
+          ;; Make sure no imports are shadowed by definitions.
+          (let ((all-import-names
+                  (syntax->datum #'(import-name ... ...))))
+            (for-each
+              (lambda (name)
+                (when (memq name all-import-names)
+                  (syntax-violation
+                    #f
+                    (string-append
+                      "imported name '"
+                      (symbol->string name)
+                      "' is shadowed by a local definition")
+                    header)))
+              (syntax->datum exports)))
+          ;; DEBUG: PRINT THUNK
+          ; (write (syntax->datum #`(lambda (import-name ... ...)
+          ;   (define export-name) ...
+          ;   #,@body
+          ;   (list export-name ...))))
+          ; (newline)(newline)
           #`(add-entry!
               'id
               'kind
@@ -407,13 +459,13 @@
                       define => ~> slow=> slow~>)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
-          (go #'(e2* ...) #'(chapter e1* ...) #'() #'() ntests (flush)))
+          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Section e1* ...) e2* ...)
-          (go #'(e2* ...) #'(section e1* ...) #'() #'() ntests (flush)))
+          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Subsection e1* ...) e2* ...)
-          (go #'(e2* ...) #'(subsection e1* ...) #'() #'() ntests (flush)))
+          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Exercise e1* ...) e2* ...)
-          (go #'(e2* ...) #'(exercise e1* ...) #'() #'() ntests (flush)))
+          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         ((e1 => e2 e* ...)
          (go=> #f #'(e2 e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 ~> e2 e* ...)
@@ -462,15 +514,14 @@
         #`(#,@body #,wrapped)))
 
     (with-syntax (((_ e* ...) x))
-      ;; PRINT INPUT
+      ;; DEBUG: PRINT INPUT
       ; #`(write '(e* ...))
 
-      ;; PRINT MACRO OUTPUT
+      ;; DEBUG: PRINT MACRO OUTPUT
       ; #`(write '(begin #,@(go #'(e* ...) 'no-header #'() #'() #'())))
 
-      ;; PRINT *entries*
+      ;; DEBUG: PRINT *entries*
       ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()) (write *entries*))
 
-      ;; NORMAL
       #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))
       ))))
