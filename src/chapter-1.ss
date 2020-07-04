@@ -612,26 +612,26 @@ circumference ~> 62.8318
 (expt 2 5) => 32
 
 ;; Recursive successive squaring: O(log(n)) time, O(log(n)) space
-(define (expt b n)
+(define (fast-expt b n)
   (cond ((= n 0) 1)
-        ((even? n) (square (expt b (/ n 2))))
-        (else (* b (expt b (- n 1))))))
+        ((even? n) (square (fast-expt b (/ n 2))))
+        (else (* b (fast-expt b (- n 1))))))
 
-(expt 2 5) => 32
+(fast-expt 2 5) => 32
 
 (Exercise ?1.1.6
   (use (:1.1.4 square)))
 
 ;; Iterative successive squaring: O(log(n)) time, O(1) space
-(define (expt b n)
+(define (fast-expt b n)
   (define (iter a b n)
     (cond ((= n 0) a)
           ((even? n) (iter a (square b) (/ n 2)))
           (else (iter (* a b) b (- n 1)))))
   (iter 1 b n))
 
-(expt 2 5) => 32
-(expt 2 100) => 1267650600228229401496703205376
+(fast-expt 2 5) => 32
+(fast-expt 2 100) => 1267650600228229401496703205376
 
 (Exercise ?1.17)
 
@@ -648,25 +648,25 @@ circumference ~> 62.8318
 (define (halve x) (/ x 2))
 
 ;; Recursive successive doubling: O(log(n)) time, O(log(n)) space
-(define (* a b)
+(define (fast-* a b)
   (cond ((= b 0) 0)
-        ((even? b) (double (* a (halve b))))
-        (else (+ a (* a (- b 1))))))
+        ((even? b) (double (fast-* a (halve b))))
+        (else (+ a (fast-* a (- b 1))))))
 
-(* 5 4) => 20
+(fast-* 5 4) => 20
 
 (Exercise ?1.18
   (use (?1.17 double halve)))
 
 ;; Iterative successive doubling: O(log(n)) time, O(1) space
-(define (* a b)
+(define (fast-* a b)
   (define (iter c a b)
     (cond ((= b 0) c)
           ((even? b) (iter c (double a) (halve b)))
           (else (iter (+ c a) a (- b 1)))))
   (iter 0 a b))
 
-(* 5 4) => 20
+(fast-* 5 4) => 20
 
 (Exercise ?1.19)
 
@@ -746,93 +746,118 @@ circumference ~> 62.8318
 => (remainder (remainder 206 40)
               (remainder 40 (remainder 206 40)))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 1.2.6 (primality)
-;; trial division
-(define (divides? a b)
-  (= (remainder b a) 0))
+(Subsection :1.2.6 "Example: Testing for Primality"
+  (use (:1.1.4 square)))
+
+;; Trial division: O(sqrt(n)) time
+(define (smallest-divisor n) (find-divisor n 2))
 (define (find-divisor n test-divisor)
   (cond ((> (square test-divisor) n) n)
         ((divides? test-divisor n) test-divisor)
         (else (find-divisor n (+ test-divisor 1)))))
-(define (smallest-divisor n)
-  (find-divisor n 2))
+(define (divides? a b) (= (remainder b a) 0))
 (define (prime? n)
   (= n (smallest-divisor n)))
-;; Fermat test
+
+(prime? 10) => #f
+(prime? 13) => #t
+
+;; Fermat test: O(log(n)) time, probabilistic
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
-        (remainder (square (expmod base (/ exp 2) m))
+         (remainder (square (expmod base (/ exp 2) m))
                     m))
         (else (remainder (* base (expmod base (- exp 1) m))
-                        m))))
+                         m))))
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
-  (try-it (+ 1 (random-integer (- n 1)))))
+  (try-it (+ 1 (random (- n 1)))))
 (define (fast-prime? n times)
   (or (= times 0)
       (and (fermat-test n)
            (fast-prime? n (- times 1)))))
 
-;;; ex 1.21
-(check
-  (smallest-divisor 199) => 199
-  (smallest-divisor 1999) => 1999
-  (smallest-divisor 19999) => 7)
+(define many-times 10)
 
-;;; ex 1.22
-(define (runtime)
-  (let ((t (current-time)))
-    (+ (time-second t)
-       (/ (time-nanosecond t) 1e9))))
-(define (timed-prime-test n)
+;; The Fermat test only has false positives on composite numbers (incorrectly
+;; reported as prime), not prime numbers. So the test for 13 is deterministic.
+;; We leave the test for 10 commented out since it will fail at random.
+; (fast-prime? 10 many-times) => #f
+(fast-prime? 13 many-times) => #t
+
+;; The first Carmichael number, 561, fools the Fermat test: no matter how many
+;; iterations we use, it will always think it's prime.
+(prime? 561) => #f
+(fast-prime? 561 many-times) => #t
+
+(Exercise ?1.21
+  (use (:1.2.6 smallest-divisor)))
+
+(smallest-divisor 199) => 199
+(smallest-divisor 1999) => 1999
+(smallest-divisor 19999) => 7
+
+(Exercise ?1.22
+  (use (:1.2.6 prime?)))
+
+(define (timed-prime-test p? n)
   (newline)
   (display n)
-  (start-prime-test n (runtime)))
-(define (start-prime-test n start-time)
-  (if (prime? n)
+  (start-prime-test p? n (runtime)))
+(define (start-prime-test p? n start-time)
+  (if (p? n)
     (report-prime (- (runtime) start-time))))
 (define (report-prime elapsed-time)
   (display " *** ")
   (display elapsed-time))
-(define (ceil-odd n)
-  (+ n (- 1 (remainder n 2))))
-(define (search-for-primes a b)
-  (define (helper a b)
-    (if (<= a b)
-      (begin (timed-prime-test a)
-             (helper (+ a 2) b))))
-  (helper (ceil-odd a) b))
-;; 3 primes greater than 1000 (A)
+
+(define (search-for-primes p? a b)
+  (define (iter a b)
+    (when (<= a b)
+      (timed-prime-test p? a)
+      (iter (+ a 2) b)))
+  (iter (if (odd? a) a (+ a 1)) b))
+
+(string-contains?
+  (capture-output (search-for-primes prime? 6 10))
+  "7 *** ")
+=> #t
+
+;; 3 primes greater than 1,000 (A)
 ; 1009 *** 4.792213439941406e-5
 ; 1013 *** 4.291534423828125e-5
 ; 1019 *** 4.792213439941406e-5
-;; 3 primes greater than 10000 (B)
+
+;; 3 primes greater than 10,000 (B)
 ;; 2.3A < B < 2.8A, sqrt(10) = 3.16
 ; 10007 *** 1.1086463928222656e-4
 ; 10009 *** 1.1396408081054688e-4
 ; 10037 *** 1.2302398681640625e-4
-;; 3 primes greater than 100000 (C)
+
+;; 3 primes greater than 100,000 (C)
 ;; 3.3B < C < 4.1B, sqrt(10) = 3.16
 ; 100003 *** 4.010200500488281e-4
 ; 100019 *** 3.6597251892089844e-4
 ; 100043 *** 4.558563232421875e-4
-;; 3 primes greater than 1000000 (D)
+
+;; 3 primes greater than 1,000,000 (D)
 ;; 2.8C < D < 3.4C, sqrt(10) = 3.16
 ;; 23.7A < D < 31.9A, sqrt(1000) = 31.62
 ; 1000003 *** .0013530254364013672
 ; 1000033 *** .0011339187622070312
 ; 1000037 *** .0013699531555175781
+
 ;; The data seems to bear out the O(sqrt(n)) prediction. The larger the numbers,
 ;; the closer the growth between powers of ten is to the square root of ten.
 ;; This result is compatible with the notion that programs on the machine run in
 ;; time proportional to the number of steps required for the computation.
 
-;;; ex 1.23
+(Exercise ?1.23
+  (use (:1.1.4 square) (?1.22 search-for-primes)))
+
+;; Trial division, but only testing odd divisors.
 (define (prime? n)
   (define (divides? a b)
     (= (remainder b a) 0))
@@ -845,198 +870,240 @@ circumference ~> 62.8318
   (define (smallest-divisor n)
     (find-divisor n 2))
   (= n (smallest-divisor n)))
-;; 3 primes greater than 1000
+
+(string-contains?
+  (capture-output (search-for-primes prime? 6 10))
+  "7 *** ")
+=> #t
+
+;; 3 primes greater than 1,000
 ; 1009 *** 5.1975250244140625e-5   (1.085x)
 ; 1013 *** 5.1975250244140625e-5   (1.211x)
 ; 1019 *** 6.198883056640625e-5    (1.294x)
-;; 3 primes greater than 10000
+
+;; 3 primes greater than 10,000
 ; 10007 *** 1.1491775512695312e-4  (1.037x)
 ; 10009 *** 1.1801719665527344e-4  (1.036x)
 ; 10037 *** 1.1897087097167969e-4  (0.967x)
-;; 3 primes greater than 100000
+
+;; 3 primes greater than 100,000
 ; 100003 *** 3.540515899658203e-4  (0.883x)
 ; 100019 *** 3.490447998046875e-4  (0.954x)
 ; 100043 *** 3.590583801269531e-4  (0.788x)
-;; 3 primes greater than 1000000
+
+;; 3 primes greater than 1,000,000
 ; 1000003 *** .0010960102081298828 (0.810x)
 ; 1000033 *** .001055002212524414  (0.930x)
 ; 1000037 *** .0010900497436523438 (0.796x)
+
 ;; The expectation of half time was not confirmed. In fact, this method is
-;; actually slower for primes under 10000. Even for seven-figure primes, this
+;; actually slower for primes under 10,000. Even for seven-figure primes, this
 ;; method only shaves off 20% of the time. There was probably some error in
 ;; these measurements -- the time measured is too small. Other processes on the
 ;; computer and random factors might have played a role. I was surprised that
 ;; the new method turned out this bad (for relatively small primes, anyway). By
 ;; replacing the increment with a call to the next procedure, we add some
-;; overhead and a conditional (which imlicates branch prediction), and maybe
+;; overhead and a conditional (which implicates branch prediction), and maybe
 ;; this outweighed the gain from skipping the even numbers past two.
 
-;;; ex 1.24
-(define (start-prime-test n start-time)
-  (if (fast-prime? n 100)
-    (report-prime (- (runtime) start-time))))
-;; 3 primes greater than 1000 (A)
+(Exercise ?1.24
+  (use (:1.2.6 fast-prime?) (?1.22 search-for-primes)))
+
+(define (prime? n) (fast-prime? n 100))
+
+(string-contains?
+  (capture-output (search-for-primes prime? 6 10))
+  "7 *** ")
+=> #t
+
+;; 3 primes greater than 1,000 (A)
 ; 1009 *** .003638029098510742
 ; 1013 *** .003793001174926758
 ; 1019 *** .003606081008911133
-;; 3 primes greater than 10000 (B)
+
+;; 3 primes greater than 10,000 (B)
 ;; 0.988A < B < 1.196A
 ; 10007 *** .004311084747314453
 ; 10009 *** .0039730072021484375
 ; 10037 *** .0037479400634765625
-;; 3 primes greater than 100000 (C)
+
+;; 3 primes greater than 100,000 (C)
 ;; 0.893B < C < 1.294B
 ; 100003 *** .004847049713134766
 ; 100019 *** .004848003387451172
 ; 100043 *** .003850221633911133
-;; 3 primes greater than 1000000 (D)
+
+;; 3 primes greater than 1,000,000 (D)
 ;; 0.891C < D < 1.453C
 ;; 1.138A < D < 1.551A
 ; 1000003 *** .005592823028564453
 ; 1000033 *** .004972934722900391
 ; 1000037 *** .0043179988861083984
-;; Since the Fermat test has O(log(n)) grwoth, I expected the time to the primes
-;; near 1000000 to be only a bit greater than the time needed to test primes
-;; near 1000. The data bears this out -- for each additional order of magnitude
+
+;; Since the Fermat test has O(log(n)) growth, I expected the time to the primes
+;; near 1,000,000 to be only a bit greater than the time needed to test primes
+;; near 1,000. The data bears this out -- for each additional order of magnitude
 ;; of the primes, the time required increases by a small, constant amount.
 ;; Specifically, primes that are 10 times larger take about 0.001 seconds longer
 ;; to test using the Fermat method. It should be noted that these results may be
 ;; dependent on the choice of 100 as the second argument to `fast-prime?` (the
 ;; exercise did not specify what value to use).
 
-;;; ex 1.25
-(define fast-expt fast-expt-it)
-(define (new-expmod base exp m)
+(Exercise ?1.25
+  (use (:1.1.4 square) (:1.2.4 fast-expt) (:1.2.6 expmod)))
+
+(define (alyssa-expmod base exp m)
   (remainder (fast-expt base exp) m))
+
 ;; This procedure works, but it is not as efficient. The Fermat test takes much
 ;; longer using this version of expmod -- longer by three orders of magnitude.
 ;; While `fast-expt` is reasonably fast, the original `expmod` procedure is much
-;; faster. The key to its implmentation is not only successive squaring (which
-;; `fast-expt` does as well in this new procedure), but that it calls remainder
-;; between each squaring. This new procedure does not, so the value becomes
+;; faster. The key to its implementation is not only successive squaring (which
+;; `fast-expt` does as well in Alyssa's procedure), but that it calls remainder
+;; between each squaring. Alyssa's procedure does not, so the value becomes
 ;; enormous (requiring bignums, which is slow) by the time the remainder is
 ;; finally taken. Suppose we test the primality of n = 9, choosing a = 5. Using
-;; the old definiton of `expmod`, the process will evolve like so:
-(check
-  (define r remainder)
-  (define s square)
-  (expmod 5 9 9)
-  => (r (* 5 (expmod 5 8 9)) 9)
-  => (r (* 5 (r (s (expmod 5 4 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (expmod 5 2 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (r (s (expmod 5 1 9)) 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (r (s (r (* 5 (expmod 5 0 9)) 9)) 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (r (s (r (* 5 1) 9)) 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (r (s (r 5 9)) 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (r (s 5) 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s (r 25 9)) 9)) 9)) 9)
-  => (r (* 5 (r (s (r (s 7) 9)) 9)) 9)
-  => (r (* 5 (r (s (r 49 9)) 9)) 9)
-  => (r (* 5 (r (s 4) 9)) 9)
-  => (r (* 5 (r 16 9)) 9)
-  => (r (* 5 7) 9)
-  => (r 35 9)
-  => 8
-;; Compare this to the evolution of the process using the new `expmod`:
-  (expmod 5 9 9)
-  => (r (fast-expt 5 9) 9)
-  => (r 1953125 9))
+;; the old definition of `expmod`, the process will evolve like so:
+
+(define r remainder)
+(define s square)
+(expmod 5 9 9)
+=> (r (* 5 (expmod 5 8 9)) 9)
+=> (r (* 5 (r (s (expmod 5 4 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (expmod 5 2 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (r (s (expmod 5 1 9)) 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (r (s (r (* 5 (expmod 5 0 9)) 9)) 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (r (s (r (* 5 1) 9)) 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (r (s (r 5 9)) 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (r (s 5) 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s (r 25 9)) 9)) 9)) 9)
+=> (r (* 5 (r (s (r (s 7) 9)) 9)) 9)
+=> (r (* 5 (r (s (r 49 9)) 9)) 9)
+=> (r (* 5 (r (s 4) 9)) 9)
+=> (r (* 5 (r 16 9)) 9)
+=> (r (* 5 7) 9)
+=> (r 35 9)
+=> 8
+
+;; Compare this to the evolution of the process using the Alyssa's procedure:
+
+(alyssa-expmod 5 9 9)
+=> (r (fast-expt 5 9) 9)
+=> (r 1953125 9)
+
 ;; The original `expmod` doesn't need to deal with numbers anywhere near that
 ;; size, so it is much more efficient. This number may seem okay, but it will
 ;; grow exponentially with n (by definition), and will quickly require arbitrary
-;; precision integer math (bignum), which is much slower than 32-bit arithmetic.
+;; precision integer math (bignum), which is much slower than fixnum arithmetic.
 
-;;; ex 1.26
+(Exercise ?1.26)
+
 ;; When the `square` combination is evaluated, the `expmod` combination is
 ;; evaluated once and then its value is substituted into the `square` compound
 ;; procedure according to the substitution model. When the squaring is written
 ;; as an explicit multiplication, the `expmod` combination is evaluated twice.
 ;; The interpreter has no way of knowing that they will have the same value.
-;; This transforms a linear recusive process into a tree-recursive process. The
+;; This transforms a linear recursive process into a tree-recursive process. The
 ;; time complexity of this tree-recursive process is O(log(2^n)), or O(n).
 
-;;; ex 1.27
-(define (fermat-all? n)
-  (define (helper a)
-    (if (< a n)
-      (and (= (expmod a n n) a)
-           (helper (+ a 1)))
-      #t))
-  (helper 1))
-;; These Carmichael numbers pass the Fermat tests for all values of a < n:
-(slow
-  (check
-    (fermat-all? 561) => #t
-    (fermat-all? 1105) => #t
-    (fermat-all? 1729) => #t
-    (fermat-all? 2465) => #t
-    (fermat-all? 2821) => #t
-    (fermat-all? 6601) => #t))
-;; According to the trial divison procedure, none of them are prime:
-(check
-  (prime? 561) => #f
-  (prime? 1105) => #f
-  (prime? 1729) => #f
-  (prime? 2465) => #f
-  (prime? 2821) => #f
-  (prime? 6601) => #f)
+(Exercise ?1.27
+  (use (:1.2.6 expmod prime?)))
 
-;;; ex 1.28
+(define (fermat-all? n)
+  (define (iter a)
+    (or (>= a n)
+        (and (= (expmod a n n) a)
+             (iter (+ a 1)))))
+  (iter 1))
+
+;; These Carmichael numbers pass the Fermat tests for all values of a < n:
+(fermat-all? 561) => #t
+(fermat-all? 1105) => #t
+(fermat-all? 1729) => #t
+(fermat-all? 2465) => #t
+(fermat-all? 2821) => #t
+(fermat-all? 6601) => #t
+
+;; According to the trial division procedure, none of them are prime:
+(prime? 561) => #f
+(prime? 1105) => #f
+(prime? 1729) => #f
+(prime? 2465) => #f
+(prime? 2821) => #f
+(prime? 6601) => #f
+
+(Exercise ?1.28
+  (use (:1.1.4 square) (:1.2.6 many-times)))
+
 (define (square-check x m)
   (let ((sqm (remainder (square x) m)))
     (if (and (not (or (= x 1) (= x (- m 1))))
              (= sqm 1))
-      0
-      sqm)))
+        0
+        sqm)))
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
          (square-check (expmod base (/ exp 2) m) m))
         (else (remainder (* base (expmod base (- exp 1) m))
                          m))))
+
 (define (miller-rabin-test n)
   (define (try-it a)
     (= (expmod a (- n 1) n) 1))
-  (try-it (+ 2 (random-integer (- n 2)))))
+  (try-it (+ 2 (random (- n 2)))))
 (define (fast-prime? n times)
   (or (= times 0)
       (and (miller-rabin-test n)
            (fast-prime? n (- times 1)))))
-(define (p? n) (fast-prime? n 100))
-;; known composite numbers
-(check
-  (p? 32) => #f
-  (p? 100) => #f
-  (p? 1000004) => #f)
-;; known prime numbers
-(check
-  (p? 5) => #t
-  (p? 997) => #t
-  (p? 1000037) => #t)
-;; known Carmichael numbers
-(check
-  (p? 561) => #f
-  (p? 1105) => #f
-  (p? 1729) => #f
-  (p? 2465) => #f
-  (p? 2821) => #f
-  (p? 6601) => #f)
 
-;;;;; Section 1.3: Formulating abstractions with higher-order procedures
+(fast-prime? 13 many-times) => #t
 
-;;; ssec 1.3.1 (procedures as args)
+;; We cannot write a deterministic test for composite numbers (for the same
+;; reason as for the Fermat test in Section 1.2.6), nor for Carmichael numbers
+;; since we could get unlucky with the random integers. But I checked and the
+;; new `fast-prime?` procedure based on the Millner-Rabin test does indeed
+;; return #f most of the time for Carmichael numbers.
+
+(Section :1.3 "Formulating Abstractions with Higher-Order Procedures")
+
+(define (cube x) (* x x x))
+
+(Subsection :1.3.1 "Procedures as Arguments"
+  (use (:1.3 cube)))
+
 (define (sum term a next b)
   (if (> a b)
-    0
-    (+ (term a)
-       (sum term (next a) next b))))
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+
+(define (inc n) (+ n 1))
+(define (sum-cubes a b) (sum cube a inc b))
+(sum-cubes 1 10) => 3025
+
+(define (identity x) x)
+(define (sum-integers a b) (sum identity a inc b))
+(sum-integers 1 10) => 55
+
+(define (pi-sum a b)
+  (define (pi-term x) (/ 1.0 (* x (+ x 2))))
+  (define (pi-next x) (+ x 4))
+  (sum pi-term a pi-next b))
+(* 8 (pi-sum 1 1000)) ~> 3.139592655589783
+
 (define (integral f a b dx)
   (define (add-dx x)
     (+ x dx))
   (* (sum f (+ a (/ dx 2.0)) add-dx b)
      dx))
 
-;;; ex 1.29
+(integral cube 0 1 0.01) ~> .24998750000000042
+(integral cube 0 1 0.001) ~> .249999875000001
+
+(Exercise ?1.29
+  (use (:1.3 cube) (:1.3.1 inc sum)))
+
 (define (simpson f a b n)
   (let ((h (/ (- b a) n)))
     (define (term k)
@@ -1044,24 +1111,26 @@ circumference ~> 62.8318
          (if (or (= k 0) (= k n))
            1
            (+ 2 (* 2 (remainder k 2))))))
-    (* h (sum term 0 inc n))))
-;; The integral procedure is a bit inaccurate, whereas the `simpson` procedure
-;; gives the exact answer even when n = 2. This is much better.
-(check
-  (integral cube 0 1 0.01) ~> 0.24998750000000042
-  (integral cube 0 1 0.001) ~> 0.249999875000001
-  (simpson cube 0 1 2) => 3/4
-  (simpson cube 0 1 100) => 3/4
-  (simpson cube 0 1 1000) => 3/4)
+    (* h 1/3 (sum term 0.0 inc n))))
 
-;;; ex 1.30
+;; The integral procedure is a bit inaccurate, whereas the `simpson` procedure
+;; gives the exact answer even when n = 2 (note the `=>` rather than `~>`), at
+;; least for this particular integral.
+
+(simpson cube 0 1 2) => 0.25
+
+(Exercise ?1.30)
+
 (define (sum term a next b)
   (define (iter a acc)
     (if (> a b)
-      acc
-      (iter (next a) (+ acc (term a)))))
+        acc
+        (iter (next a) (+ acc (term a)))))
   (iter a 0))
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 1.31
 (define (product-rec term a next b)
   (if (> a b)

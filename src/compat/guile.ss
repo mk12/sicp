@@ -3,16 +3,29 @@
 #!r6rs
 
 (library (src compat active)
-  (export current-output-port format open-output-string parameterize
-          syntax->location with-output-to-string)
+  (export current-output-port format make-paramter open-output-string
+          parameterize random runtime seed-rng string-contains? syntax->location
+          with-output-to-string)
   (import (rnrs base (6))
           (only (guile)
-                current-output-port open-output-string parameterize
-                source-property syntax-source with-output-to-string)
+                *random-state* current-output-port gettimeofday make-parameter
+                open-output-string parameterize random
+                random-state-from-platform source-property string-contains
+                syntax-source with-output-to-string)
           (prefix (only (guile) format) guile-))
 
   (define (format . args)
     (apply guile-format #f args))
+
+  (define (runtime)
+    (let ((t (gettimeofday)))
+      (+ (car t) (/ (cdr t) 1e6))))
+
+  (define (seed-rng)
+    (set! *random-state* (random-state-from-platform)))
+
+  (define (string-contains? s1 s2)
+    (number? (string-contains s1 s2)))
 
   (define (syntax->location s)
     (let ((props (syntax-source s)))

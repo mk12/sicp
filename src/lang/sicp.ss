@@ -6,9 +6,11 @@
   (export SICP Chapter Section Subsection Exercise
           define => ~> slow=> slow~>
           capture-output hide-output
-          display format remainder)
+          display format make-parameter newline parameterize random remainder
+          runtime string-contains? unless when)
   (import (rnrs base (6))
-          (only (rnrs io simple (6)) display)
+          (only (rnrs control (6)) unless when)
+          (only (rnrs io simple (6)) display newline)
           (only (rnrs r5rs (6)) remainder)
           (src lang core)
           (src compat active))

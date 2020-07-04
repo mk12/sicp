@@ -3,7 +3,7 @@
 #!r6rs
 
 (import (rnrs (6))
-        (only (src compat active) format)
+        (only (src compat active) format seed-rng)
         (only (src lang core) run-sicp)
         (src chapter-1))
 
@@ -68,6 +68,7 @@ options:
     (exit 1)))
 
 (define (main argv)
+  (seed-rng)
   (let ((program (car argv))
         (options (parse-options (cdr argv))))
     (cond
