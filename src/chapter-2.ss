@@ -1,15 +1,22 @@
 ;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
-;;; Structure and Interpretation of Computer Programs
-;;; Chapter 2: Building Abstractions with Data
 
-;;;;; Section 2.1: Introduction to data abstraction
+#!r6rs
 
-;;; example 2.1.1 (rational ops)
-(define numer car)
-(define denom cdr)
-(define (make-rat n d)
-  (let ((g (gcd n d)))
-    (cons (/ n g) (/ d g))))
+(library (src chapter-2)
+  (export chapter-2-effects)
+  (import (rnrs base (6))
+          (src lang sicp))
+
+(define chapter-2-effects)
+
+(SICP
+
+(Chapter :2 "Building Abstractions with Data")
+
+(Section :2.1 "Introduction to Data Abstraction")
+
+(Subsection :2.1.1 "Example: Arithmetic Operations for Rational Numbers")
+
 (define (add-rat x y)
   (make-rat (+ (* (numer x) (denom y))
                (* (numer y) (denom x)))
@@ -27,56 +34,102 @@
 (define (equal-rat? x y)
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
+
+;;; Pairs
+
+(define x (cons 1 2))
+(car x) => 1
+(cdr x) => 2
+
+(define y (cons 3 4))
+(define z (cons x y))
+(car (car z)) => 1
+(car (cdr z)) => 3
+
+;;; Representing rational numbers
+
+(define (make-rat n d) (cons n d))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+
 (define (print-rat x)
   (newline)
   (display (numer x))
   (display "/")
   (display (denom x)))
 
-;;; ex 2.1
+(define one-half (make-rat 1 2))
+(capture-output (print-rat one-half)) => "\n1/2"
+
+(define one-third (make-rat 1 3))
+(add-rat one-half one-third) => '(5 . 6)
+(mul-rat one-half one-third) => '(1 . 6)
+(add-rat one-third one-third) => '(6 . 9)
+
+(define (make-rat n d)
+  (let ((g (gcd n d)))
+    (cons (/ n g) (/ d g))))
+
+(add-rat one-third one-third) => '(2 . 3)
+
+(Exercise ?2.1)
+
 (define (sgn x)
   (cond ((positive? x) 1)
         ((zero? x) 0)
         ((negative? x) -1)))
+
 (define (make-rat n d)
   (let ((g (gcd n d))
         (s (* (sgn n) (sgn d))))
     (cons (* s (/ (abs n) g))
           (/ (abs d) g))))
-(check
-  (make-rat 5 10) => '(1 . 2)
-  (make-rat -5 10) => '(-1 . 2)
-  (make-rat -5 -10) => '(1 . 2)
-  (make-rat 5 -10) => '(-1 . 2))
 
-;;; ex 2.2
+(make-rat 5 10) => '(1 . 2)
+(make-rat -5 10) => '(-1 . 2)
+(make-rat -5 -10) => '(1 . 2)
+(make-rat 5 -10) => '(-1 . 2)
+
+(Subsection :2.1.2 "Abstraction Barriers")
+
+(define (make-rat n d) (cons n d))
+(define (numer x)
+  (let ((g (gcd (car x) (cdr x))))
+    (/ (car x) g)))
+(define (denom x)
+  (let ((g (gcd (car x) (cdr x))))
+    (/ (cdr x) g)))
+
+(Exercise ?2.2)
+
 (define make-point cons)
 (define x-point car)
 (define y-point cdr)
+
 (define make-segment cons)
 (define start-segment car)
 (define end-segment cdr)
+
 (define (midpoint-segment seg)
   (let ((a (start-segment seg))
         (b (end-segment seg)))
     (make-point
       (/ (+ (x-point a) (x-point b)) 2)
       (/ (+ (y-point a) (y-point b)) 2))))
-(define (print-point p)
-  (newline)
-  (display "(")
-  (display (x-point p))
-  (display ",")
-  (display (y-point p))
-  (display ")"))
-(check
-  (midpoint-segment
-    (make-segment (make-point 6 5)
-                  (make-point 12 13)))
-  => '(9 . 9))
 
-;;; ex 2.3
-;; two corners
+(midpoint-segment
+  (make-segment (make-point 6 5) (make-point 12 13)))
+=> '(9 . 9)
+
+(Exercise ?2.3
+  (use (?2.2 make-point x-point y-point)))
+
+(define (perimeter rect)
+  (* 2 (+ (width-rect rect) (height-rect rect))))
+(define (area rect)
+  (* (width-rect rect) (height-rect rect)))
+
+;; Representation 1: two corners
 (define make-rect cons)
 (define p1-rect car)
 (define p2-rect cdr)
@@ -86,38 +139,50 @@
 (define (height-rect rect)
   (abs (- (y-point (p1-rect rect))
           (y-point (p2-rect rect)))))
-;; point and width & height
-(define (make-rect p w h)
-  (cons p (cons w h)))
+
+(define rect (make-rect (make-point 1 2) (make-point 6 5)))
+(perimeter rect) => 16
+(area rect) => 15
+
+;; Representation 2: corner and dimensions
+(define (make-rect p w h) (cons p (cons w h)))
 (define point-rect car)
-(define (width-rect rect)
-  (car (cdr rect)))
-(define (height-rect rect)
-  (cdr (cdr rect)))
-;; perimeter and area
-(define (perimiter rect)
-  (* 2 (+ (width-rect rect)
-          (height-rect rect))))
-(define (area rect)
-  (* (width-rect rect)
-     (height-rect rect)))
+(define width-rect cadr)
+(define height-rect cddr)
 
-;;; ex 2.4
-(define (my-cons x y)
-  (lambda (m) (m x y)))
-(define (my-car z)
-  (z (lambda (x y) x)))
-(define (my-cdr z)
-  (z (lambda (x y) y)))
-(check
-  (my-car (my-cons 7 12)) => 7
-  (my-cdr (my-cons 7 12)) => 12)
+(define rect (make-rect (make-point 1 2) 5 3))
+(perimeter rect) => 16
+(area rect) => 15
 
-;;; ex 2.5
-;; Due to the fundamental theorem of arithmetic, 2^a*3^b will always produce a
+(Subsection :2.1.3 "What is Meant by Data?")
+
+(define (cons x y)
+  (define (dispatch m)
+    (cond ((= m 0) x)
+          ((= m 1) y)
+          (else (error 'cons "Argument not 0 or 1" m))))
+  dispatch)
+
+(define (car z) (z 0))
+(define (cdr z) (z 1))
+
+(car (cons 'a 'b)) => 'a
+(cdr (cons 'a 'b)) => 'b
+
+(Exercise ?2.4)
+
+(define (cons x y) (lambda (m) (m x y)))
+(define (car z) (z (lambda (x y) x)))
+(define (cdr z) (z (lambda (x y) y)))
+
+(car (cons 'a 'b)) => 'a
+(cdr (cons 'a 'b)) => 'b
+
+(Exercise ?2.5)
+
+;; Due to the Fundamental Theorem of Arithmetic, 2^a*3^b will always produce a
 ;; unique product given a unique pair of integers a and b.
-(define (my-cons x y)
-  (* (expt 2 x) (expt 3 y)))
+(define (cons x y) (* (expt 2 x) (expt 3 y)))
 (define (count-divides a b)
   (define (count a n)
     (let ((q (/ a b)))
@@ -125,42 +190,43 @@
         (count q (+ n 1))
         n)))
   (count a 0))
-(define (my-car z)
-  (count-divides z 2))
-(define (my-cdr z)
-  (count-divides z 3))
-(check
-  (my-car (my-cons 7 12)) => 7
-  (my-cdr (my-cons 7 12)) => 12)
+(define (car z) (count-divides z 2))
+(define (cdr z) (count-divides z 3))
 
-;;; ex 2.6
-(define church0 (lambda (f) (lambda (x) x)))
-(define (church-inc n)
-  (lambda (f)
-    (lambda (x)
-      (f ((n f) x)))))
-(define church1 (lambda (f) (lambda (x) (f x))))
-(define church2 (lambda (f) (lambda (x) (f (f x)))))
-(define (church+ a b)
-  (lambda (f)
-    (lambda (x)
-      ((a f) ((b f) x)))))
+(car (cons 7 12)) => 7
+(cdr (cons 7 12)) => 12
+
+(Exercise ?2.6)
+
+;; Church numerals
+(define zero (lambda (f) (lambda (x) x)))
+(define (add1 n)
+  (lambda (f) (lambda (x) (f ((n f) x)))))
+
+(define one (lambda (f) (lambda (x) (f x))))
+(define two (lambda (f) (lambda (x) (f (f x)))))
+(define (add a b)
+  (lambda (f) (lambda (x) ((a f) ((b f) x)))))
+
 (define (church->number n)
   ((n (lambda (x) (+ x 1))) 0))
-(check
-  (church->number church0) => 0
-  (church->number church1) => 1
-  (church->number church2) => 2
-  (church->number (church-inc church2)) => 3
-  (church->number (church+ church1 church0)) => 1
-  (church->number (church+ church0 church2)) => 2
-  (church->number (church+ church1 church2)) => 3
-  (church->number (church+ church2 church2)) => 4)
 
-;;; extended ex 2.1.4 (interval arithmetic)
+(church->number zero) => 0
+(church->number one) => 1
+(church->number two) => 2
+(church->number (add1 two)) => 3
+(church->number (add one zero)) => 1
+(church->number (add zero two)) => 2
+(church->number (add one two)) => 3
+(church->number (add two two)) => 4
+
+(Subsection :2.1.4 "Extended Exercise: Interval Arithmetic"
+  (use (?2.7 lower-bound make-interval upper-bound)))
+
 (define (add-interval x y)
   (make-interval (+ (lower-bound x) (lower-bound y))
                  (+ (upper-bound x) (upper-bound y))))
+
 (define (mul-interval x y)
   (let ((p1 (* (lower-bound x) (lower-bound y)))
         (p2 (* (lower-bound x) (upper-bound y)))
@@ -168,18 +234,22 @@
         (p4 (* (upper-bound x) (upper-bound y))))
     (make-interval (min p1 p2 p3 p4)
                    (max p1 p2 p3 p4))))
+
 (define (div-interval x y)
   (mul-interval
     x
     (make-interval (/ 1.0 (upper-bound y))
                    (/ 1.0 (lower-bound y)))))
 
-;;; ex 2.7
-(define make-interval cons)
-(define lower-bound car)
-(define upper-bound cdr)
+(Exercise ?2.7)
 
-;;; ex 2.8
+(define (make-interval a b) (cons a b))
+(define (lower-bound x) (car x))
+(define (upper-bound x) (cdr x))
+
+(Exercise ?2.8
+  (use (?2.7 lower-bound make-interval upper-bound)))
+
 ;; The minimum value the difference could be is the difference of the lower
 ;; bound of the minuend and the upper bound of the subtrahend. The maximum
 ;; value would be the difference of the upper bound of the minuend and the
@@ -188,60 +258,72 @@
   (make-interval (- (lower-bound x) (upper-bound y))
                  (- (upper-bound x) (lower-bound y))))
 
-;;; ex 2.9
+(Exercise ?2.9
+  (use (:2.1.4 add-interval div-interval mul-interval)
+       (?2.7 lower-bound make-interval upper-bound)
+       (?2.8 sub-interval)))
+
 (define (width x)
   (/ (- (upper-bound x) (lower-bound x)) 2))
-;; The width of a sum or difference of two intervals is a function only of the
-;; widths of the intervals being added or subtracted. Given intervals x and y,
-(let* ((x1 (random-integer 1000))
-       (x2 (random-integer 1000))
-       (y1 (random-integer 1000))
-       (y2 (random-integer 1000))
-       (x (make-interval x1 x2))
-       (y (make-interval y1 y2)))
-  (check
-    (width x) => (/ (- x2 x1) 2)
-    (width y) => (/ (- y2 y1) 2))
-;; we can calculate the width of the sum:
-  (check
-    (width (add-interval x y))
-    => (width (make-interval (+ x1 y1) (+ x2 y2)))
-    => (/ (- (+ x2 y2) (+ x1 y1)) 2)
-    => (/ (+ (- x2 x1) (- y2 y1)) 2)
-    => (+ (/ (- x2 x1) 2) (/ (- y2 y1) 2))
-    => (+ (width x) (width y))))
-;; The width of the sum is the sum of the widths. This also applies for
-;; subtraction because (- x y) is the same as (+ x z) where z is -y. On the
-;; other hand, the width of a product or quotient is not a function only of the
+
+;; Consider arbitrary intervals `x` and `y`:
+(define x1 (random 1000))
+(define x2 (random 1000))
+(define y1 (random 1000))
+(define y2 (random 1000))
+(define x (make-interval x1 x2))
+(define y (make-interval y1 y2))
+(width x) => (/ (- x2 x1) 2)
+(width y) => (/ (- y2 y1) 2)
+
+;; The width of the sum is the sum of the widths:
+(width (add-interval x y))
+=> (width (make-interval (+ x1 y1) (+ x2 y2)))
+=> (/ (- (+ x2 y2) (+ x1 y1)) 2)
+=> (/ (+ (- x2 x1) (- y2 y1)) 2)
+=> (+ (/ (- x2 x1) 2) (/ (- y2 y1) 2))
+=> (+ (width x) (width y))
+
+;; The width of the difference is also the sum of the widths:
+(width (sub-interval x y))
+=> (width (make-interval (- x1 y2) (- x2 y1)))
+=> (/ (- (- x2 y1) (- x1 y2)) 2)
+=> (/ (+ (- x2 x1) (- y2 y1)) 2)
+=> (+ (/ (- x2 x1) 2) (/ (- y2 y1) 2))
+=> (+ (width x) (width y))
+
+;; The width of a product or quotient is not a function only of the
 ;; widths of the intervals being multiplied or divided. A counterexample:
-(check
-  (define x (make-interval 0 10))
-  (define y (make-interval 0 2))
-  (width x) => 5
-  (width y) => 1
-  (width (mul-interval x y)) => 10)
+(define x (make-interval 0 10))
+(define y (make-interval 0 2))
+(width x) => 5
+(width y) => 1
+(width (mul-interval x y)) => 10
 ;; The same input widths, 5 and 1, can produce a different product width,
 ;; therefore the product width is not a function of only the input widths:
-(check
-  (define x (make-interval -5 5))
-  (define y (make-interval -1 1))
-  (width x) => 5
-  (width y) => 1
-  (width (mul-interval x y)) => 5)
+(define x (make-interval -5 5))
+(define y (make-interval -1 1))
+(width x) => 5
+(width y) => 1
+(width (mul-interval x y)) => 5
 ;; This also applies to divison since any division can be restated as a
 ;; multiplication problem: (/ x y) becomes (* x (/ y)).
 
-;;; ex 2.10
+(Exercise ?2.10
+  (use (:2.1.4 mul-interval) (?2.7 lower-bound make-interval upper-bound)))
+
 (define (div-interval x y)
   (let ((y1 (lower-bound y))
         (y2 (upper-bound y)))
     (if (<= y1 0 y2)
-      (error 'div-interval "Can't divide by an interval spanning zero.")
+      (error 'div-interval "Can't divide by an interval spanning zero")
       (mul-interval
         x
         (make-interval (/ y2) (/ y1))))))
 
-;;; ex 2.11
+(Exercise ?2.11
+  (use (?2.7 lower-bound make-interval upper-bound)))
+
 (define (mul-interval x y)
   (let ((x1 (lower-bound x))
         (x2 (upper-bound x))
@@ -265,7 +347,11 @@
          (else (make-interval (min (* x1 y2) (x2 y1))
                               (max (* x1 y1) (x2 y2)))))))))
 
-;;; ex 2.12
+(mul-interval (make-interval 1 2) (make-interval 3 4)) => '(3 . 8)
+
+(Exercise ?2.12
+  (use (:1.1.7 average) (?2.7 lower-bound make-interval upper-bound)))
+
 (define (make-center-width c w)
   (make-interval (- c w) (+ c w)))
 (define (center x)
@@ -277,7 +363,14 @@
 (define (percent x)
   (* 100 (/ (width x) (center x))))
 
-;;; ex 2.13
+(define x (make-interval 9 11))
+(width x) => 1
+(center x) => 10
+(percent x) => 10
+
+(Exercise ?2.13
+  (use (:2.1.4 mul-interval) (?2.12 make-center-percent percent)))
+
 ;; Under the assumption of small percent tolerances, there is a simple formula
 ;; for the approximate percent tolerance of the product of two intervals in
 ;; terms of the tolerances of the factors: it is their sum. Assuming all numbers
@@ -303,42 +396,50 @@
 ;; This is back into centre & percent form. The centre of the product interval
 ;; is ci*cj, and its percentage uncertainty is pi + pj -- the sum. We can try it
 ;; out to make sure:
-(check
-  (define i (make-center-percent 30 1))
-  (define j (make-center-percent 25 3))
-  (define i*j (mul-interval i j))
-  (+ (percent i) (percent j)) => 4
-  (percent i*j) ~> 3.9988003598920323)
 
-;;; ex 2.14
+(define i (make-center-percent 30 1))
+(define j (make-center-percent 25 3))
+(define i*j (mul-interval i j))
+(+ (percent i) (percent j)) => 4
+(percent i*j) ~> 3.9988003598920323
+
+(Exercise ?2.14
+  (use (:2.1.4 add-interval div-interval mul-interval)
+       (?2.7 make-interval)
+       (?2.12 center make-center-percent percent)))
+
 (define (par1 r1 r2)
   (div-interval (mul-interval r1 r2)
                 (add-interval r1 r2)))
+
 (define (par2 r1 r2)
   (let ((one (make-interval 1 1)))
     (div-interval
       one
       (add-interval (div-interval one r1)
                     (div-interval one r2)))))
+
 ;; Lem is right. The uncertainty of the result is different for mathematically
 ;; equivalent expressions calculated by `par1` and `par2`:
-(check
-  (define r1 (make-center-percent 10000 5))
-  (define r2 (make-center-percent 330 10))
-  (percent (par1 r1 r2)) ~> 19.931607019958708
-  (percent (par2 r1 r2)) ~> 9.841433938087881)
+
+(define r1 (make-center-percent 10000 5))
+(define r2 (make-center-percent 330 10))
+(percent (par1 r1 r2)) ~> 19.931607019958708
+(percent (par2 r1 r2)) ~> 9.841433938087881
+
 ;; When we divide an interval by itself, we should get exactly one. Instead, we
 ;; get an interval whose center is an approximation of one, and it still has a
 ;; fair amount of uncertainty.
-(check
-  (define i (make-center-percent 5000 2))
-  (define j (make-center-percent 2500 1))
-  (center (div-interval i i)) ~> 1.000800320128051 ; ideally should be 1
-  (percent (div-interval i i)) ~> 3.998400639744109 ; ideally should be 0%
-  (center (div-interval i j)) ~> 2.000600060006000 ; correct
-  (percent (div-interval i j)) ~> 2.999400119975999) ; correct
 
-;;; ex 2.15
+(define i (make-center-percent 5000 2))
+(define j (make-center-percent 2500 1))
+(center (div-interval i i)) ~> 1.0008003201280510 ; ideally should be 1
+(percent (div-interval i i)) ~> 3.998400639744109 ; ideally should be 0%
+(center (div-interval i j)) ~> 2.0006000600060000 ; correct
+(percent (div-interval i j)) ~> 2.999400119975999 ; correct
+
+(Exercise ?2.15)
+
 ;; Yes, Eva is right. The interval calculation system produces different
 ;; intervals for mathematically equivalent expressions. When the expressions are
 ;; written in such a form that no uncertain variable is repeated, the
@@ -350,7 +451,8 @@
 ;; algebraic expression by dividing a value by itself, we introduce error
 ;; because the interval arithmetic division does not produce exactly one.
 
-;;; ex 2.16
+(Exercise ?2.16)
+
 ;; In general, equivalent expressions may lead to different answers because
 ;; identical intervals are treated indepedently even if they represent the same
 ;; measurement. This is called the dependency problem. For complicated
@@ -360,7 +462,10 @@
 ;; does not have this shortcoming. The best we can do is attempt to rewrite
 ;; expressions so that intervals are not repeated (not always possible).
 
-;;;;; Section 2.2: Hierarchical data the closure property
+) ; end of SICP
+) ; end of library
+#|
+(Section :2.2 "Hierarchical data the closure property")
 
 ;;; ex 2.17
 (define (last-pair xs)
@@ -1057,7 +1162,7 @@
     (let ((flipped (flip-horiz quarter)))
       (square-of-four flipped quarter flipped quarter))))
 
-;;;;; Section 2.3: Symbolic data
+(Section :2.3 "Symbolic data")
 
 ;;; ex 2.53
 (check
@@ -1578,7 +1683,7 @@
 ;; checking if the symbol is in the set. (If the tree were balanced, it would be
 ;; Θ(n*log(n)), but we didn't talk about that at all for Huffman trees.)
 
-;;;;; Section 2.4: Multiple representations for abstract data
+(Section :2.4 "Multiple representations for abstract data")
 
 ;;; ssec 2.4.1 (representations for complex numbers)
 (define (add-complex z1 z2)
@@ -1870,7 +1975,7 @@
 ;; style is a bit more work overall, but it doesn't have the limitation of only
 ;; working with a single argument.
 
-;;;;; Section 2.5: Systems with generic operations
+(Section :2.5 "Systems with generic operations")
 
 ;;; ssec 2.5.1 (generic arith ops)
 (define (add x y) (apply-generic 'add x y))
@@ -2780,3 +2885,4 @@
        .
        (polynomial x . (sparse-termlist (4 1) (3 1) (1 -1) (0 -1)))))
 ;; This is the correct answer in lowest terms.
+|#
