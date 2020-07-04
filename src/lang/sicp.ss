@@ -7,7 +7,7 @@
           define => ~> slow=> slow~>
           capture-output hide-output
           display format make-parameter newline parameterize random remainder
-          runtime string-contains? unless when)
+          runtime string-contains? string-count unless when)
   (import (rnrs base (6))
           (only (rnrs control (6)) unless when)
           (only (rnrs io simple (6)) display newline)
@@ -26,4 +26,12 @@
     (syntax-rules ()
       ((_ e* ...)
        (parameterize ((current-output-port (open-output-string)))
-         e* ...)))))
+         e* ...))))
+  
+  ;; Counts the occurrences of a character in a string.
+  (define (string-count char s)
+    (let ((len (string-length s)))  
+      (let loop ((i 0) (count 0))
+        (cond ((= i len) count)
+              ((char=? (string-ref s i) char) (loop (+ i 1) (+ count 1)))
+              (else (loop (+ i 1) count)))))))

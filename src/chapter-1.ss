@@ -496,7 +496,8 @@ circumference ~> 62.8318
 
 (Exercise ?1.13)
 
-;; See proofs.pdf.
+;; See proofs.pdf for the proof that Fib(n) is the closest integer to
+;; phi^n/sqrt(5), where phi = (1 + sqrt(5))/2 is the golden ratio.
 
 (Subsection :1.2.3 "Orders of Growth")
 
@@ -1238,25 +1239,29 @@ circumference ~> 62.8318
 ;; This gives an error, since 2 does not evaluate to a procedure. We cannot
 ;; apply 2 to the argument 2 because that doesn't make any sense.
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 1.3.3 (procs as general methods)
-;; half-interval method for finding zeros
-;; time complexity: O(log(L/T)) where L is original |a - b| and T is tolerance
-(define tolerance 0.00001)
+(Subsection :1.3.3 "Procedures as General Methods"
+  (use (:1.1.7 average)))
+
+;;; Finding roots of equations by the half-interval method
+
+;; Note: tolerance is changed below. The text uses 0.001 for the half interval
+;; method and 0.00001 for everything else afterwards.
+(define tolerance 0.001)
+
 (define (close-enough? x y)
   (< (abs (- x y)) tolerance))
 (define (search f neg-point pos-point)
   (let ((midpoint (average neg-point pos-point)))
     (if (close-enough? neg-point pos-point)
-      midpoint
-      (let ((test-value (f midpoint)))
-        (cond ((positive? test-value)
-               (search f neg-point midpoint))
-              ((negative? test-value)
-               (search f midpoint pos-point))
-              (else midpoint))))))
+        midpoint
+        (let ((test-value (f midpoint)))
+          (cond ((positive? test-value)
+                (search f neg-point midpoint))
+                ((negative? test-value)
+                (search f midpoint pos-point))
+                (else midpoint))))))
+
+;; Half interval method: O(log(|a - b|/tolerance)) time
 (define (half-interval-method f a b)
   (let ((a-value (f a))
         (b-value (f b)))
@@ -1265,11 +1270,17 @@ circumference ~> 62.8318
           ((and (negative? b-value) (positive? a-value))
            (search f b a))
           (else
-            (errorf 'half-interval-method
-              "Values are not of opposite sign: ~s, ~s" a b)))))
-(check
-  (half-interval-method sin 2.0 4.0) ~> 3.141590118408203)
-;; fixed point
+            (error 'half-interval-method
+              (format "Values are not of opposite sign: ~s, ~s" a b))))))
+
+(half-interval-method sin 2.0 4.0)
+~> 3.14111328125
+(half-interval-method (lambda (x) (- (* x x x) (* 2 x) 3)) 1.0 2.0)
+~> 1.89306640625
+
+;;; Finding fixed points of functions
+
+(set! tolerance 0.00001)
 (define (fixed-point f first-guess)
   (define (try guess)
     (let ((next (f guess)))
@@ -1277,16 +1288,35 @@ circumference ~> 62.8318
         next
         (try next))))
   (try first-guess))
-(check
-  (fixed-point cos 1.0) ~> 0.7390822985224023)
 
-;;; ex 1.35
-;; See the relevant section of `proofs/proofs.pdf`.
-(check
-  (/ (+ 1 (sqrt 5)) 2) ~> 1.618033988749895
-  (fixed-point (lambda (x) (+ 1 (/ x))) 42.0) ~> 1.6180328499442242)
+(fixed-point cos 1.0) ~> 0.7390822985224023
 
-;;; ex 1.36
+;; Without average damping (does not converge)
+(define (sqrt x)
+  (fixed-point (lambda (y) (/ x y)) 1.0))
+
+;; With average damping (converges)
+(define (sqrt x)
+  (fixed-point (lambda (y) (average y (/ x y))) 1.0))
+
+(sqrt 2) ~> 1.4142135623746899
+
+(Exercise ?1.35
+  (use (:1.3.3 fixed-point)))
+
+;; See proofs.pdf for the proof that the golden ratio is a fixed point of the
+;; transformation x -> 1 + 1/x.
+
+(define golden-ratio (/ (+ 1 (sqrt 5)) 2))
+
+golden-ratio
+~> 1.6180339887498950
+(fixed-point (lambda (x) (+ 1 (/ x))) 1.0)
+~> 1.6180327868852458
+
+(Exercise ?1.36
+  (use (:1.1.7 average) (:1.3.3 close-enough?)))
+
 (define (fixed-point-verbose f first-guess)
   (define (try guess)
     (let ((next (f guess)))
@@ -1297,99 +1327,139 @@ circumference ~> 62.8318
         (try next))))
   (try first-guess))
 (define (f x) (/ (log 1000) (log x)))
-(hide-output
-  (check
-    (fixed-point-verbose f 5)
-    ~> 4.555539314360711 ; 29 approximations
-    (fixed-point-verbose (lambda (x) (average x (f x))) 5)
-    ~> 4.5555361005218895)) ; 9 approximations
-;; Without average damping, it requires 20 more approximations.
 
-;;; ex 1.37
-(define (count-frac-rec n d k)
+;; Without average damping, it takes 28 approximations.
+(hide-output (fixed-point-verbose f 5)) ~> 4.555539314360711
+(string-count #\newline (capture-output (fixed-point-verbose f 5))) => 28
+
+;; With average damping, it takes only 8 approximations.
+(define (f-damped x) (average x (f x)))
+(hide-output (fixed-point-verbose f-damped 5)) ~> 4.5555361005218895
+(string-count #\newline (capture-output (fixed-point-verbose f-damped 5))) => 8
+
+(Exercise ?1.37
+  (use (?1.35 golden-ratio)))
+
+;; (a) Recursive
+(define (cont-frac n d k)
   (define (helper i)
     (if (= i k)
-      0
-      (/ (n i)
-         (+ (d i) (helper (+ i 1))))))
+        0
+        (/ (n i)
+           (+ (d i) (helper (+ i 1))))))
   (helper 1))
-(define (count-frac-it n d k)
+
+;; (b) Iterative
+(define (cont-frac n d k)
   (define (iter i acc)
     (if (zero? i)
-      acc
-      (iter (- i 1) (/ (n i)
-                       (+ (d i) acc)))))
+        acc
+        (iter (- i 1) (/ (n i)
+                         (+ (d i) acc)))))
   (iter k 0))
-(define count-frac count-frac-it)
-(define (always-one i) 1.0)
-(define (approx-gr k) (count-frac always-one always-one k))
-(check
-  (approx-gr 1) ~> 1.0
-  (approx-gr 2) ~> 0.5
-  (approx-gr 3) ~> 0.6666666666666666
-  (approx-gr 4) ~> 0.6000000000000001
-  (approx-gr 5) ~> 0.625
-  (approx-gr 6) ~> 0.6153846153846154
-  (approx-gr 7) ~> 0.6190476190476191
-  (approx-gr 8) ~> 0.6176470588235294
-  (approx-gr 9) ~> 0.6181818181818182
-  (approx-gr 10) ~> 0.6179775280898876
-  (approx-gr 11) ~> 0.6180555555555556)
-;; When k = 11, the value is accurate to 4 decimal places.
 
-;;; ex 1.38
+(define (always-one i) 1.0)
+(define (approx-gr k) (cont-frac always-one always-one k))
+
+;; When k = 11, the value is accurate to 4 decimal places.
+(approx-gr 01) ~> 1.0
+(approx-gr 02) ~> 0.5
+(approx-gr 03) ~> 0.6666666666666666
+(approx-gr 04) ~> 0.6000000000000001
+(approx-gr 05) ~> 0.625
+(approx-gr 06) ~> 0.6153846153846154
+(approx-gr 07) ~> 0.6190476190476191
+(approx-gr 08) ~> 0.6176470588235294
+(approx-gr 09) ~> 0.6181818181818182
+(approx-gr 10) ~> 0.6179775280898876
+(approx-gr 11) ~> 0.6180555555555556
+
+(define (round4 x) (* 1e-4 (truncate (* 1e4 x))))
+(round4 (approx-gr 11)) ~> (round4 (/ golden-ratio))
+
+(Exercise ?1.38
+  (use (?1.37 always-one cont-frac)))
+
 (define (approx-e k)
   (define (d i)
     (if (zero? (remainder (+ i 1) 3))
-      (* 2/3 (+ i 1))
-      1))
-  (+ 2 (count-frac always-one d k)))
-(check
-  (approx-e 1) ~> 3.0
-  (approx-e 2) ~> 2.6666666666666665
-  (approx-e 3) ~> 2.75
-  (approx-e 4) ~> 2.7142857142857144
-  (approx-e 5) ~> 2.71875
-  (approx-e 1000) ~> 2.7182818284590455)
+        (* 2/3 (+ i 1))
+        1))
+  (+ 2 (cont-frac always-one d k)))
 
-;;; ex 1.39
+(approx-e 1) ~> 3.0
+(approx-e 2) ~> 2.6666666666666665
+(approx-e 3) ~> 2.75
+(approx-e 4) ~> 2.7142857142857144
+(approx-e 5) ~> 2.71875
+(approx-e 1000) ~> 2.7182818284590455
+
+(Exercise ?1.39
+  (use (:1.1.4 square) (?1.37 cont-frac)))
+
 (define (tan-cf x k)
-  (count-frac
+  (cont-frac
     (lambda (i) (if (= i 1) x (- (square x))))
     (lambda (i) (- (* i 2) 1))
     k))
-(define pi (* (atan 1) 4))
-(check
-  (tan-cf (/ pi 3) 1) ~> 1.0471975511965976
-  (tan-cf (/ pi 3) 2) ~> 1.650535956338694
-  (tan-cf (/ pi 3) 3) ~> 1.7291124259895505
-  (tan-cf (/ pi 3) 4) ~> 1.7319971836379957
-  (tan-cf (/ pi 3) 5) ~> 1.7320501979592633
-  (tan (/ pi 3)) ~> 1.7320508075688767)
 
-;;; ssec 1.3.4 (returning procs)
+(define quarter-pi (atan 1))
+
+(tan-cf quarter-pi 1) ~> 0.7853981633974483
+(tan-cf quarter-pi 2) ~> 0.9886892399342050
+(tan-cf quarter-pi 3) ~> 0.9997876809149684
+(tan-cf quarter-pi 4) ~> 0.9999978684156948
+(tan-cf quarter-pi 5) ~> 0.9999999865263550
+(tan quarter-pi) ~> 1
+
+(Subsection :1.3.4 "Procedures as Returned Values"
+  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3 fixed-point)))
+
 (define (average-damp f)
   (lambda (x) (average x (f x))))
-(define (my-sqrt x)
-  (fixed-point
-    (average-damp (lambda (y) (/ x y)))
-    1.0))
-(define dx 0.00001)
-(define (deriv f)
-  (lambda (x)
-    (/ (- (f (+ x dx)) (f x))
-       dx)))
-(define (newton f guess)
-  (let ((df (deriv f)))
-    (fixed-point
-      (lambda (x) (- x (/ (f x) (df x))))
-      guess)))
-(define (my-sqrt x)
-  (newton
-    (lambda (y) (- (square y) x))
-    1.0))
 
-;;; ex 1.40
+((average-damp square) 10) => 55
+
+(define (sqrt x)
+  (fixed-point (average-damp (lambda (y) (/ x y))) 1.0))
+
+(define (cbrt x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y)))) 1.0))
+
+;;; Newton's method
+
+(define dx 0.00001)
+(define (deriv g)
+  (lambda (x) (/ (- (g (+ x dx)) (g x)) dx)))
+
+(define (cube x) (* x x x))
+((deriv cube) 5) ~> 75.00014999664018
+
+(define (newton-transform g)
+  (lambda (x) (- x (/ (g x) ((deriv g) x)))))
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(define (sqrt x)
+  (newtons-method
+    (lambda (y) (- (square y) x)) 1.0))
+
+;;; Abstractions and first-class procedures
+
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
+
+(define (sqrt x)
+  (fixed-point-of-transform
+    (lambda (y) (/ x y)) average-damp 1.0))
+
+(define (sqrt x)
+  (fixed-point-of-transform
+    (lambda (y) (- (square y) x)) newton-transform 1.0))
+
+(Exercise ?1.40
+  (use (:1.1.4 square) (:1.3.4 newtons-method)))
+
 (define (cubic a b c)
   (lambda (x)
     (let ((xx (square x)))
@@ -1398,40 +1468,51 @@ circumference ~> 62.8318
          (* b x)
          c))))
 
-;;; ex 1.41
+(newtons-method (cubic -3 1 1) 1.0) ~> 1
+((cubic -3 1 1) 1) ~> 0
+
+(Exercise ?1.41
+  (use (:1.3.1 inc)))
+
 (define (double f)
   (lambda (x)
     (f (f x))))
-(check
-  (((double (double double)) inc) 5)
-  => (((double (lambda (f) (double (double f)))) inc) 5)
-  => (((lambda (f) (double (double (double (double f))))) inc) 5)
-  => ((double (double (double (double inc)))) 5)
-  => ((double (double (double (lambda (x) (inc (inc x)))))) 5)
-  => ((double (double (lambda (x) (inc (inc (inc (inc x))))))) 5)
-  => ((double (lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc x)))))))))) 5)
-  => ((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
-       (inc (inc (inc (inc x))))))))))))))))) 5)
-  => (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
-       (inc 5))))))))))))))))
-  => 21)
 
-;;; ex 1.42
+(((double (double double)) inc) 5)
+=> (((double (lambda (f) (double (double f)))) inc) 5)
+=> (((lambda (f) (double (double (double (double f))))) inc) 5)
+=> ((double (double (double (double inc)))) 5)
+=> ((double (double (double (lambda (x) (inc (inc x)))))) 5)
+=> ((double (double (lambda (x) (inc (inc (inc (inc x))))))) 5)
+=> ((double (lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc x)))))))))) 5)
+=> ((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
+      (inc (inc (inc (inc x))))))))))))))))) 5)
+=> (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
+     (inc 5))))))))))))))))
+=> 21
+
+(Exercise ?1.42
+  (use (:1.1.4 square) (:1.3.1 inc)))
+
 (define (compose f g)
   (lambda (x)
     (f (g x))))
-(check
-  ((compose square inc) 6) => 49)
 
-;;; ex 1.43
+((compose square inc) 6) => 49
+
+(Exercise ?1.43
+  (use (:1.1.4 square) (?1.42 compose)))
+
 (define (repeated f n)
   (if (= n 1)
-    f
-    (compose (repeated f (- n 1)) f)))
-(check
-  ((repeated square 2) 5) => 625)
+      f
+      (compose (repeated f (- n 1)) f)))
 
-;;; ex 1.44
+((repeated square 2) 5) => 625
+
+(Exercise ?1.44
+  (use (:1.1.4 square) (?1.43 repeated)))
+
 (define dx 0.1)
 (define (smooth f)
   (lambda (x)
@@ -1439,55 +1520,56 @@ circumference ~> 62.8318
           (f x)
           (f (+ x dx)))
        3)))
-(check
-  ((smooth square) 2) ~> 4.006666666666667
-  (((repeated smooth 5) square) 2) ~> 4.033333333333333)
 
-;;; ex 1.45
-(define (my-sqrt x)
-  (fixed-point
-    (average-damp (lambda (y) (/ x y)))
-    1.0))
-(define (cbrt x)
-  (fixed-point
-    (average-damp (lambda (y) (/ x (square y))))
-    1.0))
+((smooth square) 2) ~> 4.006666666666667
+(((repeated smooth 5) square) 2) ~> 4.033333333333333
+
+(Exercise ?1.45
+  (use (:1.3.3 fixed-point) (:1.3.4 average-damp) (?1.43 repeated)))
+
+;; We need to average-damp floor(log2(n)) times.
 (define (nth-root x n)
   (fixed-point
     ((repeated average-damp
                (floor (/ (log n) (log 2))))
      (lambda (y) (/ x (expt y (- n 1)))))
     1.0))
-(check
-  (nth-root 4 2) ~> 2.000000000000002
-  (nth-root 256 8) ~> 2.0000000000039666
-  (nth-root 1048576 20) ~> 1.999999063225966)
 
-;;; ex 1.46
+(nth-root 4 2) ~> 2.000000000000002
+(nth-root 256 8) ~> 2.0000000000039666
+(nth-root 1048576 20) ~> 1.999999063225966
+
+(Exercise ?1.46
+  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3 tolerance)))
+
 (define (iterative-improve good-enough? improve)
   (define (iter guess)
     (if (good-enough? guess)
-      guess
-      (iter (improve guess))))
+        guess
+        (iter (improve guess))))
   iter)
-(define (my-sqrt x)
+
+(define (sqrt x)
   ((iterative-improve
      (lambda (guess)
        (< (abs (- (square guess) x)) tolerance))
      (lambda (guess)
        (average guess (/ x guess))))
    1.0))
-(check
-  (my-sqrt 2) ~> 1.4142156862745097)
+
+(sqrt 2) ~> 1.4142156862745097
+
 (define (fixed-point f first-guess)
   ((iterative-improve
      (lambda (guess)
        (< (abs (- guess (f guess))) tolerance))
      f)
    first-guess))
-(check
-  (fixed-point cos 1.0) ~> 0.7390893414033928)
-;; This is slightly different from the original fixed-point implementation
+
+;; This is slightly different from the original `fixed-point` implementation
 ;; because it returns `guess` when it's good enough, not `next` (that is, the
 ;; original always does one more improvement).
-|#
+(fixed-point cos 1.0) ~> 0.7390893414033928
+
+) ; end of SICP
+) ; end of library
