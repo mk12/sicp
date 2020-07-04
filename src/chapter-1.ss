@@ -1128,87 +1128,109 @@ circumference ~> 62.8318
         (iter (next a) (+ acc (term a)))))
   (iter a 0))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 1.31
-(define (product-rec term a next b)
+(Exercise ?1.31
+  (use (:1.3.1 identity inc)))
+
+;; (a) Recursive
+(define (product term a next b)
   (if (> a b)
     1
     (* (term a)
-       (product-rec term (next a) next b))))
-(define (product-it term a next b)
+       (product term (next a) next b))))
+
+;; (b) Iterative
+(define (product term a next b)
   (define (iter a acc)
     (if (> a b)
       acc
       (iter (next a) (* acc (term a)))))
   (iter a 1))
-(define product product-it)
+
 (define (factorial n)
   (product identity 1 inc n))
-(check
-  (factorial 5) => 120
-  (factorial 7) => 5040)
-(define (approx-qpi n)
+
+(factorial 5) => 120
+(factorial 7) => 5040
+
+(define (approx-pi n)
   (define (term k)
     (let ((r (remainder k 2)))
       (/ (+ k 2 (- r))
          (+ k 1 r))))
-  (product term 1.0 inc n))
-(check
-  (* 4 (approx-qpi 10)) ~> 3.2751010413348065
-  (* 4 (approx-qpi 100)) ~> 3.1570301764551654
-  (* 4 (approx-qpi 1000)) ~> 3.1431607055322552
-  (* 4 (approx-qpi 10000)) ~> 3.1417497057380084)
+  (* 4 (product term 1.0 inc n)))
 
-;;; ex 1.32
-(define (accumulate-rec combine id term a next b)
+(approx-pi 00010) ~> 3.2751010413348065
+(approx-pi 00100) ~> 3.1570301764551654
+(approx-pi 01000) ~> 3.1431607055322552
+(approx-pi 10000) ~> 3.1417497057380084
+
+(Exercise ?1.32
+  (use (:1.3.1 identity inc)))
+
+;; (a) Recursive
+(define (accumulate combine id term a next b)
   (if (> a b)
     id
-    (combine (term a) (accumulate-rec combine id term (next a) next b))))
-(define (accumulate-it combine id term a next b)
+    (combine (term a)
+             (accumulate combine id term (next a) next b))))
+
+;; (b) Iterative
+(define (accumulate combine id term a next b)
   (define (iter a acc)
     (if (> a b)
       acc
       (iter (next a) (combine (term a) acc))))
   (iter a id))
-(define accumulate accumulate-it)
+
 (define (sum term a next b)
   (accumulate + 0 term a next b))
+
 (define (product term a next b)
   (accumulate * 1 term a next b))
 
-;;; ex 1.33
-(define (filtered-accumulate-rec combine pred id term a next b)
-  (if (> a b)
-    id
-    (let ((t (term a))
-          (rest (accumulate-rec combine pred id term (next a) next b)))
-      (if (pred t)
-        rest
-        (combine t rest)))))
-(define (filtered-accumulate-it combine pred id term a next b)
+(sum identity 1 inc 10) => 55
+(product identity 1 inc 10) => 3628800
+
+(Exercise ?1.33
+  (use (:1.1.4 square) (?1.23 prime?) (:1.3.1 identity inc)))
+
+(define (filtered-accumulate combine pred? id term a next b)
   (define (iter a acc)
-    (if (> a b)
-      acc
-      (let ((t (term a)))
-        (if (pred t)
-          (iter (next a) (combine t acc))
-          (iter (next a) acc)))))
+    (cond ((> a b) acc)
+          ((pred? a)
+           (iter (next a) (combine (term a) acc)))
+          (else (iter (next a) acc))))
   (iter a id))
-(define filtered-accumulate filtered-accumulate-it)
-(define (a-sumsp a b)
+
+;; (a) Sum of squares of primes in the interval `a` to `b`.
+(define (sum-squared-primes a b)
   (filtered-accumulate + prime? 0 square a inc b))
-(define (b-prodrp n)
+
+(sum-squared-primes 10 15) => 290
+
+;; (b) Product of positive integers below `n` relatively prime to `n`.
+(define (product-rel-prime n)
   (define (rel-prime? i)
     (= (gcd i n) 1))
-  (filtered-accumulate * rel-prime? 1 identity a inc b))
+  (filtered-accumulate * rel-prime? 1 identity 1 inc (- n 1)))
 
-;;; ex 1.34
+(product-rel-prime 10) => (* 3 7 9)
+
+(Subsection :1.3.2 "Constructing Procedures using Lambda"
+  (use (:1.1.4 square)))
+
+((lambda (x y z) (+ x y (square z)))
+ 1 2 3)
+=> 12
+
+(Exercise ?1.34
+  (use (:1.1.4 square)))
+
 (define (f g) (g 2))
-(check
-  (f square) => 4
-  (f (lambda (z) (* z (+ z 1)))) => 6)
+
+(f square) => 4
+(f (lambda (z) (* z (+ z 1)))) => 6
+
 ;; If we try evaluating the combination `(f f)`, we get the following process:
 ; (f f)
 ; (f 2)
@@ -1216,6 +1238,9 @@ circumference ~> 62.8318
 ;; This gives an error, since 2 does not evaluate to a procedure. We cannot
 ;; apply 2 to the argument 2 because that doesn't make any sense.
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 1.3.3 (procs as general methods)
 ;; half-interval method for finding zeros
 ;; time complexity: O(log(L/T)) where L is original |a - b| and T is tolerance
