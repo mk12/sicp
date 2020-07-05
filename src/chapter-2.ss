@@ -688,6 +688,27 @@ one-through-four => '(1 2 3 4)
 (length (list x x)) => 2
 (count-leaves (list x x)) => 8
 
+;;; Mapping over trees
+
+(define (scale-tree tree factor)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (* tree factor))
+        (else (cons (scale-tree (car tree) factor)
+                    (scale-tree (cdr tree) factor)))))
+
+(scale-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
+=> '(10 (20 (30 40) 50) (60 70))
+
+(define (scale-tree tree factor)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (scale-tree sub-tree factor)
+             (* sub-tree factor)))
+       tree))
+
+(scale-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
+=> '(10 (20 (30 40) 50) (60 70))
+
 (Exercise ?2.24)
 
 (list 1 (list 2 (list 3 4))) => '(1 (2 (3 4)))
@@ -751,18 +772,18 @@ one-through-four => '(1 2 3 4)
 (fringe '((1 2) (3 4))) => '(1 2 3 4)
 (fringe '((((5) 2) ((3 2) 9)))) => '(5 2 3 2 9)
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.29
-(define make-mobile list)
-(define make-branch list)
-;; (a) selectors
+(Exercise ?2.29)
+
+(define (make-mobile left right) (list left right))
+(define (make-branch length structure) (list length structure))
+
+;; (a) Selectors
 (define left-branch car)
 (define right-branch cadr)
 (define branch-length car)
 (define branch-structure cadr)
-;; (b) total weight
+
+;; (b) Total weight
 (define (mobile-weight mobile)
   (+ (branch-weight (left-branch mobile))
      (branch-weight (right-branch mobile))))
@@ -771,7 +792,8 @@ one-through-four => '(1 2 3 4)
     (if (number? struct)
       struct
       (mobile-weight struct))))
-;; (c) balance predicate
+
+;; (c) Balance
 (define (torque branch)
   (* (branch-length branch)
      (branch-weight branch)))
@@ -784,125 +806,226 @@ one-through-four => '(1 2 3 4)
   (let ((struct (branch-structure branch)))
     (or (number? struct)
         (mobile-balanced? struct))))
-;; (d) We just need to change some of the selectors.
+
+;; (d) If `make-mobile` and `make-branch` use `cons` instead of `list`, all we
+;; need to do is change the `right-branch` and `branch-structure` selectors:
+
 (define make-mobile cons)
 (define make-branch cons)
-;; new selectors
 (define right-branch cdr)
 (define branch-structure cdr)
 
-;;; ex 2.30
-(define (square-tree-1 t)
-  (cond
-    ((null? t) '())
-    ((not (pair? t)) (square t))
-    (else (cons (square-tree (car t))
-                (square-tree (cdr t))))))
-(define (square-tree-2 t)
+(Exercise ?2.30
+  (use (:1.1.4 square)))
+
+(define tree '(1 (2 (3 4) 5) (6 7)))
+(define squared-tree '(1 (4 (9 16) 25) (36 49)))
+
+;; Without map
+(define (square-tree t)
+  (cond ((null? t) '())
+        ((not (pair? t)) (square t))
+        (else (cons (square-tree (car t))
+                    (square-tree (cdr t))))))
+
+(square-tree tree) => squared-tree
+
+;; With map
+(define (square-tree t)
   (map (lambda (t)
          (if (pair? t)
-           (square-tree-2 t)
-           (square t)))
+             (square-tree t)
+             (square t)))
        t))
-(define square-tree square-tree-1)
-(check
-  (square-tree '(1 (2 (3 4) 5) (6 7))) => '(1 (4 (9 16) 25) (36 49)))
 
-;;; ex 2.31
-(define (tree-map-1 f t)
+(square-tree tree) => squared-tree
+
+(Exercise ?2.31
+  (use (:1.1.4 square) (?2.30 tree squared-tree)))
+
+;; Without map
+(define (tree-map f t)
   (cond
     ((null? t) '())
     ((not (pair? t)) (f t))
-    (else (cons (tree-map-1 f (car t))
-                (tree-map-1 f (cdr t))))))
-(define (tree-map-2 f t)
+    (else (cons (tree-map f (car t))
+                (tree-map f (cdr t))))))
+
+;; With map
+(define (tree-map f t)
   (map (lambda (t)
          (if (pair? t)
-           (tree-map-2 f t)
-           (f t)))
+             (tree-map f t)
+             (f t)))
        t))
-(define tree-map tree-map-1)
 
-;;; ex 2.32
-(define (powerset s)
+(define (square-tree tree) (tree-map square tree))
+(square-tree tree) => squared-tree
+
+(Exercise ?2.32)
+
+(define (subsets s)
   (if (null? s)
-    (list '())
-    (let ((first-item (car s))
-          (subsets-rest (subsets (cdr s))))
-      (append subsets-rest
-              (map (lambda (set) (cons first-item set))
-                   rest)))))
+      (list '())
+      (let ((first-item (car s))
+            (subsets-rest (subsets (cdr s))))
+        (append subsets-rest
+                (map (lambda (set) (cons first-item set))
+                     subsets-rest)))))
+
+(subsets '(1 2 3)) => '(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))
+
 ;; This works because we can define the powerset recursively like this:
+;;
 ;; 1. The powerset of an empty set is {{}}.
 ;; 2. Given a set S and its powerset P(S), the powerset of S' (the set formed by
 ;;    adding the element x to S) is P(S'), and P(S') is equal to the union of
 ;;    P(S) and {R union {x} | R in P(S)}.
+;;
 ;; These form the base case and the natural recursion for the poweset procedure,
 ;; and they are sufficient to construct the powerset of any set.
 
-;;; ssec 2.2.3 (seq ops)
-(define (my-filter pred xs)
+(Subsection :2.2.3 "Sequences as Conventional Interfaces"
+  (use (:1.1.4 square) (?1.19 fib)))
+
+(define (sum-odd-squares tree)
+  (cond ((null? tree) 0)
+        ((not (pair? tree))
+         (if (odd? tree) (square tree) 0))
+        (else (+ (sum-odd-squares (car tree))
+                 (sum-odd-squares (cdr tree))))))
+
+(sum-odd-squares '((1 2 3) (4 (5 6)))) => 35
+
+(define (even-fibs n)
+  (define (next k)
+    (if (> k n)
+        '()
+        (let ((f (fib k)))
+          (if (even? f)
+              (cons f (next (+ k 1)))
+              (next (+ k 1))))))
+  (next 0))
+
+(even-fibs 10) => '(0 2 8 34)
+
+;;; Sequence Operations
+
+(map square (list 1 2 3 4 5)) => '(1 4 9 16 25)
+
+(define (filter pred xs)
   (cond
     ((null? xs) '())
     ((pred (car xs))
-     (cons (car xs) (my-filter pred (cdr xs))))
-    (else (my-filter pred (cdr xs)))))
-(define (reduce op initial xs)
+     (cons (car xs) (filter pred (cdr xs))))
+    (else (filter pred (cdr xs)))))
+
+(filter odd? (list 1 2 3 4 5)) => '(1 3 5)
+
+;; Accumulate is like fold-right (not fold-left).
+(define (accumulate op initial xs)
   (if (null? xs)
     initial
     (op (car xs)
-        (reduce op initial (cdr xs)))))
-(define (range a b)
-  (if (> a b)
-    '()
-    (cons a (range (+ a 1) b))))
-(define (leaves t)
-  (cond
-    ((null? t) '())
-    ((not (pair? t)) (list t))
-    (else (append (leaves (car t))
-                  (leaves (cdr t))))))
-(define (sum-odd-squares t)
-  (reduce + 0 (map square (filter odd? (leaves t)))))
+        (accumulate op initial (cdr xs)))))
+
+(accumulate + 0 (list 1 2 3 4 5)) => 15
+(accumulate * 1 (list 1 2 3 4 5)) => 120
+(accumulate cons '() (list 1 2 3 4 5)) => '(1 2 3 4 5)
+
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low (enumerate-interval (+ low 1) high))))
+
+(enumerate-interval 2 7) => '(2 3 4 5 6 7)
+
+(define (enumerate-tree tree)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (list tree))
+        (else (append (enumerate-tree (car tree))
+                      (enumerate-tree (cdr tree))))))
+
+(enumerate-tree (list 1 (list 2 (list 3 4)) 5)) => '(1 2 3 4 5)
+
+(define (sum-odd-squares tree)
+  (accumulate
+    + 0 (map square (filter odd? (enumerate-tree tree)))))
+
+(sum-odd-squares '((1 2 3) (4 (5 6)))) => 35
+
 (define (even-fibs n)
-  (reduce cons '() (filter even? (map fib (range 0 n)))))
-
-;;; ex 2.33
-(define (my-map f xs)
-  (reduce (lambda (x y) (cons (f x) y)) '() xs))
-(define (my-append xs ys)
-  (reduce cons ys xs))
-(define (my-length xs)
-  (reduce (lambda (x n) (+ n 1)) 0 xs))
-
-;;; ex 2.34
-(define (horner-eval x coefs)
-  (reduce (lambda (coef higher-terms)
-            (+ (* higher-terms x) coef))
-          0
-          coefs))
-(check
-  (horner-eval 2 (list 1 3 0 5 0 1)) => 79)
-
-;;; ex 2.35
-(define (count-leaves t)
-  (reduce + 0 (map (lambda (x) 1)
-                   (leaves t))))
-
-;;; ex 2.36
-(define (reduce-n op init seqs)
-  (if (null? (car seqs))
+  (accumulate
+    cons
     '()
-    (cons (reduce op init (map car seqs))
-          (reduce-n op init (map cdr seqs)))))
+    (filter even? (map fib (enumerate-interval 0 n)))))
 
-;;; ex 2.37
+(even-fibs 10) => '(0 2 8 34)
+
+(define (list-fib-squares n)
+  (accumulate
+    cons
+    '()
+    (map square (map fib (enumerate-interval 0 n)))))
+
+(list-fib-squares 10) => '(0 1 1 4 9 25 64 169 441 1156 3025)
+
+(define (product-of-squares-of-odd-elements sequence)
+  (accumulate * 1 (map square (filter odd? sequence))))
+
+(product-of-squares-of-odd-elements (list 1 2 3 4 5)) => 225
+
+(Exercise ?2.33
+  (use (:2.2.3 accumulate)))
+
+(define (map f xs)
+  (accumulate (lambda (x y) (cons (f x) y)) '() xs))
+(define (append xs ys)
+  (accumulate cons ys xs))
+(define (length xs)
+  (accumulate (lambda (x n) (+ n 1)) 0 xs))
+
+(Exercise ?2.34
+  (use (:2.2.3 accumulate)))
+
+(define (horner-eval x coefs)
+  (accumulate (lambda (coef higher-terms)
+                (+ (* higher-terms x) coef))
+              0
+              coefs))
+
+(horner-eval 2 (list 1 3 0 5 0 1)) => 79
+
+(Exercise ?2.35
+  (use (:2.2.3 accumulate enumerate-tree)))
+
+(define (count-leaves t)
+  (accumulate + 0 (map (lambda (x) 1)
+                       (enumerate-tree t))))
+
+(count-leaves '(1 2 (3 (4) 5) (6 7))) => 7
+
+(Exercise ?2.36
+  (use (:2.2.3 accumulate)))
+
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      '()
+      (cons (accumulate op init (map car seqs))
+            (accumulate-n op init (map cdr seqs)))))
+
+(accumulate-n + 0 '((1 2 3) (4 5 6) (7 8 9) (10 11 12))) => '(22 26 30)
+
+(Exercise ?2.37
+  (use (:2.2.3 accumulate) (?2.36 accumulate-n)))
+
 (define (dot-product v w)
-  (reduce + 0 (map * v w)))
+  (accumulate + 0 (map * v w)))
+
 (define (matrix-*-vector m v)
   (map (lambda (u) (dot-product u v)) m))
 (define (transpose mat)
-  (reduce-n cons '() mat))
+  (accumulate-n cons '() mat))
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
     (map (lambda (r)
@@ -911,32 +1034,48 @@ one-through-four => '(1 2 3 4)
                 cols))
          m)))
 
-;;; ex 2.38
+(define mat '((1 2 3) (4 5 6) (7 8 9)))
+(define identity '((1 0 0) (0 1 0) (0 0 1)))
+(matrix-*-matrix mat identity) => mat
+(matrix-*-matrix identity mat) => mat
+
+(Exercise ?2.38
+  (use (:2.2.3 accumulate)))
+
+(define fold-right accumulate)
+
 (define (fold-left op init xs)
   (define (iter result rest)
     (if (null? rest)
-      result
-      (iter (op result (car rest))
-            (cdr rest))))
+        result
+        (iter (op result (car rest))
+              (cdr rest))))
   (iter init xs))
-(define fold-right reduce)
-(check
-  (fold-right / 1 (list 1 2 3)) => 3/2
-  (fold-left / 1 (list 1 2 3)) => 1/6
-  (fold-right list '() (list 1 2 3)) => '(1 (2 (3 ())))
-  (fold-left list '() (list 1 2 3)) => '(((() 1) 2) 3))
-;; If op satisfies the commutative property (= (op x y) (op y x)), then
-;; fold-right and fold-left will produce the same values for any sequence.
 
-;;; ex 2.39
-(define (reverse-l xs)
+(fold-right / 1 (list 1 2 3)) => 3/2
+(fold-left / 1 (list 1 2 3)) => 1/6
+(fold-right list '() (list 1 2 3)) => '(1 (2 (3 ())))
+(fold-left list '() (list 1 2 3)) => '(((() 1) 2) 3)
+
+;; If `op` satisfies the commutative property `(= (op x y) (op y x))`, then
+;; `fold-right` and `fold-left` will produce the same values for any sequence.
+
+(Exercise ?2.39
+  (use (?2.38 fold-left fold-right)))
+
+(define (reverse xs)
   (fold-right (lambda (x y) (append y (list x))) '() xs))
-(define (reverse-r xs)
-  (fold-left (lambda (x y) (cons y x)) '() xs))
-(check
-  (reverse-l (list 1 2 3 4 5)) => '(5 4 3 2 1)
-  (reverse-r (list 1 2 3 4 5)) => '(5 4 3 2 1))
 
+(reverse (list 1 2 3 4 5)) => '(5 4 3 2 1)
+
+(define (reverse xs)
+  (fold-left (lambda (x y) (cons y x)) '() xs))
+
+(reverse (list 1 2 3 4 5)) => '(5 4 3 2 1)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 2.2.3 (nested mappings)
 (define (prime-sum? pair)
   (prime? (+ (car pair) (cadr pair))))
