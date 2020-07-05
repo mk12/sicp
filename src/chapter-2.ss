@@ -5,9 +5,10 @@
 (library (src chapter-2)
   (export chapter-2-effects)
   (import (rnrs base (6))
-          (src lang sicp))
+          (src lang sicp)
+          (only (src chapter-1) chapter-1-effects))
 
-(define chapter-2-effects)
+(define chapter-2-effects chapter-1-effects)
 
 (SICP
 
@@ -294,18 +295,22 @@
 
 ;; The width of a product or quotient is not a function only of the
 ;; widths of the intervals being multiplied or divided. A counterexample:
+
 (define x (make-interval 0 10))
 (define y (make-interval 0 2))
 (width x) => 5
 (width y) => 1
 (width (mul-interval x y)) => 10
+
 ;; The same input widths, 5 and 1, can produce a different product width,
 ;; therefore the product width is not a function of only the input widths:
+
 (define x (make-interval -5 5))
 (define y (make-interval -1 1))
 (width x) => 5
 (width y) => 1
 (width (mul-interval x y)) => 5
+
 ;; This also applies to divison since any division can be restated as a
 ;; multiplication problem: (/ x y) becomes (* x (/ y)).
 
@@ -462,102 +467,185 @@
 ;; does not have this shortcoming. The best we can do is attempt to rewrite
 ;; expressions so that intervals are not repeated (not always possible).
 
-) ; end of SICP
-) ; end of library
-#|
 (Section :2.2 "Hierarchical data the closure property")
 
-;;; ex 2.17
+(Subsection :2.2.1 "Representing Sequences")
+
+(define one-through-four (list 1 2 3 4))
+
+one-through-four => '(1 2 3 4)
+(car one-through-four) => 1
+(cdr one-through-four) => '(2 3 4)
+(car (cdr one-through-four)) => 2
+(cons 10 one-through-four) => '(10 1 2 3 4)
+(cons 5 one-through-four) => '(5 1 2 3 4)
+
+;;; List operations
+
+(define (list-ref items n)
+  (if (= n 0)
+      (car items)
+      (list-ref (cdr items) (- n 1))))
+
+(define squares (list 1 4 9 16 25))
+(list-ref squares 3) => 16
+
+;; Recursive
+(define (length items)
+  (if (null? items)
+      0
+      (+ 1 (length (cdr items)))))
+
+(define odds (list 1 3 5 7))
+(length odds) => 4
+
+;; Iterative
+(define (length items)
+  (define (iter a count)
+    (if (null? a)
+        count
+        (iter (cdr a) (+ 1 count))))
+  (iter items 0))
+
+(length odds) => 4
+
+(define (append list1 list2)
+  (if (null? list1)
+      list2
+      (cons (car list1)
+            (append (cdr list1) list2))))
+
+(append squares odds) => '(1 4 9 16 25 1 3 5 7)
+(append odds squares) => '(1 3 5 7 1 4 9 16 25)
+
+;;; Mapping over lists
+
+(define (scale-list items factor)
+  (if (null? items)
+      '()
+      (cons (* (car items) factor)
+            (scale-list (cdr items) factor))))
+(scale-list (list 1 2 3 4 5) 10) => '(10 20 30 40 50)
+
+(define (map proc items)
+  (if (null? items)
+      '()
+      (cons (proc (car items))
+            (map proc (cdr items)))))
+
+(define (scale-list items factor)
+  (map (lambda (x) (* x factor)) items))
+(scale-list (list 1 2 3 4 5) 10) => '(10 20 30 40 50)
+
+(Exercise ?2.17)
+
 (define (last-pair xs)
   (if (null? (cdr xs))
     xs
     (last-pair (cdr xs))))
-(last-pair (list 23 72 149 34)) ; => (34)
 
-;;; ex 2.18
-(define (reverse-rec xs)
-  (if (null? xs)
-    xs
-    (append (reverse (cdr xs))
-            (list (car xs)))))
-(define (reverse-it xs)
+(last-pair (list 23 72 149 34)) => '(34)
+
+(Exercise ?2.18)
+
+(define (reverse xs)
   (define (iter xs ys)
     (if (null? xs)
       ys
       (iter (cdr xs)
             (cons (car xs) ys))))
   (iter xs '()))
-(check
-  (reverse-it (list 1 4 9 16 25)) => '(25 16 9 4 1))
 
-;;; ex 2.19
+(reverse (list 1 4 9 16 25)) => '(25 16 9 4 1)
+
+(Exercise ?2.19)
+
 (define us-coins (list 50 25 10 5 1))
 (define uk-coins (list 100 50 20 10 5 2 1 1/2))
+
+(define (cc amount coins)
+  (cond ((= amount 0) 1)
+        ((< amount 0) 0)
+        ((no-more? coins) 0)
+        (else
+          (+ (cc amount
+                 (except-first-denom coins))
+             (cc (- amount (first-denom coins))
+                 coins)))))
+
 (define first-denom car)
 (define except-first-denom cdr)
 (define no-more? null?)
-(define (cc amount coins)
-  (cond
-    ((= amount 0) 1)
-    ((< amount 0) 0)
-    ((no-more? coins) 0)
-    (else
-      (+ (cc amount
-             (except-first-denom coins))
-         (cc (- amount (first-denom coins))
-             coins)))))
-(slow
-  (check
-    (cc 100 uk-coins) => 104561))
-;; The order of the coin value list does not affect the answer produced by `cc`:
-(check
-  (cc 100 us-coins) => 292
-  (cc 100 (reverse us-coins)) => 292
-  (cc 100 (list 5 50 1 25 10)) => 292)
-;; This is because the cc algorithm does not assume the coin values are sorted
-;; in any particular order. It recurs on the `cdr` of the list, so it will always
-;; be able to reach the end of the list unless it reaches one of the other base
-;; cases first.
 
-;;; ex 2.20
+(cc 100 uk-coins) slow=> 104561
+
+;; The order of the coin value list does not affect the answer produced by `cc`:
+
+(cc 100 us-coins) => 292
+(cc 100 (reverse us-coins)) => 292
+(cc 100 (list 5 50 1 25 10)) => 292
+
+;; This is because the cc algorithm does not assume the coin values are sorted
+;; in any particular order. It recurs on the `cdr` of the list, so it will
+;; always be able to reach the end of the list unless it reaches one of the
+;; other base cases first.
+
+(Exercise ?2.20)
+
 (define (same-parity . xs)
   (define (helper pred xs)
-    (cond
-      ((null? xs) xs)
-      ((pred (car xs))
-       (cons (car xs)
-             (helper pred (cdr xs))))
-      (else (helper pred (cdr xs)))))
-  (cond
-    ((null? xs) xs)
-    ((even? (car xs)) (helper even? xs))
-    (else (helper odd? xs))))
-(check
-  (same-parity 1 2 3 4 5 6 7) => '(1 3 5 7)
-  (same-parity 2 3 4 5 6 7) => '(2 4 6))
+    (cond ((null? xs) xs)
+          ((pred (car xs))
+           (cons (car xs)
+                 (helper pred (cdr xs))))
+          (else (helper pred (cdr xs)))))
+  (cond ((null? xs) xs)
+        ((even? (car xs)) (helper even? xs))
+        (else (helper odd? xs))))
 
-;;; ex 2.21
-(define (square-list-1 xs)
+(same-parity 1 2 3 4 5 6 7) => '(1 3 5 7)
+(same-parity 2 3 4 5 6 7) => '(2 4 6)
+
+(Exercise ?2.21
+  (use (:1.1.4 square)))
+
+(define (square-list xs)
   (if (null? xs)
     '()
-    (cons (square x)
-          (square-list-1 (cdr xs)))))
-(define (square-list-2 xs)
-  (map square xs))
+    (cons (square (car xs))
+          (square-list (cdr xs)))))
+(square-list (list 1 2 3 4)) => '(1 4 9 16)
 
-;;; ex 2.22
+(define (square-list xs) (map square xs))
+(square-list (list 1 2 3 4)) => '(1 4 9 16)
+
+(Exercise ?2.22
+  (use (:1.1.4 square)))
+
+;; Louis's procedure reverses the order of the list because he is building up a
+;; new list in the reverse order that the original one was constructed. The
+;; first element to be consed onto the original list is its last element.
+;; Consing in reverse order produces a reversed list.
+
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
-      answer
-      (iter (cdr things)
-            (cons (square (car things))
-                  answer))))
+        answer
+        (iter (cdr things)
+              (cons (square (car things))
+                    answer))))
   (iter items '()))
-;; This reverses the order of the list because he is building up a new list in
-;; the reverse order that the original one was constructed. The first element to
-;; be consed onto the original list is its last element. Consing in reverse
-;; order produces a reversed list.
+
+(square-list (list 1 2 3 4)) => '(16 9 4 1)
+
+;; When Louis interchanges the arguments to `cons`, it doesn't work because he
+;; is trying to cons a list onto a single element. This creates a list structure
+;; (in that it is made up of pairs), but this is not a sequence. Louis is trying
+;; to use cons to add an element to the end a sequence, but this is not
+;; possible. To add something to the end of a sequence, you must walk all the
+;; way to its end. He could use `append` instead of `cons` to achieve this, but
+;; this would end up being much less efficient than the recursive map.
+
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
@@ -566,35 +654,45 @@
             (cons answer
                   (square (car things))))))
   (iter items '()))
-(check
-  (square-list (list 1 2 3 4 5)) => '(((((() . 1) . 4) . 9) . 16) . 25))
-;; When Louis interchanges the arguments to cons, it doesn't work because he is
-;; trying to cons a list onto a single element. This creates a list structure
-;; (in that it is made up of pairs), but this is not a sequence. Louis is trying
-;; to use cons to add an element to the end a sequence, but this is not
-;; possible. To add something to the end of a sequence, you must walk all the
-;; way to its end. He could use `append` instead of `cons` to achieve this, but
-;; this would end up being much less efficient than the recursive map.
 
-;;; ex 2.23
-(define (my-for-each f xs)
-  (cond
-    ((null? xs) (void))
-    (else (f (car xs))
-          (for-each f (cdr xs)))))
-(check
-  (capture-output
-    (my-for-each
-      (lambda (x)
-        (newline)
-        (display x))
-      (list 57 321 88)))
-  => "\n57\n321\n88")
+(square-list (list 1 2 3 4 5)) => '(((((() . 1) . 4) . 9) . 16) . 25)
 
-;;; ex 2.24
-(check
-  (list 1 (list 2 (list 3 4))) => '(1 (2 (3 4))))
-;; box-and-pointer structure
+(Exercise ?2.23)
+
+(define (for-each f xs)
+  (unless (null? xs)
+    (f (car xs))
+    (for-each f (cdr xs))))
+
+(capture-output
+  (for-each
+    (lambda (x)
+      (newline)
+      (display x))
+    (list 57 321 88)))
+=> "\n57\n321\n88"
+
+(Subsection :2.2.2 "Hierarchical Structures")
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+(define x (cons (list 1 2) (list 3 4)))
+(length x) => 3
+(count-leaves x) => 4
+
+(list x x) => '(((1 2) 3 4) ((1 2) 3 4))
+(length (list x x)) => 2
+(count-leaves (list x x)) => 8
+
+(Exercise ?2.24)
+
+(list 1 (list 2 (list 3 4))) => '(1 (2 (3 4)))
+
+;; Box-and-pointer structure:
 ; [*|*]--->[*|X]
 ;  |        |
 ;  v        \->[*|*]--->[*|X]
@@ -603,57 +701,59 @@
 ;               2            |
 ;                            v
 ;                            3
-;; tree interpretation
-;   /\
-;  1 /\
-;   2 /\
-;    3 4
 
-;;; ex 2.25
-(check
-  (car (cdr (car (cdr (cdr '(1 3 (5 7) 9))))))
-  => 7
-  (car (car '((7))))
-  => 7
-  (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
-    '(1 (2 (3 (4 (5 (6 7))))))))))))))))))
-  => 7)
+;; Tree interpretation:
+;  /\
+; 1 /\
+;  2 /\
+;   3 4
 
-;;; ex 2.26
-(check
-  (define x (list 1 2 3))
-  (define y (list 4 5 6))
-  (append x y) => '(1 2 3 4 5 6)
-  (cons x y) => '((1 2 3) 4 5 6)
-  (list x y) => '((1 2 3) (4 5 6)))
+(Exercise ?2.25)
 
-;;; ex 2.27
-(define (deep-reverse-rec x)
+(car (cdr (car (cdr (cdr '(1 3 (5 7) 9))))))
+=> 7
+
+(car (car '((7))))
+=> 7
+
+(car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
+  '(1 (2 (3 (4 (5 (6 7))))))))))))))))))
+=> 7
+
+(Exercise ?2.26)
+
+(define x (list 1 2 3))
+(define y (list 4 5 6))
+
+(append x y) => '(1 2 3 4 5 6)
+(cons x y) => '((1 2 3) 4 5 6)
+(list x y) => '((1 2 3) (4 5 6))
+
+(Exercise ?2.27)
+
+(define (deep-reverse x)
   (if (pair? x)
-    (append (deep-reverse-rec (cdr x))
-            (list (deep-reverse-rec (car x))))
-    x))
-(define (deep-reverse-it x)
-  (if (pair? x)
-    (map deep-reverse-it (reverse x))
-    x))
-(check
-  (deep-reverse-rec '((1 2) (3 4))) => '((4 3) (2 1))
-  (deep-reverse-it '((1 2) (3 4))) => '((4 3) (2 1)))
+      (map deep-reverse (reverse x))
+      x))
 
-;;; ex 2.28
+(deep-reverse '((1 2) (3 4))) => '((4 3) (2 1))
+
+(Exercise ?2.28)
+
 (define (fringe t)
-  (cond
-    ((null? t) t)
-    ((pair? (car t))
-     (append (fringe (car t))
-             (fringe (cdr t))))
-    (else (cons (car t)
-                (fringe (cdr t))))))
-(check
-  (fringe '((1 2) (3 4))) => '(1 2 3 4)
-  (fringe '((((5) 2) ((3 2) 9)))) => '(5 2 3 2 9))
+  (cond ((null? t) t)
+        ((pair? (car t))
+         (append (fringe (car t))
+                 (fringe (cdr t))))
+        (else (cons (car t)
+                    (fringe (cdr t))))))
 
+(fringe '((1 2) (3 4))) => '(1 2 3 4)
+(fringe '((((5) 2) ((3 2) 9)))) => '(5 2 3 2 9)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.29
 (define make-mobile list)
 (define make-branch list)
