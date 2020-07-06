@@ -1542,40 +1542,60 @@ one-through-four => '(1 2 3 4)
     (let ((flipped (flip-horiz quarter)))
       (square-of-four flipped quarter flipped quarter))))
 
-) ; end of SICP
-) ; end of library
-#|
 (Section :2.3 "Symbolic data")
 
-;;; ex 2.53
-(check
-  (list 'a 'b 'c) => '(a b c)
-  (list (list 'george)) => '((george))
-  (cdr '((x1 x2) (y1 y2))) => '((y1 y2))
-  (cadr '((x1 x2) (y1 y2))) => '(y1 y2)
-  (pair? (car '(a short list))) => #f
-  (memq 'red '((red shoes) (blue socks))) => #f
-  (memq 'red '(red shoes blue socks)) => '(red shoes blue socks))
+(Section :2.3.1 "Quotation")
 
-;;; ex 2.54
-(define (my-equal? list1 list2)
+(define a 1)
+(define b 2)
+(list a b) => '(1 2)
+(list 'a 'b) => '(a b)
+(list 'a b) => '(a 2)
+
+(car '(a b c)) => 'a
+(cdr '(a b c)) => '(b c)
+
+(define (memq item x)
+  (cond ((null? x) #f)
+        ((eq? item (car x)) x)
+        (else (memq item (cdr x)))))
+
+(memq 'apple '(pear banana prune)) => #f
+(memq 'apple '(x (apple sauce) y apple pear)) => '(apple pear)
+
+(Exercise ?2.53
+  (use (:2.3.1 memq)))
+
+(list 'a 'b 'c) => '(a b c)
+(list (list 'george)) => '((george))
+(cdr '((x1 x2) (y1 y2))) => '((y1 y2))
+(cadr '((x1 x2) (y1 y2))) => '(y1 y2)
+(pair? (car '(a short list))) => #f
+(memq 'red '((red shoes) (blue socks))) => #f
+(memq 'red '(red shoes blue socks)) => '(red shoes blue socks)
+
+(Exercise ?2.54)
+
+(define (equal? list1 list2)
   (let ((null1 (null? list1))
         (null2 (null? list2)))
     (or (and null1 null2)
         (and (not (or null1 null2))
              (eq? (car list1) (car list2))
-             (my-equal? (cdr list1) (cdr list2))))))
-(check
-  (my-equal? '(this is a list) '(this is a list)) => #t
-  (my-equal? '(this is a list) '(this (is a) list)) => #f)
+             (equal? (cdr list1) (cdr list2))))))
 
-;;; ex 2.55
+(equal? '(this is a list) '(this is a list)) => #t
+(equal? '(this is a list) '(this (is a) list)) => #f
+
+(Exercise ?2.55)
+
 ;; `''abracadabra` is a shortant for `(quote (quote abracadabra))`. This is the
 ;; same as `'(quote abracadabra)`, and it evaluates to a list with two symbols:
 ;; `(quote abracadabra)`. Taking the car of this gives you the first item, which
 ;; is the symbol `quote`. This is what the interpreter prints.
 
-;;; example 2.3.2 (symbolic differentiation)
+(Section :2.3.2 "Example: Symbolic Differentiation")
+
 (define (deriv expr var)
   (cond ((number? expr) 0)
         ((variable? expr)
@@ -1589,17 +1609,47 @@ one-through-four => '(1 2 3 4)
                          (deriv (multiplicand expr) var))
            (make-product (deriv (multiplier expr) var)
                          (multiplicand expr))))
-        (else (errorf 'deriv "Unknown expr type: ~s" expr))))
-(define variable? symbol?)
-(define same-variable? eq?)
+        (else (error 'deriv "Unknown expr type" expr))))
+
+(define (variable? x) (symbol? x))
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+
 (define (=number? expr num)
   (and (number? expr) (= expr num)))
+
+(define (make-sum a1 a2) (list '+ a1 a2))
+(define (make-product m1 m2) (list '* m1 m2))
+
+(define (sum? expr)
+  (and (pair? expr) (eq? (car expr) '+)))
+(define addend cadr)
+(define augend caddr)
+
+(define (product? expr)
+  (and (pair? expr) (eq? (car expr) '*)))
+(define multiplier cadr)
+(define multiplicand caddr)
+
+(deriv '(+ x 3) 'x)
+=> '(+ 1 0)
+(deriv '(* x y) 'x)
+=> '(+ (* x 0) (* 1 y))
+(deriv '(* (* x y) (+ x 3)) 'x)
+=> '(+ (* (* x y) (+ 1 0))
+       (* (+ (* x 0) (* 1 y))
+          (+ x 3)))
+
+(define (=number? expr num)
+  (and (number? expr) (= expr num)))
+
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
         ((=number? a2 0) a1)
         ((and (number? a1) (number? a2))
          (+ a1 a2))
         (else (list '+ a1 a2))))
+
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
         ((=number? m1 1) m2)
@@ -1607,19 +1657,15 @@ one-through-four => '(1 2 3 4)
         ((and (number? m1) (number? m2))
          (* m1 m2))
         (else (list '* m1 m2))))
-(define (sum? expr)
-  (and (pair? expr) (eq? (car expr) '+)))
-(define addend cadr)
-(define augend caddr)
-(define (product? expr)
-  (and (pair? expr) (eq? (car expr) '*)))
-(define multiplier cadr)
-(define multiplicand caddr)
-(check
-  (deriv '(* (* x y) (+ x 3)) 'x)
-  => '(+ (* x y) (* y (+ x 3))))
 
-;;; ex 2.56
+(deriv '(+ x 3) 'x) => 1
+(deriv '(* x y) 'x) => 'y
+(deriv '(* (* x y) (+ x 3)) 'x) => '(+ (* x y) (* y (+ x 3)))
+
+(Exercise ?2.56
+  (use (:2.3.2 =number? addend augend make-product make-sum multiplicand
+               multiplier product? same-variable? sum? variable?)))
+
 (define (deriv expr var)
   (cond ((number? expr) 0)
         ((variable? expr)
@@ -1639,24 +1685,35 @@ one-through-four => '(1 2 3 4)
            (make-product
              (make-exponentiation (base expr) (- (exponent expr) 1))
              (deriv (base expr) var))))
-        (else (errorf 'deriv "Unknown expr type: ~s" expr))))
+        (else (error 'deriv "Unknown expr type" expr))))
+
+(define (make-exponentiation b e)
+  (cond ((=number? e 0) 1)
+        ((=number? e 1) b)
+        ((=number? b 1) 1)
+        (else (list '** b e))))
+
 (define (exponentiation? expr)
   (and (pair? expr) (eq? (car expr) '**)))
 (define base cadr)
 (define exponent caddr)
-(define (make-exponentiation b e)
-  (list '** b e))
 
-;;; ex 2.57
+(deriv '(* 3 (** x 5)) 'x) => '(* 3 (* 5 (** x 4)))
+
+) ; end of SICP
+) ; end of library
+#|
+(Exercise ?2.57
+  (use (:2.3.2 deriv)))
+
 (define addend cadr)
 (define (augend sum)
   (reduce make-sum 0 (cddr sum)))
 (define multiplier cadr)
 (define (multiplicand product)
   (reduce make-product 1 (cddr product)))
-(check
-  (deriv '(* x y (+ x 3)) 'x)
-  => '(+ (* x y) (* y (+ x 3))))
+
+(deriv '(* x y (+ x 3)) 'x) => '(+ (* x y) (* y (+ x 3)))
 
 ;;; ex 2.58
 ;; (a) fully parenthesized infix form with two arguments
