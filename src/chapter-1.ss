@@ -15,7 +15,7 @@
 
 (Section :1.1 "The Elements of Programming")
 
-(Subsection :1.1.1 "Expressions")
+(Section :1.1.1 "Expressions")
 
 486 => 486
 (+ 137 349) => 486
@@ -28,7 +28,7 @@
 (+ (* 3 5) (- 10 6)) => 19
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) => 57
 
-(Subsection :1.1.2 "Naming and the Environment")
+(Section :1.1.2 "Naming and the Environment")
 
 (define size 2)
 size => 2
@@ -41,13 +41,13 @@ size => 2
 (define circumference (* 2 pi radius))
 circumference ~> 62.8318
 
-(Subsection :1.1.3 "Evaluating Combinations")
+(Section :1.1.3 "Evaluating Combinations")
 
 (* (+ 2 (* 4 6))
    (+ 3 5 7))
 => 390
 
-(Subsection :1.1.4 "Compound Procedures")
+(Section :1.1.4 "Compound Procedures")
 
 (define (square x) (* x x))
 (square 21) => 441
@@ -62,7 +62,7 @@ circumference ~> 62.8318
   (sum-of-squares (+ a 1) (* a 2)))
 (f 5) => 136
 
-(Subsection :1.1.5 "The Substitution Model for Procedure Application"
+(Section :1.1.5 "The Substitution Model for Procedure Application"
   (use (:1.1.4 square sum-of-squares f)))
 
 ;; Applicative-order evaluation:
@@ -82,7 +82,7 @@ circumference ~> 62.8318
 => (+ 36 100)
 => 136
 
-(Subsection :1.1.6 "Conditional Expressions and Predicates")
+(Section :1.1.6 "Conditional Expressions and Predicates")
 
 (define (abs x)
   (cond ((> x 0) x)
@@ -172,7 +172,7 @@ circumference ~> 62.8318
 ;; With normal-order evaluation, the expression will evaluate to zero. The `(p)`
 ;; expression is never evaluated because it is not necessary to do so.
 
-(Subsection :1.1.7 "Example: Square Roots by Newton's Method"
+(Section :1.1.7 "Example: Square Roots by Newton's Method"
   (use (:1.1.4 square)))
 
 (define (sqrt-iter guess x)
@@ -289,7 +289,7 @@ circumference ~> 62.8318
 
 (cbrt 8) ~> 2.000004911675504
 
-(Subsection :1.1.8 "Procedures as Black-Box Abstractions"
+(Section :1.1.8 "Procedures as Black-Box Abstractions"
   (use (:1.1.7 average)))
 
 ;; The following two procedures should be indistinguishable:
@@ -323,7 +323,7 @@ circumference ~> 62.8318
 
 (Section :1.2 "Procedures and the Processes They Generate")
 
-(Subsection :1.2.1 "Linear Recursion and Iteration")
+(Section :1.2.1 "Linear Recursion and Iteration")
 
 (define (factorial n)
   (if (= n 1)
@@ -422,7 +422,7 @@ circumference ~> 62.8318
 (define (k n) (* 5 n n))
 ;; 5n^2
 
-(Subsection :1.2.2 "Tree Recursion")
+(Section :1.2.2 "Tree Recursion")
 
 (define (fib n)
   (cond ((= n 0) 0)
@@ -441,7 +441,7 @@ circumference ~> 62.8318
 
 (fib 6) => 8
 
-;;; Example: Counting change
+(Section :1.2.2.1 "Example: Counting change")
 
 (define (count-change amount)
   (define (cc a n)
@@ -499,7 +499,7 @@ circumference ~> 62.8318
 ;; See proofs.pdf for the proof that Fib(n) is the closest integer to
 ;; phi^n/sqrt(5), where phi = (1 + sqrt(5))/2 is the golden ratio.
 
-(Subsection :1.2.3 "Orders of Growth")
+(Section :1.2.3 "Orders of Growth")
 
 (Exercise ?1.14)
 
@@ -591,7 +591,7 @@ circumference ~> 62.8318
 ;; `sine` grows as O(log(n)). The interpreter must maintain the stack for that
 ;; number of calls to `p`, therfore the space complexity is also O(log(n)).
 
-(Subsection :1.2.4 "Exponentiation"
+(Section :1.2.4 "Exponentiation"
   (use (:1.1.4 square)))
 
 ;; Recursive naive: O(n) time, O(n) space
@@ -705,7 +705,7 @@ circumference ~> 62.8318
 (fib 6) => 8
 (fib 100) => 354224848179261915075
 
-(Subsection :1.2.5 "Greatest Common Divisors")
+(Section :1.2.5 "Greatest Common Divisors")
 
 ;; Euclid's Algorithm: O(log(n)) time
 (define (gcd a b)
@@ -747,23 +747,28 @@ circumference ~> 62.8318
 => (remainder (remainder 206 40)
               (remainder 40 (remainder 206 40)))
 
-(Subsection :1.2.6 "Example: Testing for Primality"
+(Section :1.2.6 "Example: Testing for Primality")
+
+(Section :1.2.6.1 "Searching for divisors"
   (use (:1.1.4 square)))
 
-;; Trial division: O(sqrt(n)) time
 (define (smallest-divisor n) (find-divisor n 2))
 (define (find-divisor n test-divisor)
   (cond ((> (square test-divisor) n) n)
         ((divides? test-divisor n) test-divisor)
         (else (find-divisor n (+ test-divisor 1)))))
 (define (divides? a b) (= (remainder b a) 0))
+
+;; Trial division: O(sqrt(n)) time
 (define (prime? n)
   (= n (smallest-divisor n)))
 
 (prime? 10) => #f
 (prime? 13) => #t
 
-;; Fermat test: O(log(n)) time, probabilistic
+(Section :1.2.6.2 "The Fermat test"
+  (use (:1.1.4 square) (:1.2.6.1 prime?)))
+
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
@@ -771,10 +776,13 @@ circumference ~> 62.8318
                     m))
         (else (remainder (* base (expmod base (- exp 1) m))
                          m))))
+
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
+
+;; Fermat test: O(log(n)) time, probabilistic
 (define (fast-prime? n times)
   (or (= times 0)
       (and (fermat-test n)
@@ -794,14 +802,14 @@ circumference ~> 62.8318
 (fast-prime? 561 many-times) => #t
 
 (Exercise ?1.21
-  (use (:1.2.6 smallest-divisor)))
+  (use (:1.2.6.1 smallest-divisor)))
 
 (smallest-divisor 199) => 199
 (smallest-divisor 1999) => 1999
 (smallest-divisor 19999) => 7
 
 (Exercise ?1.22
-  (use (:1.2.6 prime?)))
+  (use (:1.2.6.1 prime?)))
 
 (define (timed-prime-test p? n)
   (newline)
@@ -908,7 +916,7 @@ circumference ~> 62.8318
 ;; this outweighed the gain from skipping the even numbers past two.
 
 (Exercise ?1.24
-  (use (:1.2.6 fast-prime?) (?1.22 search-for-primes)))
+  (use (:1.2.6.2 fast-prime?) (?1.22 search-for-primes)))
 
 (define (prime? n) (fast-prime? n 100))
 
@@ -951,7 +959,7 @@ circumference ~> 62.8318
 ;; exercise did not specify what value to use).
 
 (Exercise ?1.25
-  (use (:1.1.4 square) (:1.2.4 fast-expt) (:1.2.6 expmod)))
+  (use (:1.1.4 square) (:1.2.4 fast-expt) (:1.2.6.2 expmod)))
 
 (define (alyssa-expmod base exp m)
   (remainder (fast-expt base exp) m))
@@ -1008,7 +1016,7 @@ circumference ~> 62.8318
 ;; time complexity of this tree-recursive process is O(log(2^n)), or O(n).
 
 (Exercise ?1.27
-  (use (:1.2.6 expmod prime?)))
+  (use (:1.2.6.1 prime?) (:1.2.6.2 expmod)))
 
 (define (fermat-all? n)
   (define (iter a)
@@ -1034,7 +1042,7 @@ circumference ~> 62.8318
 (prime? 6601) => #f
 
 (Exercise ?1.28
-  (use (:1.1.4 square) (:1.2.6 many-times)))
+  (use (:1.1.4 square) (:1.2.6.2 many-times)))
 
 (define (square-check x m)
   (let ((sqm (remainder (square x) m)))
@@ -1070,7 +1078,7 @@ circumference ~> 62.8318
 
 (define (cube x) (* x x x))
 
-(Subsection :1.3.1 "Procedures as Arguments"
+(Section :1.3.1 "Procedures as Arguments"
   (use (:1.3 cube)))
 
 (define (sum term a next b)
@@ -1217,7 +1225,7 @@ circumference ~> 62.8318
 
 (product-rel-prime 10) => (* 3 7 9)
 
-(Subsection :1.3.2 "Constructing Procedures using Lambda"
+(Section :1.3.2 "Constructing Procedures using Lambda"
   (use (:1.1.4 square)))
 
 ((lambda (x y z) (+ x y (square z)))
@@ -1239,17 +1247,11 @@ circumference ~> 62.8318
 ;; This gives an error, since 2 does not evaluate to a procedure. We cannot
 ;; apply 2 to the argument 2 because that doesn't make any sense.
 
-(Subsection :1.3.3 "Procedures as General Methods"
+(Section :1.3.3 "Procedures as General Methods")
+
+(Section :1.3.3.1 "Finding roots of equations by the half-interval method"
   (use (:1.1.7 average)))
 
-;;; Finding roots of equations by the half-interval method
-
-;; Note: tolerance is changed below. The text uses 0.001 for the half interval
-;; method and 0.00001 for everything else afterwards.
-(define tolerance 0.001)
-
-(define (close-enough? x y)
-  (< (abs (- x y)) tolerance))
 (define (search f neg-point pos-point)
   (let ((midpoint (average neg-point pos-point)))
     (if (close-enough? neg-point pos-point)
@@ -1261,7 +1263,10 @@ circumference ~> 62.8318
                 (search f midpoint pos-point))
                 (else midpoint))))))
 
-;; Half interval method: O(log(|a - b|/tolerance)) time
+(define tolerance 0.001)
+(define (close-enough? x y) (< (abs (- x y)) tolerance))
+
+;; Half interval method: O(log(|a-b|/tolerance)) time
 (define (half-interval-method f a b)
   (let ((a-value (f a))
         (b-value (f b)))
@@ -1271,16 +1276,20 @@ circumference ~> 62.8318
            (search f b a))
           (else
             (error 'half-interval-method
-              (format "Values are not of opposite sign: ~s, ~s" a b))))))
+                   "Values are not of opposite sign"
+                   a b)))))
 
 (half-interval-method sin 2.0 4.0)
 ~> 3.14111328125
 (half-interval-method (lambda (x) (- (* x x x) (* 2 x) 3)) 1.0 2.0)
 ~> 1.89306640625
 
-;;; Finding fixed points of functions
+(Section :1.3.3.2 "Finding fixed points of functions"
+  (use (:1.1.7 average)))
 
-(set! tolerance 0.00001)
+(define tolerance 0.00001)
+(define (close-enough? x y) (< (abs (- x y)) tolerance))
+
 (define (fixed-point f first-guess)
   (define (try guess)
     (let ((next (f guess)))
@@ -1302,7 +1311,7 @@ circumference ~> 62.8318
 (sqrt 2) ~> 1.4142135623746899
 
 (Exercise ?1.35
-  (use (:1.3.3 fixed-point)))
+  (use (:1.3.3.2 fixed-point)))
 
 ;; See proofs.pdf for the proof that the golden ratio is a fixed point of the
 ;; transformation x -> 1 + 1/x.
@@ -1315,7 +1324,7 @@ golden-ratio
 ~> 1.6180327868852458
 
 (Exercise ?1.36
-  (use (:1.1.7 average) (:1.3.3 close-enough?)))
+  (use (:1.1.7 average) (:1.3.3.2 close-enough?)))
 
 (define (fixed-point-verbose f first-guess)
   (define (try guess)
@@ -1412,8 +1421,8 @@ golden-ratio
 (tan-cf quarter-pi 5) ~> 0.9999999865263550
 (tan quarter-pi) ~> 1
 
-(Subsection :1.3.4 "Procedures as Returned Values"
-  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3 fixed-point)))
+(Section :1.3.4 "Procedures as Returned Values"
+  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3.2 fixed-point)))
 
 (define (average-damp f)
   (lambda (x) (average x (f x))))
@@ -1426,7 +1435,8 @@ golden-ratio
 (define (cbrt x)
   (fixed-point (average-damp (lambda (y) (/ x (square y)))) 1.0))
 
-;;; Newton's method
+(Section :1.3.4.1 "Newton's method"
+  (use (:1.1.4 square) (:1.3.3.2 fixed-point)))
 
 (define dx 0.00001)
 (define (deriv g)
@@ -1444,7 +1454,9 @@ golden-ratio
   (newtons-method
     (lambda (y) (- (square y) x)) 1.0))
 
-;;; Abstractions and first-class procedures
+(Section :1.3.4.2 "Abstractions and first-class procedures"
+  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3.2 fixed-point)
+       (:1.3.4 average-damp) (:1.3.4.1 newton-transform)))
 
 (define (fixed-point-of-transform g transform guess)
   (fixed-point (transform g) guess))
@@ -1458,7 +1470,7 @@ golden-ratio
     (lambda (y) (- (square y) x)) newton-transform 1.0))
 
 (Exercise ?1.40
-  (use (:1.1.4 square) (:1.3.4 newtons-method)))
+  (use (:1.1.4 square) (:1.3.4.1 newtons-method)))
 
 (define (cubic a b c)
   (lambda (x)
@@ -1525,7 +1537,7 @@ golden-ratio
 (((repeated smooth 5) square) 2) ~> 4.033333333333333
 
 (Exercise ?1.45
-  (use (:1.3.3 fixed-point) (:1.3.4 average-damp) (?1.43 repeated)))
+  (use (:1.3.3.2 fixed-point) (:1.3.4 average-damp) (?1.43 repeated)))
 
 ;; We need to average-damp floor(log2(n)) times.
 (define (nth-root x n)
@@ -1540,7 +1552,7 @@ golden-ratio
 (nth-root 1048576 20) ~> 1.999999063225966
 
 (Exercise ?1.46
-  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3 tolerance)))
+  (use (:1.1.4 square) (:1.1.7 average) (:1.3.3.2 tolerance)))
 
 (define (iterative-improve good-enough? improve)
   (define (iter guess)

@@ -3,7 +3,7 @@
 #!r6rs
 
 (library (src lang sicp)
-  (export SICP Chapter Section Subsection Exercise
+  (export SICP Chapter Section Exercise
           define => ~> slow=> slow~>
           capture-output hide-output
           display format make-parameter newline parameterize random remainder

@@ -3,9 +3,7 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Subsection Exercise
-          define => ~> slow=> slow~>
-          run-sicp)
+  (export SICP Chapter Section Exercise define => ~> slow=> slow~> run-sicp)
   (import (except (rnrs (6)) current-output-port)
           (rnrs mutable-pairs (6))
           (src compat active))
@@ -22,7 +20,8 @@
                     ((bold-red) "1;31")
                     ((green) "32")
                     ((yellow) "33")
-                    ((blue) "34"))))
+                    ((blue) "34")
+                    ((magenta) "35"))))
         (string-append "\x1b;[" code "m" str "\x1b;[0m"))
       str))
 
@@ -137,12 +136,12 @@
       ((_ e) (if (slow-enabled?) e (skip-slow-test)))))
 
   ;; An entry stores code from a part of the textbook. It consists of a unique
-  ;; symbol `id`, a kind ('chapter, 'section, 'subsection, or 'exercise), a
-  ;; string `num` containing a dotted chapter/section/etc. number like "1.2.3",
-  ;; a title string (or #f), a list of imported names from other entries
-  ;; formatted as `((id name ...) ...)`, a list of exported names, and a thunk
-  ;; that takes all the imported names as one flat list of arguments and returns
-  ;; the exported values in the same order as `exports`.
+  ;; symbol `id`, a kind ('Chapter, 'Section, or 'Exercise), a string `num`
+  ;; containing a dotted chapter/section/etc. number like "1.2.3", a title
+  ;; string (or #f), a list of imported names from other entries formatted as
+  ;; `((id name ...) ...)`, a list of exported names, and a thunk that takes all
+  ;; the imported names as one flat list of arguments and returns the exported
+  ;; values in the same order as `exports`.
   (define-record-type entry
     (fields id kind num title imports exports thunk))
 
@@ -359,6 +358,8 @@
         "test result: ~a. ~a passed; ~a failed; ~a skipped; ~a filtered out\n"
         (if (zero? *fails*) (ansi 'green "ok") (ansi 'bold-red "FAIL"))
         *passes* *fails* *skips* (- *total* *passes* *fails* *skips*)))
+    (when (and (zero? *passes*) (zero? *fails*))
+      (display (ansi 'magenta "WARNING: did not run any tests\n")))
     (zero? *fails*)
     ;; PRINT INFO
     ; (write filters) (newline)
@@ -381,7 +382,7 @@
               (lambda (x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
             ...)))))
-    (auxiliary Chapter Section Subsection Exercise ~> slow=> slow~>))
+    (auxiliary Chapter Section Exercise ~> slow=> slow~>))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
@@ -389,15 +390,15 @@
     (define sicp (with-syntax (((s e* ...) x)) #'s))
 
     ;; Creates an entry `num` from its `id` syntax. This just chops off the
-    ;; sigil used to differentiate chapters/sections/subsections from exercises
-    ;; (and also used because `1.1.1` on its own is an invalid R6RS identifier).
+    ;; sigil used to differentiate chapters/sections from exercises (and also
+    ;; used because `1.1.1` on its own is an invalid R6RS identifier).
     (define (entry-id->num id)
       (let ((str (symbol->string (syntax->datum id))))
         (substring str 1 (string-length str))))
 
     ;; Recursive implementation of the macro. It takes:
     ;; x       - the remaining forms to be processed
-    ;; header  - the last seen chapter/section/subsection/exercise header
+    ;; header  - the last seen chapter/section/exercise header
     ;; exports - names of definitions made since the last header
     ;; body    - code encountered since the last header
     ;; ntests  - number of tests/asserted processed so far
@@ -456,14 +457,11 @@
                   (syntax->datum exports))
           exports
           #`(#,@exports #,name)))
-      (syntax-case x (Chapter Section Subsection Exercise
-                      define => ~> slow=> slow~>)
+      (syntax-case x (Chapter Section Exercise define => ~> slow=> slow~>)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
           (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Section e1* ...) e2* ...)
-          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
-        (((Subsection e1* ...) e2* ...)
           (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Exercise e1* ...) e2* ...)
           (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
