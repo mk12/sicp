@@ -6,8 +6,8 @@
   (export SICP Chapter Section Exercise
           define => ~> slow=> slow~>
           capture-output hide-output
-          display format make-parameter newline parameterize random remainder
-          runtime string-contains? string-count unless when)
+          display format newline random remainder runtime string-contains?
+          string-count unless when)
   (import (rnrs base (6))
           (only (rnrs control (6)) unless when)
           (only (rnrs io simple (6)) display newline)

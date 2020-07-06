@@ -1700,29 +1700,61 @@ one-through-four => '(1 2 3 4)
 
 (deriv '(* 3 (** x 5)) 'x) => '(* 3 (* 5 (** x 4)))
 
-) ; end of SICP
-) ; end of library
-#|
 (Exercise ?2.57
-  (use (:2.3.2 deriv)))
+  (use (:2.2.3.1 accumulate)
+       (:2.3.2 make-product make-sum product? sum? same-variable? variable?)))
+
+(define (deriv expr var)
+  (cond ((number? expr) 0)
+        ((variable? expr)
+         (if (same-variable? expr var) 1 0))
+        ((sum? expr)
+         (make-sum (deriv (addend expr) var)
+                   (deriv (augend expr) var)))
+        ((product? expr)
+         (make-sum
+           (make-product (multiplier expr)
+                         (deriv (multiplicand expr) var))
+           (make-product (deriv (multiplier expr) var)
+                         (multiplicand expr))))
+        (else (error 'deriv "Unknown expr type" expr))))
 
 (define addend cadr)
 (define (augend sum)
-  (reduce make-sum 0 (cddr sum)))
+  (accumulate make-sum 0 (cddr sum)))
 (define multiplier cadr)
 (define (multiplicand product)
-  (reduce make-product 1 (cddr product)))
+  (accumulate make-product 1 (cddr product)))
 
 (deriv '(* x y (+ x 3)) 'x) => '(+ (* x y) (* y (+ x 3)))
 
-;;; ex 2.58
-;; (a) fully parenthesized infix form with two arguments
+(Exercise ?2.58
+  (use (:2.3.1 memq) (:2.3.2 =number? same-variable? variable?)))
+
+(define (deriv expr var)
+  (cond ((number? expr) 0)
+        ((variable? expr)
+         (if (same-variable? expr var) 1 0))
+        ((sum? expr)
+         (make-sum (deriv (addend expr) var)
+                   (deriv (augend expr) var)))
+        ((product? expr)
+         (make-sum
+           (make-product (multiplier expr)
+                         (deriv (multiplicand expr) var))
+           (make-product (deriv (multiplier expr) var)
+                         (multiplicand expr))))
+        (else (error 'deriv "Unknown expr type" expr))))
+
+;;; (a) Fully parenthesized binary infix form
+
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
         ((=number? a2 0) a1)
         ((and (number? a1) (number? a2))
          (+ a1 a2))
         (else (list a1 '+ a2))))
+
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
         ((=number? m1 1) m2)
@@ -1730,22 +1762,28 @@ one-through-four => '(1 2 3 4)
         ((and (number? m1) (number? m2))
          (* m1 m2))
         (else (list m1 '* m2))))
+
 (define (sum? expr)
   (and (pair? expr) (eq? (cadr expr) '+)))
 (define addend car)
 (define augend caddr)
+
 (define (product? expr)
   (and (pair? expr) (eq? (cadr expr) '*)))
 (define multiplier car)
 (define multiplicand caddr)
-(check
-  (deriv '(x + (3 * (x + (y + 2)))) 'x) => 4)
-;; (b) standard algebraic notation
+
+(deriv '(x + (3 * (x + (y + 2)))) 'x) => 4
+
+;; (b) Standard algebraic notation
+
 ;; This doesn't always work, but it's a start. Actually doing it properly is
 ;; complicated -- it would be much easier to implement it from scratch rather
-;; than just chaning the constructors and selectors.
+;; than just changing the constructors and selectors.
+
 (define (sum? expr)
   (and (pair? expr) (memq '+ (cdr expr))))
+
 (define (addend expr)
   (define (until-plus expr)
     (if (eq? '+ (car expr))
@@ -1754,13 +1792,17 @@ one-through-four => '(1 2 3 4)
   (if (eq? '+ (cadr expr))
     (car expr)
     (until-plus expr)))
+
 (define (augend expr)
   (if (null? (cdddr expr))
     (caddr expr)
     (cddr expr)))
-(check
-  (deriv '(x + 3 * (x + y + 2)) 'x) => 4)
 
+(deriv '(x + 3 * (x + y + 2)) 'x) => 4
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; example 2.3.3 (sets as unordered lists)
 (define (element-of-set? x set)
   (and (not (null? set))
