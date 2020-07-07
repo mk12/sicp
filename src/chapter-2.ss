@@ -1800,36 +1800,61 @@ one-through-four => '(1 2 3 4)
 
 (deriv '(x + 3 * (x + y + 2)) 'x) => 4
 
-) ; end of SICP
-) ; end of library
-#|
-;;; example 2.3.3 (sets as unordered lists)
+(Section :2.3.3 "Example: Representing Sets")
+
+(Section :2.3.3.1 "Sets as unordered lists")
+
 (define (element-of-set? x set)
   (and (not (null? set))
        (or (equal? x (car set))
            (element-of-set? x (cdr set)))))
+
 (define (adjoin-set x set)
   (if (element-of-set? x set)
-    set
-    (cons x set)))
+      set
+      (cons x set)))
+
 (define (intersection-set set1 set2)
   (cond ((null? set1) '())
         ((null? set2) '())
         ((element-of-set? (car set1) set2)
          (cons (car set1)
                (intersection-set (cdr set1) set2)))
-        (else (intersect-set (cdr set1) set2))))
+        (else (intersection-set (cdr set1) set2))))
 
-;;; ex 2.59
+(adjoin-set 1 '()) => '(1)
+(adjoin-set 1 '(1)) => '(1)
+(adjoin-set 1 '(2 3)) => '(1 2 3)
+
+(element-of-set? 1 '()) => #f
+(element-of-set? 1 '(1)) => #t
+(element-of-set? 1 '(3 2 1)) => #t
+
+(intersection-set '() '(1 2)) => '()
+(intersection-set '(1) '(1 2)) => '(1)
+(intersection-set '(2) '(1 2)) => '(2)
+(intersection-set '(2 1) '(1 2)) => '(2 1)
+
+(Exercise ?2.59
+  (use (:2.2.3.1 accumulate) (:2.3.3.1 adjoin-set)))
+
 (define (union-set set1 set2)
-  (reduce adjoin-set set1 set2))
+  (accumulate adjoin-set set2 set1))
 
-;;; ex 2.60
-;; element-of-set? stays the same
+(union-set '() '(1 2 3)) => '(1 2 3)
+(union-set '(1 2 3) '()) => '(1 2 3)
+(union-set '(1 2) '(2 3)) => '(1 2 3)
+
+(Exercise ?2.60)
+
+;; If we allow duplicates, we only need to change `adjoin-set` and `union-set`.
+;; `element-of-set?` and `intersection-set` stay the same.
+
 (define adjoin-set cons)
 (define union-set append)
-;; intersection-set stays the same
-;; Efficiency: element-of-set? is still O(n); adjoin-set is O(1).
+
+;; Efficiency:
+;;
 ;; +------------------+----------+--------+
 ;; | Function         | no dupes | dupes  |
 ;; +------------------+----------+--------+
@@ -1838,43 +1863,70 @@ one-through-four => '(1 2 3 4)
 ;; | union-set        | O(n^2)   | O(n)   |
 ;; | intersection-set | O(n^2)   | O(n^2) |
 ;; +------------------+----------+--------+
-;; It looks like it is always more efficient with duplicates. However, the n
+;;
+;; It looks like it is always more efficient with duplicates. However, the `n`
 ;; values become much larger with duplicates for obvious reasons. For small sets
 ;; and many operator applications, keeping duplicates is better. For large sets
 ;; and fewer operator applications, eliminating duplicates is better.
 
-;;; example 2.3.3 (sets as ordered lists)
+(Section :2.3.3.2 "Sets as ordered lists")
+
 (define (element-of-set? x set)
   (and (not (null? set))
        (<= (car set) x)
        (or (= (car set) x)
            (element-of-set? x (cdr set)))))
+
 (define (intersection-set set1 set2)
   (if (or (null? set1) (null? set2))
-    '()
-    (let ((x1 (car set1))
-          (x2 (car set2)))
-      (cond ((= x1 x2) (cons x1 (intersection-set (cdr set1) (cdr set2))))
-            ((< x1 x2) (intersection-set (cdr set1) set2))
-            ((< x2 x2) (intersection-set set1 (cdr set2)))))))
+      '()
+      (let ((x1 (car set1))
+            (x2 (car set2)))
+        (cond ((= x1 x2) (cons x1 (intersection-set (cdr set1) (cdr set2))))
+              ((< x1 x2) (intersection-set (cdr set1) set2))
+              (else (intersection-set set1 (cdr set2)))))))
 
-;;; ex 2.61
+(element-of-set? 2 '()) => #f
+(element-of-set? 2 '(2)) => #t
+(element-of-set? 2 '(1 2 3)) => #t
+
+(intersection-set '() '(1 2)) => '()
+(intersection-set '(1) '(1 2)) => '(1)
+(intersection-set '(2) '(1 2)) => '(2)
+(intersection-set '(1 2) '(1 2)) => '(1 2)
+
+(Exercise ?2.61)
+
 (define (adjoin-set x set)
-  (if (or (null? set) (<= x (car set)))
-    (cons x set)
-    (cons (car set)
-          (adjoin-set x (cdr set)))))
+  (cond ((null? set) (list x))
+        ((= x (car set)) set)
+        ((< x (car set)) (cons x set))
+        (else (cons (car set) (adjoin-set x (cdr set))))))
 
-;;; ex 2.62
+(adjoin-set 1 '()) => '(1)
+(adjoin-set 1 '(1)) => '(1)
+(adjoin-set 2 '(1)) => '(1 2)
+(adjoin-set 2 '(1 3)) => '(1 2 3)
+
+(Exercise ?2.62)
+
 (define (union-set set1 set2)
-  (if (or (null? set1) (null? set2))
-    '()
-    (let ((x1 (car set1))
-          (x2 (car set2)))
-      (if (< x1 x2)
-        (cons x1 (union-set (cdr set1) set2))
-        (cons x2 (union-set set1 (cdr set2)))))))
+  (cond ((null? set1) set2)
+        ((null? set2) set1)
+        (else
+          (let ((x1 (car set1))
+                (x2 (car set2)))
+            (cond ((= x1 x2) (cons x1 (union-set (cdr set1) (cdr set2))))
+                  ((< x1 x2) (cons x1 (union-set (cdr set1) set2)))
+                  (else (cons x2 (union-set set1 (cdr set2)))))))))
 
+(union-set '() '(1 2 3)) => '(1 2 3)
+(union-set '(1 2 3) '()) => '(1 2 3)
+(union-set '(1 2) '(2 3)) => '(1 2 3)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; example 2.3.3 (sets as binary trees)
 (define entry car)
 (define left-branch cadr)
