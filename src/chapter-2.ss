@@ -1924,21 +1924,21 @@ one-through-four => '(1 2 3 4)
 (union-set '(1 2 3) '()) => '(1 2 3)
 (union-set '(1 2) '(2 3)) => '(1 2 3)
 
-) ; end of SICP
-) ; end of library
-#|
-;;; example 2.3.3 (sets as binary trees)
+(Section :2.3.3.3 "Sets as binary trees")
+
+(define make-tree list)
 (define entry car)
 (define left-branch cadr)
 (define right-branch caddr)
-(define make-tree list)
+
 (define (element-of-set? x set)
   (and (not (null? set))
        (or (= x (entry set))
            (and (< x (entry set))
                 (element-of-set? x (left-branch set)))
-           (and (> x (entry-set))
+           (and (> x (entry set))
                 (element-of-set? x (right-branch set))))))
+
 (define (adjoin-set x set)
   (cond ((null? set) (make-tree x '() '()))
         ((= x (entry set)) set)
@@ -1951,50 +1951,74 @@ one-through-four => '(1 2 3 4)
                     (left-branch set)
                     (adjoin-set x (right-branch set))))))
 
-;;; ex 2.63
+(adjoin-set 1 '()) => '(1 () ())
+(adjoin-set 1 '(1 () ())) => '(1 () ())
+(adjoin-set 1 '(2 () (3 () ()))) => '(2 (1 () ()) (3 () ()))
+
+(element-of-set? 1 '()) => #f
+(element-of-set? 1 '(1 () ())) => #t
+(element-of-set? 1 '(2 (1 () ()) (3 () ()))) => #t
+
+(Exercise ?2.63
+  (use (:2.3.3.3 entry left-branch right-branch)))
+
 (define (tree->list-1 tree)
   (if (null? tree)
-    '()
-    (append (tree->list-1 (left-branch tree))
-            (cons (entry tree)
-                  (tree->list-1 (right-branch tree))))))
+      '()
+      (append (tree->list-1 (left-branch tree))
+              (cons (entry tree)
+                    (tree->list-1 (right-branch tree))))))
+
 (define (tree->list-2 tree)
   (define (copy-to-list tree result-list)
     (if (null? tree)
-      result-list
-      (copy-to-list
-        (left-branch tree)
-        (cons (entry tree)
-              (copy-to-list (right-branch tree)
-                            result-list)))))
+        result-list
+        (copy-to-list
+          (left-branch tree)
+          (cons (entry tree)
+                (copy-to-list (right-branch tree)
+                              result-list)))))
   (copy-to-list tree '()))
-(check
-  (define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
-  (define t2 '(4 (3 (1 () ()) (2 () ())) (5 () (6 () ()))))
-  (define t3 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
-  (define t4 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
-  (define t5 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
-  (tree->list-1 t1) => '(1 2 3 4 5 6)
-  (tree->list-2 t1) => '(1 2 3 4 5 6)
-  (tree->list-1 t2) => '(1 3 2 4 5 6)
-  (tree->list-2 t2) => '(1 3 2 4 5 6)
-  (tree->list-1 t3) => '(1 3 5 7 9 11)
-  (tree->list-2 t3) => '(1 3 5 7 9 11)
-  (tree->list-1 t4) => '(1 3 5 7 9 11)
-  (tree->list-1 t5) => '(1 3 5 7 9 11)
-  (tree->list-2 t5) => '(1 3 5 7 9 11))
+
+
+;; Unbalanced (t1) and balanced (t2) trees representing the set {1,2,3,4,5,6}.
+(define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
+(define t2 '(4 (2 (1 () ()) (3 () ())) (5 () (6 () ()))))
+
+;; Trees from Figure 2.16, representing the set {1,3,5,7,9,11}.
+(define t3 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
+(define t4 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
+(define t5 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
+
+(tree->list-1 t1)
+=> (tree->list-2 t1)
+=> (tree->list-1 t2)
+=> (tree->list-2 t2)
+=> '(1 2 3 4 5 6)
+
+(tree->list-1 t3)
+=> (tree->list-2 t3)
+=> (tree->list-1 t4)
+=> (tree->list-2 t4)
+=> (tree->list-1 t5)
+=> (tree->list-2 t5)
+=> '(1 3 5 7 9 11)
+
 ;; (a) Yes, the two procedures produce the same result for every tree. Also,
 ;; from this sample input, it seems that they always produce a sorted list,
 ;; which means that different trees (balanced or otherwise) representing the
-;; same set get transformed into the same list. The trees `t3`, `t4`, and `t5`
-;; and the trees from figure 2.16.
+;; same set get transformed into the same list.
+;;
 ;; (b) The second procedure performs one cons operation for each node of the
 ;; tree, so it has order of growth O(n). The first procedure uses `append`,
 ;; which is O(n). In the worst case, we would have n `append` steps for each of
-;; the n nodes, meaning O(n^2). However, the tree is balanced, so the number of
-;; `append` steps is cut in half on each recursive application. We have that for
-;; each of the n steps, and so the order of growth is O(n*log(n)).
+;; the n nodes, meaning O(n^2). However, assuming the tree is balanced, the
+;; number of `append` steps is cut in half on each recursive application. We
+;; have that for each of the n steps, and so the order of growth is O(n*log(n)).
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.64
 (define (list->tree elements)
   (car (partial-tree elements (length elements))))
