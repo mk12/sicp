@@ -2016,26 +2016,27 @@ one-through-four => '(1 2 3 4)
 ;; number of `append` steps is cut in half on each recursive application. We
 ;; have that for each of the n steps, and so the order of growth is O(n*log(n)).
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.64
+(Exercise ?2.64
+  (use (:2.3.3.3 make-tree)))
+
 (define (list->tree elements)
   (car (partial-tree elements (length elements))))
+
 (define (partial-tree elts n)
   (if (= n 0)
-    (cons '() elts)
-    (let* ((left-size (quotient (- n 1) 2))
-           (left-result (partial-tree elts left-size))
-           (left-tree (car left-result))
-           (non-left-elts (cdr left-result))
-           (this-entry (car non-left-elts))
-           (right-size (- n (+ left-size 1)))
-           (right-result (partial-tree (cdr non-left-elts) right-size))
-           (right-tree (car right-result))
-           (remaining-elts (cdr right-result)))
-      (cons (make-tree this-entry left-tree right-tree)
-            remaining-elts))))
+      (cons '() elts)
+      (let* ((left-size (quotient (- n 1) 2))
+             (left-result (partial-tree elts left-size))
+             (left-tree (car left-result))
+             (non-left-elts (cdr left-result))
+             (this-entry (car non-left-elts))
+             (right-size (- n (+ left-size 1)))
+             (right-result (partial-tree (cdr non-left-elts) right-size))
+             (right-tree (car right-result))
+             (remaining-elts (cdr right-result)))
+        (cons (make-tree this-entry left-tree right-tree)
+              remaining-elts))))
+
 ;; (a) The procedure `partial-tree` accepts a list `elts` and a number `n` as
 ;; arguments. It returns a new list which is like `elts` but has the first `n`
 ;; elements replaced by a tree representing that sublist. It does this by
@@ -2043,20 +2044,26 @@ one-through-four => '(1 2 3 4)
 ;; elements, then creating a tree with those subtrees (the `car` of the
 ;; recursive application) and with the middle value (the n/2th element of
 ;; `elts`) as the node value.
-;; This the tree produced by `(list->tree '(1 3 5 7 9 11))`:
+
+(list->tree '(1 3 5 7 9 11))
+=> '(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
 ;   5
 ;  / \
 ; 1  9
 ; \  /\
 ; 3 7 11
+
 ;; (b) The procedure `list->tree` only needs to visit each element in the list
 ;; once, and it applies cons for each one, so it has O(n) time complexity. Just
 ;; because it is tree-recursive does not imply O(n^2) or O(log(n)) or any other
 ;; specific order of growth.
 
-;;; ex 2.65
-;; The `tree->list` conversion, the union/intersection on ordered lists, and the
-;; `list->tree` conversion are all O(n), so combined they are still O(n).
+(Exercise ?2.65
+  (use (?2.63 tree->list-2) (?2.64 list->tree)))
+
+;; The `tree->list-2` conversion, the union/intersection on ordered lists, and
+;; the `list->tree` conversion are all O(n), so combined they are still O(n).
+
 (define (union-set set1 set2)
   (define (union-list l1 l2)
     (cond ((null? l1) l2)
@@ -2070,6 +2077,7 @@ one-through-four => '(1 2 3 4)
   (list->tree
     (union-list (tree->list-2 set1)
                 (tree->list-2 set2))))
+
 (define (intersection-set set1 set2)
   (define (intersection-list l1 l2)
     (cond ((null? l1) '())
@@ -2082,27 +2090,58 @@ one-through-four => '(1 2 3 4)
            (intersection-list l1 (cdr l2)))))
   (list->tree
     (intersection-list (tree->list-2 set1)
-                (tree->list-2 set2))))
+                       (tree->list-2 set2))))
 
-;;; example 2.3.3 (sets and info retrieval)
+(define t1 '(1 () ()))
+(define t2 '(2 () ()))
+(define t23 '(2 () (3 () ())))
+(define t123 '(2 (1 () ()) (3 () ())))
+
+(union-set '() t123) => t123
+(union-set t123 '()) => t123
+(union-set t123 t123) => t123
+(union-set t1 t23) => t123
+(union-set t2 t23) => t23
+(union-set t23 t123) => t123
+
+(intersection-set '() t123) => '()
+(intersection-set t123 '()) => '()
+(intersection-set t1 t123) => t1
+(intersection-set t2 t123) => t2
+(intersection-set t123 t123) => t123
+(intersection-set t23 t123) => t23
+
+(Section :2.3.3.4 "Sets and information retrieval")
+
 (define (lookup given-key set-of-records)
   (cond ((null? set-of-records) #f)
         ((equal? given-key (key (car set-of-records)))
          (car set-of-records))
         (else (lookup given-key (cdr set-of-records)))))
 
-;;; ex 2.66
+(define key car)
+
+(lookup 'c '((a flour) (b water) (c salt))) => '(c salt)
+
+(Exercise ?2.66
+  (use (:2.3.3.3 entry left-branch right-branch) (:2.3.3.4 key)))
+
 (define (lookup given-key set-of-records)
   (if (null? set-of-records)
-    #f
-    (let* ((record (entry set-of-records))
-           (rec-key (key record)))
-      (cond ((= given-key rec-key) record)
-            ((< given-key rec-key)
-             (lookup given-key (left-branch set-of-records)))
-            ((> given-key rec-key)
-             (lookup given-key (right-branch set-of-records)))))))
+      #f
+      (let* ((record (entry set-of-records))
+             (rec-key (key record)))
+        (cond ((= given-key rec-key) record)
+              ((< given-key rec-key)
+               (lookup given-key (left-branch set-of-records)))
+              ((> given-key rec-key)
+               (lookup given-key (right-branch set-of-records)))))))
 
+(lookup 3 '((2 water) ((1 flour) () ()) ((3 salt) () ()))) => '(3 salt)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; example 2.3.4 (representing huffman trees)
 (define (make-leaf symbol weight) (list 'leaf symbol weight))
 (define (leaf? object) (eq? (car object) 'leaf))
