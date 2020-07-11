@@ -2049,7 +2049,7 @@ one-through-four => '(1 2 3 4)
 => '(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
 ;   5
 ;  / \
-; 1  9
+; 1   9
 ; \  /\
 ; 3 7 11
 
@@ -2139,14 +2139,15 @@ one-through-four => '(1 2 3 4)
 
 (lookup 3 '((2 water) ((1 flour) () ()) ((3 salt) () ()))) => '(3 salt)
 
-) ; end of SICP
-) ; end of library
-#|
-;;; example 2.3.4 (representing huffman trees)
+(Section :2.3.4 "Example: Huffman Encoding Trees")
+
+;;; Representing Huffman trees
+
 (define (make-leaf symbol weight) (list 'leaf symbol weight))
 (define (leaf? object) (eq? (car object) 'leaf))
 (define symbol-leaf cadr)
 (define weight-leaf caddr)
+
 (define (make-code-tree left right)
   (list left
         right
@@ -2154,46 +2155,53 @@ one-through-four => '(1 2 3 4)
         (+ (weight left) (weight right))))
 (define left-branch car)
 (define right-branch cadr)
+
 (define (symbols tree)
   (if (leaf? tree)
-    (list (symbol-leaf tree))
-    (caddr tree)))
+      (list (symbol-leaf tree))
+      (caddr tree)))
 (define (weight tree)
   (if (leaf? tree)
-    (weight-leaf tree)
-    (cadddr tree)))
+      (weight-leaf tree)
+      (cadddr tree)))
 
-;;; example 2.3.4 (decoding proc)
-(define (choose-branch bit branch)
-  (cond ((= bit 0) (left-branch branch))
-        ((= bit 1) (right-branch branch))
-        (else (errorf 'choose-branch "Bit should be 0 or 1: ~s" bit))))
+;; The decoding procedure
+
 (define (decode bits tree)
   (define (decode-1 bits current-branch)
     (if (null? bits)
-      '()
-      (let ((next-branch (choose-branch (car bits) current-branch)))
-        (if (leaf? next-branch)
-          (cons (symbol-leaf next-branch)
-                (decode-1 (cdr bits) tree))
-          (decode-1 (cdr bits) next-branch)))))
+        '()
+        (let ((next-branch (choose-branch (car bits) current-branch)))
+          (if (leaf? next-branch)
+              (cons (symbol-leaf next-branch)
+                    (decode-1 (cdr bits) tree))
+              (decode-1 (cdr bits) next-branch)))))
   (decode-1 bits tree))
 
-;;; example 2.3.4 (sets of weighted elements)
+(define (choose-branch bit branch)
+  (cond ((= bit 0) (left-branch branch))
+        ((= bit 1) (right-branch branch))
+        (else (error 'choose-branch "bit should be 0 or 1" bit))))
+
+;;; Sets of weighted elements 
+
 (define (adjoin-set x set)
   (cond ((null? set) (list x))
         ((< (weight x) (weight (car set)))
          (cons x set))
         (else (cons (car set)
                     (adjoin-set x (cdr set))))))
+
 (define (make-leaf-set pairs)
   (if (null? pairs)
-    '()
-    (let ((pair (car pairs)))
-      (adjoin-set (make-leaf (car pair) (cadr pair))
-                  (make-leaf-set (cdr pairs))))))
+      '()
+      (let ((pair (car pairs)))
+        (adjoin-set (make-leaf (car pair) (cadr pair))
+                    (make-leaf-set (cdr pairs))))))
 
-;;; ex 2.67
+(Exercise ?2.67
+  (use (:2.3.4 decode make-code-tree make-leaf)))
+
 (define sample-tree
   (make-code-tree (make-leaf 'A 4)
                   (make-code-tree
@@ -2202,55 +2210,78 @@ one-through-four => '(1 2 3 4)
                       (make-leaf 'D 1)
                       (make-leaf 'C 1)))))
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
-(check
-  (decode sample-message sample-tree) => '(A D A B B C A))
 
-;;; ex 2.68
+(decode sample-message sample-tree) => '(A D A B B C A)
+
+(Exercise ?2.68
+  (use (:2.3.4 leaf? left-branch right-branch symbols)
+       (?2.67 sample-message sample-tree)))
+
 (define (encode message tree)
   (if (null? message)
-    '()
-    (append (encode-symbol (car message) tree)
-            (encode (cdr message) tree))))
+      '()
+      (append (encode-symbol (car message) tree)
+              (encode (cdr message) tree))))
+
 (define (encode-symbol symbol tree)
   (cond ((leaf? tree) '())
         ((element-of-set? symbol (symbols (left-branch tree)))
          (cons 0 (encode-symbol symbol (left-branch tree))))
         ((element-of-set? symbol (symbols (right-branch tree)))
          (cons 1 (encode-symbol symbol (right-branch tree))))
-        (else (error "symbol not in tree: ENCODE-SYMBOL" symbol))))
+        (else (error 'encode-symbol "symbol not in tree" symbol))))
+
 (define (element-of-set? x set)
   (and (not (null? set))
        (or (eq? x (car set))
            (element-of-set? x (cdr set)))))
-(check
-  (encode '(A D A B B C A) sample-tree) => sample-message)
 
-;;; ex 2.69
+(encode '(A D A B B C A) sample-tree) => sample-message
+
+(Exercise ?2.69
+  (use (:2.3.4 make-code-tree make-leaf-set) (?2.38 fold-left)
+       (?2.68 encode-symbol)))
+
 (define (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
+
 (define (successive-merge set)
   (fold-left make-code-tree (car set) (cdr set)))
 
-;;; ex 2.70
+(define abcd-tree (generate-huffman-tree '((A 5) (B 10) (C 2) (D 1))))
+(encode-symbol 'A abcd-tree) => '(0 1)
+(encode-symbol 'B abcd-tree) => '(1)
+(encode-symbol 'C abcd-tree) => '(0 0 1)
+(encode-symbol 'D abcd-tree) =>  '(0 0 0)
+
+(Exercise ?2.70
+  (use (?2.68 encode) (?2.69 generate-huffman-tree)))
+
 (define rock-tree
   (generate-huffman-tree
     '((a 2) (get 2) (sha 3) (wah 1) (boom 1) (job 2) (na 16) (yip 9))))
+
 (define song
   '(get a job sha na na na na na na na na
     get a job sha na na na na na na na na
     wah yip yip yip yip yip yip yip yip yip
     sha boom))
-(check
-  (encode song rock-tree)
-  => '(0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0
-       0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
-       1 0 1 0 0 1 0 0 0 0 0 0 0))
+
+(define encoded-song (encode song rock-tree))
+(length encoded-song) => 87
+encoded-song
+=> '(0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0
+     0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+     1 0 1 0 0 1 0 0 0 0 0 0 0)
+
 ;; The encoding requires 87 bits. There are eight symbols, so a fixed-length
 ;; code would require log(8)/log(2) = 3 bits per symbol. The song has a total of
 ;; 36 symbols, so the fixed-length coded message would need at least 108 bits.
 ;; The variable-length encoding saves about 19% storage.
 
-;;; ex 2.71
+(Exercise ?2.71
+  (use (?2.68 encode-symbol) (?2.69 generate-huffman-tree)))
+
 ;; We have a Huffman tree for an alphabet of n symbols. The relative frequency
 ;; of the nth symbol is 2^(n-1). For n = 5, we have the following tree:
 ;         *
@@ -2269,17 +2300,36 @@ one-through-four => '(1 2 3 4)
 ;; In general, the most frequent symbol requires one bit and the least frequent
 ;; symbol requires n-1 bits.
 
-;;; ex 2.72
+(define (alphabet-frequencies n)
+  (define (helper i)
+    (if (> i n)
+        '()
+        (cons (list i (expt 2 (- n i))) (helper (+ i 1)))))
+  (helper 1))
+
+(alphabet-frequencies 5)
+=> '((1 16) (2 8) (3 4) (4 2) (5 1))
+
+(define n (+ 1 (random 25)))
+(define tree (generate-huffman-tree (alphabet-frequencies n)))
+(length (encode-symbol 1 tree)) => 1
+(length (encode-symbol n tree)) => (- n 1)
+
+(Exercise ?2.72)
+
 ;; The number of steps required to encode the most frequent symbol in the
 ;; alphabet of n symbols with `encode-symbol` grows as O(n). The procedure only
 ;; looks down one branch, and so it must apply the procedure `element-of-set?`
-;; once. This procedure has linear time complexity with resepct to the number of
+;; once. This procedure has linear time complexity with respect to the number of
 ;; elements in the set, since it is represented as an unordered list. For the
 ;; least frequent symbol, the number of steps grows as O(n^2). At each of n
 ;; nodes through the depth of the tree, we have at most n comparisons when
 ;; checking if the symbol is in the set. (If the tree were balanced, it would be
 ;; Θ(n*log(n)), but we didn't talk about that at all for Huffman trees.)
 
+) ; end of SICP
+) ; end of library
+#|
 (Section :2.4 "Multiple representations for abstract data")
 
 ;;; ssec 2.4.1 (representations for complex numbers)

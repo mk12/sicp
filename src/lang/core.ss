@@ -135,6 +135,13 @@
     (syntax-rules ()
       ((_ e) (if (slow-enabled?) e (skip-slow-test)))))
 
+  ;; Like hashtable-ref, but fails if the key is not present.
+  (define (hashtable-ref-must table key)
+    (let ((val (hashtable-ref table key #f)))
+      (if (and (eq? val #f) (not (hashtable-contains? table key)))
+          (error 'hashtable-ref-must "key not found" key)
+          val)))
+
   ;; An entry stores code from a part of the textbook. It consists of a unique
   ;; symbol `id`, a kind ('Chapter, 'Section, or 'Exercise), a string `num`
   ;; containing a dotted chapter/section/etc. number like "1.2.3", a title
@@ -213,7 +220,7 @@
       (unless (queue-empty? q)
         (let* ((e (queue-pop-front! q))
                (deps (map (lambda (import-list)
-                            (hashtable-ref by-id (car import-list) #f))
+                            (hashtable-ref-must by-id (car import-list)))
                           (entry-imports e))))
           (hashtable-set! in-degrees e 0)
           (for-each
@@ -227,7 +234,7 @@
       (lambda (e)
         (for-each
           (lambda (import-list)
-            (let ((d (hashtable-ref by-id (car import-list) #f)))
+            (let ((d (hashtable-ref-must by-id (car import-list))))
               (when (hashtable-contains? in-degrees d)
                 (hashtable-update! in-degrees d (lambda (x) (+ x 1)) #f))))
           (entry-imports e)))
@@ -263,8 +270,8 @@
           (set! sorted (cons node sorted))
           (for-each
             (lambda (import-list)
-              (let* ((e (hashtable-ref by-id (car import-list) #f))
-                     (deg (hashtable-ref in-degrees e #f))
+              (let* ((e (hashtable-ref-must by-id (car import-list)))
+                     (deg (hashtable-ref-must in-degrees e))
                      (new-deg (- deg 1)))
                 (hashtable-set! in-degrees e new-deg)
                 (when (zero? new-deg)
@@ -312,10 +319,10 @@
     (define results (make-eq-hashtable))
     (define (gather-args importer)
       (define (gather import-list)
-        (let* ((exporter (hashtable-ref by-id (car import-list) #f))
+        (let* ((exporter (hashtable-ref-must by-id (car import-list)))
                (import-names (cdr import-list))
                (export-names (entry-exports exporter))
-               (export-values (hashtable-ref results exporter #f)))
+               (export-values (hashtable-ref-must results exporter)))
           (define (find-value name)
             (let loop ((en export-names)
                        (ev export-values))
