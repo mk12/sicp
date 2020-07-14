@@ -2327,12 +2327,11 @@ encoded-song
 ;; checking if the symbol is in the set. (If the tree were balanced, it would be
 ;; Θ(n*log(n)), but we didn't talk about that at all for Huffman trees.)
 
-) ; end of SICP
-) ; end of library
-#|
-(Section :2.4 "Multiple representations for abstract data")
+(Section :2.4 "Multiple Representations for Abstract Data")
 
-;;; ssec 2.4.1 (representations for complex numbers)
+(Section :2.4.1 "Representations for Complex Numbers"
+  (use (:1.1.4 square)))
+
 (define (add-complex z1 z2)
   (make-from-real-imag
     (+ (real-part z1) (real-part z2))
@@ -2349,6 +2348,7 @@ encoded-song
   (make-from-mag-ang
     (/ (magnitude z1) (magnitude z2))
     (- (angle z1) (angle z2))))
+
 ;; Ben's representation (rectangular form)
 (define real-part car)
 (define imag-part cdr)
@@ -2360,6 +2360,14 @@ encoded-song
 (define make-from-real-imag cons)
 (define (make-from-mag-ang r a)
   (cons (* r (cos a)) (* r (sin a))))
+
+;; Rectangular form can give exact answers for addition and subtraction.
+(define z1 (add-complex (make-from-real-imag 5 1) (make-from-real-imag 6 2)))
+(define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
+z1 => (make-from-real-imag 11 3)
+(magnitude z2) ~> 30
+(angle z2) ~> 3
+
 ;; Alyssa's representation (polar form)
 (define (real-part z) (* (magnitude z) (cos (angle z))))
 (define (imag-part z) (* (magnitude z) (sin (angle z))))
@@ -2370,19 +2378,29 @@ encoded-song
         (atan b a)))
 (define make-from-mag-ang cons)
 
-;;; ssec 2.4.2 (tagged data)
+;; Polar form can give exact answers for multiplication and division.
+(define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
+(define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
+(real-part z1) ~> 4
+(imag-part z1) ~> 6
+z2 => (make-from-mag-ang 30 3)
+
+(Section :2.4.2 "Tagged data"
+  (use (:1.1.4 square)))
+
 (define (attach-tag type-tag contents)
   (cons type-tag contents))
 (define (type-tag datum)
   (if (pair? datum)
-    (car datum)
-    (errorf 'type-tag "Bad tagged datum: ~s" datum)))
+      (car datum)
+      (error 'type-tag "bad tagged datum" datum)))
 (define (contents datum)
   (if (pair? datum)
-    (cdr datum)
-    (errorf 'contents "Bad tagged datum: ~s" datum)))
+      (cdr datum)
+      (error 'contents "bad tagged datum" datum)))
 (define (rectangular? z) (eq? (type-tag z) 'rectangular))
 (define (polar? z) (eq? (type-tag z) 'polar))
+
 ;; Ben's representation (rectangular form)
 (define real-part-rectangular car)
 (define imag-part-rectangular cdr)
@@ -2398,6 +2416,7 @@ encoded-song
   (attach-tag 'rectangular
               (cons (* r (cos a))
                     (* r (sin a)))))
+
 ;; Alyssa's representation (polar form)
 (define (real-part-polar z)
   (* (magnitude-polar z) (cos (angle-polar z))))
@@ -2411,36 +2430,64 @@ encoded-song
                     (atan b a))))
 (define (make-from-mag-ang-polar r a)
   (attach-tag 'polar (cons r a)))
-;; generic selectors
+
+;; Generic selectors
 (define (real-part z)
   (cond ((rectangular? z)
          (real-part-rectangular (contents z)))
         ((polar? z)
          (real-part-polar (contents z)))
-        (else (errorf 'real-part "Unknown type: ~s" z))))
+        (else (error 'real-part "unknown type" z))))
 (define (imag-part z)
   (cond ((rectangular? z)
          (imag-part-rectangular (contents z)))
         ((polar? z)
          (imag-part-polar (contents z)))
-        (else (errorf 'imag-part "Unknown type: ~s" z))))
+        (else (error 'imag-part "unknown type" z))))
 (define (magnitude z)
   (cond ((rectangular? z)
          (magnitude-rectangular (contents z)))
         ((polar? z)
          (magnitude-polar (contents z)))
-        (else (errorf 'magnitude "Unknown type: ~s" z))))
+        (else (error 'magnitude "unknown type" z))))
 (define (angle z)
   (cond ((rectangular? z)
          (angle-rectangular (contents z)))
         ((polar? z)
          (angle-polar (contents z)))
-        (else (errorf 'angle "Unknown type: ~s" z))))
-;; generic constructors
-(define make-from-real-imag make-from-real-imag-rectangular)
-(define make-from-mag-and make-from-mag-ang-polar)
-;; add, sub, mul, div are the same as 2.4.1
+        (else (error 'angle "unknown type" z))))
 
+;; Generic constructors
+(define make-from-real-imag make-from-real-imag-rectangular)
+(define make-from-mag-ang make-from-mag-ang-polar)
+
+;; Generic operators (same code as in Section 2.4.1)
+(define (add-complex z1 z2)
+  (make-from-real-imag
+    (+ (real-part z1) (real-part z2))
+    (+ (imag-part z1) (imag-part z2))))
+(define (sub-complex z1 z2)
+  (make-from-real-imag
+    (- (real-part z1) (real-part z2))
+    (- (imag-part z1) (imag-part z2))))
+(define (mul-complex z1 z2)
+  (make-from-mag-ang
+    (* (magnitude z1) (magnitude z2))
+    (+ (angle z1) (angle z2))))
+(define (div-complex z1 z2)
+  (make-from-mag-ang
+    (/ (magnitude z1) (magnitude z2))
+    (- (angle z1) (angle z2))))
+
+;; Now we can get exact answers for all operations:
+(define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
+(define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
+z1 => (make-from-real-imag 4 6)
+z2 => (make-from-mag-ang 30 3)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 2.4.3 (data-directed programming & additivity)
 (define (install-rectangular-package)
   (define real-part car)
