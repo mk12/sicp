@@ -2488,8 +2488,10 @@ z2 => (make-from-mag-ang 30 3)
 ) ; end of SICP
 ) ; end of library
 #|
-;;; ssec 2.4.3 (data-directed programming & additivity)
+(Section :2.4.3 "Data-Directed Programming and Additivity")
+
 (define (install-rectangular-package)
+  ;; internal procedures
   (define real-part car)
   (define imag-part cdr)
   (define make-from-real-imag cons)
@@ -2500,6 +2502,8 @@ z2 => (make-from-mag-ang 30 3)
     (atan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
+
+  ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
   (put 'imag-part '(rectangular) imag-part)
@@ -2510,7 +2514,9 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
+
 (define (install-polar-package)
+  ;; internal procedures
   (define magnitude car)
   (define angle cdr)
   (define make-from-mag-ang cons)
@@ -2521,6 +2527,8 @@ z2 => (make-from-mag-ang 30 3)
   (define (make-from-real-imag a b)
     (cons (sqrt (+ (square a) (square b)))
           (atan b a)))
+
+  ;; interface to the rest of the system
   (define (tag x) (attach-tag 'polar x))
   (put 'real-part '(polar) real-part)
   (put 'imag-part '(polar) imag-part)
@@ -2531,12 +2539,14 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
+
 (define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
     (if proc
-      (apply proc (map contents args))
-      (errorf 'apply-generic "No method '~s for types '~s" op type-tags))))
+        (apply proc (map contents args))
+        (error 'apply-generic "no method for types" op type-tags))))
+
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))

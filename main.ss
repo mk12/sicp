@@ -6,7 +6,8 @@
         (only (src compat active) format seed-rng)
         (only (src lang core) run-sicp)
         (src chapter-1)
-        (src chapter-2))
+        (src chapter-2)
+        (src chapter-3))
 
 (define (usage program)
   (format "\
@@ -66,6 +67,7 @@ options:
 (define (run filters slow verbose color)
   chapter-1-effects
   chapter-2-effects
+  chapter-3-effects
   (unless (run-sicp filters slow verbose color)
     (exit 1)))
 
