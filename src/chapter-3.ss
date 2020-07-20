@@ -57,7 +57,6 @@
 (W2 40) => "Insufficient funds"
 (W1 40) => 10
 
-
 (define (make-account balance)
   (define (withdraw amount)
     (if (>= balance amount)
@@ -90,10 +89,8 @@
 (A 10) => 15
 (A 10) => 25
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.2
+(Exercise ?3.2)
+
 (define (make-monitored f)
   (let ((n-calls 0))
     (lambda (x)
@@ -101,85 +98,92 @@
             ((eq? x 'reset-count) (set! n-calls 0))
             (else (set! n-calls (+ n-calls 1))
                   (f x))))))
-(check
-  (define s (make-monitored sqrt))
-  (s 100) => 10
-  (s 'how-many-calls?) => 1
-  (s 25) => 5
-  (s 'how-many-calls?) => 2
-  (s 'reset-count)
-  (s 'how-many-calls?) => 0)
 
-;;; ex 3.3
+(define s (make-monitored sqrt))
+(s 100) => 10
+(s 'how-many-calls?) => 1
+(s 25) => 5
+(s 'how-many-calls?) => 2
+(s 'reset-count)
+(s 'how-many-calls?) => 0
+
+(Exercise ?3.3)
+
 (define (make-account balance password)
   (define (withdraw amount)
     (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)))
+        (begin (set! balance (- balance amount))
+               balance)))
   (define (deposit amount)
     (set! balance (+ balance amount))
     balance)
   (define (dispatch p m)
     (if (eq? p password)
-      (cond ((eq? m 'withdraw) withdraw)
-            ((eq? m 'deposit) deposit)
-            (else (errorf 'dispatch "Unknown request: ~s" m)))
-      (lambda (_) "Incorrect password")))
+        (cond ((eq? m 'withdraw) withdraw)
+              ((eq? m 'deposit) deposit)
+              (else (error 'make-account "unknown request" m)))
+        (lambda (_) "Incorrect password")))
   dispatch)
-(check
-  (define acc (make-account 100 'secret-password))
-  ((acc 'secret-password 'withdraw) 40) => 60
-  ((acc 'some-other-password 'deposit) 50) => "Incorrect password")
 
-;;; ex 3.4
+(define acc (make-account 100 'secret-password))
+((acc 'secret-password 'withdraw) 40) => 60
+((acc 'some-other-password 'deposit) 50) => "Incorrect password"
+
+(Exercise ?3.4)
+
 (define (make-account balance password)
   (define (withdraw amount)
     (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)))
+        (begin (set! balance (- balance amount))
+               balance)))
   (define (deposit amount)
     (set! balance (+ balance amount))
     balance)
   (let ((consecutive-wrong 0))
     (define (dispatch p m)
       (if (eq? p password)
-        (cond ((eq? m 'withdraw) withdraw)
-              ((eq? m 'deposit) deposit)
-              (else (error "Unknown request: MAKE-ACCOUNT" m)))
-        (lambda (_)
-          (set! consecutive-wrong (+ consecutive-wrong 1))
-          (if (> consecutive-wrong 7)
-            (call-the-cops)
-            "Incorrect password"))))
+          (cond ((eq? m 'withdraw) withdraw)
+                ((eq? m 'deposit) deposit)
+                (else (error 'make-account "unknown request" m)))
+          (lambda (_)
+            (set! consecutive-wrong (+ consecutive-wrong 1))
+            (if (> consecutive-wrong 7)
+                (call-the-cops)
+                "Incorrect password"))))
     dispatch))
-(define (call-the-cops) "PUT YOUR HANDS UP!")
-(check
-  (define acc (make-account 'right 100))
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-  ((acc 'wrong 'withdraw) 100) => "PUT YOUR HANDS UP!")
 
-;;; ssec 3.1.2 (benefits of assignment)
-(define random-init 1)
+(define (call-the-cops) "PUT YOUR HANDS UP!")
+
+(define acc (make-account 'right 100))
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "Incorrect password"
+((acc 'wrong 'withdraw) 100) => "PUT YOUR HANDS UP!"
+
+(Section :3.2.1 "The Benefits of Introducing Assignment")
+
 ;; Tausworthe PRNG: https://stackoverflow.com/a/23875298
+(define random-init 1)
 (define (rand-update x0)
-  (let* ((x1 (fxlogxor x0 (fxsrl x0 13)))
-         (x2 (fxlogxor x1 (fxsll x1 18))))
-     (logand x2 #x7fffffff)))
+  (let* ((x1 (fxxor x0 (fxarithmetic-shift-right x0 13)))
+         (x2 (fxxor x1 (fxarithmetic-shift-left x1 18))))
+     (fxand x2 #x7fffffff)))
+
 (define rand
   (let ((x random-init))
     (lambda ()
       (set! x (rand-update x))
       x)))
+
 (define (estimate-pi trials)
   (sqrt (/ 6 (monte-carlo trials cesaro-test))))
 (define (cesaro-test)
   (= (gcd (rand) (rand)) 1))
+
 (define (monte-carlo trials experiment)
   (define (iter trials-remaining trials-passed)
     (cond ((= trials-remaining 0)
@@ -191,23 +195,29 @@
                       trials-passed))))
   (iter trials 0))
 
-;;; ex 3.5
+(Exercise ?3.5
+  (use (:1.1.4 square) (:3.2.1 monte-carlo rand)))
+
 (define (random-in-range low high)
   (let ((range (- high low)))
-    (+ low (* range (random-real)))))
+    (+ low (random range))))
+
 (define (estimate-integral pred x1 x2 y1 y2 trials)
   (let ((test (lambda ()
                 (pred (random-in-range x1 x2)
                       (random-in-range y1 y2)))))
-  (* (monte-carlo trials test)
-     (- x2 x1)
-     (- y2 y1))))
+    (* (monte-carlo trials test)
+       (- x2 x1)
+       (- y2 y1))))
+
 (define (estimate-pi trials)
   (let ((pred (lambda (x y)
                 (<= (+ (square x) (square y)) 1))))
     (estimate-integral pred -1 1 -1 1 trials)))
 
-;;; ex 3.6
+(Exercise ?3.6
+  (use (:3.2.1 random-init rand-update)))
+
 (define rand
   (let ((x random-init))
     (lambda (message)
@@ -217,8 +227,15 @@
             ((eq? message 'reset)
              (lambda (new-x)
                (set! x new-x)))
-            (else (errorf 'rand "message not recognized: ~s" message))))))
+            (else (error 'rand "message not recognized" message))))))
 
+(number? (rand 'generate)) => #t
+(rand 'reset)
+(number? (rand 'generate)) => #t
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.7
 (define (make-joint pp-acc password new-password)
   (lambda (p m)
