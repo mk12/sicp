@@ -233,17 +233,98 @@
 (rand 'reset)
 (number? (rand 'generate)) => #t
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.7
+(Section :3.1.3 "The Costs of Introducing Assignment")
+
+(define (make-simplified-withdraw balance)
+  (lambda (amount)
+    (set! balance (- balance amount))
+    balance))
+(define W (make-simplified-withdraw 25))
+(W 20) => 5
+(W 10) => -5
+
+(define (make-decrementer balance)
+  (lambda (amount)
+    (- balance amount)))
+(define D (make-decrementer 25))
+(D 20) => 5
+(D 10) => 15
+
+;; Substitution analysis of `make-decrementer`:
+((make-decrementer 25) 20)
+=> ((lambda (amount) (- 25 amount)) 20)
+=> (- 25 20)
+=> 5
+
+;; Faulty substitution analysis of `make-simplified-withdraw`:
+(define balance)
+((make-simplified-withdraw 25) 20) => 5
+; =>
+((lambda (amount) (set! balance (- 25 amount)) 25) 20)
+=> (begin (set! balance (- 25 20)) 25)
+=> 25
+
+(Section :3.1.3.1 "Sameness and change"
+  (use (:3.1.1 make-account)
+       (:3.1.3 make-decrementer make-simplified-withdraw)))
+
+;; `D1` and `D2` are the same.
+(define D1 (make-decrementer 25))
+(define D2 (make-decrementer 25))
+(D1 20) => (D2 20) => (D1 20) => (D2 20)
+
+;; `W1` and `W2` are surely not the same.
+(define W1 (make-simplified-withdraw 25))
+(define W2 (make-simplified-withdraw 25))
+(W1 20) => 5
+(W1 20) => -15
+(W2 20) => 5
+
+;; Distinct accounts:
+(define peter-acc (make-account 100))
+(define paul-acc (make-account 100))
+((peter-acc 'withdraw) 25) => 75
+((paul-acc 'withdraw) 25) => 75
+
+;; Joint account:
+(define peter-acc (make-account 100))
+(define paul-acc peter-acc)
+((peter-acc 'withdraw) 25) => 75
+((paul-acc 'withdraw) 25) => 50
+
+(Section :3.1.3.2 "Pitfalls of imperative programming"
+  (use (:1.2.1 factorial)))
+
+(define (imperative-factorial n)
+  (let ((product 1)
+        (counter 1))
+    (define (iter)
+      (if (> counter n)
+          product
+          (begin (set! product (* counter product))
+                 (set! counter (+ counter 1))
+                 (iter))))
+    (iter)))
+
+(imperative-factorial 10) => (factorial 10)
+
+(Exercise ?3.7
+  (use (?3.3 make-account)))
+
 (define (make-joint pp-acc password new-password)
   (lambda (p m)
-    (if (eq? p new-password)
-      (pp-acc password m)
-      (error 'make-joint "Incorrect password"))))
+    (pp-acc (if (eq? p new-password) password #f) m)))
 
-;;; ex 3.8
+(define peter-acc (make-account 100 'open-sesame))
+(define paul-acc (make-joint peter-acc 'open-sesame 'rosebud))
+((peter-acc 'rosebud 'withdraw) 10) => "Incorrect password"
+((paul-acc 'open-sesame 'withdraw) 10) => "Incorrect password"
+((peter-acc 'open-sesame 'withdraw) 10) => 90
+((paul-acc 'rosebud 'withdraw) 10) => 80
+((peter-acc 'open-sesame 'withdraw) 10) => 70
+
+(Exercise ?3.8)
+
 (define f
   (let ((x 0))
     (lambda (y)
@@ -251,6 +332,13 @@
         (set! x y)
         old-x))))
 
+(let ((result (+ (f 0) (f 1))))
+  (or (= result 0) (= result 1)))
+=> #t
+
+) ; end of SICP
+) ; end of library
+#|
 ;;;;; Section 3.2: The environment model of evaluation
 
 ;;; ex 3.9

@@ -2310,10 +2310,14 @@ encoded-song
 (alphabet-frequencies 5)
 => '((1 16) (2 8) (3 4) (4 2) (5 1))
 
-(define n (+ 1 (random 25)))
+(define n (+ 2 (random 25)))
 (define tree (generate-huffman-tree (alphabet-frequencies n)))
 (length (encode-symbol 1 tree)) => 1
 (length (encode-symbol n tree)) => (- n 1)
+
+;; Special case: when n = 1, it takes n - 1 = 0 bits, not 1 bit:
+(define tree (generate-huffman-tree (alphabet-frequencies 1)))
+(encode-symbol 1 tree) => '()
 
 (Exercise ?2.72)
 
