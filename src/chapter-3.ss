@@ -657,61 +657,73 @@ z2 => '((a b) a b)
 ;     |        |
 ;     +-> wow  +-> b
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.16
+(Exercise ?3.16)
+
 (define (count-pairs x)
   (if (not (pair? x))
-    0
-    (+ (count-pairs (car x))
-       (count-pairs (cdr x))
-       1)))
-;; The procedure `count-pairs` is wrong because it assumes there is no sharing.
-;; All of the lists named `three-N` consist of three pairs, but `count-pairs`
-;; thinks that they have `N` pairs.
-(define p (cons 'a '())) ; a single pair
-(define three-3 (cons 'a (cons 'a (cons 'a '())))) ; three pairs
-(define three-4 (cons 'a (cons p p))) ; two pairs + p = three pairs
-(define ab (cons 'a (cons 'b '()))) ; two pairs
-(define three-5 (cons ab ab)) ; one pair + ab = three pairs
-(define aa (cons p p)) ; one pair + p = two pairs
-(define three-7 (cons aa aa)) ; one pair + aa = three pairs
-(check
-  (count-pairs three-3) => 3
-  (count-pairs three-4) => 4
-  (count-pairs three-5) => 5
-  (count-pairs three-7) => 7)
+      0
+      (+ (count-pairs (car x))
+         (count-pairs (cdr x))
+         1)))
 
-;;; ex 3.17
+;; The procedure `count-pairs` is wrong because it assumes there is no sharing.
+;; The lists below named `N-M` have `N` pairs, but they use sharing so that
+;; `count-pairs` think they have `M` pairs.
+
+(define one-1 (cons 'a '()))
+(define two-2 (cons 'a (cons 'b '())))
+(define two-3 (cons one-1 one-1))
+(define three-3 (cons 'a (cons 'a (cons 'a '()))))
+(define three-4 (cons 'a (cons one-1 one-1)))
+(define three-5 (cons two-2 two-2))
+(define three-7 (cons two-3 two-3))
+
+(count-pairs one-1) => 1
+(count-pairs two-2) => 2
+(count-pairs two-3) => 3
+(count-pairs three-3) => 3
+(count-pairs three-4) => 4
+(count-pairs three-5) => 5
+(count-pairs three-7) => 7
+
+(Exercise ?3.17
+  (use (:2.3.1 memq) (?3.16 one-1 two-2 two-3 three-3 three-4 three-5 three-7)))
+
 (define (count-pairs x)
   (let ((seen '()))
     (define (iter x)
       (if (or (not (pair? x)) (memq x seen))
-        0
-        (begin (set! seen (cons x seen))
-               (+ (iter (car x))
-                  (iter (cdr x))
-                  1))))
+          0
+          (begin (set! seen (cons x seen))
+                 (+ (iter (car x))
+                    (iter (cdr x))
+                    1))))
     (iter x)))
-(check
-  (count-pairs three-3) => 3
-  (count-pairs three-4) => 3
-  (count-pairs three-5) => 3
-  (count-pairs three-7) => 3)
 
-;;; ex 3.18
+(count-pairs one-1) => 1
+(count-pairs two-2) => 2
+(count-pairs two-3) => 2
+(count-pairs three-3) => 3
+(count-pairs three-4) => 3
+(count-pairs three-5) => 3
+(count-pairs three-7) => 3
+
+(Exercise ?3.18
+  (use (:2.3.1 memq) (?3.13 make-cycle)))
+
 (define (cycle? ls)
   (define (iter ls seen)
     (and (pair? ls)
          (or (memq ls seen)
              (iter (cdr ls) (cons ls seen)))))
-  (bool (iter ls '())))
-(check
-  (cycle? (list 1 2 3)) => #f
-  (cycle? (make-cycle (list 1 2 3))) => #t)
+  (if (iter ls '()) #t #f))
 
-;;; ex 3.19
+(cycle? (list 1 2 3)) => #f
+(cycle? (make-cycle (list 1 2 3))) => #t
+
+(Exercise ?3.19
+  (use (?3.13 make-cycle)))
+
 ;; This is Floyd's cycle-finding algorithm (the tortoise and the hare).
 (define (cycle? ls)
   (define (iter t h)
@@ -721,12 +733,13 @@ z2 => '((a b) a b)
              (iter (cdr t) (cddr h)))))
   (and (pair? ls)
        (iter ls (cdr ls))))
-(check
-  (cycle? (list 1 2 3)) => #f
-  (cycle? (make-cycle (list 1 2 3))) => #t)
 
-;;; ssec 3.3.1 (mutation is just assignment)
-(define (my-cons x y)
+(cycle? (list 1 2 3)) => #f
+(cycle? (make-cycle (list 1 2 3))) => #t
+
+(Section :3.3.1.2 "Mutation is just assignment")
+
+(define (cons x y)
   (define (set-x! v) (set! x v))
   (define (set-y! v) (set! y v))
   (define (dispatch m)
@@ -734,19 +747,30 @@ z2 => '((a b) a b)
           ((eq? m 'cdr) y)
           ((eq? m 'set-car!) set-x!)
           ((eq? m 'set-cdr!) set-y!)
-          (else (errorf 'dispatch "Undefined operation: ~s" m))))
+          (else (error 'cons "undefined operation" m))))
   dispatch)
-(define (my-car p) (p 'car))
-(define (my-cdr p) (p 'cdr))
-(define (my-set-car! p v) ((p 'set-car!) v) p)
-(define (my-set-cdr! p v) ((p 'set-cdr!) v) p)
 
-;;; ex 3.20
-(check
-  (define x (my-cons 1 2))
-  (define z (my-cons x x))
-  (my-set-car! (my-cdr z) 17)
-  (my-car x) => 17)
+(define (car p) (p 'car))
+(define (cdr p) (p 'cdr))
+(define (set-car! p v) ((p 'set-car!) v) p)
+(define (set-cdr! p v) ((p 'set-cdr!) v) p)
+
+(define z (cons 'a 'b))
+(car z) => 'a
+(cdr z) => 'b
+(set-car! z 'c)
+(car z) => 'c
+(set-cdr! z 'd)
+(cdr z) => 'd
+
+(Exercise ?3.20
+  (use (:3.3.1.2 cons car cdr set-car!)))
+
+(define x (cons 1 2))
+(define z (cons x x))
+(set-car! (cdr z) 17)
+(car x) => 17
+
 ;; Following the arrows in the environment diagram below, we see that the `cdr`
 ;; of `z` is the same pair pointed to by `x`. By changing the `car` of this pair
 ;; to 17, we change `x` from `(1 2)` to `(17 2)`.
@@ -769,6 +793,9 @@ z2 => '((a b) a b)
 ; paramters: m   }<-+
 ;      body: ... }
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 3.3.2 (representing queues)
 (define front-ptr car)
 (define rear-ptr cdr)
