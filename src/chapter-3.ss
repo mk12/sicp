@@ -164,7 +164,7 @@
 ((acc 'wrong 'withdraw) 100) => "Incorrect password"
 ((acc 'wrong 'withdraw) 100) => "PUT YOUR HANDS UP!"
 
-(Section :3.2.1 "The Benefits of Introducing Assignment")
+(Section :3.1.2 "The Benefits of Introducing Assignment")
 
 ;; Tausworthe PRNG: https://stackoverflow.com/a/23875298
 (define random-init 1)
@@ -196,7 +196,7 @@
   (iter trials 0))
 
 (Exercise ?3.5
-  (use (:1.1.4 square) (:3.2.1 monte-carlo rand)))
+  (use (:1.1.4 square) (:3.1.2 monte-carlo rand)))
 
 (define (random-in-range low high)
   (let ((range (- high low)))
@@ -216,7 +216,7 @@
     (estimate-integral pred -1 1 -1 1 trials)))
 
 (Exercise ?3.6
-  (use (:3.2.1 random-init rand-update)))
+  (use (:3.1.2 random-init rand-update)))
 
 (define rand
   (let ((x random-init))
@@ -336,41 +336,85 @@
   (or (= result 0) (= result 1)))
 => #t
 
-) ; end of SICP
-) ; end of library
-#|
-;;;;; Section 3.2: The environment model of evaluation
+(Section :3.2 "The Environment Model of Evaluation")
 
-;;; ex 3.9
+(Section :3.2.1 "The Rules for Evaluation")
+
+(define square (lambda (x) (* x x)))
+(square 5) => (* 5 5) => 25
+
+;; Environment diagram:
+;                 _____________
+; global env --> | square: --+ |
+;                |___________|_|<-+
+;                 ^          |    |
+;                 |          V    |
+;         E1 -->[x: 5]     [*|*]--+
+;                           V
+;                  parameters: x
+;                        body: (* x x)
+
+(Section :3.2.2 "Applying Simple Procedures"
+  (use (:3.2.1 square)))
+
+(define (sum-of-squares x y) (+ (square x) (square y)))
+(define (f a) (sum-of-squares (+ a 1) (* a 2)))
+(f 5) => (sum-of-squares (+ 5 1) (* 5 2)) => (+ (square 6) (square 10)) => 136
+
+;; Environment diagram:
+;                 _____________________
+; global env --> | sum-of-squares: ... |
+;                | square: ...         |
+;                | f: ...              |<------------+
+;                |_____________________|<+           |
+;   (f 5)        ^           ^           |           |
+;                |           |           |           |
+;          E1->[a: 5]  E2->[x: 6]  E3->[x: 6]  E4->[x:10]
+;                          [y: 7]
+;   (sum-of-squares  (+ (square x)   (* x x)     (* x x)
+;     (+ a 1)           (square y))
+;     (* a 2)
+
+(Exercise ?3.9)
+
 (define (factorial n)
   (if (= n 1) 1 (* n (factorial (- n 1)))))
-;; Six environments are created:
-; E1 -> [n: 6]
-; E2 -> [n: 5]
-; E3 -> [n: 4]
-; E4 -> [n: 3]
-; E5 -> [n: 2]
-; E6 -> [n: 1]
+
+;; Six environments are created in the recursive version:
+(factorial 6)                                  ; E1 -> [n: 6]
+=> (* 6 (factorial 5))                         ; E2 -> [n: 5]
+=> (* 6 (* 5 (factorial 4)))                   ; E3 -> [n: 4]
+=> (* 6 (* 5 (* 4 (factorial 3))))             ; E4 -> [n: 3]
+=> (* 6 (* 5 (* 4 (* 3 (factorial 2)))))       ; E5 -> [n: 2]
+=> (* 6 (* 5 (* 4 (* 3 (* 2 (factorial 1)))))) ; E6 -> [n: 1]
+=> 720
+
 (define (factorial n) (fact-iter 1 1 n))
 (define (fact-iter product counter max-count)
-  (if (> counter max-count) product
-    (fact-iter (* counter product)
-               (+ counter 1)
-               max-count)))
-;; Eight environments are created:
-; E1 -> [n: 6]
-; E2 -> [p: 1,   c: 1, m: 6]
-; E3 -> [p: 1,   c: 2, m: 6]
-; E4 -> [p: 2,   c: 3, m: 6]
-; E5 -> [p: 6,   c: 4, m: 6]
-; E6 -> [p: 24,  c: 5, m: 6]
-; E7 -> [p: 120, c: 6, m: 6]
-; E8 -> [p: 720, c: 7, m: 6]
+  (if (> counter max-count)
+      product
+      (fact-iter (* counter product)
+                 (+ counter 1)
+                 max-count)))
 
-;;; ex 3.10
+;; Eight environments are created in the iterative version:
+(factorial 6)          ; E1 -> [n: 6]
+=> (fact-iter 1 1 6)   ; E2 -> [p: 1,   c: 1, m: 6]
+=> (fact-iter 1 2 6)   ; E3 -> [p: 1,   c: 2, m: 6]
+=> (fact-iter 2 3 6)   ; E4 -> [p: 2,   c: 3, m: 6]
+=> (fact-iter 6 4 6)   ; E5 -> [p: 6,   c: 4, m: 6]
+=> (fact-iter 24 5 6)  ; E6 -> [p: 24,  c: 5, m: 6]
+=> (fact-iter 120 6 6) ; E7 -> [p: 120, c: 6, m: 6]
+=> (fact-iter 720 7 6) ; E8 -> [p: 720, c: 7, m: 6]
+=> 720
+
+(Section :3.2.3 "Frames as the Repository of Local State")
+
+(Exercise ?3.10)
+
 ;; With or without the explicit state variable, `make-withdraw` creates objects
 ;; with the same behaviour. The only difference with the explicit variable in
-;; the let-form is that there is an extra environment. Applying `make-writhdraw`
+;; the let-form is that there is an extra environment. Applying `make-withdraw`
 ;; creates E1 to bind 100 to `initial-amount`, and then the let-form desugars to
 ;; a lambda application, creating a new environment E2. This environment holds
 ;; `balance`, beginning with the same value as `initial amount`. When we
@@ -398,25 +442,16 @@
 ;                               |
 ;      (W1 20) [amount: 20]-----+
 
-;;; ex 3.11
-(define (make-account balance)
-  (define (withdraw amount)
-    (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)
-      "Insufficient funds"))
-  (define (deposit amount)
-    (set! balance (+ balance amount))
-    balance)
-  (define (dispatch m)
-    (cond ((eq? m 'withdraw) withdraw)
-          ((eq? m 'deposit) deposit)
-          (else (errorf 'dispatch "Unknown request: ~s" m))))
-  dispatch)
+(Section :3.2.4 "Internal Definitions")
+
+(Exercise ?3.11
+  (use (:3.1.1 make-account)))
+
 ;; First, we just have a procedure bound in the global environment.
 ; global env --> [make-account: ...]
-(check
-  (define acc (make-account 50))
+
+(define acc (make-account 50))
+
 ;; Now, we have `acc` in the global frame as well. It is bound to a procedure
 ;; whose environment pointer points to E1, the environment created when we
 ;; evaluated `(make-account 50)`. It first bound the formal parameter `balance`
@@ -436,7 +471,9 @@
 ;                           |________________|<----|-+
 ;                                                  +----> parameters: amount
 ;                                                               body: ...
-  ((acc 'deposit) 40) => 90
+
+((acc 'deposit) 40) => 90
+
 ;; First we evaluate `(acc 'deposit)`. We create E2 to bind `m` to the symbol
 ;; `deposit`, and then we evaluate the body of `acc`, which is the same as the
 ;; body of `dispatch`. The enclosing environment of E2 is E1, because that is
@@ -448,7 +485,9 @@
 ; E2 [m: deposit]--+
 ;                  +----> E1 [balance:90, ...]
 ; E3 [amount: 40]--+
-  ((acc 'withdraw) 60) => 30)
+
+((acc 'withdraw) 60) => 30
+
 ;; This is almost the same, except the procedure returns the `withdraw`
 ;; procedures instead. I am reusing the names E2 and E3 because they have been
 ;; used and are no longer relevant, since nothing poitns to them.
@@ -458,38 +497,53 @@
 ;; All this time, the local state for `acc` is kept in E1, the environment
 ;; originally created to apply the `make-account` procedure. If we define
 ;; another account with `(define acc2 (make-account 100))`, it will have its own
-;; environment containing `balance` and bindings for the interal procedures. The
-;; only thing shared between `acc` and `acc2` is (possibly) the code for the
+;; environment containing `balance` and bindings for the internal procedures.
+;; The only thing shared between `acc` and `acc2` is (possibly) the code for the
 ;; internal procedures, including `dispatch`, which the accounts really are.
 ;; This sharing is an implementation detail, though.
 
-;;;;; Section 3.3: Modeling with mutable data
+(Section :3.3 "Modeling with Mutable Data")
 
-;;; ex 3.12
-(define (my-append x y)
+(Section :3.3.1 "Mutable List Structure")
+
+(define x '((a b) c d))
+(define y '(e f))
+
+(set-car! x y)
+x => (cons y (cdr x)) => '((e f) c d)
+
+(define x '((a b) c d))
+(define y '(e f))
+
+(set-cdr! x y)
+x => (cons (car x) y) '((a b) e f)
+
+(Exercise ?3.12)
+
+(define (append x y)
   (if (null? x)
-    y
-    (cons (car x) (my-append (cdr x) y))))
-(define (my-append! x y)
-  (set-cdr! (my-last-pair x) y)
+      y
+      (cons (car x) (append (cdr x) y))))
+(define (append! x y)
+  (set-cdr! (last-pair x) y)
   x)
-(define (my-last-pair x)
-  (if (null? (cdr x))
-    x
-    (my-last-pair (cdr x))))
-(check
-  (define x (list 'a 'b))
-  (define y (list 'c 'd))
-  (define z (append x y))
-  z => '(a b c d)
-  (cdr x) => '(b)
+(define (last-pair x)
+  (if (null? (cdr x)) x (last-pair (cdr x))))
+
+(define x (list 'a 'b))
+(define y (list 'c 'd))
+(define z (append x y))
+
+z => '(a b c d)
+(cdr x) => '(b)
 ; x->[*|*]->[*|X]
 ;     |      |
 ;     V      V
 ;     a      b
-  (define w (append! x y))
-  w => '(a b c d)
-  (cdr x) => '(b c d))
+
+(define w (append! x y))
+w => '(a b c d)
+(cdr x) => '(b c d)
 ;                 y
 ;                 |
 ; x->[*|*]->[*|*]->[*|*]->[*|X]
@@ -497,58 +551,77 @@
 ;     V      V      V      V
 ;     a      b      c      d
 
-;;; ex 3.13
+(Exercise ?3.13
+  (use (?3.12 last-pair)))
+
 (define (make-cycle x)
   (set-cdr! (last-pair x) x)
   x)
-(check
-  (define z (make-cycle (list 'a 'b 'c)))
-  (cadddr z) => 'a)
+
+(define z (make-cycle (list 'a 'b 'c)))
+(cadddr z) => 'a
 ;    +-------------------+
 ;    V                   |
 ; z->[*|*]->[*|*]->[*|*]-+
 ;     |      |      |
 ;     V      V      V
 ;     a      b      c
+
 ;; If we try to compute `(last-pair z)`, we will never finish because the list
 ;; is not null-terminated and so `null?` will never be true. We will be stuck in
 ;; an infinite recursion.
 
-;;; ex 3.14
+(Exercise ?3.14)
+
 (define (mystery x)
   (define (loop x y)
     (if (null? x)
-      y
-      (let ((temp (cdr x)))
-        (set-cdr! x y)
-        (loop temp x))))
+        y
+        (let ((temp (cdr x)))
+          (set-cdr! x y)
+          (loop temp x))))
   (loop x '()))
+
 ;; In general, `mystery` reverses the list `x`. It does this by walking through
 ;; the list, setting the `cdr` of each pair to point to the previous pair
 ;; instead of the next. For the very first pair, it sets the `cdr` to null.
-(check
-  (define v (list 'a 'b 'c 'd))
+
+(define v '(a b c d))
 ; v->[*|*]->[*|*]->[*|*]->[*|X]
 ;     |      |      |      |
 ;     V      V      V      V
 ;     a      b      c      d
-  (define w (mystery v))
-  v => '(a)
-  w => '(d c b a))
+
+(define w (mystery v))
+v => '(a)
+w => '(d c b a)
 ; v->[*|X]<-[*|*]<-[*|*]<-[*|*]<-w
 ;     |      |      |      |
 ;     V      V      V      V
 ;     a      b      c      d
+
 ;; These box-and-pointer diagrams make it obvious that `mystery` simply changes
 ;; the directions of all the arrows.
 
-;;; ex 3.15
+(Section :3.3.1.1 "Sharing and identity")
+
+(define x (list 'a 'b))
+(define z1 (cons x x))
+(define z2 (cons (list 'a 'b) (list 'a 'b)))
+
 (define (set-to-wow! x) (set-car! (car x) 'wow) x)
-(check
-  (define x (list 'a 'b))
-  (define z1 (cons x x))
-  z1 => '((a b) a b)
-;; The `car` and the `cdr` of `z1` both point to `x`.
+
+z1 => '((a b) a b)
+(set-to-wow! z1) => '((wow b) wow b)
+z2 => '((a b) a b)
+(set-to-wow! z2) => '((wow b) a b)
+
+(eq? (car z1) (cdr z1)) => #t
+(eq? (car z2) (cdr z2)) => #f
+
+(Exercise ?3.15)
+
+;; In `z1`, the `car` and `cdr` both point to `x`:
 ; z1->[*|*]
 ;      | |
 ;      V V
@@ -556,10 +629,8 @@
 ;      |      |
 ;      V      V
 ;      a      b
-  (set-to-wow! z1) => '((wow b) wow b)
-;; Since the `cdr` points to the same `x`, its `a` also becomes `wow`. In
-;; `set-to-wow!`, it makes no difference whether we use `(car x)` or `(cdr x)`
-;; as the first argument to `set-car!` because they are the same in this case.
+
+;; After `set-to-wow!`, the `a` becomes `wow` for both `car` and `cdr`:
 ; z1->[*|*]
 ;      | |
 ;      V V
@@ -567,9 +638,8 @@
 ;      |      |
 ;      V      V
 ;     wow     b
-  (define z2 (cons (list 'a 'b) (list 'a 'b)))
-  z2 => '((a b) a b)
-;; This is a straightforward list that happens to look "the same" as `z1`.
+
+;; In `z2`, the `car` and `cdr` point to different cons cells:
 ; z2->[*|*]->[*|*]->[*|X]
 ;      |      |      |
 ;      |      +-> a  +-> b
@@ -577,9 +647,8 @@
 ;    [*|*]->[*|X]
 ;     |      |
 ;     +-> a  +-> b
-  (set-to-wow! z2) => '((wow b) a b))
-;; Since the `car` and `cdr` of `z2` point to different `(a b)` lists (there is
-;; no sharing), only the first `a` changes to `wow`.
+
+;; After `set-to-wow!`, the `a` becomes `wow` only for the `car`:
 ; z2->[*|*]->[*|*]->[*|X]
 ;      |      |      |
 ;      |      +-> a  +-> b
@@ -588,6 +657,9 @@
 ;     |        |
 ;     +-> wow  +-> b
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.16
 (define (count-pairs x)
   (if (not (pair? x))

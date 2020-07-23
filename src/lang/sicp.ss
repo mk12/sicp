@@ -7,13 +7,14 @@
           define => ~> slow=> slow~>
           capture-output hide-output
           display format fxand fxarithmetic-shift-left fxarithmetic-shift-right
-          fxxor newline quotient random remainder runtime string-contains?
-          string-count unless when)
+          fxxor newline quotient random remainder runtime set-car! set-cdr!
+          string-contains? string-count unless when)
   (import (rnrs base (6))
           (only (rnrs arithmetic fixnums (6))
                 fxand fxarithmetic-shift-left fxarithmetic-shift-right fxxor)
           (only (rnrs control (6)) unless when)
           (only (rnrs io simple (6)) display newline)
+          (only (rnrs mutable-pairs (6)) set-car! set-cdr!)
           (only (rnrs r5rs (6)) quotient remainder)
           (src lang core)
           (src compat active))
