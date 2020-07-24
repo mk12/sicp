@@ -793,20 +793,21 @@ z2 => '((a b) a b)
 ; paramters: m   }<-+
 ;      body: ... }
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 3.3.2 (representing queues)
+(Section :3.3.2 "Representing Queues")
+
 (define front-ptr car)
 (define rear-ptr cdr)
 (define set-front-ptr! set-car!)
 (define set-rear-ptr! set-cdr!)
+
 (define (empty-queue? q) (null? (front-ptr q)))
 (define (make-queue) (cons '() '()))
+
 (define (front-queue q)
   (if (empty-queue? q)
-    (errorf 'front-queue "Called with an empty queue: ~s" q)
-    (car (front-ptr q))))
+      (error 'front-queue "called with an empty queue" q)
+      (car (front-ptr q))))
+
 (define (insert-queue! q x)
   (let ((new-pair (cons x '())))
     (cond ((empty-queue? q)
@@ -817,19 +818,22 @@ z2 => '((a b) a b)
             (set-cdr! (rear-ptr q) new-pair)
             (set-rear-ptr! q new-pair)
             q))))
+
 (define (delete-queue! q)
   (cond ((empty-queue? q)
-         (errorf 'delete-queue! "Called with an empty queue: ~s" q))
+         (error 'delete-queue! "called with an empty queue" q))
         (else (set-front-ptr! q (cdr (front-ptr q)))
               q)))
 
-;;; ex 3.21
-(check
-  (define q1 (make-queue))
-  (insert-queue! q1 'a) => '((a) a)
-  (insert-queue! q1 'b) => '((a b) b)
-  (delete-queue! q1) => '((b) b)
-  (delete-queue! q1) => '(() b))
+(Exercise ?3.21
+  (use (:3.3.2 make-queue delete-queue! front-ptr insert-queue!)))
+
+(define q1 (make-queue))
+(insert-queue! q1 'a) => '((a) a)
+(insert-queue! q1 'b) => '((a b) b)
+(delete-queue! q1) => '((b) b)
+(delete-queue! q1) => '(() b)
+
 ;; Eva Lu Ator points out that Lisp is trying to print the list structure that
 ;; makes up the queue. It doesn't know anything special about our queue
 ;; representation. The interpreter's response isn't a list of things in the
@@ -847,22 +851,29 @@ z2 => '((a b) a b)
 ;; because the `cdr` of the last item is always null. Even when we delete all
 ;; the items, we still see the last item in the queue because of the way we
 ;; implemented `delete-queue!`.
+
 (define (print-queue q)
   (display (front-ptr q))
   (newline))
 
-;;; ex 3.22
+(insert-queue! q1 'c)
+(insert-queue! q1 'd)
+(capture-output (print-queue q1)) => "(c d)\n"
+
+(Exercise ?3.22)
+
 ;; It's interesting how I ended up using `dispatch` like you would use the
 ;; `this` keyword in object-oriented languages. Another interesting point is the
 ;; application of procedures in `dispatch`. For procedures that take arguments
 ;; other than the queue itself, like for insertion, we have to return the
 ;; procedure that can then be applied to the argument(s). In this case, the
-;; rease of the operations take no other arguments. It might be more consistent
+;; rest of the operations take no other arguments. It might be more consistent
 ;; to return a procedure of zero arguments -- then we would need double
 ;; parentheses, like `((my-queue 'front-queue))` -- but this seems a bit
 ;; strange. Instead, we apply the procedure right away in `dispatch` and
 ;; pass on the return value.
-(define (make-queue-object)
+
+(define (make-queue)
   (let ((front-ptr '())
         (rear-ptr '()))
     (define (empty?)
@@ -878,47 +889,60 @@ z2 => '((a b) a b)
                     dispatch))))
     (define (delete!)
       (if (empty?)
-        (error 'delete! "Called with an empty queue")
-        (begin (set! front-ptr (cdr front-ptr))
-               dispatch)))
+          (error 'delete! "called with an empty queue")
+          (begin (set! front-ptr (cdr front-ptr))
+                 dispatch)))
     (define (dispatch m)
       (cond ((eq? m 'empty-queue?) (empty?))
             ((eq? m 'front-queue)
              (if (empty?)
-               (error 'front-queue "Called with an empty queue")
-               (car front-ptr)))
+                 (error 'front-queue "called with an empty queue")
+                 (car front-ptr)))
             ((eq? m 'insert-queue!) insert!)
             ((eq? m 'delete-queue!) (delete!))
-            (else (errorf 'dispatch "Undefined operation: ~s" m))))
+            (else (error 'make-queue "undefined operation" m))))
     dispatch))
 
-;;; ex 3.23
-;; I have implemented the deqeue as a doubly-linked list. Instead of pointing to
+(define q (make-queue))
+(q 'empty-queue?) => #t
+((q 'insert-queue!) 'a)
+((q 'insert-queue!) 'b)
+(q 'empty-queue?) => #f
+(q 'front-queue) => 'a
+(q 'delete-queue!)
+(q 'front-queue) => 'b
+(q 'delete-queue!)
+(q 'empty-queue?) => #t
+
+(Exercise ?3.23)
+
+;; I have implemented the deque as a doubly-linked list. Instead of pointing to
 ;; the next element, the `cdr` of each item is a pair whose `car` points to the
 ;; previous item and whose `cdr` points to the next. We call the items nodes:
-(define (make-node x prev next)
-  (cons x (cons prev next)))
+
+(define (make-node x prev next) (cons x (cons prev next)))
 (define (data-node node) (car node))
 (define (prev-node node) (cadr node))
 (define (next-node node) (cddr node))
 (define (set-prev! node prev) (set-car! (cdr node) prev))
 (define (set-next! node next) (set-cdr! (cdr node) next))
-;; deque representation
+
 (define (front-ptr dq) (car dq))
 (define (rear-ptr dq)  (cdr dq))
 (define (set-front-ptr! dq x) (set-car! dq x))
 (define (set-rear-ptr!  dq x) (set-cdr! dq x))
 (define (make-deque) (cons '() '()))
-;;; deque operations
+
 (define (empty-deque? dq) (null? (front-ptr dq)))
 (define (front-deque dq)
   (if (empty-deque? dq)
-    (errorf 'front-deque "Called with an empty deque: ~s" dq)
-    (data-node (front-ptr dq))))
+      (error 'front-deque "called with an empty deque" dq)
+      (data-node (front-ptr dq))))
 (define (rear-deque dq)
   (if (empty-deque? dq)
-    (errorf 'rear-deque "Called with an empty deque: ~s" dq)
-    (data-node (rear-ptr dq))))
+      (error 'rear-deque "called with an empty deque" dq)
+      (data-node (rear-ptr dq))))
+
 (define (front-insert-deque! dq x)
   (cond ((empty-deque? dq)
          (let ((node (make-node x '() '())))
@@ -931,6 +955,7 @@ z2 => '((a b) a b)
             (set-prev! old-front new-front)
             (set-front-ptr! dq new-front)
             dq))))
+
 (define (rear-insert-deque! dq x)
   (cond ((empty-deque? dq)
          (front-insert-deque! dq x))
@@ -940,9 +965,10 @@ z2 => '((a b) a b)
             (set-next! old-rear new-rear)
             (set-rear-ptr! dq new-rear)
             dq))))
+
 (define (front-delete-deque! dq)
   (cond ((empty-deque? dq)
-         (errorf 'front-delete-deque! "Called with an empty deque: ~s" dq))
+         (error 'front-delete-deque! "called with an empty deque" dq))
         (else
           (let* ((old-front (front-ptr dq))
                  (new-front (next-node old-front)))
@@ -953,9 +979,10 @@ z2 => '((a b) a b)
                   (else (set-prev! new-front '())
                         (set-front-ptr! dq new-front)
                         dq))))))
+
 (define (rear-delete-deque! dq)
   (cond ((empty-deque? dq)
-         (errorf 'rear-delete-deque "Called with an empty deque: ~s" dq))
+         (error 'rear-delete-deque! "Called with an empty deque" dq))
         (else
           (let* ((old-rear (rear-ptr dq))
                  (new-rear (prev-node old-rear)))
@@ -964,11 +991,12 @@ z2 => '((a b) a b)
                   (else (set-next! new-rear '())
                         (set-rear-ptr! dq new-rear)
                         dq))))))
+
 (define (print-deque dq)
   (define (iter node first)
     (cond
       ((not (null? node))
-       (if (not first) (display ", "))
+       (when (not first) (display ", "))
        (display (data-node node))
        (iter (next-node node) #f))))
   (display "[")
@@ -976,6 +1004,24 @@ z2 => '((a b) a b)
   (display "]")
   (newline))
 
+(define dq (make-deque))
+(empty-deque? dq) => #t
+(capture-output (print-deque dq)) => "[]\n"
+(front-insert-deque! dq 'b)
+(empty-deque? dq) => #f
+(rear-insert-deque! dq 'c)
+(front-insert-deque! dq 'a)
+(capture-output (print-deque dq)) => "[a, b, c]\n"
+(rear-delete-deque! dq)
+(capture-output (print-deque dq)) => "[a, b]\n"
+(front-delete-deque! dq)
+(capture-output (print-deque dq)) => "[b]\n"
+(rear-delete-deque! dq)
+(empty-deque? dq) => #t
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 3.3.3 (representing tables)
 ;; one-dimesional tables
 (define (table-lookup key table)
