@@ -1019,82 +1019,110 @@ z2 => '((a b) a b)
 (rear-delete-deque! dq)
 (empty-deque? dq) => #t
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 3.3.3 (representing tables)
-;; one-dimesional tables
-(define (table-lookup key table)
-  (let ((record (table-assoc key (cdr table))))
+(Section :3.3.3 "Representing Tables")
+
+(Section :3.3.3.1 "One-dimensional tables")
+
+(define (lookup key table)
+  (let ((record (assoc key (cdr table))))
     (if record
-      (cdr record)
-      #f)))
-(define (table-assoc key records)
+        (cdr record)
+        #f)))
+
+(define (assoc key records)
   (cond ((null? records) #f)
         ((equal? key (caar records)) (car records))
-        (else (table-assoc key (cdr records)))))
-(define (table-insert! key value table)
-  (let ((record (table-assoc key (cdr table))))
+        (else (assoc key (cdr records)))))
+
+(define (insert! key value table)
+  (let ((record (assoc key (cdr table))))
     (if record
-      (set-cdr! record value)
-      (set-cdr! table
-                (cons (cons key value)
-                      (cdr table)))))
+        (set-cdr! record value)
+        (set-cdr! table
+                  (cons (cons key value)
+                        (cdr table)))))
   'ok)
+
 (define (make-table) (list '*table*))
-;; two-dimensional tables
-(define (table-2d-lookup key-1 key-2 table)
-  (let ((subtable (table-assoc key-1 (cdr table))))
+
+(define t (make-table))
+(lookup 'a t) => #f
+(insert! 'a 1 t) => 'ok
+(lookup 'a t) => 1
+
+(Section :3.3.3.2 "Two-dimensional tables"
+  (use (:3.3.3.1 assoc make-table)))
+
+(define (lookup key-1 key-2 table)
+  (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
-      (let ((record (table-assoc key-2 (cdr subtable))))
-        (if record
-          (cdr record)
-          #f))
-      #f)))
-(define (table-2d-insert! key-1 key-2 value table)
-  (let ((subtable (table-assoc key-1 (cdr table))))
+        (let ((record (assoc key-2 (cdr subtable))))
+          (if record
+              (cdr record)
+              #f))
+        #f)))
+
+(define (insert! key-1 key-2 value table)
+  (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
-      (let ((record (table-assoc key-2 (cdr subtable))))
-        (if record
-          (set-cdr! record value)
-          (set-cdr! subtable
-                    (cons (cons key-2 value)
-                          (cdr subtable)))))
-      (set-cdr! table
-                (cons (list key-1 (cons key-2 value))
-                      (cdr table)))))
-  'ok)
-;; procedural implementation
-(define (make-table-object)
-  (let ((local-table (list '*table*)))
-    (define (lookup key-1 key-2)
-      (let ((subtable (table-assoc key-1 (cdr local-table))))
-        (if subtable
-          (let ((record (table-assoc key-2 (cdr subtable))))
-            (if record (cdr record) #f))
-          #f)))
-    (define (insert! key-1 key-2 value)
-      (let ((subtable (table-assoc key-1 (cdr table))))
-        (if subtable
-          (let ((record (table-assoc key-2 (cdr subtable))))
-            (if record
+        (let ((record (assoc key-2 (cdr subtable))))
+          (if record
               (set-cdr! record value)
               (set-cdr! subtable
                         (cons (cons key-2 value)
                               (cdr subtable)))))
-          (set-cdr! table
-                    (cons (list key-1 (cons key-2 value))
-                          (cdr table)))))
+        (set-cdr! table
+                  (cons (list key-1 (cons key-2 value))
+                        (cdr table)))))
+  'ok)
+
+(define t (make-table))
+(lookup 'a 'b t) => #f
+(insert! 'a 'b 1 t) => 'ok
+(lookup 'a 'b t) => 1
+(insert! 'a 'c 2 t) => 'ok
+(insert! 'x 'x 3 t) => 'ok
+(lookup 'a 'c t) => 2
+(lookup 'x 'x t) => 3
+
+(Section :3.3.3.3 "Creating local tables"
+  (use (:3.3.3.1 assoc)))
+
+(define (make-table)
+  (let ((local-table (list '*table*)))
+    (define (lookup key-1 key-2)
+      (let ((subtable (assoc key-1 (cdr local-table))))
+        (if subtable
+            (let ((record (assoc key-2 (cdr subtable))))
+              (if record (cdr record) #f))
+            #f)))
+    (define (insert! key-1 key-2 value)
+      (let ((subtable (assoc key-1 (cdr local-table))))
+        (if subtable
+            (let ((record (assoc key-2 (cdr subtable))))
+              (if record
+                  (set-cdr! record value)
+                  (set-cdr! subtable
+                            (cons (cons key-2 value)
+                                  (cdr subtable)))))
+            (set-cdr! local-table
+                      (cons (list key-1 (cons key-2 value))
+                            (cdr local-table)))))
       'ok)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
-            (else (errorf 'dispatch "Unknown operation: ~s" m))))
+            (else (error 'make-table "unknown operation" m))))
     dispatch))
-(define operation-table (make-table-object))
-(define get-operation (operation-table 'lookup-proc))
-(define put-operation (operation-table 'insert-proc!))
 
+(define operation-table (make-table))
+(define get (operation-table 'lookup-proc))
+(define put (operation-table 'insert-proc!))
+(define (reset) (set! operation-table (make-table)))
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.24
 ;; Other than the argument `same-key?` and the interal procedure `assoc`, this
 ;; is the same code as above.

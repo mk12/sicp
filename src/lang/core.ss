@@ -332,7 +332,7 @@
               (cond
                 ((or (null? en) (null? ev))
                  (error 'run-sicp
-                        (format "~a imports nonexistent (~a ~a)"
+                        (format "~a imports nonexistent `~a` from ~a"
                                 (entry-id importer)
                                 name
                                 (entry-id exporter))))

@@ -1615,9 +1615,6 @@ one-through-four => '(1 2 3 4)
 (define (same-variable? v1 v2)
   (and (variable? v1) (variable? v2) (eq? v1 v2)))
 
-(define (=number? expr num)
-  (and (number? expr) (= expr num)))
-
 (define (make-sum a1 a2) (list '+ a1 a2))
 (define (make-product m1 m2) (list '* m1 m2))
 
@@ -2465,7 +2462,7 @@ z2 => (make-from-mag-ang 30 3)
 (define make-from-real-imag make-from-real-imag-rectangular)
 (define make-from-mag-ang make-from-mag-ang-polar)
 
-;; Generic operators (same code as in Section 2.4.1)
+;; Generic operators (copied from Section 2.4.1)
 (define (add-complex z1 z2)
   (make-from-real-imag
     (+ (real-part z1) (real-part z2))
@@ -2489,13 +2486,12 @@ z2 => (make-from-mag-ang 30 3)
 z1 => (make-from-real-imag 4 6)
 z2 => (make-from-mag-ang 30 3)
 
-) ; end of SICP
-) ; end of library
-#|
-(Section :2.4.3 "Data-Directed Programming and Additivity")
+(Section :2.4.3 "Data-Directed Programming and Additivity"
+  (use (:1.1.4 square) (:2.4.2 attach-tag contents type-tag)
+       (:3.3.3.3 get put reset)))
 
 (define (install-rectangular-package)
-  ;; internal procedures
+  ;; Internal procedures
   (define real-part car)
   (define imag-part cdr)
   (define make-from-real-imag cons)
@@ -2507,7 +2503,7 @@ z2 => (make-from-mag-ang 30 3)
   (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
 
-  ;; interface to the rest of the system
+  ;; Interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
   (put 'imag-part '(rectangular) imag-part)
@@ -2520,7 +2516,7 @@ z2 => (make-from-mag-ang 30 3)
   'done)
 
 (define (install-polar-package)
-  ;; internal procedures
+  ;; Internal procedures
   (define magnitude car)
   (define angle cdr)
   (define make-from-mag-ang cons)
@@ -2532,7 +2528,7 @@ z2 => (make-from-mag-ang 30 3)
     (cons (sqrt (+ (square a) (square b)))
           (atan b a)))
 
-  ;; interface to the rest of the system
+  ;; Interface to the rest of the system
   (define (tag x) (attach-tag 'polar x))
   (put 'real-part '(polar) real-part)
   (put 'imag-part '(polar) imag-part)
@@ -2551,138 +2547,251 @@ z2 => (make-from-mag-ang 30 3)
         (apply proc (map contents args))
         (error 'apply-generic "no method for types" op type-tags))))
 
+;; Generic selectors
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
-(define (make-from-real-imag a b)
-  ((get 'make-from-real-imag 'rectangular) a b))
-(define (make-from-mag-ang r a)
-  ((get 'make-from-mag-ang 'polar) r a))
 
-;;; ex 2.73
-(define (deriv exp var)
-  (cond ((number? exp) 0)
-        ((variable? exp) (if (same-variable? exp var) 1 0))
-        (else ((get 'deriv (operator exp))
-               (operands exp) var))))
-(define operator car)
-(define operands cdr)
-;; (a) We wrote the deriv procedure as a data-direction type dispatch. The
-;; procedure dispatches on the operator, which is the `car` of an expression. We
-;; can't assimilate atomic types like numbers and variables (which are symbols)
-;; into this dispatch because they don't have an identifying tag in the `car` --
-;; they have no `car` or `cdr` at all. If we really wanted to, we could
-;; assimilate them by dispatching not on the operator, but on the `(type exp)`
-;; using this:
-(define (type exp)
-  (cond ((number? exp) 'number)
-        ((variable? exp) 'variable)
-        (else (car exp))))
-;; (b) packages for sums and products
+;; Generic constructors
+(define (make-from-real-imag a b)
+  (let ((ctor (get 'make-from-real-imag 'rectangular)))
+    (if ctor
+        (ctor a b)
+        (error 'make-from-real-imag "rectangular package not installed"))))
+(define (make-from-mag-ang r a)
+  (let ((ctor (get 'make-from-mag-ang 'polar)))
+    (if ctor
+        (ctor r a)
+        (error 'make-from-mag-ang "polar package not installed"))))
+
+;; Generic operators (copied from Section 2.4.1)
+(define (add-complex z1 z2)
+  (make-from-real-imag
+    (+ (real-part z1) (real-part z2))
+    (+ (imag-part z1) (imag-part z2))))
+(define (sub-complex z1 z2)
+  (make-from-real-imag
+    (- (real-part z1) (real-part z2))
+    (- (imag-part z1) (imag-part z2))))
+(define (mul-complex z1 z2)
+  (make-from-mag-ang
+    (* (magnitude z1) (magnitude z2))
+    (+ (angle z1) (angle z2))))
+(define (div-complex z1 z2)
+  (make-from-mag-ang
+    (/ (magnitude z1) (magnitude z2))
+    (- (angle z1) (angle z2))))
+
+(reset)
+(install-rectangular-package) => 'done
+(install-polar-package) => 'done
+(define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
+(define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
+z1 => (make-from-real-imag 4 6)
+z2 => (make-from-mag-ang 30 3)
+
+(Exercise ?2.73
+  (use (:2.2.3.1 accumulate)
+       (:2.3.2 make-product make-sum same-variable? variable?)
+       (:3.3.3.3 get put reset) (?2.56 make-exponentiation)))
+
+(define (deriv expr var)
+  (cond ((number? expr) 0)
+        ((variable? expr) (if (same-variable? expr var) 1 0))
+        (else (let ((deriv-fn (get 'deriv (operator expr))))
+                (if deriv-fn
+                    (deriv-fn (operands expr) var)
+                    (error 'deriv "generic deriv procedure not found" expr))))))
+(define (operator expr) (car expr))
+(define (operands expr) (cdr expr))
+
+;; (a) Above, we wrote the `deriv` procedure as a data-directed type dispatch.
+;; It dispatches on the operator, which is the `car` of an expression. We can't
+;; assimilate atomic types like numbers and variables (which are symbols) into
+;; this dispatch because they don't have an identifying tag in the `car` -- they
+;; have no `car` or `cdr` at all. If we really wanted to, we could assimilate
+;; them by dispatching not on the operator, but on `(type expr)` like this:
+
+(define (type expr)
+  (cond ((number? expr) 'number)
+        ((variable? expr) 'variable)
+        (else (operator expr))))
+
+;;; (b) Packages for sum and product differentiation
+
 (define (install-sum-package)
   (define (deriv-sum terms var)
-    (reduce make-sum (map (lambda (t) (deriv t var)) terms)))
+    (accumulate make-sum 0 (map (lambda (t) (deriv t var)) terms)))
   (put 'deriv '+ deriv-sum)
   'done)
+
 (define (install-product-package)
-  (define (deriv-product-2 a b var)
-    (make-sum (make-product a (deriv b var))
-              (make-product b (deriv a var))))
-  (define (deriv-product factors var)
-    (reduce (lambda (a b) (deriv-product-2 a b var))
-            factors))
+  ;; Note: We can't reuse these procedures from Exercise 2.57 because those ones
+  ;; assume the list includes the operator.
+  (define multiplier car)
+  (define (multiplicand product)
+    (accumulate make-product 1 (cdr product)))
+  (define (deriv-product product var)
+    (make-sum
+      (make-product (multiplier product)
+                    (deriv (multiplicand product) var))
+      (make-product (deriv (multiplier product) var)
+                    (multiplicand product))))
   (put 'deriv '* deriv-product)
   'done)
-;; (c) package for powers
+
+;; (c) Package for power differentiation
+
 (define (install-power-package)
+  ;; Note: We can't reuse these procedures from Exercise 2.56 because those ones
+  ;; assume the list includes the operator.
   (define base car)
   (define exponent cadr)
-  (define (deriv-power power)
+  (define (deriv-power power var)
     (make-product
       (make-product
         (exponent power)
-        (make-power (base power)
-                    (make-sum (exponent power) -1)))
+        (make-exponentiation (base power)
+                             (make-sum (exponent power) -1)))
       (deriv (base power) var)))
   (put 'deriv '** deriv-power)
   'done)
-;; (d) If we wanted to instead use `(get (operator exp) 'deriv)` to get the
+
+;; (d) If we wanted to instead use `(get (operator expr) 'deriv)` to get the
 ;; appropriate procedure, we have to change the order of the arguments given to
 ;; `put` in the package installation procedures.
 
-;;; ex 2.74
+(reset)
+(install-sum-package) => 'done
+(deriv '(+ x 3) 'x) => 1
+(install-product-package) => 'done
+(deriv '(* x y) 'x) => 'y
+(deriv '(* (* x y) (+ x 3)) 'x) => '(+ (* x y) (* y (+ x 3)))
+(install-power-package) => 'done
+(deriv '(* 3 (** x 5)) 'x) => '(* 3 (* 5 (** x 4)))
+
+(Exercise ?2.74
+  (use (:3.3.3.3 get put reset)))
+
 ;; (a) Each division must implement the `get-record` procedure. This gets
-;; dispatched based on the divison symbol, the type tag on the file. We have
-;; chosen the structure `(division . file)`, where the `car` is the type
+;; dispatched based on the division symbol, i.e. the type tag on the file. We
+;; have chosen the structure `(division . records)`, where the `car` is the type
 ;; information and the `cdr` is the division-specific set of records.
-(define (make-file division records)
-  (cons division file))
+
+(define (make-file division records) (cons division records))
 (define file-division car)
 (define file-records cdr)
+
 (define (get-record file employee-name)
   ((get 'get-record (file-division file))
    (file-records file)
    employee-name))
+
 ;; (b) The record must also be tagged with the division symbol.
+
 (define (make-record division set)
   (cons division set))
 (define record-division car)
 (define record-set cdr)
+
 (define (get-salary record)
-  ((get 'get-salary (record-divison record))
+  ((get 'get-salary (record-division record))
    (record-set record)))
+
 ;; (c) This procedure imposes no additional requirements on implementations.
+
 (define (find-employee-record employee-name files)
   (if (null? files)
-    #f
-    (or (get-record (car files) employee-name)
-        (find-employee-record employee-name (cdr files)))))
+      #f
+      (or (get-record (car files) employee-name)
+          (find-employee-record employee-name (cdr files)))))
+
 ;; (d) They must install `'get-record` and `'get-salary` generic procedures into
 ;; the data-directed dispatch system. These procedures must use the division's
 ;; name as their dispatch key.
 
-;;; ssec 2.4.3 (message passing)
-(define (make-from-real-imag-mp a b)
+;; Example: files for marketing and sales divisions.
+(define files
+  (list (make-file 'marketing
+                   '(some (very) ((weird)) format))
+        (make-file 'sales
+                   `(("Joe" ,(make-record 'sales '(40)))
+                     ("Jane" ,(make-record 'sales '(50)))))))
+(define (get-record-marketing records name) #f)
+(define (get-record-sales records name)
+  (cond ((null? records) #f)
+        ((equal? (caar records) name) (cadar records))
+        (else (get-record-sales (cdr records) name))))
+(define (get-salary-sales record) (car record))
+
+(reset)
+(put 'get-record 'marketing get-record-marketing)
+(put 'get-record 'sales get-record-sales)
+(put 'get-salary 'sales get-salary-sales)
+(find-employee-record "Bob" files) => #f
+(get-salary (find-employee-record "Joe" files)) => 40
+(get-salary (find-employee-record "Jane" files)) => 50
+
+(Section :2.4.3.1 "Message passing"
+  (use (:1.1.4 square)))
+
+(define (make-from-real-imag a b)
   (lambda (op)
     (cond ((eq? op 'real-part) a)
           ((eq? op 'imag-part) b)
           ((eq? op 'magnitude) (sqrt (+ (square a) (square b))))
           ((eq? op 'angle) (atan b a))
-          (else (errorf 'make-from-real-imag-mp "Unknown op: ~s" op)))))
-(define (apply-generic-mp op arg) (arg op))
+          (else (error 'make-from-real-imag "unknown op" op)))))
 
-;;; ex 2.75
-(define (make-from-mag-ang-mp r a)
+(define (apply-generic op arg) (arg op))
+
+(apply-generic 'real-part (make-from-real-imag 3 4)) => 3
+(apply-generic 'magnitude (make-from-real-imag 0 1)) ~> 1
+
+(Exercise ?2.75
+  (use (:2.4.3.1 apply-generic)))
+
+(define (make-from-mag-ang r a)
   (lambda (op)
     (cond ((eq? op 'real-part) (* r (cos a)))
           ((eq? op 'imag-part) (* r (sin a)))
           ((eq? op 'magnitude) r)
           ((eq? op 'angle) a)
-          (else (errorf 'make-from-mag-ang-mp "Unknown op: ~s" op)))))
+          (else (error 'make-from-mag-ang "unknown op" op)))))
 
-;;; ex 2.76
-;; 1. generic operations with explicit dispatch
-;; [types] After implementing specific procedures for the new type, you must add
-;; a new clause to the dispatcher of all the generic operations (time consuming
-;; and error-prone).
-;; [ops] After implementing a new specific procedure for each exisiting type,
-;; you must write a generic operation procedure with explicit dispatch.
-;; 2. data-directed style
-;; [types] It's easy: you just need to write new specific procedures and install
-;; them into the system with their identifying dispatch type.
-;; [ops] After implementing a new specific procedure in each of the package
-;; installer procedures, you must write a procedure invoking `apply-generic`.
-;; 3. message-passing style
-;; [types] Simply create a new type that responds to the same message.
-;; [ops] Write a specific procedure for all existing types so that they respond
-;; to the new message.
-;; ---
-;; When new types must often be added, or when new operations must often be
-;; added, data-directed style and message-passing style both work. Data-directed
-;; style is a bit more work overall, but it doesn't have the limitation of only
-;; working with a single argument.
+(apply-generic 'magnitude (make-from-mag-ang 15 0.5)) => 15
+(apply-generic 'imag-part (make-from-mag-ang 1 0)) ~> 0
 
+(Exercise ?2.76)
+
+;; 1. Generic operations with explicit dispatch
+;; - Types: After implementing specific procedures for the new type, you must
+;;   add a new clause to the dispatcher of all the generic operations (time
+;;   consuming and error-prone).
+;; - Operations: After implementing a new specific procedure for each existing
+;;   type, you must write a generic operation procedure with explicit dispatch.
+
+;; 2. Data-directed style
+;; - Types: It's easy: you just need to write new specific procedures and
+;;   install them into the system with their identifying dispatch type.
+;; - Operations: After implementing a new specific procedure in each of the
+;;   package installer procedures, you must write a procedure invoking
+;;   `apply-generic`.
+
+;; 3. Message-passing style
+;; - Types: Simply create a new type that responds to the same message.
+;; - Operations: Write a specific procedure for all existing types so that they
+;;   respond to the new message.
+
+;; Message passing is best when adding types often and operations rarely.
+;; Generic operations with explicit dispatch are best when adding types rarely
+;; and operations often. Data-directed style works well in both scenarios, and
+;; also allows dispatching on all arguments (unlike message passing).
+
+) ; end of SICP
+) ; end of library
+#|
 (Section :2.5 "Systems with generic operations")
 
 ;;; ssec 2.5.1 (generic arith ops)
@@ -2858,12 +2967,12 @@ z2 => (make-from-mag-ang 30 3)
 
 ;;; ex 2.81
 (define (ex-2.81 put-coercion)
-  (define (exp x y) (apply-generic 'exp x y))
+  (define (expr x y) (apply-generic 'exp x y))
   (put-coercion 'scheme-number 'scheme-number identity)
   (put-coercion 'complex 'complex identity)
   (put 'exp '(scheme-number scheme-number)
     (lambda (x y) (tag (expt x y)))))
-;; (a) If we call `exp` with two complex numbers as arguments, the process will
+;; (a) If we call `expr` with two complex numbers as arguments, the process will
 ;; be stuck in an infinite recursion because it keeps coercing the first
 ;; argument to the type of the second, although this brings it no closer to
 ;; being able to find a correct procedure.
