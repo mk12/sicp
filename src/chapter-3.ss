@@ -1109,16 +1109,20 @@ z2 => '((a b) a b)
                       (cons (list key-1 (cons key-2 value))
                             (cdr local-table)))))
       'ok)
+    (define (reset!)
+      (set-cdr! local-table '())
+      'ok)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
+            ((eq? m 'reset-proc!) reset!)
             (else (error 'make-table "unknown operation" m))))
     dispatch))
 
 (define operation-table (make-table))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
-(define (reset) (set! operation-table (make-table)))
+(define reset (operation-table 'reset-proc!))
 
 ) ; end of SICP
 ) ; end of library
