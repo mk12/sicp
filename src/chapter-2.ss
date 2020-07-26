@@ -2005,7 +2005,7 @@ one-through-four => '(1 2 3 4)
 ;; from this sample input, it seems that they always produce a sorted list,
 ;; which means that different trees (balanced or otherwise) representing the
 ;; same set get transformed into the same list.
-;;
+
 ;; (b) The second procedure performs one cons operation for each node of the
 ;; tree, so it has order of growth O(n). The first procedure uses `append`,
 ;; which is O(n). In the worst case, we would have n `append` steps for each of
@@ -2512,8 +2512,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-real-imag 'rectangular
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'rectangular
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  'done)
+       (lambda (r a) (tag (make-from-mag-ang r a)))))
 
 (define (install-polar-package)
   ;; Internal procedures
@@ -2537,21 +2536,20 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-real-imag 'polar
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'polar
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  'done)
+       (lambda (r a) (tag (make-from-mag-ang r a)))))
 
 (define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
     (if proc
         (apply proc (map contents args))
-        (error 'apply-generic "no method for types" op type-tags))))
+        (error 'apply-generic "no method for argument types" op type-tags))))
 
-(define (make-generic name type . args)
-  (let ((ctor (get name type)))
-    (if ctor
-        (apply ctor args)
-        (error name "package not installed" type))))
+(define (apply-specific op type . args)
+  (let ((proc (get op type)))
+    (if proc
+        (apply proc args)
+        (error op "no method for type" op type))))
 
 ;; Generic selectors
 (define (real-part z) (apply-generic 'real-part z))
@@ -2561,9 +2559,9 @@ z2 => (make-from-mag-ang 30 3)
 
 ;; Generic constructors
 (define (make-from-real-imag a b)
-  (make-generic 'make-from-real-imag 'rectangular a b))
+  (apply-specific 'make-from-real-imag 'rectangular a b))
 (define (make-from-mag-ang r a)
-  (make-generic 'make-from-mag-ang 'polar r a))
+  (apply-specific 'make-from-mag-ang 'polar r a))
 
 ;; Generic operators (copied from Section 2.4.1)
 (define (add-complex z1 z2)
@@ -2583,9 +2581,13 @@ z2 => (make-from-mag-ang 30 3)
     (/ (magnitude z1) (magnitude z2))
     (- (angle z1) (angle z2))))
 
-(reset)
-(install-rectangular-package) => 'done
-(install-polar-package) => 'done
+;; Helper function to run installers on a clean slate.
+(define (using . installers)
+  (reset)
+  (for-each (lambda (f) (f)) installers))
+
+(using install-rectangular-package install-polar-package)
+
 (define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
 (define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
 z1 => (make-from-real-imag 4 6)
@@ -2594,14 +2596,13 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.73
   (use (:2.2.3.1 accumulate)
        (:2.3.2 make-product make-sum same-variable? variable?)
-       (:3.3.3.3 get put reset) (?2.56 make-exponentiation)))
+       (:2.4.3 apply-specific using) (:3.3.3.3 put)
+       (?2.56 make-exponentiation)))
 
 (define (deriv expr var)
   (cond ((number? expr) 0)
         ((variable? expr) (if (same-variable? expr var) 1 0))
-        (else ((get 'deriv (operator expr))
-               (operands expr)
-               var))))
+        (else (apply-specific 'deriv (operator expr) (operands expr) var))))
 (define (operator expr) (car expr))
 (define (operands expr) (cdr expr))
 
@@ -2622,8 +2623,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (install-sum-package)
   (define (deriv-sum terms var)
     (accumulate make-sum 0 (map (lambda (t) (deriv t var)) terms)))
-  (put 'deriv '+ deriv-sum)
-  'done)
+  (put 'deriv '+ deriv-sum))
 
 (define (install-product-package)
   ;; Note: We can't reuse these procedures from Exercise 2.57 because those ones
@@ -2637,8 +2637,7 @@ z2 => (make-from-mag-ang 30 3)
                     (deriv (multiplicand product) var))
       (make-product (deriv (multiplier product) var)
                     (multiplicand product))))
-  (put 'deriv '* deriv-product)
-  'done)
+  (put 'deriv '* deriv-product))
 
 ;; (c) Package for power differentiation
 
@@ -2654,24 +2653,21 @@ z2 => (make-from-mag-ang 30 3)
         (make-exponentiation (base power)
                              (make-sum (exponent power) -1)))
       (deriv (base power) var)))
-  (put 'deriv '** deriv-power)
-  'done)
+  (put 'deriv '** deriv-power))
 
 ;; (d) If we wanted to instead use `(get (operator expr) 'deriv)` to get the
 ;; appropriate procedure, we have to change the order of the arguments given to
 ;; `put` in the package installation procedures.
 
-(reset)
-(install-sum-package) => 'done
+(using install-sum-package install-product-package install-power-package)
+
 (deriv '(+ x 3) 'x) => 1
-(install-product-package) => 'done
 (deriv '(* x y) 'x) => 'y
 (deriv '(* (* x y) (+ x 3)) 'x) => '(+ (* x y) (* y (+ x 3)))
-(install-power-package) => 'done
 (deriv '(* 3 (** x 5)) 'x) => '(* 3 (* 5 (** x 4)))
 
 (Exercise ?2.74
-  (use (:3.3.3.3 get put reset)))
+  (use (:2.4.3 apply-specific using) (:3.3.3.3 put)))
 
 ;; (a) Each division must implement the `get-record` procedure. This gets
 ;; dispatched based on the division symbol, i.e. the type tag on the file. We
@@ -2683,9 +2679,8 @@ z2 => (make-from-mag-ang 30 3)
 (define file-records cdr)
 
 (define (get-record file employee-name)
-  ((get 'get-record (file-division file))
-   (file-records file)
-   employee-name))
+  (apply-specific
+    'get-record (file-division file) (file-records file) employee-name))
 
 ;; (b) The record must also be tagged with the division symbol.
 
@@ -2695,8 +2690,7 @@ z2 => (make-from-mag-ang 30 3)
 (define record-set cdr)
 
 (define (get-salary record)
-  ((get 'get-salary (record-division record))
-   (record-set record)))
+  (apply-specific 'get-salary (record-division record) (record-set record)))
 
 ;; (c) This procedure imposes no additional requirements on implementations.
 
@@ -2710,24 +2704,28 @@ z2 => (make-from-mag-ang 30 3)
 ;; the data-directed dispatch system. These procedures must use the division's
 ;; name as their dispatch key.
 
-;; Example: files for marketing and sales divisions.
+;;; Example: files for marketing and sales divisions
+
 (define files
   (list (make-file 'marketing
                    '(some (very) ((weird)) format))
         (make-file 'sales
                    `(("Joe" ,(make-record 'sales '(40)))
                      ("Jane" ,(make-record 'sales '(50)))))))
-(define (get-record-marketing records name) #f)
-(define (get-record-sales records name)
-  (cond ((null? records) #f)
-        ((equal? (caar records) name) (cadar records))
-        (else (get-record-sales (cdr records) name))))
-(define (get-salary-sales record) (car record))
 
-(reset)
-(put 'get-record 'marketing get-record-marketing)
-(put 'get-record 'sales get-record-sales)
-(put 'get-salary 'sales get-salary-sales)
+(define (install-company-package)
+  (define (get-record-marketing records name) #f)
+  (define (get-record-sales records name)
+    (cond ((null? records) #f)
+          ((equal? (caar records) name) (cadar records))
+          (else (get-record-sales (cdr records) name))))
+  (define (get-salary-sales record) (car record))
+  (put 'get-record 'marketing get-record-marketing)
+  (put 'get-record 'sales get-record-sales)
+  (put 'get-salary 'sales get-salary-sales))
+
+(using install-company-package)
+
 (find-employee-record "Bob" files) => #f
 (get-salary (find-employee-record "Joe" files)) => 40
 (get-salary (find-employee-record "Jane" files)) => 50
@@ -2794,8 +2792,8 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.1.1 add-rat denom div-rat mul-rat numer sub-rat) (:2.4.2 attach-tag)
        (:2.4.3 add-complex apply-generic div-complex install-rectangular-package
                install-polar-package make-from-real-imag make-from-mag-ang
-               make-generic mul-complex sub-complex)
-       (:3.3.3.3 put reset) (?2.1 make-rat)))
+               apply-specific mul-complex sub-complex using)
+       (:3.3.3.3 put) (?2.1 make-rat)))
 
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
@@ -2808,11 +2806,10 @@ z2 => (make-from-mag-ang 30 3)
   (put 'sub '(scheme-number scheme-number) (lambda (x y) (tag (- x y))))
   (put 'mul '(scheme-number scheme-number) (lambda (x y) (tag (* x y))))
   (put 'div '(scheme-number scheme-number) (lambda (x y) (tag (/ x y))))
-  (put 'make 'scheme-number tag)
-  'done)
+  (put 'make 'scheme-number tag))
 
 (define (make-scheme-number n)
-  (make-generic 'make 'scheme-number n))
+  (apply-specific 'make 'scheme-number n))
 
 (define (install-rational-package)
   (define (tag x) (attach-tag 'rational x))
@@ -2820,11 +2817,10 @@ z2 => (make-from-mag-ang 30 3)
   (put 'sub '(rational rational) (lambda (x y) (tag (sub-rat x y))))
   (put 'mul '(rational rational) (lambda (x y) (tag (mul-rat x y))))
   (put 'div '(rational rational) (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational (lambda (n d) (tag (make-rat n d))))
-  'done)
+  (put 'make 'rational (lambda (n d) (tag (make-rat n d)))))
 
 (define (make-rational n d)
-  (make-generic 'make 'rational n d))
+  (apply-specific 'make 'rational n d))
 
 (define (install-complex-package)
   (define (tag z) (attach-tag 'complex z))
@@ -2837,22 +2833,19 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-real-imag 'complex
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'complex
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  'done)
+       (lambda (r a) (tag (make-from-mag-ang r a)))))
 
 (define (make-complex-from-real-imag a b)
-  (make-generic 'make-from-real-imag 'complex a b))
+  (apply-specific 'make-from-real-imag 'complex a b))
 (define (make-complex-from-mag-ang r a)
-  (make-generic 'make-from-mag-ang 'complex r a))
+  (apply-specific 'make-from-mag-ang 'complex r a))
 
 (define (install-numeric-package)
   (install-scheme-number-package)
   (install-rational-package)
-  (install-complex-package)
-  'done)
+  (install-complex-package))
 
-(reset)
-(install-numeric-package) => 'done
+(using install-numeric-package)
 
 (add (make-scheme-number 1) (make-scheme-number 2))
 => (make-scheme-number 3)
@@ -2865,29 +2858,24 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.77
   (use (:1.1.4 square)
-       (:2.4.3 angle apply-generic imag-part magnitude real-part)
+       (:2.4.3 angle apply-generic imag-part magnitude real-part using)
        (:2.5.1 install-complex-package make-complex-from-real-imag)
-       (:3.3.3.3 get put reset)))
+       (:3.3.3.3 get put)))
 
 (define (install-complex-components-package)
   (put 'real-part '(complex) real-part)
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
-  (put 'angle '(complex) angle)
-  'done)
+  (put 'angle '(complex) angle))
 
 ;; This works because all four procedures were already defined in Section 2.4.3
 ;; to use `apply-generic`. This means (1) they will dispatch to the new
 ;; procedures when given complex inputs, and (2) the new procedures will
 ;; dispatch on the inner representation (rectangular or polar).
 
-(reset)
-(install-complex-package) => 'done
-(install-complex-components-package) => 'done
+(using install-complex-package install-complex-components-package)
 
-;; Here is the process generated by `(magnitude z)` where `z` is the object
-;; shown in Figure 2.24:
-
+;; The object shown in Figure 2.24.
 (define z (make-complex-from-real-imag 3 4))
 
 (magnitude z)
@@ -2928,10 +2916,11 @@ z2 => (make-from-mag-ang 30 3)
 (contents 1) => 1
 
 (Exercise ?2.79
-  (use (:2.1.1 denom numer) (:2.4.3 apply-generic imag-part real-part)
+  (use (:2.1.1 denom numer)
+       (:2.4.3 apply-generic imag-part real-part using)
        (:2.5.1 install-numeric-package make-complex-from-mag-ang
                make-complex-from-real-imag make-rational make-scheme-number)
-       (:3.3.3.3 put reset)))
+       (:3.3.3.3 put)))
 
 (define (install-equ-package)
   (put 'equ? '(scheme-number scheme-number) =)
@@ -2942,14 +2931,11 @@ z2 => (make-from-mag-ang 30 3)
   (put 'equ? '(complex complex)
        (lambda (z1 z2)
          (and (= (real-part z1) (real-part z2))
-              (= (imag-part z1) (imag-part z2)))))
-  'done)
+              (= (imag-part z1) (imag-part z2))))))
 
 (define (equ? x y) (apply-generic 'equ? x y))
 
-(reset)
-(install-numeric-package) => 'done
-(install-equ-package) => 'done
+(using install-numeric-package install-equ-package)
 
 (equ? (make-scheme-number 1) (make-scheme-number 1)) => #t
 (equ? (make-scheme-number 1) (make-scheme-number 2)) => #f
@@ -2959,10 +2945,10 @@ z2 => (make-from-mag-ang 30 3)
 (equ? (make-complex-from-real-imag 1 1) (make-complex-from-mag-ang 1 0)) => #f
 
 (Exercise ?2.80
-  (use (:2.1.1 numer) (:2.4.3 apply-generic imag-part real-part)
+  (use (:2.1.1 numer) (:2.4.3 apply-generic imag-part real-part using)
        (:2.5.1 install-numeric-package make-complex-from-mag-ang
                make-complex-from-real-imag make-rational make-scheme-number)
-       (:3.3.3.3 put reset)))
+       (:3.3.3.3 put)))
 
 (define (install-zero-package)
   (put '=zero? '(scheme-number) zero?)
@@ -2970,14 +2956,11 @@ z2 => (make-from-mag-ang 30 3)
        (lambda (x) (zero? (numer x))))
   (put '=zero? '(complex)
        (lambda (x) (and (zero? (real-part x))
-                        (zero? (imag-part x)))))
-  'done)
+                        (zero? (imag-part x))))))
 
 (define (=zero? n) (apply-generic '=zero? n))
 
-(reset)
-(install-numeric-package) => 'done
-(install-zero-package) => 'done
+(using install-numeric-package install-zero-package)
 
 (=zero? (make-scheme-number 0)) => #t
 (=zero? (make-scheme-number 1)) => #f
@@ -2986,106 +2969,174 @@ z2 => (make-from-mag-ang 30 3)
 (=zero? (make-complex-from-mag-ang 0 2)) => #t
 (=zero? (make-complex-from-real-imag 0 1)) => #f
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 2.5.2 (coercion)
-(define (apply-generic-coerce-1 op . args)
+(Section :2.5.2 "Combining Data of Different Types"
+  (use (:2.4.2 contents type-tag) (:2.4.3 using)
+       (:2.5.1 install-numeric-package make-complex-from-real-imag
+               make-scheme-number)
+       (:3.3.3.3 get put)))
+
+(define (get-coercion type1 type2)
+  (get 'coerce (list type1 type2)))
+(define (put-coercion type1 type2 coerce)
+  (put 'coerce (list type1 type2) coerce))
+
+(define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
+    (define (err)
+      (error 'apply-generic "no method for types" op type-tags))
     (if proc
-      (apply proc (map contents args))
-      (if (= (length args) 2)
-        (let* ((type1 (car type-tags))
-               (type2 (cadr type-tags))
-               (a1 (car args))
-               (a2 (cadr args))
-               (t1->t2 (get-coercion type1 type2))
-               (t2->t1 (get-coercion type2 type1)))
-          (cond (t1->t2 (apply-generic-coerce-1 op (t1->t2 a1) a2))
-                (t2->t1 (apply-generic-coerce-1 op a1 (t2->t1 a2)))
-                (else (errorf 'apply-generic-coerce-1
-                        "No method '~s for types '~s"
-                        op type-tags))))
-        (errorf 'apply-generic-coerce-1
-          "No method '~s types '~s"
-          op type-tags)))))
+        (apply proc (map contents args))
+        (if (= (length args) 2)
+            (let* ((type1 (car type-tags))
+                   (type2 (cadr type-tags))
+                   (a1 (car args))
+                   (a2 (cadr args))
+                   (t1->t2 (get-coercion type1 type2))
+                   (t2->t1 (get-coercion type2 type1)))
+              (cond (t1->t2 (apply-generic op (t1->t2 a1) a2))
+                    (t2->t1 (apply-generic op a1 (t2->t1 a2)))
+                    (else (err))))
+            (err)))))
 
-;;; ex 2.81
-(define (ex-2.81 put-coercion)
-  (define (expr x y) (apply-generic 'exp x y))
-  (put-coercion 'scheme-number 'scheme-number identity)
-  (put-coercion 'complex 'complex identity)
-  (put 'exp '(scheme-number scheme-number)
-    (lambda (x y) (tag (expt x y)))))
-;; (a) If we call `expr` with two complex numbers as arguments, the process will
+(define (install-scheme-number->complex-package)
+  (define (coerce n)
+    (make-complex-from-real-imag (contents n) 0))
+  (put-coercion 'scheme-number 'complex coerce))
+
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+
+(using install-numeric-package install-scheme-number->complex-package)
+
+(add (make-scheme-number 1) (make-complex-from-real-imag 0 1))
+=> (add (make-complex-from-real-imag 0 1) (make-scheme-number 1))
+=> (make-complex-from-real-imag 1 1)
+
+(Exercise ?2.81
+  (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 using)
+       (:2.5.1 install-complex-package make-complex-from-real-imag)
+       (:2.5.2 apply-generic get-coercion put-coercion) (:3.3.3.3 get put)))
+
+(define (install-identity-package)
+  (define (scheme-number->scheme-number n) n)
+  (define (complex->complex z) z)
+  (put-coercion 'scheme-number 'scheme-number scheme-number->scheme-number)
+  (put-coercion 'complex 'complex complex->complex))
+
+(define (install-exp-package)
+  (define (tag x) (attach-tag 'scheme-number x))
+  (put 'exp '(scheme-number scheme-number) (lambda (x y) (tag (expt x y)))))
+
+(define (exp x y) (apply-generic 'exp x y))
+
+;; (a) If we call `exp` with two complex numbers as arguments, the process will
 ;; be stuck in an infinite recursion because it keeps coercing the first
 ;; argument to the type of the second, although this brings it no closer to
 ;; being able to find a correct procedure.
+
+(using install-complex-package install-identity-package install-exp-package)
+
+(define z (make-complex-from-real-imag 0 0))
+; (exp z z) ; never terminates
+
 ;; (b) Louis is wrong. Nothing needs to be done to handle coercion with
 ;; arguments of the same type, because if there is no procedure installed for
 ;; that type then coercion doesn't help. This is assuming that the package
 ;; consists only of operations on two arguments of the same type. If an
 ;; operation had two arguments of different types, there may be multiple
 ;; possible coercions that would succeed in finding a specific procedure.
-;; (c) This `apply-generic` doesn't coerce two arguments of the same type.
-(define (apply-generic-error op type-tags)
-  (errorf 'applyg-generic "No method '~s for types '~s" op type-tags))
-(define (apply-generic-coerce-2 op . args)
+
+;; (c) This `apply-generic` doesn't coerce two arguments of the same type:
+
+(define (new-apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
+    (define (err)
+      (error 'new-apply-generic "no method for types" op type-tags))
     (if proc
-      (apply proc (map contents args))
-      (if (= (length args) 2)
-        (let ((type1 (car type-tags))
-              (type2 (cadr type-tags)))
-          (if (eq? type1 type2)
-            (apply-generic-error op type-tags)
-            (let ((a1 (car args))
-                  (a2 (cadr args))
-                  (t1->t2 (get-coercion type1 type2))
-                  (t2->t1 (get-coercion type2 type1)))
-              (cond (t1->t2 (apply-generic-coerce-2 op (t1->t2 a1) a2))
-                    (t2->t1 (apply-generic-coerce-2 op a1 (t2->t1 a2)))
-                    (else (apply-generic-error op type-tags))))))
-        (apply-generic-error op type-tags)))))
+        (apply proc (map contents args))
+        (if (= (length args) 2)
+            (let ((type1 (car type-tags))
+                  (type2 (cadr type-tags)))
+              (if (eq? type1 type2)
+                  (err)
+                  (let ((a1 (car args))
+                        (a2 (cadr args))
+                        (t1->t2 (get-coercion type1 type2))
+                        (t2->t1 (get-coercion type2 type1)))
+                    (cond (t1->t2 (new-apply-generic op (t1->t2 a1) a2))
+                          (t2->t1 (new-apply-generic op a1 (t2->t1 a2)))
+                          (else (err))))))
+            (err)))))
 
-;;; ex 2.82
-(define (get-coercion-fn from to)
+(define (exp x y) (new-apply-generic 'exp x y))
+; (exp z z) ; raises an error
+
+(Exercise ?2.82
+  (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 add-complex using)
+       (:2.5.1 install-numeric-package make-complex-from-real-imag
+               make-scheme-number)
+       (:2.5.2 add get-coercion install-scheme-number->complex-package)
+       (:3.3.3.3 get put)))
+
+(define (get-coercion-or-id from to)
   (if (eq? from to)
-    (lambda (x) x)
-    (get-coercion from to)))
+      (lambda (x) x)
+      (get-coercion from to)))
 (define (all-good? xs)
   (or (null? xs)
       (and (car xs)
            (all-good? (cdr xs)))))
 (define (coerce-all vals types to)
-  (let ((cs (map (lambda (from) (get-coercion-fn from to)) types)))
+  (let ((cs (map (lambda (from) (get-coercion-or-id from to)) types)))
     (if (all-good? cs)
-      (map (lambda (c v) (c v)) cs vals)
-      #f)))
-(define (apply-generic-coerce-3 op . args)
+        (map (lambda (c v) (c v)) cs vals)
+        #f)))
+
+(define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
-         (vals (map contents args))
          (proc (get op type-tags)))
     (define (try tt)
-      (if (null? tt)
-        (apply-generic-error op type-tags)
-        (let* ((try-type (car tt))
-               (coerced-vals (coerce-all vals type-tags try-type))
-               (new-type-tags (map (lambda (x) try-type) type-tags))
-               (proc (get op new-type-tags)))
-          (if proc
-            (apply proc coerced-vals)
-            (try (cdr tt))))))
+      (when (null? tt)
+        (error 'apply-generic "no method for types" op type-tags))
+      (let* ((try-type (car tt))
+             (coerced-args (coerce-all args type-tags try-type))
+             (new-type-tags (map (lambda (x) try-type) type-tags))
+             (proc (get op new-type-tags)))
+        (if proc
+            (apply proc (map contents coerced-args))
+            (try (cdr tt)))))
     (if proc
-      (apply proc vals)
-      (try type-tags))))
+        (apply proc (map contents args))
+        (try type-tags))))
+
+(define (install-add3c-package)
+  (define (tag z) (attach-tag 'complex z))
+  (put 'add3c '(complex complex complex)
+       (lambda (z1 z2 z3)
+         (tag (add-complex z1 (add-complex z2 z3))))))
+
+(define (add3c z1 z2 z3) (apply-generic 'add3c z1 z2 z3))
+
+(using install-numeric-package install-scheme-number->complex-package
+       install-add3c-package)
+
+(add3c (make-scheme-number 1)
+       (make-complex-from-real-imag 1 1)
+       (make-scheme-number 1))
+=> (make-complex-from-real-imag 3 1)
+
 ;; This won't work if two complex numbers are supplied and the operation takes
 ;; one real number and one complex number. It only works for operations given
 ;; the exact types they need, or for operations that take arguments that are all
 ;; of the same type (assuming all necessary coercions are possible).
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.83
 (define (install-raise)
   (define (integer->rational n)
@@ -3096,8 +3147,7 @@ z2 => (make-from-mag-ang 30 3)
     (make-from-real-imag n 0))
   (put 'raise '(integer) integer->rational)
   (put 'raise '(rational) rational->real)
-  (put 'raise '(real) real->complex)
-  'done)
+  (put 'raise '(real) real->complex))
 (define (raise x) (apply-generic 'raise x))
 
 ;;; ex 2.84
@@ -3144,8 +3194,7 @@ z2 => (make-from-mag-ang 30 3)
     (make-integer (quotient (numer r) (denom r))))
   (put 'project '(complex) complex->real)
   (put 'project '(real) real->integer)
-  (put 'project '(rational) rational->integer)
-  'done)
+  (put 'project '(rational) rational->integer))
 (define (drop x)
   (define (climb x to-type)
     (if (eq? (type-tag x) to-type)
@@ -3209,8 +3258,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-real-imag 'rectangular
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'rectangular
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  'done)
+       (lambda (r a) (tag (make-from-mag-ang r a)))))
 (define (install-polar-package)
   (define magnitude car)
   (define angle cdr)
@@ -3230,8 +3278,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-real-imag 'polar
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'polar
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  'done)
+       (lambda (r a) (tag (make-from-mag-ang r a)))))
 (define (install-complex-package)
   (define (make-from-real-imag a b)
     ((get 'make-from-real-imag 'rectangular) x y))
@@ -3258,8 +3305,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-real-imag 'complex
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'complex
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  'done)
+       (lambda (r a) (tag (make-from-mag-ang r a)))))
 (define (make-complex-from-real-imag a b)
   ((get 'make-from-real-imag 'complex) a b))
 (define (make-complex-from-mag-ang r a)
@@ -3290,8 +3336,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   (put 'variable '(polynomial) variable)
-  (put 'term-list '(polynomial) term-list)
-  'done)
+  (put 'term-list '(polynomial) term-list))
 (define (add-terms l1 l2)
   (cond ((empty-termlist? l1) l2)
         ((empty-termlist? l2) l1)
@@ -3347,8 +3392,7 @@ z2 => (make-from-mag-ang 30 3)
           (and (=zero? (coeff (first-term terms)))
                (all-zero? (rest-terms terms)))))
     (all-zero? (term-list p)))
-  (put '=zero? '(polynomial) =zero?)
-  'done)
+  (put '=zero? '(polynomial) =zero?))
 
 ;;; ex 2.88
 (define (negate-terms tl)
@@ -3373,8 +3417,7 @@ z2 => (make-from-mag-ang 30 3)
            (lambda (p)
              (make-polynomial
                (variable p)
-               (negate-terms (term-list p)))))
-  'done)
+               (negate-terms (term-list p))))))
 (define (negate x) (apply-generic 'negate x))
 (define (sub x y) (add x (negate y)))
 
@@ -3412,8 +3455,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'empty-termlist? '(sparse-termlist) empty-termlist?)
   (put 'first-term '(sparse-termlist) first-term)
   (put 'rest-terms '(sparse-termlist) (lambda (tl) (tag (rest-terms tl))))
-  (put 'adjoin-term 'sparse-termlist (lambda (t tl) (tag (adjoin-term t tl))))
-  'done)
+  (put 'adjoin-term 'sparse-termlist (lambda (t tl) (tag (adjoin-term t tl)))))
 (define (install-dense-termlist)
   (define (the-empty-termlist) '())
   (define empty-termlist? null?)
@@ -3433,8 +3475,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'empty-termlist? '(dense-termlist) empty-termlist?)
   (put 'first-term '(dense-termlist) first-term)
   (put 'rest-terms '(dense-termlist) (lambda (tl) (tag (rest-terms tl))))
-  (put 'adjoin-term 'dense-termlist (lambda (t tl) (tag (adjoin-term t tl))))
-  'done)
+  (put 'adjoin-term 'dense-termlist (lambda (t tl) (tag (adjoin-term t tl)))))
 (define (empty-dense-termlist)
   ((get 'the-empty-termlist 'dense-termlist)))
 (define (empty-sparse-termlist)
@@ -3471,8 +3512,7 @@ z2 => (make-from-mag-ang 30 3)
         (list (make-polynomial var (car result))
               (make-polynomial var (cadr result))))
       (errorf 'div-poly "Polys not in same var: ~s" (list p1 p2))))
-  (put 'div '(polynomial polynomial) div-poly)
-  'done)
+  (put 'div '(polynomial polynomial) div-poly))
 
 ;;; ex 2.92
 (define (single-term t)
@@ -3531,8 +3571,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
   (put 'make 'polynomial
-       (lambda (var terms) (tag (make-poly var terms))))
-  'done)
+       (lambda (var terms) (tag (make-poly var terms)))))
 
 ;;; ex 2.93
 (define numer car)
@@ -3559,8 +3598,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'sub two-r (lambda (x y) (tag (sub-rat x y))))
   (put 'mul two-r (lambda (x y) (tag (mul-rat x y))))
   (put 'div two-r (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational (lambda (n d) (tag (make-rat n d))))
-  'done)
+  (put 'make 'rational (lambda (n d) (tag (make-rat n d)))))
 (define (make-rational n d)
   ((get 'make 'rational) n d))
 (check
@@ -3592,8 +3630,7 @@ z2 => (make-from-mag-ang 30 3)
         (make-polynomial (variable p1) tl))
       (error "Polys not in same variable: GCD-POLY" (list p1 p2))))
   (put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
-  (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly)
-  'done)
+  (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly))
 (define (greatest-common-divisor a b)
   (apply-generic 'greatest-common-divisor a b))
 (check
@@ -3693,15 +3730,13 @@ z2 => (make-from-mag-ang 30 3)
         (list (make-polynomial var (car reduced))
               (make-polynomial var (cadr reduced))))
       (errorf 'reduce-poly "Polys not in same variable: ~s" (list n d))))
-  (put 'reduce '(polynomial polynomial) reduce-poly)
-  'done)
+  (put 'reduce '(polynomial polynomial) reduce-poly))
 ;; (b) reduce-integers
 (define (install-reduce-integers)
   (define (reduce-integers n d)
     (let ((g (gcd n d)))
       (list (/ n g) (/ d g))))
-  (put 'reduce '(scheme-number scheme-number) reduce-integers)
-  'done)
+  (put 'reduce '(scheme-number scheme-number) reduce-integers))
 (define numer car)
 (define denom cdr)
 (define (install-rational-package)
@@ -3728,8 +3763,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'sub two-r (lambda (x y) (tag (sub-rat x y))))
   (put 'mul two-r (lambda (x y) (tag (mul-rat x y))))
   (put 'div two-r (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational (lambda (n d) (tag (make-rat n d))))
-  'done)
+  (put 'make 'rational (lambda (n d) (tag (make-rat n d)))))
 (define (make-rational n d)
   ((get 'make 'rational) n d))
 (check
