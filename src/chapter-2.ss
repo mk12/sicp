@@ -2931,7 +2931,10 @@ z2 => (make-from-mag-ang 30 3)
   (put 'equ? '(complex complex)
        (lambda (z1 z2)
          (and (= (real-part z1) (real-part z2))
-              (= (imag-part z1) (imag-part z2))))))
+              (= (imag-part z1) (imag-part z2)))))
+  ;; These are used later in Exercise 2.85.
+  (put 'equ? '(integer integer) =)
+  (put 'equ? '(real real) =))
 
 (define (equ? x y) (apply-generic 'equ? x y))
 
@@ -3134,122 +3137,243 @@ z2 => (make-from-mag-ang 30 3)
 ;; the exact types they need, or for operations that take arguments that are all
 ;; of the same type (assuming all necessary coercions are possible).
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.83
-(define (install-raise)
+(Exercise ?2.83
+  (use (:2.1.1 denom numer) (:2.4.2 attach-tag)
+       (:2.4.3 apply-generic apply-specific using)
+       (:2.5.1 add div install-complex-package install-rational-package
+               make-rational make-complex-from-real-imag)
+       (:3.3.3.3 put)))
+
+(define (install-integer-package)
+  (define (tag x) (attach-tag 'integer x))
+  (put 'add '(integer integer) (lambda (x y) (tag (+ x y))))
+  (put 'sub '(integer integer) (lambda (x y) (tag (- x y))))
+  (put 'mul '(integer integer) (lambda (x y) (tag (* x y))))
+  (put 'div '(integer integer)
+       (lambda (x y)
+         (let ((z (/ x y)))
+           (if (integer? z) (tag z) (make-rational x y)))))
+  (put 'make 'integer tag))
+
+(define (make-integer x) (apply-specific 'make 'integer x))
+
+(define (install-real-package)
+  (define (tag x) (attach-tag 'real x))
+  (put 'add '(real real) (lambda (x y) (tag (+ x y))))
+  (put 'sub '(real real) (lambda (x y) (tag (- x y))))
+  (put 'mul '(real real) (lambda (x y) (tag (* x y))))
+  (put 'div '(real real) (lambda (x y) (tag (/ x y))))
+  (put 'make 'real tag))
+
+(define (make-real x) (apply-specific 'make 'real x))
+
+;; The extended numeric package splits 'scheme-number into 'integer and 'real.
+(define (install-extended-numeric-package)
+  (install-integer-package)
+  (install-rational-package)
+  (install-real-package)
+  (install-complex-package))
+
+(define (install-raise-package)
   (define (integer->rational n)
     (make-rational n 1))
   (define (rational->real x)
-    (make-real (numer x)))
+    (make-real (inexact (/ (numer x) (denom x)))))
   (define (real->complex n)
-    (make-from-real-imag n 0))
+    (make-complex-from-real-imag n 0))
   (put 'raise '(integer) integer->rational)
   (put 'raise '(rational) rational->real)
   (put 'raise '(real) real->complex))
+
 (define (raise x) (apply-generic 'raise x))
 
-;;; ex 2.84
-(define numeric-tower '(integer rational real complex))
-(define (top? t)
-  (let ((ls (memq t numeric-tower)))
-    (and (list? ls) (= (length ls) 1))))
-(define t= eq?)
-(define (t< t1 t2)
-  (define (search tower)
-    (cond ((null? tower) (errorf 't< "Types not in tower: ~s, ~s" t1 t2))
-          ((eq? (car tower) t1) #t)
-          ((eq? (car tower) t2) #f)
-          (else (search (cdr tower)))))
-  (and (not (t= t1 t2))
-       (search numeric-tower)))
-(define (apply-generic-coerce-4 op . args)
+(using install-extended-numeric-package install-raise-package)
+
+(add (make-integer 1) (make-integer 2)) => (make-integer 3)
+(div (make-integer 10) (make-integer 2)) => (make-integer 5)
+(div (make-integer 1) (make-integer 2)) => (make-rational 1 2)
+
+(raise (make-integer 1)) => (make-rational 1 1)
+(raise (make-rational 1 2)) => (make-real 0.5)
+(raise (make-real 0.5)) => (make-complex-from-real-imag 0.5 0)
+
+(Exercise ?2.84
+  (use (:2.4.2 contents type-tag) (:2.4.3 using)
+       (:2.5.1 make-complex-from-real-imag make-rational) (:3.3.3.3 get)
+       (?2.83 install-extended-numeric-package install-raise-package
+              make-integer make-real raise)))
+
+(define numeric-tower
+  '(integer rational real complex))
+
+(define (tower-bottom? type) (eq? type 'integer))
+(define (tower-top? type) (eq? type 'complex))
+
+(define (tower-position type)
+  (define (iter tower n)
+    (cond ((null? tower) #f)
+          ((eq? type (car tower)) n)
+          (else (iter (cdr tower) (+ n 1)))))
+  (iter numeric-tower 0))
+
+(define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (vals (map contents args))
          (proc (get op type-tags)))
+    (define (err)
+      (error 'apply-generic "no method for types" op type-tags))
     (cond (proc (apply proc vals))
-          ((= (length args) 1)
-           (if (top? (car type-tags))
-             (apply-generic-error op type-tags)
-             (apply-generic-coerce-4 op (list (raise (car args))))))
-          ((= (length args) 2)
+          ((null? args) (err))
+          ((null? (cdr args))
+           (if (tower-top? (car type-tags))
+               (err)
+               (apply-generic op (raise (car args)))))
+          ((null? (cddr args))
            (let ((a1 (car args))
                  (a2 (cadr args))
-                 (t1 (car type-tags))
-                 (t2 (cadr type-tags)))
-             (cond ((eq? t1 t2) (apply-generic-error op type-tags))
-                   ((t< t1 t1)
-                    (apply-generic-coerce-4 op (list (raise a1) a2)))
-                   (else (apply-generic-coerce-4 op (list a1 (raise a2)))))))
-          (else (apply-generic-error op type-tags)))))
+                 (p1 (tower-position (car type-tags)))
+                 (p2 (tower-position (cadr type-tags))))
+             (cond ((or (not p1) (not p2) (= p1 p2)) (err))
+                   ((< p1 p2) (apply-generic op (raise a1) a2))
+                   (else (apply-generic op a1 (raise a2))))))
+          (else (err)))))
 
-;;; ex 2.85
-(define (install-project)
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+
+(using install-extended-numeric-package install-raise-package)
+
+(add (make-integer 1) (make-complex-from-real-imag 2.0 3.0))
+=> (make-complex-from-real-imag 3.0 3.0)
+
+(add (make-rational 1 2) (make-real 0.5))
+=> (make-real 1.0)
+
+(div (make-real 1) (make-integer 2))
+=> (make-real 0.5)
+
+(Exercise ?2.85
+  (use (:2.1.1 numer denom) (:2.4.2 contents type-tag) (:2.4.3 real-part using)
+       (:2.5.1 make-complex-from-real-imag make-rational) (:3.3.3.3 get put)
+       (?2.79 equ? install-equ-package) 
+       (?2.83 install-extended-numeric-package install-raise-package
+              make-integer make-real raise)
+       (?2.84 tower-position tower-bottom? tower-top?)))
+
+(define (install-project-package)
   (define (complex->real x)
     (make-real (real-part x)))
-  (define (real->integer x)
-    (make-integer (round x)))
+  (define (real->rational x)
+    ;; Note: `exact`, `numerator`, and `denominator` are built-in procedures.
+    (let ((y (exact x)))
+      (make-rational (numerator y) (denominator y))))
   (define (rational->integer r)
     (make-integer (quotient (numer r) (denom r))))
   (put 'project '(complex) complex->real)
-  (put 'project '(real) real->integer)
+  (put 'project '(real) real->rational)
   (put 'project '(rational) rational->integer))
+
+(define (project x) (apply-generic 'project x))
+
 (define (drop x)
-  (define (climb x to-type)
-    (if (eq? (type-tag x) to-type)
-      x
-      (climb (raise x) to-type)))
-  (if (not (memq (type-tag x) numeric-tower))
-    x
-    (let ((proj (project x))
-          (returned (climb proj (type-tag x))))
-      (if (equ? x returned)
-        proj
-        x))))
-(define (apply-generic-coerce-5 op . args)
+  (let ((type (type-tag x)))
+    (if (or (tower-bottom? type) (not (tower-position type)))
+        x
+        (let* ((down (project x))
+               (down-up (raise down)))
+          (if (equ? x down-up) (drop down) x)))))
+
+(define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (vals (map contents args))
          (proc (get op type-tags)))
+    (define (err)
+      (error 'apply-generic "no method for types" op type-tags))
     (cond (proc
             (let ((result (apply proc vals)))
-              (if (eq? op 'raise)
-                result
-                (drop result))))
-          ((= (length args) 1)
-           (if (top? (car type-tags))
-             (apply-generic-error op type-tags)
-             (apply-generic-coerce-5 op (list (raise (car args))))))
-          ((= (length args) 2)
+              (if (or (eq? op 'raise) (eq? op 'project) (eq? op 'equ?))
+                  result
+                  (drop result))))
+          ((null? args) (err))
+          ((null? (cdr args))
+           (if (tower-top? (car type-tags))
+               (err)
+               (apply-generic op (raise (car args)))))
+          ((null? (cddr args))
            (let ((a1 (car args))
                  (a2 (cadr args))
-                 (t1 (car type-tags))
-                 (t2 (cadr type-tags)))
-             (cond ((eq? t1 t2) (apply-generic-error op type-tags))
-                   ((t< t1 t1)
-                    (apply-generic-coerce-5 op (list (raise a1) a2)))
-                   (else (apply-generic-coerce-5 op (list a1 (raise a2)))))))
-          (else (apply-generic-error op type-tags)))))
+                 (p1 (tower-position (car type-tags)))
+                 (p2 (tower-position (cadr type-tags))))
+             (cond ((or (not p1) (not p2) (= p1 p2)) (err))
+                   ((< p1 p2) (apply-generic op (raise a1) a2))
+                   (else (apply-generic op a1 (raise a2))))))
+          (else (err)))))
 
-;;; ex 2.86
-;; The procedures `add`, `sub`, `mul`, and `div` use `apply-generic` on their
-;; respective operations (see subsection 2.5.1, immediately after section 2.5).
-;; The main changes for this exercise are replacing instances of primitive
-;; operations like `+`, `-`, `*`, and `/` with the generic procedures. Also, we
-;; are assuming that `sin`, `cos`, and `atan` are implemented as generic
-;; procedures -- I don't feel like doing it.
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+
+(using install-extended-numeric-package install-equ-package
+       install-raise-package install-project-package)
+
+(div (make-real 1) (make-complex-from-real-imag 2 0)) => (make-rational 1 2)
+(add (make-complex-from-real-imag 1 0) (make-integer 1)) => (make-integer 2)
+(mul (make-rational 3 2) (make-real 8)) => (make-integer 12)
+(sub (make-real 2) (make-real 0.5)) => (make-rational 3 2)
+
+(Exercise ?2.86
+  (use (:2.1.1 denom numer) (:2.4.2 attach-tag contents type-tag)
+       (:2.4.3 angle apply-specific imag-part magnitude make-from-real-imag
+               make-from-mag-ang real-part using)
+       (:2.5.1 install-rational-package make-complex-from-mag-ang
+               make-complex-from-real-imag make-rational)
+       (:3.3.3.3 put)
+       (?2.79 equ? install-equ-package)
+       (?2.83 install-integer-package install-raise-package install-real-package
+              make-integer make-real)
+       (?2.85 add apply-generic div install-project-package mul sub)))
+
+;; This has to be built on top of the numeric tower, rather than just the types
+;; from Section 2.5.1 (scheme-number, rational, complex) because we need
+;; coercions between all the types. For example, internally complex numbers will
+;; take sines, cosines, square roots, etc. of their components, so if they are
+;; integers, they will need to be promoted to real numbers, and then be combined
+;; in other operations potentially using different data types.
+
 (define (square x) (mul x x))
+
+(define (install-trig-package)
+  (define (tag x) (attach-tag 'real x))
+  (define (id x) x)
+  (define (divide-rat x) (/ (numer x) (denom x)))
+  (for-each
+    (lambda (type f)
+      (put 'square-root (list type) (lambda (x) (tag (sqrt (f x)))))
+      (put 'sine (list type) (lambda (x) (tag (sin (f x)))))
+      (put 'cosine (list type) (lambda (x) (tag (cos (f x)))))
+      (put 'atan2 (list type type) (lambda (x y) (tag (atan (f x) (f y))))))
+    '(integer real rational)
+    (list id id divide-rat)))
+
+(define (square-root x) (apply-generic 'square-root x))
+(define (sine x) (apply-generic 'sine x))
+(define (cosine x) (apply-generic 'cosine x))
+(define (atan2 x y) (apply-generic 'atan2 x y))
+
 (define (install-rectangular-package)
   (define real-part car)
   (define imag-part cdr)
   (define make-from-real-imag cons)
   (define (magnitude z)
-    (sqrt (add (square (real-part z))
-               (square (imag-part z)))))
+    (square-root (add (square (real-part z))
+                      (square (imag-part z)))))
   (define (angle z)
-    (atan (imag-part z) (real-part z)))
+    (atan2 (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a)
-    (cons (mul r (cos a)) (mul r (sin a))))
+    (cons (mul r (cosine a)) (mul r (sine a))))
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
   (put 'imag-part '(rectangular) imag-part)
@@ -3259,17 +3383,18 @@ z2 => (make-from-mag-ang 30 3)
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a)))))
+
 (define (install-polar-package)
   (define magnitude car)
   (define angle cdr)
   (define make-from-mag-ang cons)
   (define (real-part z)
-    (mul (magnitude z) (cos (angle z))))
+    (mul (magnitude z) (cosine (angle z))))
   (define (imag-part z)
-    (mul (magnitude z) (sin (angle z))))
+    (mul (magnitude z) (sine (angle z))))
   (define (make-from-real-imag a b)
-    (cons (sqrt (add (square a) (square b)))
-          (atan b a)))
+    (cons (square-root (add (square a) (square b)))
+          (atan2 b a)))
   (define (tag x) (attach-tag 'polar x))
   (put 'real-part '(polar) real-part)
   (put 'imag-part '(polar) imag-part)
@@ -3279,11 +3404,9 @@ z2 => (make-from-mag-ang 30 3)
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a)))))
+
 (define (install-complex-package)
-  (define (make-from-real-imag a b)
-    ((get 'make-from-real-imag 'rectangular) x y))
-  (define (make-from-mag-ang r a)
-    ((get 'make-from-mag-ang 'polar) r a))
+  (define (tag z) (attach-tag 'complex z))
   (define (add-complex z1 z2)
     (make-from-real-imag (add (real-part z1) (real-part z2))
                          (add (imag-part z1) (imag-part z2))))
@@ -3296,21 +3419,67 @@ z2 => (make-from-mag-ang 30 3)
   (define (div-complex z1 z2)
     (make-from-mag-ang (div (magnitude z1) (magnitude z2))
                        (sub (angle z1) (angle z2))))
-  (define (tag z) (attach-tag 'complex z))
-  (define two-c '(complex complex))
-  (put 'add two-c (lambda (z1 z2) (tag (add-complex z1 z2))))
-  (put 'sub two-c (lambda (z1 z2) (tag (sub-complex z1 z2))))
-  (put 'mul two-c (lambda (z1 z2) (tag (mul-complex z1 z2))))
-  (put 'div two-c (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (install-rectangular-package)
+  (install-polar-package)
+  (put 'add '(complex complex) (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex) (lambda (z1 z2) (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex) (lambda (z1 z2) (tag (div-complex z1 z2))))
   (put 'make-from-real-imag 'complex
        (lambda (a b) (tag (make-from-real-imag a b))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a)))))
-(define (make-complex-from-real-imag a b)
-  ((get 'make-from-real-imag 'complex) a b))
-(define (make-complex-from-mag-ang r a)
-  ((get 'make-from-mag-ang 'complex) r a))
 
+;; Note: The implementation of `drop` will still use the old implementation of
+;; `equ?`, which uses an older `apply-generic` without coercion.
+(define (equ-generic? x y) (apply-generic 'equ? x y))
+
+;; Fix complex procedures that previously assumed the complex number's real part
+;; and imaginary part were plain Scheme numbers.
+(define (install-complex-patch-package)
+  (put 'equ? '(complex complex)
+       (lambda (z1 z2)
+         (and (equ-generic? (real-part z1) (real-part z2))
+              (equ-generic? (imag-part z1) (imag-part z2)))))
+  (put 'raise '(real)
+       (lambda (x) (make-complex-from-real-imag (make-real x) (make-real 0))))
+  (put 'project '(complex)
+       (lambda (x)
+         (let* ((rp (real-part x))
+                (type (type-tag rp))
+                (value (contents rp)))
+           (case type
+             ((real) rp)
+             ((rational) (make-real (inexact (/ (numer value) (denom value)))))
+             ((integer) (make-real value)))))))
+
+(define (install-final-numeric-package)
+  (install-integer-package)
+  (install-rational-package)
+  (install-real-package)
+  (install-complex-package)
+  ;; Used by the new complex package.
+  (install-trig-package)
+  ;; Used by numeric tower coercion and simplifying.
+  (install-equ-package)
+  (install-raise-package)
+  (install-project-package)
+  ;; Fix up complex entries in the packages above.
+  (install-complex-patch-package))
+
+(using install-final-numeric-package)
+
+(add (make-complex-from-mag-ang (make-rational 1 2) (make-integer 0))
+     (make-complex-from-real-imag (make-rational 3 4) (make-real 2)))
+=> (make-complex-from-real-imag (make-rational 5 4) (make-integer 2))
+
+(div (make-complex-from-mag-ang (make-integer 3) (make-real 1))
+     (make-complex-from-mag-ang (make-rational 1 2) (make-real 1)))
+=> (make-integer 6)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; example 2.5.3 (arithmetic on polynomials)
 (define variable car)
 (define term-list cdr)
