@@ -2893,7 +2893,8 @@ z2 => (make-from-mag-ang 30 3)
 ;; `apply-generic` is invoked twice: once on the 'complex object and once on the
 ;; inner 'rectangular object. Each invocation strips off one type tag.
 
-(Exercise ?2.78)
+(Exercise ?2.78
+  (use (:2.4.3 using) (:3.3.3.3 get put)))
 
 (define (attach-tag type-tag contents)
   (if (eq? type-tag 'scheme-number)
@@ -2914,6 +2915,34 @@ z2 => (make-from-mag-ang 30 3)
 (type-tag 1) => 'scheme-number
 (contents '(foo . a)) => 'a
 (contents 1) => 1
+
+;; Copied from Section 2.4.3 to use the new tagging procedures.
+(define (apply-generic op . args)
+  (let* ((type-tags (map type-tag args))
+         (proc (get op type-tags)))
+    (if proc
+        (apply proc (map contents args))
+        (error 'apply-generic "no method for argument types" op type-tags))))
+
+;; Copied from Section 2.5.1 to use the new tagging procedures.
+(define (install-scheme-number-package)
+  (define (tag x) (attach-tag 'scheme-number x))
+  (put 'add '(scheme-number scheme-number) (lambda (x y) (tag (+ x y))))
+  (put 'sub '(scheme-number scheme-number) (lambda (x y) (tag (- x y))))
+  (put 'mul '(scheme-number scheme-number) (lambda (x y) (tag (* x y))))
+  (put 'div '(scheme-number scheme-number) (lambda (x y) (tag (/ x y))))
+  (put 'make 'scheme-number tag))
+
+;; Copied from Section 2.5.1 to use the new `apply-generic`.
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+
+(using install-scheme-number-package)
+
+(add 1 2) => 3
+(mul 3 4) => 12
 
 (Exercise ?2.79
   (use (:2.1.1 denom numer)
@@ -3292,10 +3321,12 @@ z2 => (make-from-mag-ang 30 3)
     (define (err)
       (error 'apply-generic "no method for types" op type-tags))
     (cond (proc
-            (let ((result (apply proc vals)))
-              (if (or (eq? op 'raise) (eq? op 'project) (eq? op 'equ?))
-                  result
-                  (drop result))))
+           (let ((result (apply proc vals)))
+             (if (and (pair? result)
+                      (tower-position (type-tag result))
+                      (not (or (eq? op 'raise) (eq? op 'project))))
+                 (drop result)
+                 result)))
           ((null? args) (err))
           ((null? (cdr args))
            (if (tower-top? (car type-tags))
@@ -3477,35 +3508,40 @@ z2 => (make-from-mag-ang 30 3)
      (make-complex-from-mag-ang (make-rational 1 2) (make-real 1)))
 => (make-integer 6)
 
-) ; end of SICP
-) ; end of library
-#|
-;;; example 2.5.3 (arithmetic on polynomials)
-(define variable car)
-(define term-list cdr)
-(define variable? symbol?)
-(define same-variable? eq?)
-(define (install-polynomial)
-  (define make-poly cons)
+(Section :2.5.3 "Example: Symbolic Algebra")
+
+(Section :2.5.3.1 "Arithmetic on polynomials"
+  (use (:2.3.2 same-variable? variable?)
+       (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-term order
+                 rest-terms the-empty-termlist)
+       (:3.3.3.3 put) (?2.78 attach-tag add mul)))
+
+;; Note: We are following Footnote 58 and using the generic arithmetic system
+;; from Exercise 2.78, where Scheme numbers are not explicitly tagged.
+
+(define (variable p) (car p))
+(define (term-list p) (cdr p))
+
+(define (install-polynomial-package)
+  (define (make-poly variable term-list) (cons variable term-list))
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
-      (make-poly (variable p1)
-                 (add-terms (term-list p1) (term-list p2)))
-      (errorf 'add-poly "Polys not in same var: ~s" (list p1 p2))))
+        (make-poly (variable p1)
+                   (add-terms (term-list p1) (term-list p2)))
+        (error 'add-poly "polys not in same var" p1 p2)))
   (define (mul-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
-      (make-poly (variable p1)
-                 (mul-terms (term-list p1) (term-list p2)))
-      (errorf 'mul-poly "Polys not in same var: ~s" (list p1 p2))))
+        (make-poly (variable p1)
+                   (mul-terms (term-list p1) (term-list p2)))
+        (error 'mul-poly "polys not in same var" p1 p2)))
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
   (put 'make 'polynomial
-       (lambda (var terms) (tag (make-poly var terms))))
-  (put 'variable '(polynomial) variable)
-  (put 'term-list '(polynomial) term-list))
+       (lambda (var terms) (tag (make-poly var terms)))))
+
 (define (add-terms l1 l2)
   (cond ((empty-termlist? l1) l2)
         ((empty-termlist? l2) l1)
@@ -3524,46 +3560,83 @@ z2 => (make-from-mag-ang 30 3)
                                  (add (coeff t1) (coeff t2)))
                       (add-terms (rest-terms l1)
                                  (rest-terms l2)))))))))
+
 (define (mul-terms l1 l2)
   (if (empty-termlist? l1)
-    (the-empty-termlist)
-    (add-terms (mul-term-by-all-terms (first-term l1) l2)
-               (mul-terms (rest-terms l1) l2))))
+      (the-empty-termlist)
+      (add-terms (mul-term-by-all-terms (first-term l1) l2)
+                 (mul-terms (rest-terms l1) l2))))
+
 (define (mul-term-by-all-terms t1 l)
   (if (empty-termlist? l)
-    (the-empty-termlist)
-    (let ((t2 (first-term l)))
-      (adjoin-term
-        (make-term (+ (order t1) (order t2))
-                   (mul (coeff t1) (coeff t2)))
-        (mul-term-by-all-terms t1 (rest-terms l))))))
+      (the-empty-termlist)
+      (let ((t2 (first-term l)))
+        (adjoin-term
+          (make-term (+ (order t1) (order t2))
+                     (mul (coeff t1) (coeff t2)))
+          (mul-term-by-all-terms t1 (rest-terms l))))))
 
-;;; example 2.5.3 (representing term lists)
+(Section :2.5.3.2 "Representing term lists"
+  (use (:2.4.3 apply-specific) (?2.78 apply-generic)))
+
 (define (adjoin-term term term-list)
-  (if (=zero? (coeff term))
-    term-list
-    (cons term term-list)))
+  ;; Can't use `=zero?` from Exercise 2.87 due to import cycle.
+  (if (apply-generic '=zero? (coeff term))
+      term-list
+      (cons term term-list)))
+
 (define (the-empty-termlist) '())
 (define first-term car)
 (define rest-terms cdr)
 (define empty-termlist? null?)
+
 (define make-term list)
 (define order car)
 (define coeff cadr)
-(define (make-polynomial var terms)
-  ((get 'make 'polynomial) var terms))
 
-;;; ex 2.87
-(define (install-poly-zero-pred)
-  (define (=zero? p)
+(define (make-polynomial var terms)
+  (apply-specific 'make 'polynomial var terms))
+
+(Exercise ?2.87
+  (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package term-list)
+       (:2.5.3.2 coeff empty-termlist? first-term make-polynomial rest-terms)
+       (:3.3.3.3 put)
+       (?2.78 add apply-generic install-scheme-number-package mul)))
+
+(define (install-polynomial-zero-package)
+  (define (poly-zero? p)
     (define (all-zero? terms)
       (or (empty-termlist? terms)
           (and (=zero? (coeff (first-term terms)))
                (all-zero? (rest-terms terms)))))
     (all-zero? (term-list p)))
-  (put '=zero? '(polynomial) =zero?))
+  (put '=zero? '(scheme-number) zero?)
+  (put '=zero? '(polynomial) poly-zero?))
 
-;;; ex 2.88
+(define (=zero? n) (apply-generic '=zero? n))
+
+(using install-scheme-number-package install-polynomial-package
+       install-polynomial-zero-package)
+
+(=zero? (make-polynomial 'x '())) => #t
+(=zero? (make-polynomial 'x '((2 0)))) => #t
+(=zero? (make-polynomial 'x '((2 1) (1 0)))) => #f
+
+(add (make-polynomial 'x '((100 1) (2 3)))
+     (make-polynomial 'x '((3 1) (2 2) (0 5))))
+=> (make-polynomial 'x '((100 1) (3 1) (2 5) (0 5)))
+
+(mul (make-polynomial 'x '((2 1) (0 1)))
+     (make-polynomial 'x '((1 2))))
+=> (make-polynomial 'x '((3 2) (1 2)))
+
+(Exercise ?2.88
+  (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package term-list variable)
+       (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
+                 make-term order rest-terms the-empty-termlist)
+       (:3.3.3.3 put) (?2.78 add apply-generic install-scheme-number-package)
+       (?2.87 install-polynomial-zero-package)))
+
 (define (negate-terms tl)
   (if (empty-termlist? tl)
     (the-empty-termlist)
@@ -3571,25 +3644,32 @@ z2 => (make-from-mag-ang 30 3)
            (new-term (make-term (order term) (negate (coeff term)))))
       (adjoin-term new-term
                    (negate-terms (rest-terms tl))))))
-(define (install-negate)
-  (define (put-for type f)
-    (put 'negate (list type) f))
-  (put-for 'scheme-number -)
-  (put-for 'rational
-           (lambda (r) (make-rational (- (numer r)) (denom r))))
-  (put-for 'complex
-           (lambda (c)
-             (make-complex-from-real-imag
-               (- (real-part c))
-               (imag-part c))))
-  (put-for 'polynomial
-           (lambda (p)
-             (make-polynomial
-               (variable p)
-               (negate-terms (term-list p))))))
+
+(define (install-negate-package)
+  (put 'negate '(scheme-number) -)
+  (put 'negate '(polynomial)
+       (lambda (p)
+         (make-polynomial
+           (variable p)
+           (negate-terms (term-list p))))))
+
 (define (negate x) (apply-generic 'negate x))
 (define (sub x y) (add x (negate y)))
 
+(using install-scheme-number-package install-polynomial-package
+       install-polynomial-zero-package install-negate-package)
+
+(negate 1) => -1
+(sub 5 2) => 3
+
+(negate (make-polynomial 'x '((2 1)))) => (make-polynomial 'x '((2 -1)))
+(sub (make-polynomial 'x '((3 1) (1 2)))
+     (make-polynomial 'x '((2 2) (1 1) (0 -1))))
+=> (make-polynomial 'x '((3 1) (2 -2) (1 1) (0 1)))
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.89
 ;; This assumes that adjoined terms are always of a greater order than the
 ;; largest order already present in the term-list (at its head).
