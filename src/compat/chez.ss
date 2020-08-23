@@ -4,14 +4,16 @@
 
 (library (src compat active)
   (export current-output-port format make-parameter open-output-string
-          parameterize random runtime seed-rng string-contains? syntax->location
-          with-output-to-string)
+          parameterize patch-output random runtime seed-rng string-contains?
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
           (only (chezscheme)
                 annotation-source current-output-port current-time format
                 locate-source-object-source make-parameter open-output-string
                 parameterize random random-seed syntax->annotation
                 time-nanosecond time-second with-output-to-string))
+  
+  (define (patch-output s) s)
 
   (define (runtime)
     (let ((t (current-time 'time-monotonic)))

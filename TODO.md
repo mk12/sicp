@@ -1,12 +1,18 @@
+# New to do
+
+- remove debug stuff from core.ss
+- consider removing --slow
++ remove make-parameter/parameterize from sicp
+
 # To Do
 
-- main.scm to run stuff
-- --slow flag
++ main.scm to run stuff
++ --slow flag
 
 need:
-- use stuff from later chapter
-- sometimes don't override: sqrt
-- sometimes override: real-part
++ use stuff from later chapter
++ sometimes don't override: sqrt
++ sometimes override: real-part
 
 2 approaches:
 A semantic (exercise 1.1 ...)

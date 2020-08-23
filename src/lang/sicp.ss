@@ -23,7 +23,7 @@
   (define-syntax capture-output
     (syntax-rules ()
       ((_ e* ...)
-       (with-output-to-string (lambda () e* ...)))))
+       (patch-output (with-output-to-string (lambda () e* ...))))))
 
   ;; Supresses printing to standard output.
   (define-syntax hide-output

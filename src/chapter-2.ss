@@ -2462,6 +2462,9 @@ z2 => (make-from-mag-ang 30 3)
 (define make-from-real-imag make-from-real-imag-rectangular)
 (define make-from-mag-ang make-from-mag-ang-polar)
 
+;; Generic operators
+; (paste (:2.4.1 add-complex sub-complex mul-complex div-complex))
+
 ;; Generic operators (copied from Section 2.4.1)
 (define (add-complex z1 z2)
   (make-from-real-imag
@@ -3667,24 +3670,30 @@ z2 => (make-from-mag-ang 30 3)
      (make-polynomial 'x '((2 2) (1 1) (0 -1))))
 => (make-polynomial 'x '((3 1) (2 -2) (1 1) (0 1)))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.89
-;; This assumes that adjoined terms are always of a greater order than the
-;; largest order already present in the term-list (at its head).
-(define zero-coeff (list 'scheme-number 0))
+(Exercise ?2.89
+  (use (:2.5.3.2 coeff make-term order the-empty-termlist)
+       (?2.87 =zero?)))
+
+;; idea: have sth like this
+;; (copy-defs (:2.5.3.1 add-terms))
+;; or in the (Exercise (use) (copy)) block!
+
 (define (adjoin-term term term-list)
   (cond ((=zero? (coeff term)) term-list)
         ((= (order term) (length term-list))
          (cons (coeff term) term-list))
-        (else (adjoin-term term (cons zero-coeff term-list)))))
+        (else (adjoin-term term (cons 0 term-list)))))
+
 (define (first-term term-list)
   (make-term (- (length term-list) 1)
              (car term-list)))
-;; Procedures `the-empty-termlist`, `rest-terms`, `empty-termlist?`,
-;; `make-term`, `order`, and `coeff` remain the same as before.
 
+(adjoin-term (make-term 3 1) (the-empty-termlist)) => '(1 0 0 0)
+(first-term '(1 0 0 0)) => (make-term 3 1)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.90
 (define make-term list)
 (define order car)

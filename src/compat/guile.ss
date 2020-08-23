@@ -4,8 +4,8 @@
 
 (library (src compat active)
   (export current-output-port format make-paramter open-output-string
-          parameterize random runtime seed-rng string-contains? syntax->location
-          with-output-to-string)
+          parameterize patch-output random runtime seed-rng string-contains?
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
           (only (guile)
                 *random-state* current-output-port gettimeofday make-parameter
@@ -16,6 +16,8 @@
 
   (define (format . args)
     (apply guile-format #f args))
+
+  (define (patch-output s) s)
 
   (define (runtime)
     (let ((t (gettimeofday)))

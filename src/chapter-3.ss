@@ -516,7 +516,7 @@ x => (cons y (cdr x)) => '((e f) c d)
 (define y '(e f))
 
 (set-cdr! x y)
-x => (cons (car x) y) '((a b) e f)
+x => (cons (car x) y) => '((a b) e f)
 
 (Exercise ?3.12)
 

@@ -38,19 +38,19 @@ slow=> 354224848179261915075
 Code fragments are isolated to their part of the book:
 
 ```scheme
-(Chapter :1 "chapter title")    ; The ":" sigil is for the text
+(Chapter :1 "chapter title")  ; The ":" sigil is for the text
 
 (define a 1)  ; This belongs to Chapter 1
 
-(Section :1.1 "section title")  ; The "?" sigil is for exercises
+(Section :1.1 "section title")
 
 (define b 2)  ; This belongs to Section 1.1
 
-(Subsection :1.1.1 "subsection title")
+(Section :1.1.1 "subsection title")
 
 (define c 3)  ; This belongs to Subsection 1.1.1
 
-(Exercise ?1.1)
+(Exercise ?1.1)  ; The "?" sigil is for exercises
 
 (define d 4)  ; This belongs to Exercise 1.1
 ```
@@ -73,6 +73,22 @@ We can import definitions out of order:
   (use :1.2 square cube))
 
 (define a (+ (square 3) (cube 4)))  ; ok
+```
+
+We can also unhygienically paste code, but only from earlier sections:
+
+```scheme
+(Section :1 "Original")
+
+(define a 1)
+(define (inc x) (+ x a))
+(inc 42) => 43
+
+(Section :2 "Copy")
+
+(define a -1)
+(paste (:1 inc))
+(inc 42) => 41
 ```
 
 ## Known issues
