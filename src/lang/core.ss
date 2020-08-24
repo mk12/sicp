@@ -3,7 +3,8 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define => ~> slow=> slow~> run-sicp)
+  (export SICP Chapter Section Exercise define => ~> slow=> slow~> paste
+          run-sicp)
   (import (except (rnrs (6)) current-output-port)
           (rnrs mutable-pairs (6))
           (src compat active))
@@ -409,6 +410,34 @@
     ;; Table of definitions used to implement `paste`.
     (define definitions (make-eq-hashtable))
 
+    ;; Construct a combined identifier from an entry id and a name. This is used
+    ;; as a key in `definitions`.    
+    (define (paste-id id name)
+      (define (str s) (symbol->string (syntax->datum s)))
+      (string->symbol (string-append (str id) "--" (str name))))
+
+    ;; Given a spec like `((:1.2 foo) (?3.4 bar baz))`, retrieve the code for
+    ;; `foo`, `bar`, and `baz`. The returned syntax should be spliced, since
+    ;; otherwise it would be invoking void as a procedure.
+    (define (retrieve-paste-code spec)
+      (define (inner id names)
+        (syntax-case names ()
+          (() #'())
+          ((name e* ...)
+            (let ((pid (paste-id id #'name)))
+              (unless (hashtable-contains? definitions pid)
+                (syntax-violation
+                  #f
+                  "paste of non-existent definition"
+                  #'name))
+              #`(#,(hashtable-ref definitions pid #f)
+                #,@(inner id #'(e* ...)))))))
+      (syntax-case spec ()
+        (() #'())
+        (((id name* ...) e* ...)
+          #`(#,@(inner #'id #'(name* ...))
+            #,@(retrieve-paste-code #'(e* ...))))))
+
     ;; Recursive implementation of the macro. It takes:
     ;; x       - the remaining forms to be processed
     ;; header  - the last seen chapter/section/exercise header
@@ -465,27 +494,6 @@
           ((_ _ (use e* ...)) #'(e* ...))
           ((_ _ _ (use e* ...)) #'(e* ...))
           (_ '())))
-      (define (paste-id id name)
-        (define (str s) (symbol->string (syntax->datum s)))
-        (string->symbol (string-append (str id) "--" (str name))))
-      (define (retrieve-paste-code spec)
-        (define (inner id names)
-          (syntax-case names ()
-            (() #'())
-            ((name e* ...)
-             (let ((pid (paste-id id #'name)))
-               (unless (hashtable-contains? definitions pid)
-                 (syntax-violation
-                   #f
-                   "paste of non-existent definition"
-                   #'name))
-               #`(#,(hashtable-ref definitions pid #f)
-                  #,@(inner id #'(e* ...)))))))
-        (syntax-case spec ()
-          (() #'())
-          (((id name* ...) e* ...)
-           #`(#,@(inner #'id #'(name* ...))
-              #,@(retrieve-paste-code #'(e* ...))))))
       (define (add-export name code)
         (with-syntax (((_ id e* ...) header))
           (let ((pid (paste-id #'id name)))
@@ -497,8 +505,21 @@
                 (hashtable-delete! definitions pid)
                 exports)
               (else
-                (hashtable-set! definitions pid code)
+                (when code (hashtable-set! definitions pid code))
                 #`(#,@exports #,name))))))
+      (define (add-exports-from-paste names)
+        (define (add names result)
+          (syntax-case names ()
+            (() result)
+            ((n n* ...)
+             (memq (syntax->datum #'n) (syntax->datum exports))
+             (add #'(n* ...) result))
+            ((n n* ...)
+             (add #'(n* ...) #`(#,@result n)))))
+        ;; This intentionally doesn't add to the definitions table. Pastes
+        ;; should come from the original source -- it would be too confusing
+        ;; if a paste's code comes from another paste.
+        (add names exports))
       (syntax-case x (Chapter Section Exercise define => ~> slow=> slow~> paste)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
@@ -516,21 +537,23 @@
         ((e1 slow~> e2 e* ...)
          (go~> #t #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         (((paste (id name ...) ...) e* ...)
-         (with-syntax ((code (retrieve-paste-code #'((id name ...) ...))))
-           (go #'(e* ...) header exports #`(#,@body code) ntests out)))
+         (with-syntax (((code ...) (retrieve-paste-code #'((id name ...) ...))))
+           (go #'(e* ...)
+               header (add-exports-from-paste #'(name ... ...))
+               #`(#,@body code ...) ntests out)))
         (((define name) e* ...)
          (identifier? #'name)
-         (go #'(e* ...) header (add-export #'name (car x)) body ntests out))
+         (go #'(e* ...) header (add-export #'name #f) body ntests out))
         (((define name e1* ...) e2* ...)
          (identifier? #'name)
          (with-syntax ((set #'(set! name e1* ...)))
            (go #'(e2* ...)
-               header (add-export #'name (car x)) #`(#,@body set) ntests out)))
+               header (add-export #'name #'set) #`(#,@body set) ntests out)))
         (((define (name . args) e1* ...) e2* ...)
          (identifier? #'name)
          (with-syntax ((set #'(set! name (lambda args e1* ...))))
            (go #'(e2* ...)
-               header (add-export #'name (car x)) #`(#,@body set) ntests out)))
+               header (add-export #'name #'set) #`(#,@body set) ntests out)))
         ((e e* ...)
          (go #'(e* ...) header exports #`(#,@body e) ntests out))))
 

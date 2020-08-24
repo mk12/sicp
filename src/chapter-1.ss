@@ -1294,8 +1294,8 @@ circumference ~> 62.8318
   (define (try guess)
     (let ((next (f guess)))
       (if (close-enough? guess next)
-        next
-        (try next))))
+          next
+          (try next))))
   (try first-guess))
 
 (fixed-point cos 1.0) ~> 0.7390822985224023
@@ -1332,8 +1332,8 @@ golden-ratio
       (display next)
       (newline)
       (if (close-enough? guess next)
-        next
-        (try next))))
+          next
+          (try next))))
   (try first-guess))
 (define (f x) (/ (log 1000) (log x)))
 

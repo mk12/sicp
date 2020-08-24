@@ -1414,8 +1414,8 @@ one-through-four => '(1 2 3 4)
   (transform-painter
     painter
     (make-vect 0 1)
-    (make-vect 0 0)
-    (make-vect 1 1)))
+    (make-vect 1 1)
+    (make-vect 0 0)))
 
 (define (shrink-to-upper-right painter)
   (transform-painter
@@ -1428,8 +1428,8 @@ one-through-four => '(1 2 3 4)
   (transform-painter
     painter
     (make-vect 1 0)
-    (make-vect 0 0)
-    (make-vect 1 1)))
+    (make-vect 1 1)
+    (make-vect 0 0)))
 
 (define (squash-inwards painter)
   (transform-painter
@@ -1701,20 +1701,7 @@ one-through-four => '(1 2 3 4)
   (use (:2.2.3.1 accumulate)
        (:2.3.2 make-product make-sum product? sum? same-variable? variable?)))
 
-(define (deriv expr var)
-  (cond ((number? expr) 0)
-        ((variable? expr)
-         (if (same-variable? expr var) 1 0))
-        ((sum? expr)
-         (make-sum (deriv (addend expr) var)
-                   (deriv (augend expr) var)))
-        ((product? expr)
-         (make-sum
-           (make-product (multiplier expr)
-                         (deriv (multiplicand expr) var))
-           (make-product (deriv (multiplier expr) var)
-                         (multiplicand expr))))
-        (else (error 'deriv "Unknown expr type" expr))))
+(paste (:2.3.2 deriv))
 
 (define addend cadr)
 (define (augend sum)
@@ -1728,20 +1715,7 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.58
   (use (:2.3.1 memq) (:2.3.2 =number? same-variable? variable?)))
 
-(define (deriv expr var)
-  (cond ((number? expr) 0)
-        ((variable? expr)
-         (if (same-variable? expr var) 1 0))
-        ((sum? expr)
-         (make-sum (deriv (addend expr) var)
-                   (deriv (augend expr) var)))
-        ((product? expr)
-         (make-sum
-           (make-product (multiplier expr)
-                         (deriv (multiplicand expr) var))
-           (make-product (deriv (multiplier expr) var)
-                         (multiplicand expr))))
-        (else (error 'deriv "Unknown expr type" expr))))
+(paste (:2.3.2 deriv))
 
 ;;; (a) Fully parenthesized binary infix form
 
@@ -2463,25 +2437,7 @@ z2 => (make-from-mag-ang 30 3)
 (define make-from-mag-ang make-from-mag-ang-polar)
 
 ;; Generic operators
-; (paste (:2.4.1 add-complex sub-complex mul-complex div-complex))
-
-;; Generic operators (copied from Section 2.4.1)
-(define (add-complex z1 z2)
-  (make-from-real-imag
-    (+ (real-part z1) (real-part z2))
-    (+ (imag-part z1) (imag-part z2))))
-(define (sub-complex z1 z2)
-  (make-from-real-imag
-    (- (real-part z1) (real-part z2))
-    (- (imag-part z1) (imag-part z2))))
-(define (mul-complex z1 z2)
-  (make-from-mag-ang
-    (* (magnitude z1) (magnitude z2))
-    (+ (angle z1) (angle z2))))
-(define (div-complex z1 z2)
-  (make-from-mag-ang
-    (/ (magnitude z1) (magnitude z2))
-    (- (angle z1) (angle z2))))
+(paste (:2.4.1 add-complex sub-complex mul-complex div-complex))
 
 ;; Now we can get exact answers for all operations:
 (define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
@@ -2566,23 +2522,8 @@ z2 => (make-from-mag-ang 30 3)
 (define (make-from-mag-ang r a)
   (apply-specific 'make-from-mag-ang 'polar r a))
 
-;; Generic operators (copied from Section 2.4.1)
-(define (add-complex z1 z2)
-  (make-from-real-imag
-    (+ (real-part z1) (real-part z2))
-    (+ (imag-part z1) (imag-part z2))))
-(define (sub-complex z1 z2)
-  (make-from-real-imag
-    (- (real-part z1) (real-part z2))
-    (- (imag-part z1) (imag-part z2))))
-(define (mul-complex z1 z2)
-  (make-from-mag-ang
-    (* (magnitude z1) (magnitude z2))
-    (+ (angle z1) (angle z2))))
-(define (div-complex z1 z2)
-  (make-from-mag-ang
-    (/ (magnitude z1) (magnitude z2))
-    (- (angle z1) (angle z2))))
+;; Generic operators
+(paste (:2.4.1 add-complex sub-complex mul-complex div-complex))
 
 ;; Helper function to run installers on a clean slate.
 (define (using . installers)
@@ -2919,28 +2860,8 @@ z2 => (make-from-mag-ang 30 3)
 (contents '(foo . a)) => 'a
 (contents 1) => 1
 
-;; Copied from Section 2.4.3 to use the new tagging procedures.
-(define (apply-generic op . args)
-  (let* ((type-tags (map type-tag args))
-         (proc (get op type-tags)))
-    (if proc
-        (apply proc (map contents args))
-        (error 'apply-generic "no method for argument types" op type-tags))))
-
-;; Copied from Section 2.5.1 to use the new tagging procedures.
-(define (install-scheme-number-package)
-  (define (tag x) (attach-tag 'scheme-number x))
-  (put 'add '(scheme-number scheme-number) (lambda (x y) (tag (+ x y))))
-  (put 'sub '(scheme-number scheme-number) (lambda (x y) (tag (- x y))))
-  (put 'mul '(scheme-number scheme-number) (lambda (x y) (tag (* x y))))
-  (put 'div '(scheme-number scheme-number) (lambda (x y) (tag (/ x y))))
-  (put 'make 'scheme-number tag))
-
-;; Copied from Section 2.5.1 to use the new `apply-generic`.
-(define (add x y) (apply-generic 'add x y))
-(define (sub x y) (apply-generic 'sub x y))
-(define (mul x y) (apply-generic 'mul x y))
-(define (div x y) (apply-generic 'div x y))
+(paste (:2.4.3 apply-generic)
+       (:2.5.1 add sub mul div install-scheme-number-package))
 
 (using install-scheme-number-package)
 
@@ -3673,10 +3594,6 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.89
   (use (:2.5.3.2 coeff make-term order the-empty-termlist)
        (?2.87 =zero?)))
-
-;; idea: have sth like this
-;; (copy-defs (:2.5.3.1 add-terms))
-;; or in the (Exercise (use) (copy)) block!
 
 (define (adjoin-term term term-list)
   (cond ((=zero? (coeff term)) term-list)
