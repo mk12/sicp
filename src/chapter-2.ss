@@ -161,7 +161,7 @@
   (define (dispatch m)
     (cond ((= m 0) x)
           ((= m 1) y)
-          (else (error 'cons "Argument not 0 or 1" m))))
+          (else (error 'cons "argument not 0 or 1" m))))
   dispatch)
 
 (define (car z) (z 0))
@@ -321,7 +321,7 @@
   (let ((y1 (lower-bound y))
         (y2 (upper-bound y)))
     (if (<= y1 0 y2)
-      (error 'div-interval "Can't divide by an interval spanning zero")
+      (error 'div-interval "can't divide by an interval spanning zero")
       (mul-interval
         x
         (make-interval (/ y2) (/ y1))))))
@@ -1609,7 +1609,7 @@ one-through-four => '(1 2 3 4)
                          (deriv (multiplicand expr) var))
            (make-product (deriv (multiplier expr) var)
                          (multiplicand expr))))
-        (else (error 'deriv "Unknown expr type" expr))))
+        (else (error 'deriv "unknown expr type" expr))))
 
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
@@ -1682,7 +1682,7 @@ one-through-four => '(1 2 3 4)
            (make-product
              (make-exponentiation (base expr) (- (exponent expr) 1))
              (deriv (base expr) var))))
-        (else (error 'deriv "Unknown expr type" expr))))
+        (else (error 'deriv "unknown expr type" expr))))
 
 (define (make-exponentiation b e)
   (cond ((=number? e 0) 1)
@@ -3527,7 +3527,7 @@ z2 => (make-from-mag-ang 30 3)
        (:3.3.3.3 put)
        (?2.78 add apply-generic install-scheme-number-package mul)))
 
-(define (install-polynomial-zero-package)
+(define (install-zero-package)
   (define (poly-zero? p)
     (define (all-zero? terms)
       (or (empty-termlist? terms)
@@ -3540,7 +3540,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (=zero? n) (apply-generic '=zero? n))
 
 (using install-scheme-number-package install-polynomial-package
-       install-polynomial-zero-package)
+       install-zero-package)
 
 (=zero? (make-polynomial 'x '())) => #t
 (=zero? (make-polynomial 'x '((2 0)))) => #t
@@ -3559,7 +3559,7 @@ z2 => (make-from-mag-ang 30 3)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
                  make-term order rest-terms the-empty-termlist)
        (:3.3.3.3 put) (?2.78 add apply-generic install-scheme-number-package)
-       (?2.87 install-polynomial-zero-package)))
+       (?2.87 install-zero-package)))
 
 (define (negate-terms tl)
   (if (empty-termlist? tl)
@@ -3581,7 +3581,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (sub x y) (add x (negate y)))
 
 (using install-scheme-number-package install-polynomial-package
-       install-polynomial-zero-package install-negate-package)
+       install-zero-package install-negate-package)
 
 (negate 1) => -1
 (sub 5 2) => 3
@@ -3620,10 +3620,7 @@ z2 => (make-from-mag-ang 30 3)
   (define empty-termlist? null?)
   (define first-term car)
   (define rest-terms cdr)
-  (define (adjoin-term term tl)
-    (if (=zero? (coeff term))
-        tl
-        (cons term tl)))
+  (define (adjoin-term term tl) (if (=zero? (coeff term)) tl (cons term tl)))
   (define (tag tl) (attach-tag 'sparse-termlist tl))
   (put 'make 'sparse-termlist (lambda (terms) (tag terms)))
   (put 'the-empty-termlist 'sparse-termlist
@@ -3637,8 +3634,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (install-dense-termlist-package)
   (define (the-empty-termlist) '())
   (define empty-termlist? null?)
-  (define (first-term tl)
-    (make-term (- (length tl) 1) (car tl)))
+  (define (first-term tl) (make-term (- (length tl) 1) (car tl)))
   (define rest-terms cdr)
   (define zero-coeff (list 'scheme-number 0))
   (define (adjoin-term term tl)
@@ -3679,11 +3675,11 @@ z2 => (make-from-mag-ang 30 3)
 
 (paste (:2.5.3.1 install-polynomial-package add-terms mul-terms
                  mul-term-by-all-terms)
-       (?2.87 install-polynomial-zero-package))
+       (?2.87 install-zero-package))
 
 (using install-sparse-termlist-package install-dense-termlist-package
        install-scheme-number-package install-polynomial-package
-       install-polynomial-zero-package)
+       install-zero-package)
 
 ;; It works with both sparse and dense representations.
 (add (make-polynomial 'x '(3 0 0 1)) (make-polynomial 'x '(0 3 3 2)))
@@ -3697,36 +3693,57 @@ z2 => (make-from-mag-ang 30 3)
 (mul (make-polynomial 'x '((2 2))) (make-polynomial 'x '(1 0 0 0)))
 => (make-polynomial 'x '((5 2)))
 
+(Exercise ?2.91
+  (use (:2.3.2 same-variable?) (:2.4.3 using)
+       (:2.5.3.1 add-terms install-polynomial-package mul-term-by-all-terms
+                 term-list variable)
+       (:2.5.3.2 adjoin-term make-polynomial make-term)
+       (:2.5.3.2 coeff empty-termlist? first-term order the-empty-termlist)
+       (:3.3.3.3 put) (?2.78 apply-generic install-scheme-number-package)
+       (?2.87 install-zero-package)
+       (?2.88 install-negate-package negate-terms sub)))
+
+(define (div-terms l1 l2)
+  (if (empty-termlist? l1)
+      (list (the-empty-termlist)
+            (the-empty-termlist))
+      (let ((t1 (first-term l1))
+            (t2 (first-term l2)))
+        (if (> (order t2) (order t1))
+          (list (the-empty-termlist) l1)
+          (let* ((new-c (div (coeff t1) (coeff t2)))
+                 (new-o (sub (order t1) (order t2)))
+                 (new-term (make-term new-o new-c))
+                 (multiplied (mul-term-by-all-terms new-term l2))
+                 (new-l1 (add-terms l1 (negate-terms multiplied)))
+                 (rest-of-result (div-terms new-l1 l2)))
+            (list (adjoin-term new-term (car rest-of-result))
+                  (cadr rest-of-result)))))))
+
+(define (install-polynomial-div-package)
+  (define (div-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (let ((var (variable p1))
+              (result (div-terms (term-list p1) (term-list p2))))
+          (list (make-polynomial var (car result))
+                (make-polynomial var (cadr result))))
+        (error 'div-poly "polys not in same var" p1 p2)))
+  (put 'div '(polynomial polynomial) div-poly))
+
+(define (div x y) (apply-generic 'div x y))
+
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package install-negate-package
+       install-polynomial-div-package)
+
+;; (x^5 - 1) / (x^2 - 1) = (x^3 + x), remainder (x - 1)
+(div (make-polynomial 'x '((5 1) (0 -1))) (make-polynomial 'x '((2 1) (0 -1))))
+=> (list (make-polynomial 'x '((3 1) (1 1)))
+         (make-polynomial 'x '((1 1) (0 -1))))
+
 ) ; end of SICP
 ) ; end of library
 #|
-;;; ex 2.91
-(define (div-terms l1 l2)
-  (if (empty-termlist? l1)
-    (list (the-empty-termlist)
-          (the-empty-termlist))
-    (let ((t1 (first-term l1))
-          (t2 (first-term l2)))
-      (if (> (order t2) (order t1))
-        (list (the-empty-termlist) l1)
-        (let* ((new-c (div (coeff t1) (coeff t2)))
-               (new-o (sub (order t1) (order t2)))
-               (new-term (make-term new-o new-c))
-               (multiplied (mul-term-by-all-terms new-term l2))
-               (new-l1 (add-terms l1 (negate-terms multiplied)))
-               (rest-of-result (div-terms new-l1 l2)))
-          (list (adjoin-term new-term (car rest-of-result))
-                (cadr rest-of-result)))))))
-(define (install-poly-div)
-  (define (div-poly p1 p2)
-    (if (same-variable? (variable p1) (variable p2))
-      (let ((var (variable p1))
-            (result (div-terms (term-list p1) (term-list p2))))
-        (list (make-polynomial var (car result))
-              (make-polynomial var (cadr result))))
-      (errorf 'div-poly "Polys not in same var: ~s" (list p1 p2))))
-  (put 'div '(polynomial polynomial) div-poly))
-
 ;;; ex 2.92
 (define (single-term t)
   (adjoin-term t (empty-sparse-termlist)))

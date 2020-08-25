@@ -1276,7 +1276,7 @@ circumference ~> 62.8318
            (search f b a))
           (else
             (error 'half-interval-method
-                   "Values are not of opposite sign"
+                   "values are not of opposite sign"
                    a b)))))
 
 (half-interval-method sin 2.0 4.0)
