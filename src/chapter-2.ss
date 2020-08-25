@@ -3435,7 +3435,7 @@ z2 => (make-from-mag-ang 30 3)
 (Section :2.5.3 "Example: Symbolic Algebra")
 
 (Section :2.5.3.1 "Arithmetic on polynomials"
-  (use (:2.3.2 same-variable? variable?)
+  (use (:2.3.2 same-variable?)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-term order
                  rest-terms the-empty-termlist)
        (:3.3.3.3 put) (?2.78 attach-tag add mul)))
@@ -3608,35 +3608,37 @@ z2 => (make-from-mag-ang 30 3)
 (adjoin-term (make-term 3 1) (the-empty-termlist)) => '(1 0 0 0)
 (first-term '(1 0 0 0)) => (make-term 3 1)
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.90
-(define make-term list)
-(define order car)
-(define coeff cadr)
-(define (install-sparse-termlist)
+(Exercise ?2.90
+  (use (:2.2.3.1 accumulate) (:2.3.2 same-variable?)
+       (:2.4.3 apply-specific using) (:2.5.3.1 term-list variable)
+       (:2.5.3.2 coeff make-term order) (:3.3.3.3 put)
+       (?2.78 add apply-generic attach-tag install-scheme-number-package mul)
+       (?2.87 =zero?)))
+
+(define (install-sparse-termlist-package)
   (define (the-empty-termlist) '())
   (define empty-termlist? null?)
   (define first-term car)
   (define rest-terms cdr)
   (define (adjoin-term term tl)
     (if (=zero? (coeff term))
-      tl
-      (cons term tl)))
+        tl
+        (cons term tl)))
   (define (tag tl) (attach-tag 'sparse-termlist tl))
+  (put 'make 'sparse-termlist (lambda (terms) (tag terms)))
   (put 'the-empty-termlist 'sparse-termlist
        (lambda () (tag (the-empty-termlist))))
   (put 'empty-termlist? '(sparse-termlist) empty-termlist?)
   (put 'first-term '(sparse-termlist) first-term)
   (put 'rest-terms '(sparse-termlist) (lambda (tl) (tag (rest-terms tl))))
-  (put 'adjoin-term 'sparse-termlist (lambda (t tl) (tag (adjoin-term t tl)))))
-(define (install-dense-termlist)
+  (put 'adjoin-term '(sparse-termlist)
+       (lambda (tl) (lambda (t) (tag (adjoin-term t tl))))))
+
+(define (install-dense-termlist-package)
   (define (the-empty-termlist) '())
   (define empty-termlist? null?)
   (define (first-term tl)
-    (make-term (- (length tl) 1)
-               (car term-list)))
+    (make-term (- (length tl) 1) (car tl)))
   (define rest-terms cdr)
   (define zero-coeff (list 'scheme-number 0))
   (define (adjoin-term term tl)
@@ -3645,23 +3647,59 @@ z2 => (make-from-mag-ang 30 3)
            (cons (coeff term) tl))
           (else (adjoin-term term (cons zero-coeff tl)))))
   (define (tag tl) (attach-tag 'dense-termlist tl))
+  (put 'make 'dense-termlist (lambda (terms) (tag terms)))
   (put 'the-empty-termlist 'dense-termlist
        (lambda () (tag (the-empty-termlist))))
   (put 'empty-termlist? '(dense-termlist) empty-termlist?)
   (put 'first-term '(dense-termlist) first-term)
   (put 'rest-terms '(dense-termlist) (lambda (tl) (tag (rest-terms tl))))
-  (put 'adjoin-term 'dense-termlist (lambda (t tl) (tag (adjoin-term t tl)))))
-(define (empty-dense-termlist)
-  ((get 'the-empty-termlist 'dense-termlist)))
+  (put 'adjoin-term '(dense-termlist)
+       (lambda (tl) (lambda (t) (tag (adjoin-term t tl))))))
+
 (define (empty-sparse-termlist)
-  ((get 'the-empty-termlist 'sparse-termlist)))
+  (apply-specific 'the-empty-termlist 'sparse-termlist))
+(define (empty-dense-termlist)
+  (apply-specific 'the-empty-termlist 'dense-termlist))
 (define the-empty-termlist empty-sparse-termlist)
 (define (empty-termlist? tl) (apply-generic 'empty-termlist? tl))
 (define (first-term tl) (apply-generic 'first-term tl))
 (define (rest-terms tl) (apply-generic 'rest-terms tl))
-(define (adjoin-term term tl)
-  ((get 'adjoin-term (type-tag tl)) term (contents tl)))
+(define (adjoin-term term tl) ((apply-generic 'adjoin-term tl) term))
 
+(define (make-polynomial var terms)
+  (define (flat? ls)
+    (or (null? ls)
+        (and (number? (car ls)) (flat? (cdr ls)))))
+  (let ((new-terms
+         (cond ((eq? terms 'sparse) (empty-sparse-termlist))
+               ((eq? terms 'dense) (empty-dense-termlist))
+               ((flat? terms) (apply-specific 'make 'dense-termlist terms))
+               (else (apply-specific 'make 'sparse-termlist terms)))))
+    (apply-specific 'make 'polynomial var new-terms)))
+
+(paste (:2.5.3.1 install-polynomial-package add-terms mul-terms
+                 mul-term-by-all-terms)
+       (?2.87 install-polynomial-zero-package))
+
+(using install-sparse-termlist-package install-dense-termlist-package
+       install-scheme-number-package install-polynomial-package
+       install-polynomial-zero-package)
+
+;; It works with both sparse and dense representations.
+(add (make-polynomial 'x '(3 0 0 1)) (make-polynomial 'x '(0 3 3 2)))
+=> (make-polynomial 'x '(3 3 3 3))
+(mul (make-polynomial 'x '((2 1) (0 1))) (make-polynomial 'x '((1 2))))
+=> (make-polynomial 'x '((3 2) (1 2)))
+
+;; The first argument determines the representation of the result.
+(add (make-polynomial 'x '(1 2 3)) (make-polynomial 'x '((2 9))))
+=> (make-polynomial 'x '(10 2 3))
+(mul (make-polynomial 'x '((2 2))) (make-polynomial 'x '(1 0 0 0)))
+=> (make-polynomial 'x '((5 2)))
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.91
 (define (div-terms l1 l2)
   (if (empty-termlist? l1)
