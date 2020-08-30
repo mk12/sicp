@@ -224,6 +224,12 @@
       (unless (queue-empty? q)
         (let* ((e (queue-pop-front! q))
                (deps (map (lambda (import-list)
+                            (unless (hashtable-contains? by-id
+                                                         (car import-list))
+                              (error 'entries-to-in-degrees
+                                     (format "~a imports from nonexistent ~a"
+                                             (entry-id e)
+                                             (car import-list))))
                             (hashtable-ref-must by-id (car import-list)))
                           (entry-imports e))))
           (hashtable-set! in-degrees e 0)

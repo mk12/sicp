@@ -3459,12 +3459,9 @@ z2 => (make-from-mag-ang 30 3)
                    (mul-terms (term-list p1) (term-list p2)))
         (error 'mul-poly "polys not in same var" p1 p2)))
   (define (tag p) (attach-tag 'polynomial p))
-  (put 'add '(polynomial polynomial)
-       (lambda (p1 p2) (tag (add-poly p1 p2))))
-  (put 'mul '(polynomial polynomial)
-       (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'make 'polynomial
-       (lambda (var terms) (tag (make-poly var terms)))))
+  (put 'add '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms)))))
 
 (define (add-terms l1 l2)
   (cond ((empty-termlist? l1) l2)
@@ -3741,43 +3738,49 @@ z2 => (make-from-mag-ang 30 3)
 => (list (make-polynomial 'x '((3 1) (1 1)))
          (make-polynomial 'x '((1 1) (0 -1))))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.92
-(define (single-term t)
-  (adjoin-term t (empty-sparse-termlist)))
-(define (poly-wrapped var term)
-  (make-term 0 (make-poly var (single-term term))))
-(define (install-polynomial)
+(Section :2.5.3.3 "Hierarchies of types in symbolic algebra")
+
+(Exercise ?2.92
+  (use (:2.3.2 same-variable? variable?) (:2.4.3 using)
+       (:2.5.3.1 add-terms mul-term-by-all-terms mul-terms term-list variable)
+       (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
+                 make-term rest-terms order the-empty-termlist)
+       (:3.3.3.3 put)
+       (?2.78 add attach-tag contents install-scheme-number-package mul type-tag)
+       (?2.87 install-zero-package)))
+
+(define (polynomial? x)
+  (eq? (type-tag x) 'polynomial))
+
+(define (variable<? a b)
+  (string<? (symbol->string a)
+            (symbol->string b)))
+
+(define (install-polynomial-package)
   (define make-poly cons)
-  (define variable car)
-  (define term-list cdr)
-  (define variable? symbol?)
-  (define same-variable? eq?)
-  (define (variable<? a b)
-    (string<? (symbol->string a)
-              (symbol->string b)))
+  (define (singleton t)
+    (adjoin-term t (the-empty-termlist)))
+  (define (as-constant-term var term)
+    (make-term 0 (make-polynomial var (singleton term))))
   (define (principal-variable p1 p2)
     (let ((v1 (variable p1))
           (v2 (variable p2)))
       (if (variable<? v1 v2) v1 v2)))
   (define (coerce-termlist tl from to)
     (if (empty-termlist? tl)
-      (empty-sparse-termlist)
-      (let ((ft (first-term tl)))
-        (add-terms
-          (if (polynomial? (coeff ft))
-            (mul-term-by-all-terms
-              (poly-wrapped from (make-term (order ft) (make-scheme-number 1)))
-              (coerce-poly (coeff ft) to))
-            (single-term (poly-wrapped from ft)
-          (coerce-termlist (rest-terms tl) from to)))))))
+        (the-empty-termlist)
+        (let ((ft (first-term tl)))
+          (add-terms
+            (if (polynomial? (coeff ft))
+                (mul-term-by-all-terms
+                  (as-constant-term from (make-term (order ft) 1))
+                  (term-list (coerce-poly (contents (coeff ft)) to)))
+                (singleton (as-constant-term from ft)))
+            (coerce-termlist (rest-terms tl) from to)))))
   (define (coerce-poly p var)
-    (if (same-variable? (variable p) var)
-      p
-      (make-poly var
-                 (coerce-termlist (term-list p) (variable p) var))))
+    (cond ((same-variable? (variable p) var) p)
+          (else (make-poly var
+                           (coerce-termlist (term-list p) (variable p) var)))))
   (define (binary-poly-op f)
     (lambda (p1 p2)
       (let ((var (principal-variable p1 p2)))
@@ -3795,14 +3798,39 @@ z2 => (make-from-mag-ang 30 3)
         (make-poly
           (variable p1)
           (mul-terms (term-list p1) (term-list p2))))))
+  (define (scale-poly k p)
+    (make-poly (variable p)
+               (map (lambda (t) (make-term (order t) (mul k (coeff t))))
+                    (term-list p))))
   (define (tag p) (attach-tag 'polynomial p))
-  (put 'add '(polynomial polynomial)
-       (lambda (p1 p2) (tag (add-poly p1 p2))))
-  (put 'mul '(polynomial polynomial)
-       (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'make 'polynomial
-       (lambda (var terms) (tag (make-poly var terms)))))
+  (put 'add '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  ;; Number-polynomial multiplications needed by `coerce-termlist` when calling
+  ;; `mul-term-by-all-terms`, since terms can have different coefficient types.
+  (put 'mul '(scheme-number polynomial) (lambda (x p) (tag (scale-poly x p))))
+  (put 'mul '(polynomial scheme-number) (lambda (p x) (tag (scale-poly x p))))
+  (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms)))))
 
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package)
+
+;; x + y = y + x = (1)x^1 + ((1)y^1)x^0
+(add (make-polynomial 'x '((1 1))) (make-polynomial 'y '((1 1))))
+=> (add (make-polynomial 'y '((1 1))) (make-polynomial 'x '((1 1))))
+=> (make-polynomial 'x `((1 1) (0 ,(make-polynomial 'y '((1 1))))))
+
+;; (yx^3 + 2)(y + x^2 + 1)
+;; = ((1)y^1)x^5 + ((1)y^2 + (1)y^1)x^3 + (2)x^2 + ((2)y^1 + (2)y^0)x^0
+(mul (make-polynomial 'x `((3 ,(make-polynomial 'y '((1 1)))) (0 2)))
+     (make-polynomial 'y `((1 1) (0 ,(make-polynomial 'x '((2 1) (0 1)))))))
+=> (make-polynomial 'x `((5 ,(make-polynomial 'y '((1 1))))
+                         (3 ,(make-polynomial 'y '((2 1) (1 1))))
+                         (2 ,(make-polynomial 'y '((0 2))))
+                         (0 ,(make-polynomial 'y '((1 2) (0 2))))))
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.93
 (define numer car)
 (define denom cdr)
