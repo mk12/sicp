@@ -3828,52 +3828,49 @@ z2 => (make-from-mag-ang 30 3)
                          (2 ,(make-polynomial 'y '((0 2))))
                          (0 ,(make-polynomial 'y '((1 2) (0 2))))))
 
+(Section :2.5.3.4 "Extended exercise: Rational functions")
+
+(Exercise ?2.93
+  (use (:2.1.1 denom numer) (:2.4.3 using) (:2.5.1 make-rational)
+       (:2.5.3.1 install-polynomial-package) (:2.5.3.2 make-polynomial)
+       (:3.3.3.3 put)
+       (?2.78 add attach-tag div install-scheme-number-package mul sub)
+       (?2.87 install-zero-package)))
+
+(define (make-rat n d) (cons n d))
+
+(define (add-rat x y)
+  (make-rat (add (mul (numer x) (denom y))
+                 (mul (numer y) (denom x)))
+            (mul (denom x) (denom y))))
+(define (sub-rat x y)
+  (make-rat (sub (mul (numer x) (denom y))
+                 (mul (numer y) (denom x)))
+            (mul (denom x) (denom y))))
+(define (mul-rat x y)
+  (make-rat (mul (numer x) (numer y))
+            (mul (denom x) (denom y))))
+(define (div-rat x y)
+  (make-rat (mul (numer x) (denom y))
+            (mul (denom x) (numer y))))
+
+(paste (:2.5.1 install-rational-package))
+
+(using install-scheme-number-package install-zero-package
+       install-polynomial-package install-rational-package)
+
+(define p1 (make-polynomial 'x '((2 1) (0 1))))
+(define p2 (make-polynomial 'x '((3 1) (0 1))))
+(define rf (make-rational p2 p1))
+
+(add rf rf)
+=> (make-rational
+     (make-polynomial 'x '((5 2) (3 2) (2 2) (0 2)))
+     (make-polynomial 'x '((4 1) (2 2) (0 1))))
+
 ) ; end of SICP
 ) ; end of library
 #|
-;;; ex 2.93
-(define numer car)
-(define denom cdr)
-(define (install-rational-package)
-  (define make-rat cons)
-  (define (add-rat x y)
-    (make-rat (add (mul (numer x) (denom y))
-                   (mul (numer y) (denom x)))
-              (mul (denom x) (denom y))))
-  (define (sub-rat x y)
-    (make-rat (sub (mul (numer x) (denom y))
-                   (mul (numer y) (denom x)))
-              (mul (denom x) (denom y))))
-  (define (mul-rat x y)
-    (make-rat (mul (numer x) (numer y))
-              (mul (denom x) (denom y))))
-  (define (div-rat x y)
-    (make-rat (mul (numer x) (denom y))
-              (mul (denom x) (numer y))))
-  (define (tag x) (attach-tag 'rational x))
-  (define two-r '(rational rational))
-  (put 'add two-r (lambda (x y) (tag (add-rat x y))))
-  (put 'sub two-r (lambda (x y) (tag (sub-rat x y))))
-  (put 'mul two-r (lambda (x y) (tag (mul-rat x y))))
-  (put 'div two-r (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational (lambda (n d) (tag (make-rat n d)))))
-(define (make-rational n d)
-  ((get 'make 'rational) n d))
-(check
-  (install-polynomial)
-  (install-rational-package)
-  (install-sparse-termlist)
-  (install-scheme-number-package)
-  (install-=zero?)
-  (define p1 (make-polynomial 'x '(sparse-termlist (2 1) (0 1))))
-  (define p2 (make-polynomial 'x '(sparse-termlist (3 1) (0 1))))
-  (define rf (make-rational p2 p1))
-  (add rf rf)
-  => '(rational
-        (polynomial x . (sparse-termlist (5 2) (3 2) (2 2) (0 2)))
-        .
-        (polynomial x . (sparse-termlist (4 1) (2 2) (0 1)))))
-
 ;;; ex 2.94
 (define (remainder-terms l1 l2)
   (cadr (div-terms l1 l2)))
