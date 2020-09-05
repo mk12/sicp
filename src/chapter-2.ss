@@ -3868,36 +3868,50 @@ z2 => (make-from-mag-ang 30 3)
      (make-polynomial 'x '((5 2) (3 2) (2 2) (0 2)))
      (make-polynomial 'x '((4 1) (2 2) (0 1))))
 
+(Exercise ?2.94 
+  (use (:2.3.2 same-variable?) (:2.4.3 using)
+       (:2.5.3.1 install-polynomial-package term-list variable)
+       (:2.5.3.2 empty-termlist? make-polynomial) (:3.3.3.3 put)
+       (?2.78 apply-generic install-scheme-number-package)
+       (?2.87 install-zero-package) (?2.88 install-negate-package)
+       (?2.91 div-terms)))
+
+(define (remainder-terms l1 l2)
+  (cadr (div-terms l1 l2)))
+
+(define (gcd-terms a b)
+  (if (empty-termlist? b)
+      a
+      (gcd-terms b (remainder-terms a b))))
+
+(define (install-greatest-common-divisor-package)
+  (define (gcd-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (let ((tl (gcd-terms (term-list p1) (term-list p2))))
+          (make-polynomial (variable p1) tl))
+        (error 'gcd-poly "polys not in same var" (list p1 p2))))
+  (put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
+  (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly))
+
+(define (greatest-common-divisor a b)
+  (apply-generic 'greatest-common-divisor a b))
+
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package install-negate-package
+       install-greatest-common-divisor-package)
+
+(greatest-common-divisor 128 40) => 8
+
+(define p1 (make-polynomial 'x '((4 1) (3 -1) (2 -2) (1 2))))
+(define p2 (make-polynomial 'x '((3 1) (1 -1))))
+(greatest-common-divisor p1 p2)
+=> (make-polynomial 'x '((2 -1) (1 1)))
+;; This is correct according to WolframAlpha:
+;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
+
 ) ; end of SICP
 ) ; end of library
 #|
-;;; ex 2.94
-(define (remainder-terms l1 l2)
-  (cadr (div-terms l1 l2)))
-(define (gcd-terms a b)
-  (if (empty-termlist? b)
-    a
-    (gcd-terms b (remainder-terms a b))))
-(define (install-greatest-common-divisor)
-  (define (gcd-poly p1 p2)
-    (if (same-variable? (variable p1) (variable p2))
-      (let ((tl (gcd-terms (term-list p1) (term-list p2))))
-        (make-polynomial (variable p1) tl))
-      (error "Polys not in same variable: GCD-POLY" (list p1 p2))))
-  (put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
-  (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly))
-(define (greatest-common-divisor a b)
-  (apply-generic 'greatest-common-divisor a b))
-(check
-  (install-negate)
-  (install-greatest-common-divisor)
-  (define p1 (make-polynomial 'x '(sparse-termlist (4 1) (3 -1) (2 -2) (1 2))))
-  (define p2 (make-polynomial 'x '(sparse-termlist (3 1) (1 -1))))
-  (greatest-common-divisor p1 p2)
-  => '(polynomial x . (sparse-termlist (2 -1) (1 1))))
-;; This is correct, according to WolframAlpha:
-;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
-
 ;;; ex 2.95
 (define p1 (make-polynomial 'x '(sparse-termlist (2 1) (1 -2) (0 1))))
 (define p2 (make-polynomial 'x '(sparse-termlist (2 11) (0 7))))
