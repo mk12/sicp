@@ -3941,11 +3941,21 @@ z2 => (make-from-mag-ang 30 3)
      (make-polynomial 'x '((0 169/1458))))
 => p1
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.96
-;; (a) pseudoremainder-terms
+(Exercise ?2.96
+  (use (:2.2.3.1 accumulate) (:2.3.2 same-variable?) (:2.4.3 using)
+       (:2.5.3.1 install-polynomial-package mul-term-by-all-terms term-list
+                 variable)
+       (:2.5.3.2 coeff empty-termlist? first-term make-polynomial make-term
+                 order rest-terms)
+       (:3.3.3.3 put) (?2.78 install-scheme-number-package mul)
+       (?2.87 install-zero-package) (?2.88 install-negate-package)
+       (?2.91 div-terms install-polynomial-div-package)
+       (?2.94 greatest-common-divisor remainder-terms) (?2.95 p1 q1 q2)))
+
+(paste (?2.94 install-greatest-common-divisor-package))
+
+;; (a) GCD with integer coefficients
+
 (define (pseudoremainder-terms l1 l2)
   (let* ((o1 (order (first-term l1)))
          (o2 (order (first-term l2)))
@@ -3953,37 +3963,62 @@ z2 => (make-from-mag-ang 30 3)
          (integerizing-factor (expt c (+ 1 o1 (- o2))))
          (term (make-term 0 integerizing-factor))
          (ml1 (mul-term-by-all-terms term l1)))
-    (cadr (div-terms ml1 l2))))
+    (remainder-terms ml1 l2)))
+
 (define (gcd-terms a b)
   (if (empty-termlist? b)
-    a
-    (gcd-terms b (pseudoremainder-terms a b))))
-(check
-  (greatest-common-divisor q1 q2)
-  => '(polynomial x . (sparse-termlist (2 1458) (1 -2916) (0 1458))))
-;; (b) removing common factors
+      a
+      (gcd-terms b (pseudoremainder-terms a b))))
+
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package install-negate-package
+       install-polynomial-div-package install-greatest-common-divisor-package)
+
+(greatest-common-divisor q1 q2)
+=> (make-polynomial 'x '((2 1458) (1 -2916) (0 1458)))
+=> (mul p1 (make-polynomial 'x '((0 1458))))
+
+;; (b) GCD with reduced integer coefficients
+
 (define (termlist-coeffs tl)
   (if (empty-termlist? tl)
-    '()
-    (cons (coeff (first-term tl))
-          (termlist-coeffs (rest-terms tl)))))
+      '()
+      (cons (coeff (first-term tl))
+            (termlist-coeffs (rest-terms tl)))))
+
 (define (gcd-terms a b)
   (if (empty-termlist? b)
-    (let* ((cs (termlist-coeffs a))
-           (coeff-gcd (reduce greatest-common-divisor (car cs) (cdr cs))))
-      (car (div-terms a (single-term (make-term 0 coeff-gcd)))))
-    (gcd-terms b (pseudoremainder-terms a b))))
-(check
-  (greatest-common-divisor q1 q2)
-  => '(polynomial x . (sparse-termlist (2 1) (1 -2) (0 1)))
-  => p1)
+      (let* ((cs (termlist-coeffs a))
+             (coeff-gcd (accumulate gcd (car cs) (cdr cs))))
+        (mul-term-by-all-terms (make-term 0 (/ coeff-gcd)) a))
+      (gcd-terms b (pseudoremainder-terms a b))))
 
-;;; ex 2.97
-;; (a) reduce-terms
-(define (termlist-order tl)
-  (order (first-term tl)))
-(define (quotient-terms l1 l2)
-  (car (div-terms l1 l2)))
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package install-negate-package
+       install-polynomial-div-package install-greatest-common-divisor-package)
+
+(greatest-common-divisor q1 q2)
+=> (make-polynomial 'x '((2 1) (1 -2) (0 1)))
+=> p1
+
+(Exercise ?2.97
+  (use (:2.1.1 denom numer) (:2.2.3.1 accumulate) (:2.3.2 same-variable?)
+       (:2.4.3 using) (:2.5.1 make-rational)
+       (:2.5.3.1 install-polynomial-package mul-term-by-all-terms term-list
+                 variable)
+       (:2.5.3.2 coeff first-term make-polynomial make-term order)
+       (:3.3.3.3 put)
+       (?2.78 add apply-generic attach-tag div install-scheme-number-package mul
+              sub)
+       (?2.87 install-zero-package) (?2.88 install-negate-package)
+       (?2.91 div-terms install-polynomial-div-package)
+       (?2.96 gcd-terms termlist-coeffs)))
+
+;; (a) Reduce a rational function to lowest terms
+
+(define (termlist-order tl) (order (first-term tl)))
+(define (quotient-terms l1 l2) (car (div-terms l1 l2)))
+
 (define (reduce-terms n d)
   (let* ((nd-gcd (gcd-terms n d))
          (leading-coeff (coeff (first-term nd-gcd)))
@@ -3991,75 +4026,63 @@ z2 => (make-from-mag-ang 30 3)
                       (max (termlist-order n) (termlist-order d))
                       (- (termlist-order nd-gcd))))
          (integerizing-factor (expt leading-coeff exponent))
-         (term (make-term 0 integerizing-factor))
-         (n/gcd (quotient-terms (mul-term-by-all-terms term n) nd-gcd))
-         (d/gcd (quotient-terms (mul-term-by-all-terms term d) nd-gcd))
+         (term1 (make-term 0 integerizing-factor))
+         (n/gcd (quotient-terms (mul-term-by-all-terms term1 n) nd-gcd))
+         (d/gcd (quotient-terms (mul-term-by-all-terms term1 d) nd-gcd))
          (all-coeffs (append (termlist-coeffs n/gcd)
                              (termlist-coeffs d/gcd)))
-         (coef-gcd (reduce greatest-common-divisor
-                     (car all-coeffs) (cdr all-coeffs)))
-         (tl (single-term (make-term 0 coef-gcd)))
-         (nn (quotient-terms n/gcd tl))
-         (dd (quotient-terms d/gcd tl)))
+         (coeff-gcd (accumulate gcd (car all-coeffs) (cdr all-coeffs)))
+         (term2 (make-term 0 (/ coeff-gcd)))
+         (nn (mul-term-by-all-terms term2 n/gcd))
+         (dd (mul-term-by-all-terms term2 d/gcd)))
     (list nn dd)))
-(define (install-reduce-poly)
-  (define (reduce-poly n d)
-    (if (same-variable? (variable n) (variable d))
+
+(define (reduce-poly n d)
+  (if (same-variable? (variable n) (variable d))
       (let ((var (variable n))
             (reduced (reduce-terms (term-list n) (term-list d))))
         (list (make-polynomial var (car reduced))
               (make-polynomial var (cadr reduced))))
-      (errorf 'reduce-poly "Polys not in same variable: ~s" (list n d))))
+      (error 'reduce-poly "polys not in same var" (list n d))))
+
+;; (b) Generic reducing operation
+
+(define (reduce-integers n d)
+  (let ((g (gcd n d)))
+    (list (/ n g) (/ d g))))
+
+(define (install-reduce-package)
+  (put 'reduce '(scheme-number scheme-number) reduce-integers)
   (put 'reduce '(polynomial polynomial) reduce-poly))
-;; (b) reduce-integers
-(define (install-reduce-integers)
-  (define (reduce-integers n d)
-    (let ((g (gcd n d)))
-      (list (/ n g) (/ d g))))
-  (put 'reduce '(scheme-number scheme-number) reduce-integers))
-(define numer car)
-(define denom cdr)
-(define (install-rational-package)
-  (define (make-rat n d)
-    (let ((reduced (apply-generic 'reduce n d)))
-      (cons (car reduced) (cadr reduced))))
-  (define (add-rat x y)
-    (make-rat (add (mul (numer x) (denom y))
-                   (mul (numer y) (denom x)))
-              (mul (denom x) (denom y))))
-  (define (sub-rat x y)
-    (make-rat (sub (mul (numer x) (denom y))
-                   (mul (numer y) (denom x)))
-              (mul (denom x) (denom y))))
-  (define (mul-rat x y)
-    (make-rat (mul (numer x) (numer y))
-              (mul (denom x) (denom y))))
-  (define (div-rat x y)
-    (make-rat (mul (numer x) (denom y))
-              (mul (denom x) (numer y))))
-  (define (tag x) (attach-tag 'rational x))
-  (define two-r '(rational rational))
-  (put 'add two-r (lambda (x y) (tag (add-rat x y))))
-  (put 'sub two-r (lambda (x y) (tag (sub-rat x y))))
-  (put 'mul two-r (lambda (x y) (tag (mul-rat x y))))
-  (put 'div two-r (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational (lambda (n d) (tag (make-rat n d)))))
-(define (make-rational n d)
-  ((get 'make 'rational) n d))
-(check
-  (install-reduce-poly)
-  (install-reduce-integers)
-  (install-rational-package)
-  (define p1 (make-polynomial 'x '(sparse-termlist (1 1) (0 1))))
-  (define p2 (make-polynomial 'x '(sparse-termlist (3 1) (0 -1))))
-  (define p3 (make-polynomial 'x '(sparse-termlist (1 1))))
-  (define p4 (make-polynomial 'x '(sparse-termlist (2 1) (0 -1))))
-  (define rf1 (make-rational p1 p2))
-  (define rf2 (make-rational p3 p4))
-  (add rf1 rf2)
-  => '(rational
-       (polynomial x . (sparse-termlist (3 1) (2 2) (1 3) (0 1)))
-       .
-       (polynomial x . (sparse-termlist (4 1) (3 1) (1 -1) (0 -1)))))
-;; This is the correct answer in lowest terms.
-|#
+
+(define (reduce n d) (apply-generic 'reduce n d))
+
+(define (make-rat n d)
+  (let ((reduced (reduce n d)))
+    (cons (car reduced) (cadr reduced))))
+
+(paste (?2.93 add-rat sub-rat mul-rat div-rat)
+       (:2.5.1 install-rational-package))
+
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package install-negate-package
+       install-polynomial-div-package install-rational-package
+       install-reduce-package)
+
+(add (make-rational 4 7) (make-rational 30 33)) => '(rational 114 . 77)
+
+(define p1 (make-polynomial 'x '((1 1) (0 1))))
+(define p2 (make-polynomial 'x '((3 1) (0 -1))))
+(define p3 (make-polynomial 'x '((1 1))))
+(define p4 (make-polynomial 'x '((2 1) (0 -1))))
+(define rf1 (make-rational p1 p2))
+(define rf2 (make-rational p3 p4))
+
+(add rf1 rf2)
+=> '(rational
+      (polynomial x . ((3 1) (2 2) (1 3) (0 1)))
+      .
+      (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))
+
+) ; end of SICP
+) ; end of library
