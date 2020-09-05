@@ -3696,7 +3696,7 @@ z2 => (make-from-mag-ang 30 3)
                  term-list variable)
        (:2.5.3.2 adjoin-term make-polynomial make-term)
        (:2.5.3.2 coeff empty-termlist? first-term order the-empty-termlist)
-       (:3.3.3.3 put) (?2.78 apply-generic install-scheme-number-package)
+       (:3.3.3.3 put) (?2.78 apply-generic div install-scheme-number-package)
        (?2.87 install-zero-package)
        (?2.88 install-negate-package negate-terms sub)))
 
@@ -3726,8 +3726,6 @@ z2 => (make-from-mag-ang 30 3)
                 (make-polynomial var (cadr result))))
         (error 'div-poly "polys not in same var" p1 p2)))
   (put 'div '(polynomial polynomial) div-poly))
-
-(define (div x y) (apply-generic 'div x y))
 
 (using install-scheme-number-package install-polynomial-package
        install-zero-package install-negate-package
@@ -3909,30 +3907,43 @@ z2 => (make-from-mag-ang 30 3)
 ;; This is correct according to WolframAlpha:
 ;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 2.95
-(define p1 (make-polynomial 'x '(sparse-termlist (2 1) (1 -2) (0 1))))
-(define p2 (make-polynomial 'x '(sparse-termlist (2 11) (0 7))))
-(define p3 (make-polynomial 'x '(sparse-termlist (1 13) (0 5))))
+(Exercise ?2.95
+  (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package)
+       (:2.5.3.2 make-polynomial) (?2.78 div install-scheme-number-package mul)
+       (?2.87 install-zero-package) (?2.88 install-negate-package)
+       (?2.91 install-polynomial-div-package)
+       (?2.94 greatest-common-divisor install-greatest-common-divisor-package)))
+
+(using install-scheme-number-package install-polynomial-package
+       install-zero-package install-negate-package
+       install-polynomial-div-package install-greatest-common-divisor-package)
+
+(define p1 (make-polynomial 'x '((2 1) (1 -2) (0 1))))
+(define p2 (make-polynomial 'x '((2 11) (0 7))))
+(define p3 (make-polynomial 'x '((1 13) (0 5))))
 (define q1 (mul p1 p2))
 (define q2 (mul p1 p3))
-(check
-  (install-poly-div)
-  (greatest-common-divisor q1 q2)
-  => '(polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
-;; The `greatest-common-divisor` procedure uses `gcd-terms`. This recurs by
-;; taking the GCD of q2 and the remainder of dividing q1 by q2:
-  (cadr (div q1 q2))
-  => '(polynomial x . (sparse-termlist (2 1458/169) (1 -2916/169) (0 1458/169)))
+
+(define (rem p q) (cadr (div p q)))
+
+;; The GCD calculation makes two recursive calls:
+(greatest-common-divisor q1 q2)
+=> (greatest-common-divisor q2 (rem q1 q2))                   ; 1st recursion
+=> (greatest-common-divisor (rem q1 q2) (rem q2 (rem q1 q2))) ; 2nd recursion
+=> (greatest-common-divisor (rem q1 q2) (make-polynomial 'x '()))
+=> (rem q1 q2)
+=> (make-polynomial 'x '((2 1458/169) (1 -2916/169) (0 1458/169)))
+
 ;; This remainder polynomial has noninteger coefficients, so the final GCD
 ;; returned also has noninteger coefficients. However, if we look closely at the
 ;; GCD of `q1` and `q2`, it is clear that we can factor out 1458/169:
-  (mul (greatest-common-divisor q1 q2)
-       (make-polynomial 'x '(sparse-termlist (0 169/1458))))
-  => p1)
+(mul (greatest-common-divisor q1 q2)
+     (make-polynomial 'x '((0 169/1458))))
+=> p1
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 2.96
 ;; (a) pseudoremainder-terms
 (define (pseudoremainder-terms l1 l2)
