@@ -1,1 +1,6 @@
+# Symlink to compat module
 /src/compat/active.ss
+
+# Racket bytecode
+*.dep
+*.zo

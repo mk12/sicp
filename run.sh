@@ -4,8 +4,12 @@ set -eufo pipefail
 
 usage() {
     cat <<EOS
-usage: $0 {all,chez,chezd,guile,racket} args ...
+usage: $0 [--help] {all,clean,chez,chezd,guile,racket} args ...
 EOS
+}
+
+clean() {
+    find . -type d -name compiled -exec rm -rf {} +
 }
 
 if [[ $# -eq 0 ]]; then
@@ -38,12 +42,13 @@ run_guile() {
 
 run_racket() {
     ln -sf racket.ss src/compat/active.ss
-    # TODO: --compile first?
+    plt-r6rs --compile ++path . main.ss
     plt-r6rs ++path . main.ss "$@"
 }
 
 case $arg in
     -h|--help) usage; exit ;;
+    clean) clean; exit ;;
     chez|chezd|guile|racket) "run_$arg" "$@" ;;
     all) run_chez "$@" && run_guile "$@" && run_racket "$@" ;;
     *) usage >&2; exit 1 ;;
