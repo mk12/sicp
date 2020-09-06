@@ -8,6 +8,7 @@
           (src lang sicp)
           (only (src chapter-1) chapter-1-effects))
 
+;; Introduce a dependency on the previous chapter so that it executes first.
 (define chapter-2-effects chapter-1-effects)
 
 (SICP
@@ -337,23 +338,19 @@
         (x2 (upper-bound x))
         (y1 (lower-bound y))
         (y2 (upper-bound y)))
-    (cond
-      ((> x1 0)
-       (cond
-         ((> y1 0) (make-interval (* x1 y1) (* x2 y2)))
-         ((< y2 0) (make-interval (* x2 y1) (* x1 y2)))
-         (else (make-interval (* x2 y1) (* x2 y2)))))
-      ((< x2 0)
-       (cond
-         ((> y1 0) (make-interval (* x1 y2) (* x2 y1)))
-         ((< y2 0) (make-interval (* x2 y2) (x1 y1)))
-         (else (make-interval (* x1 y2) (* x1 y1)))))
-      (else
-       (cond
-         ((> y1 0) (make-interval (* x1 y2) (* x2 y2)))
-         ((< y2 0) (make-interval (* x2 y1) (* x1 y1)))
-         (else (make-interval (min (* x1 y2) (x2 y1))
-                              (max (* x1 y1) (x2 y2)))))))))
+    (cond ((> x1 0)
+           (cond ((> y1 0) (make-interval (* x1 y1) (* x2 y2)))
+                 ((< y2 0) (make-interval (* x2 y1) (* x1 y2)))
+                 (else (make-interval (* x2 y1) (* x2 y2)))))
+          ((< x2 0)
+           (cond ((> y1 0) (make-interval (* x1 y2) (* x2 y1)))
+                 ((< y2 0) (make-interval (* x2 y2) (x1 y1)))
+                 (else (make-interval (* x1 y2) (* x1 y1)))))
+          (else
+           (cond ((> y1 0) (make-interval (* x1 y2) (* x2 y2)))
+                 ((< y2 0) (make-interval (* x2 y1) (* x1 y1)))
+                 (else (make-interval (min (* x1 y2) (x2 y1))
+                                      (max (* x1 y1) (x2 y2)))))))))
 
 (mul-interval (make-interval 1 2) (make-interval 3 4)) => '(3 . 8)
 
@@ -552,10 +549,10 @@ one-through-four => '(1 2 3 4)
         ((< amount 0) 0)
         ((no-more? coins) 0)
         (else
-          (+ (cc amount
-                 (except-first-denom coins))
-             (cc (- amount (first-denom coins))
-                 coins)))))
+         (+ (cc amount
+                (except-first-denom coins))
+            (cc (- amount (first-denom coins))
+                coins)))))
 
 (define first-denom car)
 (define except-first-denom cdr)
@@ -1888,11 +1885,11 @@ one-through-four => '(1 2 3 4)
   (cond ((null? set1) set2)
         ((null? set2) set1)
         (else
-          (let ((x1 (car set1))
-                (x2 (car set2)))
-            (cond ((= x1 x2) (cons x1 (union-set (cdr set1) (cdr set2))))
-                  ((< x1 x2) (cons x1 (union-set (cdr set1) set2)))
-                  (else (cons x2 (union-set set1 (cdr set2)))))))))
+         (let ((x1 (car set1))
+               (x2 (car set2)))
+           (cond ((= x1 x2) (cons x1 (union-set (cdr set1) (cdr set2))))
+                 ((< x1 x2) (cons x1 (union-set (cdr set1) set2)))
+                 (else (cons x2 (union-set set1 (cdr set2)))))))))
 
 (union-set '() '(1 2 3)) => '(1 2 3)
 (union-set '(1 2 3) '()) => '(1 2 3)
@@ -3472,20 +3469,20 @@ z2 => (make-from-mag-ang 30 3)
   (cond ((empty-termlist? l1) l2)
         ((empty-termlist? l2) l1)
         (else
-          (let ((t1 (first-term l1))
-                (t2 (first-term l2)))
-            (cond ((> (order t1) (order t2))
-                   (adjoin-term t1
-                                (add-terms (rest-terms l1) l2)))
-                  ((< (order t1) (order t2))
-                   (adjoin-term t2
-                                (add-terms l1 (rest-terms l2))))
-                  (else
-                    (adjoin-term
-                      (make-term (order t1)
-                                 (add (coeff t1) (coeff t2)))
-                      (add-terms (rest-terms l1)
-                                 (rest-terms l2)))))))))
+         (let ((t1 (first-term l1))
+               (t2 (first-term l2)))
+           (cond ((> (order t1) (order t2))
+                  (adjoin-term t1
+                               (add-terms (rest-terms l1) l2)))
+                 ((< (order t1) (order t2))
+                  (adjoin-term t2
+                               (add-terms l1 (rest-terms l2))))
+                 (else
+                   (adjoin-term
+                     (make-term (order t1)
+                                (add (coeff t1) (coeff t2)))
+                     (add-terms (rest-terms l1)
+                                (rest-terms l2)))))))))
 
 (define (mul-terms l1 l2)
   (if (empty-termlist? l1)
