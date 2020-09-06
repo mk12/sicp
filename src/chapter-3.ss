@@ -1264,18 +1264,18 @@ z2 => '((a b) a b)
 (lookup -4 table) => 'd
 (lookup 7 table) => 'e
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.27
+(Exercise ?3.27
+  (use (:3.3.3.1 make-table) (?3.26 insert! lookup)))
+
 (define (memoize f)
   (let ((table (make-table)))
     (lambda (x)
-      (let ((cached (table-lookup x table)))
+      (let ((cached (lookup x table)))
         (or cached
             (let ((result (f x)))
-              (table-insert! x result table)
+              (insert! x result table)
               result))))))
+
 (define memo-fib
   (memoize
     (lambda (n)
@@ -1283,24 +1283,31 @@ z2 => '((a b) a b)
             ((= n 1) 1)
             (else (+ (memo-fib (- n 1))
                      (memo-fib (- n 2))))))))
-;; For the environment diagram, see `whiteboard/exercise-3.27.jpg`.
-;; The memoized procedure `memo-fib` computes the nth Fibonacci number in a
-;; number of steps proportional to `n` because it simply takes the sum of `n`
-;; numbers. When we evaluate `(memo-fib n)`, a tree-recursive process is
-;; generated and the tree descends until it reaches 0 and 1. These are the base
-;; cases of the recursive Fibonacci implementation. The results for these inputs
-;; are placed in the table, and then `(memo-fib 2)` requires only one step, the
-;; addition of 0 and 1, because the values are taken from the cache table. The
-;; pattern continues: `(memo-fib 3)` recurses on 1 and 2, and both return early
-;; because they are in the table. In general, we descend to the bottom of the
-;; tree once and then ascent it, never again going down and reaching duplicate
-;; leaves. This is twice `n` steps, so it grows as O(n). If we had defined
-;; `memo-fib` as `(memoize fib)`, this would not work because recursive calls
-;; would use `fib`, not `memo-fib`, and so we would still have an exponential
-;; number of steps. However, this aspect of the memoization would still work: if
-;; you evaluated `(memo-fib 42)` twice, the second time would take only the step
-;; of looking up a value in the table.
 
+(memo-fib 6) => 8
+(memo-fib 100) => 354224848179261915075
+
+;; See whiteboard/exercise-3.27.jpg for the environment diagram.
+
+;; The memoized procedure `memo-fib` computes the nth Fibonacci number in a
+;; number of steps proportional to `n` because it takes the sum of `n` numbers.
+;; When we evaluate `(memo-fib n)`, a tree-recursive process is generated and it
+;; descends until it reaches 0 and 1, the base cases of the recursive Fibonacci
+;; implementation. The results for these inputs are placed in the table, and
+;; then `(memo-fib 2)` requires only one step, the addition of 0 and 1, because
+;; the values are taken from the table. In general, we descend to the bottom of
+;; the tree once and then ascend it, never again going down and reaching
+;; duplicate leaves. This is twice `n` steps, so it grows as O(n).
+
+;; If we had defined `memo-fib` as `(memoize fib)`, it would not work because
+;; recursive calls would use `fib`, not `memo-fib`, and so we would still have
+;; an exponential number of steps. However, this aspect of the memoization would
+;; still work: if you evaluated `(memo-fib 42)` twice, the second time would
+;; take only the step of looking up a value in the table.
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 3.3.4 (digital circuit simulation)
 (define (half-adder a b sum carry)
   (let ((d (make-wire))
