@@ -1135,7 +1135,7 @@ z2 => '((a b) a b)
 
 ;; Other than the argument `same-key?` and the internal procedure `assoc`, this
 ;; is the same code as in Section 3.3.3.3.
-(define (make-table-custom-eq same-key?)
+(define (make-table same-key?)
   (define (assoc key records)
     (cond ((null? records) #f)
           ((same-key? key (caar records)) (car records))
@@ -1144,18 +1144,18 @@ z2 => '((a b) a b)
     (define (lookup key-1 key-2)
       (let ((subtable (assoc key-1 (cdr local-table))))
         (if subtable
-          (let ((record (assoc key-2 (cdr subtable))))
-            (if record (cdr record) #f))
-          #f)))
+            (let ((record (assoc key-2 (cdr subtable))))
+              (if record (cdr record) #f))
+            #f)))
     (define (insert! key-1 key-2 value)
       (let ((subtable (assoc key-1 (cdr local-table))))
         (if subtable
           (let ((record (assoc key-2 (cdr subtable))))
             (if record
-              (set-cdr! record value)
-              (set-cdr! subtable
-                        (cons (cons key-2 value)
-                              (cdr subtable)))))
+                (set-cdr! record value)
+                (set-cdr! subtable
+                          (cons (cons key-2 value)
+                                (cdr subtable)))))
           (set-cdr! local-table
                     (cons (list key-1 (cons key-2 value))
                           (cdr local-table)))))
@@ -1166,68 +1166,64 @@ z2 => '((a b) a b)
             (else (error 'dispatch "unknown operation" m))))
     dispatch))
 
-(define table (make-table-custom-eq (lambda (x y) (< (abs (- x y)) 10))))
+(define table (make-table (lambda (x y) (< (abs (- x y)) 10))))
 ((table 'insert-proc!) 0 0 'a)
 ((table 'lookup-proc) 0 0) => 'a
 ((table 'lookup-proc) 2 3) => 'a
 ((table 'lookup-proc) -9 9) => 'a
 
+(Exercise ?3.25
+  (use (:3.3.3.1 assoc make-table)))
+
+(define (lookup keys table)
+  (let ((value (cdr table)))
+    (cond ((null? keys)
+           (if (list? value)
+               ;; We use '() as a sentinel key when there are two keys entered
+               ;; in the table and one is a prefix of the other.
+               (lookup '(()) table)
+               value))
+          ((list? value)
+           (let ((subtable (assoc (car keys) value)))
+             (and subtable (lookup (cdr keys) subtable))))
+          (else #f))))
+
+(define (insert! keys value table)
+  (define (iter keys table)
+    (let ((old-value (cdr table)))
+      (cond ((null? keys) (set-cdr! table value))
+            ((list? old-value)
+             (let ((subtable (assoc (car keys) old-value)))
+               (if subtable
+                   (iter (cdr keys) subtable)
+                   (let ((new-subtable (cons (car keys) '())))
+                     (set-cdr! table (cons new-subtable old-value))
+                     (iter (cdr keys) new-subtable)))))
+            (else (set-cdr! table (list (cons '() old-value)))
+                  (iter keys table)))))
+  (iter keys table))
+
+(define table (make-table))
+
+(insert! '(a) 1 table)
+(insert! '(a b c) 2 table)
+(insert! '(d) 3 table)
+(insert! '(e f) 4 table)
+(insert! '(e g h) 5 table)
+
+(lookup '(a) table) => 1
+(lookup '(a b c) table) => 2
+(lookup '(d) table) => 3
+(lookup '(e f) table) => 4
+(lookup '(e g h) table) => 5
+
+(lookup '(a b) table) => #f
+(lookup '(a b c d) table) => #f
+(lookup '(z) table) => #f
+
 ) ; end of SICP
 ) ; end of library
 #|
-;;; ex 3.25
-;; The generalized n-dimensional table procedures are implemented recursively.
-;; On each recursive call, a key is stripped off the keys list and a deeper
-;; subtable is entered. The procedures `lookup` and `insert!` have an argument
-;; named `tor`, which means "table or record." A table is treated as a record
-;; whose key is its name and whose value is a list of records. The base case for
-;; the null list of keys is not necessarily useful, but it makes sense. The
-;; dimensions of the table do not need to be consistent, but be careful: If you
-;; have a value stored at `'(a b)` and then insert something at `'(a b c)`, that
-;; value will be overwitten with a fresh subtable for `c`.
-(scope
-  (define record-key car)
-  (define record-val cdr)
-  (define set-key! set-car!)
-  (define set-val! set-cdr!)
-  (define make-record cons)
-  (define table-name record-key)
-  (define table-records record-val)
-  (define set-name! set-key!)
-  (define set-records! set-val!)
-  (define make-table make-record)
-  (define (make-empty-table) (make-table '*table* '()))
-  (define (table-assoc key records)
-    (cond ((null? records) #f)
-          ((equal? key (record-key (car records)))
-          (car records))
-          (else (table-assoc key (cdr records)))))
-  (define (table-lookup keys tor)
-    (let ((val (record-val tor)))
-      (if (null? keys)
-        val
-        (if (list? val) ; tor is a table, val is a list of records
-          (let ((subtor (table-assoc (car keys) val)))
-            (if subtor
-              (table-lookup (cdr keys) subtor)
-              #f))
-          #f))))
-  (define (table-insert! keys value tor)
-    (define (iter keys tor)
-      (if (null? keys)
-        (set-val! tor value)
-        (let ((records (table-records tor)))
-          (if (list? records)
-            (let ((subtor (table-assoc (car keys) records)))
-              (if subtor
-                (iter (cdr keys) subtor)
-                (let ((new-subtor (make-table (car keys) '())))
-                  (set-records! tor (cons new-subtor records))
-                  (iter (cdr keys) new-subtor))))
-            (begin (set-val! tor '())
-                  (iter keys tor))))))
-    (iter keys tor)))
-
 ;;; ex 3.26
 ;; In our current implementation, a table is the pair `(cons n rs)` where `n` is
 ;; the name of the table and `rs` is a list of records, each record being a key
