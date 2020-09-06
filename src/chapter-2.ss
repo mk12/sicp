@@ -321,10 +321,13 @@
   (let ((y1 (lower-bound y))
         (y2 (upper-bound y)))
     (if (<= y1 0 y2)
-      (error 'div-interval "can't divide by an interval spanning zero")
+      (error 'div-interval "can't divide by an interval spanning zero" y)
       (mul-interval
         x
         (make-interval (/ y2) (/ y1))))))
+
+(div-interval (make-interval 1 2) (make-interval 3 4)) => '(1/4 . 2/3)
+(div-interval (make-interval 1 2) (make-interval -1 1)) =!> "can't divide"
 
 (Exercise ?2.11
   (use (?2.7 lower-bound make-interval upper-bound)))
@@ -2136,7 +2139,7 @@ one-through-four => '(1 2 3 4)
       (weight-leaf tree)
       (cadddr tree)))
 
-;; The decoding procedure
+;;; The decoding procedure
 
 (define (decode bits tree)
   (define (decode-1 bits current-branch)
@@ -2183,6 +2186,7 @@ one-through-four => '(1 2 3 4)
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
 (decode sample-message sample-tree) => '(A D A B B C A)
+(decode '(0 1 2) sample-tree) =!> "bit should be 0 or 1: 2"
 
 (Exercise ?2.68
   (use (:2.3.4 leaf? left-branch right-branch symbols)
@@ -2208,6 +2212,7 @@ one-through-four => '(1 2 3 4)
            (element-of-set? x (cdr set)))))
 
 (encode '(A D A B B C A) sample-tree) => sample-message
+(encode '(Z) sample-tree) =!> "symbol not in tree: Z"
 
 (Exercise ?2.69
   (use (:2.3.4 make-code-tree make-leaf-set) (?2.38 fold-left)
@@ -3550,6 +3555,9 @@ z2 => (make-from-mag-ang 30 3)
 (mul (make-polynomial 'x '((2 1) (0 1)))
      (make-polynomial 'x '((1 2))))
 => (make-polynomial 'x '((3 2) (1 2)))
+
+(add (make-polynomial 'x '()) (make-polynomial 'y '()))
+=!> "polys not in same var"
 
 (Exercise ?2.88
   (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package term-list variable)

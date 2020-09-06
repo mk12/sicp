@@ -2,6 +2,7 @@
 
 - remove debug stuff from core.ss
 - consider removing --slow
+- assert raises?
 + remove make-parameter/parameterize from sicp
 
 # To Do

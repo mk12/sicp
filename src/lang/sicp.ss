@@ -4,7 +4,7 @@
 
 (library (src lang sicp)
   (export SICP Chapter Section Exercise
-          define => ~> slow=> slow~> paste
+          define =!> => ~> slow=> slow~> paste
           capture-output hide-output
           display format fxand fxarithmetic-shift-left fxarithmetic-shift-right
           fxxor newline quotient random remainder runtime set-car! set-cdr!

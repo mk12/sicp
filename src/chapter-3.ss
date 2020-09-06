@@ -77,6 +77,7 @@
 ((acc 'withdraw) 60) => "Insufficient funds"
 ((acc 'deposit) 40) => 90
 ((acc 'withdraw) 60) => 30
+((acc 'floof)) =!> "unknown request: floof"
 
 (Exercise ?3.1)
 
@@ -122,7 +123,7 @@
         (cond ((eq? m 'withdraw) withdraw)
               ((eq? m 'deposit) deposit)
               (else (error 'make-account "unknown request" m)))
-        (lambda (_) "Incorrect password")))
+        (lambda (x) "Incorrect password")))
   dispatch)
 
 (define acc (make-account 100 'secret-password))
@@ -145,7 +146,7 @@
           (cond ((eq? m 'withdraw) withdraw)
                 ((eq? m 'deposit) deposit)
                 (else (error 'make-account "unknown request" m)))
-          (lambda (_)
+          (lambda (x)
             (set! consecutive-wrong (+ consecutive-wrong 1))
             (if (> consecutive-wrong 7)
                 (call-the-cops)
@@ -913,6 +914,8 @@ z2 => '((a b) a b)
 (q 'front-queue) => 'b
 (q 'delete-queue!)
 (q 'empty-queue?) => #t
+(q 'front-queue) =!> "called with an empty queue"
+(q 'delete-queue!) =!> "called with an empty queue"
 
 (Exercise ?3.23)
 
@@ -982,7 +985,7 @@ z2 => '((a b) a b)
 
 (define (rear-delete-deque! dq)
   (cond ((empty-deque? dq)
-         (error 'rear-delete-deque! "Called with an empty deque" dq))
+         (error 'rear-delete-deque! "called with an empty deque" dq))
         (else
           (let* ((old-rear (rear-ptr dq))
                  (new-rear (prev-node old-rear)))
@@ -1018,6 +1021,9 @@ z2 => '((a b) a b)
 (capture-output (print-deque dq)) => "[b]\n"
 (rear-delete-deque! dq)
 (empty-deque? dq) => #t
+(front-deque dq) =!> "called with an empty deque"
+(front-delete-deque! dq) =!> "called with an empty deque"
+(rear-delete-deque! dq) =!> "called with an empty deque"
 
 (Section :3.3.3 "Representing Tables")
 

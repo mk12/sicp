@@ -3,7 +3,7 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define => ~> slow=> slow~> paste
+  (export SICP Chapter Section Exercise define =!> => ~> slow=> slow~> paste
           run-sicp)
   (import (except (rnrs (6)) current-output-port)
           (rnrs mutable-pairs (6))
@@ -19,10 +19,12 @@
       (let ((code (case color
                     ((bold) "1")
                     ((bold-red) "1;31")
+                    ((red) "31")
                     ((green) "32")
                     ((yellow) "33")
                     ((blue) "34")
-                    ((magenta) "35"))))
+                    ((magenta) "35")
+                    (else (error 'ansi "unknown color" color)))))
         (string-append "\x1b;[" code "m" str "\x1b;[0m"))
       str))
 
@@ -89,17 +91,57 @@
             ((pred? v1 v2) (set! *passes* (+ *passes* 1)))
             (else
               (set! *fails* (+ *fails* 1))
-              (let-values (((file line col) (syntax->location e1)))
-                (let ((msg (make-msg
-                            v1 v2 (syntax->datum e1) (syntax->datum e2))))
-                  (display
-                    (format
-                      (string-append
-                        (ansi 'bold "~a:~a:~a: assertion failed")
-                        "\n~a")
-                      file line col msg))))))))
+              (display-failure
+                e1
+                (make-msg v1 v2 (syntax->datum e1) (syntax->datum e2)))))))
       (pairs vals)
       (pairs (syntax->list exprs))))
+
+  ;; Asserts that executing `thunk` raises an error, and that the error message
+  ;; formatted as "<who>: <message>: <irritants>" contains `substr` as a
+  ;; substring. Expects `expr` to contain the syntax object for `thunk`.
+  (define (assert-raises thunk expr substr)
+    (define (pass)
+      (set! *passes* (+ *passes* 1)))
+    (define (fail ok result)
+      (set! *fails* (+ *fails* 1))
+      (display-failure
+        expr
+        (format
+          (string-append
+            "left: " (ansi 'blue "~s") "\n" (if ok "=>" "=!>") " "
+            (ansi (if ok 'green 'red) (if ok "~s" "~a")) "\n\n"
+            "right:\n=!> ... " (ansi 'red substr) " ...\n\n")
+          (syntax->datum expr) result)))
+    (call/cc
+      (lambda (return)
+        (let ((result
+               (with-exception-handler
+                 (lambda (con)
+                   (let* ((irrs (condition-irritants con))
+                          (colon (if (null? irrs) "" ":"))
+                          (rest (map (lambda (x) " ~s") irrs))
+                          (fmt (apply string-append "~a: ~a" colon rest))
+                          (who (condition-who con))
+                          (msg (condition-message con))
+                          (str (apply format fmt who msg irrs)))
+                     (if (string-contains? str substr)
+                         (pass)
+                         (fail #f str)))
+                   (return))
+                 thunk)))
+          (fail #t result)))))
+
+  ;; Displays an assertion failure message, including the source location of
+  ;; syntax object `expr` and the message `msg`.
+  (define (display-failure expr msg)
+    (let-values (((file line col) (syntax->location expr)))
+      (display
+        (format
+          (string-append
+            (ansi 'bold "~a:~a:~a: assertion failed")
+            "\n~a")
+          file line col msg))))
 
   ;; Converts a syntax object to a list of syntax objects.
   ;; https://www.scheme.com/csug8/syntax.html#./syntax:s6
@@ -399,7 +441,7 @@
               (lambda (x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
             ...)))))
-    (auxiliary Chapter Section Exercise ~> slow=> slow~> paste))
+    (auxiliary Chapter Section Exercise =!> ~> slow=> slow~> paste))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
@@ -526,7 +568,8 @@
         ;; should come from the original source -- it would be too confusing
         ;; if a paste's code comes from another paste.
         (add names exports))
-      (syntax-case x (Chapter Section Exercise define => ~> slow=> slow~> paste)
+      (syntax-case x (Chapter Section Exercise define
+                      =!> => ~> slow=> slow~> paste)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -534,6 +577,9 @@
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Exercise e1* ...) e2* ...)
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
+        ((e1 =!> e2 e* ...)
+         (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
+           (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
         ((e1 => e2 e* ...)
          (go=> #f #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 ~> e2 e* ...)

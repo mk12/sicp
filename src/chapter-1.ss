@@ -1283,6 +1283,8 @@ circumference ~> 62.8318
 ~> 3.14111328125
 (half-interval-method (lambda (x) (- (* x x x) (* 2 x) 3)) 1.0 2.0)
 ~> 1.89306640625
+(half-interval-method cos -1 1)
+=!> "values are not of opposite sign: -1 1"
 
 (Section :1.3.3.2 "Finding fixed points of functions"
   (use (:1.1.7 average)))
