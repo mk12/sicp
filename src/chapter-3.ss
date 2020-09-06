@@ -1175,12 +1175,15 @@ z2 => '((a b) a b)
 (Exercise ?3.25
   (use (:3.3.3.1 assoc make-table)))
 
+;; A table is a pair `(key . records)`, where `records` is an alist. Each alist
+;; entry is either `(key . value)`. If `value` is a list, then the entry is a
+;; subtable. The root key is the symbol `*table*`. To allow storing values at a
+;; key which is a prefix of other keys, we use a sentinel key `()`.
+
 (define (lookup keys table)
   (let ((value (cdr table)))
     (cond ((null? keys)
            (if (list? value)
-               ;; We use '() as a sentinel key when there are two keys entered
-               ;; in the table and one is a prefix of the other.
                (lookup '(()) table)
                value))
           ((list? value)
@@ -1221,76 +1224,49 @@ z2 => '((a b) a b)
 (lookup '(a b c d) table) => #f
 (lookup '(z) table) => #f
 
+(Exercise ?3.26
+  (use (:3.3.3.1 make-table)))
+
+;; A table is a pair whose `cdr` is a node. A node is either null or has the
+;; form `((key . value) . (left . right))` where `left` and `right` are nodes.
+
+(define (lookup key table)
+  (define (iter node)
+    (if (null? node)
+        #f
+        (let ((node-key (caar node)))
+          (cond ((= key node-key) (cdar node))
+                ((< key node-key) (iter (cadr node)))
+                ((> key node-key) (iter (cddr node)))))))
+  (iter (cdr table)))
+
+(define (insert! key value table)
+  (define (iter node set-child! parent)
+    (if (null? node)
+        (set-child! parent (cons (cons key value) (cons '() '())))
+        (let ((node-key (caar node)))
+          (cond ((= key node-key) (set-cdr! (car node) value))
+                ((< key node-key) (iter (cadr node) set-car! (cdr node)))
+                ((> key node-key) (iter (cddr node) set-cdr! (cdr node)))))))
+  (iter (cdr table) set-cdr! table))
+
+(define table (make-table))
+
+(insert! 0 'a table)
+(insert! 25 'b table)
+(insert! -3 'c table)
+(insert! -4 'd table)
+(insert! 7 'e table)
+
+(lookup 0 table) => 'a
+(lookup 25 table) => 'b
+(lookup -3 table) => 'c
+(lookup -4 table) => 'd
+(lookup 7 table) => 'e
+
 ) ; end of SICP
 ) ; end of library
 #|
-;;; ex 3.26
-;; In our current implementation, a table is the pair `(cons n rs)` where `n` is
-;; the name of the table and `rs` is a list of records, each record being a key
-;; consed to a value. With a binary tree implementation, instead of a list of
-;; records, we could have three things: a record (consisting of a key and a
-;; value), a left branch, and a right branch. Records down the left branch have
-;; smaller keys, and records down the right branch have larger keys. The keys
-;; can be anything, but the procdure `compare` must be defined on them such that
-;; `(compare k1 k2)` returns either `'=`, `'<`, or `'>`. We wouldn't need to
-;; have `'*table*` in this setup because we don't need to maintain an identity
-;; for a changing "first record." We can always navigate down the tree to insert
-;; a new record.
-(scope
-  (define record-key car)
-  (define record-val cdr)
-  (define set-key! set-car!)
-  (define set-val! set-cdr!)
-  (define make-record cons)
-  (define table-record car)
-  (define table-left cadr)
-  (define table-right cddr)
-  (define set-record! set-car!)
-  (define (set-left!  table left)  (set-car! (cdr table) left))
-  (define (set-right! table right) (set-cdr! (cdr table) right))
-  (define (make-tree-table record left right)
-    (cons record (cons left right)))
-  (define (make-empty-table)
-    (make-tree-table '() '() '()))
-  (define (make-singleton key value)
-    (make-table (make-record key value) '() '()))
-  (define (empty-table? table)
-    (null? (table-record table)))
-  (define (table-lookup key table)
-    (define (iter table)
-      (if (or (null? table) (empty-table? table))
-        #f
-        (let* ((record (table-record table))
-              (order (compare key (record-key record))))
-          (cond ((eq? order '=) (record-val record))
-                ((eq? order '<) (iter (table-left table)))
-                ((eq? order '>) (iter (table-right table)))))))
-    (iter table))
-  (define (table-insert! key value table)
-    (define (iter table)
-      (cond
-        ((null? table)
-        (errorf 'table-insert!
-          "Cannot insert (~s, ~s) into null table ~s" key value table))
-        ((empty-table? table)
-        (set-record! table (make-record key value)))
-        (else
-          (let* ((record (table-record table))
-                (order (compare key (record-key record))))
-            (cond ((eq? order '=)
-                  (set-val! record value))
-                  ((eq? order '<)
-                  (let ((subtable (table-left table)))
-                    (if (null? subtable)
-                      (set-left! table (make-singleton key value))
-                      (iter subtable))))
-                  ((eq? order '>)
-                  (let ((subtable (table-right table)))
-                    (if (null? subtable)
-                      (set-right! table (make-singleton key value))
-                      (iter subtable)))))))))
-    (iter table)))
-
 ;;; ex 3.27
 (define (memoize f)
   (let ((table (make-table)))
