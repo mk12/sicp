@@ -1125,17 +1125,16 @@ z2 => '((a b) a b)
             (else (error 'make-table "unknown operation" m))))
     dispatch))
 
+;; This is used extensively in Chapter 2.
 (define operation-table (make-table))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
 (define reset (operation-table 'reset-proc!))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.24
-;; Other than the argument `same-key?` and the interal procedure `assoc`, this
-;; is the same code as above.
+(Exercise ?3.24)
+
+;; Other than the argument `same-key?` and the internal procedure `assoc`, this
+;; is the same code as in Section 3.3.3.3.
 (define (make-table-custom-eq same-key?)
   (define (assoc key records)
     (cond ((null? records) #f)
@@ -1149,7 +1148,7 @@ z2 => '((a b) a b)
             (if record (cdr record) #f))
           #f)))
     (define (insert! key-1 key-2 value)
-      (let ((subtable (assoc key-1 (cdr table))))
+      (let ((subtable (assoc key-1 (cdr local-table))))
         (if subtable
           (let ((record (assoc key-2 (cdr subtable))))
             (if record
@@ -1157,16 +1156,25 @@ z2 => '((a b) a b)
               (set-cdr! subtable
                         (cons (cons key-2 value)
                               (cdr subtable)))))
-          (set-cdr! table
+          (set-cdr! local-table
                     (cons (list key-1 (cons key-2 value))
-                          (cdr table)))))
+                          (cdr local-table)))))
       'ok)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
-            (else (errorf 'dispatch "Unknown operation: ~s" m))))
+            (else (error 'dispatch "unknown operation" m))))
     dispatch))
 
+(define table (make-table-custom-eq (lambda (x y) (< (abs (- x y)) 10))))
+((table 'insert-proc!) 0 0 'a)
+((table 'lookup-proc) 0 0) => 'a
+((table 'lookup-proc) 2 3) => 'a
+((table 'lookup-proc) -9 9) => 'a
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.25
 ;; The generalized n-dimensional table procedures are implemented recursively.
 ;; On each recursive call, a key is stripped off the keys list and a deeper
@@ -1442,7 +1450,7 @@ z2 => '((a b) a b)
       (cond ((eq? m 'get-signal) signal-value)
             ((eq? m 'set-signal!) set-signal!)
             ((eq? m 'add-action!) add-action!)
-            (else (errorf 'dispatch "Unknown operation: ~s" m))))
+            (else (errorf 'dispatch "unknown operation: ~s" m))))
     dispatch))
 (define (call-each procs)
   (if (null? procs)
