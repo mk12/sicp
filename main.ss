@@ -2,7 +2,11 @@
 
 #!r6rs
 
-(import (rnrs (6))
+(import (rnrs base (6))
+        (rnrs control (6))
+        (rnrs io simple (6))
+        (rnrs lists (6))
+        (rnrs programs (6))
         (only (src compat active) format seed-rng)
         (only (src lang core) run-sicp)
         (src chapter-1)
