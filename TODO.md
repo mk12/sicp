@@ -2,8 +2,11 @@
 
 - remove debug stuff from core.ss
 - consider removing --slow
-- assert raises?
++ assert raises
 + remove make-parameter/parameterize from sicp
+
+Assert no exception on `=>`?
+no: (1) inconsistent `(foo)` and `(foo) => 'ok`, and will slow down compilation more
 
 # To Do
 
