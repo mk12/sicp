@@ -282,11 +282,6 @@
     (define in-degrees (entries-to-in-degrees by-id pred?))
     (define sources (make-queue))
     (define sorted '())
-    ; DEBUG: PRINT IN DEGREES
-    ; (let-values (((keys vals) (hashtable-entries in-degrees)))
-    ;   (write (vector-map entry-id keys)) (newline)
-    ;   (write vals)(newline)
-    ;   (write 'done)(newline))
     (for-each
       (lambda (entry)
         (when (zero? (hashtable-ref in-degrees entry -1))
@@ -295,8 +290,6 @@
       ;; filtered by `pred?`, so that in the absence of forward dependencies
       ;; entries will be executed in source order.
       (reverse (queue-front *entries*)))
-    ; DEBUG: PRINT INITIAL SOURCE QUEUE
-    ; (display (format "source queue: ~s\n" (map entry-id (queue-front sources))))
     (let loop ()
       (unless (queue-empty? sources)
         (let ((node (queue-pop-front! sources)))
@@ -318,9 +311,6 @@
       (vector-for-each
         (lambda (e deg)
           (unless (zero? deg)
-            ; DEBUG: PRINT IN-DEGREES POST-SORT
-            ; (write (vector-map entry-id entries)) (newline)
-            ; (write degrees) (newline)
             (error 'sort-entries "import cycle in entries" (entry-id e))))
         entries
         degrees))
@@ -381,14 +371,10 @@
                           (if (entry-title e)
                             (string-append ": " (entry-title e))
                             "")))))
-        ; (display (format "ARGS FOR ~s: ~s\n" (entry-id e) (gather-args e)))
         (hashtable-set!
           results
           e
-          (apply (entry-thunk e) (gather-args e)))
-        ; (let-values (((keys vals) (hashtable-entries results)))
-        ;   (display "RESULTS: ") (write (vector-map entry-id keys)) (write vals) (newline))
-        )
+          (apply (entry-thunk e) (gather-args e))))
       sorted)
     (when verbose (newline))
     (display
@@ -398,13 +384,7 @@
         *passes* *fails* (- *total* *passes* *fails*)))
     (when (and (zero? *passes*) (zero? *fails*))
       (display (ansi 'magenta "WARNING: did not run any tests\n")))
-    (zero? *fails*)
-    ;; PRINT INFO
-    ; (write filters) (newline)
-    ; (write verbose) (newline)
-    ; (write *entries*) (newline)
-    ; (write (map entry-id sorted))
-    )
+    (zero? *fails*))
 
   ;; In order for `SICP` to match on auxiliary keywords, we must export them.
   ;; That implies giving them definitions. We don't need to do this for `define`
@@ -494,12 +474,6 @@
                       "' is shadowed by a local definition")
                     header)))
               (syntax->datum exports)))
-          ;; DEBUG: PRINT THUNK
-          ; (write (syntax->datum #`(lambda (import-name ... ...)
-          ;   (define export-name) ...
-          ;   #,@body
-          ;   (list export-name ...))))
-          ; (newline)(newline)
           #`(add-entry!
               'id
               'kind
@@ -601,14 +575,4 @@
            (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
     (with-syntax (((_ e* ...) x))
-      ;; DEBUG: PRINT INPUT
-      ; #`(write '(e* ...))
-
-      ;; DEBUG: PRINT MACRO OUTPUT
-      ; #`(write '(begin #,@(go #'(e* ...) 'no-header #'() #'() #'())))
-
-      ;; DEBUG: PRINT *entries*
-      ; #`(begin #,@(go #'(e* ...) 'no-header #'() #'() #'()) (write *entries*))
-
-      #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))
-      ))))
+      #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))))))
