@@ -28,13 +28,6 @@ Tests are written using `=>` and `~>`:
 (+ 1.0 0.1) ~> 1.1  ; Use ~> for inexact numbers (allows a small margin of error)
 ```
 
-Slow tests only run with `-s` or `--slow`:
-
-```scheme
-(fib 100)
-slow=> 354224848179261915075
-```
-
 Code fragments are isolated to their part of the book:
 
 ```scheme

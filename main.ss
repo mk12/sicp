@@ -32,7 +32,6 @@ It will also run all transitive dependencies of the specified parts.
 options:
 
   -h, --help       show this help message
-  -s, --slow       run slow tests too
   -v, --verbose    verbose output
   -n, --no-color   disable color
 " program))
@@ -52,7 +51,6 @@ options:
     (cond
       ((null? args) options)
       ((is? "-h" "--help") (just 'help))
-      ((is? "-s" "--slow") (add 'slow))
       ((is? "-v" "--verbose") (add 'verbose))
       ((is? "-n" "--no-color") (add 'no-color))
       ((not (startswith? #\-)) (add 'filter (car args)))
@@ -68,11 +66,11 @@ options:
       (else (go (cdr alist) res))))
   (go alist '()))
 
-(define (run filters slow verbose color)
+(define (run filters verbose color)
   chapter-1-effects
   chapter-2-effects
   chapter-3-effects
-  (unless (run-sicp filters slow verbose color)
+  (unless (run-sicp filters verbose color)
     (exit 1)))
 
 (define (main argv)
@@ -86,7 +84,6 @@ options:
        (display (usage program)))
       (else
         (run (collq 'filter options)
-             (assq 'slow options)
              (assq 'verbose options)
              (not (assq 'no-color options)))))))
 

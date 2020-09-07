@@ -3,7 +3,7 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define =!> => ~> slow=> slow~> paste
+  (export SICP Chapter Section Exercise define => ~> =!> paste
           run-sicp)
   (import (except (rnrs (6)) current-output-port)
           (rnrs mutable-pairs (6))
@@ -29,12 +29,11 @@
       str))
 
   ;; Global test counters, used for reporting and for setting the exit status.
-  ;; When running without a filter, total = passes + fails + skips. Otherwise,
-  ;; the difference is equal to the number of tests filtered out.
+  ;; When running without a filter, total = passes + fails. Otherwise, the
+  ;; difference is equal to the number of tests filtered out.
   (define *total* 0)
   (define *passes* 0)
   (define *fails* 0)
-  (define *skips* 0)
 
   ;; Increases `*total*` by `n` tests. We need a separate function for this
   ;; because using `*total*` in macros would indirectly export it, meaning it
@@ -159,24 +158,6 @@
       ((null? (cdr xs)) '())
       (else (cons (cons (car xs) (cadr xs))
                   (pairs (cdr xs))))))
-
-  ;; Global flag indicating whether to run slow tests.
-  (define *slow* #f)
-
-  ;; Returns whether to run slow tests. We need a separate function for this
-  ;; because using `*slow*` in macros would indirectly export it, meaning it
-  ;; would have to be immutable.
-  (define (slow-enabled?) *slow*)
-
-  ;; Increments the `*skips*` counter for a skipped slow test.
-  (define (skip-slow-test)
-    (set! *skips* (+ *skips* 1)))
-
-  ;; Wraps code so that it only executes when `*slow*` is true, and otherwise
-  ;; increments the `*skips*` counter.
-  (define-syntax when-slow
-    (syntax-rules ()
-      ((_ e) (if (slow-enabled?) e (skip-slow-test)))))
 
   ;; Like hashtable-ref, but fails if the key is not present.
   (define (hashtable-ref-must table key)
@@ -345,12 +326,11 @@
         degrees))
     sorted)
 
-  ;; Executes the code in `*entries*`. If `slow` is true, runs slow tests. If
-  ;; `verbose` is true, prints more verbose information about all tests. If
-  ;; `color` is true, prints color output. If `filters` is nonempty, only runs
-  ;; entries whose `id` matches at least one of the items in `filters` (and all
-  ;; their transitive depedencies). Returns #t if all tests passed.
-  (define (run-sicp filters slow verbose color)
+  ;; Executes the code in `*entries*`. If `verbose` is true, prints verbose info
+  ;; about all tests. If `color` is true, prints color output. If `filters` is
+  ;; nonempty, only runs entries whose `id` matches at least one of the filters
+  ;; (and all their transitive depedencies). Returns #t if all tests passed.
+  (define (run-sicp filters verbose color)
     (define (include-entry? entry)
       (define (match? s)
         (let ((s-len (string-length s)))
@@ -389,7 +369,6 @@
                 (else (loop (cdr en) (cdr ev))))))
           (map find-value import-names)))
       (fold-left append '() (map gather (entry-imports importer))))
-    (when slow (set! *slow* #t))
     (when color (set! *color* #t))
     (for-each
       (lambda (e)
@@ -414,15 +393,14 @@
     (when verbose (newline))
     (display
       (format
-        "test result: ~a. ~a passed; ~a failed; ~a skipped; ~a filtered out\n"
+        "test result: ~a. ~a passed; ~a failed; ~a filtered out\n"
         (if (zero? *fails*) (ansi 'green "ok") (ansi 'bold-red "FAIL"))
-        *passes* *fails* *skips* (- *total* *passes* *fails* *skips*)))
+        *passes* *fails* (- *total* *passes* *fails*)))
     (when (and (zero? *passes*) (zero? *fails*))
       (display (ansi 'magenta "WARNING: did not run any tests\n")))
     (zero? *fails*)
     ;; PRINT INFO
     ; (write filters) (newline)
-    ; (write slow) (newline)
     ; (write verbose) (newline)
     ; (write *entries*) (newline)
     ; (write (map entry-id sorted))
@@ -441,7 +419,7 @@
               (lambda (x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
             ...)))))
-    (auxiliary Chapter Section Exercise =!> ~> slow=> slow~> paste))
+    (auxiliary Chapter Section Exercise ~> =!> paste))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
@@ -568,8 +546,7 @@
         ;; should come from the original source -- it would be too confusing
         ;; if a paste's code comes from another paste.
         (add names exports))
-      (syntax-case x (Chapter Section Exercise define
-                      =!> => ~> slow=> slow~> paste)
+      (syntax-case x (Chapter Section Exercise define => ~> =!> paste)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -577,17 +554,13 @@
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
         (((Exercise e1* ...) e2* ...)
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
+        ((e1 => e2 e* ...)
+         (go=> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
+        ((e1 ~> e2 e* ...)
+         (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 =!> e2 e* ...)
          (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
            (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
-        ((e1 => e2 e* ...)
-         (go=> #f #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
-        ((e1 ~> e2 e* ...)
-         (go~> #f #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
-        ((e1 slow=> e2 e* ...)
-         (go=> #t #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
-        ((e1 slow~> e2 e* ...)
-         (go~> #t #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         (((paste (id name ...) ...) e* ...)
          (with-syntax (((code ...) (retrieve-paste-code #'((id name ...) ...))))
            (go #'(e* ...)
@@ -610,30 +583,22 @@
          (go #'(e* ...) header exports #`(#,@body e) ntests out))))
 
     ;; Helper recursive function when parsing `=>` operators.
-    (define (go=> slow x terms header exports body ntests out)
+    (define (go=> x terms header exports body ntests out)
       (syntax-case x (=>)
         ((=> e e* ...)
-         (go=> slow #'(e* ...)
-               #`(#,@terms e) header exports body (+ ntests 1) out))
+         (go=> #'(e* ...) #`(#,@terms e) header exports body (+ ntests 1) out))
         ((e* ...)
-         (let ((new-body (add-assertion slow #'assert-equal terms body)))
-           (go #'(e* ...) header exports new-body ntests out)))))
+         (with-syntax ((assert #`(assert-equal (list #,@terms) #'#,terms)))
+           (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
     ;; Helper recursive function when parsing `~>` operators.
-    (define (go~> slow x terms header exports body ntests out)
+    (define (go~> x terms header exports body ntests out)
       (syntax-case x (~>)
         ((~> e e* ...)
-         (go~> slow #'(e e* ...)
-               #`(#,@terms e) header exports body (+ ntests 1) out))
+         (go~> #'(e* ...) #`(#,@terms e) header exports body (+ ntests 1) out))
         ((e* ...)
-         (let ((new-body (add-assertion slow #'assert-close terms body)))
-           (go #'(e* ...) header exports new-body ntests out)))))
-
-    ;; Helper used by `go=>` and `go~>` to add an assertion to `body`.
-    (define (add-assertion slow assert terms body)
-      (let* ((code #`(#,assert (list #,@terms) #'#,terms))
-             (wrapped (if slow #`(when-slow #,code) code)))
-        #`(#,@body #,wrapped)))
+         (with-syntax ((assert #`(assert-close (list #,@terms) #'#,terms)))
+           (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
     (with-syntax (((_ e* ...) x))
       ;; DEBUG: PRINT INPUT

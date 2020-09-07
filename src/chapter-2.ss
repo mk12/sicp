@@ -558,7 +558,7 @@ one-through-four => '(1 2 3 4)
 (define except-first-denom cdr)
 (define no-more? null?)
 
-(cc 100 uk-coins) slow=> 104561
+(cc 20 uk-coins) => 293
 
 ;; The order of the coin value list does not affect the answer produced by `cc`:
 
