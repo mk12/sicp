@@ -1669,12 +1669,12 @@ z2 => '((a b) a b)
 
 (disable-stack-mode)
 
-) ; end of SICP
-) ; end of library
-#|
-;; *** OLD SPOT I HAD GOTTEN TO
+(Section :3.3.5 "Propagation of Constraints")
 
-;;; ssec 3.3.5 (using the constraint system)
+(Section :3.3.5.1 "Using the constraint system"
+  (use (:3.3.5.2 adder constant multiplier probe)
+       (:3.3.5.3 forget-value! make-connector set-value!)))
+
 (define (celsius-fahrenheit-converter c f)
   (let ((u (make-connector))
         (v (make-connector))
@@ -1686,35 +1686,29 @@ z2 => '((a b) a b)
     (adder v y f)
     (constant 9 w)
     (constant 5 x)
-    (constant 32 y)
-    'ok))
+    (constant 32 y)))
+
 (define C (make-connector))
 (define F (make-connector))
-(celsius-fahrenheit-converter C F) ; => ok
+(celsius-fahrenheit-converter C F)
 (probe "Celsius temp" C)
 (probe "Fahrenheit temp" F)
-(set-value! C 25 'user)
-;; => Probe: Celsius temp = 25
-;;    Probe: Fahrenheit temp = 77
-;;    done
-(set-value! F 212 'user)
-;; => Error! Contradiction (77 212)
-(forget-value! C 'user)
-;; => Probe: Celsius temp = ?
-;;    Probe: Fahrenheit temp = ?
-;;    done
-(set-value! F 212 'user)
-;; => Probe: Fahrenheit temp = 212
-;;    Probe: Celsius temp = 100
-;;    done
 
-;;; ssec 3.3.5 (implementing the constraint system)
-(define (constant value connector)
-  (define (me request)
-    (error "Unknown request: CONSTANT" request))
-  (connect connector me)
-  (set-value! connector value me)
-  me)
+(capture-lines (set-value! C 25 'user))
+=> '("Probe: Celsius temp = 25"
+     "Probe: Fahrenheit temp = 77")
+(set-value! F 212 'user)
+=!> "contradiction: 77 212"
+(capture-lines (forget-value! C 'user))
+=> '("Probe: Celsius temp = ?"
+     "Probe: Fahrenheit temp = ?")
+(capture-lines (set-value! F 212 'user))
+=> '("Probe: Fahrenheit temp = 212"
+     "Probe: Celsius temp = 100")
+
+(Section :3.3.5.2 "Implementing the constraint system"
+  (use (:3.3.5.3 connect forget-value! get-value has-value? set-value!)))
+
 (define (adder a b sum)
   (define (process-new-value)
     (cond ((and (has-value? a) (has-value? b))
@@ -1729,13 +1723,14 @@ z2 => '((a b) a b)
     (forget-value! b me)
     (process-new-value))
   (define (me request)
-    (cond ((eq? request 'I-have-a-value)  (process-new-value))
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
           ((eq? request 'I-lost-my-value) (process-forget-value))
-          (else (error "Unknown request: ADDER" request))))
+          (else (error 'adder "unknown request" request))))
   (connect a me)
   (connect b me)
   (connect sum me)
   me)
+
 (define (multiplier x y product)
   (define (process-new-value)
     (cond ((or (and (has-value? x) (zero? (get-value x)))
@@ -1753,34 +1748,42 @@ z2 => '((a b) a b)
     (forget-value! y me)
     (process-new-value))
   (define (me request)
-    (cond ((eq? request 'I-have-a-value)  (process-new-value))
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
           ((eq? request 'I-lost-my-value) (process-forget-value))
-          (else (error "Unknown request: MULTIPLIER" request))))
+          (else (error 'multiplier "unknown request" request))))
   (connect x me)
   (connect y me)
   (connect product me)
   me)
+
+(define (constant value connector)
+  (define (me request)
+    (error 'constant "unknown request" request))
+  (connect connector me)
+  (set-value! connector value me)
+  me)
+
 (define (probe name connector)
   (define (print-probe value)
-    (newline)
-    (display "Probe: ")
-    (display name)
-    (display " = ")
-    (display value))
+    (display (format "\nProbe: ~a = ~a" name value)))
   (define (me request)
     (cond ((eq? request 'I-have-a-value)
            (print-probe (get-value connector)))
           ((eq? request 'I-lost-my-value)
            (print-probe "?"))
-          (else (error "Unknown request: PROBE" request))))
+          (else (error 'probe "unknown request" request))))
   (connect connector me)
   me)
+
+(Section :3.3.5.3 "Representing connectors"
+  (use (:2.3.1 memq)))
+
+;; Moved from Section 3.3.5.2 to avoid import cycle.
 (define (inform-about-value constraint)
   (constraint 'I-have-a-value))
 (define (inform-about-no-value constraint)
   (constraint 'I-lost-my-value))
 
-;;; ssec 3.3.5 (representing connectors)
 (define (make-connector)
   (let ((value #f)
         (informant #f)
@@ -1789,26 +1792,20 @@ z2 => '((a b) a b)
       (cond ((not (has-value? me))
              (set! value new-val)
              (set! informant setter)
-             (for-each-except setter
-                              inform-about-value
-                              constraints))
+             (for-each-except setter inform-about-value constraints))
             ((not (= value new-val))
-             (error "Contradiction" (list value new-val)))
+             (error 'set-value! "contradiction" value new-val))
             (else 'ignored)))
     (define (forget-value! retractor)
-      (if (eq? retractor informant)
-        (begin (set! informant #f)
-               (for-each-except retractor
-                                inform-about-no-value
-                                constraints))
-        'ignored))
+      (cond ((eq? retractor informant)
+             (set! informant #f)
+             (for-each-except retractor inform-about-no-value constraints))
+            (else 'ignored)))
     (define (connect new-constraint)
-      (if (not (memq new-constraint constraints))
-        (set! constraints
-          (cons new-constraint constraints)))
-      (if (has-value? me)
-        (inform-about-value new-constraint))
-      'done)
+      (unless (memq new-constraint constraints)
+        (set! constraints (cons new-constraint constraints)))
+      (when (has-value? me)
+        (inform-about-value new-constraint)))
     (define (me request)
       (cond ((eq? request 'has-value?)
              (if informant #t #f))
@@ -1816,112 +1813,143 @@ z2 => '((a b) a b)
             ((eq? request 'set-value!) set-value!)
             ((eq? request 'forget-value!) forget-value!)
             ((eq? request 'connect) connect)
-            (else (error "Unknown operation: CONNECTOR" request))))
+            (else (error 'make-connector "unknown operation" request))))
     me))
-(define (for-each-except exception proc ls)
-  (define (loop items)
-    (cond ((null? items) 'done)
-          ((eq? (car items) exception) (loop (cdr items)))
-          (else (proc (car items))
-                (loop (cdr items)))))
-  (loop ls))
-(define (has-value? connector)
-  (connector 'has-value?))
-(define (get-value connector)
-  (connector 'get-value))
-(define (set-value! connector new-value informant)
-  ((connector 'set-value!) new-value informant))
-(define (forget-value! connector retractor)
-  ((connector 'forget-value!) retractor))
-(define (connect connector new-constraint)
-  ((connector 'connect) new-constraint))
 
-;;; ex 3.33
+(define (for-each-except exception proc ls)
+  (define (iter items)
+    (unless (null? items)
+      (unless (eq? (car items) exception)
+        (proc (car items)))
+      (iter (cdr items))))
+  (iter ls))
+
+(define (has-value? connector) (connector 'has-value?))
+(define (get-value connector) (connector 'get-value))
+(define (set-value! connector val who) ((connector 'set-value!) val who))
+(define (forget-value! connector who) ((connector 'forget-value!) who))
+(define (connect connector constraint) ((connector 'connect) constraint))
+
+(Exercise ?3.33
+  (use (:3.3.5.2 adder constant multiplier probe)
+       (:3.3.5.3 forget-value! make-connector set-value!)))
+
 (define (averager a b c)
   (let ((u (make-connector))
         (w (make-connector)))
     (adder a b u)
     (multiplier c w u)
-    (constant 2 w)
-    'ok))
+    (constant 2 w)))
 
-;;; ex 3.34
+(define a (make-connector))
+(define b (make-connector))
+(define c (make-connector))
+(averager a b c)
+(probe "a" a)
+(probe "c" c)
+
+(capture-lines (set-value! a 10 'user))
+=> '("Probe: a = 10")
+(capture-lines (set-value! b 20 'user))
+=> '("Probe: c = 15")
+(capture-lines (forget-value! a 'user))
+=> '("Probe: a = ?"
+     "Probe: c = ?")
+(capture-lines (set-value! c 99 'user))
+=> '("Probe: c = 99"
+     "Probe: a = 178")
+
+(Exercise ?3.34
+  (use (:3.3.5.2 multiplier probe)
+       (:3.3.5.3 forget-value! make-connector set-value!)))
+
 (define (bad-squarer a b)
   (multiplier a a b))
+
 ;; At first glance, Louis Reasoner's constraint seems okay:
+
 (define a (make-connector))
 (define b (make-connector))
-(probe 'b b)
+(probe "a" a)
+(probe "b" b)
 (bad-squarer a b)
-(set-value! a 5 'user)
-;; => Probe: b = 25
-;;    done
-;; However, going the other way doesn't work. If we set `b`, the constraint
-;; does not figure out `a`. It would be remarkable if it did a square root
-;; algorithm without us ever writing code for that! The problem is that
-;; multiplier is too general. Louis Reasoner's constraint does not take
-;; advantage of the extra information specific to multiplications of a number to
-;; itself. It doesn't know that the multiplicand and the multiplier are the
-;; same connector.
+(capture-lines (set-value! a 5 'user))
+=> '("Probe: b = 25"
+     "Probe: a = 5")
 
-;;; ex 3.35
-(define (square x) (* x x))
-(define (squarer n n-squared)
+;; However, going the other way doesn't work:
+
+(capture-lines (forget-value! a 'user))
+=> '("Probe: b = ?"
+     "Probe: a = ?")
+(capture-lines (set-value! b 49 'user))
+=> '("Probe: b = 49")
+
+;; Upon reflection, it would be remarkable if it performed a square root without
+;; us ever coding the algorithm! The problem is, `multiplier` is too general.
+;; Louis Reasoner's constraint does not take advantage of the extra information
+;; specific to multiplications of a number to itself. It doesn't know that the
+;; multiplicand and the multiplier are the same connector.
+
+(Exercise ?3.35
+  (use (:1.1.4 square) (:3.3.5.2 probe)
+       (:3.3.5.3 connect forget-value! get-value has-value? make-connector
+                 set-value!)))
+
+(define (squarer a b)
   (define (process-new-value)
-    (cond ((has-value? n)
-           (set-value! n-squared (square (get-value n)) me))
-          ((has-value? n-squared)
-           (if (< (get-value n-squared) 0)
-             (error "Square less than 0: SQUARER" (get-value n-squared))
-             (set-value! n (sqrt (get-value n-squared)) me)))))
-  (define (process-forget-value!)
-    (forget-value! n-squared)
-    (forget-value! n)
+    (cond ((has-value? a)
+           (set-value! b (square (get-value a)) me))
+          ((has-value? b)
+           (if (< (get-value b) 0)
+               (error 'squarer "square less than 0" (get-value b))
+               (set-value! a (sqrt (get-value b)) me)))))
+  (define (process-forget-value)
+    (forget-value! b)
+    (forget-value! a)
     (process-new-value))
   (define (me request)
-    (cond ((eq? request 'I-have-a-value)  (process-new-value))
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
           ((eq? request 'I-lost-my-value) (process-forget-value))
-          (else (error "Unknown request: SQUARER" request))))
-  (connect n me)
-  (connect n-squared me)
+          (else (error 'squarer "unknown request" request))))
+  (connect a me)
+  (connect b me)
   me)
+
 (define a (make-connector))
 (define b (make-connector))
-(probe 'a a)
+(probe "a" a)
 (squarer a b)
-(set-value! b 25 'user)
-;; => Probe: a = 5
-;;    done
+(capture-lines (set-value! b 49 'user))
+=> '("Probe: a = 7")
 
-;;; ex 3.36
-;; For the environment diagram, see `whiteboard/exercise-3.36.jpg`.
+(Exercise ?3.36)
 
-;;; ex 3.37
+;; See whiteboard/exercise-3.36.jpg for the environment diagram.
+
+(Exercise ?3.37
+  (use (:3.3.5.2 constant adder multiplier probe) (:3.3.5.3 make-connector set-value!)))
+
 (define (celsius->fahrenheit x)
   (c+ (c* (c/ (cv 9) (cv 5))
           x)
       (cv 32)))
-(define (cv k)
-  (let ((c (make-connector)))
-    (set-value! c k cv)
-    c))
-(define (c+ x y)
-  (let ((z (make-connector)))
-    (adder x y z)
-    z))
-(define (c- x y)
-  (let ((z (make-connector)))
-    (adder y z x)
-    z))
-(define (c* x y)
-  (let ((z (make-connector)))
-    (multiplier x y z)
-    z))
-(define (c/ x y)
-  (let ((z (make-connector)))
-    (multiplier y z x)
-    z))
 
+(define (cv val) (let ((c (make-connector))) (constant val c) c))
+(define (c+ x y) (let ((z (make-connector))) (adder x y z) z))
+(define (c- x y) (let ((z (make-connector))) (adder y z x) z))
+(define (c* x y) (let ((z (make-connector))) (multiplier x y z) z))
+(define (c/ x y) (let ((z (make-connector))) (multiplier y z x) z))
+
+(define C (make-connector))
+(define F (celsius->fahrenheit C))
+(probe "C" C)
+(capture-lines (set-value! F 212 'user))
+=> '("Probe: C = 100")
+
+) ; end of SICP
+) ; end of library
+#|
 ;;;;; Section 3.4: Concurrency: time is of the essence
 
 ;;; ex 3.38
