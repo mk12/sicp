@@ -61,7 +61,7 @@
   (display (denom x)))
 
 (define one-half (make-rat 1 2))
-(capture-lines (print-rat one-half)) => '("1/2")
+(print-rat one-half) =/> "\n1/2"
 
 (define one-third (make-rat 1 3))
 (add-rat one-half one-third) => '(5 . 6)
@@ -664,13 +664,12 @@ one-through-four => '(1 2 3 4)
     (f (car xs))
     (for-each f (cdr xs))))
 
-(capture-lines
-  (for-each
-    (lambda (x)
-      (newline)
-      (display x))
-    (list 57 321 88)))
-=> '("57" "321" "88")
+(for-each
+  (lambda (x)
+    (newline)
+    (display x))
+  (list 57 321 88))
+=/> '("57" "321" "88")
 
 (Section :2.2.2 "Hierarchical Structures")
 

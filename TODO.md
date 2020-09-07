@@ -1,9 +1,12 @@
 # New to do
 
-- remove debug stuff from core.ss
-- consider removing --slow
++ special arrow for output/lines
++ remove debug stuff from core.ss
++ remove --slow
 + assert raises
 + remove make-parameter/parameterize from sicp
+
+# Considered
 
 Assert no exception on `=>`?
 no: (1) inconsistent `(foo)` and `(foo) => 'ok`, and will slow down compilation more

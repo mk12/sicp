@@ -28,6 +28,22 @@ Tests are written using `=>` and `~>`:
 (+ 1.0 0.1) ~> 1.1  ; Use ~> for inexact numbers (allows a small margin of error)
 ```
 
+You can test standard output with `=/>`:
+
+```scheme
+(display "hi") =/> "hi"
+(display "the quick brown fox\njumps over the lazy dog\n")
+=/> '("the quick brown fox"
+      "jumps over the lazy dog")
+```
+
+And test expected errors with `=!>`:
+
+```scheme
+(error 'foo "unexpected" 3) =!> "foo: unexpected: 3" ; Test the error message
+(error 'foo "unexpected" 3) =!> "unexpected"         ; Any substring will do
+```
+
 Code fragments are isolated to their part of the book:
 
 ```scheme

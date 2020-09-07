@@ -868,7 +868,7 @@ z2 => '((a b) a b)
 
 (insert-queue! q1 'c)
 (insert-queue! q1 'd)
-(capture-lines (print-queue q1)) => '("(c d)")
+(print-queue q1) =/> "(c d)\n"
 
 (Exercise ?3.22)
 
@@ -1017,16 +1017,16 @@ z2 => '((a b) a b)
 
 (define dq (make-deque))
 (empty-deque? dq) => #t
-(capture-lines (print-deque dq)) => '("[]")
+(print-deque dq) =/> "[]\n"
 (front-insert-deque! dq 'b)
 (empty-deque? dq) => #f
 (rear-insert-deque! dq 'c)
 (front-insert-deque! dq 'a)
-(capture-lines (print-deque dq)) => '("[a, b, c]")
+(print-deque dq) =/> "[a, b, c]\n"
 (rear-delete-deque! dq)
-(capture-lines (print-deque dq)) => '("[a, b]")
+(print-deque dq) =/> "[a, b]\n"
 (front-delete-deque! dq)
-(capture-lines (print-deque dq)) => '("[b]")
+(print-deque dq) =/> "[b]\n"
 (rear-delete-deque! dq)
 (empty-deque? dq) => #t
 (front-deque dq) =!> "called with an empty deque"
@@ -1482,18 +1482,18 @@ z2 => '((a b) a b)
 (define sum (make-wire))
 (define carry (make-wire))
 
-(capture-lines (probe 'sum sum))
-=> '("sum 0 New-value = 0")
-(capture-lines (probe 'carry carry))
-=> '("carry 0 New-value = 0")
+(probe 'sum sum)
+=/> '("sum 0 New-value = 0")
+(probe 'carry carry)
+=/> '("carry 0 New-value = 0")
 (half-adder input-1 input-2 sum carry)
 (set-signal! input-1 1)
-(capture-lines (propagate))
-=> '("sum 8 New-value = 1")
+(propagate)
+=/> '("sum 8 New-value = 1")
 (set-signal! input-2 1)
-(capture-lines (propagate))
-=> '("carry 11 New-value = 1"
-     "sum 16 New-value = 0")
+(propagate)
+=/> '("carry 11 New-value = 1"
+      "sum 16 New-value = 0")
 
 (Exercise ?3.31
   (use (:3.3.4 half-adder) (:3.3.4.1 inverter)
@@ -1550,13 +1550,13 @@ z2 => '((a b) a b)
 (define input-2 (make-bad-wire))
 (define sum (make-bad-wire))
 (define carry (make-bad-wire))
-(capture-lines (probe 'sum sum)) => '()
-(capture-lines (probe 'carry carry)) => '()
+(probe 'sum sum) =/> ""
+(probe 'carry carry) =/> ""
 (half-adder input-1 input-2 sum carry)
 (set-signal! input-1 1)
-(capture-lines (propagate)) => '()
+(propagate) =/> ""
 (set-signal! input-2 1)
-(capture-lines (propagate)) => '("carry 11 New-value = 1")
+(propagate) =/> '("carry 11 New-value = 1")
 
 (Section :3.3.4.5 "Implementing the agenda"
   (use (:3.3.2 delete-queue! empty-queue? front-queue insert-queue!
@@ -1636,12 +1636,14 @@ z2 => '((a b) a b)
 (set-signal! a 0)
 (set-signal! b 1)
 (and-gate a b c)
-(capture-lines (probe 'c c)) => '("c 0 New-value = 0")
-(capture-lines (propagate)) => '()
+(probe 'c c)
+=/> '("c 0 New-value = 0")
+(propagate) =/> ""
 (set-signal! a 1)
 (set-signal! b 0)
-(capture-lines (propagate)) => '("c 6 New-value = 1"
-                                 "c 6 New-value = 0")
+(propagate)
+=/> '("c 6 New-value = 1"
+      "c 6 New-value = 0")
 
 ;; The value of `c` goes to 1, but settles to 0 once all actions are processed.
 ;; If we use a stack (FILO) rather than a queue (FIFO) for actions, there will
@@ -1661,11 +1663,11 @@ z2 => '((a b) a b)
 (set-signal! a 0)
 (set-signal! b 1)
 (and-gate a b c)
-(capture-lines (probe 'c c)) => '("c 0 New-value = 0")
-(capture-lines (propagate)) => '()
+(probe 'c c) =/> '("c 0 New-value = 0")
+(propagate) =/> ""
 (set-signal! a 1)
 (set-signal! b 0)
-(capture-lines (propagate)) => '("c 6 New-value = 1")
+(propagate) =/> '("c 6 New-value = 1")
 
 (disable-stack-mode)
 
@@ -1694,17 +1696,17 @@ z2 => '((a b) a b)
 (probe "Celsius temp" C)
 (probe "Fahrenheit temp" F)
 
-(capture-lines (set-value! C 25 'user))
-=> '("Probe: Celsius temp = 25"
-     "Probe: Fahrenheit temp = 77")
+(set-value! C 25 'user)
+=/> '("Probe: Celsius temp = 25"
+      "Probe: Fahrenheit temp = 77")
 (set-value! F 212 'user)
 =!> "contradiction: 77 212"
-(capture-lines (forget-value! C 'user))
-=> '("Probe: Celsius temp = ?"
-     "Probe: Fahrenheit temp = ?")
-(capture-lines (set-value! F 212 'user))
-=> '("Probe: Fahrenheit temp = 212"
-     "Probe: Celsius temp = 100")
+(forget-value! C 'user)
+=/> '("Probe: Celsius temp = ?"
+      "Probe: Fahrenheit temp = ?")
+(set-value! F 212 'user)
+=/> '("Probe: Fahrenheit temp = 212"
+      "Probe: Celsius temp = 100")
 
 (Section :3.3.5.2 "Implementing the constraint system"
   (use (:3.3.5.3 connect forget-value! get-value has-value? set-value!)))
@@ -1848,16 +1850,16 @@ z2 => '((a b) a b)
 (probe "a" a)
 (probe "c" c)
 
-(capture-lines (set-value! a 10 'user))
-=> '("Probe: a = 10")
-(capture-lines (set-value! b 20 'user))
-=> '("Probe: c = 15")
-(capture-lines (forget-value! a 'user))
-=> '("Probe: a = ?"
-     "Probe: c = ?")
-(capture-lines (set-value! c 99 'user))
-=> '("Probe: c = 99"
-     "Probe: a = 178")
+(set-value! a 10 'user)
+=/> '("Probe: a = 10")
+(set-value! b 20 'user)
+=/> '("Probe: c = 15")
+(forget-value! a 'user)
+=/> '("Probe: a = ?"
+      "Probe: c = ?")
+(set-value! c 99 'user)
+=/> '("Probe: c = 99"
+      "Probe: a = 178")
 
 (Exercise ?3.34
   (use (:3.3.5.2 multiplier probe)
@@ -1873,17 +1875,17 @@ z2 => '((a b) a b)
 (probe "a" a)
 (probe "b" b)
 (bad-squarer a b)
-(capture-lines (set-value! a 5 'user))
-=> '("Probe: b = 25"
-     "Probe: a = 5")
+(set-value! a 5 'user)
+=/> '("Probe: b = 25"
+      "Probe: a = 5")
 
 ;; However, going the other way doesn't work:
 
-(capture-lines (forget-value! a 'user))
-=> '("Probe: b = ?"
-     "Probe: a = ?")
-(capture-lines (set-value! b 49 'user))
-=> '("Probe: b = 49")
+(forget-value! a 'user)
+=/> '("Probe: b = ?"
+      "Probe: a = ?")
+(set-value! b 49 'user)
+=/> '("Probe: b = 49")
 
 ;; Upon reflection, it would be remarkable if it performed a square root without
 ;; us ever coding the algorithm! The problem is, `multiplier` is too general.
@@ -1920,8 +1922,7 @@ z2 => '((a b) a b)
 (define b (make-connector))
 (probe "a" a)
 (squarer a b)
-(capture-lines (set-value! b 49 'user))
-=> '("Probe: a = 7")
+(set-value! b 49 'user) =/> '("Probe: a = 7")
 
 (Exercise ?3.36)
 
@@ -1944,8 +1945,7 @@ z2 => '((a b) a b)
 (define C (make-connector))
 (define F (celsius->fahrenheit C))
 (probe "C" C)
-(capture-lines (set-value! F 212 'user))
-=> '("Probe: C = 100")
+(set-value! F 212 'user) =/> '("Probe: C = 100")
 
 ) ; end of SICP
 ) ; end of library

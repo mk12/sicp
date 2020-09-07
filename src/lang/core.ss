@@ -3,7 +3,8 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define => ~> =!> paste
+  (export SICP Chapter Section Exercise define => ~> =/> =!> paste
+          capture-output hide-output
           run-sicp)
   (import (except (rnrs (6)) current-output-port)
           (rnrs mutable-pairs (6))
@@ -141,6 +142,38 @@
             (ansi 'bold "~a:~a:~a: assertion failed")
             "\n~a")
           file line col msg))))
+
+  ;; Captures standard output in a string.
+  (define-syntax capture-output
+    (syntax-rules ()
+      ((_ e* ...)
+       (patch-output (with-output-to-string (lambda () e* ...))))))
+  
+  ;; Like `capture-output`, but splits into a list of lines.
+  (define-syntax capture-lines
+    (syntax-rules ()
+      ((_ e* ...)
+       (split-lines (capture-output e* ...)))))
+
+  ;; Supresses printing to standard output.
+  (define-syntax hide-output
+    (syntax-rules ()
+      ((_ e* ...)
+       (parameterize ((current-output-port (open-output-string)))
+         e* ...))))
+
+  ;; Splits a string into a list of lines, using "\n" as the delimiter, not
+  ;; including the delimiter in the result, and not producing empty strings for
+  ;; runs of multiple newlines or for newlines at the start/end.
+  (define (split-lines s)
+    (let ((len (string-length s)))
+      (let loop ((i len) (j len) (res '()))
+        (define (push)
+          (if (< i j) (cons (substring s i j) res) res))
+        (cond ((zero? i) (push))
+              ((char=? (string-ref s (- i 1)) #\newline)
+               (loop (- i 1) (- i 1) (push)))
+              (else (loop (- i 1) j res))))))
 
   ;; Converts a syntax object to a list of syntax objects.
   ;; https://www.scheme.com/csug8/syntax.html#./syntax:s6
@@ -399,7 +432,7 @@
               (lambda (x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
             ...)))))
-    (auxiliary Chapter Section Exercise ~> =!> paste))
+    (auxiliary Chapter Section Exercise ~> =/> =!> paste))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
@@ -520,7 +553,7 @@
         ;; should come from the original source -- it would be too confusing
         ;; if a paste's code comes from another paste.
         (add names exports))
-      (syntax-case x (Chapter Section Exercise define => ~> =!> paste)
+      (syntax-case x (Chapter Section Exercise define => ~> =/> =!> paste)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -532,6 +565,13 @@
          (go=> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 ~> e2 e* ...)
          (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
+        ((e1 =/> e2 e* ...)
+         (string? (syntax->datum #'e2))
+         (with-syntax ((term #'(capture-output e1)))
+           (go=> #'(e* ...) #'(term e2) header exports body (+ ntests 1) out)))
+        ((e1 =/> e2 e* ...)
+         (with-syntax ((term #'(capture-lines e1)))
+           (go=> #'(e* ...) #'(term e2) header exports body (+ ntests 1) out)))
         ((e1 =!> e2 e* ...)
          (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
            (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
