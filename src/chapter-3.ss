@@ -1947,27 +1947,35 @@ z2 => '((a b) a b)
 (probe "C" C)
 (set-value! F 212 'user) =/> '("Probe: C = 100")
 
-) ; end of SICP
-) ; end of library
-#|
-;;;;; Section 3.4: Concurrency: time is of the essence
+(Section :3.4 "Concurrency: Time Is of the Essence")
 
-;;; ex 3.38
+(Section :3.4.1 "The Nature of Time in Concurrent Systems")
+
+(Exercise ?3.38)
+
 (define balance 100)
+
 ;; These three assignments are executed concurrently:
 (set! balance (+ balance 10))
 (set! balance (- balance 20))
 (set! balance (- balance (/ balance 2)))
-;; (a) Possible values:
+
+;; (a) Possible values when execution is serializable:
 (or (= balance 35)
     (= balance 40)
     (= balance 45)
     (= balance 50))
-;; (b) These other values are equivalent to what you can get when you leave out
-;; one or more of the assignments, since the new value is overwritten before
-;; being read. We could have 110, 90, 80, 55, ....
+=> #t
 
-;;; ssec 3.4.2 (serializers)
+;; (b) If the system allows the processes to be interleaved, you could also get
+;; results equilavent to leaving out one or more of the assignments, where the
+;; new value is overwritten before being read (110, 90, 80, 55, etc.).
+
+(Section :3.4.2 "Mechanisms for Controlling Concurrency")
+
+) ; end of SICP
+) ; end of library
+#|
 (define x 10)
 (parallel-execute
   (lambda () (set! x (* x x)))
