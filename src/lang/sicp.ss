@@ -7,8 +7,8 @@
           define => ~> =/> =!> paste
           capture-output hide-output
           display format fxand fxarithmetic-shift-left fxarithmetic-shift-right
-          fxxor newline quotient random remainder runtime set-car! set-cdr!
-          string-contains? string-count unless when)
+          fxxor make-mutex newline parallel-execute quotient random remainder
+          runtime set-car! set-cdr! string-contains? string-count unless when)
   (import (rnrs base (6))
           (only (rnrs arithmetic fixnums (6))
                 fxand fxarithmetic-shift-left fxarithmetic-shift-right fxxor)

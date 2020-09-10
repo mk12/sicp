@@ -1954,64 +1954,103 @@ z2 => '((a b) a b)
 (Exercise ?3.38)
 
 (define balance 100)
+(define (peter) (set! balance (+ balance 10)))
+(define (paul) (set! balance (- balance 20)))
+(define (mary) (set! balance (- balance (/ balance 2))))
 
-;; These three assignments are executed concurrently:
-(set! balance (+ balance 10))
-(set! balance (- balance 20))
-(set! balance (- balance (/ balance 2)))
+;; (a) Out of six permutations, there are four possible values: 35, 40, 45, 50.
 
-;; (a) Possible values when execution is serializable:
-(or (= balance 35)
-    (= balance 40)
-    (= balance 45)
-    (= balance 50))
-=> #t
+(set! balance 100) (peter) (paul) (mary) balance => 45
+(set! balance 100) (peter) (mary) (paul) balance => 35
+(set! balance 100) (paul) (peter) (mary) balance => 45
+(set! balance 100) (paul) (mary) (peter) balance => 50
+(set! balance 100) (mary) (peter) (paul) balance => 40
+(set! balance 100) (mary) (paul) (peter) balance => 40
 
 ;; (b) If the system allows the processes to be interleaved, you could also get
 ;; results equilavent to leaving out one or more of the assignments, where the
-;; new value is overwritten before being read (110, 90, 80, 55, etc.).
+;; new value is overwritten before being read. In `mary`, the value divided by
+;; 2 could also be different from the value being subtracted from.
+
+(define (in? x xs)
+  (and (not (null? xs))
+       (or (= (car xs) x) (in? x (cdr xs)))))
+
+(set! balance 100)
+(parallel-execute peter paul mary)
+(in? balance '(30 35 40 45 50 55 60 80 90 110)) => #t
 
 (Section :3.4.2 "Mechanisms for Controlling Concurrency")
 
-) ; end of SICP
-) ; end of library
-#|
+(Section :3.4.2.1 "Serializing access to shared state"
+  (use (:3.4.2.3 make-serializer) (?3.38 in?)))
+
+;; Without serialization, there are five possible values:
 (define x 10)
 (parallel-execute
   (lambda () (set! x (* x x)))
   (lambda () (set! x (+ x 1))))
-;; There are five possible final values:
-(or (= x 101) (= x 121) (= x 110) (= x 11) (= x 100))
-;; Using a serializer, we narrow it down:
+(in? x '(11 100 101 110 121)) => #t
+
+;; With serialization, it narrows to two possible values:
 (define x 10)
 (define s (make-serializer))
-(paralell-execute
+(parallel-execute
   (s (lambda () (set! x (* x x))))
   (s (lambda () (set! x (+ x 1)))))
-;; There are just two possible values:
-(or (= x 101) (= x 121))
+(in? x '(101 121)) => #t
 
-;;; ex 3.39
+(define (make-account balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+                balance)
+        "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (let ((protected (make-serializer)))
+    (define (dispatch m)
+      (cond ((eq? m 'withdraw) (protected withdraw))
+            ((eq? m 'deposit) (protected deposit))
+            ((eq? m 'balance) balance)
+            (else (error 'make-account "unknown request" m))))
+  dispatch))
+
+(Exercise ?3.39
+  (use (:3.4.2.3 make-serializer) (?3.38 in?)))
+
 (define x 10)
 (define s (make-serializer))
 (parallel-execute
   (lambda () (set! x ((s (lambda () (* x x))))))
   (s (lambda () (set! x (+ x 1)))))
-;; Three of the five values are still ossible:
-(or (= x 101)  ; squared, then incremented
-    (= x 121)  ; incremented, then squared
-    (= x 100)) ; incremented between squarer read and write
 
-;;; ex 3.40
+;; Three of the five values are still possible:
+(in? x '(101   ; squared, then incremented
+         121   ; incremented, then squared
+         100)) ; incremented between squarer read and write
+=> #t
+
+(Exercise ?3.40
+  (use (:2.2.3.1 filter) (:2.2.3.2 permutations)
+       (:3.3.3.1 make-table insert! lookup) (:3.4.2.3 make-serializer)
+       (?3.38 in?)))
+
 (define x 10)
 (parallel-execute
-  (lambda () (set! x (* x x)))
 ;; process S:  3        1 2
-  (lambda () (set! x (* x x x))))
+  (lambda () (set! x (* x x)))
 ;; process C:  7        4 5 6
-;; There are seven relevant steps taken above: three in S, four in C. Steps 1,
-;; 2, 4, 5, and 6 are reads; steps 3 and 7 are writes. This conccurent
-;; execution is not serialized at all, so the steps can interleave.
+  (lambda () (set! x (* x x x))))
+
+;; There are five possible values:
+(in? x '(100 1000 10000 100000 1000000)) => #t
+
+;; We will now demonstrate how the steps can interleave to produce these values.
+;; There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and
+;; 6 are reads; steps 3 and 7 are writes.
+
 (define steps-s-read '(1 2))
 (define steps-s-write '(3))
 (define steps-c-read '(4 5 6))
@@ -2019,205 +2058,204 @@ z2 => '((a b) a b)
 (define steps-s (append steps-s-read steps-s-write))
 (define steps-c (append steps-c-read steps-c-write))
 (define steps (append steps-s steps-c))
-;; We will calculate all possible orderings using permutations and a filter.
-(define (permutations xs)
-  (if (null? xs)
-    '(())
-    (flat-map
-      (lambda (p)
-        (map (lambda (q) (cons p q))
-             (permutations (remove p xs))))
-      xs)))
+
+;; Only certain permutations of steps are valid orderings:
+
 (define (good-interleave? p)
   (define (iter latest-s latest-c p)
     (or (null? p)
-        (and (memv (car p) steps-s)
+        (and (in? (car p) steps-s)
              (> (car p) latest-s)
              (iter (car p) latest-c (cdr p)))
-        (and (memv (car p) steps-c)
+        (and (in? (car p) steps-c)
              (> (car p) latest-c)
              (iter latest-s (car p) (cdr p)))))
   (iter 0 0 p))
+
 (define possible-orders
-  (filter good-interleave?
-          (permutations steps)))
-(length possible-orders) ; => 35
-;; There are 35 possibilities. Some may produce the same value, so there are 35
-;; or less possible final values for `x`. We will automate this part as well:
+  (filter good-interleave? (permutations steps)))
+
+(length possible-orders) => 35
+
+;; For a given ordering of steps, we can simulate the execution:
+
 (define (execute-steps steps x)
   (define (iter s-reads c-reads steps x)
     (cond ((null? steps) x)
-          ((memv (car steps) steps-s-read)
+          ((in? (car steps) steps-s-read)
            (iter (cons x s-reads) c-reads (cdr steps) x))
-          ((memv (car steps) steps-c-read)
+          ((in? (car steps) steps-c-read)
            (iter s-reads (cons x c-reads) (cdr steps) x))
-          ((memv (car steps) steps-s-write)
+          ((in? (car steps) steps-s-write)
            (iter s-reads c-reads (cdr steps) (apply * s-reads)))
-          ((memv (car steps) steps-c-write)
+          ((in? (car steps) steps-c-write)
            (iter s-reads c-reads (cdr steps) (apply * c-reads)))
-          (else (error "Unknown step number: EXECUTE-STEPS" (car steps)))))
+          (else (error 'execute-steps "unknown step number" (car steps)))))
   (iter '() '() steps x))
-;; Now, we can see the values that produced by all 35 possibilities:
+
 (define final-values
-  (map (lambda (ss) (execute-steps ss 10))
-     possible-orders))
+  (map (lambda (ss) (execute-steps ss 10)) possible-orders))
+
 final-values
-;; => (1000000 100000 10000 1000 100 100000 10000
-;;     1000 100 10000 1000 100 1000 100
-;;     10000 100000 10000 1000 100 10000 1000
-;;     100 1000 100 10000 10000 1000 100
-;;     1000 100 10000 1000 100 10000 1000000)
-;; Quite a range of different values! But there are some duplicates. Let's see
-;; how many of each value there is.
+=> '(1000000 100000 10000 1000 100 100000 10000
+     1000 100 10000 1000 100 1000 100
+     10000 100000 10000 1000 100 10000 1000
+     100 1000 100 10000 10000 1000 100
+     1000 100 10000 1000 100 10000 1000000)
+
+;; There are many duplicates, so let's count the occurrences.
+
 (define (group xs)
   (let ((occurence-table (make-table)))
     (define (iter xs)
       (if (null? xs)
-        occurence-table
-        (let ((n (table-lookup (car xs) occurence-table)))
-          (insert! (car xs)
-                   (if n (inc n) 1)
-                   occurence-table)
-          (iter (cdr xs)))))
+          occurence-table
+          (let ((n (lookup (car xs) occurence-table)))
+            (insert! (car xs)
+                     (if n (+ n 1) 1)
+                     occurence-table)
+            (iter (cdr xs)))))
     (iter xs)))
+
 (group final-values)
-;; => (*table* (100     . 10)
-;;             (1000    . 10)
-;;             (10000   . 10)
-;;             (100000  .  3)
-;;             (1000000 .  2))
-;; The smaller values are more frequent. The largest value, 1000000, is the
-;; correct value, and we can check that:
-(execute-steps '(1 2 3 4 5 6 7) 10) ; => 1000000
-;; This is squaring and then cubing. Notice there are 2 occurences of this
-;; value. The only other way is to cube and then square:
-(execute-steps '(4 5 6 7 1 2 3) 10) ; => 1000000
-;; If we serialize the two procedures, this is the only value we get.
+=> '(*table* (100 . 10)
+             (1000 . 10)
+             (10000 . 10)
+             (100000 . 3)
+             (1000000 . 2))
 
-;;; ex 3.41
-;; Ben Bitdiddle is dead wrong. It would be unnecessary to serialize access to
-;; the bank balance because it would make no difference. If we serialize it,
-;; then the value will be read either before or after (in sequence) it is
-;; written, assuming someone is withdrawing or depositing concurrently.
-;; However, if we don't serialize it, we still get one value or the other.
-;; There is nothing that can be interleaved because reading the balance takes
-;; only one step. Any problems below this level are handled in the hardware.
-;; Therefore it is useless to serialize access to the bank balance. Now, you
-;; might think that it matters when we withdraw or deposit an amount which is a
-;; function of the present balance. Consider this:
-(define account (make-account 100))
+;; The largest value, 1000000, can be obtained in two ways:
+(execute-steps '(1 2 3 4 5 6 7) 10) => 1000000 ; squared, then cubed
+(execute-steps '(4 5 6 7 1 2 3) 10) => 1000000 ; cubed, then squared
+
+;; If we serialize the procedures, we always get that value:
+(define x 10)
+(define s (make-serializer))
 (parallel-execute
-  (lambda () ((account 'deposit) 10))
-  (lambda () ((account 'withdraw) (account 'balance))))
-;; We should think that the balance ends up either 0 or 10. If I have 10 in my
-;; pocket at the beginning, then the total 110 should be conserved. Either I
-;; put 10 in first, and then withdraw the 110, leaving 0 in the bank and 110 in
-;; my pocket; or I withdraw the 100 first, and then deposit 10, leaving 10 in
-;; the bank and 100 in my pocket. We need serialization for this, because there
-;; are other possibilities due to the fact that the deposit can happen in
-;; between reading of the balance and the withdrawal. (Note that the deposit
-;; cannot interleave with the withdrawal because they are serialized.) However,
-;; Ben Bitdiddle is still wrong, because serializing access to the balance
-;; wouldn't change a think. It would only seal up the balance access, still
-;; leaving a hole between that and the withdrawal. We would have to create a
-;; procedure that does both, and then serialize that. In any case, Ben is wrong.
+  (s (lambda () (set! x (* x x))))
+  (s (lambda () (set! x (* x x x)))))
+x => 1000000
 
-;;; ex 3.42
+(Exercise ?3.41
+  (use (:3.4.2.1 make-account)))
+
+;; Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank
+;; balance because it would make no difference. If we serialize it, then the
+;; value will be read either before or after (in sequence) it is written,
+;; assuming someone is withdrawing or depositing concurrently. However, if we
+;; don't serialize it, we still get one value or the other. There is nothing
+;; that can be interleaved because reading the balance takes only one step,
+;; assuming the Scheme implementation considers this a thread-safe operation.
+
+(Exercise ?3.42)
+
 ;; This is a safe change to make. Each bank account still has one serializer and
 ;; the deposit and withdraw procedures returned from the dispatcher are always
 ;; protected by it. It makes no difference in what concurrency is allowed. If it
 ;; did, then the specification of `make-serializer` must be incorrect.
 
-;;; ex 3.43
-;; The balances in the three accounts start out as $10, $20, and $30. The
-;; exchange of balances A and B works by calculating D = A - B, and then
-;; withdrawing to get A' = A - D and depositing to get B' = B + D. Substituting
-;; for D, we have A' = A - (A - B) = B, and B' = B + (A - B) = A. The new value
-;; of A is A' = B, and the new value of B is B' = A. The initial set of balances
-;; {A,B} and the final set of balances {B,A} are equal. This proves that the
-;; account balances remain $10, $20, and $30 in some order after an exchange.
-;; With `serialized-exchange`, the exchanging is serialized on both accounts.
-;; This means that if A and B are beight exchanged, no other exchange involving
-;; either A or B can occur until it is finished. If one exchange preserves the
-;; set of balances {10,20,30}, then so will another, and another: a sequence of
-;; exchanges, or serialized concurrent exchanges, will preserve {10,20,30}.
-;; Using the first definition of the account-exchange program, where only the
-;; individual deposits and withdrawals are serialized (and only on one account),
-;; the {10,20,30} set will not be preserved. This is because the four steps of
-;; the exchange can interleave with the four steps of another. Let us refer to
-;; the steps of concurrent processes P and Q by P1, Q1, P2, Q2, etc.:
+(Section :3.4.2.2 "Complexity of using multiple shared resources"
+  (use (:3.4.2.3 make-serializer)))
+
+(define (exchange account1 account2)
+  (let ((difference (- (account1 'balance)
+                       (account2 'balance))))
+    ((account1 'withdraw) difference)
+    ((account2 'deposit) difference)))
+
+(define (make-account-and-serializer balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount)) balance)
+  (let ((balance-serializer (make-serializer)))
+    (define (dispatch m)
+      (cond ((eq? m 'withdraw) withdraw)
+            ((eq? m 'deposit) deposit)
+            ((eq? m 'balance) balance)
+            ((eq? m 'serializer) balance-serializer)
+            (else (error 'make-account "unknown request" m))))
+    dispatch))
+
+(define (deposit account amount)
+  (let ((s (account 'serializer))
+        (d (account 'deposit)))
+    ((s d) amount)))
+
+(define (serialized-exchange account1 account2)
+  (let ((serializer1 (account1 'serializer))
+        (serializer2 (account2 'serializer)))
+    ((serializer1 (serializer2 exchange))
+     account1
+     account2)))
+
+(Exercise ?3.43)
+
+;; The balances in the accounts start out as $10, $20, and $30. Exchanging
+;; balances A and B works by taking D = A - B, and then withdrawing to get A' =
+;; A - D = B and depositing to get B' = B + D = A. Going from {A, B} to {B, A},
+;; we can see that any sequence of exchanges preserves the set {A, B}, and in
+;; this particular case {10, 20, 30}.
+;;
+;; Using the first version of `exchange`, where only individual deposits and
+;; withdrawals are serialized (by account), the {10, 20, 30} set will not be
+;; preserved. For example, let us refer to concurrent processes P and Q:
+
 (define (exchange acc1 acc2)
   (let ((diff (- (acc1 'balance)    ; (1)
                  (acc2 'balance)))) ; (2)
     ((acc1 'withdraw) diff)         ; (3)
     ((acc2 'deposit) diff)))        ; (4)
-;; Suppose the three accounts A, B, and C begin with $10, $20, and $30
-;; respectively. Process P exchanges A and B while concurrent process Q
-;; exchanges A and C. We interleave the steps like so: P1, Q1, Q2, Q3, Q4, P2,
-;; P3, P4. Now, P finds the balance of A to be $10. Then Q carries out all its
-;; steps: A and C are exchanged, and P's read operation does not affect this.
-;; Therefore A, B, and C now have balances $30, $20, and $10 respectively. Now
-;; process P carries out its three remaining steps. It finds B to have $20. It
-;; calculates the difference `(- 10 20)`, which is -10. It withdraws this from
-;; A, leaving A with a balance of 30 - (-10), or 40. It deposits this in B,
-;; leaving B with a balance of 20 + (-10) = 10. Now the balances of A, B, and C
-;; are $40, $10, and $10 respectively. This is {10,20,30}. This proves that the
-;; balances {10,20,30} are not preserved with the original implementation. Now,
-;; although it violates this condition, it does preserve the sum of the
-;; balances, $60. This is the case in our example: 10 + 20 + 30 = 40 + 10 + 10.
-;; It is true in general because, no matter how wrong the value of `diff` is, it
-;; is calculated once only. It is then withdrawn from one account and deposited
-;; into another, and these two operations are serialized. The sum of the
-;; balances is preserved, because A' + B' = B + A = A + B. No interleaving of
-;; the four exchanging steps can alter this. It matters only that the individual
-;; withdrawals and deposits are serialized. This proves that the original
-;; implementation preserves the sum of the balances. Finally, if we used the
-;; original implementation but changed `make-account` so that it did no
-;; serializing, the sum would not be preserved. This is because the steps
-;; of the deposits and withdrawals of concurrent processes will interleave, and
-;; we have already seen that this does not ensure that the total amount of money
-;; is preserved. I will not bother detailing an example for this case.
 
-;;; ex 3.44
+;; Suppose accounts A, B, C begin with $10, $20, $30. Process P exchanges A and
+;; B, process Q exchanges A and C. We interleave steps as P1, Q1, Q2, Q3, Q4,
+;; P2, P3, P4. P finds the balance of A to be $10. Then Q carries out all its
+;; steps: A and C are exchanged, and P's read operation does not affect this.
+;; Therefore A, B, C now have balances $30, $20, $10. Now P carries out its
+;; three remaining steps. It finds B to have $20. It calculates 10 - 20 = -10.
+;; It withdraws -10 from A, leaving A with a balance of 30 - (-10) = 40. It
+;; deposits this in B, leaving B with a balance of 20 + (-10) = 10. Now the
+;; balances of A, B, C are $40, $10, $10. Thus {10, 20, 30} is not preserved.
+;; But it does preserve the sum 10 + 20 + 30 = 40 + 10 + 10 = 60. This would be
+;; the case even if `diff` was a random number, because deposits and withdrawals
+;; are serialized, and we deposit and withdraw the same `diff`.
+;;
+;; If we used the original implementation but changed `make-account` so that it
+;; did no serializing, the sum would not be preserved. This is because the steps
+;; of the deposits and withdrawals of concurrent processes will interleave, and
+;; we have already seen the issues this produces earlier.
+
+(Exercise ?3.44)
+
 (define (transfer from-acc to-acc amount)
   ((from-acc 'withdraw) amount) ; (1)
   ((to-acc 'deposit) amount))   ; (2)
+
 ;; Ben Bitdiddle is correct. This procedure will behave correctly, even with
-;; multiple conccurent transfers involving the same accounts. Suppose we
+;; multiple concurrent transfers involving the same accounts. Suppose we
 ;; transfer $10 between A and B (process P), and concurrently transfer $20
 ;; between A and C (process Q). P1 and Q1 will be in the same serialization set,
 ;; because they both withdraw from A. P2 and Q2 will neither be in that set nor
 ;; in each other's set. One deposits to B, and the other deposits to C. They
-;; cannot interfere with each other. We can safely ignore P2 and Q2 -- all we
-;; care about is that they will happen at some time. That leaves us with P1 and
-;; Q1. These are serialized, so we either have P1 followed by Q1, or the other
-;; way around. We either withdraw $10 from A and then $20 from A, or we do it in
-;; the opposite order. In either case, A loses $30. B is guaranteed to gain $10,
-;; and C will likewise gain $20. Correctness is ensured. Louis Reasoner is
-;; wrong; we do not need a more sophisticated method. The essential difference
-;; between the transfer problem and the exchange problem is that the exchange
-;; amount depends on the current balances, and so it must include steps that
-;; read the balance, thereby introducing a hole into which a concurrent step can
-;; be interleaved, unless the whole exchange is serialized. The `transfer`
-;; procedure takes `amount` as an argument, and there is no way this can be
-;; messed up. The serialization of deposits and withdrawals guarantees that the
-;; deposit and withdrawal of `amount` will behave correctly. It should be noted
-;; that if `(from-account 'balance)` is passed as the `amount`, or some
-;; similar expression involving a reading of the balance, then this argument is
-;; invalid and we would need serialization as in the exchange example. I have
-;; been assuming that `amount` is a constant.
+;; cannot interfere with each other.
+;;
+;; The essential difference between the transfer problem and the exchange
+;; problem is that the exchange amount depends on the current balances, and so
+;; it must include steps that read the balance, introducing a hole into which a
+;; concurrent step can be interleaved, unless the whole exchange is serialized.
 
-;;; ex 3.45
+(Exercise ?3.45)
+
 ;; Louis Reasoner is wrong. The problem with automatically serializing all
 ;; deposits and withdrawals is that, when we create our own multi-step
 ;; operations such as the exchange or the transfer, and we serialize them, we
-;; end up with nested serialization. When `serialized-exchange` is called, it
-;; will never return. It will be stuck forever, because as soon as it tries
-;; withdraw from the first account, the system will not be able to proceed
-;; because the account is already locked. It will try to wait for the exchanging
-;; procedure to finish before it makes the withdrawal, which is impossible.
+;; end up with nested serialization, i.e. deadlock.
 
-;;; ssec 3.4.2 (implementing serializers)
+(Section :3.4.2.3 "Implementing serializers")
+
 (define (make-serializer)
   (let ((mutex (make-mutex)))
     (lambda (p)
@@ -2226,22 +2264,30 @@ final-values
         (let ((val (apply p args)))
           (mutex 'release)
           val)))))
-(define (make-mutex)
+
+;; We cannot use this implementation because not all the Schemes we're targeting
+;; support atomics for a proper implementation of `test-and-set!`. Instead, we
+;; define `make-mutex` in src/compat to use the Scheme's own threading library.
+(define (make-mutex-from-scratch)
   (let ((cell (list #f)))
     (define (the-mutex m)
       (cond ((eq? m 'acquire)
              (if (test-and-set! cell)
-               (the-mutex 'acquire))) ; retry
+                 (the-mutex 'acquire))) ; retry
             ((eq? m 'release) (clear! cell))))
     the-mutex))
-(define (clear! cell) (set-car! cell #f))
 
+(define (clear! cell)
+  (set-car! cell #f))
 (define (test-and-set! cell)
   (if (car cell)
-    #t
-    (begin (set-car! cell #t)
-           #f)))
+      #t
+      (begin (set-car! cell #t)
+             #f)))
 
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.46
 ;; Suppose we use the above implementation of `test-and-set!` and execute this:
 (let ((x 100)

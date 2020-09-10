@@ -3,16 +3,26 @@
 #!r6rs
 
 (library (src compat active)
-  (export current-output-port format make-parameter open-output-string
-          parameterize patch-output random runtime seed-rng string-contains?
-          syntax->location with-output-to-string)
+  (export current-output-port format make-mutex open-output-string
+          parallel-execute parameterize patch-output random runtime seed-rng
+          string-contains? syntax->location with-output-to-string)
   (import (rnrs base (6))
+          (only (rnrs control (6)) unless when)
           (only (chezscheme)
-                annotation-source current-output-port current-time format
-                locate-source-object-source make-parameter open-output-string
-                parameterize random random-seed syntax->annotation
-                time-nanosecond time-second with-output-to-string))
-  
+                annotation-source condition-signal condition-wait
+                current-output-port current-time fork-thread format
+                locate-source-object-source make-condition make-time
+                mutex-acquire mutex-release open-output-string parameterize
+                random random-seed sleep syntax->annotation time-nanosecond
+                time-second with-mutex with-output-to-string)
+          (prefix (only (chezscheme) make-mutex) chez-))
+
+  (define (syntax->location s)
+    (locate-source-object-source
+      (annotation-source (syntax->annotation s))
+      #t    ; get the start, not end
+      #t)) ; use the cache
+
   (define (patch-output s) s)
 
   (define (runtime)
@@ -24,6 +34,35 @@
     (random-seed
       (+ 1 (mod (time-second (current-time))
                 (- (expt 2 32) 1)))))
+
+  (define (make-mutex)
+    (let ((mutex (chez-make-mutex)))
+      (lambda (op)
+        (cond ((eq? op 'acquire) (mutex-acquire mutex))
+              ((eq? op 'release) (mutex-release mutex))
+              (else (error 'make-mutex "unknown operation" op))))))
+
+  (define (parallel-execute . thunks)
+    (let ((mutex (chez-make-mutex))
+          (finished (make-condition))
+          (remaining (length thunks)))
+      (for-each
+        (lambda (proc)
+          (fork-thread
+            (lambda ()
+              ;; Sleep for up to 1ms to ensure nondeterminism shows up.
+              (sleep (make-time 'time-duration 1000000 0))
+              (proc)
+              (with-mutex mutex
+                (set! remaining (- remaining 1))
+                (when (zero? remaining)
+                  (condition-signal finished))))))
+        thunks)
+      (with-mutex mutex
+        (let loop ()
+          (unless (zero? remaining)
+            (condition-wait finished mutex)
+            (loop))))))
 
   ;; Rabin-Karp string search algorithm. Assumes ASCII.
   (define (string-contains? s1 s2)
@@ -80,10 +119,4 @@
                           h
                           msd-value
                           (string-ref s1 i)
-                          (string-ref s1 (+ i m))))))))))))
-
-  (define (syntax->location s)
-    (locate-source-object-source
-      (annotation-source (syntax->annotation s))
-      #t    ; get the start, not end
-      #t))) ; use the cache
+                          (string-ref s1 (+ i m)))))))))))))
