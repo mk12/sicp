@@ -1994,10 +1994,10 @@ z2 => '((a b) a b)
 
 ;; With serialization, it narrows to two possible values:
 (define x 10)
-(define s (make-serializer))
-(parallel-execute
-  (s (lambda () (set! x (* x x))))
-  (s (lambda () (set! x (+ x 1)))))
+(let ((s (make-serializer)))
+  (parallel-execute
+    (s (lambda () (set! x (* x x))))
+    (s (lambda () (set! x (+ x 1))))))
 (in? x '(101 121)) => #t
 
 (define (make-account balance)
@@ -2021,10 +2021,10 @@ z2 => '((a b) a b)
   (use (:3.4.2.3 make-serializer) (?3.38 in?)))
 
 (define x 10)
-(define s (make-serializer))
-(parallel-execute
-  (lambda () (set! x ((s (lambda () (* x x))))))
-  (s (lambda () (set! x (+ x 1)))))
+(let ((s (make-serializer)))
+  (parallel-execute
+    (lambda () (set! x ((s (lambda () (* x x))))))
+    (s (lambda () (set! x (+ x 1))))))
 
 ;; Three of the five values are still possible:
 (in? x '(101   ; squared, then incremented
@@ -2130,10 +2130,10 @@ final-values
 
 ;; If we serialize the procedures, we always get that value:
 (define x 10)
-(define s (make-serializer))
-(parallel-execute
-  (s (lambda () (set! x (* x x))))
-  (s (lambda () (set! x (* x x x)))))
+(let ((s (make-serializer)))
+  (parallel-execute
+    (s (lambda () (set! x (* x x))))
+    (s (lambda () (set! x (* x x x))))))
 x => 1000000
 
 (Exercise ?3.41
@@ -2270,12 +2270,10 @@ x => 1000000
 ;; define `make-mutex` in src/compat to use the Scheme's own threading library.
 (define (make-mutex-from-scratch)
   (let ((cell (list #f)))
-    (define (the-mutex m)
+    (lambda (m)
       (cond ((eq? m 'acquire)
-             (if (test-and-set! cell)
-                 (the-mutex 'acquire))) ; retry
-            ((eq? m 'release) (clear! cell))))
-    the-mutex))
+             (let retry () (when (test-and-set! cell) (retry))))
+            ((eq? m 'release) (clear! cell))))))
 
 (define (clear! cell)
   (set-car! cell #f))
@@ -2285,78 +2283,96 @@ x => 1000000
       (begin (set-car! cell #t)
              #f)))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.46
-;; Suppose we use the above implementation of `test-and-set!` and execute this:
-(let ((x 100)
-      (s (make-serializer)))
-  (parallel-execute
-    (s (lambda () (set! x (+ 100 x)))) ; process P
-    (s (lambda () (set! x (/ x 2)))))) ; process Q
-;; Properly serialized, we would expect only two possibilities:
-(or (= x 100)  ; add 100, then divide by 2
-    (= x 150)) ; divide by 2, then add 100
-;; Since `test-and-set!` is not atomic, the mutex will not work. Processes P and
-;; Q will execute in parallel. Here is a representation of the serialized
-;; procedure that `s` creates for process P:
-(lambda ()
-  (mutex 'acquire)
-  (let ((val (set! x (+ 100 x)))) ; (*)
-    (mutex 'release)
-    val))
-;; We expect the line marked by (*) to be atomic. That is, since the mutex is
-;; locked, Q should not be able to acquire the mutex and do anything during this
-;; time. This is false, because of the way we implemented `test-and-set!`. When
-;; `(mutex 'acquire)` is executed, `test-and-set!` is called on the cell:
-(define (test-and-set! cell)
-  (if (car cell)              ; (1)
-    #t
-    (begin (set-car! cell #t) ; (2)
-           #f)))
-;; Each process performs two operations when they test and set. We have P1, P2,
-;; Q1, and Q2. Since the procedure is not atomic, these can be interleaved.
-;; Suppose both processes try to acquire the mutex at the same time, and we get
-;; P1, Q1, Q2, P2. Both P1 and Q1 find the contents of the cell to be false.
-;; Process Q sets it to `#t` in Q2, locking the mutex, and then P2 locks the
-;; already-locked mutex. Both processes think they have the lock. Now everything
-;; will happen in parallel and it is as if we hadn't used a serializer. We could
-;; end up with a final value of 50 for `x`, for example.
+(Exercise ?3.46
+  (use (:3.4.2.3 make-mutex-from-scratch) (?3.38 in?)))
 
-;;; ex 3.47
-;; in terms of mutexes
+(define make-mutex make-mutex-from-scratch)
+(paste (:3.4.2.3 make-serializer))
+
+;; Suppose we execute this using the non-atomic `test-and-set!`:
+(define x 100)
+(let ((s (make-serializer)))
+  (parallel-execute
+    ;;              2            1
+    (s (lambda () (set! x (+ 100 x)))) ; process P
+    ;;              2        1
+    (s (lambda () (set! x (/ x 2)))))) ; process Q
+
+;; There are four possible values:
+(in? x '(100  ; P1, P2, Q1, Q2 (serial)
+         150  ; Q1, Q2, P1, P2 (serial)
+         200  ; P1, Q1, Q2, P2 (interleaved)
+         50)) ; Q1, P1, P2, Q2 (interleaved)
+
+;; The interleaved results can happen since with the non-atomic `test-and-set!`,
+;; both processes can acquire the mutex at the same time. Both check if the cell
+;; is set, find it is #f, and then both set it to #t.
+
+(Exercise ?3.47
+  (use (:3.4.2.3 clear! test-and-set!) (?3.38 in?)))
+
+;;; (a) Sempahore in terms of mutexes
+
+;; Note: This assumes that any thread can acquire/release the mutex. It does not
+;; work with mutex implementations that only allow the owner to release it.
 (define (make-semaphore n)
-  (let ((mutex (make-mutex))
-        (users 0))
+  (let ((count n)
+        (count-mutex (make-mutex))
+        (queue-mutex (make-mutex)))
+    (queue-mutex 'acquire) ; starts out locked
     (lambda (m)
       (cond ((eq? m 'acquire)
-             (let ((u (inc users)))
-              (if (>= u n)
-                (mutex 'acquire))
-              (set! users u)))
-            ((eq? m 1) users)
+             (count-mutex 'acquire)
+             (set! count (- count 1))
+             (when (< count 0)
+               (count-mutex 'release)
+               (queue-mutex 'acquire))
+             (count-mutex 'release))
             ((eq? m 'release)
-             (if (= users n)
-               (mutex 'release))
-             (set! users (dec users)))))))
-;; in terms of atomic `test-and-set!` operations
-(define (make-semaphore n)
-  (let ((users 0)
+             (count-mutex 'acquire)
+             (set! count (+ count 1))
+             (if (<= count 0)
+                 (queue-mutex 'release)
+                 (count-mutex 'release)))
+            (else (error 'make-semaphore "unexpected message" m))))))
+
+(define x 0)
+(define sem (make-semaphore 2))
+(define (inc)
+  (sem 'acquire)
+  (set! x (+ x 1))
+  (sem 'release))
+(parallel-execute inc inc inc inc inc inc inc inc inc inc) ; 10 times
+;; With no concurrency control, `x` could be anything from 1 to 10. With
+;; serialization, it would always be 10. With the semaphore that allows up to
+;; two to execute at once, the range of possibilities is in between:
+(in? x '(5 6 7 8 9 10)) => #t
+
+;;; (b) Semaphore in terms of atomic `test-and-set!` operations
+
+(define (make-semaphore-from-scratch n)
+  (let ((count n)
         (cell (list #f)))
     (define (the-semaphore m)
       (cond ((eq? m 'acquire)
-             (let ((u (inc users)))
-               (if (>= u n)
-                 (if (test-and-set! cell)
-                   (the-semaphore 'acquire)))
-               (set! users u)))
+             (let retry () (when (test-and-set! cell) (retry)))
+             (cond ((> count 0)
+                    (set! count (- count 1))
+                    (clear! cell))
+                   (else (clear! cell)
+                         (the-semaphore 'acquire)))) ; busy wait
             ((eq? m 'release)
-             (if (= users n)
-               (clear! cell))
-             (set! users (dec users)))))
+             (let retry () (when (test-and-set! cell) (retry)))
+             (set! count (+ 1 count))
+             (clear! cell))
+            (else (error 'make-semaphore-from-scratch "unexpected message" m))))
     the-semaphore))
 
+;; We can't test this because our `test-and-set!` is not actually atomic.
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.48
 ;; Before we locked the `exchange` operation using the serializers of both
 ;; accounts. This can lead to deadlock if lock sequences A, B and B, A are
