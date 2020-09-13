@@ -1978,7 +1978,7 @@ z2 => '((a b) a b)
 
 (set! balance 100)
 (parallel-execute peter paul mary)
-(in? balance '(30 35 40 45 50 55 60 80 90 110)) => #t
+(in? balance '(25 30 35 40 45 50 55 60 80 90 110)) => #t
 
 (Section :3.4.2 "Mechanisms for Controlling Concurrency")
 
