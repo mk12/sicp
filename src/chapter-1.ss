@@ -163,7 +163,7 @@ circumference ~> 62.8318
 (define (p) (p))
 (define (test x y)
   (if (= x 0) 0 y))
- 
+
 ; (test 0 (p)) ; never terminates
 
 ;; With applicative-order evaluation, the expression will never return a value

@@ -1253,7 +1253,7 @@ one-through-four => '(1 2 3 4)
 (define (square-of-four tl tr bl br)
   (lambda (painter)
     (let ((top (beside (tl painter) (tr painter)))
-          (bottom (beside (bl painter) 
+          (bottom (beside (bl painter)
                           br painter)))
       (below bottom top))))
 
@@ -2153,7 +2153,7 @@ one-through-four => '(1 2 3 4)
         ((= bit 1) (right-branch branch))
         (else (error 'choose-branch "bit should be 0 or 1" bit))))
 
-;;; Sets of weighted elements 
+;;; Sets of weighted elements
 
 (define (adjoin-set x set)
   (cond ((null? set) (list x))
@@ -3211,7 +3211,7 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.85
   (use (:2.1.1 numer denom) (:2.4.2 contents type-tag) (:2.4.3 real-part using)
        (:2.5.1 make-complex-from-real-imag make-rational) (:3.3.3.3 get put)
-       (?2.79 equ? install-equ-package) 
+       (?2.79 equ? install-equ-package)
        (?2.83 install-extended-numeric-package install-raise-package
               make-integer make-real raise)
        (?2.84 tower-position tower-bottom? tower-top?)))
@@ -3870,7 +3870,7 @@ z2 => (make-from-mag-ang 30 3)
      (make-polynomial 'x '((5 2) (3 2) (2 2) (0 2)))
      (make-polynomial 'x '((4 1) (2 2) (0 1))))
 
-(Exercise ?2.94 
+(Exercise ?2.94
   (use (:2.3.2 same-variable?) (:2.4.3 using)
        (:2.5.3.1 install-polynomial-package term-list variable)
        (:2.5.3.2 empty-termlist? make-polynomial) (:3.3.3.3 put)

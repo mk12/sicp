@@ -24,10 +24,10 @@
   (define-syntax cons-stream
     (syntax-rules ()
       ((_ x y) (cons x (delay y)))))
-  
+
   ;; Counts the occurrences of a character in a string.
   (define (string-count char s)
-    (let ((len (string-length s)))  
+    (let ((len (string-length s)))
       (let loop ((i 0) (count 0))
         (cond ((= i len) count)
               ((char=? (string-ref s i) char) (loop (+ i 1) (+ count 1)))

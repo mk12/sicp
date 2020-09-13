@@ -214,7 +214,7 @@
     (lambda (ls)
       (syntax-case ls ()
         (() '())
-        ((x . r) (cons #'x (syntax->list #'r)))))) 
+        ((x . r) (cons #'x (syntax->list #'r))))))
 
   ;; Returns a list of the adjacent pairs of elements in `xs` For example, given
   ;; the list `(a b c d)` it returns `((a . b) (b . c) (c . d))`.
@@ -307,7 +307,7 @@
       (lambda (entry)
         (when (pred? entry)
           (queue-push-back! q entry)))
-      (queue-front *entries*)) 
+      (queue-front *entries*))
     ;; Explore entries reachable from those satisfying `pred?` using BFS.
     (let loop ()
       (unless (queue-empty? q)
@@ -483,7 +483,7 @@
     (define definitions (make-eq-hashtable))
 
     ;; Construct a combined identifier from an entry id and a name. This is used
-    ;; as a key in `definitions`.    
+    ;; as a key in `definitions`.
     (define (paste-id id name)
       (define (str s) (symbol->string (syntax->datum s)))
       (string->symbol (string-append (str id) "--" (str name))))
