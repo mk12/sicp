@@ -2131,64 +2131,64 @@ final-values
 ;; If we serialize the procedures, we always get that value:
 (define x 10)
 (let ((s (make-serializer)))
-  (parallel-execute
-    (s (lambda () (set! x (* x x))))
-    (s (lambda () (set! x (* x x x))))))
-x => 1000000
+    (parallel-execute
+      (s (lambda () (set! x (* x x))))
+      (s (lambda () (set! x (* x x x))))))
+  x => 1000000
 
-(Exercise ?3.41
-  (use (:3.4.2.1 make-account)))
+  (Exercise ?3.41
+    (use (:3.4.2.1 make-account)))
 
-;; Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank
-;; balance because it would make no difference. If we serialize it, then the
-;; value will be read either before or after (in sequence) it is written,
-;; assuming someone is withdrawing or depositing concurrently. However, if we
-;; don't serialize it, we still get one value or the other. There is nothing
-;; that can be interleaved because reading the balance takes only one step,
-;; assuming the Scheme implementation considers this a thread-safe operation.
+  ;; Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank
+  ;; balance because it would make no difference. If we serialize it, then the
+  ;; value will be read either before or after (in sequence) it is written,
+  ;; assuming someone is withdrawing or depositing concurrently. However, if we
+  ;; don't serialize it, we still get one value or the other. There is nothing
+  ;; that can be interleaved because reading the balance takes only one step,
+  ;; assuming the Scheme implementation considers this a thread-safe operation.
 
-(Exercise ?3.42)
+  (Exercise ?3.42)
 
-;; This is a safe change to make. Each bank account still has one serializer and
-;; the deposit and withdraw procedures returned from the dispatcher are always
-;; protected by it. It makes no difference in what concurrency is allowed. If it
-;; did, then the specification of `make-serializer` must be incorrect.
+  ;; This is a safe change to make. Each bank account still has one serializer and
+  ;; the deposit and withdraw procedures returned from the dispatcher are always
+  ;; protected by it. It makes no difference in what concurrency is allowed. If it
+  ;; did, then the specification of `make-serializer` must be incorrect.
 
-(Section :3.4.2.2 "Complexity of using multiple shared resources"
-  (use (:3.4.2.3 make-serializer)))
+  (Section :3.4.2.2 "Complexity of using multiple shared resources"
+    (use (:3.4.2.3 make-serializer)))
 
-(define (exchange account1 account2)
-  (let ((difference (- (account1 'balance)
-                       (account2 'balance))))
-    ((account1 'withdraw) difference)
-    ((account2 'deposit) difference)))
+  (define (exchange account1 account2)
+    (let ((difference (- (account1 'balance)
+                        (account2 'balance))))
+      ((account1 'withdraw) difference)
+      ((account2 'deposit) difference)))
 
-(define (make-account-and-serializer balance)
-  (define (withdraw amount)
-    (if (>= balance amount)
-        (begin (set! balance (- balance amount))
-               balance)
-        "Insufficient funds"))
-  (define (deposit amount)
-    (set! balance (+ balance amount)) balance)
-  (let ((balance-serializer (make-serializer)))
-    (define (dispatch m)
-      (cond ((eq? m 'withdraw) withdraw)
-            ((eq? m 'deposit) deposit)
-            ((eq? m 'balance) balance)
-            ((eq? m 'serializer) balance-serializer)
-            (else (error 'make-account "unknown request" m))))
-    dispatch))
+  (define (make-account-and-serializer balance)
+    (define (withdraw amount)
+      (if (>= balance amount)
+          (begin (set! balance (- balance amount))
+                balance)
+          "Insufficient funds"))
+    (define (deposit amount)
+      (set! balance (+ balance amount)) balance)
+    (let ((balance-serializer (make-serializer)))
+      (define (dispatch m)
+        (cond ((eq? m 'withdraw) withdraw)
+              ((eq? m 'deposit) deposit)
+              ((eq? m 'balance) balance)
+              ((eq? m 'serializer) balance-serializer)
+              (else (error 'make-account "unknown request" m))))
+      dispatch))
 
-(define (deposit account amount)
-  (let ((s (account 'serializer))
-        (d (account 'deposit)))
-    ((s d) amount)))
+  (define (deposit account amount)
+    (let ((s (account 'serializer))
+          (d (account 'deposit)))
+      ((s d) amount)))
 
-(define (serialized-exchange account1 account2)
-  (let ((serializer1 (account1 'serializer))
-        (serializer2 (account2 'serializer)))
-    ((serializer1 (serializer2 exchange))
+  (define (serialized-exchange account1 account2)
+    (let ((serializer1 (account1 'serializer))
+          (serializer2 (account2 'serializer)))
+      ((serializer1 (serializer2 exchange))
      account1
      account2)))
 
@@ -2336,17 +2336,8 @@ x => 1000000
                  (count-mutex 'release)))
             (else (error 'make-semaphore "unexpected message" m))))))
 
-(define x 0)
-(define sem (make-semaphore 2))
-(define (inc)
-  (sem 'acquire)
-  (set! x (+ x 1))
-  (sem 'release))
-(parallel-execute inc inc inc inc inc inc inc inc inc inc) ; 10 times
-;; With no concurrency control, `x` could be anything from 1 to 10. With
-;; serialization, it would always be 10. With the semaphore that allows up to
-;; two to execute at once, the range of possibilities is in between:
-(in? x '(5 6 7 8 9 10)) => #t
+;; We can't test this because not all Schemes we support have the required
+;; property of allowing any thread to release another's mutex.
 
 ;;; (b) Semaphore in terms of atomic `test-and-set!` operations
 
@@ -2370,10 +2361,15 @@ x => 1000000
 
 ;; We can't test this because our `test-and-set!` is not actually atomic.
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.48
+(Section :3.4.2.4 "Deadlock")
+
+;; One way to avoid deadlock is to give each account a unique identification
+;; number, and write procedures like `exchange` so that they always try to
+;; acquire the mutex for the lower-numbered account first.
+
+(Exercise ?3.48
+  (use (:3.4.2.2 exchange) (:3.4.2.3 make-serializer)))
+
 ;; Before we locked the `exchange` operation using the serializers of both
 ;; accounts. This can lead to deadlock if lock sequences A, B and B, A are
 ;; interleaved such that both processes are trying to acquire the mutex that the
@@ -2382,19 +2378,20 @@ x => 1000000
 ;; interleaving wouldn't work. Both processes would have the lock sequence A, B,
 ;; and the second process cannot acquire A after the first already has. The
 ;; first is then free to acquire B, perform its operations, and release both.
+
 (define *uuid* 0)
 (define (gen-uuid)
-  (set! *uuid* (inc *uuid*))
+  (set! *uuid* (+ *uuid* 1))
   *uuid*)
+
 (define (make-account balance)
   (define (withdraw amount)
     (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)
-      "Insufficient funds"))
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds"))
   (define (deposit amount)
-    (set! balance (+ balance amount))
-    balance)
+    (set! balance (+ balance amount)) balance)
   (let ((id (gen-uuid))
         (s (make-serializer)))
     (define (dispatch m)
@@ -2403,12 +2400,9 @@ x => 1000000
             ((eq? m 'balance) balance)
             ((eq? m 'serializer) s)
             ((eq? m 'identifier) id)
-            (else (error "Unknown request: MAKE-ACCOUNT" m))))
+            (else (error 'make-account "unknown request" m))))
     dispatch))
-(define (exchange a1 a2)
-  (let ((diff (- (a1 'balance) (a2 'balance))))
-    ((a1 'withdraw) diff)
-    ((a2 'deposit) diff)))
+
 (define (serialized-exchange a1 a2)
   (let ((s1 (a1 'serializer))
         (s2 (a2 'serializer)))
@@ -2418,130 +2412,161 @@ x => 1000000
      a1
      a2)))
 
-;;; ex 3.49
-;; The deadlock avoidance mechanism used in 3.48 would not work with
+;; This is safe from deadlocks:
+(define a1 (make-account 10))
+(define a2 (make-account 20))
+(parallel-execute
+  (lambda () (serialized-exchange a1 a2))
+  (lambda () (serialized-exchange a2 a1)))
+(a1 'balance) => 10
+(a2 'balance) => 20
+
+(Exercise ?3.49)
+
+;; The deadlock avoidance mechanism used in Exercise 3.48 would not work with
 ;; `(contrived-exchange acc)`, which exchanges the balance of `acc` with that of
 ;; the account whose balance is closest to the balance of `acc`. We must either
 ;; always lock `acc` first (without the ordering mechanism of 3.48, allowing
 ;; deadlocks), or we must lock after accessing `acc`, creating a hole into which
 ;; other operations can be interleaved.
 
-;;;;; Section 3.5: Streams
+(Section :3.4.2.5 "Concurrency, time, and communication")
 
-;;; ssec 3.5.1 (streams are delayed lists)
-(define the-empty-stream '())
-(define stream-null? null?)
+;; Concurrency is hard. It is intimately tied to communication. There may be
+;; cases where the "real" value (e.g. account balance) are irrelevant or
+;; meaningless except at special synchronization points.
+
+(Section :3.5 "Streams")
+
+(Section :3.5.1 "Streams Are Delayed Lists")
+
 (define (stream-ref s n)
   (if (zero? n)
-    (stream-car s)
-    (stream-ref (stream-cdr s) (dec n))))
+      (stream-car s)
+      (stream-ref (stream-cdr s) (- n 1))))
 (define (stream-map f s)
   (if (stream-null? s)
-    the-empty-stream
-    (cons-stream (f (stream-car s))
-                 (stream-map f (stream-cdr s)))))
+      the-empty-stream
+      (cons-stream (f (stream-car s))
+                   (stream-map f (stream-cdr s)))))
 (define (stream-for-each f s)
-  (if (stream-null? s)
-    'done
-    (begin (f (stream-car s))
-           (stream-for-each f (stream-cdr s)))))
+  (unless (stream-null? s)
+    (f (stream-car s))
+    (stream-for-each f (stream-cdr s))))
+
+(define (display-stream s) (stream-for-each display-line s))
+(define (display-line x) (newline) (display x))
+
+;; `cons-stream` is defined in src/lang/sicp.ss.
+(define the-empty-stream '())
+(define stream-null? null?)
+(define (stream-car s) (car s ))
+(define (stream-cdr s) (force (cdr s)))
+
+(Section :3.5.1.1 "The stream implementation in action"
+  (use (:3.5.1 stream-car stream-cdr stream-null? the-empty-stream)
+       (?1.23 prime?)))
+
+(define (stream-enumerate-interval low high)
+  (if (> low high)
+      the-empty-stream
+      (cons-stream low (stream-enumerate-interval (+ low 1) high))))
+
 (define (stream-filter pred s)
   (cond ((stream-null? s) the-empty-stream)
         ((pred (stream-car s))
          (cons-stream (stream-car s)
                       (stream-filter pred (stream-cdr s))))
         (else (stream-filter pred (stream-cdr s)))))
-(define (display-stream s)
-  (stream-for-each display-line s))
-(define (display-line x) (display x) (newline))
-(define (stream-car s) (car s ))
-(define (stream-cdr s) (force (cdr s)))
-(define-syntax cons-stream
-  (syntax-rules ()
-    ((_ x y) (cons x (delay y)))))
 
-;;; ssec 3.5.1 (implementing promises)
+;; Abbreviations to save space below.
+(define a stream-car)
+(define d stream-cdr)
+(define i stream-enumerate-interval)
+(define f stream-filter)
+(define p? prime?)
+
+(a (d (f p? (i 10000 1000000))))
+=> (a (d (f p? (cons 10000 (delay (i 10001 1000000))))))
+;; ... 10001 through 10006 ...
+=> (a (d (f p? (cons 10007 (delay (i 10008 1000000))))))
+=> (a (d (cons 10007 (delay (f p? (cons 10008 (delay (i 10009 1000000))))))))
+=> (a (f p? (cons 10008 (delay (i 10009 1000000)))))
+=> (a (f p? (cons 10009 (delay (i 10010 1000000)))))
+=> (a (cons 10009 (delay (f p? (cons 10010 (delay (i 10011 1000000)))))))
+=> 10009
+
+(Section :3.5.1.2 "Implementing delay and force")
+
+;; `delay` is a special form such that `(delay EXPR)` is syntactic sugar for
+;; `(lambda () EXPR)`. `force` can be implemented as procedure, as done below.
+;; However, outside this section we use the Scheme implementation's versions.
+
+(define (force delayed-object) (delayed-object))
+
 (define (memo-proc proc)
   (let ((already-run? #f)
         (result #f))
     (lambda ()
-      (if (not already-run?)
-        (begin (set! result (proc))
-               (set! already-run? #t)
-               result)
-        result))))
-(define-syntax delay
-  (syntax-rules ()
-    ((_ e) (memo-proc (lambda () e)))))
-(define (force p) (p))
+      (unless already-run?
+        (set! result (proc))
+        (set! already-run? #t))
+        result)))
 
-;;; ex 3.50
-(define (stream-map proc . ss)
-  (if (null? (car ss))
-    the-empty-stream
-    (cons-stream
-      (apply proc (map stream-car ss))
-      (apply stream-map
-             (cons proc (map stream-cdr ss))))))
-(define (add-streams s1 s2)
-  (stream-map + s1 s2))
-(define (scale-stream s k)
-  (stream-map (lambda (x) (* x k)) s))
-(define (negate-stream s)
-  (stream-map - s))
+;; We would then define `(delay EXPR)` to be `(memo-proc (lambda () EXPR))`.
 
-;;; ex 3.51
+(Exercise ?3.50
+  (use (:3.5.1 stream-car stream-cdr stream-null? the-empty-stream)))
+
+(define (stream-map f . ss)
+  (if (stream-null? (car ss))
+      the-empty-stream
+      (cons-stream
+        (apply f (map stream-car ss))
+        (apply stream-map f (map stream-cdr ss)))))
+
+(Exercise ?3.51
+  (use (:3.5.1 display-line stream-map stream-ref)
+       (:3.5.1.1 stream-enumerate-interval)))
+
 (define (show x) (display-line x) x)
-(define x
-  (stream-map show
-              (stream-enumerate-interval 0 10)))
-;; 0
-;; => (0 . #<promise #2>)
-(stream-ref x 5)
-;; 1
-;; 2
-;; 3
-;; 4
-;; 5
-;; => 5
-(stream-ref x 7)
-;; 6
-;; 7
-;; => 7
 
-;;; ex 3.52
+(define x)
+(set! x (stream-map show (stream-enumerate-interval 0 10)))
+=/> ["0"]
+
+(stream-ref x 5) =/> ["1" "2" "3" "4" "5"]
+(stream-ref x 5) => 5
+(stream-ref x 7) =/> ["6" "7"]
+(stream-ref x 7) => 7
+
+(Exercise ?3.52
+  (use (:3.5.1 display-stream stream-map stream-ref)
+       (:3.5.1.1 stream-enumerate-interval stream-filter)))
+
 (define sum 0)
 (define (accum x) (set! sum (+ x sum)) sum)
-(define seq
-  (stream-map accum
-              (stream-enumerate-interval 1 20)))
-;; [sum = 1]
+(define seq (stream-map accum (stream-enumerate-interval 1 20)))
+sum => 1
 (define y (stream-filter even? seq))
-;; [sum = 6]
-(define z
-  (stream-filter (lambda (x) (= (remainder x 5) 0))
-                 seq))
-;; [sum = 10]
-(stream-ref y 7) ; => 120
-;; [sum = 120]
-(display-stream z)
-;; 10
-;; 15
-;; 45
-;; 55
-;; 105
-;; 120
-;; 190
-;; 210
-;; => done
-;; Yes, the responses would differ if we had not memoized the procedure created
-;; by `delay`. The stream `seq` would get its `cdr` evaluated multiple times,
-;; and it would be different each time because `sum` would keep getting added
-;; to. Instead of 1, 6, 10, and 120, we would see 1, 6, 15, and 162. Then, when
-;; we display `z`, we would see only one element, 15. The rest of seq gets
-;; generated using a much higher `sum`, and none of those end up being divisible
-;; by five.
+sum => 6
+(define z (stream-filter (lambda (x) (= (remainder x 5) 0)) seq))
+sum => 10
+(stream-ref y 7) => 136
+sum => 136
+(display-stream z) =/> ["10" "15" "45" "55" "105" "120" "190" "210"]
 
+;; Yes, responses would differ if `delay` did not use memoization. The stream
+;; `seq` would get its `cdr` evaluated multiple times, and it would be different
+;; each time because `sum` keeps increasing. Instead of 1, 6, 10, 120, it would
+;; be 1, 6, 15, 162. Displaying `z` would only show 15. The rest of `seq` gets
+;; generated using a much higher `sum`, none of which are divisible by 5.
+
+(Section :3.5.2 "Infinite Streams")
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 3.5.2 (infinite streams)
 (define (integers-starting-from n)
   (cons-stream n (integers-starting-from (inc n))))
