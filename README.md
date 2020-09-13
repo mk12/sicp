@@ -84,7 +84,7 @@ We can import definitions out of order:
 (define a (+ (square 3) (cube 4)))  ; ok
 ```
 
-We can also unhygienically paste code, but only from earlier sections:
+We can also unhygienically paste code, but only from earlier sections in the same file:
 
 ```scheme
 (Section :1 "Original")
