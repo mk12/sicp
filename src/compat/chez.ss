@@ -18,9 +18,11 @@
           (prefix (only (chezscheme) make-mutex) chez-))
 
   (define (syntax->location s)
+    (unless (syntax->annotation s)
+      (display (format "failed syntax->annotation for: ~s" s)))
     (locate-source-object-source
       (annotation-source (syntax->annotation s))
-      #t    ; get the start, not end
+      #t   ; get the start, not end
       #t)) ; use the cache
 
   (define (patch-output s) s)

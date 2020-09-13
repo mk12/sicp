@@ -33,8 +33,8 @@ You can test standard output with `=/>`:
 ```scheme
 (display "hi") =/> "hi"
 (display "the quick brown fox\njumps over the lazy dog\n")
-=/> '("the quick brown fox"
-      "jumps over the lazy dog")
+=/> ["the quick brown fox"
+     "jumps over the lazy dog"]
 ```
 
 And test expected errors with `=!>`:

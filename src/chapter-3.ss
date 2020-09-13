@@ -1483,17 +1483,17 @@ z2 => '((a b) a b)
 (define carry (make-wire))
 
 (probe 'sum sum)
-=/> '("sum 0 New-value = 0")
+=/> ["sum 0 New-value = 0"]
 (probe 'carry carry)
-=/> '("carry 0 New-value = 0")
+=/> ["carry 0 New-value = 0"]
 (half-adder input-1 input-2 sum carry)
 (set-signal! input-1 1)
 (propagate)
-=/> '("sum 8 New-value = 1")
+=/> ["sum 8 New-value = 1"]
 (set-signal! input-2 1)
 (propagate)
-=/> '("carry 11 New-value = 1"
-      "sum 16 New-value = 0")
+=/> ["carry 11 New-value = 1"
+     "sum 16 New-value = 0"]
 
 (Exercise ?3.31
   (use (:3.3.4 half-adder) (:3.3.4.1 inverter)
@@ -1556,7 +1556,7 @@ z2 => '((a b) a b)
 (set-signal! input-1 1)
 (propagate) =/> ""
 (set-signal! input-2 1)
-(propagate) =/> '("carry 11 New-value = 1")
+(propagate) =/> ["carry 11 New-value = 1"]
 
 (Section :3.3.4.5 "Implementing the agenda"
   (use (:3.3.2 delete-queue! empty-queue? front-queue insert-queue!
@@ -1637,13 +1637,13 @@ z2 => '((a b) a b)
 (set-signal! b 1)
 (and-gate a b c)
 (probe 'c c)
-=/> '("c 0 New-value = 0")
+ =/> ["c 0 New-value = 0"]
 (propagate) =/> ""
 (set-signal! a 1)
 (set-signal! b 0)
 (propagate)
-=/> '("c 6 New-value = 1"
-      "c 6 New-value = 0")
+=/> ["c 6 New-value = 1"
+     "c 6 New-value = 0"]
 
 ;; The value of `c` goes to 1, but settles to 0 once all actions are processed.
 ;; If we use a stack (FILO) rather than a queue (FIFO) for actions, there will
@@ -1663,11 +1663,11 @@ z2 => '((a b) a b)
 (set-signal! a 0)
 (set-signal! b 1)
 (and-gate a b c)
-(probe 'c c) =/> '("c 0 New-value = 0")
+(probe 'c c) =/> ["c 0 New-value = 0"]
 (propagate) =/> ""
 (set-signal! a 1)
 (set-signal! b 0)
-(propagate) =/> '("c 6 New-value = 1")
+(propagate) =/> ["c 6 New-value = 1"]
 
 (disable-stack-mode)
 
@@ -1697,16 +1697,16 @@ z2 => '((a b) a b)
 (probe "Fahrenheit temp" F)
 
 (set-value! C 25 'user)
-=/> '("Probe: Celsius temp = 25"
-      "Probe: Fahrenheit temp = 77")
+=/> ["Probe: Celsius temp = 25"
+     "Probe: Fahrenheit temp = 77"]
 (set-value! F 212 'user)
 =!> "contradiction: 77 212"
 (forget-value! C 'user)
-=/> '("Probe: Celsius temp = ?"
-      "Probe: Fahrenheit temp = ?")
+=/> ["Probe: Celsius temp = ?"
+     "Probe: Fahrenheit temp = ?"]
 (set-value! F 212 'user)
-=/> '("Probe: Fahrenheit temp = 212"
-      "Probe: Celsius temp = 100")
+=/> ["Probe: Fahrenheit temp = 212"
+     "Probe: Celsius temp = 100"]
 
 (Section :3.3.5.2 "Implementing the constraint system"
   (use (:3.3.5.3 connect forget-value! get-value has-value? set-value!)))
@@ -1851,15 +1851,15 @@ z2 => '((a b) a b)
 (probe "c" c)
 
 (set-value! a 10 'user)
-=/> '("Probe: a = 10")
+=/> ["Probe: a = 10"]
 (set-value! b 20 'user)
-=/> '("Probe: c = 15")
+=/> ["Probe: c = 15"]
 (forget-value! a 'user)
-=/> '("Probe: a = ?"
-      "Probe: c = ?")
+=/> ["Probe: a = ?"
+     "Probe: c = ?"]
 (set-value! c 99 'user)
-=/> '("Probe: c = 99"
-      "Probe: a = 178")
+=/> ["Probe: c = 99"
+     "Probe: a = 178"]
 
 (Exercise ?3.34
   (use (:3.3.5.2 multiplier probe)
@@ -1876,16 +1876,16 @@ z2 => '((a b) a b)
 (probe "b" b)
 (bad-squarer a b)
 (set-value! a 5 'user)
-=/> '("Probe: b = 25"
-      "Probe: a = 5")
+=/> ["Probe: b = 25"
+     "Probe: a = 5"]
 
 ;; However, going the other way doesn't work:
 
 (forget-value! a 'user)
-=/> '("Probe: b = ?"
-      "Probe: a = ?")
+=/> ["Probe: b = ?"
+     "Probe: a = ?"]
 (set-value! b 49 'user)
-=/> '("Probe: b = 49")
+=/> ["Probe: b = 49"]
 
 ;; Upon reflection, it would be remarkable if it performed a square root without
 ;; us ever coding the algorithm! The problem is, `multiplier` is too general.
@@ -1922,7 +1922,7 @@ z2 => '((a b) a b)
 (define b (make-connector))
 (probe "a" a)
 (squarer a b)
-(set-value! b 49 'user) =/> '("Probe: a = 7")
+(set-value! b 49 'user) =/> ["Probe: a = 7"]
 
 (Exercise ?3.36)
 
@@ -1945,7 +1945,7 @@ z2 => '((a b) a b)
 (define C (make-connector))
 (define F (celsius->fahrenheit C))
 (probe "C" C)
-(set-value! F 212 'user) =/> '("Probe: C = 100")
+(set-value! F 212 'user) =/> ["Probe: C = 100"]
 
 (Section :3.4 "Concurrency: Time Is of the Essence")
 
@@ -1968,7 +1968,7 @@ z2 => '((a b) a b)
 (set! balance 100) (mary) (paul) (peter) balance => 40
 
 ;; (b) If the system allows the processes to be interleaved, you could also get
-;; results equilavent to leaving out one or more of the assignments, where the
+;; results equivalent to leaving out one or more of the assignments, where the
 ;; new value is overwritten before being read. In `mary`, the value divided by
 ;; 2 could also be different from the value being subtracted from.
 

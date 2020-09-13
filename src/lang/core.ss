@@ -42,6 +42,19 @@
   (define (increase-total-tests! n)
     (set! *total* (+ *total* n)))
 
+  ;; Records that a test passed.
+  (define (test-pass!)
+    (set! *passes* (+ *passes* 1)))
+
+  ;; Records that a test failed and displays a failure message, including the
+  ;; source location of syntax object `expr` and the string `msg`.
+  (define (test-fail! expr msg)
+    (set! *fails* (+ *fails* 1))
+    (let-values (((file line col) (syntax->location expr)))
+      (display
+        (format (string-append (ansi 'bold "~a:~a:~a: assertion failed") "\n~a")
+                file line col msg))))
+
   ;; Asserts that all elements in `vals` are the same, according to `equal?`.
   ;; Expects `exprs` to contain syntax objects for each value in `vals`.
   (define (assert-equal vals exprs)
@@ -88,29 +101,72 @@
               (e1 (car epair))
               (e2 (cdr epair)))
           (cond
-            ((pred? v1 v2) (set! *passes* (+ *passes* 1)))
-            (else
-              (set! *fails* (+ *fails* 1))
-              (display-failure
-                e1
-                (make-msg v1 v2 (syntax->datum e1) (syntax->datum e2)))))))
+            ((pred? v1 v2) (test-pass!))
+            (else (test-fail!
+                    e1
+                    (make-msg v1 v2 (syntax->datum e1) (syntax->datum e2)))))))
       (pairs vals)
       (pairs (syntax->list exprs))))
 
+  ;; Asserts that the string `output` matches `expected`, a syntax object
+  ;; containing either a string or an (unquoted) list. In the string case, we
+  ;; test for equality. In the list case, we split `output` using `split-lines`
+  ;; and compare with the list of strings. Expects `expr` to be the syntax
+  ;; object for the expression which produced the output.
+  (define (assert-output output expr expected)
+    (define (fmt str-or-list)
+      (define (slots xs)
+        (cond ((null? xs) '())
+              ((null? (cdr xs)) (list "~s"))
+              (else (cons "~s\n     " (slots (cdr xs))))))
+      (if (string? str-or-list)
+          (format (ansi 'yellow "~s") str-or-list)
+          (apply format
+                 ;; In R6RS square brackets are interchangeable with parens.
+                 ;; I do not use them in cond/let/etc. the way the spec does.
+                 ;; I use them in =/> assertions just to make them stand out.
+                 (string-append
+                   "["
+                   (ansi 'yellow (apply string-append (slots str-or-list)))
+                   "]")
+                 str-or-list)))
+    (let* ((expected (syntax->datum expected))
+           (output (cond ((string? expected) output)
+                         ((list? expected) (split-lines output))
+                         (else (error 'assert-output
+                                      "result must be a string or list"
+                                      expected)))))
+      (if (equal? output expected)
+          (test-pass!)
+          (test-fail!
+            expr
+            (format
+              (string-append
+                "left: " (ansi 'blue "~s") "\n=/> ~a\n\nright:\n=/> ~a\n\n")
+              (syntax->datum expr) (fmt output) (fmt expected))))))
+
+
   ;; Asserts that executing `thunk` raises an error, and that the error message
   ;; formatted as "<who>: <message>: <irritants>" contains `substr` as a
-  ;; substring. Expects `expr` to contain the syntax object for `thunk`.
+  ;; substring. Expects `expr` to be the syntax object for `thunk`.
   (define (assert-raises thunk expr substr)
-    (define (pass)
-      (set! *passes* (+ *passes* 1)))
-    (define (fail ok result)
-      (set! *fails* (+ *fails* 1))
-      (display-failure
+    (define (format-condition con)
+      (let ((irritants (condition-irritants con)))
+        (apply format
+              (apply string-append
+                     "~a: ~a"
+                     (if (null? irritants) "" ":")
+                     (map (lambda (x) " ~s") irritants))
+              (condition-who con)
+              (condition-message con)
+              irritants)))
+    (define (fail! raised? result)
+      (test-fail!
         expr
         (format
           (string-append
-            "left: " (ansi 'blue "~s") "\n" (if ok "=>" "=!>") " "
-            (ansi (if ok 'green 'red) (if ok "~s" "~a")) "\n\n"
+            "left: " (ansi 'blue "~s") "\n" (if raised? "=!>" "=>") " "
+            (ansi (if raised? 'red 'green) (if raised? "~a" "~s")) "\n\n"
             "right:\n=!> ... " (ansi 'red substr) " ...\n\n")
           (syntax->datum expr) result)))
     (call/cc
@@ -118,42 +174,19 @@
         (let ((result
                (with-exception-handler
                  (lambda (con)
-                   (let* ((irrs (condition-irritants con))
-                          (colon (if (null? irrs) "" ":"))
-                          (rest (map (lambda (x) " ~s") irrs))
-                          (fmt (apply string-append "~a: ~a" colon rest))
-                          (who (condition-who con))
-                          (msg (condition-message con))
-                          (str (apply format fmt who msg irrs)))
+                   (let ((str (format-condition con)))
                      (if (string-contains? str substr)
-                         (pass)
-                         (fail #f str)))
+                         (test-pass!)
+                         (fail! #t str)))
                    (return))
                  thunk)))
-          (fail #t result)))))
-
-  ;; Displays an assertion failure message, including the source location of
-  ;; syntax object `expr` and the message `msg`.
-  (define (display-failure expr msg)
-    (let-values (((file line col) (syntax->location expr)))
-      (display
-        (format
-          (string-append
-            (ansi 'bold "~a:~a:~a: assertion failed")
-            "\n~a")
-          file line col msg))))
+          (fail! #f result)))))
 
   ;; Captures standard output in a string.
   (define-syntax capture-output
     (syntax-rules ()
       ((_ e* ...)
        (patch-output (with-output-to-string (lambda () e* ...))))))
-  
-  ;; Like `capture-output`, but splits into a list of lines.
-  (define-syntax capture-lines
-    (syntax-rules ()
-      ((_ e* ...)
-       (split-lines (capture-output e* ...)))))
 
   ;; Supresses printing to standard output.
   (define-syntax hide-output
@@ -226,8 +259,8 @@
          (queue-front-set! q new-pair)
          (queue-back-set! q new-pair))
         (else
-          (set-cdr! (queue-back q) new-pair)
-          (queue-back-set! q new-pair)))))
+         (set-cdr! (queue-back q) new-pair)
+         (queue-back-set! q new-pair)))))
   (define (queue-pop-front! q)
     (if (queue-empty? q)
         (error 'queue-pop-front! "empty queue")
@@ -237,7 +270,7 @@
              (queue-front-set! q '())
              (queue-back-set! q '()))
             (else
-              (queue-front-set! q (cdr (queue-front q)))))
+             (queue-front-set! q (cdr (queue-front q)))))
           result)))
   (define (queue-push-front! q x)
     (if (queue-empty? q)
@@ -532,14 +565,14 @@
           (let ((pid (paste-id #'id name)))
             (cond
               ((memq (syntax->datum name) (syntax->datum exports))
-                ;; This is a redefinition of the same export. Remove it from the
-                ;; definition table to disallow pasting the code, since it would
-                ;; be ambiguous which definition it is meant to paste.
-                (hashtable-delete! definitions pid)
-                exports)
+               ;; This is a redefinition of the same export. Remove it from the
+               ;; definition table to disallow pasting the code, since it would
+               ;; be ambiguous which definition it is meant to paste.
+               (hashtable-delete! definitions pid)
+               exports)
               (else
-                (when code (hashtable-set! definitions pid code))
-                #`(#,@exports #,name))))))
+               (when code (hashtable-set! definitions pid code))
+               #`(#,@exports #,name))))))
       (define (add-exports-from-paste names)
         (define (add names result)
           (syntax-case names ()
@@ -579,12 +612,8 @@
         ((e1 ~> e2 e* ...)
          (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 =/> e2 e* ...)
-         (string? (syntax->datum #'e2))
-         (with-syntax ((term #'(capture-output e1)))
-           (go=> #'(e* ...) #'(term e2) header exports body (+ ntests 1) out)))
-        ((e1 =/> e2 e* ...)
-         (with-syntax ((term #'(capture-lines e1)))
-           (go=> #'(e* ...) #'(term e2) header exports body (+ ntests 1) out)))
+         (with-syntax ((assert #'(assert-output (capture-output e1) #'e1 #'e2)))
+           (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
         ((e1 =!> e2 e* ...)
          (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
            (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
