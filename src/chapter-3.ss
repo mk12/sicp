@@ -2612,6 +2612,7 @@ sum => 136
 
 (define (scale-stream stream factor)
   (stream-map (lambda (x) (* x factor)) stream))
+(define (negate-stream stream) (scale-stream stream -1))
 
 (define double
   (cons-stream 1 (scale-stream double 2)))
@@ -2699,14 +2700,17 @@ sum => 136
 (stream-take (expand 3 8 10) 10) => '(3 7 5 0 0 0 0 0 0 0)
 (inexact (/ 3 8)) ~> 0.375
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.59
-;; (a) integration
-(define (integrate-series ps)
-  (stream-map / ps (integers-starting-from 1)))
-;; (b) exponential, sine, cosine
+(Exercise ?3.59
+  (use (:2.2.3.1 accumulate) (:3.5.2 integers-starting-from stream-take)
+       (:3.5.2.1 negate-stream) (?3.50 stream-map)))
+
+;;; (a) Integration
+
+(define (integrate-series power-series)
+  (stream-map / power-series (integers-starting-from 1)))
+
+;;; (b) Exponential, sine, cosine
+
 (define exp-series
   (cons-stream 1 (integrate-series exp-series)))
 (define cosine-series
@@ -2714,12 +2718,37 @@ sum => 136
 (define sine-series
   (cons-stream 0 (integrate-series cosine-series)))
 
-;;; ex 3.60
+;;; Evaluating series
+
+(define (eval-series s x n)
+  (let ((terms (stream-map (lambda (c k) (* c (expt x k)))
+                           s
+                           (integers-starting-from 0))))
+    (accumulate + 0.0 (stream-take terms n))))
+
+(eval-series exp-series 1.0 15) ~> 2.7182818285
+
+(Exercise ?3.60
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2.1 add-streams scale-stream)
+       (?3.59 cosine-series eval-series sine-series)))
+
 (define (mul-series s1 s2)
   (cons-stream (* (stream-car s1) (stream-car s2))
                (add-streams (scale-stream (stream-cdr s2) (stream-car s1))
                             (mul-series (stream-cdr s1) s2))))
 
+;; Verifying that sin^2(x) + cos^2(x) = 1. We can rely on the result being
+;; exactly 1, not just approximately 1, because the identity is satisfied all
+;; the way in the partial sums, not just in the limit.
+(eval-series (add-streams (mul-series sine-series sine-series)
+                          (mul-series cosine-series cosine-series))
+             (random 100)
+             15)
+=> 1
+
+) ; end of SICP
+) ; end of library
+#|
 ;; ex 3.61
 (define (invert-unit-series s)
   (cons-stream
