@@ -2744,35 +2744,43 @@ sum => 136
                           (mul-series cosine-series cosine-series))
              (random 100)
              15)
-=> 1
+=> 1.0
 
-) ; end of SICP
-) ; end of library
-#|
-;; ex 3.61
+(Exercise ?3.61
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2.1 negate-stream scale-stream)
+       (?3.60 mul-series)))
+
 (define (invert-unit-series s)
   (cons-stream
     1
     (negate-stream (mul-series (stream-cdr s)
                                (invert-unit-series s)))))
-;; `invert-series` requires a nonzero constant term.
+
+;; Note: `invert-series` requires a nonzero constant term.
 (define (invert-series s)
-  (let ((fst (stream-car s)))
-    (if (= fst 1)
-      (invert-unit-series s)
-      (scale-stream
-        (invert-unit-series (scale-stream s (/ fst)))
-        (/ fst)))))
+  (let ((constant (stream-car s)))
+    (cond ((= constant 0) (error 'invert-series "division by zero" s))
+          ((= constant 1) (invert-unit-series s))
+          (else (scale-stream
+                  (invert-unit-series (scale-stream s (/ constant)))
+                  (/ constant))))))
 
-;;; ex 3.62
+(Exercise ?3.62
+  (use (:3.5.1 stream-car) (?3.59 cosine-series eval-series sine-series)
+       (?3.60 mul-series) (?3.61 invert-series)))
+
 (define (div-series s1 s2)
-  (let ((den-car (stream-car s2)))
-    (if (zero? den-car)
-      (error "Can't divide by zero: DIV-SERIES" (list s1 s2))
-      (mul-series s1 (invert-series s2)))))
-(define tangent-series
-  (div-series sine-series cosine-series))
+  (let ((den-constant (stream-car s2)))
+    (cond ((zero? den-constant) (error 'div-series "division by zero" s1 s2))
+          (else (mul-series s1 (invert-series s2))))))
 
+(define tangent-series (div-series sine-series cosine-series))
+
+(eval-series tangent-series (atan 0.123) 10) ~> 0.123
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ssec 3.5.3 (iterations as stream procs)
 (define (sqrt-stream x)
   (define guesses
