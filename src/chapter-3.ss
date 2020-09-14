@@ -2562,14 +2562,26 @@ sum => 136
 ;; be 1, 6, 15, 162. Displaying `z` would only show 15. The rest of `seq` gets
 ;; generated using a much higher `sum`, none of which are divisible by 5.
 
-(Section :3.5.2 "Infinite Streams")
+(Section :3.5.2 "Infinite Streams"
+  (use (:3.5.1 stream-car stream-cdr stream-ref) (:3.5.1.1 stream-filter)))
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 3.5.2 (infinite streams)
+(define (stream-take s n)
+  (cond ((zero? n) '())
+        (else (cons (stream-car s) (stream-take (stream-cdr s) (- n 1))))))
+
 (define (integers-starting-from n)
-  (cons-stream n (integers-starting-from (inc n))))
+  (cons-stream n (integers-starting-from (+ 1 n))))
+(define integers (integers-starting-from 1))
+
+(define (divisible? x y) (= (remainder x y) 0))
+(define no-sevens
+  (stream-filter (lambda (x) (not (divisible? x 7))) integers))
+(stream-ref no-sevens 100) => 117
+
+(define (fibgen a b) (cons-stream a (fibgen b (+ a b))))
+(define fibs (fibgen 0 1))
+(stream-take fibs 10) => '(0 1 1 2 3 5 8 13 21 34)
+
 (define (sieve s)
   (cons-stream
     (stream-car s)
@@ -2578,88 +2590,118 @@ sum => 136
                (not (divisible? x (stream-car s))))
              (stream-cdr s)))))
 (define primes (sieve (integers-starting-from 2)))
+(stream-ref primes 50) => 233
 
-;;; ssec 3.5.2 (defining streams implicitly)
+(Section :3.5.2.1 "Defining streams implicitly"
+  (use (:1.1.4 square) (:3.5.1 stream-car stream-cdr stream-ref)
+       (:3.5.1.1 stream-filter)
+       (:3.5.2 divisible? integers-starting-from stream-take)
+       (?3.50 stream-map)))
+
+(define ones (cons-stream 1 ones))
+
+(define (add-streams s1 s2) (stream-map + s1 s2))
+
+(define integers
+  (cons-stream 1 (add-streams ones integers)))
+(stream-take integers 10) => '(1 2 3 4 5 6 7 8 9 10)
+
+(define fibs
+  (cons-stream 0 (cons-stream 1 (add-streams (stream-cdr fibs) fibs))))
+(stream-take fibs 10) => '(0 1 1 2 3 5 8 13 21 34)
+
+(define (scale-stream stream factor)
+  (stream-map (lambda (x) (* x factor)) stream))
+
+(define double
+  (cons-stream 1 (scale-stream double 2)))
+(stream-take double 10) => '(1 2 4 8 16 32 64 128 256 512)
+
 (define primes
-  (cons-stream
-    2
-    (stream-filter prime? (integers-starting-from 3))))
+  (cons-stream 2 (stream-filter prime? (integers-starting-from 3))))
 (define (prime? n)
   (define (iter ps)
     (or (> (square (stream-car ps)) n)
         (and (not (divisible? n (stream-car ps)))
              (iter (stream-cdr ps)))))
   (iter primes))
+(stream-ref primes 50) => 233
 
-;;; ex 3.53
+(Exercise ?3.53
+  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams)))
+
 (define s (cons-stream 1 (add-streams s s)))
-;; This produces all powers of two. It is similar to an earlier example:
-(= (add-streams s s) (scale-stream s 2))
 
-;;; ex 3.54
+;; It produces all powers of two, just like `double` in Section 3.5.2.1. This
+;; can be seen from the fact that `x * 2` (scaling a stream by 2) is the same as
+;; `x + x` (adding a stream to itself).
+
+(stream-take s 10) => '(1 2 4 8 16 32 64 128 256 512)
+
+(Exercise ?3.54
+  (use (:3.5.2 integers-starting-from stream-take) (?3.50 stream-map)))
+
 (define (mul-streams s1 s2) (stream-map * s1 s2))
-(define from-two (integers-starting-from 2))
 (define factorials
-  (cons-stream 1 (mul-streams factorials from-two)))
+  (cons-stream 1 (mul-streams factorials (integers-starting-from 2))))
+(stream-take factorials 5) => '(1 2 6 24 120)
 
-;;; ex 3.55
-(define (partial-sums s)
-  (cons-stream (stream-car s)
-               (add-streams (partial-sums s) (stream-cdr s))))
-;; The following procedure is more efficient because it uses itself via
-;; corecursion rather than calling the procedure recursively, which would
-;; prevent the memoizing from working. I could be wrong.
-(define (partial-sums s)
-  (define ps
-    (cons-stream (stream-car s)
-                 (add-streams ps (stream-cdr s))))
-  ps)
+(Exercise ?3.55
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2 stream-take)
+       (:3.5.2.1 add-streams integers)))
 
-;;; ex 3.56
+(define (partial-sums s)
+  (define self (cons-stream (stream-car s) (add-streams self (stream-cdr s))))
+  self)
+(stream-take (partial-sums integers) 10) => '(1 3 6 10 15 21 28 36 45 55)
+
+(Exercise ?3.56
+  (use (:3.5.1 stream-car stream-cdr stream-null?) (:3.5.2 stream-take)
+       (:3.5.2.1 scale-stream)))
+
 (define (merge s1 s2)
   (cond ((stream-null? s1) s2)
         ((stream-null? s2) s1)
-        (else
-          (let ((s1car (stream-car s1))
-                (s2car (stream-car s2)))
-            (cond ((< s1car s2car)
-                   (cons-stream
-                     s1car
-                     (merge (stream-cdr s1) s2)))
-                  ((> s1car s2car)
-                   (cons-stream
-                     s2car
-                     (merge s1 (stream-cdr s2))))
-                  (else
-                    (cons-stream
-                      s1car
-                      (merge (stream-cdr s1)
-                             (stream-cdr s2)))))))))
+        (else (let ((x1 (stream-car s1))
+                    (x2 (stream-car s2)))
+                (cond ((< x1 x2) (cons-stream x1 (merge (stream-cdr s1) s2)))
+                      ((> x1 x2) (cons-stream x2 (merge s1 (stream-cdr s2))))
+                      (else (cons-stream
+                              x1
+                              (merge (stream-cdr s1) (stream-cdr s2)))))))))
 (define S
   (cons-stream 1 (merge (scale-stream S 2)
                         (merge (scale-stream S 3)
                                (scale-stream S 5)))))
 
-;;; ex 3.57
-(define fibs
-  (cons-stream
-    0
-    (cons-stream 1 (add-streams fibs (stream-cdr fibs)))))
-;; See the relevant section of `proofs/proofs.pdf`.
+(stream-take S 10) => '(1 2 3 4 5 6 8 9 10 12)
 
-;;; ex 3.58
+(Exercise ?3.57)
+
+;; See proofs.pdf for the proof that the number of additions when computing the
+;; nth Fibonacci number using `fibs` from Section 3.5.2.1 would be exponentially
+;; greater if `delay` is implemented without memoization.
+
+(Exercise ?3.58
+   (use (:3.5.2 stream-take)))
+
 (define (expand num den radix)
   (cons-stream
     (quotient (* num radix) den)
     (expand (remainder (* num radix) den) den radix)))
+
 ;; This procedure produces the stream of digits in the base given by `radix`
 ;; that represent the quotient of `num` and `den`. It does it without using
 ;; floating-point operations.
-(expand 1 7 10)          ; => (1 4 2 8 5 7 ...)
-(exact->inexact (/ 1 7)) ; => .14285714285714285
-(expand 3 8 10)          ; => (3 7 5 0 0 0 ...)
-(exact->inexact (/ 3 8)) ; => .375
 
+(stream-take (expand 1 7 10) 10) => '(1 4 2 8 5 7 1 4 2 8)
+(inexact (/ 1 7)) ~> 0.14285714285714285
+(stream-take (expand 3 8 10) 10) => '(3 7 5 0 0 0 0 0 0 0)
+(inexact (/ 3 8)) ~> 0.375
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.59
 ;; (a) integration
 (define (integrate-series ps)
