@@ -2778,22 +2778,26 @@ sum => 136
 
 (eval-series tangent-series (atan 0.123) 10) ~> 0.123
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ssec 3.5.3 (iterations as stream procs)
+(Section :3.5.3 "Exploiting the Stream Paradigm")
+
+(Section :3.5.3.1 "Formulating iterations as stream processes"
+  (use (:1.1.4 square) (:1.1.7 improve)
+       (:3.5.1 stream-car stream-cdr stream-ref) (:3.5.2.1 scale-stream)
+       (?3.50 stream-map) (?3.55 partial-sums)))
+
 (define (sqrt-stream x)
   (define guesses
     (cons-stream
       1.0
-      (stream-map (lambda (guess) (sqrt-improve guess x))
+      (stream-map (lambda (guess) (improve guess x))
                   guesses)))
   guesses)
+
 (define (pi-summands n)
-  (cons-stream (/ n)
-               (stream-map - (pi-summands (+ n 2)))))
+  (cons-stream (/ 1.0 n) (stream-map - (pi-summands (+ n 2)))))
 (define pi-stream
   (scale-stream (partial-sums (pi-summands 1)) 4))
+
 (define (euler-transform s)
   (let ((s0 (stream-ref s 0))
         (s1 (stream-ref s 1))
@@ -2801,78 +2805,78 @@ sum => 136
     (cons-stream (- s2 (/ (square (- s2 s1))
                           (+ s0 (* -2 s1) s2)))
                  (euler-transform (stream-cdr s)))))
+
 (define (make-tableau transform s)
   (cons-stream s (make-tableau transform (transform s))))
 (define (accelerated-sequence transform s)
   (stream-map stream-car (make-tableau transform s)))
 
-;;; ex 3.63
+(stream-ref (sqrt-stream 2) 10)
+~> 1.414213562373095
+(stream-ref pi-stream 10)
+~> 3.232315809405594
+(stream-ref (euler-transform pi-stream) 10)
+~> 3.1417360992606667
+(stream-ref (accelerated-sequence euler-transform pi-stream) 8)
+~> 3.141592653589793
+
+;; The 11th term is NaN, probably because a denominator becomes extremely tiny.
+(stream-ref (accelerated-sequence euler-transform pi-stream) 10)
+=> +nan.0
+
+(Exercise ?3.63
+  (use (:1.1.7 improve) (?3.50 stream-map)))
+
 (define (sqrt-stream x)
   (cons-stream
     1.0
-    (stream-map
-      (lambda (guess) (sqrt-improve guess x))
-      (sqrt-stream x))))
-;; This implementation is less efficient because it doesn't take advantage of
-;; memoization, so it does redundant computation. This procedure improves the
-;; first guess to get the second item, but then it must do that all over again
-;; in the recursive call to improve the second guess. This is because calling
-;; `(sqrt-stream x)` creates a new stream, distinct from the one being returned
-;; in the context of the current procedure evaluation. It will have it's own
-;; cons cell to begin it, and therefore values in one will not be memoized in
-;; the other. In general, to get the next element of the stream, we must restart
-;; from the beginning every time. If our implementation of `delay` didn't use
-;; the optimization provided by `memo-proc`, then there would be no difference
-;; in efficiency between the original procedure and this one.
+    (stream-map (lambda (guess) (improve guess x))
+                (sqrt-stream x))))
 
-;;; ex 3.64
+;; This implementation is less efficient because it doesn't take advantage of
+;; memoization. It improves the first guess to get the second item, but then it
+;; must do that all over again in the recursive call to improve the second
+;; gues when it calls `(sqrt-stream x)`. If our implementation of `delay` didn't
+;; use the optimization provided by `memo-proc`, then there would be no
+;; difference in efficiency between the original procedure and this one.
+
+(Exercise ?3.64
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.3.1 sqrt-stream)))
+
 (define (stream-limit s tolerance)
   (define (iter prev s)
     (let ((next (stream-car s)))
       (if (< (abs (- prev next)) tolerance)
-        next
-        (iter next (stream-cdr s)))))
+          next
+          (iter next (stream-cdr s)))))
   (iter (stream-car s) (stream-cdr s)))
+
 (define (sqrt x tolerance)
   (stream-limit (sqrt-stream x) tolerance))
 
-;;; ex 3.65
+(sqrt 2 0.1) ~> 1.4166666666666665
+(sqrt 2 0.0001) ~> 1.4142135623746899
+
+(Exercise ?3.65
+  (use (:3.5.1 stream-ref) (:3.5.2.1 negate-stream)
+       (:3.5.3.1 accelerated-sequence euler-transform) (?3.55 partial-sums)))
+
 (define (ln-2-summands n)
-  (cons-stream (/ n)
-               (negate-stream (ln-2-summands (inc n)))))
+  (cons-stream (/ 1.0 n) (negate-stream (ln-2-summands (+ n 1)))))
 (define ln-2-stream
   (partial-sums (ln-2-summands 1)))
-;; This converges fairly slowly on its own:
-(log 2) ; => 0.6931471805599453
-(display-stream (stream-map exact->inexact ln-2-stream))
-;; => 1.0
-;;    0.5
-;;    0.8333333333333334
-;;    0.5833333333333334
-;;    0.7833333333333333
-;;    0.6166666666666667
-;;    0.7595238095238095
-;;    0.6345238095238095
-;;    0.7456349206349207
-;;    0.6456349206349207
-;;    ...
-;; The accelerated sequence converges much faster:
-(define accel-ln-2 (accelerated-sequence euler-transform ln-2-stream))
-(display-stream (stream-map exact->inexact accel-ln-2))
-;; => 1.0
-;;    0.7
-;;    0.6932773109243697
-;;    0.6931488693329254
-;;    0.6931471960735491
-;;    0.6931471806635636
-;;    0.6931471805604039
-;;    0.6931471805599444
-;;    0.6931471805599435
-;;    0.6931471805599453
-;; The tenth item looks identical to the printed value of `(log 2)`. That's
-;; sixteen decimal places.
 
-;;; ssec 3.5.3 (infinite streams of pairs)
+;; This converges fairly slowly on its own:
+(stream-ref ln-2-stream 10) ~> 0.7365440115440116
+
+;; The accelerated sequence converges much faster:
+(define accel-ln-2-stream (accelerated-sequence euler-transform ln-2-stream))
+(stream-ref accel-ln-2-stream 8) ~> (log 2)
+
+(Section :3.5.3.2 "Infinite streams of pairs"
+  (use (:3.5.1 stream-car stream-cdr stream-null?) (:3.5.2 integers stream-take)
+       (?3.50 stream-map)))
+
 (define (pairs s t)
   (cons-stream
     (list (stream-car s) (stream-car t))
@@ -2880,31 +2884,53 @@ sum => 136
       (stream-map (lambda (x) (list (stream-car s) x))
                   (stream-cdr t))
       (pairs (stream-cdr s) (stream-cdr t)))))
+
 (define (interleave s1 s2)
-  (if (stream-null? s1)
-    s2
-    (cons-stream (stream-car s1)
-                 (interleave s2 (stream-cdr s1)))))
+  (cond ((stream-null? s1) s2)
+        (else (cons-stream (stream-car s1)
+                           (interleave s2 (stream-cdr s1))))))
 
-;;; ex 3.66
-;; Let f(n) represent the nth pair in the stream, starting from one.
-;; f(1)  = (1,1); f(i) = (1,x) when i = 2  + 2N
-;; f(3)  = (2,2); f(i) = (2,x) when i = 5  + 4N
-;; f(7)  = (3,3); f(i) = (3,x) when i = 11 + 8N
-;; f(15) = (4,4); f(i) = (4,x) when i = 23 + 16N
-;; ...
+(stream-take (pairs integers integers) 10)
+=> '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
+
+(Exercise ?3.66
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2 integers) (:3.5.3.2 pairs)))
+
+;; Let f(n) be the nth pair in the stream.
+;;
+;;     f(1)  = (1,1); f(i) = (1,x) when i = 2  + 2N
+;;     f(3)  = (2,2); f(i) = (2,x) when i = 5  + 4N
+;;     f(7)  = (3,3); f(i) = (3,x) when i = 11 + 8N
+;;     f(15) = (4,4); f(i) = (4,x) when i = 23 + 16N
+;;     ...
+;;
 ;; The next row (where the first number in the pair is incremented once) always
-;; gets updated half as often as the previous row.
-;; In general,
-;; f(2^x - 1) = (x,x);
-;; f(2^x - 1 + (2N-1)*2^(x-1)) = (x,x+N), N > 0.
-;; The pair (1,100) is the 198th pair in the stream.
-;; The pair (99,100) is the 9.507e29th in the stream.
-;; The pair (100,100) is (2^100-1)th in the stream.
-;; See `whiteboard/exercise-3.66.jpg` for the function from indices to pairs,
-;; and its inverse (from pairs to indices).
+;; gets updated half as often as the previous row. In general,
+;;
+;;     f(2^x - 1) = (x,x);
+;;     f(2^x - 1 + (2N-1)*2^(x-1)) = (x,x+N), N > 0.
+;;
+;; Therefore:
+;;
+;; * The pair (1,100) is the 198th pair in the stream.
+;; * The pair (99,100) is the 9.507e29th in the stream.
+;; * The pair (100,100) is (2^100-1)th in the stream.
+;;
+;; See whiteboard/exercise-3.66.jpg for the function from indices to pairs and
+;; its inverse (from pairs to indices).
 
-;;; ex 3.67
+(define (stream-index s x)
+  (define (iter s i)
+    (cond ((equal? (stream-car s) x) i)
+          (else (iter (stream-cdr s) (+ i 1)))))
+  (iter s 0))
+
+(stream-index (pairs integers integers) '(1 100)) => (- 198 1)
+
+(Exercise ?3.67
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2 integers stream-take)
+       (:3.5.3.2 interleave) (?3.50 stream-map)))
+
 (define (pairs s t)
   (cons-stream
     (list (stream-car s) (stream-car t))
@@ -2912,20 +2938,29 @@ sum => 136
       (stream-map (lambda (x) (list (stream-car s) x))
                   (stream-cdr t))
       (interleave
-        (stream-map (lambda (x) (list (stream-car t) x))
+        (stream-map (lambda (x) (list x (stream-car t)))
                     (stream-cdr s))
         (pairs (stream-cdr s) (stream-cdr t))))))
 
-;;; ex 3.68
+(stream-take (pairs integers integers) 10)
+=> '((1 1) (1 2) (2 1) (1 3) (2 2) (1 4) (3 1) (1 5) (2 3) (1 6))
+
+(Exercise ?3.68
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.3.2 interleave) (?3.50 stream-map)))
+
 (define (pairs s t)
   (interleave
     (stream-map (lambda (x) (list (stream-car s) x))
                 t)
     (pairs (stream-cdr s) (stream-cdr t))))
-;; No, this will not work, because there will be an infinite loop. The recursive
-;; call `(pairs (stream-cdr s) (stream-cdr t))` is not delayed by a
-;; `cons-stream`, so the procedure will never return.
 
+;; No, this will not work: there will be an infinite loop. The recursive call
+;; `(pairs (stream-cdr s) (stream-cdr t))` is not delayed by a `cons-stream`,
+;; so the procedure will never return.
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.69
 (define (triples s t u)
   (cons-stream
