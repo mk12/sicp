@@ -2890,42 +2890,69 @@ sum => 136
         (else (cons-stream (stream-car s1)
                            (interleave s2 (stream-cdr s1))))))
 
-(stream-take (pairs integers integers) 10)
-=> '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
+(define integer-pairs (pairs integers integers))
+(define first-10-pairs (stream-take integer-pairs 10))
+first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 (Exercise ?3.66
-  (use (:3.5.1 stream-car stream-cdr) (:3.5.2 integers) (:3.5.3.2 pairs)))
+  (use (:2.2.3.1 enumerate-interval) (:3.5.1 stream-car stream-cdr stream-ref)
+       (:3.5.2 divisible?) (:3.5.3.2 first-10-pairs integer-pairs)))
 
-;; Let f(n) be the nth pair in the stream.
+;; Let f(n) be the nth pair in the stream, starting at 0.
 ;;
-;;     f(1)  = (1,1); f(i) = (1,x) when i = 2  + 2N
-;;     f(3)  = (2,2); f(i) = (2,x) when i = 5  + 4N
-;;     f(7)  = (3,3); f(i) = (3,x) when i = 11 + 8N
-;;     f(15) = (4,4); f(i) = (4,x) when i = 23 + 16N
+;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k
+;;     f(2)  = (2,2); f(n) = (2,_) when n = 4  + 4k
+;;     f(6)  = (3,3); f(n) = (3,_) when n = 10 + 8k
+;;     f(14) = (4,4); f(n) = (4,_) when n = 22 + 16k
 ;;     ...
 ;;
 ;; The next row (where the first number in the pair is incremented once) always
 ;; gets updated half as often as the previous row. In general,
 ;;
-;;     f(2^x - 1) = (x,x);
-;;     f(2^x - 1 + (2N-1)*2^(x-1)) = (x,x+N), N > 0.
+;;     f(2^x - 2) = (x,x);
+;;     f(2^x - 2 + 2^(x-1) + (k - 1)2^x) = (x,x+k), k > 0.
 ;;
-;; Therefore:
-;;
-;; * The pair (1,100) is the 198th pair in the stream.
-;; * The pair (99,100) is the 9.507e29th in the stream.
-;; * The pair (100,100) is (2^100-1)th in the stream.
-;;
-;; See whiteboard/exercise-3.66.jpg for the function from indices to pairs and
-;; its inverse (from pairs to indices).
+;; We can write a function to find the index of a given pair:
 
-(define (stream-index s x)
-  (define (iter s i)
-    (cond ((equal? (stream-car s) x) i)
-          (else (iter (stream-cdr s) (+ i 1)))))
-  (iter s 0))
+(define (pair->index pair)
+  (let* ((x (car pair))
+         (k (- (cadr pair) x)))
+    (cond ((zero? k) (- (expt 2 x) 2))
+          (else (- (* (expt 2 (- x 1))
+                      (+ (* 2 k) 1))
+                   2)))))
 
-(stream-index (pairs integers integers) '(1 100)) => (- 198 1)
+(pair->index '(1 100)) => 197
+(pair->index '(99 100)) => 950737950171172051122527404030
+(pair->index '(100 100)) => (- (expt 2 100) 2)
+
+;; We can confirm that it's correct for small indices:
+
+(map pair->index first-10-pairs) => (enumerate-interval 0 9)
+(stream-ref integer-pairs 197) => '(1 100)
+(define random-pair (list (+ 1 (random 5)) (+ 1 (random 50))))
+(define random-index (pair->index random-pair))
+(<= random-index 1454) => #t ; ensuring it's not too large
+(stream-ref integer-pairs random-index) => random-pair
+
+;; Going the other way, from index to pair, is possible without generating the
+;; stream. But there is no simple closed form solution. For an index n, the
+;; first element of the pair (from which we can easily solve for the second) is
+;; given by https://oeis.org/A091090.
+
+(define (index->pair n)
+  ;; Maintains the invariants a = 2^x, b = 3*2^(x-1).
+  (define (iter x a b)
+    (cond ((divisible? (- n (- b 2)) a)
+           (list x (+ x (/ (+ n 2 (* -3/2 a)) a) 1)))
+          (else (iter (+ x 1) (* a 2) (* b 2)))))
+  (let ((x (log (+ n 2) 2)))
+    (cond ((integer? x) (list (exact x) (exact x)))
+          (else (iter 1 2 3)))))
+
+(map index->pair (enumerate-interval 0 9)) => first-10-pairs
+(index->pair 197) => '(1 100)
+(index->pair random-index) => random-pair
 
 (Exercise ?3.67
   (use (:3.5.1 stream-car stream-cdr) (:3.5.2 integers stream-take)
@@ -2958,25 +2985,31 @@ sum => 136
 ;; `(pairs (stream-cdr s) (stream-cdr t))` is not delayed by a `cons-stream`,
 ;; so the procedure will never return.
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.69
+(Exercise ?3.69
+  (use (:1.1.4 square) (:3.5.1 stream-car stream-cdr) (:3.5.1.1 stream-filter)
+       (:3.5.2 integers) (:3.5.3.2 interleave pairs) (?3.50 stream-map)))
+
 (define (triples s t u)
   (cons-stream
     (list (stream-car s) (stream-car t) (stream-car u))
     (interleave
       (stream-map (lambda (x) (cons (stream-car s) x))
-                  (pairs t u))
+                  (stream-cdr (pairs t u)))
       (triples (stream-cdr s)
-               (stream-cdr t)
-               (stream-cdr u)))))
-(define (pythagorean-triples)
+              (stream-cdr t)
+              (stream-cdr u)))))
+
+(define pythagorean-triples
   (stream-filter
     (lambda (x)
-      (= (+ (square (car x) (cadr x))) (square (caddr x))))
+      (= (+ (square (car x)) (square (cadr x))) (square (caddr x))))
     (triples integers integers integers)))
 
+(stream-car pythagorean-triples) => '(3 4 5)
+
+) ; end of SICP
+) ; end of library
+#|
 ;;; ex 3.70
 (define (merge-weighted s1 s2 weight)
   (cond ((stream-null? s1) s2)
