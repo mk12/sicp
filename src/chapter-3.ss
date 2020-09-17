@@ -3007,21 +3007,21 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 (stream-car pythagorean-triples) => '(3 4 5)
 
-) ; end of SICP
-) ; end of library
-#|
-;;; ex 3.70
+(Exercise ?3.70
+  (use (:3.5.1 stream-car stream-cdr stream-null?) (:3.5.1.1 stream-filter)
+       (:3.5.2 divisible? integers stream-take) (?3.50 stream-map)))
+
 (define (merge-weighted s1 s2 weight)
-  (cond ((stream-null? s1) s2)
-        ((stream-null? s2) s1)
-        (else
-          (let ((s1car (stream-car s1))
-                (s2car (stream-car s2)))
-            (if (<= (weight s1car) (weight s2car))
-              (cons-stream s1car
-                           (merge (stream-cdr s1) s2))
-              (cons-stream s2car
-                           (merge s1 (stream-cdr s2))))))))
+  (define (merge s1 s2)
+    (cond ((stream-null? s1) s2)
+          ((stream-null? s2) s1)
+          (else (let ((x1 (stream-car s1))
+                      (x2 (stream-car s2)))
+                  (if (<= (weight x1) (weight x2))
+                      (cons-stream x1 (merge (stream-cdr s1) s2))
+                      (cons-stream x2 (merge s1 (stream-cdr s2))))))))
+  (merge s1 s2))
+
 (define (weighted-pairs s t weight)
   (cons-stream
     (list (stream-car s) (stream-car s))
@@ -3030,65 +3030,79 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
                   (stream-cdr t))
       (weighted-pairs (stream-cdr s) (stream-cdr t) weight)
       weight)))
-(define part-a
-  (weighted-pairs integers
-                  integers
-                  (lambda (p) (apply + p))))
-(define part-b
-  (define not-235
-    (stream-filter
-      (lambda (x)
-        (not (or (divisible? x 2)
-                 (divisible? x 3)
-                 (divisible? x 5))))
-      integers))
-  (weighted-pairs not-235
-                  not-235
-                  (lambda (p)
-                    (+ (* 2 (car p))
-                       (* 3 (cadr p))
-                       (* 5 (car p) (cadr p))))))
 
-;;; ex 3.71
-(define ramanujan-numbers
-  (define (cube x)
-    (* x x x))
-  (define (weight a b)
-    (+ (cube a) (cube b)))
-  (define (analyze pairs)
-    (let ((w1 (weight (stream-car pairs)))
+;; (a) Pairs of positive integers (i, j) with i <= j ordered by i + j.
+(define (a-weight p) (apply + p))
+(define a-stream (weighted-pairs integers integers a-weight))
+(define a-10 (stream-take a-stream 10))
+a-10 => '((1 1) (1 2) (1 3) (2 2) (1 4) (2 3) (1 5) (2 4) (3 3) (1 6))
+(map a-weight a-10) => '(2 3 4 4 5 5 6 6 6 7)
+
+;; (b) Pairs of positive integers (i, j) with i <= j, where neither i nor j is
+;; divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.
+(define (b-weight p)
+  (+ (* 2 (car p))
+    (* 3 (cadr p))
+    (* 5 (car p) (cadr p))))
+(define b-stream
+  (let ((filtered
+         (stream-filter
+           (lambda (x)
+             (not (or (divisible? x 2) (divisible? x 3) (divisible? x 5))))
+           integers)))
+    (weighted-pairs filtered filtered b-weight)))
+(define b-10 (stream-take b-stream 10))
+b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
+(map b-weight b-10) => '(10 58 90 106 138 154 186 234 250 280)
+
+(Exercise ?3.71
+  (use (:1.3 cube) (:3.5.1 stream-car stream-cdr) (:3.5.2 integers stream-take)
+       (?3.70 weighted-pairs)))
+
+(define (weight p) (+ (cube (car p)) (cube (cadr p))))
+(define (analyze pairs)
+  (let* ((w1 (weight (stream-car pairs)))
           (w2 (weight (stream-car (stream-cdr pairs)))))
-      (if (= w1 w2)
-        (stream-cons
-          (list w1 (stream-car pairs) (stream-car (stream-cdr pairs)))
-          (analyze (stream-cdr (stream-cdr pairs))))
+    (if (= w1 w2)
+        (cons-stream w1 (analyze (stream-cdr (stream-cdr pairs))))
         (analyze (stream-cdr pairs)))))
+(define ramanujan-numbers
   (analyze (weighted-pairs integers integers weight)))
-;; first six Ramanujan numbers: 1729, 4104, 13832, 20683, 32832, 39312
 
-;;; ex 3.72
-(define thrice-square-sums
-  (define (weight a b)
-    (+ (square a) (square b)))
-  (define (analyze pairs)
-    (let ((w1 (weight (stream-car pairs)))
-          (w2 (weight (stream-car (stream-cdr pairs))))
-          (w3 (weight (stream-car (stream-cdr (stream-cdr pairs))))))
-      (if (= w1 w2 w3)
-        (stream-cons
-          (list w1
-                (stream-car pairs)
-                (stream-car (stream-cdr pairs))
-                (stream-car (stream-cdr (stream-cdr pairs))))
+(stream-take ramanujan-numbers 6) => '(1729 4104 13832 20683 32832 39312)
+
+(Exercise ?3.72
+  (use (:1.1.4 square) (:3.5.1 stream-car stream-cdr)
+       (:3.5.2 integers stream-take) (?3.70 weighted-pairs)))
+
+(define (weight p) (+ (square (car p)) (square (cadr p))))
+(define (analyze pairs)
+  (let* ((x1 (stream-car pairs))
+         (x2 (stream-car (stream-cdr pairs)))
+         (x3 (stream-car (stream-cdr (stream-cdr pairs))))
+         (w1 (weight x1)))
+    (if (= w1 (weight x2) (weight x3))
+        (cons-stream
+          (list w1 x1 x2 x3)
           (analyze (stream-cdr (stream-cdr (stream-cdr pairs)))))
         (analyze (stream-cdr pairs)))))
+(define thrice-square-sums
   (analyze (weighted-pairs integers integers weight)))
 
-;; ex 3.73
+(stream-take thrice-square-sums 3)
+=> '((325 (1 18) (6 17) (10 15))
+     (425 (5 20) (8 19) (13 16))
+     (650 (5 25) (11 23) (17 19)))
+
+(Section :3.5.3.3 "Streams as signals"
+  (use (:3.5.2.1 add-streams scale-stream)))
+
 (define (integral integrand initial-value dt)
   (define int
     (cons-stream initial-value
                  (add-streams (scale-stream integrand dt)
                               int)))
   int)
-|#
+
+) ; end of SICP
+) ; end of library
