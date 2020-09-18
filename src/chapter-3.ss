@@ -3104,5 +3104,77 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
                               int)))
   int)
 
+(Exercise ?3.73
+  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams ones scale-stream) (:3.5.3.3 integral)))
+
+(define (RC R C dt)
+  (lambda (i v0)
+    (add-streams (scale-stream i R)
+                 (integral (scale-stream i (/ C)) v0 dt))))
+
+;; RC circuit with R = 5 ohms, C = 1 farad, and a 0.5-second time step.
+(define RC1 (RC 5 1 0.5))
+;; Calculate the stream of voltages given a constant i = 1 amp and v0 = 0 V.
+(stream-take (RC1 ones 0) 10)
+=> '(5 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0 9.5)
+
+(Exercise ?3.74
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2 stream-take) (?3.50 stream-map)))
+
+(define (cycle original)
+  (define (iter xs)
+    (cond ((null? xs) (iter original))
+          (else (cons-stream (car xs) (iter (cdr xs))))))
+  (iter original))
+
+;;; Alyssa's original implementation
+
+(define (sign-change-detector new old)
+  (cond ((and (< old 0) (>= new 0)) 1)
+        ((and (>= old 0) (< new 0)) -1)
+        (else 0)))
+(define (make-zero-crossings input-stream last-value)
+  (cons-stream
+    (sign-change-detector (stream-car input-stream) last-value)
+    (make-zero-crossings (stream-cdr input-stream) (stream-car input-stream))))
+(define (zero-crossings sense-data) (make-zero-crossings sense-data 0))
+
+(define test-data (cycle '(1 2 -1 -2 0 -1 0 2 4 5)))
+(define test-result '(0 0 -1 0 1 -1 1 0 0 0))
+(stream-take (zero-crossings test-data) 10) => test-result
+
+;;; My implementation based on Eva Lu Ator's suggestion
+
+(define (zero-crossings sense-data)
+  (stream-map sign-change-detector
+              sense-data
+              (cons-stream 0 sense-data)))
+
+(stream-take (zero-crossings test-data) 10) => test-result
+
+(Exercise ?3.75
+  (use (:3.5.1 stream-car stream-cdr) (:3.5.2 stream-take)
+       (?3.74 sign-change-detector test-data)))
+
+(define (make-zero-crossings input-stream last-value last-avpt)
+  (let* ((value (stream-car input-stream))
+         (avpt (/ (+ value last-value) 2)))
+    (cons-stream
+      (sign-change-detector avpt last-avpt)
+      (make-zero-crossings (stream-cdr input-stream) value avpt))))
+(define (zero-crossings sense-data) (make-zero-crossings sense-data 0 0))
+
+(define test-result '(0 0 0 -1 0 0 0 1 0 0))
+(stream-take (zero-crossings test-data) 10) => test-result
+
+(Exercise ?3.76
+  (use (:1.1.7 average) (:3.5.2 stream-take) (?3.50 stream-map)
+       (?3.74 test-data zero-crossings) (?3.75 test-result)))
+
+(define (smooth s) (stream-map average s (cons-stream 0 s)))
+(define (smooth-zero-crossings sense-data) (zero-crossings (smooth sense-data)))
+
+(stream-take (smooth-zero-crossings test-data) 10) => test-result
+
 ) ; end of SICP
 ) ; end of library
