@@ -156,7 +156,7 @@
 (perimeter rect) => 16
 (area rect) => 15
 
-(Section :2.1.3 "What is Meant by Data?")
+(Section :2.1.3 "What Is Meant by Data?")
 
 (define (cons x y)
   (define (dispatch m)
@@ -467,7 +467,7 @@
 ;; does not have this shortcoming. The best we can do is attempt to rewrite
 ;; expressions so that intervals are not repeated (not always possible).
 
-(Section :2.2 "Hierarchical data the closure property")
+(Section :2.2 "Hierarchical Data and the Closure Property")
 
 (Section :2.2.1 "Representing Sequences")
 
@@ -908,7 +908,7 @@ one-through-four => '(1 2 3 4)
 
 (even-fibs 10) => '(0 2 8 34)
 
-(Section :2.2.3.1 "Sequence Operations"
+(Section :2.2.3.1 "Sequence operations"
   (use (:1.1.4 square) (?1.19 fib)))
 
 (map square (list 1 2 3 4 5)) => '(1 4 9 16 25)
@@ -1073,7 +1073,7 @@ one-through-four => '(1 2 3 4)
 
 (reverse (list 1 2 3 4 5)) => '(5 4 3 2 1)
 
-(Section :2.2.3.2 "Nested Mappings"
+(Section :2.2.3.2 "Nested mappings"
   (use (:2.2.3.1 accumulate enumerate-interval filter) (?1.23 prime?)))
 
 (define (flatmap proc seq)
@@ -1541,7 +1541,7 @@ one-through-four => '(1 2 3 4)
     (let ((flipped (flip-horiz quarter)))
       (square-of-four flipped quarter flipped quarter))))
 
-(Section :2.3 "Symbolic data")
+(Section :2.3 "Symbolic Data")
 
 (Section :2.3.1 "Quotation")
 
@@ -2361,7 +2361,7 @@ z1 => (make-from-real-imag 11 3)
 (imag-part z1) ~> 6
 z2 => (make-from-mag-ang 30 3)
 
-(Section :2.4.2 "Tagged data"
+(Section :2.4.2 "Tagged Data"
   (use (:1.1.4 square)))
 
 (define (attach-tag type-tag contents)
@@ -2731,7 +2731,7 @@ z2 => (make-from-mag-ang 30 3)
 ;; and operations often. Data-directed style works well in both scenarios, and
 ;; also allows dispatching on all arguments (unlike message passing).
 
-(Section :2.5 "Systems with generic operations")
+(Section :2.5 "Systems with Generic Operations")
 
 (Section :2.5.1 "Generic Arithmetic Operations"
   (use (:2.1.1 add-rat denom div-rat mul-rat numer sub-rat) (:2.4.2 attach-tag)

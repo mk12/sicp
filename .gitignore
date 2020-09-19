@@ -4,3 +4,6 @@
 # Racket bytecode
 *.dep
 *.zo
+
+# Pandoc output
+out.html

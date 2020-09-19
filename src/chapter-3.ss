@@ -3176,5 +3176,16 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 
 (stream-take (smooth-zero-crossings test-data) 10) => test-result
 
+(Section :3.5.4 "Streams and Delayed Evaluation"
+  (use (:3.5.2.1 add-streams scale-stream)))
+
+(define (integral delayed-integrand initial-value dt)
+  (define int
+    (cons-stream
+      initial-value
+      (let ((integrand (force delayed-integrand)))
+	      (add-streams (scale-stream integrand dt) int))))
+  int)
+
 ) ; end of SICP
 ) ; end of library

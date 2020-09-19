@@ -1,14 +1,22 @@
-# SICP Exercises
+# SICP Study
 
-This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp]. My notes on the text are in [notes.md](notes.md). Solutions to the exercises are written in portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
+This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp]. It contains study notes and solutions to all the exercises. Solutions are written in portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
 
-## Usage
+## Notes
+
+My notes on the text are in [notes/notes.md](notes/notes.md). Run `make` in [notes/](notes) to compile them to HTML. You will need [Pandoc][] installed.
+
+You can also continuously build the notes with `make watch`, which requires [entr][]. This is useful in combination with the VS Code extension [Live Server][].
+
+## Exercises
+
+### Usage
 
 Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on which Scheme implementation you have installed.
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 
-## Structure
+### Structure
 
 The program starts in `main.scm`. Each chapter of the book has its own file in [src/](src), written in a [custom DSL](#dsl). The DSL is implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
 
@@ -16,9 +24,7 @@ For exercises requiring proofs, I have written ConTeXt documents in [proofs/](pr
 
 For exercises requiring diagrams, I have used ASCII art in comments or stored whiteboard photos in [whiteboard/](whiteboard).
 
-## DSL
-
-Here is a quick guide to the DSL used in this project.
+### DSL
 
 Tests are written using `=>` and `~>`:
 
@@ -126,10 +132,13 @@ This works in Chez Scheme and Racket. It also works in Guile, but only the inter
 
 © 2020 Mitchell Kember
 
-SICP Exercises is available under the MIT License; see [LICENSE](LICENSE.md) for details.
+SICP Study is available under the MIT License; see [LICENSE](LICENSE.md) for details.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [R6RS]: http://www.r6rs.org
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
 [Guile]: https://www.gnu.org/software/guile/
 [Racket]: http://racket-lang.org
+[Pandoc]: https://pandoc.org
+[entr]: http://eradman.com/entrproject/
+[Live Server]: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer

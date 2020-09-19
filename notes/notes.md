@@ -1,3 +1,6 @@
+% Study Notes on _Structure and Interpretation of Computer Programs_
+% Mitchell Kember
+
 # Dedication
 
 > What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. (11)
@@ -22,7 +25,7 @@
 
 > Mathematics provides a framework for dealing precisely with notions of "what is." Computation provides a framework for dealing precisely with notions of "how to." (20)
 
-# Building Abstractions with Procedures
+# Chapter 1: Building Abstractions with Procedures
 
 - A computational process evolves to manipulate data.
 - The evolution is controlled by a program, a pattern of rules.
@@ -30,7 +33,7 @@
 - This book uses the Scheme dialect of Lisp.
 - Lisp represents procedures as data.
 
-## The elements of programming
+## The Elements of Programming
 
 There are three mechanisms for combining simple ideas to form more complex ideas in every powerful programming language:
 
@@ -51,31 +54,31 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
 - Lisp combinations use prefix notation.
 - Combinations can be nested: an operator or operand can itself be another combination.
 
-### Naming and the environment
+### Naming and the Environment
 
 - Scheme names things with the `define`. This is the simplest means of abstraction.
 - The name-value pairs are stored in an _environment_.
 
-### Evaluating combinations
+### Evaluating Combinations
 
 - To evaluate a combination, do the following:
-1.1. Evaluate the subexpressions of the combination.
-1.2. Apply the procedure (value of left more subexpression, the operator) to the arguments (values of other subexpressions, the operands).
+    1. Evaluate the subexpressions of the combination.
+    2. Apply the procedure (value of left more subexpression, the operator) to the arguments (values of other subexpressions, the operands).
 - Before evaluating a combination, we must first evaluate each element inside it.
 - Evaluation is recursive in nature -- one of its steps is invoking itself.
 - The evaluation of a combination can be represents with a tree.
 - Recursion is a powerful technique for dealing with hierarchical, tree-like objects.
 - To end the recursion, we stipulate the following:
-1.1. Numbers evaluate to themselves.
-1.2. Built-in operators evaluate to machine instruction sequences.
-1.3. Names evaluate to the values associated with them in the environment.
+    1. Numbers evaluate to themselves.
+    2. Built-in operators evaluate to machine instruction sequences.
+    3. Names evaluate to the values associated with them in the environment.
 - Rule 2 is a special case of rule 3 if we consider the arithmetic operators to be names in the environment.
 - Evaluating `(define x 3)` does not apply `define` to two arguments; this is not a combination.
 - Exceptions such as these are _special forms_. Each one has its own evaluation rule.
 
 > Syntactic sugar causes cancer of the semicolon. (Alan Perlis)
 
-### Compound procedures
+### Compound Procedures
 
 - Procedure definitions are very powerful for abstraction.
 - A squaring procedure: `(define (square x) (* x x))`.
@@ -83,7 +86,7 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
 - The general form of a procedure definition is `(define (<name> <formal parameters>) <body>)`.
 - If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.
 
-### The substitution model for procedure application
+### The Substitution Model for Procedure Application
 
 This is the substation model:
 
@@ -91,7 +94,7 @@ This is the substation model:
 
 An example of procedure application:
 
-```
+```scheme
 (f 5)
 (sum-of-squares (+ 5 1) (* 5 2))
 (sum-of-squares 6 10)
@@ -107,7 +110,7 @@ An example of procedure application:
 
 An example of normal order procedure application:
 
-```
+```scheme
 (f 5)
 (sum-of-squares (+ 5 1) (* 5 2))
 (+ (square (+ 5 1)) (square (* 5 2)))
@@ -121,7 +124,7 @@ An example of normal order procedure application:
 - Applicative: evaluate the arguments and then apply.
 - Normal: fully expand and then reduce.
 
-### Conditional expressions and predicates
+### Conditional Expressions and Predicates
 
 - To make more useful procedures, we need to be able to make tests and perform different operations accordingly.
 - We do _case analysis_ in Scheme using `cond`.
@@ -131,7 +134,7 @@ An example of normal order procedure application:
 - The `if` conditional can be used when there are two cases.
 - Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures.
 
-### Example: Square roots by Newton's method
+### Example: Square Roots by Newton's Method
 
 > But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. (48)
 
@@ -139,7 +142,7 @@ An example of normal order procedure application:
 - Mathematical functions describes things (declarative knowledge); procedures describe how to do things (imperative knowledge).
 - Declarative is _what is_, imperative is _how to_.
 
-### Procedures as black-box abstractions
+### Procedures as Black-Box Abstractions
 
 - Each procedure in a program should accomplish and identifiable task that can be used as a module in defining other procedures.
 - When we use a procedure as a "black box," we are concerned with _what_ it is doing but not _how_ it is doing it.
@@ -164,7 +167,7 @@ An example of normal order procedure application:
 - By internalizing auxiliary procedures, we can often eliminate bindings by allowing variables to remain free.
 - Lexical scoping: free variables in a procedure refer to bindings in enclosing procedure definitions.
 
-## Procedures and the processes they generate
+## Procedures and the Processes They Generate
 
 > To become experts, we must learn to visualize the processes generated by various types of procedures. Only after we have developed such a skill can we learn to reliably construct programs that exhibit the desired behaviour. (59)
 
@@ -173,12 +176,12 @@ An example of normal order procedure application:
 - Processes governed by different types of procedures generate different "shapes" of evolution.
 - There are two important resources that computational processes consume: time and space.
 
-### Linear recursion and iteration
+### Linear Recursion and Iteration
 
 - The factorial of $N$ is defined as the product of the integers on the interval $[1,N]$.
 - The naive _recursive_ implementation creates a curved shape:
 
-```
+```scheme
 (factorial 4)
 (* 4 (factorial 3))
 (* 4 (* 3 (factorial 2)))
@@ -192,7 +195,7 @@ An example of normal order procedure application:
 - The _iterative_ implementation maintains a running product and multiplies the numbers from 1 to $N$ to it.
 - This creates a shape with a straight edge:
 
-```
+```scheme
 (factorial 4)
 (fact-iter 1 1 4)
 (fact-iter 1 2 4)
@@ -204,11 +207,11 @@ An example of normal order procedure application:
 
 - Both compute the same mathematical function, but the computational processes evolve very differently.
 - The first one is a _linear recursive process_. The chain of deferred operations causes an expansion (as more operations are added) and a contraction (as the operations are performed).
-	- The interpreter must keep track of all these operations.
-	- It is a _linear_ recursive process because the information it must keep track of (the call stack) grows linearly with $N$.
+    - The interpreter must keep track of all these operations.
+    - It is a _linear_ recursive process because the information it must keep track of (the call stack) grows linearly with $N$.
 - The second is a _linear iterative process_. It is iterative because it does not grow and shrink.
-	- It is summarized by a fixed number of state variables and a rule to describe how they should update and when the process should terminate.
-	- It is a _linear_ iterative process because the number of steps grows linearly with $N$.
+    - It is summarized by a fixed number of state variables and a rule to describe how they should update and when the process should terminate.
+    - It is a _linear_ iterative process because the number of steps grows linearly with $N$.
 - In the iterative process, the variables provide a complete description of the state of the process at any point.
 - In the recursive process, their is "hidden" information that makes it impossible to resume the process midway through.
 - The longer the chain of deferred operations, the more information must be maintained (in a stack, as we will see).
@@ -216,7 +219,7 @@ An example of normal order procedure application:
 - A recursive _process_ refers to the evolution of the process described above.
 - A recursive procedure can generate an iterative process in Scheme thanks to tail-call optimization. In other languages, special-purpose looping constructs are needed for this.
 
-### Tree recursion
+### Tree Recursion
 
 - With tree recursion, the procedure invokes itself more than once, causing the process to evolve in the shape of a tree.
 - The naive Fibonacci procedure calls itself twice each time it is invoked, so each branch splits into two at each level.
@@ -231,11 +234,17 @@ Let $f(A,N)$ represent the number of ways of changing the amount A using $N$ kin
 
 That rule and a few degenerate cases is sufficient to describe an algorithm for counting the number of ways of changing amounts of money. We can define it with the following piecewise function:
 
-$$f(A,N) = {(1, if A=0","),(0, if A < 0","),(0, if N=0","),(f(A,N-1)+f(A-D,N), if A > 0 and N > 0.):}$$
+$$
+f(A,N) = \begin{cases}
+1, & \text{if $A = 0$,} \\
+0, & \text{if $A < 0$ or $N = 0$,} \\
+f(A,N-1) + f(A-D,N), & \text{if $A > 0$ and $N > 0$.}
+\end{cases}
+$$
 
 Like Fibonacci, the easy tree-recursive implementation involves a lot of redundancy. Unlike it, there is no obvious iterative solution (it is possible, just harder). One way to improve the performance of the tree-recursive process is to use _memoization_ (maintaining a lookup table).
 
-### Orders of growth
+### Orders of Growth
 
 - Some processes consume more or less computational resources than others.
 - We compare this using _order of growth_, a gross measure of the resources required by a process as the inputs becomes larger.
@@ -252,19 +261,24 @@ if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n)�
 
 One way to calculate b to the nth power is via the following recursive definition:
 
-$$b^0 = 1, qquad b^n = b * b^(n-1)$$.
+$$b^0 = 1, \qquad b^n = b * b^{n-1}.$$
 
 In words, multiply the base to itself $n$ times. A faster method is to use successive squaring:
 
-$$b^n = {((b^(n//2))^2, if n\ "is even";),(b * b^(n-1), if n\ "is odd".):}$$
+$$
+b^n = \begin{cases}
+\left(b^{n/2}\right)^2 & \text{if $n$ is even,} \\
+b * b^{n-1}, & \text{if $n$ is odd.}
+\end{cases}
+$$
 
-### Greatest common divisors
+### Greatest Common Divisors
 
-- The GCD of integers $a$ and $b$ is the largest integer that divides both $a$ and $b$ with no remainder. For example, $"GCD"(16,28) = 4$.
-- Efficient algorithm uses $"GCD"(a,b) = "GCD"(b,a % b)$.
+- The GCD of integers $a$ and $b$ is the largest integer that divides both $a$ and $b$ with no remainder. For example, $\gcd(16,28) = 4$.
+- Efficient algorithm uses $\gcd(a,b) = \gcd(b,a\bmod b)$.
 - For example, we can reduce `(gcd 206 40)` as follows:
 
-```
+```scheme
 (gcd 206 40)
 (gcd 40 6)
 (gcd 6 4)
@@ -275,9 +289,9 @@ $$b^n = {((b^(n//2))^2, if n\ "is even";),(b * b^(n-1), if n\ "is odd".):}$$
 
 - This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.
 - This is called _Euclid's Algorithm_.
-- Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair, then $min{a,b} ≥ "Fib"(k)$.
+- Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair $(a,b)$, then $\min\{a,b\} ≥ \text{Fib}(k)$.
 
-### Example: Testing for primality
+### Example: Testing for Primality
 
 #### Searching for divisors
 
@@ -292,7 +306,7 @@ The Fermat test is a $Θ(log(n))$ primality test based on Fermat's Little Theore
 
 The test works like this:
 
-1. Given a number $n$, pick a random number $a < n$ and calculate $a^n % n$.
+1. Given a number $n$, pick a random number $a < n$ and calculate $a^n\bmod n$.
 2. Fail: If the result is not equal to $a$, then $n$ is not prime.
 3. Pass: If the result is equal to $a$, then $n$ is likely prime.
 4. Repeat. The more times the number passes the test, the more confident we are that $n$ is prime. If there is a single failure, $n$ is certainly not prime.
@@ -306,7 +320,7 @@ The test works like this:
 
 > Numbers that fool the Fermat test are called Carmichael numbers, and little is known about them other than that they are extremely rare. There are 255 Carmichael numbers below 100,000,000. The smallest few are 561, 1105, 1729, 2465, 2821, and 6601. In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a "correct" algorithm. Considering an algorithm to be inadequate for the first reason but not for the second _illustrates the difference between mathematics and engineering_.
 
-## Formulating abstractions with higher-order procedures
+## Formulating Abstractions with Higher-Order Procedures
 
 > We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers. (74)
 
@@ -318,36 +332,36 @@ The test works like this:
 - To abstract more general programming patterns, we need to write precedes that take other procedures as arguments and return new procedures.
 - These are called _higher-order_ procedures.
 
-### Procedures as arguments
+### Procedures as Arguments
 
 Procedures that compute a sum are all similar. They are all based on the following template:
 
-```
+```scheme
 (define (<name> a b)
   (if (> a b)
-    0
-    (+ (<term> a)
-       (<name> (<next> a) b))))
+      0
+      (+ (<term> a)
+         (<name> (<next> a) b))))
 ```
 
 This is a useful abstraction, just as sigma notation in math is useful because the summation of a series is so common.
 
 > The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. (77)
 
-### Constructing procedures using lambda
+### Constructing Procedures Using `Lambda`
 
 `lambda` creates anonymous procedures. They are just like the procedures created by `define`, but without a name: `(lambda (<formal-parameters>) <body>)`.
 
 A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.
 
-#### Using let to create local variables
+#### Using `let` to create local variables
 
 - We often need local variables other than the ones that have been bound as formal parameters.
 - We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special `let` form that does it.
 
 The general form of a let-expression is
 
-```
+```scheme
 (let ((<var1> <exp1>)
       (<var2> <exp2>)
       ...
@@ -357,7 +371,7 @@ The general form of a let-expression is
 
 This is just syntactic sugar for
 
-```
+```scheme
 ((lambda (<var1> <var2> ... <varn>)
    <body>)
  <exp1>
@@ -371,7 +385,7 @@ This is just syntactic sugar for
 - The variables in the let-expression are parallel and independent. They cannot refer to each other, and their order does not matter.
 - You can use let-expressions (`let`, `let*`, and `letrec`) instead of internal definitions (block structure).
 
-### Procedures as general methods
+### Procedures as General Methods
 
 So far, we have seen
 
@@ -392,18 +406,18 @@ Now we will take it a bit further.
 - In some cases, repeatedly applying the function to an initial guess will converge on the fixed point.
 - The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.
 
-### Procedures as returned values
+### Procedures as Returned Values
 
 Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:
 
-```
+```scheme
 (define (average-damp f)
   (lambda (x) (average x (f x))))
 ```
 
 If we use `average-damp` on `square`, we actually get a procedure that takes the sum of the numbers from 1 to n:
 
-```
+```scheme
 ((average-damp square) 10)
 55
 (+ 1 2 3 4 5 6 7 8 9 10)
@@ -416,22 +430,22 @@ If we use `average-damp` on `square`, we actually get a procedure that takes the
 
 The square-root procedure we did earlier was a special case of Newton's method.  Given a function $f(x)$, the solution to $f(x) = 0$ is given by the fixed point of
 
-$$x ↦ x − (f(x))/(f'(x))$$.
+$$x ↦ x − \frac{f(x)}{f'(x)}.$$
 
 Newton's method converges very quickly -- much faster than the half-interval method in favourable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:
 
-$$f'(x) = (f(x+dx) - f(x))/dx$$.
+$$f'(x) = \frac{f(x+dx) - f(x)}{dx}.$$
 
 This translates to the following procedure:
 
-```
+```scheme
 (define (deriv f)
   (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
 ```
 
 Now we can do things like this:
 
-```
+```scheme
 (define (cube x) (* x x x))
 (define dx 0.00001)
 ((deriv cube) 5)
@@ -445,18 +459,18 @@ Now we can do things like this:
 - We should always be on the lookout for underlying abstractions that can be brought out and generalized.
 - This doesn't mean we should always program in the most abstract form possible; there is a level appropriate for each task.
 - Elements with the fewest restrictions are _first-class_:
-	- They may be named by variables.
-	- They may be passed as arguments to procedures.
-	- They may be returned as the results of procedures.
-	- They may be included in data structures.
+    - They may be named by variables.
+    - They may be passed as arguments to procedures.
+    - They may be returned as the results of procedures.
+    - They may be included in data structures.
 - In Lisp, procedures have first-class status. This gives us an enormous gain in expressive power.
 
-# Building Abstractions with Data
+# Chapter 2: Building Abstractions with Data
 
 - Recap: we looked at computations processes and the role of procedures in program design.
-	- We saw primitive data (numbers), primitive operations (arithmetic operators), combinations, and abstractions.
-	- A procedure is a pattern for the local evolution of a process.
-	- We also saw higher-order procedures.
+    - We saw primitive data (numbers), primitive operations (arithmetic operators), combinations, and abstractions.
+    - A procedure is a pattern for the local evolution of a process.
+    - We also saw higher-order procedures.
 - Now we are going to look at more complex data.
 - Before we made compound procedures from other procedures; now we will make compound data from other, simpler data.
 
@@ -468,7 +482,7 @@ Now we can do things like this:
 - Data abstraction enables us to construct _abstraction barriers_ between different parts of the program.
 - We will look at closure, conventional interfaces, symbolic expressions, generic operations, and data-directed programming.
 
-## Introduction to data abstraction
+## Introduction to Data Abstraction
 
 - We already know about procedural abstraction: the procedure is a black box, and we don't care how it is implemented internally.
 - Data abstractions allows us to isolate how a compound data object is used from the details of its actual representation.
@@ -478,7 +492,7 @@ Now we can do things like this:
 - There is a concrete data representation behind the abstraction.
 - The interface between the two parts of the system is a set of procedures: selectors and constructors.
 
-### Example: Arithmetic operations for rational numbers
+### Example: Arithmetic Operations for Rational Numbers
 
 - We want to add, subtract, multiply, divide, and test equality with our rational numbers.
 - We assume we have `(make-rat <n> <d>)`, `(number <x>)`, and `(denom <x>)` available as the constructor and selectors.
@@ -486,7 +500,7 @@ Now we can do things like this:
 - A _pair_ is a concrete structure that we create with cons.
 - We extract the parts of the pair with car and cdr.
 
-```
+```scheme
 (define x (cons 1 2))
 (car x)
 1
@@ -504,7 +518,7 @@ Now we can do things like this:
 - Data objects constructed from pairs are _list-structured_ data.
 - To ensure that our rational numbers are always in lowest terms, we need `make-rat` to divide the numerator and the denominator by their greatest common divisor (GCD).
 
-### Abstractions barriers
+### Abstractions Barriers
 
 > In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. (118)
 
@@ -513,18 +527,18 @@ Now we can do things like this:
 
 > Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations. (121)
 
-### What is meant by data?
+### What Is Meant by Data?
 
 - Data is defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation.
 - For rationals, we have the following definition:
-1.1. We can construct a rational `x` with `(make-rat n d)`.
-1.2. We can select the numerator with `(numer x)`.
-1.3. We can select the denominator with `(denom x)`.
-1.4. For all values of `x`, `(/ (numer x) (denom x))` must equal n/d.
-- For pairs, it is even simpler: we need three operations, which we will call cons, car, and cdr, such that if z is (cons x y), then (car z) is x and (cdr z) is y.
+    1. We can construct a rational `x` with `(make-rat n d)`.
+    2. We can select the numerator with `(numer x)`.
+    3. We can select the denominator with `(denom x)`.
+    4. For all values of `x`, `(/ (numer x) (denom x))` must equal $n/d$.
+- For pairs, it is even simpler: we need three operations, which we will call `cons`, `car`, and `cdr`, such that if `z` is `(cons x y)`, then `(car z)` is `x` and `(cdr z)` is `y`.
 - Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:
 
-```
+```scheme
 (define (cons x y)
   (lambda (m)
     (if (= m 0) x y)))
@@ -540,12 +554,12 @@ Now we can do things like this:
 
 - This style of programming is often called _message passing_.
 
-### Extended Exercise: Interval arithmetic
+### Extended Exercise: Interval Arithmetic
 
 - We want to design a system that allows us to manipulate inexact quantities with known precision (uncertainty).
 - To do this, we need arithmetic operations for combining intervals -- ranges of possible values.
 
-## Hierarchical data the closure property
+## Hierarchical Data and the Closure Property
 
 - Paris form a primitive "glue" for compound data objects.
 - We can visualize cons pairs with _box-and-pointer_ notation.
@@ -554,7 +568,7 @@ Now we can do things like this:
 - Closure allows us to create hierarchal structures.
 - We have been using closure all along with combinations. Now, we are going to use closure for compound data.
 
-### Representing sequences
+### Representing Sequences
 
 - Among the things we can build with pairs is a sequence.
 - A sequence is an ordered collection of data objects.
@@ -567,32 +581,32 @@ Now we can do things like this:
 
 #### List operations
 
-- We can get at the nth item of the list by `cdr`ing one less than n times, and then taking the `car`.
+- We can get at the nth item of the list by `cdr`&thinsp;ing one less than $n$ times, and then taking the `car`.
 - Scheme includes a primitive predicate `null?` which is true if its argument is the empty list.
 
-```
+```scheme
 (define (list-ref items n)
   (if (= n 0)
-    (car items)
-    (list-ref (cdr items) (- n 1))))
+      (car items)
+      (list-ref (cdr items) (- n 1))))
 ```
 
 - We often write recursive procedures that `cdr` all the way through the list.
 
-```
+```scheme
 (define (length items)
   (if (null? items)
-    0
-    (+ 1 (length (cdr items)))))
+      0
+      (+ 1 (length (cdr items)))))
 ```
 
-- We can build up lists to return by `cons`ing them up.
+- We can build up lists to return by `cons`&thinsp;ing them up.
 
-```
+```scheme
 (define (append list1 list2)
   (if (null? list1)
-    list2
-    (cons (car list1 (append (cdr list1) list2))))
+      list2
+      (cons (car list1 (append (cdr list1) list2))))
 ```
 
 #### Mapping over lists
@@ -600,12 +614,12 @@ Now we can do things like this:
 - Useful operation: applying the same transformation to each element in a list, producing a new list.
 - This is a higher-order procedure called `map`.
 
-```
+```scheme
 (define (map f xs)
   (if (null? xs)
-    nil
-    (cons (f (car xs)
-          (map f (cdr xs)))))
+      nil
+      (cons (f (car xs)
+            (map f (cdr xs)))))
 ```
 
 - Using map, we can do `(map abs (list -1 5 -3 0 2 -2))` and get back the list `(1 5 3 0 2 2)`.
@@ -614,14 +628,14 @@ Now we can do things like this:
 
 > this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)
 
-### Hierarchical structures
+### Hierarchical Structures
 
 - We can represent lists whose elements themselves may also be lists. We can also think of them as _trees_.
 - Recursion is a natural tool for dealing with trees.
 - The primitive predicate `pair?` returns true if its argument is a pair (formed with cons).
 - We can count the number of leaves in a tree with this:
 
-```
+```scheme
 (define (count-leaves x)
   (cond ((null? x) 0)
         ((not (pair? x)) 1)
@@ -634,7 +648,7 @@ Now we can do things like this:
 - We can deal with trees using `map` together with recursion.
 - This makes it possible to apply an operation to all the leaves in a tree, for example.
 
-### Sequences as conventional interfaces
+### Sequences as Conventional Interfaces
 
 - Abstractions preserves the flexibility to experiment with alternative representations.
 - Another powerful design principle for working with data structures is the use of conventional interfaces.
@@ -649,24 +663,24 @@ Now we can do things like this:
 - A vast range of operations can be expressed as sequence operations, even if you don't realize it at first.
 - Sequences (here, they are lists) serve as a conventional interface for the modules of the program.
 
-#### Nested Mappings
+#### Nested mappings
 
 - For many computations, the sequence paradigm can be used where loops would otherwise be needed.
 - Sometimes we need to use _nested_ mappings, where each mapping maps to a second set of mappings.
 - We can use `mapcat` to flatten the nested mapping result into one list at the end.
 - The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!
 
-```
+```scheme
 (define (permutations s)
   (if (null? s)
-    (list nil)
-    (mapcat (lambda (x)
-              (map (lambda (p) (cons x p))
-                   (permutations (remove x s))))
-            s)))
+      (list nil)
+      (mapcat (lambda (x)
+                (map (lambda (p) (cons x p))
+                     (permutations (remove x s))))
+              s)))
 ```
 
-### Example: A picture language
+### Example: A Picture Language
 
 - We will use a simple language for drawing pictures.
 - The data objects are represented as procedures rather than as list structure.
@@ -713,7 +727,7 @@ Now we can do things like this:
 
 > In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it.
 
-## Symbolic data
+## Symbolic Data
 
 - So far we have constructed compound data from numbers only.
 - Now, we will work with arbitrary symbols.
@@ -727,7 +741,7 @@ Now we can do things like this:
 - To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.
 - Here is the difference between symbols and their values:
 
-```
+```scheme
 (define a 1)
 (define b 2)
 (list a b)   ; => (1 2)
@@ -738,7 +752,7 @@ Now we can do things like this:
 - We can write lists directly with quotation rather than using `cons` or list, and we can represent the empty list with `'()`.
 - We need one more primitive now: `eq?`. This tests to see if two symbols are the same.
 
-### Example: Symbolic differentiation
+### Example: Symbolic Differentiation
 
 - Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.
 - We will worry about representation later (data abstraction).
@@ -749,7 +763,7 @@ Now we can do things like this:
 - We need the constant rule, the sum rule, and the product rule.
 - We will assume we already have these procedures:
 
-```
+```scheme
 (variable? e)
 (same-variable? v1 v2)
 (sum? e)
@@ -769,7 +783,7 @@ Now we can do things like this:
 - We can simplify the answers just like we did in the rational number example: by changing the constructors.
 - Simplifying the way a human would is hard, partly because the most "simplified" form is sometimes subjective.
 
-### Example: Representing sets
+### Example: Representing Sets
 
 There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:
 
@@ -802,7 +816,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The left branch contains smaller numbers, and the right branch contains larger numbers.
 - The same set can be represented by a tree in many ways.
 - If the tree is balanced, each subtree is about half the size of the original tree.
-- This allows us to do `element-of-set?` in $Θ(log(n))$ time.
+- This allows us to do `element-of-set?` in $Θ(\log(n))$ time.
 - We will use the following list structure to represent trees: each node is the list `(number left-subtree right-subtree)`.
 - Efficiency hinges on the tree being balanced.
 - We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).
@@ -816,7 +830,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - For "random access," meaning $Θ(1)$ access time complexity, trees are usually used.
 - Data abstraction is important here -- you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
 
-### Example: Huffman encoding trees
+### Example: Huffman Encoding Trees
 
 - We can represent data as sequences of ones and zeros (bits).
 - Codes like ASCII are fixed-length. Each symbol is represented by the same number of bits.
@@ -838,7 +852,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Leaves are represented by the list beginning with the symbol `leaf` and with two more elements: the symbol and the weight.
 - Trees are represented by the list `(left right symbols weight)`, where `left` and `right` are subtrees, `symbols` is a list of the symbols underneath the node, and `weight` is the sum of the weights of all the leaves beneath the node.
 
-## Multiple representations for abstract data
+## Multiple Representations for Abstract Data
 
 - Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.
 - We erect abstraction barriers to control complexity.
@@ -852,14 +866,14 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We will accomplish this with _type tags_. We will also discuss _data-directed_ programming.
 - We now have horizontal abstraction barriers, separating higher-level from lower-level, and vertical ones, separately alternative representations.
 
-### Representations for complex numbers
+### Representations for Complex Numbers
 
 - This system will perform arithmetic operations on complex numbers represented in rectangular form _or_ polar form.
 - Different representations are appropriate for different operations.
 - We have four selectors: `real-part`, `imag-part`, `magnitude`, and `angle`.
 - We have two constructors: `make-from-real-img` and `make-from-mag-ang`.
 
-### Tagged data
+### Tagged Data
 
 - One way to view data abstraction: principle of least commitment.
 - We waited until the last minute to choose the concrete representation, retaining maximum flexibility.
@@ -869,12 +883,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Each generic selector uses case analysis to check the tag of its argument and dispatches the appropriate procedure.
 - Our general mechanism for interfacing separate representations: in a specific implementation, the data object is an untyped pair. The generic selectors dispatch on the tag and strip off the tag before passing the data to the appropriate procedure.
 
-### Data-directed programming and additivity
+### Data-Directed Programming and Additivity
 
 - The strategy of checking the type and calling an appropriate procedure is called dispatching on type.
 - The implementation in the previous section had two significant weaknesses:
-1.1. The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.
-1.2. We must guarantee that no two procedures have the same name.
+    1. The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.
+    2. We must guarantee that no two procedures have the same name.
 - The underlying issue: the technique we used was not _additive_.
 - This is a source of inconvenience and error.
 - The solution is a technique known as data-directed programming.
@@ -894,7 +908,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This is called message-passing style, and we can accomplish it in Scheme using closures.
 - Message passing can be a powerful tool for structuring simulation programs.
 
-## Systems with generic operations
+## Systems with Generic Operations
 
 - The key idea in the previous section: link specific data operations to multiple representations using generic procedures.
 - We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.
@@ -903,7 +917,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This will require many abstraction barriers.
 - The result will be additive (modular) -- easy to add new types.
 
-### Generic arithmetic functions
+### Generic Arithmetic Operations
 
 - We want `add` to work for primitive numbers, rational numbers, and complex numbers.
 - We will attach a type tag to each kind of number.
@@ -911,10 +925,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - For complex numbers we have two levels of tagging: a `'complex` tag on top of the `'rectangular` or `'polar` tag.
 - The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.
 
-### Combining data of different types
+### Combining Data of Different Types
 
 - In our unified arithmetic system, we ignored an important issue.
-- We did not consider the possibility of operations that cross type boundaries, like adding a scheme-number to a rational.
+- We did not consider the possibility of operations that cross type boundaries, like adding a Scheme number to a rational.
 - One solution would be to design a procedure for each possible combination of types.
 - This is cumbersome, and it violates modularity.
 
@@ -922,10 +936,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Often the different data types are not completely independent.
 - For example, any real number can be expressed as a complex number with an imaginary part of zero (but not vice versa).
-- We can make all operations work on combinations of schem-numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.
+- We can make all operations work on combinations of Scheme numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.
 - Here is a typical coercion procedure:
 
-```
+```scheme
 (define (scheme-number->complex n)
   (make-complex-from-real-imag (contents n) 0))
 ```
@@ -939,7 +953,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Integers are a subtype of rationals, which are a subtype of real numbers, and so on for complex numbers.
 - We have supertypes going in the opposite order.
-- A simple hierarchy where each type has at most one supertype and and most one subtype is called a tower.
+- A simple hierarchy where each type has at most one supertype and most one subtype is called a tower.
 - Coercion then simply becomes a matter of raising the argument whose type is lower in the tower to the level of the other type.
 - We can write fewer procedures by allowing types to _inherit_ the operations on supertypes.
 - In some cases we can also lower a value down the type tower.
@@ -950,7 +964,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Having multiple super types is tricky, since the type can be raised via multiple paths to search for a procedure.
 - Large numbers of interrelated types conflicts with modularity.
 
-### Example: Symbolic algebra
+### Example: Symbolic Algebra
 
 - The manipulation of symbolic algebraic expressions is hard.
 - We can view them as hierarchical structures -- a tree of operators applied to operands.
@@ -988,18 +1002,18 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Extended exercise: Rational functions
 
 - Rational functions are "fractions" with polynomial numerators and denominators.
-- We can use our old rational package, but we need to change a few things (like using generic `add`, `mil`, etc).
+- We can use our old rational package, but we need to change a few things (like using generic `add`, `mul`, etc.).
 - We can reduce rational functions as long as we can compute the GCD of two polynomials (which in turn uses the remainder operation on two polynomials).
 - Problem: we end up with a GCD polynomial that has fractional coefficients. Solution: multiply the first argument by an _integerizing factor_.
 - We can use our GCD procedure to reduce rational functions to lowest terms:
-1.1. Compute the integerized GCD of the numerator and denominator.
-1.2. Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power $1 + O_1 − O_2$, where $O_2$ is the order of the GCD and $O_1$ is the maximum of order of the numerator and the order of the denominator.
-1.3. Divide the new numerator and new denominator by the GCD.
-1.4. Divide both by the GCD of all their coefficients.
+    1. Compute the integerized GCD of the numerator and denominator.
+    2. Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power $1 + O_1 − O_2$, where $O_2$ is the order of the GCD and $O_1$ is the maximum of order of the numerator and the order of the denominator.
+    3. Divide the new numerator and new denominator by the GCD.
+    4. Divide both by the GCD of all their coefficients.
 - This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.
 - This one is very slow. Probabilistic algorithms are faster.
 
-# Modularity, Objects, and State
+# Chapter 3: Modularity, Objects, and State
 
 - Primitive procedures and primitive data combine to construct compound entities; abstraction controls complexity.
 - But these tools are not sufficient for designing programs.
@@ -1013,7 +1027,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Objects: Must allow change but preserve identity. Abandon the substation model for the environment model. Grapple with time in the computational model.
 - Streams: Decouple simulated time in the model from the order of events that take place in the computer. Delayed evaluation.
 
-## Assignment and local state
+## Assignment and Local State
 
 - The world is populated by independent objects possessing changing state.
 - An object "has state": its behaviour is influenced by history.
@@ -1021,14 +1035,14 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - An object's state can be characterized by _state variables_.
 - We need an _assignment operator_ to change the value associated with a name representing a local variable of an object.
 
-### Local state variables
+### Local State Variables
 
 - Let's model the situation of withdrawing from a bank account.
 - The `withdraw` procedure should accept an amount of money as an argument and return the balance after the withdrawal.
 - If you try to withdraw too much, it should return the string "Insufficient funds".
-- Suppose we begin with $100:
+- Suppose we begin with \$100:
 
-```
+```scheme
 (withdraw 25)
 75
 (withdraw 25)
@@ -1043,13 +1057,13 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.
 - To implement `withdraw`, we define a variable called `balance`:
 
-```
+```scheme
 (define balance 100)
 (define (withdraw amount)
   (if (>= balance amount)
-    (begin (set! balance (- balance amount))
-           balance)
-    "Insufficient funds"))
+      (begin (set! balance (- balance amount))
+             balance)
+      "Insufficient funds"))
 ```
 
 - This uses the `set!` special form, whose syntax is `(set! <name> <new-value>)`.
@@ -1057,27 +1071,27 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The expression `(begin <exp1> <exp2> ... <expk>)` evaluates all the expressions in sequence and returns the value of the last.
 - We made `balance` a global variable. It is much better to have it _encapsulated_ within `withdraw`, like so:
 
-```
+```scheme
 (define withdraw
   (let ((balance 100))
     (lambda (amount)
       (if (>= balance amount)
-        (begin (set! balance (- balance amount))
-               balance)
-        "Insufficient funds"))))
+          (begin (set! balance (- balance amount))
+                 balance)
+          "Insufficient funds"))))
 ```
 
 - Unfortunately, the substitution model of evaluation is no longer adequate once we have assignment in our procedures.
 - For now, we technically have no way to understand how these procedures work. We will develop a new model soon.
 - The following procedure creates "withdraw processors":
 
-```
+```scheme
 (define (make-withdraw balance)
   (lambda (amount)
     (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)
-      "Insufficient funds")))
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds")))
 (define W1 (make-withdraw 100))
 (define W2 (make-withdraw 100))
 (W1 50)
@@ -1093,13 +1107,13 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Here, `W1` and `W2` are complement independent objects, each with its own local state variable.
 - We can create a "bank-account object" that responds to multiple messages, all operating on the same local state:
 
-```
+```scheme
 (define (make-account balance)
   (define (withdraw amount)
     (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)
-      "Insufficient funds"))
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds"))
   (define (deposit amount)
     (set! balance (+ balance amount))
     balance)
@@ -1110,19 +1124,19 @@ There are a number of possible ways we could represent sets. A set is a collecti
   dispatch)
 ```
 
-### The benefits of introducing assignment
+### The Benefits of Introducing Assignment
 
 - Introducing assignment "leads us into a thicket of difficult conceptual issues" (305).
 - Even so, it gives us a powerful technique for maintaining modular design.
 - Consider the procedure `rand`. We want it to return an integer chosen at random each time we evaluate `(rand)`.
 - Suppose we have the procedure `rand-update` that takes one argument.
-	- We first call it with an initial value $x_1$, and it returns an integer $x_2$.
-	- We call it with $x_2$, and it gives us $x_3$, and so on.
-	- The sequence of values $x_1, x_2, ..., x_n$ will have the desired statistical properties (random uniform distribution).
-	- This is a _pseudorandom_ sequence, since each number is a function of the previous one.
+    - We first call it with an initial value $x_1$, and it returns an integer $x_2$.
+    - We call it with $x_2$, and it gives us $x_3$, and so on.
+    - The sequence of values $x_1, x_2, \dots, x_n$ will have the desired statistical properties (random uniform distribution).
+    - This is a _pseudorandom_ sequence, since each number is a function of the previous one.
 - We could implement `rand` like this:
 
-```
+```scheme
 (define rand
   (let ((x random-init))
     (lambda ()
@@ -1132,19 +1146,19 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 > The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306--307)
 
-- We can use the Monte Carlo method to approximate $π$, knowing that the probability that two randomly chosen integers have 1 as their GCD is $6//π^2$.
+- We can use the Monte Carlo method to approximate $π$, knowing that the probability that two randomly chosen integers have 1 as their GCD is $6/π^2$.
 - If we had to use `rand-update` directly, our Monte Carlo program would "betray some painful breaches of modularity" (308).
 
 > The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behaviour changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. (309)
 
-### The costs of introducing assignment
+### The Costs of Introducing Assignment
 
 - The advantages of local state and assignment come at a price.
 - The substitution model of procedure application is no longer sufficient to properly interpret out programs.
 - Programming without the use of assignment, as we have done in the first two chapters, is called _functional programming_.
 - Observe what happens when we try using the substation model:
 
-```
+```scheme
 (define (make-simplified-withdraw balance)
   (lambda (amount)
     (set! balance (- balance amount))
@@ -1182,7 +1196,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 > In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. (318--319)
 
-## The environment model of evaluation
+## The Environment Model of Evaluation
 
 - Recall the substitution model:
 
@@ -1199,11 +1213,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The environment determines the context in which an expression should be evaluated. An expression has no meaning otherwise.
 - The global environment consists of a single frame, and it is implicitly used in interactions with the interpreter.
 
-### The rules for evaluation
+### The Rules for Evaluation
 
 - To evaluate a combination:
-1.1. Evaluate the subexpressions of the combination.
-1.2. Apply the value of the operator subexpression to the values of the operand subexpressions.
+    1. Evaluate the subexpressions of the combination.
+    2. Apply the value of the operator subexpression to the values of the operand subexpressions.
 - The environment model redefines the meaning of "apply."
 - A procedure is created by evaluating a λ-expression relative to a given environment.
 - The resulting procedure object is a pair consisting of the text of the λ-expression and a pointer to the environment in which the procedure was created.
@@ -1215,11 +1229,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Evaluating `(set! <var> <val>)` locates the binding of `<var>` in the current environment (the first frame that has a binding for it) and changes the bound value to `<val>`.
 - We use `define` for variables that are currently unbound, and `set!` for variables that are already bound.
 
-### Applying simple procedures
+### Applying Simple Procedures
 
 - Let's evaluate `(f 5)`, given the following procedures:
 
-```
+```scheme
 (define (square x) (* x x))
 (define (sum-of-square x y) (+ (square x) (square y)))
 (define (f a) (sum-of-squares (+ a 1) (* a 2)))
@@ -1235,35 +1249,35 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - In $E_2$, we evaluate `(+ (square x) (square y))`.
 - The process continues recursively. We end up with `(+ 36 100)`, which evaluates to `136`.
 
-### Frames as the repository of local state
+### Frames as the Repository of Local State
 
 - Now we can see how the environment model makes sense of assignment and local state.
 - Consider the "withdrawal processor":
 
-```
+```scheme
 (define (make-withdraw balance)
   (lambda (amount)
     (if (>= balance amount)
-      (begin (set! balance (- balance amount))
-             balance)
-      "Insufficient funds")))
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds")))
 ```
 
 - This places a single binding in the global environment frame.
 - Consider now `(define W1 (make-withdraw 100))`.
-	- We set up $E_1$ where `100` is bound to the formal parameter `balance`, and then we evaluate the body of `make-withdraw`.
-	- This returns a lambda procedure who environment is $E_1$, and this is then bound to `W1` in the global frame.
+    - We set up $E_1$ where `100` is bound to the formal parameter `balance`, and then we evaluate the body of `make-withdraw`.
+    - This returns a lambda procedure who environment is $E_1$, and this is then bound to `W1` in the global frame.
 - Now, we apply this procedure: `(W1 50)`.
-	- We construct a frame in $E_2$ that binds `amount` to `50`, and then we evaluate the body of `W1`.
-	- The enclosing environment of $E_2$ is $E_1$, _not_ the global environment.
-	- Evaluating the body results in the `set!` rebinding `balance` in $E_`$ to the value `(- 100 50)`, which is `50`.
-	- After calling `W1`, the environment $E_2$ is irrelevant because nothing points to it.
-	- Each call to `W1` creates a new environment to hold `amount`, but uses the same $E_1$ (which holds `balance`).
+    - We construct a frame in $E_2$ that binds `amount` to `50`, and then we evaluate the body of `W1`.
+    - The enclosing environment of $E_2$ is $E_1$, _not_ the global environment.
+    - Evaluating the body results in the `set!` rebinding `balance` in $E_`$ to the value `(- 100 50)`, which is `50`.
+    - After calling `W1`, the environment $E_2$ is irrelevant because nothing points to it.
+    - Each call to `W1` creates a new environment to hold `amount`, but uses the same $E_1$ (which holds `balance`).
 - `(define W2 (make-withdraw 100))` creates another environment with a `balance` binding.
-	- This is independent from $E_1$, which is why the `W2` object and its local state is independent from `W1`.
-	- On the other hand, `W1` and `W2` share the same code.
+    - This is independent from $E_1$, which is why the `W2` object and its local state is independent from `W1`.
+    - On the other hand, `W1` and `W2` share the same code.
 
-### Internal definitions
+### Internal Definitions
 
 - With block structure, we nested definitions using `define` to avoid exposing helper procedures.
 - Internal definitions work according to the environmental model.
@@ -1273,20 +1287,20 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This means each internal procedure has access to the arguments of the procedure they are defined within.
 - The names of local procedures don't interfere with names external to the enclosing procedure, due to $E_1$.
 
-## Modeling with mutable data
+## Modeling with Mutable Data
 
 - We previously looked at compound data and data abstraction.
 - To model stateful objects, we need _mutators_ in addition to constructors and selectors.
 - A mutator is a procedure that modifies the data object.
 
-### Mutable list structure
+### Mutable List Structure
 
 - The primitive mutators for pairs are `set-car!` and `set-cdr!`.
 - `(set-car p x)` changes the `car` of the pair `p`, making it point to `x` instead.
 - The old `car` is unreachable garbage. We will see later how Lisp recycles this memory.
 - We could implement `cons` in terms of these two procedures in addition to a `get-new-part` procedure.
 
-```
+```scheme
 (define (cons x y)
   (let ((new (get-new-pair)))
     (set-car! new x)
@@ -1312,7 +1326,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Earlier we said we can represent pairs purely in terms of procedures:
 
-```
+```scheme
 (define (cons x y)
   (lambda (sel)
     (sel x y)))
@@ -1324,7 +1338,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - The same is true of mutable data. We can implement mutators with procedures and assignment alone:
 
-```
+```scheme
 (define (cons x y)
   (define (set-x! v) (set! x v))
   (define (set-y! v) (set! y v))
@@ -1339,32 +1353,32 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Assignment and mutation are equipotent: each can be implemented in terms of the other.
 
-### Representing queues
+### Representing Queues
 
 - The mutators allow us to construct new data structures.
 - A _queue_ is a sequence in which items are inserted at one end (the rear) and deleted from the other end (the front).
 - It is also called a FIFO buffer (first in, first out).
 - We define the following operations for data abstraction:
-	- a constructor `(make-queue)`,
-	- a predicate `(empty-queue? q)`,
-	- a selector `(front-queue q)`,
-	- two mutators: `(insert-queue! q x)` and `(delete-queue! q)`.
+    - a constructor `(make-queue)`,
+    - a predicate `(empty-queue? q)`,
+    - a selector `(front-queue q)`,
+    - two mutators: `(insert-queue! q x)` and `(delete-queue! q)`.
 - A simple list representation is inefficient because we have to scan to get to one end.
 - Scanning a list takes $Θ(n)$ operations.
 - A simply modification lets us implement all the operations with $Θ(1)$ time complexity: keep a pointer to the end as well.
 - A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.
 
-### Representing tables
+### Representing Tables
 
 - In a one-dimensional table, each value is indexed by one key.
 - We can implement it as a simple list of _records_.
 - A record is a pair consisting of a key and an associated value.
 - The first record in the table is a dummy, and it hold the arbitrarily chosen symbol `*table*`.
-	- If a table was just a pointer to the first actual record, then when we wouldn't be able to write a mutator to add a record to the front.
-	- We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
-	- It would only change the parameter in $E_1$, not the value in the calling environment.
-	- We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr` -- but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
-	- We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`, `*x`, and `*x = ...`.
+    - If a table was just a pointer to the first actual record, then when we wouldn't be able to write a mutator to add a record to the front.
+    - We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
+    - It would only change the parameter in $E_1$, not the value in the calling environment.
+    - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr` -- but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
+    - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`, `*x`, and `*x = ...`.
 - The `lookup` procedure returns the value associated with a key in a table, or `#f` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
 
@@ -1383,28 +1397,28 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We could use the message-passing style with the `dispatch` procedure that we've seen a few times already.
 - We could also take the λ-calculus approach:
 
-```
+```scheme
 (define (make-table) (lambda (k) #f))
 (define (lookup key table) (table key))
 (define (insert! key value table)
   (lambda (k)
     (if (eq? k key)
-      value
-      (table k))))
+        value
+        (table k))))
 ```
 
-### A simulator for digital circuits
+### A Simulator for Digital Circuits
 
 - Digital circuits are made up of simple elements.
 - Networks of these simple elements can have very complex behaviour.
 - We will design a system to simulator digital logic. This type of program is called an _event-driven simulation_.
 - Our computational model is based on the physical components.
-	- A _wire_ carries a _digital signal_, which is either 0 or 1.
-	- A _function box_ connects to input wires and output wires.
-	- The output signal is delayed by a time that depends on the type of function box.
-	- Our primitive function boxes are the _inverter_, _and-gate_, and _or-gate_. Each has its own delay.
-	- We construct complex functions by connecting primitives.
-	- Multiple outputs are not necessarily generated at the same time.
+    - A _wire_ carries a _digital signal_, which is either 0 or 1.
+    - A _function box_ connects to input wires and output wires.
+    - The output signal is delayed by a time that depends on the type of function box.
+    - Our primitive function boxes are the _inverter_, _and-gate_, and _or-gate_. Each has its own delay.
+    - We construct complex functions by connecting primitives.
+    - Multiple outputs are not necessarily generated at the same time.
 - We construct wires with `(make-wire)`.
 - Evaluating `(define a (make-wire))` and `(define b (make-wire))` followed by `(inverter a b)` connects `a` and `b` with an inverter.
 - The primitive functions are our primitive elements; wiring is the means of combination; specifying wiring patterns as procedures is the means of abstraction.
@@ -1413,9 +1427,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - The primitives boxes implement "forces" by which changes in the signal of one wire influence the signal of another.
 - We have the following operations on wires:
-	- `(get-signal <wire>)` returns the current value of the signal.
-	- `(set-signal! <wire> <value>)` changes the value of the signal.
-	- `(add-action! <wire> <procedure of no arguments>)` asserts that the given procedure should be run whenever the signal on the wire changes value.
+    - `(get-signal <wire>)` returns the current value of the signal.
+    - `(set-signal! <wire> <value>)` changes the value of the signal.
+    - `(add-action! <wire> <procedure of no arguments>)` asserts that the given procedure should be run whenever the signal on the wire changes value.
 - The procedure `after-delay` executes a procedure after a given time delay.
 
 #### Representing wires
@@ -1437,23 +1451,23 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Implementing the agenda
 
-- The agenda is a a pair: the current time, and a list of _time segments_ sorted in increasing order of time.
+- The agenda is a pair: the current time, and a list of _time segments_ sorted in increasing order of time.
 - A time segment is a pair: a number (the time) and a queue of procedures that are scheduled to run during that time segment.
 - To add an action to the agenda, we scan its segments, examining their times. If we find the right time, we add the action to that segment's queue. Otherwise, we create a new segment.
 - To remove the first agenda item, we delete the first item in the first queue, and if this makes the queue empty, we delete the first time segment as well.
 - Whenever we extract the first item with `first-agenda-item`, we also update the current time.
 
-### Propagation of constraints
+### Propagation of Constraints
 
 - We often organize computer programs in one direction: from input to output.
 - On the other hand, we often model systems in terms of relations among quantities.
 - The equation $dAE = FL$ is not one-directional.
 - We will create a language to work in terms of the relations themselves, so that we don't have to write five procedures.
 - The primitive elements are _primitive constraints_.
-	- `(adder a b c)` specifies $a + b = c$.
-	- `(multiplier x y z)` specifies $xy = z$.
-	- `(constant 3.14 x)` says that the value of `x` must be 3.14.
-- The means of combination are constructing _constraint networks_ in which constraints are joined by _connnectors_.
+    - `(adder a b c)` specifies $a + b = c$.
+    - `(multiplier x y z)` specifies $xy = z$.
+    - `(constant 3.14 x)` says that the value of `x` must be 3.14.
+- The means of combination are constructing _constraint networks_ in which constraints are joined by _connectors_.
 - The means of abstraction are procedures.
 
 #### Using the constraint system
@@ -1477,7 +1491,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Each time the connector's value is set, it remembers the informant. This could be a constraint, or a symbol like `'user`.
 - `for-each-except` is used to notify all _other_ constraints.
 
-## Concurrency: time is of the essence
+## Concurrency: Time Is of the Essence
 
 - The power of stateful computational objects comes at a price: the loss of referential transparency.
 - This gives rise to a thicket of questions about sameness and change, and we had to create a more intricate evaluation model.
@@ -1488,7 +1502,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - It can also provide a speed advantage on multicore computers.
 - The complexities introduces by assignment become even more problematic in the presence of concurrency.
 
-### The nature of time in concurrent systems
+### The Nature of Time in Concurrent Systems
 
 - On the surface, time is straightforward: it is an ordering.
 - Two events either occur in one order, or the other, or simultaneously.
@@ -1504,7 +1518,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - A less stringent restriction: to ensure that the system produces the same result as if the processes had run sequentially in some order (we don't specify a particular order).
 - Concurrent programs are inherently _nondeterministic_, because we don't what order of execution its result is equivalent to, so there is a set of possible values it could take.
 
-### Mechanisms for controlling concurrency
+### Mechanisms for Controlling Concurrency
 
 - If one process has three ordered events $(a,b,c)$ and another, running concurrently, has three ordered events $(x,y,z)$, then there are twenty ways of interleaving them.
 - The programmer would have to consider the results in all twenty cases to be confident in the program.
@@ -1516,7 +1530,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can use this to control access to shared variables.
 - Before, assignments based on a state variables current value were problematic. We could solve this with the set {`get-value`, `set-value!`, and `swap-value!`} where the latter is defined like so:
 
-```
+```scheme
 (define (swap-value! f)
   (set-value! (f (get-value)))
 ```
@@ -1534,7 +1548,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Things get much more difficult with multiple shared resources.
 - Suppose we want to swap the balances in two bank accounts:
 
-```
+```scheme
 (define (exchange acc1 acc2)
   (let ((diff (- (acc1 'balance) (acc2 'balance))))
     ((acc1 'withdraw) diff)
@@ -1553,9 +1567,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Once acquired, no other acquire operations can proceed until the mutex is released.
 - Each serializer has an associated mutex.
 - A serialized procedure (created with `(s proc)` where `s` is a serializer) does the following when it is run:
-	- acquire the mutex,
-	- run the procedure `proc`,
-	- release the mutex.
+    - acquire the mutex,
+    - run the procedure `proc`,
+    - release the mutex.
 - The mutex is a mutable object, represented by a _cell_ (a one-element list). It holds a boolean value, indicating whether or not it is currently locked.
 - To acquire the mutex, we test the cell. We wait until it is false, then we set it to true and proceed.
 - To release the mutex, we set its contents to false.
@@ -1586,7 +1600,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - With time measured in discrete steps, we can model a time function as a sequence of values.
 - Stream processing allows us to model state without assignments.
 
-### Streams are delayed lists
+### Streams Are Delayed Lists
 
 - If we represent streams as lists, we get elegance at the price of severe inefficiency (time _and_ space).
 - Consider adding all the primes in an interval. Using `filter` and `reduce`, we waste a lot of space storing lists.
@@ -1608,12 +1622,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `force` simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.
 - The promise stored in the `cdr` of the stream is also known as a _thunk_.
 
-### Infinite streams
+### Infinite Streams
 
 - With lazy sequences, we can manipulate infinitely long streams!
 - We can define Fibonacci sequence explicitly with a generator:
 
-```
+```scheme
 (define (fibgen a b) (cons-stream a (fibgen b (+ a b))))
 (define fibs (fibgen 0 1))
 ```
@@ -1625,7 +1639,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.
 
-```
+```scheme
 (define fibs
   (cons-stream
     0
@@ -1636,7 +1650,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - This implicit technique is known as _corecursion_. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.
 
-### Exploiting the stream paradigm
+### Exploiting the Stream Paradigm
 
 - Streams can provide many of the benefits of local state and assignment while avoiding some of the theoretical tangles.
 - Using streams allows us to have different module boundaries.
@@ -1654,7 +1668,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Previously, we handled traditional nested loops as processes defined on sequences of pairs.
 - We can find all pairs $(i,j)$ with $i ≤ j$ such that $i + j$ is prime like this:
 
-```
+```scheme
 (stream-filter
   (lambda (pair) (prime? (+ (car pair) (cadr pair))))
   int-pairs)
@@ -1669,22 +1683,22 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can use streams to model signal-processing systems.
 - For example, taking the integral of a signal:
 
-```
+```scheme
 (define (integral integrand initial-value dt)
   (define int
     (cons-stream initial-value
                  (add-streams (scale-stream integrand dt)
                               int)))
-  int) 
+  int)
 ```
 
 ### Streams and Delayed Evaluation
 
 - The use of `delay` in `cons-stream` is crucial to defining streams with feedback loops.
 - However, there are cases where we need further, explicit uses of `delay`.
-- For example, solving the differential equation $dy/dx = f(y)$ where $f$ is a given function:
+- For example, solving the differential equation $dy/dt = f(y)$ where $f$ is a given function:
 
-```
+```scheme
 (define (solve f y0 dt)
   (define y (integral dy y0 dt))
   (define dy (stream-map f y))
@@ -1694,12 +1708,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This does not work because the definition of `y` and `dy` depend on each other.
 - To solve this, we need to change our implementation of `integral`:
 
-```
+```scheme
 (define (integral delayed-integrand initial-value dt)
   (define int
     (cons-stream
       initial-value
       (let ((integrand (force delayed-integrand)))
-	(add-streams (scale-stream integrand dt) int))))
+    (add-streams (scale-stream integrand dt) int))))
   int)
 ```
