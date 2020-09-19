@@ -1,6 +1,6 @@
 # SICP Exercises
 
-This repository contains my solutions to exercises from [_Structure and Interpretation of Computer Programs_][sicp]. It is written in portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
+This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp]. My notes on the text are in [notes.md](notes.md). Solutions to the exercises are written in portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
 
 ## Usage
 
