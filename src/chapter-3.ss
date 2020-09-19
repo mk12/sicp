@@ -3112,7 +3112,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
     (add-streams (scale-stream i R)
                  (integral (scale-stream i (/ C)) v0 dt))))
 
-;; RC circuit with R = 5 ohms, C = 1 farad, and a 0.5-second time step.
+;; RC circuit with R = 5 ohms, C = 1 farad, and dt = 0.5 s.
 (define RC1 (RC 5 1 0.5))
 ;; Calculate the stream of voltages given a constant i = 1 amp and v0 = 0 V.
 (stream-take (RC1 ones 0) 10)
@@ -3177,7 +3177,8 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 (stream-take (smooth-zero-crossings test-data) 10) => test-result
 
 (Section :3.5.4 "Streams and Delayed Evaluation"
-  (use (:3.5.2.1 add-streams scale-stream)))
+  (use (:3.5.1 stream-ref) (:3.5.2.1 add-streams scale-stream)
+       (?3.50 stream-map)))
 
 (define (integral delayed-integrand initial-value dt)
   (define int
@@ -3186,6 +3187,87 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
       (let ((integrand (force delayed-integrand)))
 	      (add-streams (scale-stream integrand dt) int))))
   int)
+
+;; Solves y' = f(y).
+(define (solve f y0 dt)
+  (define y (integral (delay dy) y0 dt))
+  (define dy (stream-map f y))
+  y)
+
+;; When f(y) = y and y0 = 1, the solution is e.
+(stream-ref (solve (lambda (y) y) 1 0.001) 1000) ~> 2.716923932235896
+
+(Exercise ?3.77
+  (use (:3.5.1 stream-car stream-cdr stream-null? the-empty-stream stream-ref)
+       (?3.50 stream-map)))
+
+(define (integral delayed-integrand initial-value dt)
+  (cons-stream
+    initial-value
+    (let ((integrand (force delayed-integrand)))
+      (if (stream-null? integrand)
+          the-empty-stream
+            (integral (delay (stream-cdr integrand))
+                      (+ (* dt (stream-car integrand))
+                        initial-value)
+                      dt)))))
+
+(paste (:3.5.4 solve))
+(stream-ref (solve (lambda (y) y) 1 0.001) 1000) ~> 2.716923932235896
+
+(Exercise ?3.78
+  (use (:3.5.2.1 add-streams scale-stream) (:3.5.4 integral)))
+
+;; Solves y'' - ay' - by = 0.
+(define (solve-2nd a b y0 dy0 dt)
+  (define y (integral (delay dy) y0 dt))
+  (define dy (integral (delay ddy) dy0 dt))
+  (define ddy (add-streams (scale-stream dy a)
+                           (scale-stream y b)))
+  y)
+
+(Exercise ?3.79
+  (use (:3.5.4 integral) (?3.50 stream-map)))
+
+;; Solves y'' = f(y', y).
+(define (solve-2nd f y0 dy0 dt)
+  (define y (integral (delay dy) y0 dt))
+  (define dy (integral (delay ddy) dy0 dt))
+  (define ddy (stream-map f dy y))
+  y)
+
+(Exercise ?3.80
+  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams scale-stream) (:3.5.4 integral)))
+
+(define (RLC R L C dt)
+  (lambda (vC0 iL0)
+    (define vC (integral (delay dvC) vC0 dt))
+    (define iL (integral (delay diL) iL0 dt))
+    (define dvC (scale-stream iL (/ -1 C)))
+    (define diL (add-streams (scale-stream vC (/ L))
+                             (scale-stream iL (/ (- R) L))))
+    (cons vC iL)))
+
+(define (three-decimals x)
+  (let-values (((a b) (div-and-mod (round (* (abs x) 1000)) 1000)))
+    (format "~a~a.~a~a~a"
+            (if (negative? x) "-" "")
+            (exact a)
+            (if (< b 10) 0 "")
+            (if (< b 100) 0 "")
+            (exact b))))
+
+;; RLC circuit with R = 1 ohm, C = 0.2 farad, L = 1 henry, and dt = 0.1 s.
+(define RLC1 (RLC 1 1 0.2 0.1))
+;; Calculate the stream of vC (capacitor voltage) and iL (inductor current)
+;; given initial values iL0 = 0 amps and vC0 = 10 volts.
+(define v-and-i (RLC1 10 0))
+(map three-decimals (stream-take (car v-and-i) 9))
+=> '("10.000" "10.000" "9.500" "8.550" "7.220" "5.596" "3.772" "1.852" "-0.065")
+(map three-decimals (stream-take (cdr v-and-i) 9))
+=> '("0.000" "1.000" "1.900" "2.660" "3.249" "3.646" "3.841" "3.834" "3.636")
+
+(Section :3.5.5 "Modularity of Functional Programs and Modularity of Objects")
 
 ) ; end of SICP
 ) ; end of library

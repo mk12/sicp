@@ -1,5 +1,6 @@
 # New to do
 
+- consider changing =/> (looks like does NOT equal)
 + move study markdown into repo
 + special arrow for output/lines
 + remove debug stuff from core.ss

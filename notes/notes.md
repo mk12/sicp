@@ -1613,7 +1613,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### The stream implementation in action
 
-> In general, we can think of delayed evaluation as "demand-drive" programming, we herby each stage in the stream process is activated only enough to satisfy the next stage. (438)
+> In general, we can think of delayed evaluation as "demand-driven" programming, we herby each stage in the stream process is activated only enough to satisfy the next stage. (438)
 
 #### Implementing `delay` and `force`
 
@@ -1714,6 +1714,20 @@ There are a number of possible ways we could represent sets. A set is a collecti
     (cons-stream
       initial-value
       (let ((integrand (force delayed-integrand)))
-    (add-streams (scale-stream integrand dt) int))))
+        (add-streams (scale-stream integrand dt) int))))
   int)
+(define (solve f y0 dt)
+  (define y (integral (delay dy) y0 dt))
+  (define dy (stream-map f y))
+  y)
 ```
+
+#### Normal-order evaluation
+
+- Explicit use of `delay` and `force` is powerful, but makes our programs more complex.
+- It creates two clasess of procedures: normal, and ones that take delayed arguments.
+- (This is similar to the sync vs. async divide in modern programming languages.)
+- This forces us to define separate classes of higher-order procedures, unless we make everything delayed, equivalent to normal-order evaluation (like Haskell).
+- Mutability and delayed evaluation do not mix well.
+
+### Modularity of Functional Programs and Modularity of Objects
