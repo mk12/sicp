@@ -1,30 +1,30 @@
 # SICP Study
 
-This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp]. It contains study notes and solutions to all the exercises. Solutions are written in portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
+This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp]. It contains [study notes][pages] and solutions to the exercises. It uses portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
 
 ## Notes
 
-My notes on the text are in [notes/notes.md](notes/notes.md). Run `make` in [notes/](notes) to compile them to HTML. You will need [Pandoc][] installed.
+My notes on the text are published at <https://mk12.github.io/sicp>, generated from [docs/notes.md](docs/notes.md).
 
-You can also continuously build the notes with `make watch`, which requires [entr][]. This is useful in combination with the VS Code extension [Live Server][].
+To compile the notes, install [Pandoc][] and run `make -C docs`. To compile automatically on every save, install [entr][] and run `make -C docs watch`. This is useful in combination with the VS Code extension [Live Server][].
 
 ## Exercises
 
 ### Usage
 
-Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on which Scheme implementation you have installed.
+Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Scheme implementation.
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 
 ### Structure
 
-The program starts in `main.scm`. Each chapter of the book has its own file in [src/](src), written in a [custom DSL](#dsl). The DSL is implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
+The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/](src), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
 
-For exercises requiring proofs, I have written ConTeXt documents in [proofs/](proofs).
+For exercises requiring proofs, there are ConTeXt documents in [proofs/](proofs).
 
-For exercises requiring diagrams, I have used ASCII art in comments or stored whiteboard photos in [whiteboard/](whiteboard).
+For exercises requiring diagrams, there is ASCII art in comments or photos in [whiteboard/](whiteboard).
 
-### DSL
+### Language
 
 Tests use `=>`, `~>`, `=$>`, and `=!>`:
 
@@ -125,6 +125,7 @@ This works in Chez Scheme and Racket. It also works in Guile, but only the inter
 SICP Study is available under the MIT License; see [LICENSE](LICENSE.md) for details.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
+[pages]: https://mk12.github.io/sicp
 [R6RS]: http://www.r6rs.org
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
 [Guile]: https://www.gnu.org/software/guile/

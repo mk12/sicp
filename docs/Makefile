@@ -1,13 +1,10 @@
 src := notes.md
-dst := out.html
+dst := index.html
 css := style.css
 
-.PHONY: all clean watch
+.PHONY: all watch
 
 all: $(dst)
-
-clean:
-	rm -f $(dst)
 
 watch:
 	ls $(src) $(css) | entr make $(dst)
