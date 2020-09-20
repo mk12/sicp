@@ -13,6 +13,68 @@
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
@@ -72,7 +134,7 @@
 <p>Imperative instructions (how-to knowledge): approximate the square root of x with the following steps:</p>
 <ol type="1">
 <li>Make a guess, <span class="math inline">G</span>.</li>
-<li>Improve the guess by averaging <span class="math inline">G</span> and <span class="math inline">x//G</span>.</li>
+<li>Improve the guess by averaging <span class="math inline">G</span> and <span class="math inline">x/G</span>.</li>
 <li>Keep improving until the guess is good enough.</li>
 </ol>
 <h3 id="processes-and-lisp">Processes and Lisp</h3>
@@ -138,22 +200,22 @@
 </ul>
 <h4 id="means-of-abstraction">Means of abstraction</h4>
 <p>This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure – it is a <em>special form</em>. We can also define procedures this way:</p>
-<pre><code>(define (square x) (* x x))</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1"></a>(<span class="ex">define</span><span class="fu"> </span>(square x) (* x x))</span></code></pre></div>
 <p>We can also make it more clear that we are naming something:</p>
-<pre><code>(define square (lambda (x) (* x x)))</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1"></a>(<span class="ex">define</span><span class="fu"> square </span>(<span class="kw">lambda</span> (x) (* x x)))</span></code></pre></div>
 <p>The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former <em>desugars</em> to the latter.</p>
 <p>In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in. A person using that shouldn’t even have to know.</p>
 <h3 id="case-analysis">Case analysis</h3>
 <p>We do case analysis in Lisp using <code>cond</code>.</p>
-<pre><code>(define (abs x)
-  (cond ((&lt; x 0) (- x))
-        ((= x 0) 0)
-        ((&gt; x 0) x)))</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">abs</span> x)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  (<span class="kw">cond</span> ((<span class="op">&lt;</span> x <span class="dv">0</span>) (<span class="op">-</span> x))</span>
+<span id="cb3-3"><a href="#cb3-3"></a>        ((<span class="op">=</span> x <span class="dv">0</span>) <span class="dv">0</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>        ((<span class="op">&gt;</span> x <span class="dv">0</span>) x)))</span></code></pre></div>
 <p>Each line is a clause consisting of a predicate (true or false) and an action. We can use <code>if</code> if there is a single case:</p>
-<pre><code>(define (abs x)
-  (if (&lt; x 0)
-    (- x)
-    x))</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">abs</span> x)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  (<span class="kw">if</span> (<span class="op">&lt;</span> x <span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>      (<span class="op">-</span> x)</span>
+<span id="cb4-4"><a href="#cb4-4"></a>      x))</span></code></pre></div>
 <p>You can think of <code>if</code> and syntactic sugar for <code>cond</code> or vice versa. It doesn’t make any difference.</p>
 <h3 id="recursion">Recursion</h3>
 <ul>
@@ -172,7 +234,7 @@
 <li>He does this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.</li>
 <li>He must understand the relationship between the particular spells he casts and the process he’s trying to control.</li>
 <li>This lecture aims to establish this connection.</li>
-<li>How do particular patterns of procedures and expressions cause particule patterns of execution and behaviour in the process?</li>
+<li>How do particular patterns of procedures and expressions cause particular patterns of execution and behaviour in the process?</li>
 </ul>
 <h3 id="kinds-of-expressions">Kinds of expressions</h3>
 <p>So far we have seen three main kinds of expressions:</p>
@@ -192,21 +254,26 @@
 <ol type="1">
 <li>Evaluate the operator to get the procedure.</li>
 <li>Evaluate the operands to get the arguments.</li>
-<li>Apply the procedure to the arguments. 3.1. Copy the body of the procedure. 3.2. Substitute the arguments supplied for the formal parameters of the procedure. 3.3. Evaluate the resulting body.</li>
+<li>Apply the procedure to the arguments.
+<ol type="1">
+<li>Copy the body of the procedure.</li>
+<li>Substitute the arguments supplied for the formal parameters of the procedure.</li>
+<li>Evaluate the resulting body.</li>
+</ol></li>
 </ol>
 <h4 id="example">Example</h4>
-<p>The sos procedure takes the sum of the squares:</p>
-<pre><code>(define (s  q a) (* a a))
-(define (sos x y)
-  (+ (sq x) (sq y)))</code></pre>
+<p>The <code>sos</code> procedure takes the sum of the squares:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sq a) (* a a))</span>
+<span id="cb5-2"><a href="#cb5-2"></a>(<span class="ex">define</span><span class="fu"> </span>(sos x y)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  (<span class="op">+</span> (sq x) (sq y)))</span></code></pre></div>
 <p>Let’s evaluate the sum of the square of 3 and the square of 4:</p>
-<pre><code>(sos 3 4)
-(+ (sq 3) (sq 4))
-(+ (sq 3) (* 4 4))
-(+ (sq 3) 16)
-(+ (* 3 3) 16)
-(+ 9 16)
-25</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1"></a>(sos <span class="dv">3</span> <span class="dv">4</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>(<span class="op">+</span> (sq <span class="dv">3</span>) (sq <span class="dv">4</span>))</span>
+<span id="cb6-3"><a href="#cb6-3"></a>(<span class="op">+</span> (sq <span class="dv">3</span>) (* <span class="dv">4</span> <span class="dv">4</span>))</span>
+<span id="cb6-4"><a href="#cb6-4"></a>(<span class="op">+</span> (sq <span class="dv">3</span>) <span class="dv">16</span>)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>(<span class="op">+</span> (* <span class="dv">3</span> <span class="dv">3</span>) <span class="dv">16</span>)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>(<span class="op">+</span> <span class="dv">9</span> <span class="dv">16</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="dv">25</span></span></code></pre></div>
 <p>This is not a perfect description of what the computer does. But it is a good enough model for now.</p>
 <blockquote>
 <p>But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think.</p>
@@ -214,30 +281,34 @@
 <h3 id="evaluating-conditionals">Evaluating conditionals</h3>
 <p>To evaluate <code>(if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)</code>, follow these steps:</p>
 <ol type="1">
-<li>Evaluate the predicate expression. 1.1. If it yields true, Evaluate the consequent expression. 1.2. If it yields false, Evaluate the alternative expression.</li>
+<li>Evaluate the predicate expression.
+<ol type="1">
+<li>If it yields true, evaluate the consequent expression.</li>
+<li>If it yields false, evaluate the alternative expression.</li>
+</ol></li>
 </ol>
 <h4 id="example-1">Example</h4>
 <p>The addition operator in Peano arithmetic uses a conditional:</p>
-<pre><code>(define (+ x y)
-  (if (= x 0)
-    y
-    (+ (-1+ x) (1+ y))))</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="op">+</span> x y)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  (<span class="kw">if</span> (<span class="op">=</span> x <span class="dv">0</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>      y</span>
+<span id="cb7-4"><a href="#cb7-4"></a>      (<span class="op">+</span> (-<span class="dv">1</span>+ x) (<span class="dv">1</span>+ y))))</span></code></pre></div>
 <p>Now we can evaluate <code>(+ 3 4)</code> like so:</p>
-<pre><code>(+ 3 4)
-(if (= 3 0) 4 (+ (-1+ 3) (1+ 4)))
-(+ (-1+ 3) (1+ 4))
-(+ (-1+ 3) 5)
-(+ 2 5)
-(if (= 2 0) 5 (+ (-1+ 2) (1+ 5)))
-(+ (-1+ 2) (1+ 5))
-(+ (-1+ 2) 6)
-(+ 1 6)
-(if (= 1 0) 6 (+ (-1+ 1) (1+ 6)))
-(+ (-1+ 1) (1+ 6))
-(+ (-1+ 1) 7)
-(+ 0 7)
-(if (= 0 0) 7 (+ (-1+ 0) (1+ 7)))
-7</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1"></a>(<span class="op">+</span> <span class="dv">3</span> <span class="dv">4</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">3</span> <span class="dv">0</span>) <span class="dv">4</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">3</span>) (<span class="dv">1</span>+ <span class="dv">4</span>)))</span>
+<span id="cb8-3"><a href="#cb8-3"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">3</span>) (<span class="dv">1</span>+ <span class="dv">4</span>))</span>
+<span id="cb8-4"><a href="#cb8-4"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">3</span>) <span class="dv">5</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a>(<span class="op">+</span> <span class="dv">2</span> <span class="dv">5</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">2</span> <span class="dv">0</span>) <span class="dv">5</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">2</span>) (<span class="dv">1</span>+ <span class="dv">5</span>)))</span>
+<span id="cb8-7"><a href="#cb8-7"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">2</span>) (<span class="dv">1</span>+ <span class="dv">5</span>))</span>
+<span id="cb8-8"><a href="#cb8-8"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">2</span>) <span class="dv">6</span>)</span>
+<span id="cb8-9"><a href="#cb8-9"></a>(<span class="op">+</span> <span class="dv">1</span> <span class="dv">6</span>)</span>
+<span id="cb8-10"><a href="#cb8-10"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">1</span> <span class="dv">0</span>) <span class="dv">6</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">1</span>) (<span class="dv">1</span>+ <span class="dv">6</span>)))</span>
+<span id="cb8-11"><a href="#cb8-11"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">1</span>) (<span class="dv">1</span>+ <span class="dv">6</span>))</span>
+<span id="cb8-12"><a href="#cb8-12"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">1</span>) <span class="dv">7</span>)</span>
+<span id="cb8-13"><a href="#cb8-13"></a>(<span class="op">+</span> <span class="dv">0</span> <span class="dv">7</span>)</span>
+<span id="cb8-14"><a href="#cb8-14"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">0</span> <span class="dv">0</span>) <span class="dv">7</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">0</span>) (<span class="dv">1</span>+ <span class="dv">7</span>)))</span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="dv">7</span></span></code></pre></div>
 <h2 id="part-2-1">Part 2</h2>
 <h3 id="pre-visualization">Pre-visualization</h3>
 <ul>
@@ -248,14 +319,14 @@
 </ul>
 <h3 id="peano-arithmetic">Peano arithmetic</h3>
 <p>There are two ways to add whole numbers in Peano arithmetic.</p>
-<pre><code>(define (+ x y)
-  (if (= x 0)
-    y
-    (+ (-1+ x) (1+ y))))
-(define (+ x y)
-  (if (= x 0)
-    y
-    (1+ (+ (-1+ x) y))))</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb9-1"><a href="#cb9-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="op">+</span> x y)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  (<span class="kw">if</span> (<span class="op">=</span> x <span class="dv">0</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>      y</span>
+<span id="cb9-4"><a href="#cb9-4"></a>      (<span class="op">+</span> (-<span class="dv">1</span>+ x) (<span class="dv">1</span>+ y))))</span>
+<span id="cb9-5"><a href="#cb9-5"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="op">+</span> x y)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  (<span class="kw">if</span> (<span class="op">=</span> x <span class="dv">0</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>      y</span>
+<span id="cb9-8"><a href="#cb9-8"></a>      (<span class="dv">1</span>+ (<span class="op">+</span> (-<span class="dv">1</span>+ x) y))))</span></code></pre></div>
 <p>Both are written using recursion, but they are different: the first generates a <em>linear iterative</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(n)</span> space; the second generates a <em>linear recursive</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(1)</span> space.</p>
 <p>The iteration has all of its state in explicit variables. The recursion does not.</p>
 <h2 id="part-3">Part 3</h2>
@@ -263,11 +334,11 @@
 <p>Perturbation analysis: make small changes to the program, see how it affects the process.</p>
 <h3 id="fibonacci-sequence">Fibonacci sequence</h3>
 <p>The Fibonacci numbers: 0, 1, 1, 2, 3, 5, 8, 13, 21, …. We can represent this directly in Lisp like so:</p>
-<pre><code>(define (fib n)
-  (if (&lt; n 2)
-    n
-    (+ (fib (- n 1))
-       (fib (- n 2)))))</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb10-1"><a href="#cb10-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fib n)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>  (<span class="kw">if</span> (<span class="op">&lt;</span> n <span class="dv">2</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>      n</span>
+<span id="cb10-4"><a href="#cb10-4"></a>      (<span class="op">+</span> (fib (<span class="op">-</span> n <span class="dv">1</span>))</span>
+<span id="cb10-5"><a href="#cb10-5"></a>        (fib (<span class="op">-</span> n <span class="dv">2</span>)))))</span></code></pre></div>
 <p>This is a <em>tree-recursive</em> process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.</p>
 <blockquote>
 <p>The reason why people think programming is hard is because you’re writing down a general rule which is going to be used for lots of instances – it’s going to control all of those instances.</p>
@@ -277,12 +348,12 @@
 <p>The way in which you construct a recursive process is by wishful thinking. You have to believe.</p>
 </blockquote>
 <p>Here is how we move an n-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
-<pre><code>(define (move n from to spare)
-  (cond
-    ((= n 0) &quot;DONE&quot;)
-    (else (move (-1+ n) from spare to)
-          (print-move from to)
-          (move (-1+m) spare to from))))</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb11-1"><a href="#cb11-1"></a>(<span class="ex">define</span><span class="fu"> </span>(move n from to spare)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>  (<span class="kw">cond</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>    ((<span class="op">=</span> n <span class="dv">0</span>) <span class="st">&quot;DONE&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    (<span class="kw">else</span> (move (-<span class="dv">1</span>+ n) from spare to)</span>
+<span id="cb11-5"><a href="#cb11-5"></a>          (print-move from to)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>          (move (-<span class="dv">1</span>+m) spare to from))))</span></code></pre></div>
 <h1 id="a-higher-order-procedures">2A: Higher-order Procedures</h1>
 <h2 id="part-1-2">Part 1</h2>
 <h3 id="dont-repeat-yourself">Don’t repeat yourself</h3>
@@ -303,22 +374,22 @@
 </ul>
 <h3 id="summation">Summation</h3>
 <p>We can represent the sigma notation with a procedure that takes other procedures as arguments:</p>
-<pre><code>(define (sum term a next b)
-  (if (&gt; a b)
-    0
-    (+ (term a)
-       (sum term (next a) next b))))</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb12-1"><a href="#cb12-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sum term a next b)</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  (<span class="kw">if</span> (<span class="op">&gt;</span> a b)</span>
+<span id="cb12-3"><a href="#cb12-3"></a>      <span class="dv">0</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>      (<span class="op">+</span> (term a)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>        (sum term (next a) next b))))</span></code></pre></div>
 <p>Now we can write particular cases easily, without repeating ourselves:</p>
-<pre><code>(define (sum-int a b)
-  (define (identity x) x)
-  (sum identity a 1+ b))
-(define (sum-sq a b)
-    (sum square a 1+ b))
-(define (pi-sum a b)
-  (sum (lambda (i) (/ i (* i (+ i 2))))
-       a
-       (lambda (i) (+ i 4))
-       b))</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb13-1"><a href="#cb13-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sum-int a b)</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  (<span class="ex">define</span><span class="fu"> </span>(identity x) x)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>  (sum identity a <span class="dv">1</span>+ b))</span>
+<span id="cb13-4"><a href="#cb13-4"></a>(<span class="ex">define</span><span class="fu"> </span>(sum-sq a b)</span>
+<span id="cb13-5"><a href="#cb13-5"></a>  (sum square a <span class="dv">1</span>+ b))</span>
+<span id="cb13-6"><a href="#cb13-6"></a>(<span class="ex">define</span><span class="fu"> </span>(pi-sum a b)</span>
+<span id="cb13-7"><a href="#cb13-7"></a>  (sum (<span class="kw">lambda</span> (i) (<span class="op">/</span> i (* i (<span class="op">+</span> i <span class="dv">2</span>))))</span>
+<span id="cb13-8"><a href="#cb13-8"></a>       a</span>
+<span id="cb13-9"><a href="#cb13-9"></a>       (<span class="kw">lambda</span> (i) (<span class="op">+</span> i <span class="dv">4</span>))</span>
+<span id="cb13-10"><a href="#cb13-10"></a>       b))</span></code></pre></div>
 <p>We are separating the things we are adding up from the method of doing the addition. Now, we can change the sum procedure so that it generates an iterative process, and all the specific procedures using sum will benefit.</p>
 <h2 id="part-2-2">Part 2</h2>
 <h3 id="higher-order-procedures">Higher-order procedures</h3>
@@ -333,7 +404,7 @@
 <h3 id="newtons-method">Newton’s method</h3>
 <ul>
 <li>Newton’s method: a general method to find the zeros of functions (an <span class="math inline">x</span> such that <span class="math inline">f(x) = 0</span>).</li>
-<li>We can use the fixed-point procedure to define a procedure for computing zeros using Newton’s method.</li>
+<li>We can use the <code>fixed-point</code> procedure to define a procedure for computing zeros using Newton’s method.</li>
 </ul>
 <blockquote>
 <p>Wishful thinking: essential to good engineering. And especially essential to good computer science.</p>
@@ -380,11 +451,11 @@
 <li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
 <li>We can implement a procedure for adding rationals like so:</li>
 </ul>
-<pre><code>(define (+rat x y)
-  (make-rat
-    (+ (* (numer x) (denom y))
-       (* (numer y) (denom x)))
-    (* (denom x) (denom y))))</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb14-1"><a href="#cb14-1"></a>(<span class="ex">define</span><span class="fu"> </span>(+rat x y)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  (make-rat</span>
+<span id="cb14-3"><a href="#cb14-3"></a>    (<span class="op">+</span> (* (numer x) (denom y))</span>
+<span id="cb14-4"><a href="#cb14-4"></a>       (* (numer y) (denom x)))</span>
+<span id="cb14-5"><a href="#cb14-5"></a>    (* (denom x) (denom y))))</span></code></pre></div>
 <ul>
 <li>The procedure <code>make-rat</code> is called a <em>constructor</em>.</li>
 <li>The procedures <code>numer</code> and <code>denom</code> are called <em>selectors</em>.</li>
@@ -416,9 +487,9 @@
 <li>This isn’t the problem of the addition procedure; the <code>make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
 <li>We can use the greatest common divisor to fix this:</li>
 </ul>
-<pre><code>(define (make-rat n d)
-  (let ((g (gcd n d)))
-    (cons (/ n g) (/ d g))))</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb15-1"><a href="#cb15-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-rat n d)</span>
+<span id="cb15-2"><a href="#cb15-2"></a>  (<span class="kw">let</span> ((g (<span class="kw">gcd</span> n d)))</span>
+<span id="cb15-3"><a href="#cb15-3"></a>    (<span class="kw">cons</span> (<span class="op">/</span> n g) (<span class="op">/</span> d g))))</span></code></pre></div>
 <ul>
 <li>Now our fractions will always be reduced to lowest terms.</li>
 </ul>
@@ -480,12 +551,12 @@
 <li>Pairs are the same: they happen to satisfy the contract that <code>(car (cons x y))</code> is <code>x</code> and <code>(cdr (cons x y))</code> is <code>y</code>.</li>
 <li>We can implement pairs with procedures. We don’t even need special primitives – all we need are lambdas:</li>
 </ul>
-<pre><code>(define (cons a b)
-  (lambda (pick)
-    (cond ((= pick 1) a)
-          ((= pick 2) b))))
-(define (car x) (x 1))
-(define (cdr x) (x 2))</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb16-1"><a href="#cb16-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> a b)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>  (<span class="kw">lambda</span> (pick)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    (<span class="kw">cond</span> ((<span class="op">=</span> pick <span class="dv">1</span>) a)</span>
+<span id="cb16-4"><a href="#cb16-4"></a>          ((<span class="op">=</span> pick <span class="dv">2</span>) b))))</span>
+<span id="cb16-5"><a href="#cb16-5"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> x) (x <span class="dv">1</span>))</span>
+<span id="cb16-6"><a href="#cb16-6"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> x) (x <span class="dv">2</span>))</span></code></pre></div>
 <ul>
 <li>All we need to do is show that this satisfies the axiom.</li>
 <li>We can do that with the substitution model. It works.</li>
@@ -515,7 +586,7 @@
 <li>Lisp has a particular convention for representing a sequence of things as chained pairs: a list.</li>
 <li>The car of the pair is the first item in the sequence. The <code>cdr</code> of the pair is the rest of the sequence.</li>
 <li>The <code>cdr</code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>.</li>
-<li>The predicte <code>null?</code> checks if a list is empty (is nil).</li>
+<li>The predicate <code>null?</code> checks if a list is empty (is nil).</li>
 <li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested conses.</li>
 </ul>
 <h3 id="mapping-lists">Mapping lists</h3>
@@ -545,7 +616,7 @@
 <li>This representation is nice because, once primitives are implemented in this way, the means of combination just fall out because you automatically get the closure property.</li>
 <li>The procedures <code>beside</code> and <code>below</code> are trivial to write.</li>
 <li>The operation <code>rotate</code> is similarly simple.</li>
-<li>The real pun cline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.</li>
+<li>The real punchline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.</li>
 <li>We can write recursive painters without ever having purposely built recursion into the painting language.</li>
 <li>We can even write higher-order painters.</li>
 </ul>
@@ -627,7 +698,7 @@
 <li>There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.</li>
 </ul>
 <blockquote>
-<p>This is one the the pieces of artillery we have in our war against complexity.</p>
+<p>This is one the pieces of artillery we have in our war against complexity.</p>
 </blockquote>
 <ul>
 <li>We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).</li>
@@ -662,20 +733,20 @@
 <ul>
 <li>We can represent the differentiation rules like this:</li>
 </ul>
-<pre><code>(define deriv-rules
-  &#39;(((dd (?c c) (? v) 0)
-    ((dd (?v v) (? v) 1)
-    ((dd (?v u) (? v) 0)
-    ((dd (+ (? x1) (? x2)) (? v))
-     (+ (dd (: x1) (: v))
-        (dd (: x2) (: v))))
-    ((dd (* (? x1) (? x2)) (? v))
-     (+ (* (: x1) (dd (: x2) (: v)))
-        (* (dd (: x1) (: v)) (: x2))))
-    ((dd (** (? x) (?c n)) (? v))
-     (* (* (: n)
-           (** *: x) (: (- n 1))))
-        (dd (: x) (: v))))))</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb17-1"><a href="#cb17-1"></a>(<span class="ex">define</span><span class="fu"> deriv-rules</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>  &#39;(((dd (?c c) (? v) <span class="dv">0</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    ((dd (?v v) (? v) <span class="dv">1</span>)</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    ((dd (?v u) (? v) <span class="dv">0</span>)</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    ((dd (<span class="op">+</span> (? x1) (? x2)) (? v))</span>
+<span id="cb17-6"><a href="#cb17-6"></a>     (<span class="op">+</span> (dd (: x1) (: v))</span>
+<span id="cb17-7"><a href="#cb17-7"></a>        (dd (: x2) (: v))))</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    ((dd (* (? x1) (? x2)) (? v))</span>
+<span id="cb17-9"><a href="#cb17-9"></a>     (<span class="op">+</span> (* (: x1) (dd (: x2) (: v)))</span>
+<span id="cb17-10"><a href="#cb17-10"></a>        (* (dd (: x1) (: v)) (: x2))))</span>
+<span id="cb17-11"><a href="#cb17-11"></a>    ((dd (** (? x) (?c n)) (? v))</span>
+<span id="cb17-12"><a href="#cb17-12"></a>     (* (* (: n)</span>
+<span id="cb17-13"><a href="#cb17-13"></a>           (** *: x) (: (<span class="op">-</span> n <span class="dv">1</span>))))</span>
+<span id="cb17-14"><a href="#cb17-14"></a>        (dd (: x) (: v))))))</span></code></pre></div>
 <ul>
 <li>It could be prettier, but that doesn’t matter. What matters is that we are writing rules directly in our language.</li>
 <li><code>deriv-rules</code> is simply a list of rules.</li>
@@ -684,14 +755,14 @@
 <li>The forms beginning with colons in the RHS are called <em>substitution objects</em>. They are skeleton evaluations.</li>
 <li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>
 </ul>
-<pre><code>(define algebra-rules
-  &#39;((((? op) (?c e1) (?c e2))
-     (: (op e1 e2)))
-    (((? op) (? e1) (?c e2))
-     ((: op) (: e2) (: e1)))
-    ((+ 0 (? e)) (: e))
-    ((* 1 (? e)) (: e))
-    ((* 0 (? e)) 0)))</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb18-1"><a href="#cb18-1"></a>(<span class="ex">define</span><span class="fu"> algebra-rules</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>  &#39;((((? op) (?c e1) (?c e2))</span>
+<span id="cb18-3"><a href="#cb18-3"></a>     (: (op e1 e2)))</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    (((? op) (? e1) (?c e2))</span>
+<span id="cb18-5"><a href="#cb18-5"></a>     ((: op) (: e2) (: e1)))</span>
+<span id="cb18-6"><a href="#cb18-6"></a>    ((<span class="op">+</span> <span class="dv">0</span> (? e)) (: e))</span>
+<span id="cb18-7"><a href="#cb18-7"></a>    ((* <span class="dv">1</span> (? e)) (: e))</span>
+<span id="cb18-8"><a href="#cb18-8"></a>    ((* <span class="dv">0</span> (? e)) <span class="dv">0</span>)))</span></code></pre></div>
 <h3 id="syntax">Syntax</h3>
 <h4 id="patterns">Patterns</h4>
 <ul>
@@ -721,29 +792,29 @@
 <ul>
 <li>The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.</li>
 </ul>
-<pre><code>(define (match pat exp dict)
-  (cond ((eq? dict &#39;failed) &#39;failed)
-        ((atom? pat)
-         (if (and (atom? exp) (eq? pat exp))
-           dict
-           &#39;failed))
-        ((arbitrary-constant? pat)
-         (if (constant? exp)
-           (extend-dict pat exp dict)
-           &#39;failed))
-        ((arbitrary-variable? pat)
-         (if (variable? exp)
-           (extend-dict pat exp dict)
-           &#39;failed))
-        ((arbitrary-expression? pat)
-         (extend-dict pat exp dict))
-        ((atom? exp) &#39;failed)
-        (else
-          (match (cdr pat)
-                 (cdr exp)
-                 (match (car pat)
-                        (car exp)
-                        dict)))))</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb19-1"><a href="#cb19-1"></a>(<span class="ex">define</span><span class="fu"> </span>(match pat <span class="kw">exp</span> dict)</span>
+<span id="cb19-2"><a href="#cb19-2"></a>  (<span class="kw">cond</span> ((<span class="kw">eq?</span> dict &#39;failed) &#39;failed)</span>
+<span id="cb19-3"><a href="#cb19-3"></a>        ((atom? pat)</span>
+<span id="cb19-4"><a href="#cb19-4"></a>         (<span class="kw">if</span> (<span class="kw">and</span> (atom? <span class="kw">exp</span>) (<span class="kw">eq?</span> pat <span class="kw">exp</span>))</span>
+<span id="cb19-5"><a href="#cb19-5"></a>             dict</span>
+<span id="cb19-6"><a href="#cb19-6"></a>             &#39;failed))</span>
+<span id="cb19-7"><a href="#cb19-7"></a>        ((arbitrary-constant? pat)</span>
+<span id="cb19-8"><a href="#cb19-8"></a>         (<span class="kw">if</span> (constant? <span class="kw">exp</span>)</span>
+<span id="cb19-9"><a href="#cb19-9"></a>             (extend-dict pat <span class="kw">exp</span> dict)</span>
+<span id="cb19-10"><a href="#cb19-10"></a>             &#39;failed))</span>
+<span id="cb19-11"><a href="#cb19-11"></a>        ((arbitrary-variable? pat)</span>
+<span id="cb19-12"><a href="#cb19-12"></a>         (<span class="kw">if</span> (variable? <span class="kw">exp</span>)</span>
+<span id="cb19-13"><a href="#cb19-13"></a>             (extend-dict pat <span class="kw">exp</span> dict)</span>
+<span id="cb19-14"><a href="#cb19-14"></a>             &#39;failed))</span>
+<span id="cb19-15"><a href="#cb19-15"></a>        ((arbitrary-expression? pat)</span>
+<span id="cb19-16"><a href="#cb19-16"></a>         (extend-dict pat <span class="kw">exp</span> dict))</span>
+<span id="cb19-17"><a href="#cb19-17"></a>        ((atom? <span class="kw">exp</span>) &#39;failed)</span>
+<span id="cb19-18"><a href="#cb19-18"></a>        (<span class="kw">else</span></span>
+<span id="cb19-19"><a href="#cb19-19"></a>         (match (<span class="kw">cdr</span> pat)</span>
+<span id="cb19-20"><a href="#cb19-20"></a>                (<span class="kw">cdr</span> <span class="kw">exp</span>)</span>
+<span id="cb19-21"><a href="#cb19-21"></a>                (match (<span class="kw">car</span> pat)</span>
+<span id="cb19-22"><a href="#cb19-22"></a>                       (<span class="kw">car</span> <span class="kw">exp</span>)</span>
+<span id="cb19-23"><a href="#cb19-23"></a>                       dict)))))</span></code></pre></div>
 <ul>
 <li>The <code>else</code> clause recursion is very important.</li>
 <li>We are examine two trees simultaneously: the tree of the expression, and that of the pattern.</li>
@@ -759,27 +830,27 @@
 <ul>
 <li>The instantiator takes a dictionary and a skeleton as input and outputs an expression.</li>
 </ul>
-<pre><code>(define (instantiate skeleton dict)
-  (define (loop s)
-    (cond ((atom? s) s)
-          ((skeleton-evaluation? s)
-           (evaluate (eval-exp s) dict))
-          (else (cons (loop (car s))
-                      (loop (cdr s))))))
-  (loop skeleton))</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb20-1"><a href="#cb20-1"></a>(<span class="ex">define</span><span class="fu"> </span>(instantiate skeleton dict)</span>
+<span id="cb20-2"><a href="#cb20-2"></a>  (<span class="ex">define</span><span class="fu"> </span>(loop s)</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    (<span class="kw">cond</span> ((atom? s) s)</span>
+<span id="cb20-4"><a href="#cb20-4"></a>          ((skeleton-evaluation? s)</span>
+<span id="cb20-5"><a href="#cb20-5"></a>           (evaluate (eval-exp s) dict))</span>
+<span id="cb20-6"><a href="#cb20-6"></a>          (<span class="kw">else</span> (<span class="kw">cons</span> (loop (<span class="kw">car</span> s))</span>
+<span id="cb20-7"><a href="#cb20-7"></a>                      (loop (<span class="kw">cdr</span> s))))))</span>
+<span id="cb20-8"><a href="#cb20-8"></a>  (loop skeleton))</span></code></pre></div>
 <ul>
 <li>We do a recursive tree walk on the skeleton.</li>
 <li>It is simpler than the matcher because the parts of the tree can be instantiated independently (we don’t change the dictionary).</li>
 <li>The only reason we have the internal procedure is to avoid passing the same <code>dict</code> on every recursive call.</li>
 <li>The skeleton evaluation forms like<code>(: x)</code> use <code>evaluate</code>:</li>
 </ul>
-<pre><code>(define (evaluate form dict)
-  (if (atom? form)
-    (lookup form dict)
-    (apply (eval (lookup (car form) dict)
-                 user-initial-environment)
-           (mapcar (lambda (v) (lookup v dict))
-                   (cdr form)))))</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb21-1"><a href="#cb21-1"></a>(<span class="ex">define</span><span class="fu"> </span>(evaluate form dict)</span>
+<span id="cb21-2"><a href="#cb21-2"></a>  (<span class="kw">if</span> (atom? form)</span>
+<span id="cb21-3"><a href="#cb21-3"></a>      (lookup form dict)</span>
+<span id="cb21-4"><a href="#cb21-4"></a>      (apply (<span class="kw">eval</span> (lookup (<span class="kw">car</span> form) dict)</span>
+<span id="cb21-5"><a href="#cb21-5"></a>                  user-initial-environment)</span>
+<span id="cb21-6"><a href="#cb21-6"></a>            (mapcar (<span class="kw">lambda</span> (v) (lookup v dict))</span>
+<span id="cb21-7"><a href="#cb21-7"></a>                    (<span class="kw">cdr</span> form)))))</span></code></pre></div>
 <ul>
 <li>Atoms (variable names) are simply looked up in the dictionary.</li>
 <li>For more complicated expressions, we lookup and evaluate the <code>car</code> of the form (the operator) and apply it to the result of looking up everything from the <code>cdr</code> (the operands).</li>
@@ -799,40 +870,40 @@
 <li>For <code>deriv-rules</code>, this would be <code>(define dsimp (simplifier deriv-rules))</code>.</li>
 <li>This is the <code>simplifier</code> procedure:</li>
 </ul>
-<pre><code>(define (simplifier the-rules)
-  (define (simplify-exp exp)
-    (try-rules (if (compound? exp)
-                 (simplify-parts exp)
-                 exp)))
-  (define (simplify-parts exp)
-    (if (null? exp)
-      &#39;()
-      (cons (simplify-exp (car exp))
-            (simplify-parts (cdr exp)))))
-  (define (try-rules exp)
-    (define (scan rules)
-      (if (null? rules)
-        exp
-        (let ((dict (match (pattern (car rules))
-                           exp
-                           (empty-dictionary))))
-          (if (eq? dict &#39;failed)
-            (scan (cdr rules))
-            (simplify-exp
-              (instantiate (skeleton (car rules))
-                           dict))))))
-    (scan the-rules))
-  simplify-exp)</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb22-1"><a href="#cb22-1"></a>(<span class="ex">define</span><span class="fu"> </span>(simplifier the-rules)</span>
+<span id="cb22-2"><a href="#cb22-2"></a>  (<span class="ex">define</span><span class="fu"> </span>(simplify-exp <span class="kw">exp</span>)</span>
+<span id="cb22-3"><a href="#cb22-3"></a>    (try-rules (<span class="kw">if</span> (compound? <span class="kw">exp</span>)</span>
+<span id="cb22-4"><a href="#cb22-4"></a>                   (simplify-parts <span class="kw">exp</span>)</span>
+<span id="cb22-5"><a href="#cb22-5"></a>                   <span class="kw">exp</span>)))</span>
+<span id="cb22-6"><a href="#cb22-6"></a>  (<span class="ex">define</span><span class="fu"> </span>(simplify-parts <span class="kw">exp</span>)</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    (<span class="kw">if</span> (<span class="kw">null?</span> <span class="kw">exp</span>)</span>
+<span id="cb22-8"><a href="#cb22-8"></a>        &#39;()</span>
+<span id="cb22-9"><a href="#cb22-9"></a>        (<span class="kw">cons</span> (simplify-exp (<span class="kw">car</span> <span class="kw">exp</span>))</span>
+<span id="cb22-10"><a href="#cb22-10"></a>              (simplify-parts (<span class="kw">cdr</span> <span class="kw">exp</span>)))))</span>
+<span id="cb22-11"><a href="#cb22-11"></a>  (<span class="ex">define</span><span class="fu"> </span>(try-rules <span class="kw">exp</span>)</span>
+<span id="cb22-12"><a href="#cb22-12"></a>    (<span class="ex">define</span><span class="fu"> </span>(scan rules)</span>
+<span id="cb22-13"><a href="#cb22-13"></a>      (<span class="kw">if</span> (<span class="kw">null?</span> rules)</span>
+<span id="cb22-14"><a href="#cb22-14"></a>          <span class="kw">exp</span></span>
+<span id="cb22-15"><a href="#cb22-15"></a>          (<span class="kw">let</span> ((dict (match (pattern (<span class="kw">car</span> rules))</span>
+<span id="cb22-16"><a href="#cb22-16"></a>                            <span class="kw">exp</span></span>
+<span id="cb22-17"><a href="#cb22-17"></a>                            (empty-dictionary))))</span>
+<span id="cb22-18"><a href="#cb22-18"></a>            (<span class="kw">if</span> (<span class="kw">eq?</span> dict &#39;failed)</span>
+<span id="cb22-19"><a href="#cb22-19"></a>                (scan (<span class="kw">cdr</span> rules))</span>
+<span id="cb22-20"><a href="#cb22-20"></a>                (simplify-exp</span>
+<span id="cb22-21"><a href="#cb22-21"></a>                  (instantiate (skeleton (<span class="kw">car</span> rules))</span>
+<span id="cb22-22"><a href="#cb22-22"></a>                              dict))))))</span>
+<span id="cb22-23"><a href="#cb22-23"></a>    (scan the-rules))</span>
+<span id="cb22-24"><a href="#cb22-24"></a>  simplify-exp)</span></code></pre></div>
 <ul>
 <li>The procedures <code>simplify-exp</code> and <code>simplify-parts</code> call each other recursively.</li>
 <li>Since the <code>exp</code> in <code>simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
 <li>We could have just used one procedure, using <code>map</code>:</li>
 </ul>
-<pre><code>(define (simplify-exp exp)
-  (try-rules
-    (if (compound? exp)
-      (map simplify-exp exp)
-      exp)))</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb23-1"><a href="#cb23-1"></a>(<span class="ex">define</span><span class="fu"> </span>(simplify-exp <span class="kw">exp</span>)</span>
+<span id="cb23-2"><a href="#cb23-2"></a>  (try-rules</span>
+<span id="cb23-3"><a href="#cb23-3"></a>    (<span class="kw">if</span> (compound? <span class="kw">exp</span>)</span>
+<span id="cb23-4"><a href="#cb23-4"></a>        (map simplify-exp <span class="kw">exp</span>)</span>
+<span id="cb23-5"><a href="#cb23-5"></a>        <span class="kw">exp</span>)))</span></code></pre></div>
 <ul>
 <li>This is a different idiom; it works the same way, but you think about it a bit differently.</li>
 <li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code>map</code> in one of our procedures. It is best to extract those common patterns.</li>
@@ -853,17 +924,17 @@
 <ul>
 <li>The implementation of the dictionary is pretty simple:</li>
 </ul>
-<pre><code>(define (empty-dictionary) &#39;())
-(define (extend-dictionary pat dat dict)
-  (let ((name (variable-name pat)))
-    (let ((v ((assq name dict)))
-      (cond ((null? v)
-             (cons (list name dat) dict))
-            ((eq? (cadr v) dat) dict)
-            (else &#39;failed)))))
-(define (lookup var dict)
-  (let ((v (assq var dict)))
-    (if (null? v) var (cadr v))))</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb24-1"><a href="#cb24-1"></a>(<span class="ex">define</span><span class="fu"> </span>(empty-dictionary) &#39;())</span>
+<span id="cb24-2"><a href="#cb24-2"></a>(<span class="ex">define</span><span class="fu"> </span>(extend-dictionary pat dat dict)</span>
+<span id="cb24-3"><a href="#cb24-3"></a>  (<span class="kw">let</span> ((name (variable-name pat)))</span>
+<span id="cb24-4"><a href="#cb24-4"></a>    (<span class="kw">let</span> ((v ((<span class="kw">assq</span> name dict)))</span>
+<span id="cb24-5"><a href="#cb24-5"></a>      (<span class="kw">cond</span> ((<span class="kw">null?</span> v)</span>
+<span id="cb24-6"><a href="#cb24-6"></a>             (<span class="kw">cons</span> (<span class="kw">list</span> name dat) dict))</span>
+<span id="cb24-7"><a href="#cb24-7"></a>            ((<span class="kw">eq?</span> (<span class="kw">cadr</span> v) dat) dict)</span>
+<span id="cb24-8"><a href="#cb24-8"></a>            (<span class="kw">else</span> &#39;failed)))))</span>
+<span id="cb24-9"><a href="#cb24-9"></a>(<span class="ex">define</span><span class="fu"> </span>(lookup var dict)</span>
+<span id="cb24-10"><a href="#cb24-10"></a>  (<span class="kw">let</span> ((v (<span class="kw">assq</span> var dict)))</span>
+<span id="cb24-11"><a href="#cb24-11"></a>    (<span class="kw">if</span> (<span class="kw">null?</span> v) var (<span class="kw">cadr</span> v))))</span></code></pre></div>
 <ul>
 <li>When extending the dictionary, we check if the name is already present in the dictionary.</li>
 <li>If not, we add it. If it is, but has the same value, we return the dictionary unchanged.</li>
@@ -888,10 +959,10 @@
 <li>real part and imaginary part (rectangular form);</li>
 <li>magnitude and angle (polar form).</li>
 </ul></li>
-<li>The rectangular form <span class="math inline">x + iy</span> and the polar form <span class="math inline">re^(i theta)</span> are related – we can get one from the other:
+<li>The rectangular form <span class="math inline">x + iy</span> and the polar form <span class="math inline">re^{i\theta}</span> are related:
 <ul>
-<li><span class="math inline">x = r cos theta</span> and <span class="math inline">y = r sin theta</span>.</li>
-<li><span class="math inline">r = sqrt(x^2 + y^2)</span> and <span class="math inline">theta = arctan(y,x)</span>.</li>
+<li><span class="math inline">x = r\cos\theta</span> and <span class="math inline">y = r\sin\theta</span>.</li>
+<li><span class="math inline">r = \sqrt{x^2 + y^2}</span> and <span class="math inline">\theta = \arctan(y,x)</span>.</li>
 </ul></li>
 <li>We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.</li>
 <li>We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.</li>
@@ -929,21 +1000,21 @@
 <li>It is the procedures that go in the table, not their names.</li>
 <li>The key procedure in this whole system is <code>operate</code>:</li>
 </ul>
-<pre><code>(define (operate op obj)
-  (let ((proc (get (type obj) op)))
-    (if (null? proc)
-      (error &quot;undefined OP&quot;)
-      (proc (contents obj)))))</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb25-1"><a href="#cb25-1"></a>(<span class="ex">define</span><span class="fu"> </span>(operate op obj)</span>
+<span id="cb25-2"><a href="#cb25-2"></a>  (<span class="kw">let</span> ((proc (get (type obj) op)))</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    (<span class="kw">if</span> (<span class="kw">null?</span> proc)</span>
+<span id="cb25-4"><a href="#cb25-4"></a>        (error <span class="st">&quot;undefined OP&quot;</span>)</span>
+<span id="cb25-5"><a href="#cb25-5"></a>        (proc (contents obj)))))</span></code></pre></div>
 <ul>
 <li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
 <li>This is what happens when we try to extract the real part of a complex number in polar form:</li>
 </ul>
-<pre><code>(real-part z)
-(operate &#39;real-part z)
-((get &#39;polar &#39;real-part) (contents z))
-(real-part-polar &#39;(1 . 2))
-(* 1 (cos 2))
--0.4161468365</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb26-1"><a href="#cb26-1"></a>(<span class="kw">real-part</span> z)</span>
+<span id="cb26-2"><a href="#cb26-2"></a>(operate &#39;real-part z)</span>
+<span id="cb26-3"><a href="#cb26-3"></a>((get &#39;polar &#39;real-part) (contents z))</span>
+<span id="cb26-4"><a href="#cb26-4"></a>(real-part-polar &#39;(<span class="dv">1</span> . <span class="dv">2</span>))</span>
+<span id="cb26-5"><a href="#cb26-5"></a>(* <span class="dv">1</span> (<span class="kw">cos</span> <span class="dv">2</span>))</span>
+<span id="cb26-6"><a href="#cb26-6"></a><span class="fl">-0.4161468365</span></span></code></pre></div>
 <ul>
 <li>This style of programming called <em>data-directed</em> programming.</li>
 <li>The data objects themselves are carrying the information about how you should operate on them.</li>
@@ -1019,21 +1090,21 @@
 <ul>
 <li>Here’s how we implemented factorial functionally:</li>
 </ul>
-<pre><code>(define (fact n)
-  (define (iter p i)
-    (if (&gt; i n) m (iter (* i p) (+ i 1))))
-  (iter 1 1))</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb27-1"><a href="#cb27-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fact n)</span>
+<span id="cb27-2"><a href="#cb27-2"></a>  (<span class="ex">define</span><span class="fu"> </span>(iter p i)</span>
+<span id="cb27-3"><a href="#cb27-3"></a>    (<span class="kw">if</span> (<span class="op">&gt;</span> i n) m (iter (* i p) (<span class="op">+</span> i <span class="dv">1</span>))))</span>
+<span id="cb27-4"><a href="#cb27-4"></a>  (iter <span class="dv">1</span> <span class="dv">1</span>))</span></code></pre></div>
 <ul>
 <li>We could instead write it with assignments:</li>
 </ul>
-<pre><code>(define (fact n)
-  (let ((p 1) (i 1))
-    (define (loop)
-      (cond ((&gt; i n) p)
-            (else (set! p (* i p))
-                  (set! i (+ i 1))
-                  (loop))))
-    (loop)))</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb28-1"><a href="#cb28-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fact n)</span>
+<span id="cb28-2"><a href="#cb28-2"></a>  (<span class="kw">let</span> ((p <span class="dv">1</span>) (i <span class="dv">1</span>))</span>
+<span id="cb28-3"><a href="#cb28-3"></a>    (<span class="ex">define</span><span class="fu"> </span>(loop)</span>
+<span id="cb28-4"><a href="#cb28-4"></a>      (<span class="kw">cond</span> ((<span class="op">&gt;</span> i n) p)</span>
+<span id="cb28-5"><a href="#cb28-5"></a>            (<span class="kw">else</span> (set! p (* i p))</span>
+<span id="cb28-6"><a href="#cb28-6"></a>                  (set! i (<span class="op">+</span> i <span class="dv">1</span>))</span>
+<span id="cb28-7"><a href="#cb28-7"></a>                  (loop))))</span>
+<span id="cb28-8"><a href="#cb28-8"></a>    (loop)))</span></code></pre></div>
 <ul>
 <li>There are ways of making errors in the second program that simply didn’t exist when we couldn’t do assignment.</li>
 <li>If we change the ordering of the two assignments, the procedure calculates the wrong value.</li>
@@ -1069,7 +1140,12 @@
 <li>A procedure is a pair: some code, and (a pointer to) an environment. Free variables are found in this environment.</li>
 <li>Procedure objects are created by evaluating λ-expressions.</li>
 <li>A λ-expression is evaluated relative to a given environment as follows: a new procedure object is formed, combing the text (code) of the λ-expression with (a pointer to) the environment of evaluation.</li>
-<li>A procedure is applied to a set of arguments by 1.1. constructing a frame whose parent is the environment part of the procedure being applied, 1.2. binding the formal parameters of the procedure to the actual arguments of the call, 1.3. evaluating the body of the procedure in the context of the new environment.</li>
+<li>A procedure is applied to a set of arguments by
+<ol type="1">
+<li>constructing a frame whose parent is the environment part of the procedure being applied,</li>
+<li>binding the formal parameters of the procedure to the actual arguments of the call,</li>
+<li>evaluating the body of the procedure in the context of the new environment.</li>
+</ol></li>
 <li>In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.</li>
 </ul>
 <h2 id="part-3-6">Part 3</h2>
@@ -1079,21 +1155,21 @@
 <li>We wouldn’t have done this if there wasn’t a good reason.</li>
 <li>Consider the following program:</li>
 </ul>
-<pre><code>(define make-counter
-  (lambda (n)
-    (lambda ()
-      (set! n (inc n))
-      n)))
-(define c1 (make-counter 0))
-(define c2 (make-counter 10))
-(c1)
-1
-(c1)
-2
-(c2)
-11
-(c2)
-12</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb29-1"><a href="#cb29-1"></a>(<span class="ex">define</span><span class="fu"> make-counter</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>  (<span class="kw">lambda</span> (n)</span>
+<span id="cb29-3"><a href="#cb29-3"></a>    (<span class="kw">lambda</span> ()</span>
+<span id="cb29-4"><a href="#cb29-4"></a>      (set! n (inc n))</span>
+<span id="cb29-5"><a href="#cb29-5"></a>      n)))</span>
+<span id="cb29-6"><a href="#cb29-6"></a>(<span class="ex">define</span><span class="fu"> c1 </span>(make-counter <span class="dv">0</span>))</span>
+<span id="cb29-7"><a href="#cb29-7"></a>(<span class="ex">define</span><span class="fu"> c2 </span>(make-counter <span class="dv">10</span>))</span>
+<span id="cb29-8"><a href="#cb29-8"></a>(c1)</span>
+<span id="cb29-9"><a href="#cb29-9"></a><span class="dv">1</span></span>
+<span id="cb29-10"><a href="#cb29-10"></a>(c1)</span>
+<span id="cb29-11"><a href="#cb29-11"></a><span class="dv">2</span></span>
+<span id="cb29-12"><a href="#cb29-12"></a>(c2)</span>
+<span id="cb29-13"><a href="#cb29-13"></a><span class="dv">11</span></span>
+<span id="cb29-14"><a href="#cb29-14"></a>(c2)</span>
+<span id="cb29-15"><a href="#cb29-15"></a><span class="dv">12</span></span></code></pre></div>
 <ul>
 <li>These two counters are independent and have their own state.</li>
 <li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
@@ -1161,14 +1237,14 @@
 <li>We’ve made a simulation where objects and state changed in the computer match the objects and state changes in the world.</li>
 <li>We’re going to use agendas (priority queues) to organize time.</li>
 <li>We have a constructor <code>make-agenda</code>; selector <code>current-time</code> and <code>first-item</code>; predicate <code>empty-agenda?</code>; and mutators <code>add-to-agenda!</code> and <code>remove-first-item!</code>.</li>
-<li>We will represent it as a list a segments. Each segment is a time consed to a queue of tasks (procedures of no arguments).</li>
+<li>We will represent it as a list a segments. Each segment is a time <code>cons</code> ed to a queue of tasks (procedures of no arguments).</li>
 <li>To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.</li>
 </ul>
 <h4 id="queues">Queues</h4>
 <ul>
 <li>We construct queues with <code>(make-queue)</code>.</li>
 <li>There are two mutators, <code>(insert-queue! q x)</code> and <code>(delete-queue! q)</code>; a selector, <code>(front-queue q)</code>; and a predicate, <code>(empty-queue? q)</code>.</li>
-<li>A queue is represented as a front pointer of a list consed to the rear pointer of the same list.</li>
+<li>A queue is represented as a front pointer of a list <code>cons</code> ed to the rear pointer of the same list.</li>
 <li>The mutators use <code>set-car!</code> and <code>set-cdr!</code>.</li>
 </ul>
 <h2 id="part-3-7">Part 3</h2>
@@ -1186,28 +1262,28 @@
 <li>Assignment and mutators are equally powerful. We can implement the cons mutators in terms of <code>set!</code>.</li>
 <li>We’ve already seen Alonzo Church’s way of creating pairs just with lambda expressions:</li>
 </ul>
-<pre><code>(define (cons x y)
-  (lambda (m)
-    (m x y)))
-(define (car x) (x (lambda (a d) a)))
-(define (cdr x) (x (lambda (a d) d)))</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb30-1"><a href="#cb30-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
+<span id="cb30-2"><a href="#cb30-2"></a>  (<span class="kw">lambda</span> (m)</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    (m x y)))</span>
+<span id="cb30-4"><a href="#cb30-4"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> x) (x (<span class="kw">lambda</span> (a d) a)))</span>
+<span id="cb30-5"><a href="#cb30-5"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> x) (x (<span class="kw">lambda</span> (a d) d)))</span></code></pre></div>
 <ul>
 <li>We can change it to allow mutation:</li>
 </ul>
-<pre><code>(define (cons x y)
-  (lambda (m)
-    (m x
-       y
-       (lambda (n) (set! x n))
-       (lambda (n) (set! y n)))))
-(define (car x)
-  (x (lambda (a d sa sd) a)))
-(define (cdr x)
-  (x (lambda (a d sa sd) d)))
-(define (set-car! x v)
-  (x (lambda (a d sa sd) (sa v))))
-(define (set-cdr! x v)
-  (x (lambda (a d sa sd) (sd v))))</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb31-1"><a href="#cb31-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
+<span id="cb31-2"><a href="#cb31-2"></a>  (<span class="kw">lambda</span> (m)</span>
+<span id="cb31-3"><a href="#cb31-3"></a>    (m x</span>
+<span id="cb31-4"><a href="#cb31-4"></a>       y</span>
+<span id="cb31-5"><a href="#cb31-5"></a>       (<span class="kw">lambda</span> (n) (set! x n))</span>
+<span id="cb31-6"><a href="#cb31-6"></a>       (<span class="kw">lambda</span> (n) (set! y n)))))</span>
+<span id="cb31-7"><a href="#cb31-7"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> x)</span>
+<span id="cb31-8"><a href="#cb31-8"></a>  (x (<span class="kw">lambda</span> (a d sa sd) a)))</span>
+<span id="cb31-9"><a href="#cb31-9"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> x)</span>
+<span id="cb31-10"><a href="#cb31-10"></a>  (x (<span class="kw">lambda</span> (a d sa sd) d)))</span>
+<span id="cb31-11"><a href="#cb31-11"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">set-car!</span> x v)</span>
+<span id="cb31-12"><a href="#cb31-12"></a>  (x (<span class="kw">lambda</span> (a d sa sd) (sa v))))</span>
+<span id="cb31-13"><a href="#cb31-13"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">set-cdr!</span> x v)</span>
+<span id="cb31-14"><a href="#cb31-14"></a>  (x (<span class="kw">lambda</span> (a d sa sd) (sd v))))</span></code></pre></div>
 <ul>
 <li>(I just realized that creating objects this way, where you apply the object to a procedure that is passed all the state variables, is just like pattern matching.)</li>
 </ul>

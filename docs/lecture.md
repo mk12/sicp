@@ -23,7 +23,7 @@ Mathematical declarative statement (what-is knowledge): The square root of $x$ i
 Imperative instructions (how-to knowledge): approximate the square root of x with the following steps:
 
 1. Make a guess, $G$.
-2. Improve the guess by averaging $G$ and $x//G$.
+2. Improve the guess by averaging $G$ and $x/G$.
 3. Keep improving until the guess is good enough.
 
 ### Processes and Lisp
@@ -74,7 +74,7 @@ Another way of controlling complexity is to choose a new design language (a doma
 
 The process of interpreting Lisp in Lisp is like a giant wheel of two processes, apply and eval, which sort of constantly reduce expressions to each other. Very magical.
 
-- apply/eval 
+- apply/eval
 - logical programming
 - register machines
 
@@ -100,13 +100,13 @@ Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all n
 
 This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure -- it is a _special form_. We can also define procedures this way:
 
-```
+```scheme
 (define (square x) (* x x))
 ```
 
 We can also make it more clear that we are naming something:
 
-```
+```scheme
 (define square (lambda (x) (* x x)))
 ```
 
@@ -118,7 +118,7 @@ In Lisp, you do not make arbitrary distinctions between things that are defined 
 
 We do case analysis in Lisp using `cond`.
 
-```
+```scheme
 (define (abs x)
   (cond ((< x 0) (- x))
         ((= x 0) 0)
@@ -127,11 +127,11 @@ We do case analysis in Lisp using `cond`.
 
 Each line is a clause consisting of a predicate (true or false) and an action. We can use `if` if there is a single case:
 
-```
+```scheme
 (define (abs x)
   (if (< x 0)
-    (- x)
-    x))
+      (- x)
+      x))
 ```
 
 You can think of `if` and syntactic sugar for `cond` or vice versa. It doesn't make any difference.
@@ -155,7 +155,7 @@ You can think of `if` and syntactic sugar for `cond` or vice versa. It doesn't m
 - He does this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.
 - He must understand the relationship between the particular spells he casts and the process he's trying to control.
 - This lecture aims to establish this connection.
-- How do particular patterns of procedures and expressions cause particule patterns of execution and behaviour in the process?
+- How do particular patterns of procedures and expressions cause particular patterns of execution and behaviour in the process?
 
 ### Kinds of expressions
 
@@ -178,23 +178,23 @@ These are the substitution rules for evaluating a combination. Note that the ord
 1. Evaluate the operator to get the procedure.
 2. Evaluate the operands to get the arguments.
 3. Apply the procedure to the arguments.
-3.1. Copy the body of the procedure.
-3.2. Substitute the arguments supplied for the formal parameters of the procedure.
-3.3. Evaluate the resulting body.
+    1. Copy the body of the procedure.
+    2. Substitute the arguments supplied for the formal parameters of the procedure.
+    3. Evaluate the resulting body.
 
 #### Example
 
-The sos procedure takes the sum of the squares:
+The `sos` procedure takes the sum of the squares:
 
-```
-(define (s	q a) (* a a))
+```scheme
+(define (sq a) (* a a))
 (define (sos x y)
   (+ (sq x) (sq y)))
 ```
 
 Let's evaluate the sum of the square of 3 and the square of 4:
 
-```
+```scheme
 (sos 3 4)
 (+ (sq 3) (sq 4))
 (+ (sq 3) (* 4 4))
@@ -213,23 +213,23 @@ This is not a perfect description of what the computer does. But it is a good en
 To evaluate `(if <predicate> <consequent> <alternative>)`, follow these steps:
 
 1. Evaluate the predicate expression.
-1.1. If it yields true, Evaluate the consequent expression.
-1.2. If it yields false, Evaluate the alternative expression.
+    1. If it yields true, evaluate the consequent expression.
+    2. If it yields false, evaluate the alternative expression.
 
 #### Example
 
 The addition operator in Peano arithmetic uses a conditional:
 
-```
+```scheme
 (define (+ x y)
   (if (= x 0)
-    y
-    (+ (-1+ x) (1+ y))))
+      y
+      (+ (-1+ x) (1+ y))))
 ```
 
 Now we can evaluate `(+ 3 4)` like so:
 
-```
+```scheme
 (+ 3 4)
 (if (= 3 0) 4 (+ (-1+ 3) (1+ 4)))
 (+ (-1+ 3) (1+ 4))
@@ -260,15 +260,15 @@ Now we can evaluate `(+ 3 4)` like so:
 
 There are two ways to add whole numbers in Peano arithmetic.
 
-```
+```scheme
 (define (+ x y)
   (if (= x 0)
-    y
-    (+ (-1+ x) (1+ y))))
+      y
+      (+ (-1+ x) (1+ y))))
 (define (+ x y)
   (if (= x 0)
-    y
-    (1+ (+ (-1+ x) y))))
+      y
+      (1+ (+ (-1+ x) y))))
 ```
 
 Both are written using recursion, but they are different: the first generates a _linear iterative_ process with $Θ(n)$ time and $Θ(n)$ space; the second generates a _linear recursive_ process with $Θ(n)$ time and $Θ(1)$ space.
@@ -285,12 +285,12 @@ Perturbation analysis: make small changes to the program, see how it affects the
 
 The Fibonacci numbers: 0, 1, 1, 2, 3, 5, 8, 13, 21, .... We can represent this directly in Lisp like so:
 
-```
+```scheme
 (define (fib n)
   (if (< n 2)
-    n
-    (+ (fib (- n 1))
-       (fib (- n 2)))))
+      n
+      (+ (fib (- n 1))
+        (fib (- n 2)))))
 ```
 
 This is a _tree-recursive_ process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.
@@ -303,7 +303,7 @@ This is a _tree-recursive_ process. We can represent the evaluation with a tree.
 
 Here is how we move an n-high tower from spike `from` to spike `to` using spike `spare` as a spare:
 
-```
+```scheme
 (define (move n from to spare)
   (cond
     ((= n 0) "DONE")
@@ -334,22 +334,22 @@ Here is how we move an n-high tower from spike `from` to spike `to` using spike 
 
 We can represent the sigma notation with a procedure that takes other procedures as arguments:
 
-```
+```scheme
 (define (sum term a next b)
   (if (> a b)
-    0
-    (+ (term a)
-       (sum term (next a) next b))))
+      0
+      (+ (term a)
+        (sum term (next a) next b))))
 ```
 
 Now we can write particular cases easily, without repeating ourselves:
 
-```
+```scheme
 (define (sum-int a b)
   (define (identity x) x)
   (sum identity a 1+ b))
 (define (sum-sq a b)
-	(sum square a 1+ b))
+  (sum square a 1+ b))
 (define (pi-sum a b)
   (sum (lambda (i) (/ i (* i (+ i 2))))
        a
@@ -374,7 +374,7 @@ We are separating the things we are adding up from the method of doing the addit
 ### Newton's method
 
 - Newton's method: a general method to find the zeros of functions (an $x$ such that $f(x) = 0$).
-- We can use the fixed-point procedure to define a procedure for computing zeros using Newton's method.
+- We can use the `fixed-point` procedure to define a procedure for computing zeros using Newton's method.
 
 > Wishful thinking: essential to good engineering. And especially essential to good computer science.
 
@@ -421,7 +421,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We need to apply the strategy of wishful thinking: let's imagine that we have procedures `make-rat`, `numer`, and `denom`.
 - We can implement a procedure for adding rationals like so:
 
-```
+```scheme
 (define (+rat x y)
   (make-rat
     (+ (* (numer x) (denom y))
@@ -460,7 +460,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This isn't the problem of the addition procedure; the `make-rat` procedure should be responsible for reducing to lowest terms.
 - We can use the greatest common divisor to fix this:
 
-```
+```scheme
 (define (make-rat n d)
   (let ((g (gcd n d)))
     (cons (/ n g) (/ d g))))
@@ -527,7 +527,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Pairs are the same: they happen to satisfy the contract that `(car (cons x y))` is `x` and `(cdr (cons x y))` is `y`.
 - We can implement pairs with procedures. We don't even need special primitives -- all we need are lambdas:
 
-```
+```scheme
 (define (cons a b)
   (lambda (pick)
     (cond ((= pick 1) a)
@@ -566,7 +566,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Lisp has a particular convention for representing a sequence of things as chained pairs: a list.
 - The car of the pair is the first item in the sequence. The `cdr` of the pair is the rest of the sequence.
 - The `cdr` of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as `()`.
-- The predicte `null?` checks if a list is empty (is nil).
+- The predicate `null?` checks if a list is empty (is nil).
 - Lisp has a procedure called `list`, which is just an abbreviation for the nested conses.
 
 ### Mapping lists
@@ -598,7 +598,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This representation is nice because, once primitives are implemented in this way, the means of combination just fall out because you automatically get the closure property.
 - The procedures `beside` and `below` are trivial to write.
 - The operation `rotate` is similarly simple.
-- The real pun cline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.
+- The real punchline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.
 - We can write recursive painters without ever having purposely built recursion into the painting language.
 - We can even write higher-order painters.
 
@@ -678,7 +678,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.
 
-> This is one the the pieces of artillery we have in our war against complexity.
+> This is one the pieces of artillery we have in our war against complexity.
 
 - We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).
 
@@ -714,7 +714,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We can represent the differentiation rules like this:
 
-```
+```scheme
 (define deriv-rules
   '(((dd (?c c) (? v) 0)
     ((dd (?v v) (? v) 1)
@@ -738,7 +738,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The forms beginning with colons in the RHS are called _substitution objects_. They are skeleton evaluations.
 - Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:
 
-```
+```scheme
 (define algebra-rules
   '((((? op) (?c e1) (?c e2))
      (: (op e1 e2)))
@@ -780,30 +780,30 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.
 
-```
+```scheme
 (define (match pat exp dict)
   (cond ((eq? dict 'failed) 'failed)
         ((atom? pat)
          (if (and (atom? exp) (eq? pat exp))
-           dict
-           'failed))
+             dict
+             'failed))
         ((arbitrary-constant? pat)
          (if (constant? exp)
-           (extend-dict pat exp dict)
-           'failed))
+             (extend-dict pat exp dict)
+             'failed))
         ((arbitrary-variable? pat)
          (if (variable? exp)
-           (extend-dict pat exp dict)
-           'failed))
+             (extend-dict pat exp dict)
+             'failed))
         ((arbitrary-expression? pat)
          (extend-dict pat exp dict))
         ((atom? exp) 'failed)
         (else
-          (match (cdr pat)
-                 (cdr exp)
-                 (match (car pat)
-                        (car exp)
-                        dict)))))
+         (match (cdr pat)
+                (cdr exp)
+                (match (car pat)
+                       (car exp)
+                       dict)))))
 ```
 
 - The `else` clause recursion is very important.
@@ -820,7 +820,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The instantiator takes a dictionary and a skeleton as input and outputs an expression.
 
-```
+```scheme
 (define (instantiate skeleton dict)
   (define (loop s)
     (cond ((atom? s) s)
@@ -836,14 +836,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The only reason we have the internal procedure is to avoid passing the same `dict` on every recursive call.
 - The skeleton evaluation forms like`(: x)` use `evaluate`:
 
-```
+```scheme
 (define (evaluate form dict)
   (if (atom? form)
-    (lookup form dict)
-    (apply (eval (lookup (car form) dict)
-                 user-initial-environment)
-           (mapcar (lambda (v) (lookup v dict))
-                   (cdr form)))))
+      (lookup form dict)
+      (apply (eval (lookup (car form) dict)
+                  user-initial-environment)
+            (mapcar (lambda (v) (lookup v dict))
+                    (cdr form)))))
 ```
 
 - Atoms (variable names) are simply looked up in the dictionary.
@@ -865,29 +865,29 @@ Then, we learned how to use higher-order procedures to represent general methods
 - For `deriv-rules`, this would be `(define dsimp (simplifier deriv-rules))`.
 - This is the `simplifier` procedure:
 
-```
+```scheme
 (define (simplifier the-rules)
   (define (simplify-exp exp)
     (try-rules (if (compound? exp)
-                 (simplify-parts exp)
-                 exp)))
+                   (simplify-parts exp)
+                   exp)))
   (define (simplify-parts exp)
     (if (null? exp)
-      '()
-      (cons (simplify-exp (car exp))
-            (simplify-parts (cdr exp)))))
+        '()
+        (cons (simplify-exp (car exp))
+              (simplify-parts (cdr exp)))))
   (define (try-rules exp)
     (define (scan rules)
       (if (null? rules)
-        exp
-        (let ((dict (match (pattern (car rules))
-                           exp
-                           (empty-dictionary))))
-          (if (eq? dict 'failed)
-            (scan (cdr rules))
-            (simplify-exp
-              (instantiate (skeleton (car rules))
-                           dict))))))
+          exp
+          (let ((dict (match (pattern (car rules))
+                            exp
+                            (empty-dictionary))))
+            (if (eq? dict 'failed)
+                (scan (cdr rules))
+                (simplify-exp
+                  (instantiate (skeleton (car rules))
+                              dict))))))
     (scan the-rules))
   simplify-exp)
 ```
@@ -896,12 +896,12 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Since the `exp` in `simplify-exp` can be either atomic or compound, this naturally recurses through a tree of expressions.
 - We could have just used one procedure, using `map`:
 
-```
+```scheme
 (define (simplify-exp exp)
   (try-rules
     (if (compound? exp)
-      (map simplify-exp exp)
-      exp)))
+        (map simplify-exp exp)
+        exp)))
 ```
 
 - This is a different idiom; it works the same way, but you think about it a bit differently.
@@ -922,7 +922,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The implementation of the dictionary is pretty simple:
 
-```
+```scheme
 (define (empty-dictionary) '())
 (define (extend-dictionary pat dat dict)
   (let ((name (variable-name pat)))
@@ -957,11 +957,11 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Complex number arithmetic
 
 - We can represent a complex number in two ways:
-	- real part and imaginary part (rectangular form);
-	- magnitude and angle (polar form).
-- The rectangular form $x + iy$ and the polar form $re^(i theta)$ are related -- we can get one from the other:
-	- $x = r cos theta$ and $y = r sin theta$.
-	- $r = sqrt(x^2 + y^2)$ and $theta = arctan(y,x)$.
+    - real part and imaginary part (rectangular form);
+    - magnitude and angle (polar form).
+- The rectangular form $x + iy$ and the polar form $re^{i\theta}$ are related:
+    - $x = r\cos\theta$ and $y = r\sin\theta$.
+    - $r = \sqrt{x^2 + y^2}$ and $\theta = \arctan(y,x)$.
 - We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.
 - We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.
 
@@ -983,9 +983,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 - One annoyance is that we had to change the names of the specific procedures (adding a suffix) to avoid naming conflicts.
 - We'll talk about namespaces to fix that problem later.
 - What happens when you add a new type to the system?
-	- The other types don't care. They can remain the same.
-	- The manager needs to add a new clause to every generic procedure that should be able to work with the new type.
-	- This is annoying because the generic procedure case analyses are very repetitive.
+    - The other types don't care. They can remain the same.
+    - The manager needs to add a new clause to every generic procedure that should be able to work with the new type.
+    - This is annoying because the generic procedure case analyses are very repetitive.
 
 ### Data-directed programming
 
@@ -997,18 +997,18 @@ Then, we learned how to use higher-order procedures to represent general methods
 - It is the procedures that go in the table, not their names.
 - The key procedure in this whole system is `operate`:
 
-```
+```scheme
 (define (operate op obj)
   (let ((proc (get (type obj) op)))
     (if (null? proc)
-      (error "undefined OP")
-      (proc (contents obj)))))
+        (error "undefined OP")
+        (proc (contents obj)))))
 ```
 
 - This uses the table to look up the correct procedure, and applies it to the given object.
 - This is what happens when we try to extract the real part of a complex number in polar form:
 
-```
+```scheme
 (real-part z)
 (operate 'real-part z)
 ((get 'polar 'real-part) (contents z))
@@ -1094,7 +1094,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Here's how we implemented factorial functionally:
 
-```
+```scheme
 (define (fact n)
   (define (iter p i)
     (if (> i n) m (iter (* i p) (+ i 1))))
@@ -1103,7 +1103,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We could instead write it with assignments:
 
-```
+```scheme
 (define (fact n)
   (let ((p 1) (i 1))
     (define (loop)
@@ -1150,9 +1150,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Procedure objects are created by evaluating λ-expressions.
 - A λ-expression is evaluated relative to a given environment as follows: a new procedure object is formed, combing the text (code) of the λ-expression with (a pointer to) the environment of evaluation.
 - A procedure is applied to a set of arguments by
-1.1. constructing a frame whose parent is the environment part of the procedure being applied,
-1.2. binding the formal parameters of the procedure to the actual arguments of the call,
-1.3. evaluating the body of the procedure in the context of the new environment.
+    1. constructing a frame whose parent is the environment part of the procedure being applied,
+    2. binding the formal parameters of the procedure to the actual arguments of the call,
+    3. evaluating the body of the procedure in the context of the new environment.
 - In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.
 
 ## Part 3
@@ -1163,7 +1163,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We wouldn't have done this if there wasn't a good reason.
 - Consider the following program:
 
-```
+```scheme
 (define make-counter
   (lambda (n)
     (lambda ()
@@ -1250,14 +1250,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We've made a simulation where objects and state changed in the computer match the objects and state changes in the world.
 - We're going to use agendas (priority queues) to organize time.
 - We have a constructor `make-agenda`; selector `current-time` and `first-item`; predicate `empty-agenda?`; and mutators `add-to-agenda!` and `remove-first-item!`.
-- We will represent it as a list a segments. Each segment is a time consed to a queue of tasks (procedures of no arguments).
+- We will represent it as a list a segments. Each segment is a time `cons`&thinsp;ed to a queue of tasks (procedures of no arguments).
 - To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.
 
 #### Queues
 
 - We construct queues with `(make-queue)`.
 - There are two mutators, `(insert-queue! q x)` and `(delete-queue! q)`; a selector, `(front-queue q)`; and a predicate, `(empty-queue? q)`.
-- A queue is represented as a front pointer of a list consed to the rear pointer of the same list.
+- A queue is represented as a front pointer of a list `cons`&thinsp;ed to the rear pointer of the same list.
 - The mutators use `set-car!` and `set-cdr!`.
 
 ## Part 3
@@ -1276,7 +1276,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Assignment and mutators are equally powerful. We can implement the cons mutators in terms of `set!`.
 - We've already seen Alonzo Church's way of creating pairs just with lambda expressions:
 
-```
+```scheme
 (define (cons x y)
   (lambda (m)
     (m x y)))
@@ -1286,7 +1286,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We can change it to allow mutation:
 
-```
+```scheme
 (define (cons x y)
   (lambda (m)
     (m x
