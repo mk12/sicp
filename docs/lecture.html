@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Mitchell Kember" />
+  <title>SICP Lecture Notes</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<a class="index-link" href="index.html">Index</a>
+|
+<a class="index-link" href="https://github.com/mk12/sicp">GitHub</a>
+<header id="title-block-header">
+<h1 class="title">SICP Lecture Notes</h1>
+<p class="subtitle">Notes on <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/"><em>Structure and Interpretation of Computer Programs</em> lectures</a></p>
+<p class="author">Mitchell Kember</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#a-overview-and-introduction-to-lisp">1A: Overview and Introduction to Lisp</a></li>
+<li><a href="#b-procedures-and-processes-substitution-model">1B: Procedures and Processes; Substitution Model</a></li>
+<li><a href="#a-higher-order-procedures">2A: Higher-order Procedures</a></li>
+<li><a href="#b-compound-data">2B: Compound Data</a></li>
+<li><a href="#a-henderson-escher-example">3A: Henderson Escher Example</a></li>
+<li><a href="#b-symbolic-differentiation-quotation">3B: Symbolic Differentiation; Quotation</a></li>
+<li><a href="#a-pattern-matching-and-rule-based-substitution">4A: Pattern Matching and Rule-based Substitution</a></li>
+<li><a href="#b-generic-operators">4B: Generic Operators</a></li>
+<li><a href="#a-assignment-state-and-side-effects">5A: Assignment, State, and Side-effects</a></li>
+<li><a href="#b-computational-objects">5B: Computational Objects</a></li>
+<li><a href="#a-streams-part-1">6A: Streams, Part 1</a></li>
+</ul>
+</nav>
+<h1 id="a-overview-and-introduction-to-lisp">1A: Overview and Introduction to Lisp</h1>
+<h2 id="part-1">Part 1</h2>
+<h3 id="computer-science">Computer science</h3>
+<ul>
+<li>It’s not a science, and it’s not <em>really</em> about computers.</li>
+<li>It’s not about computers in the same way that astronomy isn’t about telescopes.</li>
+<li>The ancient Egyptians began geometry using surveying instruments. We now know that the essence of geometry is much bigger than the act of using these primitive tools.</li>
+<li>We often conflate the essence of a field with its tools.</li>
+<li>In a thousand years, they will look back on us in a similar way to how we look at the ancient Egyptians: “They were playing around with these digital computers, but that was only the beginning of the much broader ideas about computation.”</li>
+</ul>
+<h3 id="declarative-vs.-imperative">Declarative vs. imperative</h3>
+<p>Mathematical declarative statement (what-is knowledge): The square root of <span class="math inline">x</span> is the <span class="math inline">y</span> such that <span class="math inline">y ≥ 0</span> and <span class="math inline">y^2 = x</span>.</p>
+<p>Imperative instructions (how-to knowledge): approximate the square root of x with the following steps:</p>
+<ol type="1">
+<li>Make a guess, <span class="math inline">G</span>.</li>
+<li>Improve the guess by averaging <span class="math inline">G</span> and <span class="math inline">x//G</span>.</li>
+<li>Keep improving until the guess is good enough.</li>
+</ol>
+<h3 id="processes-and-lisp">Processes and Lisp</h3>
+<ul>
+<li>The above is an algorithm. More generally, it is a <em>process</em>.</li>
+<li>What is a process? It’s like a magical spirit that lives in the computer and does something.</li>
+<li>The process is directed by a pattern of rules called a procedure (procedure is the spell that controls the spirit).</li>
+<li>We conjure our spirits in a language called Lisp.</li>
+<li>Lisp is easy to learn just as chess is easy to learn.</li>
+<li>Rules stated in minutes, but there are many implications.</li>
+<li>Much more difficult to become a master programmer: understanding all the implications, knowing how to approach problems.</li>
+</ul>
+<h3 id="complexity-and-computer-science">Complexity and computer science</h3>
+<ul>
+<li>The real problems in CS come when developing huge software with so much code that you can’t hold it all in your head at once.</li>
+<li>This is possible because there are techniques for controlling the complexity of large systems.</li>
+<li>Computer scientists are in the business of controlling complexity.</li>
+<li>This is different from the complexity that others, for example aeronautical engineers, deal with, because the complexity in CS in a sense is not real.</li>
+<li>Computer science deals with <em>idealized</em> components.</li>
+<li>We know as much as we want about the components; we don’t need to worry about tolerance.</li>
+<li>Not much difference between what I can <em>build</em> and what I can <em>image</em>.</li>
+<li>Other disciplines have physical constraints; in CS, their is only the constraints of your own mind.</li>
+<li>CS is like an abstract kind of engineering – ignore the constraints that are imposed by reality.</li>
+</ul>
+<h3 id="techniques-for-managing-complexity">Techniques for managing complexity</h3>
+<h4 id="black-box-abstraction">Black box abstraction</h4>
+<p>Take something and build a box about it. The important thing is that you don’t care what is going on inside the box – it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and big bigger boxes.</p>
+<ul>
+<li>Primitive objects: primitive procedures, primitive data.</li>
+<li>Means of combination: procedure composition, construction of compound data.</li>
+<li>Means of abstraction: procedure definition, simple data abstraction.</li>
+<li>Capturing common patterns: higher-order procedures, data as procedures.</li>
+</ul>
+<h4 id="conventional-interfaces">Conventional interfaces</h4>
+<p>Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.</p>
+<ul>
+<li>generic operations</li>
+<li>large-scale structure and modularity</li>
+<li>object-oriented programming</li>
+<li>operations on aggregates</li>
+</ul>
+<h4 id="metalinguistic-abstraction">Metalinguistic abstraction</h4>
+<p>Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.</p>
+<p>The process of interpreting Lisp in Lisp is like a giant wheel of two processes, apply and eval, which sort of constantly reduce expressions to each other. Very magical.</p>
+<ul>
+<li>apply/eval</li>
+<li>logical programming</li>
+<li>register machines</li>
+</ul>
+<h2 id="part-2">Part 2</h2>
+<h3 id="three-main-features">Three main features</h3>
+<h4 id="primitive-elements">Primitive elements</h4>
+<p>Here are some primitive elements is Lisp: <code>3</code>, <code>14.4</code>, <code>5</code>, <code>+</code>. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.</p>
+<h4 id="means-of-combination">Means of combination</h4>
+<ul>
+<li>We can take the sum using a <em>combination</em>: <code>(+ 3 14.4 5)</code>.</li>
+<li>Combination: applying and operator to operands.</li>
+<li>The operator and operands themselves can be combinations.</li>
+<li>Lisp uses fully parenthesized (unambiguous) prefix notation.</li>
+<li>Parentheses are very different in Lisp and in mathematics.</li>
+<li>Nested combinations can be modelled as trees.</li>
+<li>Parentheses are just a way to write trees as a linear sequence of characters.</li>
+</ul>
+<h4 id="means-of-abstraction">Means of abstraction</h4>
+<p>This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure – it is a <em>special form</em>. We can also define procedures this way:</p>
+<pre><code>(define (square x) (* x x))</code></pre>
+<p>We can also make it more clear that we are naming something:</p>
+<pre><code>(define square (lambda (x) (* x x)))</code></pre>
+<p>The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former <em>desugars</em> to the latter.</p>
+<p>In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in. A person using that shouldn’t even have to know.</p>
+<h3 id="case-analysis">Case analysis</h3>
+<p>We do case analysis in Lisp using <code>cond</code>.</p>
+<pre><code>(define (abs x)
+  (cond ((&lt; x 0) (- x))
+        ((= x 0) 0)
+        ((&gt; x 0) x)))</code></pre>
+<p>Each line is a clause consisting of a predicate (true or false) and an action. We can use <code>if</code> if there is a single case:</p>
+<pre><code>(define (abs x)
+  (if (&lt; x 0)
+    (- x)
+    x))</code></pre>
+<p>You can think of <code>if</code> and syntactic sugar for <code>cond</code> or vice versa. It doesn’t make any difference.</p>
+<h3 id="recursion">Recursion</h3>
+<ul>
+<li>We now know enough to implement any numerical procedure that you could implement in other languages.</li>
+<li>We don’t need any looping constructs in Lisp. We can define things in terms of themselves using <em>recursion</em>.</li>
+</ul>
+<h3 id="block-structure">Block structure</h3>
+<ul>
+<li>We can create a black box by packaging internals inside of a definition. This is called <em>block structure</em>.</li>
+</ul>
+<h1 id="b-procedures-and-processes-substitution-model">1B: Procedures and Processes; Substitution Model</h1>
+<h2 id="part-1-1">Part 1</h2>
+<h3 id="programs-and-processes">Programs and processes</h3>
+<ul>
+<li>The job of a programmer is to design processes that accomplish particular goals (like finding the square root of a number).</li>
+<li>He does this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.</li>
+<li>He must understand the relationship between the particular spells he casts and the process he’s trying to control.</li>
+<li>This lecture aims to establish this connection.</li>
+<li>How do particular patterns of procedures and expressions cause particule patterns of execution and behaviour in the process?</li>
+</ul>
+<h3 id="kinds-of-expressions">Kinds of expressions</h3>
+<p>So far we have seen three main kinds of expressions:</p>
+<ul>
+<li>numbers</li>
+<li>symbols</li>
+<li>combinations</li>
+</ul>
+<p>These are also expressions, but they are <em>special forms</em>, so we will worry about them later:</p>
+<ul>
+<li>lambdas</li>
+<li>definitions</li>
+<li>conditionals</li>
+</ul>
+<h3 id="evaluating-combinations">Evaluating combinations</h3>
+<p>These are the substitution rules for evaluating a combination. Note that the order does not matter for steps 1 and 2.</p>
+<ol type="1">
+<li>Evaluate the operator to get the procedure.</li>
+<li>Evaluate the operands to get the arguments.</li>
+<li>Apply the procedure to the arguments. 3.1. Copy the body of the procedure. 3.2. Substitute the arguments supplied for the formal parameters of the procedure. 3.3. Evaluate the resulting body.</li>
+</ol>
+<h4 id="example">Example</h4>
+<p>The sos procedure takes the sum of the squares:</p>
+<pre><code>(define (s  q a) (* a a))
+(define (sos x y)
+  (+ (sq x) (sq y)))</code></pre>
+<p>Let’s evaluate the sum of the square of 3 and the square of 4:</p>
+<pre><code>(sos 3 4)
+(+ (sq 3) (sq 4))
+(+ (sq 3) (* 4 4))
+(+ (sq 3) 16)
+(+ (* 3 3) 16)
+(+ 9 16)
+25</code></pre>
+<p>This is not a perfect description of what the computer does. But it is a good enough model for now.</p>
+<blockquote>
+<p>But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think.</p>
+</blockquote>
+<h3 id="evaluating-conditionals">Evaluating conditionals</h3>
+<p>To evaluate <code>(if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)</code>, follow these steps:</p>
+<ol type="1">
+<li>Evaluate the predicate expression. 1.1. If it yields true, Evaluate the consequent expression. 1.2. If it yields false, Evaluate the alternative expression.</li>
+</ol>
+<h4 id="example-1">Example</h4>
+<p>The addition operator in Peano arithmetic uses a conditional:</p>
+<pre><code>(define (+ x y)
+  (if (= x 0)
+    y
+    (+ (-1+ x) (1+ y))))</code></pre>
+<p>Now we can evaluate <code>(+ 3 4)</code> like so:</p>
+<pre><code>(+ 3 4)
+(if (= 3 0) 4 (+ (-1+ 3) (1+ 4)))
+(+ (-1+ 3) (1+ 4))
+(+ (-1+ 3) 5)
+(+ 2 5)
+(if (= 2 0) 5 (+ (-1+ 2) (1+ 5)))
+(+ (-1+ 2) (1+ 5))
+(+ (-1+ 2) 6)
+(+ 1 6)
+(if (= 1 0) 6 (+ (-1+ 1) (1+ 6)))
+(+ (-1+ 1) (1+ 6))
+(+ (-1+ 1) 7)
+(+ 0 7)
+(if (= 0 0) 7 (+ (-1+ 0) (1+ 7)))
+7</code></pre>
+<h2 id="part-2-1">Part 2</h2>
+<h3 id="pre-visualization">Pre-visualization</h3>
+<ul>
+<li>A program made of procedures and expression evolves a process.</li>
+<li>But how do particular programs evolve particle processes?</li>
+<li>We want to be able to go from particularly shaped programs to particularly shaped processes.</li>
+<li>We want to pre-visualize the process like a photographer pre-visualizes the photo before taking the shot.</li>
+</ul>
+<h3 id="peano-arithmetic">Peano arithmetic</h3>
+<p>There are two ways to add whole numbers in Peano arithmetic.</p>
+<pre><code>(define (+ x y)
+  (if (= x 0)
+    y
+    (+ (-1+ x) (1+ y))))
+(define (+ x y)
+  (if (= x 0)
+    y
+    (1+ (+ (-1+ x) y))))</code></pre>
+<p>Both are written using recursion, but they are different: the first generates a <em>linear iterative</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(n)</span> space; the second generates a <em>linear recursive</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(1)</span> space.</p>
+<p>The iteration has all of its state in explicit variables. The recursion does not.</p>
+<h2 id="part-3">Part 3</h2>
+<h3 id="perturbation-analysis">Perturbation analysis</h3>
+<p>Perturbation analysis: make small changes to the program, see how it affects the process.</p>
+<h3 id="fibonacci-sequence">Fibonacci sequence</h3>
+<p>The Fibonacci numbers: 0, 1, 1, 2, 3, 5, 8, 13, 21, …. We can represent this directly in Lisp like so:</p>
+<pre><code>(define (fib n)
+  (if (&lt; n 2)
+    n
+    (+ (fib (- n 1))
+       (fib (- n 2)))))</code></pre>
+<p>This is a <em>tree-recursive</em> process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.</p>
+<blockquote>
+<p>The reason why people think programming is hard is because you’re writing down a general rule which is going to be used for lots of instances – it’s going to control all of those instances.</p>
+</blockquote>
+<h3 id="tower-of-hanoi">Tower of Hanoi</h3>
+<blockquote>
+<p>The way in which you construct a recursive process is by wishful thinking. You have to believe.</p>
+</blockquote>
+<p>Here is how we move an n-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
+<pre><code>(define (move n from to spare)
+  (cond
+    ((= n 0) &quot;DONE&quot;)
+    (else (move (-1+ n) from spare to)
+          (print-move from to)
+          (move (-1+m) spare to from))))</code></pre>
+<h1 id="a-higher-order-procedures">2A: Higher-order Procedures</h1>
+<h2 id="part-1-2">Part 1</h2>
+<h3 id="dont-repeat-yourself">Don’t repeat yourself</h3>
+<ul>
+<li>So far Lisp might just seem like a different language with funny syntax. It’s time to shatter that illusion.</li>
+<li>We are already familiar with creating recursive procedures that, for example, calculate the sum of integers from <span class="math inline">A</span> to <span class="math inline">B</span>.</li>
+<li>What about the sum of the squares of the integers from <span class="math inline">A</span> to <span class="math inline">B</span>? That’s almost the same program! We don’t like repetition.</li>
+</ul>
+<blockquote>
+<p>Whenever you see yourself writing the same thing down more than once, there’s something wrong and you shouldn’t be doing it. And the reason is not because it’s a waste of time to write something down more than once. It’s because there’s some idea here, a very simple idea….</p>
+</blockquote>
+<ul>
+<li>It is crucial to divide problems up into as many pieces as is reasonable. We must be able to understand each in isolation.</li>
+<li>Understanding and debugging only happens once when you avoid repetition – not just writing!</li>
+<li>Any time we see things that are almost identical, we need to think of an abstraction to cover them.</li>
+<li>An <em>idiom</em> is a common pattern in a language that is useful to know. In Lisp, we can give idioms names and abstract them.</li>
+<li>There is nothing very special about numbers. Numbers are just one kind of data. Procedures are also data.</li>
+</ul>
+<h3 id="summation">Summation</h3>
+<p>We can represent the sigma notation with a procedure that takes other procedures as arguments:</p>
+<pre><code>(define (sum term a next b)
+  (if (&gt; a b)
+    0
+    (+ (term a)
+       (sum term (next a) next b))))</code></pre>
+<p>Now we can write particular cases easily, without repeating ourselves:</p>
+<pre><code>(define (sum-int a b)
+  (define (identity x) x)
+  (sum identity a 1+ b))
+(define (sum-sq a b)
+    (sum square a 1+ b))
+(define (pi-sum a b)
+  (sum (lambda (i) (/ i (* i (+ i 2))))
+       a
+       (lambda (i) (+ i 4))
+       b))</code></pre>
+<p>We are separating the things we are adding up from the method of doing the addition. Now, we can change the sum procedure so that it generates an iterative process, and all the specific procedures using sum will benefit.</p>
+<h2 id="part-2-2">Part 2</h2>
+<h3 id="higher-order-procedures">Higher-order procedures</h3>
+<ul>
+<li>We use abstraction for the purpose of making programs easier to read and write.</li>
+<li>Abstraction helps us to clarify what’s going on.</li>
+<li>Our square root algorithm was actually a specific instance of the more general fixed-point search.</li>
+<li>The damping part is also a general signal processing strategy, and we can also treat is as a separate thing using a higher-order procedure.</li>
+<li>Higher-order procedures can take procedures as arguments and they can return new procedures.</li>
+</ul>
+<h2 id="part-3-1">Part 3</h2>
+<h3 id="newtons-method">Newton’s method</h3>
+<ul>
+<li>Newton’s method: a general method to find the zeros of functions (an <span class="math inline">x</span> such that <span class="math inline">f(x) = 0</span>).</li>
+<li>We can use the fixed-point procedure to define a procedure for computing zeros using Newton’s method.</li>
+</ul>
+<blockquote>
+<p>Wishful thinking: essential to good engineering. And especially essential to good computer science.</p>
+</blockquote>
+<ul>
+<li>We can use names of procedures that we haven’t defined yet while writing a program (top-down design).</li>
+</ul>
+<h3 id="the-rights-and-privileges-of-first-class-citizens">The rights and privileges of first-class citizens</h3>
+<ul>
+<li>To be named by variables.</li>
+<li>To be passed as arguments to procedures.</li>
+<li>To be returned as values of procedures.</li>
+<li>To be incorporating into data structures.</li>
+</ul>
+<h1 id="b-compound-data">2B: Compound Data</h1>
+<h2 id="part-1-3">Part 1</h2>
+<h4 id="recap">Recap</h4>
+<p>In the beginning, we learned about</p>
+<ul>
+<li>primitive forms;</li>
+<li>means of combination;</li>
+<li>means of abstraction.</li>
+</ul>
+<p>Then, we learned how to use higher-order procedures to represent general methods of computation. This gave us extraordinary expressive power.</p>
+<h3 id="layered-system">Layered system</h3>
+<ul>
+<li>When we wrote the square root procedure, we used layers of abstraction. Someone else could have written <code>good-enough?</code>.</li>
+</ul>
+<blockquote>
+<p>The crucial idea is that when we’re building things, we divorce the task of building things from the task implementing the parts.</p>
+</blockquote>
+<ul>
+<li>In a large system, we have lots of <em>abstraction barriers</em>.</li>
+<li>Now we will look at the same issues for data.</li>
+<li>There are means of combination for data as well, allowing us to combine primitive data into compound data.</li>
+<li>We will also see a methodology for abstraction with data.</li>
+<li>Key idea: build the system in layers, with abstraction barriers.</li>
+</ul>
+<h3 id="rational-number-arithmetic">Rational number arithmetic</h3>
+<ul>
+<li>We already know how to express the arithmetic operators for fractions in math.</li>
+<li>Combining two fractions with addition, subtraction, multiplication, or division produces another fraction.</li>
+<li>The computations are easy – but how to we represent a rational number? They are not primitive numbers.</li>
+<li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
+<li>We can implement a procedure for adding rationals like so:</li>
+</ul>
+<pre><code>(define (+rat x y)
+  (make-rat
+    (+ (* (numer x) (denom y))
+       (* (numer y) (denom x)))
+    (* (denom x) (denom y))))</code></pre>
+<ul>
+<li>The procedure <code>make-rat</code> is called a <em>constructor</em>.</li>
+<li>The procedures <code>numer</code> and <code>denom</code> are called <em>selectors</em>.</li>
+</ul>
+<h3 id="why-do-we-need-compound-data">Why do we need compound data?</h3>
+<ul>
+<li>Why bother with these data objects instead of just passing in four numbers? It doesn’t scale, and there is no abstraction.</li>
+<li>We would have to worry about all these temporary numbers.</li>
+<li>It’s confusing. We need abstraction.</li>
+<li>We need to create compound data objects for the same reason that we separate our program into procedures built on abstractions.</li>
+</ul>
+<h2 id="part-2-3">Part 2</h2>
+<h3 id="pairs">Pairs</h3>
+<ul>
+<li>How do we actually make one of these “clouds”?</li>
+<li>We need a kind of glue to connect things.</li>
+<li>Lisp provides this: it is called <em>list structure</em>.</li>
+<li>The primitive <code>cons</code> allows us to construct <em>pairs</em>.</li>
+<li>Cons is obviously the constructor.</li>
+<li>The <code>car</code> and the <code>cdr</code> procedures are the selectors for pairs.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(car (cons x y))</code> is <code>x</code>.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(cdr (cons x y))</code> is <code>y</code>.</li>
+<li>We can represent conses with two boxes side by side with an arrow coming out of each one.</li>
+<li>This is called box and pointer notation.</li>
+</ul>
+<h3 id="lowest-terms">Lowest terms</h3>
+<ul>
+<li>When we use the system to add a half and a quarter, it gives us six eights instead of three quarters. This isn’t what we want.</li>
+<li>This isn’t the problem of the addition procedure; the <code>make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
+<li>We can use the greatest common divisor to fix this:</li>
+</ul>
+<pre><code>(define (make-rat n d)
+  (let ((g (gcd n d)))
+    (cons (/ n g) (/ d g))))</code></pre>
+<ul>
+<li>Now our fractions will always be reduced to lowest terms.</li>
+</ul>
+<h3 id="abstraction-layer">Abstraction layer</h3>
+<ul>
+<li>The important thing with our rational arithmetic system is that we set up an abstraction layer.</li>
+<li>We have the rational arithmetic operators on one side and the pair constructor and selectors on the other.</li>
+<li>The procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code> act as an abstraction barrier between the two.</li>
+<li>We always want to separate <em>use</em> from <em>representation</em>.</li>
+<li>This methodology is called <em>data abstraction</em>.</li>
+</ul>
+<h3 id="why-use-data-abstraction">Why use data abstraction?</h3>
+<ul>
+<li>We didn’t have to do it this way.</li>
+<li>We could have used <code>cons</code>, <code>car</code>, and <code>cdr</code> directly in the rational arithmetic procedures.</li>
+<li>Is this talk of data abstraction just self-righteous BS?</li>
+<li>Maybe it would be marginally more efficient to skip the data abstraction!</li>
+<li>It goes back to naming. If you have the name of the spirit, you have control over it.</li>
+<li>One advantage: you might want to have alternative representations. If we use <code>cons</code> directly, we would have to reduce to lowest terms every time we make a rational number.</li>
+<li>With the data abstraction, we could even move the lowest terms stuff to the selectors – no other change in the code required.</li>
+<li>Data abstraction lets us postpone decisions.</li>
+</ul>
+<h3 id="designing-systems">Designing systems</h3>
+<blockquote>
+<p>See, in general, as systems designers, you’re forced with the necessity to make decisions about how you’re going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you’re forced to do it. The problem is, there’s a very, very narrow line between deferring decisions and outright procrastination. So you’d like to make progress, but also at the same time never be bound by the consequences of your decisions.</p>
+</blockquote>
+<blockquote>
+<p>I said that computer science is a lot like magic, and it’s sort of good that it’s like magic. There’s a bad part of computer since that’s a lot like religion.</p>
+</blockquote>
+<h2 id="part-3-2">Part 3</h2>
+<h3 id="data-abstraction">Data abstraction</h3>
+<ul>
+<li>Data abstraction is a way of controlling complexity in large systems.</li>
+<li>Like all ways of controlling complexity, the real power comes from their use as building blocks for more complicated things.</li>
+</ul>
+<h3 id="points-and-line-segments">Points and line segments</h3>
+<ul>
+<li>We could also use pairs to represent points on a plane.</li>
+<li>The constructor and accessors could use <code>cons</code>, <code>car</code>, and <code>cdr</code>, just like in the rational number system.</li>
+<li>We could use points (or vectors) as a building block to make line segments. This would be a multi-layered system.</li>
+<li>Segments, vectors, and pairs are all separated.</li>
+<li>Without data abstraction, the procedure for calculating the length of a line segment is very hard to read; worse, it locks you into decisions about representation.</li>
+<li>Cons can combine anything, not just numbers. With line segments, we combine two pairs.</li>
+<li><em>Closure</em> means we can make pairs of pairs, not just pairs of numbers. We say that the means of combinations closes over the things that it makes.</li>
+</ul>
+<h2 id="part-4">Part 4</h2>
+<h3 id="abstract-data-and-contracts">Abstract data and contracts</h3>
+<ul>
+<li>We’ve done a few simple examples. Now we’re going to talk about what it <em>means</em>, which is much harder.</li>
+<li>At the beginning, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).</li>
+<li>We had defined a rational number representation in terms of <em>abstract data</em>.</li>
+<li>There’s a way of saying whether three procedures are suitable as a basis for rational number representation.</li>
+<li>We had a contract that the procedures have to fulfill: given a rational number <code>x</code> created with <code>(make-rat n d)</code>, we must have <code>(= (/ (numer x) (denom x)) (/ n d))</code>.</li>
+</ul>
+<h3 id="implementation-of-pairs">Implementation of pairs</h3>
+<ul>
+<li>Rational numbers <em>really</em> are just this contract, this axiom.</li>
+<li>They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.</li>
+<li>Pairs are the same: they happen to satisfy the contract that <code>(car (cons x y))</code> is <code>x</code> and <code>(cdr (cons x y))</code> is <code>y</code>.</li>
+<li>We can implement pairs with procedures. We don’t even need special primitives – all we need are lambdas:</li>
+</ul>
+<pre><code>(define (cons a b)
+  (lambda (pick)
+    (cond ((= pick 1) a)
+          ((= pick 2) b))))
+(define (car x) (x 1))
+(define (cdr x) (x 2))</code></pre>
+<ul>
+<li>All we need to do is show that this satisfies the axiom.</li>
+<li>We can do that with the substitution model. It works.</li>
+<li>You couldn’t tell if <code>cons</code>, <code>car</code>, and <code>cdr</code> were implemented in this way or not.</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<ul>
+<li>We don’t need data at all for data abstraction: we can do everything in terms of procedures.</li>
+<li>This blurs the line between code and data.</li>
+<li>Procedures are not just the act of doing something.</li>
+<li>Procedures are conceptual entities or objects.</li>
+</ul>
+<h1 id="a-henderson-escher-example">3A: Henderson Escher Example</h1>
+<h2 id="part-1-4">Part 1</h2>
+<h3 id="recap-1">Recap</h3>
+<ul>
+<li>Now we know about procedural abstract and data abstraction.</li>
+<li>We can isolate the way data objects are <em>used</em> from the way that they are <em>represented</em>.</li>
+<li>We learned how to make pairs with <code>cons</code>, <code>car</code>, and <code>cdr</code>.</li>
+<li>We looked at examples: interval arithmetic and vectors.</li>
+<li>We can glue together arbitrary things with <code>cons</code>, not just numbers (for example, pairs of pairs).</li>
+<li>We learned about closure: the things that we combine can themselves be combined. This allows us to build complexity.</li>
+</ul>
+<h3 id="lists">Lists</h3>
+<ul>
+<li>Their are a lot of different ways of building list structure.</li>
+<li>Lisp has a particular convention for representing a sequence of things as chained pairs: a list.</li>
+<li>The car of the pair is the first item in the sequence. The <code>cdr</code> of the pair is the rest of the sequence.</li>
+<li>The <code>cdr</code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>.</li>
+<li>The predicte <code>null?</code> checks if a list is empty (is nil).</li>
+<li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested conses.</li>
+</ul>
+<h3 id="mapping-lists">Mapping lists</h3>
+<ul>
+<li>It is common to write a procedure that does the same thing to each item in a list and returns a new list.</li>
+<li>The recursive strategy is to apply the operation to the car of the list, and then cons that onto the rest of the list which has already been mapped (wishful thinking).</li>
+<li>Rather than doing the recursive strategy manually each time, we use the higher-order procedure <code>map</code>.</li>
+<li>Thinking in terms of operations on aggregates is a powerful idea. We don’t worry about recursion or other details.</li>
+<li>The procedure <code>for-each</code> is like map, but it doesn’t build up a new list. It is just for side-effects.</li>
+</ul>
+<h2 id="part-2-4">Part 2</h2>
+<h3 id="henderson-escher-example">Henderson Escher example</h3>
+<ul>
+<li>A language for describing self-similar, fractal-like figures.</li>
+<li>This example will blur the line between procedures and data.</li>
+<li>There is only one primitive: a painter. A painter draws its image within a frame (a parallelogram).</li>
+<li>We have means of combination: <code>rotate</code>, <code>beside</code>, and <code>below</code>.</li>
+<li>Thanks to the closure property, we are able to build up complexity in this language very quickly.</li>
+<li>A frame is defined by an origin vector and two side vectors.</li>
+<li>All frames are based on transformations from the unit square.</li>
+<li>We can build primitive painters from lists of line segments.</li>
+<li>A painter is a procedure that accepts a frame as an argument and draws its image within the frame.</li>
+</ul>
+<h2 id="part-3-3">Part 3</h2>
+<h3 id="importance-of-closure">Importance of closure</h3>
+<ul>
+<li>This representation is nice because, once primitives are implemented in this way, the means of combination just fall out because you automatically get the closure property.</li>
+<li>The procedures <code>beside</code> and <code>below</code> are trivial to write.</li>
+<li>The operation <code>rotate</code> is similarly simple.</li>
+<li>The real pun cline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.</li>
+<li>We can write recursive painters without ever having purposely built recursion into the painting language.</li>
+<li>We can even write higher-order painters.</li>
+</ul>
+<h3 id="the-power-of-lisp">The power of Lisp</h3>
+<ul>
+<li>The difference between merely implementing something in a language and embedding something in the language: you don’t lost the original power of the language.</li>
+<li>Lisp is a lousy language for any particular problem. But it’s good for figuring out the right language you want and embedding that in Lisp. That’s the real power of this approach to design.</li>
+<li>There is no difference between procedures and data.</li>
+</ul>
+<h3 id="software-engineering">Software engineering</h3>
+<ul>
+<li>We have been creating a sequence of layers of language.</li>
+<li>The methodology (or mythology) of software engineering is this: figure out your task, break it into three sub-tasks, and repeat for each sub-task. Work your way up to the top and you’ll end up with this beautiful edifice.</li>
+<li>Each of these nodes in the tree is supposed to fit perfectly into the whole thing.</li>
+<li>The Henderson example didn’t work like that.</li>
+<li>Instead, we had a sequence of layers of language. Each layer depends on the layers beneath it, but it can’t see their details because there is an abstraction barrier in the way.</li>
+</ul>
+<blockquote>
+<p>So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level.</p>
+</blockquote>
+<ul>
+<li>With the top-down tree, each part does a specific task.</li>
+<li>In the Henderson example, we had a full range of linguistic power at each level. Each level does a whole range of things, not a single task.</li>
+<li>This makes the system more robust, meaning that changes are easy to make and the system can adapt to them.</li>
+<li>A small change in the top-down tree might cause the whole thing to fall down unless you reconstruct it.</li>
+<li>We are talking about levels of language rather than a strict hierarchy. Each level has its own vocabulary.</li>
+<li>The design process is not so much implementing programs as implementing languages. That’s the powerful idea of Lisp.</li>
+</ul>
+<h1 id="b-symbolic-differentiation-quotation">3B: Symbolic Differentiation; Quotation</h1>
+<h2 id="part-1-5">Part 1</h2>
+<h3 id="recap-2">Recap</h3>
+<ul>
+<li>In order to make a robust system, it needs to be insensitive to small changes.</li>
+<li>A small change in the problem leads to a small change in the solution.</li>
+<li>Don’t solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.</li>
+<li>We’ve seen the power of embedding languages.</li>
+<li>We are going to confuse the distinction between procedures and data even more badly.</li>
+</ul>
+<h3 id="derivatives-and-integrals">Derivatives and integrals</h3>
+<ul>
+<li>Instead of doing a numerical approximation of the derivative, we want to apply the rules of calculus to algebraic expressions.</li>
+<li>Producing derivatives of arbitrary expressions is easy; producing integrals, the inverse operation, is hard.</li>
+<li>Why is it easy to go one way but not the other? Because the rules for differentiation are reduction rules.</li>
+<li>Big problems turn into multiple simpler problems.</li>
+</ul>
+<h3 id="differentiation-procedure">Differentiation procedure</h3>
+<ul>
+<li>The reduction rules of differentiation are appropriate for recursion.</li>
+<li>We can write the rules as a case analysis.</li>
+<li>But, we need to be able to <em>represent</em> the expressions.</li>
+<li>The differentiation procedure that takes an <em>expression</em> as an argument is different from the one that takes a function.</li>
+<li>You can’t open up a function. You can only get answers from it.</li>
+<li>An expression is some object representing the algebraic expression that defines a function.</li>
+<li>We can write the procedure <code>deriv</code> using a lot of wishful thinking.</li>
+</ul>
+<h3 id="expression-representation">Expression representation</h3>
+<ul>
+<li>To represent sums, products, quotients, etc., why not use the same language we’re writing the program in?</li>
+<li>We can just use list structure.</li>
+<li>There are more primitive predicates that come with Lisp that we haven’t seen yet: <code>atom?</code> and <code>eq?</code>.</li>
+</ul>
+<h3 id="quotation">Quotation</h3>
+<ul>
+<li>We are also introducing <em>quotation</em>. The words of English are ambiguous: <em>say your name</em> is different from <em>say “your name”</em>.</li>
+<li>The notation in Lisp is to precede the expression with a single quotation mark.</li>
+<li>Quotation makes a language more complex because we can no longer substitute equals for equals.</li>
+<li>The names <code>car</code> and <code>cdr</code> have survived (originally the address register and the decrement register) because we can do things like <code>cadddr</code> and <code>cadar</code>.</li>
+</ul>
+<h2 id="part-2-5">Part 2</h2>
+<h3 id="simplifying-expressions">Simplifying expressions</h3>
+<ul>
+<li>The expressions we get from the <code>deriv</code> procedure are ugly.</li>
+<li>Nothing is simplified, and it is hard to read.</li>
+</ul>
+<blockquote>
+<p>The form of the process is expanded from the local rules that you see in the procedure.</p>
+</blockquote>
+<ul>
+<li>There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.</li>
+</ul>
+<blockquote>
+<p>This is one the the pieces of artillery we have in our war against complexity.</p>
+</blockquote>
+<ul>
+<li>We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).</li>
+</ul>
+<h3 id="conclusion-1">Conclusion</h3>
+<ul>
+<li>Quotation stops and says, “I’m talking about this expression itself.”</li>
+<li>We can write languages that are not only embedded in Lisp, that are completely different, using quotation.</li>
+<li>Quotation gives us tremendous power.</li>
+</ul>
+<h1 id="a-pattern-matching-and-rule-based-substitution">4A: Pattern Matching and Rule-based Substitution</h1>
+<h2 id="part-1-6">Part 1</h2>
+<h3 id="recap-3">Recap</h3>
+<ul>
+<li>We wrote a program to differentiate expressions that had a highly stylized behaviour and structure.</li>
+<li>We used quotation to represent symbolic math expressions.</li>
+<li>Why did we have to translate the rules of differential calculus into the language of the computer?</li>
+<li>Our program was a conditional dispatch on the type of the expression as observed by the rules.</li>
+<li>Is there some other, more clear way of writing this program?</li>
+</ul>
+<h3 id="rules">Rules</h3>
+<ul>
+<li>We follow rules to differentiate expressions.</li>
+<li>What is a rule, exactly?</li>
+<li>A rule has a left-hand side and a right-hand side.</li>
+<li>The LHS is what you compare your expression to, and the RHS is the replacement expression.</li>
+<li>A rule is an arrow from a <em>pattern</em> to a <em>skeleton</em>.</li>
+<li>We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.</li>
+<li>We want to build a language that allows us to directly express these rules. We will work bottom-up, like before.</li>
+</ul>
+<h3 id="representation">Representation</h3>
+<ul>
+<li>We can represent the differentiation rules like this:</li>
+</ul>
+<pre><code>(define deriv-rules
+  &#39;(((dd (?c c) (? v) 0)
+    ((dd (?v v) (? v) 1)
+    ((dd (?v u) (? v) 0)
+    ((dd (+ (? x1) (? x2)) (? v))
+     (+ (dd (: x1) (: v))
+        (dd (: x2) (: v))))
+    ((dd (* (? x1) (? x2)) (? v))
+     (+ (* (: x1) (dd (: x2) (: v)))
+        (* (dd (: x1) (: v)) (: x2))))
+    ((dd (** (? x) (?c n)) (? v))
+     (* (* (: n)
+           (** *: x) (: (- n 1))))
+        (dd (: x) (: v))))))</code></pre>
+<ul>
+<li>It could be prettier, but that doesn’t matter. What matters is that we are writing rules directly in our language.</li>
+<li><code>deriv-rules</code> is simply a list of rules.</li>
+<li>Each rule is of the form <code>(LHS RHS)</code>. The left side is the pattern; the right side is the skeleton.</li>
+<li>The forms beginning with question marks in the LHS are called <em>pattern variables</em>. We have invented them for our language.</li>
+<li>The forms beginning with colons in the RHS are called <em>substitution objects</em>. They are skeleton evaluations.</li>
+<li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>
+</ul>
+<pre><code>(define algebra-rules
+  &#39;((((? op) (?c e1) (?c e2))
+     (: (op e1 e2)))
+    (((? op) (? e1) (?c e2))
+     ((: op) (: e2) (: e1)))
+    ((+ 0 (? e)) (: e))
+    ((* 1 (? e)) (: e))
+    ((* 0 (? e)) 0)))</code></pre>
+<h3 id="syntax">Syntax</h3>
+<h4 id="patterns">Patterns</h4>
+<ul>
+<li><code>foo</code> <em>matches</em> exactly <code>foo</code>.</li>
+<li><code>(f a b)</code> <em>matches</em> a list of three elements with first, second, and third elements being <code>f</code>, <code>a</code>, and <code>b</code>, respectively.</li>
+<li><code>(? x)</code> <em>matches</em> anything, and calls it <code>x</code>.</li>
+<li><code>(?c x)</code> <em>matches</em> a constant, and calls it <code>x</code>.</li>
+<li><code>(?v x)</code> <em>matches</em> a variable, and calls it <code>x</code>.</li>
+</ul>
+<h4 id="skeletons">Skeletons</h4>
+<ul>
+<li><code>foo</code> <em>instantiates</em> to exactly <code>foo</code>.</li>
+<li><code>(f a b)</code> <em>instantiates</em> to a list of three elements, the results of instantiating each of <code>f</code>, <code>a</code>, and <code>b</code>.</li>
+<li><code>(: x)</code> <em>instantiates</em> to the value of <code>x</code> in the pattern matched.</li>
+</ul>
+<h3 id="simplification-process">Simplification process</h3>
+<ul>
+<li>We can imagine the rules as a deck of cards, each one with a pattern and a skeleton.</li>
+<li>The patterns feed into the matcher, and the skeletons feed into the instantiator.</li>
+<li>The matcher passes a dictionary to the instantiator. This consists of the pattern variables and their matched values.</li>
+<li>The output of the instantiator goes back into the matcher.</li>
+<li>All of the rules must be tried on the expression, and on all its subexpressions. We can stop when it no longer changes.</li>
+<li>If you don’t write your rules carefully, There is a danger of going into an infinite loop.</li>
+</ul>
+<h2 id="part-2-6">Part 2</h2>
+<h3 id="matcher">Matcher</h3>
+<ul>
+<li>The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.</li>
+</ul>
+<pre><code>(define (match pat exp dict)
+  (cond ((eq? dict &#39;failed) &#39;failed)
+        ((atom? pat)
+         (if (and (atom? exp) (eq? pat exp))
+           dict
+           &#39;failed))
+        ((arbitrary-constant? pat)
+         (if (constant? exp)
+           (extend-dict pat exp dict)
+           &#39;failed))
+        ((arbitrary-variable? pat)
+         (if (variable? exp)
+           (extend-dict pat exp dict)
+           &#39;failed))
+        ((arbitrary-expression? pat)
+         (extend-dict pat exp dict))
+        ((atom? exp) &#39;failed)
+        (else
+          (match (cdr pat)
+                 (cdr exp)
+                 (match (car pat)
+                        (car exp)
+                        dict)))))</code></pre>
+<ul>
+<li>The <code>else</code> clause recursion is very important.</li>
+<li>We are examine two trees simultaneously: the tree of the expression, and that of the pattern.</li>
+<li>Consider this pattern: <code>(+ (* (? x) (? y)) (? y))</code>. We could draw this as a tree.</li>
+<li>The expression matching it, <code>(+ (* 3 x)) x)</code>, has a very similar tree structure.</li>
+<li>We want to traverse both trees simultaneously and compare them.</li>
+<li>The matcher can fail at any point. The first clause checks this and propagates the failure. (This could be done more efficiently in continuation-passing style.)</li>
+<li>If the pattern is an atom, we make sure the expression is the same atom.</li>
+<li>If the pattern is an arbitrary expression variable like <code>(? x)</code>, we simply add the expression to the dictionary.</li>
+<li>If it is an arbitrary constant or variable, we make sure it is the correct one before adding to the dictionary.</li>
+</ul>
+<h3 id="instantiator">Instantiator</h3>
+<ul>
+<li>The instantiator takes a dictionary and a skeleton as input and outputs an expression.</li>
+</ul>
+<pre><code>(define (instantiate skeleton dict)
+  (define (loop s)
+    (cond ((atom? s) s)
+          ((skeleton-evaluation? s)
+           (evaluate (eval-exp s) dict))
+          (else (cons (loop (car s))
+                      (loop (cdr s))))))
+  (loop skeleton))</code></pre>
+<ul>
+<li>We do a recursive tree walk on the skeleton.</li>
+<li>It is simpler than the matcher because the parts of the tree can be instantiated independently (we don’t change the dictionary).</li>
+<li>The only reason we have the internal procedure is to avoid passing the same <code>dict</code> on every recursive call.</li>
+<li>The skeleton evaluation forms like<code>(: x)</code> use <code>evaluate</code>:</li>
+</ul>
+<pre><code>(define (evaluate form dict)
+  (if (atom? form)
+    (lookup form dict)
+    (apply (eval (lookup (car form) dict)
+                 user-initial-environment)
+           (mapcar (lambda (v) (lookup v dict))
+                   (cdr form)))))</code></pre>
+<ul>
+<li>Atoms (variable names) are simply looked up in the dictionary.</li>
+<li>For more complicated expressions, we lookup and evaluate the <code>car</code> of the form (the operator) and apply it to the result of looking up everything from the <code>cdr</code> (the operands).</li>
+<li>This is magic. We don’t know everything going on with <code>apply</code> and <code>eval</code> yet. We will later.</li>
+</ul>
+<h2 id="part-3-4">Part 3</h2>
+<h3 id="plan">Plan</h3>
+<ul>
+<li>We’ve seen the two halves of the rule system: the matcher and the instantiator.</li>
+<li>Now we will create the control structure by which the rules are applied to the expressions.</li>
+<li>We want to apply all of the rules to every node.</li>
+<li>We call the basic idea <em>garbage in, garbage out</em> (GIGO).</li>
+</ul>
+<h3 id="simplifier">Simplifier</h3>
+<ul>
+<li>We want to be able to evaluate <code>(simplifier rules)</code> and get a procedure that simplifies expressions according to the rules:</li>
+<li>For <code>deriv-rules</code>, this would be <code>(define dsimp (simplifier deriv-rules))</code>.</li>
+<li>This is the <code>simplifier</code> procedure:</li>
+</ul>
+<pre><code>(define (simplifier the-rules)
+  (define (simplify-exp exp)
+    (try-rules (if (compound? exp)
+                 (simplify-parts exp)
+                 exp)))
+  (define (simplify-parts exp)
+    (if (null? exp)
+      &#39;()
+      (cons (simplify-exp (car exp))
+            (simplify-parts (cdr exp)))))
+  (define (try-rules exp)
+    (define (scan rules)
+      (if (null? rules)
+        exp
+        (let ((dict (match (pattern (car rules))
+                           exp
+                           (empty-dictionary))))
+          (if (eq? dict &#39;failed)
+            (scan (cdr rules))
+            (simplify-exp
+              (instantiate (skeleton (car rules))
+                           dict))))))
+    (scan the-rules))
+  simplify-exp)</code></pre>
+<ul>
+<li>The procedures <code>simplify-exp</code> and <code>simplify-parts</code> call each other recursively.</li>
+<li>Since the <code>exp</code> in <code>simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
+<li>We could have just used one procedure, using <code>map</code>:</li>
+</ul>
+<pre><code>(define (simplify-exp exp)
+  (try-rules
+    (if (compound? exp)
+      (map simplify-exp exp)
+      exp)))</code></pre>
+<ul>
+<li>This is a different idiom; it works the same way, but you think about it a bit differently.</li>
+<li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code>map</code> in one of our procedures. It is best to extract those common patterns.</li>
+<li>The <code>try-rules</code> procedure scans the rules and tries each one.</li>
+<li>It returns the original expression if none matched.</li>
+<li>When a rule’s pattern matches, <code>try-rules</code> instantiates the skeleton and tries to simplify that further.</li>
+</ul>
+<h3 id="complexity">Complexity</h3>
+<ul>
+<li>The pattern of recursions here is very complicated.</li>
+<li>We shouldn’t try to think about it all at once. Instead, we make a modular system where we can focus on one part at a time.</li>
+<li>As long as we know what a procedure application is supposed to do, we can use it without thinking how it will work.</li>
+</ul>
+<blockquote>
+<p>The key to very good programming, and very good design, is to know what not to think about.</p>
+</blockquote>
+<h3 id="dictionaries">Dictionaries</h3>
+<ul>
+<li>The implementation of the dictionary is pretty simple:</li>
+</ul>
+<pre><code>(define (empty-dictionary) &#39;())
+(define (extend-dictionary pat dat dict)
+  (let ((name (variable-name pat)))
+    (let ((v ((assq name dict)))
+      (cond ((null? v)
+             (cons (list name dat) dict))
+            ((eq? (cadr v) dat) dict)
+            (else &#39;failed)))))
+(define (lookup var dict)
+  (let ((v (assq var dict)))
+    (if (null? v) var (cadr v))))</code></pre>
+<ul>
+<li>When extending the dictionary, we check if the name is already present in the dictionary.</li>
+<li>If not, we add it. If it is, but has the same value, we return the dictionary unchanged.</li>
+<li>If we are trying to give it a different value, we fail.</li>
+</ul>
+<h1 id="b-generic-operators">4B: Generic Operators</h1>
+<h2 id="part-1-7">Part 1</h2>
+<h3 id="limits-of-data-abstraction">Limits of data abstraction</h3>
+<ul>
+<li>So far, we’ve talked a lot about data abstraction.</li>
+<li>We’ve had these horizontal abstract barriers that separate use from representation.</li>
+<li>This is powerful, but not sufficient for really complex systems.</li>
+<li>The problem is that sometimes we to use need multiple, incompatible representations.</li>
+<li>We want some kind of vertical barrier in addition to the horizontal barriers.</li>
+<li>We want <em>generic operators</em>. What these operators precisely do depends on the data format it is looking at.</li>
+<li>It should be easy to add new data types to the system, so that the generic operators work on them, too, with minimal changes.</li>
+</ul>
+<h3 id="complex-number-arithmetic">Complex number arithmetic</h3>
+<ul>
+<li>We can represent a complex number in two ways:
+<ul>
+<li>real part and imaginary part (rectangular form);</li>
+<li>magnitude and angle (polar form).</li>
+</ul></li>
+<li>The rectangular form <span class="math inline">x + iy</span> and the polar form <span class="math inline">re^(i theta)</span> are related – we can get one from the other:
+<ul>
+<li><span class="math inline">x = r cos theta</span> and <span class="math inline">y = r sin theta</span>.</li>
+<li><span class="math inline">r = sqrt(x^2 + y^2)</span> and <span class="math inline">theta = arctan(y,x)</span>.</li>
+</ul></li>
+<li>We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.</li>
+<li>We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.</li>
+</ul>
+<h3 id="incompatible-representations">Incompatible representations</h3>
+<ul>
+<li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
+<li>What if we want <em>both</em> representations? Data abstraction allows us to postpone the representation decision, but we don’t want to make a decision at all!</li>
+<li>We need a vertical barrier between rectangular and polar forms.</li>
+<li>The selectors for complex numbers – <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code> – must be generic operators.</li>
+<li>For this to work, we need <em>typed data</em>. We need to tag our data objects with labels telling us the type of their contents.</li>
+<li>We can simply <code>cons</code> the symbol <code>'rectangular</code> or <code>'polar</code> to the complex number data.</li>
+<li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
+</ul>
+<h2 id="part-2-7">Part 2</h2>
+<h3 id="problems-with-the-manager">Problems with the manager</h3>
+<ul>
+<li>The strategy we just looked at is called <em>dispatch on type</em>.</li>
+<li>One annoyance is that we had to change the names of the specific procedures (adding a suffix) to avoid naming conflicts.</li>
+<li>We’ll talk about namespaces to fix that problem later.</li>
+<li>What happens when you add a new type to the system?
+<ul>
+<li>The other types don’t care. They can remain the same.</li>
+<li>The manager needs to add a new clause to every generic procedure that should be able to work with the new type.</li>
+<li>This is annoying because the generic procedure case analyses are very repetitive.</li>
+</ul></li>
+</ul>
+<h3 id="data-directed-programming">Data-directed programming</h3>
+<ul>
+<li>Our system has a table with types on the horizontal axis and operators on the vertical axis.</li>
+<li>Instead of writing these generic procedures manually, we should just use a table directly.</li>
+<li>We introduce two new procedures: <code>(put key1 key2 value)</code> and <code>(get key1 key2)</code>. This is a map, or associative list.</li>
+<li>Now we just need to use <code>put</code> to insert our specific procedures into the table, and the rest will be automated.</li>
+<li>We wouldn’t even have to name our procedures – we could just pass a lambda expression as the last argument.</li>
+<li>It is the procedures that go in the table, not their names.</li>
+<li>The key procedure in this whole system is <code>operate</code>:</li>
+</ul>
+<pre><code>(define (operate op obj)
+  (let ((proc (get (type obj) op)))
+    (if (null? proc)
+      (error &quot;undefined OP&quot;)
+      (proc (contents obj)))))</code></pre>
+<ul>
+<li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
+<li>This is what happens when we try to extract the real part of a complex number in polar form:</li>
+</ul>
+<pre><code>(real-part z)
+(operate &#39;real-part z)
+((get &#39;polar &#39;real-part) (contents z))
+(real-part-polar &#39;(1 . 2))
+(* 1 (cos 2))
+-0.4161468365</code></pre>
+<ul>
+<li>This style of programming called <em>data-directed</em> programming.</li>
+<li>The data objects themselves are carrying the information about how you should operate on them.</li>
+</ul>
+<h2 id="part-3-5">Part 3</h2>
+<h3 id="generic-arithmetic-system">Generic arithmetic system</h3>
+<ul>
+<li>We just looked at data-directed programming for complex numbers.</li>
+<li>The power of the methodology only becomes apparent when you embed this in a more complex system.</li>
+<li>Let’s consider a generic arithmetic system with operations <code>add</code>, <code>sub</code>, <code>mil</code>, and <code>div</code>.</li>
+<li>This should sit on top of ordinary Lisp numbers, rationals, and complex numbers.</li>
+<li>We already made a rational number package; we just need to change the constructor <code>make-rat</code> so that it attaches the tag <code>'rational</code> to the data.</li>
+<li>We can’t use <code>operate</code> anymore because that was designed for a single argument. <code>apply-generic</code> from SICP is better.</li>
+<li>Now, our complex numbers will have two labels on them: <code>'complex</code> <em>and</em> either <code>'rectangular</code> or <code>'polar</code>.</li>
+<li>At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.</li>
+</ul>
+<h3 id="polynomials">Polynomials</h3>
+<ul>
+<li>We could also add polynomials to the generic arithmetic system.</li>
+<li>Our polynomials will have a variable (symbol) and a term list (list of ordered pairs).</li>
+<li>We can add polynomials in the same variable by adding their term lists (collecting like terms).</li>
+<li>By using <code>add</code> when we add term lists, we can use <em>any</em> kind of numbers as a coefficients, for free!</li>
+<li>This includes polynomials whose coefficients are polynomials.</li>
+<li>All because we wrote <code>add</code> instead of <code>+</code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
+<li>If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.</li>
+</ul>
+<h3 id="conclusion-2">Conclusion</h3>
+<ul>
+<li>We built a system that has decentralized control.</li>
+<li>We don’t have to worry about how operations are actually performed.</li>
+<li>This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.</li>
+<li>The true complexity comes in with <em>coercion</em> – when you add a complex and a rational, who worries about converting what?</li>
+</ul>
+<h1 id="a-assignment-state-and-side-effects">5A: Assignment, State, and Side-effects</h1>
+<h2 id="part-1-8">Part 1</h2>
+<h3 id="introducing-assignment">Introducing assignment</h3>
+<ul>
+<li>We’ve learned enough about programming in Lisp to do fairly complex things.</li>
+<li>We have done all of this without an assignment statement.</li>
+<li>Today, we’re going to add the assignment statement.</li>
+<li>If we can do so much without it, why should we add it?</li>
+<li>After all, we only ever add something to the language if we have a good reason for doing so.</li>
+<li>We are adding assignment because it will allow us to break some problems up into certain sets of pieces, and this new means of decomposition would be impossible without assignment.</li>
+</ul>
+<h3 id="functional-programming">Functional programming</h3>
+<ul>
+<li>Functional programs encode mathematical truths.</li>
+<li>Processes evolved by these programs can be understood by substitution, which preserves truth (equals for equals).</li>
+<li>Methods may be distinguished by the choice of truths expressed.</li>
+<li>Although functional, Lisp is not quite the same as math. Math is declarative, but Lisp is imperative.</li>
+</ul>
+<h3 id="assignment-and-time">Assignment and Time</h3>
+<ul>
+<li>To do assignment, we use <code>(set! &lt;variable&gt; &lt;value&gt;)</code>.</li>
+<li>By convention, we suffix a bang to the names of procedures that do assignment-like things.</li>
+<li><code>set!</code> is like <code>define</code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
+<li>When we add assignment, we also have to consider <em>time</em>.</li>
+<li>The assignment produces a moment in time: a difference between a <em>before</em> and an <em>after</em> in time.</li>
+<li>After the moment, <code>&lt;variable&gt;</code> has the value <code>&lt;value&gt;</code>, independent of what value it had before.</li>
+<li>So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.</li>
+<li>This isn’t the case when we have assignment. The same expression can lead to different answers because it depends on time.</li>
+<li>The substitution model completely breaks down. It is static.</li>
+<li>We need a new model of computation for this “bad thing.” We had better have a good reason for introducing assignment.</li>
+</ul>
+<h3 id="identity">Identity</h3>
+<ul>
+<li>Symbols for variables are no longer going to refer directly to their values, but to some <em>place</em>.</li>
+<li>A variable now refers to an <em>identity</em>. This is an entity associated with a series of causally related values over time.</li>
+<li>The state of an identity is it’s current associated value.</li>
+<li>When we talk about <em>time</em>, we mean the before/after ordering of causal values.</li>
+</ul>
+<h3 id="factorial-example">Factorial example</h3>
+<ul>
+<li>Here’s how we implemented factorial functionally:</li>
+</ul>
+<pre><code>(define (fact n)
+  (define (iter p i)
+    (if (&gt; i n) m (iter (* i p) (+ i 1))))
+  (iter 1 1))</code></pre>
+<ul>
+<li>We could instead write it with assignments:</li>
+</ul>
+<pre><code>(define (fact n)
+  (let ((p 1) (i 1))
+    (define (loop)
+      (cond ((&gt; i n) p)
+            (else (set! p (* i p))
+                  (set! i (+ i 1))
+                  (loop))))
+    (loop)))</code></pre>
+<ul>
+<li>There are ways of making errors in the second program that simply didn’t exist when we couldn’t do assignment.</li>
+<li>If we change the ordering of the two assignments, the procedure calculates the wrong value.</li>
+</ul>
+<h2 id="part-2-8">Part 2</h2>
+<h3 id="environment-model">Environment model</h3>
+<ul>
+<li>We need a new model of computation that can allow us to understand programs that use assignment.</li>
+<li>The new model is called the <em>environment model</em>.</li>
+<li>Unfortunately, it is significantly more complicated than the substitution model.</li>
+</ul>
+<h3 id="free-and-bound-variables">Free and bound variables</h3>
+<ul>
+<li>A variable <code>v</code> is <em>bound</em> in an expression <code>E</code> if the meaning of <code>E</code> is unchanged by the uniform replacement of a variable <code>w</code> not occurring in <code>E</code>, for every occurrence of <code>v</code> in <code>E</code>.</li>
+<li>We use bound variables all the time.</li>
+<li>The <code>lambda</code> is the essential thing that binds variables.</li>
+<li>If a variable isn’t bound, we say it is a <em>free</em> variable.</li>
+<li>If <code>x</code> is a bound variable in <code>E</code> then there is λ-expression where it is bound.</li>
+<li>The list of formal parameters is called the <em>bound variable list</em>. The λ-expression <em>binds</em> the variables <em>declared</em> in its bound variable list.</li>
+<li>The parts of the expression where a variable has a value defined by the λ-expression binding it is the <em>scope</em> of the variable.</li>
+</ul>
+<h3 id="environments-frames-and-bindings">Environments, frames, and bindings</h3>
+<ul>
+<li>Environments are a way of doing substitutions virtually.</li>
+<li>It’s the place where the names of the variables are associated with values.</li>
+<li>An environment is a pointer to a <em>frame</em>. A frame is a table of <em>bindings</em>, plus a parent/enclosing environment.</li>
+<li>A binding is a variable name associated with a value.</li>
+<li>We look up the value of a variable in an environment by traversing up the frames, finding the first one that has a binding for the variable, and reading its associated value.</li>
+<li>If a variable is bound twice in an environment, the binding in the earlier (lower) frame <em>shadows</em> the other.</li>
+</ul>
+<h3 id="procedure-creation-and-application">Procedure creation and application</h3>
+<ul>
+<li>A procedure is a pair: some code, and (a pointer to) an environment. Free variables are found in this environment.</li>
+<li>Procedure objects are created by evaluating λ-expressions.</li>
+<li>A λ-expression is evaluated relative to a given environment as follows: a new procedure object is formed, combing the text (code) of the λ-expression with (a pointer to) the environment of evaluation.</li>
+<li>A procedure is applied to a set of arguments by 1.1. constructing a frame whose parent is the environment part of the procedure being applied, 1.2. binding the formal parameters of the procedure to the actual arguments of the call, 1.3. evaluating the body of the procedure in the context of the new environment.</li>
+<li>In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.</li>
+</ul>
+<h2 id="part-3-6">Part 3</h2>
+<h3 id="counter-example">Counter example</h3>
+<ul>
+<li>We’ve introduced a very complicated thing, assignment, which destroys most of the interesting mathematical properties of our programs.</li>
+<li>We wouldn’t have done this if there wasn’t a good reason.</li>
+<li>Consider the following program:</li>
+</ul>
+<pre><code>(define make-counter
+  (lambda (n)
+    (lambda ()
+      (set! n (inc n))
+      n)))
+(define c1 (make-counter 0))
+(define c2 (make-counter 10))
+(c1)
+1
+(c1)
+2
+(c2)
+11
+(c2)
+12</code></pre>
+<ul>
+<li>These two counters are independent and have their own state.</li>
+<li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
+<li>The <em>global environment</em> is the topmost environment. Its frame contains <code>car</code>, <code>+</code>, <code>*</code>, etc., and all top-level definitions.</li>
+</ul>
+<h3 id="objects">Objects</h3>
+<ul>
+<li>We like to think about the world as being made up of independent objects, each having their own state.</li>
+<li>The only way to see if two objects are the same (not just associated with an equal value) is to change one and see if the other changes in the same way.</li>
+<li>The idea of objects, changed, and sameness raises deep problems.</li>
+<li>If you cut off your fingernail, the “before” and “after” of you is enormously different in terms of atoms. You have changed and feel that you are the “same” person, but how do you know that?</li>
+<li>By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.</li>
+</ul>
+<h3 id="actions-and-identity">Actions and identity</h3>
+<ul>
+<li>An action <span class="math inline">A</span> had an effect on an object <span class="math inline">x</span> (or equivalently, that <span class="math inline">x</span> was changed by <span class="math inline">A</span>) if some property <span class="math inline">P</span> which was true of <span class="math inline">x</span> before $$ became false of <span class="math inline">x</span> after <span class="math inline">A</span>.</li>
+<li>Two objects <span class="math inline">x</span> and <span class="math inline">y</span> are the same if any action which has an effect on <span class="math inline">x</span> has the same effect on <span class="math inline">y</span>.</li>
+</ul>
+<h3 id="uses-of-objection-orientation">Uses of objection orientation</h3>
+<ul>
+<li>One of the nice things about objects is the way it lets us model the world. We like to thing of the world as being made up of these independent objects.</li>
+<li>If we want to understand the program well and we want small changes in the world to lead to small changes in the program, we would like isomorphisms between the world and the model.</li>
+<li>For most things, objects and assignment are not the right way to think. We should only use them if we need them.</li>
+<li>Sometimes, though, they are essential.</li>
+<li>It can also improve modularity greatly – consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can’t decompose certain problems very well.</li>
+</ul>
+<h1 id="b-computational-objects">5B: Computational Objects</h1>
+<h2 id="part-1-9">Part 1</h2>
+<h3 id="recap-4">Recap</h3>
+<ul>
+<li>We’re going to do some complicated programming to illustrate what you can do with mutable state.</li>
+<li>We were motivated by the need to model physical systems.</li>
+<li>Programming this way buys us modularity, if done correctly.</li>
+</ul>
+<h3 id="electrical-systems">Electrical systems</h3>
+<ul>
+<li>We are going to model electrical systems.</li>
+<li>We can consider the things wires are connected to as objects.</li>
+<li>The connections can be made abstract. We use ideal wires.</li>
+<li>We create wires with <code>(make-wire)</code>, and we connect them with gates: <code>and-gate</code>, <code>or-gate</code>, and <code>inverter</code>.</li>
+<li><code>(inverter a b)</code> connects wires <code>a</code> and <code>b</code> with an inverter.</li>
+<li>Our language will be embedded in Lisp, like the Henderson picture language.</li>
+<li>We can wire up half adders and full adders with these gates.</li>
+<li>We have primitives (wires), means of combination (gates), and means of abstraction (lambda). Lambda is the ultimate glue.</li>
+</ul>
+<h3 id="implementing-the-primitives">Implementing the primitives</h3>
+<ul>
+<li>All we have to do is implement the primitives. The rest is free.</li>
+<li>An inverter works by adding an action to its input wire. When a new signal arrives, this action delays and then sets the signal of its output wire to the logical-not of its input signal.</li>
+<li>And-gates and or-gates are implemented similarly. The action must be added to both input wires.</li>
+<li>Each wires must remember its signals and its list of actions.</li>
+<li>The actions procedures need to keep references to their wires. These are captured by the lambda inside the gate procedures.</li>
+<li>We implement wires with the message-passing style. It responds to <code>get-signal</code>, <code>set-signal!</code>, and <code>add-action!</code>.</li>
+<li>The wire executes all actions after its signal is set.</li>
+</ul>
+<h3 id="scheduling-delayed-tasks">Scheduling delayed tasks</h3>
+<ul>
+<li>The agenda is a schedule of actions to run. Whenever <code>after-delay</code> is used in an action, a task is added to the agenda.</li>
+<li>These get executed in the proper order, with a time variable maintaining the correct time.</li>
+<li>The <code>propagate</code> procedure executers everything the agenda, emptying it as it goes.</li>
+</ul>
+<h2 id="part-2-9">Part 2</h2>
+<h3 id="implementing-the-agenda">Implementing the agenda</h3>
+<ul>
+<li>We’ve made a simulation where objects and state changed in the computer match the objects and state changes in the world.</li>
+<li>We’re going to use agendas (priority queues) to organize time.</li>
+<li>We have a constructor <code>make-agenda</code>; selector <code>current-time</code> and <code>first-item</code>; predicate <code>empty-agenda?</code>; and mutators <code>add-to-agenda!</code> and <code>remove-first-item!</code>.</li>
+<li>We will represent it as a list a segments. Each segment is a time consed to a queue of tasks (procedures of no arguments).</li>
+<li>To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.</li>
+</ul>
+<h4 id="queues">Queues</h4>
+<ul>
+<li>We construct queues with <code>(make-queue)</code>.</li>
+<li>There are two mutators, <code>(insert-queue! q x)</code> and <code>(delete-queue! q)</code>; a selector, <code>(front-queue q)</code>; and a predicate, <code>(empty-queue? q)</code>.</li>
+<li>A queue is represented as a front pointer of a list consed to the rear pointer of the same list.</li>
+<li>The mutators use <code>set-car!</code> and <code>set-cdr!</code>.</li>
+</ul>
+<h2 id="part-3-7">Part 3</h2>
+<h3 id="identity-of-pairs">Identity of pairs</h3>
+<ul>
+<li>Before, all we needed to know about <code>cons</code> was that for all values of <code>x</code> and <code>y</code>, <code>(= x (car (cons x y)))</code> and <code>(= y (cdr (cons x y)))</code>. This says nothing about identity.</li>
+<li>These no longer tell the whole story, now that we have mutators.</li>
+<li>This raises a question: if you change the <code>car</code> of a pair, do all pairs that look the same also change?</li>
+<li>Cons pairs now have an identity.</li>
+<li>When we have multiple names for the same object, they are called <em>aliases</em>. Changing one changes them all.</li>
+<li>Sometimes sharing is what we want. But inadvertent sharing is a great source of bugs in complicated programs.</li>
+</ul>
+<h3 id="lambda-calculus">Lambda calculus</h3>
+<ul>
+<li>Assignment and mutators are equally powerful. We can implement the cons mutators in terms of <code>set!</code>.</li>
+<li>We’ve already seen Alonzo Church’s way of creating pairs just with lambda expressions:</li>
+</ul>
+<pre><code>(define (cons x y)
+  (lambda (m)
+    (m x y)))
+(define (car x) (x (lambda (a d) a)))
+(define (cdr x) (x (lambda (a d) d)))</code></pre>
+<ul>
+<li>We can change it to allow mutation:</li>
+</ul>
+<pre><code>(define (cons x y)
+  (lambda (m)
+    (m x
+       y
+       (lambda (n) (set! x n))
+       (lambda (n) (set! y n)))))
+(define (car x)
+  (x (lambda (a d sa sd) a)))
+(define (cdr x)
+  (x (lambda (a d sa sd) d)))
+(define (set-car! x v)
+  (x (lambda (a d sa sd) (sa v))))
+(define (set-cdr! x v)
+  (x (lambda (a d sa sd) (sd v))))</code></pre>
+<ul>
+<li>(I just realized that creating objects this way, where you apply the object to a procedure that is passed all the state variables, is just like pattern matching.)</li>
+</ul>
+<h1 id="a-streams-part-1">6A: Streams, Part 1</h1>
+</body>
+</html>

@@ -1,5 +1,8 @@
-% Study Notes on _Structure and Interpretation of Computer Programs_
-% Mitchell Kember
+---
+title: SICP Textbook Notes
+subtitle: Notes on [_Structure and Interpretation of Computer Programs_](https://mitpress.mit.edu/sites/default/files/sicp/index.html)
+author: Mitchell Kember
+---
 
 # Dedication
 

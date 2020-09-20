@@ -6,7 +6,7 @@ html, body, blockquote, p, ul, ol, li {
 body {
     max-width: 800px;
     margin: 0 auto;
-    padding: 50px 30px;
+    padding: 50px;
     background: #fafafa;
     color: #333;
     font: 20px sans-serif;
@@ -30,15 +30,57 @@ p:first-child {
     margin-top: 0;
 }
 
-h1, h2, h3, h4 {
-    margin: 1em 0 0 -50px;
-    line-height: 1.25;
+.index-link {
+    /* position: absolute; */
+}
+
+.title, .subtitle, .author {
+    text-align: center;
+    margin: 1em 0 0;
+}
+
+.title {
+    font-size: 2.5em;
+    border: none;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.author {
+    margin-bottom: 2em;
+}
+
+h1, h2, h3, h4{
+    /* Larger margin-top to compensate for smaller line-height. */
+    margin: 1.17em 0 0 -50px;
+    line-height: 1.2;
 }
 
 @media only screen and (max-width: 920px) {
     h1, h2, h3, h4 {
         margin-left: -22px;
     }
+}
+
+h1 {
+    font-size: 2em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #888; 
+}
+
+h2 {
+    font-size: 1.5em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #aaa; 
+}
+
+h3 {
+    font-size: 1.17em;
+}
+
+h4 {
+    font-size: 1em;
+    color: #555;
 }
 
 ul ul, ol ul {

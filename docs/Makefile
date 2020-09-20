@@ -1,13 +1,20 @@
-src := notes.md
-dst := index.html
+src := $(wildcard *.md)
+dst := $(src:%.md=%.html)
 css := style.css
+before := before.html
+
+flags :=
 
 .PHONY: all watch
 
 all: $(dst)
 
 watch:
-	ls $(src) $(css) | entr make $(dst)
+	ls $(src) $(css) $(before) | entr make
 
-$(dst): $(src) $(css)
-	pandoc $(src) -o $(dst) -s --css=$(css) --katex --toc --toc-depth=3
+%.html: %.md $(css) $(before)
+	pandoc -o $@ $< --standalone --css=$(css) --katex $(flags) -B $(before)
+
+textbook.html lecture.html: flags += --toc
+textbook.html: flags += --toc-depth=3
+lecture.html: flags += --toc-depth=1
