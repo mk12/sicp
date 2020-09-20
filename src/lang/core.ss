@@ -3,7 +3,7 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define => ~> =/> =!> paste
+  (export SICP Chapter Section Exercise define => ~> =$> =!> paste
           capture-output hide-output
           run-sicp)
   (import (except (rnrs (6)) current-output-port)
@@ -124,7 +124,7 @@
           (apply format
                  ;; In R6RS square brackets are interchangeable with parens.
                  ;; I do not use them in cond/let/etc. the way the spec does.
-                 ;; I use them in =/> assertions just to make them stand out.
+                 ;; I use them in =$> assertions just to make them stand out.
                  (string-append
                    "["
                    (ansi 'yellow (apply string-append (slots str-or-list)))
@@ -142,7 +142,7 @@
             expr
             (format
               (string-append
-                "left: " (ansi 'blue "~s") "\n=/> ~a\n\nright:\n=/> ~a\n\n")
+                "left: " (ansi 'blue "~s") "\n=$> ~a\n\nright:\n=$> ~a\n\n")
               (syntax->datum expr) (fmt output) (fmt expected))))))
 
 
@@ -465,7 +465,7 @@
               (lambda (x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
             ...)))))
-    (auxiliary Chapter Section Exercise ~> =/> =!> paste))
+    (auxiliary Chapter Section Exercise ~> =$> =!> paste))
 
   ;; A DSL for SICP code samples and exercises.
   (define-syntax SICP (lambda (x)
@@ -586,7 +586,7 @@
         ;; should come from the original source -- it would be too confusing
         ;; if a paste's code comes from another paste.
         (add names exports))
-      (syntax-case x (Chapter Section Exercise define => ~> =/> =!> paste)
+      (syntax-case x (Chapter Section Exercise define => ~> =$> =!> paste)
         (() #`(#,@(flush) (increase-total-tests! #,ntests)))
         (((Chapter e1* ...) e2* ...)
          (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -611,7 +611,7 @@
          (go=> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
         ((e1 ~> e2 e* ...)
          (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
-        ((e1 =/> e2 e* ...)
+        ((e1 =$> e2 e* ...)
          (with-syntax ((assert #'(assert-output (capture-output e1) #'e1 #'e2)))
            (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
         ((e1 =!> e2 e* ...)
