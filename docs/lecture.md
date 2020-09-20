@@ -20,7 +20,7 @@ author: Mitchell Kember
 
 Mathematical declarative statement (what-is knowledge): The square root of $x$ is the $y$ such that $y ≥ 0$ and $y^2 = x$.
 
-Imperative instructions (how-to knowledge): approximate the square root of x with the following steps:
+Imperative instructions (how-to knowledge): approximate the square root of $x$ with the following steps:
 
 1. Make a guess, $G$.
 2. Improve the guess by averaging $G$ and $x/G$.
@@ -39,20 +39,20 @@ Imperative instructions (how-to knowledge): approximate the square root of x wit
 ### Complexity and computer science
 
 - The real problems in CS come when developing huge software with so much code that you can't hold it all in your head at once.
-- This is possible because there are techniques for controlling the complexity of large systems.
+- This is possible thanks to techniques for controlling the complexity of large systems.
 - Computer scientists are in the business of controlling complexity.
 - This is different from the complexity that others, for example aeronautical engineers, deal with, because the complexity in CS in a sense is not real.
 - Computer science deals with _idealized_ components.
 - We know as much as we want about the components; we don't need to worry about tolerance.
 - Not much difference between what I can _build_ and what I can _image_.
-- Other disciplines have physical constraints; in CS, their is only the constraints of your own mind.
-- CS is like an abstract kind of engineering -- ignore the constraints that are imposed by reality.
+- Other disciplines have physical constraints; in CS, the only constraint is your mind.
+- CS is an abstract kind of engineering -- ignore the constraints imposed by reality.
 
 ### Techniques for managing complexity
 
 #### Black box abstraction
 
-Take something and build a box about it. The important thing is that you don't care what is going on inside the box -- it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and big bigger boxes.
+Take something and build a box around it. The important thing is that you don't care what is going on inside the box -- it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
 
 - Primitive objects: primitive procedures, primitive data.
 - Means of combination: procedure composition, construction of compound data.
@@ -72,9 +72,9 @@ Agreed upon ways of connecting things together. Like standard impedances in elec
 
 Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.
 
-The process of interpreting Lisp in Lisp is like a giant wheel of two processes, apply and eval, which sort of constantly reduce expressions to each other. Very magical.
+The process of interpreting Lisp in Lisp is like a giant wheel of two processes, `apply` and `eval`, which reduce expressions to each other. Very magical.
 
-- apply/eval
+- `apply` and `eval`
 - logical programming
 - register machines
 
@@ -112,7 +112,7 @@ We can also make it more clear that we are naming something:
 
 The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former _desugars_ to the latter.
 
-In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in. A person using that shouldn't even have to know.
+In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in.
 
 ### Case analysis
 
@@ -134,7 +134,7 @@ Each line is a clause consisting of a predicate (true or false) and an action. W
       x))
 ```
 
-You can think of `if` and syntactic sugar for `cond` or vice versa. It doesn't make any difference.
+You can think of `if` as syntactic sugar for `cond` or vice versa.
 
 ### Recursion
 
@@ -152,14 +152,13 @@ You can think of `if` and syntactic sugar for `cond` or vice versa. It doesn't m
 ### Programs and processes
 
 - The job of a programmer is to design processes that accomplish particular goals (like finding the square root of a number).
-- He does this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.
-- He must understand the relationship between the particular spells he casts and the process he's trying to control.
-- This lecture aims to establish this connection.
+- You do this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.
+- You must understand the relationship between the particular spells you cast and the process you're trying to control.
 - How do particular patterns of procedures and expressions cause particular patterns of execution and behaviour in the process?
 
 ### Kinds of expressions
 
-So far we have seen three main kinds of expressions:
+So far we've seen three main kinds of expressions:
 
 - numbers
 - symbols
@@ -188,8 +187,7 @@ The `sos` procedure takes the sum of the squares:
 
 ```scheme
 (define (sq a) (* a a))
-(define (sos x y)
-  (+ (sq x) (sq y)))
+(define (sos x y) (+ (sq x) (sq y)))
 ```
 
 Let's evaluate the sum of the square of 3 and the square of 4:
@@ -279,11 +277,11 @@ The iteration has all of its state in explicit variables. The recursion does not
 
 ### Perturbation analysis
 
-Perturbation analysis: make small changes to the program, see how it affects the process.
+Make small changes to the program, see how it affects the process.
 
 ### Fibonacci sequence
 
-The Fibonacci numbers: 0, 1, 1, 2, 3, 5, 8, 13, 21, .... We can represent this directly in Lisp like so:
+We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, ... in Lisp:
 
 ```scheme
 (define (fib n)
@@ -301,7 +299,7 @@ This is a _tree-recursive_ process. We can represent the evaluation with a tree.
 
 > The way in which you construct a recursive process is by wishful thinking. You have to believe.
 
-Here is how we move an n-high tower from spike `from` to spike `to` using spike `spare` as a spare:
+Move an n-high tower from spike `from` to spike `to` using spike `spare` as a spare:
 
 ```scheme
 (define (move n from to spare)
@@ -325,8 +323,8 @@ Here is how we move an n-high tower from spike `from` to spike `to` using spike 
 > Whenever you see yourself writing the same thing down more than once, there's something wrong and you shouldn't be doing it. And the reason is not because it's a waste of time to write something down more than once. It's because there's some idea here, a very simple idea....
 
 - It is crucial to divide problems up into as many pieces as is reasonable. We must be able to understand each in isolation.
-- Understanding and debugging only happens once when you avoid repetition -- not just writing!
-- Any time we see things that are almost identical, we need to think of an abstraction to cover them.
+- No repetition means you only write it once, but also only understand and debug it once!
+- Any time you see things that are almost identical, think of an abstraction to cover them.
 - An _idiom_ is a common pattern in a language that is useful to know. In Lisp, we can give idioms names and abstract them.
 - There is nothing very special about numbers. Numbers are just one kind of data. Procedures are also data.
 
@@ -365,7 +363,7 @@ We are separating the things we are adding up from the method of doing the addit
 
 - We use abstraction for the purpose of making programs easier to read and write.
 - Abstraction helps us to clarify what's going on.
-- Our square root algorithm was actually a specific instance of the more general fixed-point search.
+- Our square root algorithm was a specific instance of the more general fixed-point search.
 - The damping part is also a general signal processing strategy, and we can also treat is as a separate thing using a higher-order procedure.
 - Higher-order procedures can take procedures as arguments and they can return new procedures.
 
@@ -373,8 +371,8 @@ We are separating the things we are adding up from the method of doing the addit
 
 ### Newton's method
 
-- Newton's method: a general method to find the zeros of functions (an $x$ such that $f(x) = 0$).
-- We can use the `fixed-point` procedure to define a procedure for computing zeros using Newton's method.
+- Newton's method: general method to find the zeros (an $x$ such that $f(x) = 0$).
+- We can use the fixed-point procedure to define a procedure for computing zeros using Newton's method.
 
 > Wishful thinking: essential to good engineering. And especially essential to good computer science.
 
@@ -395,9 +393,9 @@ We are separating the things we are adding up from the method of doing the addit
 
 In the beginning, we learned about
 
-- primitive forms;
-- means of combination;
-- means of abstraction.
+- primitive forms
+- means of combination
+- means of abstraction
 
 Then, we learned how to use higher-order procedures to represent general methods of computation. This gave us extraordinary expressive power.
 
@@ -447,12 +445,12 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We need a kind of glue to connect things.
 - Lisp provides this: it is called _list structure_.
 - The primitive `cons` allows us to construct _pairs_.
-- Cons is obviously the constructor.
-- The `car` and the `cdr` procedures are the selectors for pairs.
+- `cons` is obviously the **cons**tructor.
+- `car` and `cdr` are the selectors for pairs.
 - For any `x` and `y`, `(car (cons x y))` is `x`.
 - For any `x` and `y`, `(cdr (cons x y))` is `y`.
-- We can represent conses with two boxes side by side with an arrow coming out of each one.
-- This is called box and pointer notation.
+- We can represent conses with two boxes side by side with an arrow coming from each.
+- This is called _box-and-pointer notation_.
 
 ### Lowest terms
 
@@ -470,9 +468,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Abstraction layer
 
-- The important thing with our rational arithmetic system is that we set up an abstraction layer.
+- The important thing with our rational arithmetic system is the abstraction layer.
 - We have the rational arithmetic operators on one side and the pair constructor and selectors on the other.
-- The procedures `make-rat`, `numer`, and `denom` act as an abstraction barrier between the two.
+- The procedures `make-rat`, `numer`, and `denom` are an abstraction barrier between the two.
 - We always want to separate _use_ from _representation_.
 - This methodology is called _data abstraction_.
 
@@ -507,7 +505,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We could use points (or vectors) as a building block to make line segments. This would be a multi-layered system.
 - Segments, vectors, and pairs are all separated.
 - Without data abstraction, the procedure for calculating the length of a line segment is very hard to read; worse, it locks you into decisions about representation.
-- Cons can combine anything, not just numbers. With line segments, we combine two pairs.
+- `cons` can combine anything, not just numbers. With line segments, we combine two pairs.
 - _Closure_ means we can make pairs of pairs, not just pairs of numbers. We say that the means of combinations closes over the things that it makes.
 
 ## Part 4
@@ -542,7 +540,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Conclusion
 
-- We don't need data at all for data abstraction: we can do everything in terms of procedures.
+- We don't need data at all for data abstraction: we can do everything with procedures.
 - This blurs the line between code and data.
 - Procedures are not just the act of doing something.
 - Procedures are conceptual entities or objects.
@@ -557,14 +555,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We can isolate the way data objects are _used_ from the way that they are _represented_.
 - We learned how to make pairs with `cons`, `car`, and `cdr`.
 - We looked at examples: interval arithmetic and vectors.
-- We can glue together arbitrary things with `cons`, not just numbers (for example, pairs of pairs).
+- We can glue together arbitrary things with `cons`, not just numbers.
 - We learned about closure: the things that we combine can themselves be combined. This allows us to build complexity.
 
 ### Lists
 
 - Their are a lot of different ways of building list structure.
-- Lisp has a particular convention for representing a sequence of things as chained pairs: a list.
-- The car of the pair is the first item in the sequence. The `cdr` of the pair is the rest of the sequence.
+- Lisp has a particular convention for representing a sequence as chained pairs: a list.
+- The car of the pair is the first item. The `cdr` of the pair is the rest of the sequence.
 - The `cdr` of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as `()`.
 - The predicate `null?` checks if a list is empty (is nil).
 - Lisp has a procedure called `list`, which is just an abbreviation for the nested conses.
@@ -575,7 +573,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The recursive strategy is to apply the operation to the car of the list, and then cons that onto the rest of the list which has already been mapped (wishful thinking).
 - Rather than doing the recursive strategy manually each time, we use the higher-order procedure `map`.
 - Thinking in terms of operations on aggregates is a powerful idea. We don't worry about recursion or other details.
-- The procedure `for-each` is like map, but it doesn't build up a new list. It is just for side-effects.
+- `for-each` is like map, but it doesn't build up a new list. It is just for side-effects.
 
 ## Part 2
 
@@ -585,11 +583,11 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This example will blur the line between procedures and data.
 - There is only one primitive: a painter. A painter draws its image within a frame (a parallelogram).
 - We have means of combination: `rotate`, `beside`, and `below`.
-- Thanks to the closure property, we are able to build up complexity in this language very quickly.
+- Thanks to the closure property, we are able to build up complexity in this language quickly.
 - A frame is defined by an origin vector and two side vectors.
 - All frames are based on transformations from the unit square.
 - We can build primitive painters from lists of line segments.
-- A painter is a procedure that accepts a frame as an argument and draws its image within the frame.
+- A painter is a procedure that takes a frame and draws its image within the frame.
 
 ## Part 3
 
@@ -605,7 +603,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### The power of Lisp
 
 - The difference between merely implementing something in a language and embedding something in the language: you don't lost the original power of the language.
-- Lisp is a lousy language for any particular problem. But it's good for figuring out the right language you want and embedding that in Lisp. That's the real power of this approach to design.
+- Lisp is a lousy language for any particular problem. But it's good for figuring out the right language and embedding that in Lisp. That's the real power of this approach to design.
 - There is no difference between procedures and data.
 
 ### Software engineering
@@ -651,20 +649,20 @@ Then, we learned how to use higher-order procedures to represent general methods
 - But, we need to be able to _represent_ the expressions.
 - The differentiation procedure that takes an _expression_ as an argument is different from the one that takes a function.
 - You can't open up a function. You can only get answers from it.
-- An expression is some object representing the algebraic expression that defines a function.
+- An expression is an object representing the algebraic expression that defines a function.
 - We can write the procedure `deriv` using a lot of wishful thinking.
 
 ### Expression representation
 
 - To represent sums, products, quotients, etc., why not use the same language we're writing the program in?
 - We can just use list structure.
-- There are more primitive predicates that come with Lisp that we haven't seen yet: `atom?` and `eq?`.
+- There are more built-in predicates we haven't seen yet: `atom?` and `eq?`.
 
 ### Quotation
 
 - We are also introducing _quotation_. The words of English are ambiguous: _say your name_ is different from _say "your name"_.
 - The notation in Lisp is to precede the expression with a single quotation mark.
-- Quotation makes a language more complex because we can no longer substitute equals for equals.
+- Quotation makes a language more complex because we can no longer substitute equals for equals (see Bertrand Russell's "On Denoting").
 - The names `car` and `cdr` have survived (originally the address register and the decrement register) because we can do things like `cadddr` and `cadar`.
 
 ## Part 2
@@ -697,15 +695,15 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We wrote a program to differentiate expressions that had a highly stylized behaviour and structure.
 - We used quotation to represent symbolic math expressions.
 - Why did we have to translate the rules of differential calculus into the language of the computer?
-- Our program was a conditional dispatch on the type of the expression as observed by the rules.
+- Our program was a conditional dispatch on the type of the expression.
 - Is there some other, more clear way of writing this program?
 
 ### Rules
 
-- We follow rules to differentiate expressions.
-- What is a rule, exactly?
+- We follow rules to differentiate expressions. What is a rule, exactly?
 - A rule has a left-hand side and a right-hand side.
-- The LHS is what you compare your expression to, and the RHS is the replacement expression.
+  - The LHS is what you compare your expression to.
+  - The RHS is the replacement expression.
 - A rule is an arrow from a _pattern_ to a _skeleton_.
 - We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.
 - We want to build a language that allows us to directly express these rules. We will work bottom-up, like before.
@@ -733,7 +731,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - It could be prettier, but that doesn't matter. What matters is that we are writing rules directly in our language.
 - `deriv-rules` is simply a list of rules.
-- Each rule is of the form `(LHS RHS)`. The left side is the pattern; the right side is the skeleton.
+- Each rule is of the form `(LHS RHS)`. `LHS` is a pattern; `RHS` is a skeleton.
 - The forms beginning with question marks in the LHS are called _pattern variables_. We have invented them for our language.
 - The forms beginning with colons in the RHS are called _substitution objects_. They are skeleton evaluations.
 - Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:
@@ -772,7 +770,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The matcher passes a dictionary to the instantiator. This consists of the pattern variables and their matched values.
 - The output of the instantiator goes back into the matcher.
 - All of the rules must be tried on the expression, and on all its subexpressions. We can stop when it no longer changes.
-- If you don't write your rules carefully, There is a danger of going into an infinite loop.
+- If you don't write your rules carefully, there is a danger of going into an infinite loop.
 
 ## Part 2
 
@@ -807,7 +805,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```
 
 - The `else` clause recursion is very important.
-- We are examine two trees simultaneously: the tree of the expression, and that of the pattern.
+- We examine two trees simultaneously: the tree of the expression, and that of the pattern.
 - Consider this pattern: `(+ (* (? x) (? y)) (? y))`. We could draw this as a tree.
 - The expression matching it, `(+ (* 3 x)) x)`, has a very similar tree structure.
 - We want to traverse both trees simultaneously and compare them.
@@ -834,14 +832,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We do a recursive tree walk on the skeleton.
 - It is simpler than the matcher because the parts of the tree can be instantiated independently (we don't change the dictionary).
 - The only reason we have the internal procedure is to avoid passing the same `dict` on every recursive call.
-- The skeleton evaluation forms like`(: x)` use `evaluate`:
+- The skeleton evaluation forms like `(: x)` use `evaluate`:
 
 ```scheme
 (define (evaluate form dict)
   (if (atom? form)
       (lookup form dict)
       (apply (eval (lookup (car form) dict)
-                  user-initial-environment)
+                   user-initial-environment)
             (mapcar (lambda (v) (lookup v dict))
                     (cdr form)))))
 ```
@@ -881,13 +879,13 @@ Then, we learned how to use higher-order procedures to represent general methods
       (if (null? rules)
           exp
           (let ((dict (match (pattern (car rules))
-                            exp
-                            (empty-dictionary))))
+                             exp
+                             (empty-dictionary))))
             (if (eq? dict 'failed)
                 (scan (cdr rules))
                 (simplify-exp
                   (instantiate (skeleton (car rules))
-                              dict))))))
+                               dict))))))
     (scan the-rules))
   simplify-exp)
 ```
@@ -906,8 +904,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - This is a different idiom; it works the same way, but you think about it a bit differently.
 - It is better because otherwise we are basically reinventing the wheel by hiding a definition of `map` in one of our procedures. It is best to extract those common patterns.
-- The `try-rules` procedure scans the rules and tries each one.
-- It returns the original expression if none matched.
+- The `try-rules` procedure scans the rules and tries each one. It returns the original expression if none matched.
 - When a rule's pattern matches, `try-rules` instantiates the skeleton and tries to simplify that further.
 
 ### Complexity

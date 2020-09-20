@@ -4,7 +4,7 @@ This repository is my study of [_Structure and Interpretation of Computer Progra
 
 ## Notes
 
-My notes on the text are published at <https://mk12.github.io/sicp>, generated from [docs/notes.md](docs/notes.md).
+My notes are published at <https://mk12.github.io/sicp>, generated from Markdown files in [docs/](docs). They are based on the [2.andresraba5 PDF][pdf] and the [MIT OCW video lectures][lectures].
 
 To compile the notes, install [Pandoc][] and run `make -C docs`. To compile automatically on every save, install [entr][] and run `make -C docs watch`. This is useful in combination with the VS Code extension [Live Server][].
 
@@ -126,6 +126,8 @@ SICP Study is available under the MIT License; see [LICENSE](LICENSE.md) for det
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [pages]: https://mk12.github.io/sicp
+[pdf]: https://github.com/sarabander/sicp-pdf
+[lectures]: https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
 [R6RS]: http://www.r6rs.org
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
 [Guile]: https://www.gnu.org/software/guile/

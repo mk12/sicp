@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Mitchell Kember" />
+  <title>SICP Quotes</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<a class="index-link" href="index.html">Index</a>
+|
+<a class="index-link" href="https://github.com/mk12/sicp">GitHub</a>
+<header id="title-block-header">
+<h1 class="title">SICP Quotes</h1>
+<p class="subtitle">Quotes from <a href="https://mitpress.mit.edu/sites/default/files/sicp/index.html"><em>Structure and Interpretation of Computer Programs</em></a> and its <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/">lectures</a></p>
+<p class="author">Mitchell Kember</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#textbook">Textbook</a>
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#chapter-1-building-abstractions-with-procedures">Chapter 1: Building Abstractions with Procedures</a></li>
+<li><a href="#chapter-2-building-abstractions-with-data">Chapter 2: Building Abstractions with Data</a></li>
+<li><a href="#chapter-3-modularity-objects-and-state">Chapter 3: Modularity, Objects, and State</a></li>
+<li><a href="#chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</a></li>
+</ul></li>
+<li><a href="#lectures">Lectures</a>
+<ul>
+<li><a href="#a-overview-and-introduction-to-lisp">1A: Overview and Introduction to Lisp</a></li>
+<li><a href="#b-procedures-and-processes-substitution-model">1B: Procedures and Processes; Substitution Model</a></li>
+<li><a href="#b-compound-data">2B: Compound Data</a></li>
+<li><a href="#a-henderson-escher-example">3A: Henderson Escher Example</a></li>
+<li><a href="#b-symbolic-differentiation-quotation">3B: Symbolic Differentiation; Quotation</a></li>
+<li><a href="#a-pattern-matching-and-rule-based-substitution">4A: Pattern Matching and Rule-based Substitution</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="textbook">Textbook</h1>
+<p>Page numbers correspond to the <a href="https://github.com/sarabander/sicp-pdf">2.andresraba5 PDF</a>.</p>
+<h2 id="preface">Preface</h2>
+<blockquote>
+<p>First, we want to establish the idea that a computer language is not just a way of getting a computer to perform operations but rather that it is a novel formal medium for expressing ideas about methodology. Thus, programs must be written for people to read, and only incidentally for machines to execute. (xxii)</p>
+</blockquote>
+<blockquote>
+<p>Underlying our approach to this subject is our conviction that “computer science” is not a science and that its significance has little to do with computers. (xxiii)</p>
+</blockquote>
+<blockquote>
+<p>Mathematics provides a framework for dealing precisely with notions of “what is.” Computation provides a framework for dealing precisely with notions of “how to.” (xxiii)</p>
+</blockquote>
+<h2 id="chapter-1-building-abstractions-with-procedures">Chapter 1: Building Abstractions with Procedures</h2>
+<blockquote>
+<p>Syntactic sugar causes cancer of the semicolon. (Alan Perlis)</p>
+</blockquote>
+<blockquote>
+<p>In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a “correct” algorithm. Considering an algorithm to be inadequate for the first reason but not for the second illustrates the difference between mathematics and engineering. (69)</p>
+</blockquote>
+<h2 id="chapter-2-building-abstractions-with-data">Chapter 2: Building Abstractions with Data</h2>
+<blockquote>
+<p>Developing a useful, general framework for expressing the relations among different types of entities (what philosophers call “ontology”) seems intractably difficult. The main difference between the confusion that existed ten years ago and the confusion that exists now is that now a variety of inadequate ontological theories have been embodied in a plethora of correspondingly inadequate programming languages. For example, much of the complexity of object-oriented programming languages – and the subtle and confusing differences among contemporary object-oriented languages – centers on the treatment of generic operations on interrelated types. (270)</p>
+</blockquote>
+<h2 id="chapter-3-modularity-objects-and-state">Chapter 3: Modularity, Objects, and State</h2>
+<blockquote>
+<p>In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. (318–319)</p>
+</blockquote>
+<blockquote>
+<p>In view of this, it is ironic that introductory programming is most often taught in a highly imperative style. This may be a vestige of a belief, common throughout the 1960s and 1970s, that programs that call procedures must inherently be less efficient than programs that perform assignments. […] Alternatively it may reflect a view that step-by-step assignment is easier for beginners to visualize than procedure call. Whatever the reason, it often saddles beginning programmers with “should I set this variable before or after that one” concerns that can complicate programming and obscure the important ideas. (319)</p>
+</blockquote>
+<blockquote>
+<p>The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between “procedures” and “data,” and we can choose our syntactic sugar to allow us to program in whatever style we choose. (378)</p>
+</blockquote>
+<blockquote>
+<p>To quote some graffiti seen on a Cambridge building wall: “Time is a device that was invented to keep everything from happening at once.” (403)</p>
+</blockquote>
+<blockquote>
+<p>We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge. (486)</p>
+</blockquote>
+<blockquote>
+<p>The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the “objects” is much larger than the state that they share. (486)</p>
+</blockquote>
+<h2 id="chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</h2>
+<h1 id="lectures">Lectures</h1>
+<p>Quotes and paraphrases are from the <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/">MIT OCW video lectures</a>.</p>
+<h2 id="a-overview-and-introduction-to-lisp">1A: Overview and Introduction to Lisp</h2>
+<blockquote>
+<p>Computer scientists are in the business of controlling complexity.</p>
+</blockquote>
+<h2 id="b-procedures-and-processes-substitution-model">1B: Procedures and Processes; Substitution Model</h2>
+<blockquote>
+<p>But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think.</p>
+</blockquote>
+<h2 id="b-compound-data">2B: Compound Data</h2>
+<blockquote>
+<p>See, in general, as systems designers, you’re forced with the necessity to make decisions about how you’re going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you’re forced to do it. The problem is, there’s a very, very narrow line between deferring decisions and outright procrastination. So you’d like to make progress, but also at the same time never be bound by the consequences of your decisions.</p>
+</blockquote>
+<blockquote>
+<p>I said that computer science is a lot like magic, and it’s sort of good that it’s like magic. There’s a bad part of computer since that’s a lot like religion.</p>
+</blockquote>
+<h2 id="a-henderson-escher-example">3A: Henderson Escher Example</h2>
+<blockquote>
+<p>Lisp is a lousy language for any particular problem. But it’s good for figuring out the right language and embedding that in Lisp. That’s the real power of this approach to design.</p>
+</blockquote>
+<blockquote>
+<p>The design process is not so much implementing programs as implementing languages. That’s the powerful idea of Lisp.</p>
+</blockquote>
+<h2 id="b-symbolic-differentiation-quotation">3B: Symbolic Differentiation; Quotation</h2>
+<blockquote>
+<p>In order to make a robust system, it needs to be insensitive to small changes. A small change in the problem leads to a small change in the solution. Don’t solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.</p>
+</blockquote>
+<h2 id="a-pattern-matching-and-rule-based-substitution">4A: Pattern Matching and Rule-based Substitution</h2>
+<blockquote>
+<p>The key to very good programming, and very good design, is to know what not to think about.</p>
+</blockquote>
+<blockquote>
+<p>We like to think about the world as being made up of independent objects, each having their own state. The idea of objects, changed, and sameness raises deep problems. If you cut off your fingernail, the “before” and “after” of you is enormously different in terms of atoms. You have changed and feel that you are the “same” person, but how do you know that? By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.</p>
+</blockquote>
+</body>
+</html>
