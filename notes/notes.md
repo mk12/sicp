@@ -1235,7 +1235,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ```scheme
 (define (square x) (* x x))
-(define (sum-of-square x y) (+ (square x) (square y)))
+(define (sum-of-squares x y) (+ (square x) (square y)))
 (define (f a) (sum-of-squares (+ a 1) (* a 2)))
 ```
 
@@ -1696,31 +1696,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - The use of `delay` in `cons-stream` is crucial to defining streams with feedback loops.
 - However, there are cases where we need further, explicit uses of `delay`.
-- For example, solving the differential equation $dy/dt = f(y)$ where $f$ is a given function:
-
-```scheme
-(define (solve f y0 dt)
-  (define y (integral dy y0 dt))
-  (define dy (stream-map f y))
-  y)
-```
-
-- This does not work because the definition of `y` and `dy` depend on each other.
-- To solve this, we need to change our implementation of `integral`:
-
-```scheme
-(define (integral delayed-integrand initial-value dt)
-  (define int
-    (cons-stream
-      initial-value
-      (let ((integrand (force delayed-integrand)))
-        (add-streams (scale-stream integrand dt) int))))
-  int)
-(define (solve f y0 dt)
-  (define y (integral (delay dy) y0 dt))
-  (define dy (stream-map f y))
-  y)
-```
+- For example, solving the differential equation $dy/dt = f(y)$ where $f$ is a given function.
+- The problem here is that `y` and `dy` will depend on each other.
+- To solve this, we need to change `integral` to take a delayed integrand.
 
 #### Normal-order evaluation
 
@@ -1731,3 +1709,20 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Mutability and delayed evaluation do not mix well.
 
 ### Modularity of Functional Programs and Modularity of Objects
+
+- Modularity through encapsulation is a major benefit of introducing assignment.
+- Stream models can provide equivalent modularity without assignment.
+- For example, we can reimplement the Monte Carlo simulation with streams.
+
+#### A functional-programming view of time
+
+- Streams represent time explicitly, decoupling the simulated world from evaluation.
+- They produce stateful-seeming behavior but avoid all the thorny issues of state.
+- However, the issues come back when we need to merge streams together.
+- Immutability is a key pillar of _functional programming languages_.
+
+> We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge. (486)
+
+> The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the "objects" is much larger than the state that they share. (486)
+
+# Chapter 4: Metalinguistic Abstraction 

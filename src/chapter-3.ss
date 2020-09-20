@@ -170,10 +170,11 @@
 
 ;; Tausworthe PRNG: https://stackoverflow.com/a/23875298
 (define random-init 1)
+(define random-max #x7fffffff)
 (define (rand-update x0)
   (let* ((x1 (fxxor x0 (fxarithmetic-shift-right x0 13)))
          (x2 (fxxor x1 (fxarithmetic-shift-left x1 18))))
-     (fxand x2 #x7fffffff)))
+     (fxand x2 random-max)))
 
 (define rand
   (let ((x random-init))
@@ -197,6 +198,9 @@
                       trials-passed))))
   (iter trials 0))
 
+;; This is deterministic because the `random-init` seed is fixed.
+(estimate-pi 1000) ~> 3.149183286488868
+
 (Exercise ?3.5
   (use (:1.1.4 square) (:3.1.2 monte-carlo rand)))
 
@@ -215,7 +219,7 @@
 (define (estimate-pi trials)
   (let ((pred (lambda (x y)
                 (<= (+ (square x) (square y)) 1))))
-    (estimate-integral pred -1 1 -1 1 trials)))
+    (estimate-integral pred -1.0 1.0 -1.0 1.0 trials)))
 
 (Exercise ?3.6
   (use (:3.1.2 random-init rand-update)))
@@ -3267,7 +3271,87 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 (map three-decimals (stream-take (cdr v-and-i) 9))
 => '("0.000" "1.000" "1.900" "2.660" "3.249" "3.646" "3.841" "3.834" "3.636")
 
-(Section :3.5.5 "Modularity of Functional Programs and Modularity of Objects")
+(Section :3.5.5 "Modularity of Functional Programs and Modularity of Objects"
+  (use (:3.1.2 random-init rand-update)
+       (:3.5.1 stream-car stream-cdr stream-ref) (?3.50 stream-map)))
+
+(define (map-successive-pairs f s)
+  (cons-stream
+    (f (stream-car s) (stream-car (stream-cdr s)))
+    (map-successive-pairs f (stream-cdr (stream-cdr s)))))
+
+(define (monte-carlo experiment-stream passed failed)
+  (define (next passed failed)
+    (cons-stream
+      (/ passed (+ passed failed))
+      (monte-carlo (stream-cdr experiment-stream) passed failed)))
+  (if (stream-car experiment-stream)
+      (next (+ passed 1) failed)
+      (next passed (+ failed 1))))
+
+(define random-numbers
+  (cons-stream
+    ;; Start at `(rand-update random-init)` rather than `random-init` to match
+    ;; the behavior in Section 3.1.2. This ensures the same estimate of pi.
+    (rand-update random-init)
+    (stream-map rand-update random-numbers)))
+(define cesaro-stream
+  (map-successive-pairs
+    (lambda (r1 r2) (= (gcd r1 r2) 1))
+    random-numbers))
+(define pi
+  (stream-map
+    (lambda (p) (sqrt (/ 6 p)))
+    (monte-carlo cesaro-stream 0 0)))
+
+;; This is deterministic because the `random-init` seed is fixed.
+(stream-ref pi 999) ~> 3.149183286488868
+
+(Exercise ?3.81
+  (use (:3.1.2 random-init rand-update)
+       (:3.5.1 stream-car stream-cdr stream-null? the-empty-stream)
+       (:3.5.2 stream-take) (?3.74 cycle)))
+
+(define (random-numbers request-stream)
+  (define (iter s prev)
+    (if (stream-null? s)
+        the-empty-stream
+        (let* ((request (stream-car s))
+               (operation (car request))
+               (value (cond ((eq? operation 'reset) (cadr request))
+                            ((eq? operation 'generate) (rand-update prev))
+                            (else (error 'random-numbers
+                                         "unknown request"
+                                         request)))))
+          (cons-stream value (iter (stream-cdr s) value)))))
+  (iter request-stream random-init))
+
+(define reqs (cycle '((generate) (reset 7) (generate) (generate) (reset 0))))
+(stream-take (random-numbers reqs) 5) => '(262145 7 1835015 58720487 0)
+
+(Exercise ?3.82
+  (use (:1.1.4 square) (:3.1.2 random-max) (:3.5.1 stream-ref)
+       (:3.5.5 map-successive-pairs monte-carlo random-numbers)
+       (?3.50 stream-map)))
+
+(define (estimate-integral pred x1 x2 y1 y2)
+  (let* ((dx (- x2 x1))
+         (dy (- y2 y1))
+         (experiment-stream
+         (map-successive-pairs
+           (lambda (r1 r2)
+             (pred (+ x1 (* dx (/ r1 random-max)))
+                   (+ y1 (* dy (/ r2 random-max)))))
+           random-numbers)))
+    (stream-map (lambda (p) (* p dx dy))
+                (monte-carlo experiment-stream 0 0))))
+
+(define pi
+  (let ((pred (lambda (x y)
+                (<= (+ (square x) (square y)) 1))))
+    (estimate-integral pred -1.0 1.0 -1.0 1.0)))
+
+(stream-ref pi 999) ~> 3.092
 
 ) ; end of SICP
 ) ; end of library
