@@ -389,7 +389,7 @@ We are separating the things we are adding up from the method of doing the addit
 
 ## Part 1
 
-#### Recap
+### Recap
 
 In the beginning, we learned about
 
@@ -1057,7 +1057,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We have done all of this without an assignment statement.
 - Today, we're going to add the assignment statement.
 - If we can do so much without it, why should we add it?
-- After all, we only ever add something to the language if we have a good reason for doing so.
+- After all, we only add something to the language if we have a good reason for doing so.
 - We are adding assignment because it will allow us to break some problems up into certain sets of pieces, and this new means of decomposition would be impossible without assignment.
 
 ### Functional programming
@@ -1082,7 +1082,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Identity
 
-- Symbols for variables are no longer going to refer directly to their values, but to some _place_.
+- Symbols for variables no longer refer directly to their values, but to some _place_.
 - A variable now refers to an _identity_. This is an entity associated with a series of causally related values over time.
 - The state of an identity is it's current associated value.
 - When we talk about _time_, we mean the before/after ordering of causal values.
@@ -1112,7 +1112,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```
 
 - There are ways of making errors in the second program that simply didn't exist when we couldn't do assignment.
-- If we change the ordering of the two assignments, the procedure calculates the wrong value.
+- If we change the ordering of the assignments, the procedure calculates the wrong value.
 
 ## Part 2
 
@@ -1192,12 +1192,12 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Actions and identity
 
-- An action $A$ had an effect on an object $x$ (or equivalently, that $x$ was changed by $A$) if some property $P$ which was true of $x$ before $$ became false of $x$ after $A$.
+- An action $A$ had an effect on an object $x$ (or equivalently, that $x$ was changed by $A$) if some property $P$ which was true of $x$ before $A$ became false of $x$ after $A$.
 - Two objects $x$ and $y$ are the same if any action which has an effect on $x$ has the same effect on $y$.
 
 ### Uses of objection orientation
 
-- One of the nice things about objects is the way it lets us model the world. We like to thing of the world as being made up of these independent objects.
+- One of the nice things about objects is the way it lets us model the world. We like to think of the world as being made up of these independent objects.
 - If we want to understand the program well and we want small changes in the world to lead to small changes in the program, we would like isomorphisms between the world and the model.
 - For most things, objects and assignment are not the right way to think. We should only use them if we need them.
 - Sometimes, though, they are essential.
@@ -1303,3 +1303,183 @@ Then, we learned how to use higher-order procedures to represent general methods
 - (I just realized that creating objects this way, where you apply the object to a procedure that is passed all the state variables, is just like pattern matching.)
 
 # 6A: Streams, Part 1
+
+## Part 1
+
+### Recap
+
+- We've learned about assignment and its frightening implications.
+- The substitution model of evaluation breaks down; we have to use the much more complicated environment model.
+- Worry about: assignment, state, change, time, identity, objects, sharing.
+- Suddenly a variable doesn't just stand for a value; it specifies a place that holds a value.
+- Our goal was _modularity_, writing programs that mirror reality.
+- Maybe we have the wrong view of reality; maybe time is an illusion and nothing changes.
+
+### Motivation
+
+- We're going to look at another way to decompose systems: _stream processing_.
+- Consider summing the odd squares in a binary tree of integers:
+
+```scheme
+(define (sum-odd-squares tree)
+  (if (leaf-node? tree)
+      (if (odd? tree)
+          (square tree)
+          0)
+      (+ (sum-odd-squares (left-branch tree))
+         (sum-odd-squares (right-branch tree)))))
+```
+
+- And contrast with collecting the odd Fibonacci numbers:
+
+```scheme
+(define (odd-fibs n)
+  (define (next k)
+    (if (> k n)
+        '()
+        (let ((f (fib k)))
+          (if (odd? f)
+              (cons f (next (1+ k)))
+              (next (1+ k))))))
+  (next 1))
+```
+
+- 1st procedure: enumerate leaves → filter `odd?` → map `square` → accumulate `+`, 0.
+- 2nd procedure: enumerate interval → map `fib` → filter `odd?` → accumulate `cons`, `'()`.
+- These are similar, but the commonality is obscured by how we wrote the procedures.
+
+> Going back to this fundamental principle of computer science that in order to control something you need the name of it.
+
+### Defining streams
+
+- The arrows between the boxes represent data structures called _streams_.
+- `(cons-stream x y)` and `the-empty-stream` construct streams.
+- For any `x` and `y`, `(head (cons-stream x y))` is `x`.
+- For any `x` and `y`, `(tail (cons-stream x y))` is `y`.
+- We can define higher-order procedures like we did for lists:
+
+```scheme
+(define (map-stream proc s)
+  (if (empty-stream? s)
+      the-empty-stream
+      (cons-stream (proc (head s))
+                   (map-stream proc (tail se)))))
+```
+
+### Using the language
+
+- Now we can reimplement those problems with explicit stream processing:
+
+```scheme
+(define (sum-odd-squares tree)
+  (accumulate +
+              0
+              (map square
+                   (filter odd
+                           (enumerate-tree tree)))))
+(define (odd-fibs n)
+  (accumulate cons
+              '()
+              (filter odd
+                      (map fib
+                           (enumerate-interval 1 n)))))
+```
+
+- This reveals their commonality, and makes it easy to mix and match boxes.
+- The advantage of stream processing is that it establishes _conventional interfaces_.
+- Conventional interfaces are powerful because we can easily glue things together.
+
+## Part 2
+
+### More complicated stream processing
+
+- Suppose we have a stream of streams $\{\{1,2,3,\dots\},\{10,20,30,\dots\},\dots\}$.
+- We can define a procedure `flatten` to accumulate them into a single flat stream.
+- Problem: Given $N$, find all pairs $0<j<i≤N$ such that $i+j$ is prime.
+
+```scheme
+(define (prime-sum-pairs n)
+  (map
+    (lambda (p)
+      (list (car p) (cadr p) (+ (car p) (cadr  p))))
+    (filter
+      (lambda (p)
+        (prime (+ (car p) (cadr p))))
+      (flatmap
+        (lambda (i)
+          (map
+            (lambda (j) (list i j))
+            (enumerate-interval 1 (-1+ i))))
+        (enumerate-interval 1 n)))))
+```
+
+- `flatmap` takes the place of nested loops in most other languages.
+- We can simplify it with syntactic sugar `collect`:
+
+```scheme
+(define (prime-sum-pairs n)
+  (collect
+    (list i j (+ i j))
+    ((i (enumerate-interval 1 n))
+     (j (enumerate-interval 1 (-1+ i))))
+    (prime? (+ i j))))
+```
+
+### Eight queens puzzle
+
+- Solving this typically uses a _backtracking search_, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).
+- This is unnecessary -- it's inordinately concerned with _time_.
+- A simpler way is to employ _wishful thinking_ and go from $k$ columns to $k+1$ columns.
+
+```scheme
+(define (queens size)
+  (define (fill-cols k)
+    (if (= k 0)
+        (singleton empty-board)
+        (collect (adjoin-position try-row k rest-queens)
+                 ((rest-queens (fill-cols (-1+ k)))
+                  (try-row (enumerate-interval 1 size)))
+                 (safe? try-row k rest-queens))))
+  (fill-cols size))
+```
+
+- This gives us _all solutions_ to the $k$-queens puzzle.
+- We changed our view from things that evolve in time and have state to a global view where we're not concerned with time.
+
+## Part 3
+
+### Streams are not lists
+
+- By now you should be suspicious -- what's the catch?
+- Problem: Find the second prime between 10,000 and 1,000,000.
+- Stream solution: enumerate 10,000 to 1,000,000 → filter `prime?` → take 2nd.
+- This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.
+- But we can have our cake and eat it to! We can make it just as efficient.
+- The key to this is that streams are _not_ lists.
+
+### Implementing streams
+
+- We want the stream to compute itself incrementally, to be an "on demand" data structure.
+    - `(cons-stream x y)` is an abbreviation for `(cons x (delay y))`
+    - `(head s)` is `(car s)`
+    - `(tail s)` is `(force (cdr s))`
+- `delay` creates a promise to compute something when `force`&thinsp;d.
+    - `(delay <expr>)` is an abbreviation for `(lambda () <expr>)`
+    - `(force p)` is `(p)`
+- `delay` decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.
+- One little hack: to be efficient, `(delay <expr>)` is `(memo-proc (lambda () <expr>))`.
+
+```scheme
+(define (memo-proc proc)
+  (let ((already-run? nil) (result nil))
+    (lambda ()
+      (if (not already-run?)
+          (sequence (set! result (proc))
+                    (set! already-run? (not nil))
+                    result)
+          result))))
+```
+
+- Streams blur the line between data structures and procedures.
+
+# 6B: Streams, Part 2

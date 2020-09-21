@@ -74,7 +74,17 @@ Quotes and paraphrases are from the [MIT OCW video lectures][lectures].
 
 > The key to very good programming, and very good design, is to know what not to think about. 
 
+## 5A: Assignment, State, and Side-effects
+
 > We like to think about the world as being made up of independent objects, each having their own state. The idea of objects, changed, and sameness raises deep problems. If you cut off your fingernail, the "before" and "after" of you is enormously different in terms of atoms. You have changed and feel that you are the "same" person, but how do you know that? By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.
+
+## 5B: Computational Objects
+
+> When we have multiple names for the same object, they are called aliases. Changing one changes them all. Sometimes sharing is what we want. But inadvertent sharing is a great source of bugs in complicated programs.
+
+## 6A: Streams, Part 1
+
+> Going back to this fundamental principle of computer science that in order to control something you need the name of it.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [pdf]: https://github.com/sarabander/sicp-pdf
