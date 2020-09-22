@@ -1451,5 +1451,114 @@
 <li>Streams blur the line between data structures and procedures.</li>
 </ul>
 <h1 id="b-streams-part-2">6B: Streams, Part 2</h1>
+<h2 id="part-1-11">Part 1</h2>
+<h3 id="recap-6">Recap</h3>
+<ul>
+<li>We’ve been looking at stream processing, an on-demand method of computation.</li>
+<li>We don’t compute elements until we’ve asked for them. When do we “ask” for them?</li>
+<li>Example: <code>nth-stream</code> forces the first <code>n</code> elements of a stream.</li>
+</ul>
+<div class="sourceCode" id="cb40"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb40-1"><a href="#cb40-1"></a>(<span class="ex">define</span><span class="fu"> </span>(nth-stream n s)</span>
+<span id="cb40-2"><a href="#cb40-2"></a>  (<span class="kw">if</span> (<span class="op">=</span> n <span class="dv">0</span>)</span>
+<span id="cb40-3"><a href="#cb40-3"></a>      (head s)</span>
+<span id="cb40-4"><a href="#cb40-4"></a>      (nth-stream (-<span class="dv">1</span>+ n) (tail s))))</span></code></pre></div>
+<h3 id="infinite-streams">Infinite streams</h3>
+<ul>
+<li>How long can a stream be? It can be <em>infinite</em>!</li>
+</ul>
+<div class="sourceCode" id="cb41"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb41-1"><a href="#cb41-1"></a>(<span class="ex">define</span><span class="fu"> </span>(integers-from n)</span>
+<span id="cb41-2"><a href="#cb41-2"></a>  (cons-stream n (integers-from (<span class="dv">1</span>+ n))))</span>
+<span id="cb41-3"><a href="#cb41-3"></a>(<span class="ex">define</span><span class="fu"> integers </span>(integers-from <span class="dv">1</span>))</span></code></pre></div>
+<ul>
+<li>Is this really all the integers, or is it just cleverly arranged so that whenever you look for an integer you find it there? This is a sort of philosophical question.</li>
+</ul>
+<h3 id="sieve-of-eratosthenes">Sieve of Eratosthenes</h3>
+<ul>
+<li>Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you’re left with is all the primes.</li>
+</ul>
+<div class="sourceCode" id="cb42"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb42-1"><a href="#cb42-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sieve s)</span>
+<span id="cb42-2"><a href="#cb42-2"></a>  (cons-stream</span>
+<span id="cb42-3"><a href="#cb42-3"></a>    (head s)</span>
+<span id="cb42-4"><a href="#cb42-4"></a>    (sieve (filter (<span class="kw">lambda</span> (x) (<span class="kw">not</span> (divisible? x (head s))))</span>
+<span id="cb42-5"><a href="#cb42-5"></a>                   (tail s)))))</span>
+<span id="cb42-6"><a href="#cb42-6"></a>(<span class="ex">define</span><span class="fu"> primes </span>(sieve (integers-from <span class="dv">2</span>)))</span>
+<span id="cb42-7"><a href="#cb42-7"></a>(nth-stream <span class="dv">20</span> primes)</span>
+<span id="cb42-8"><a href="#cb42-8"></a><span class="dv">73</span></span></code></pre></div>
+<h2 id="part-2-11">Part 2</h2>
+<h3 id="defining-streams-implicitly">Defining streams implicitly</h3>
+<ul>
+<li>We’ve so far seen procedures that recursively create streams.</li>
+<li>There’s another way. But first we need some additional procedures:</li>
+</ul>
+<div class="sourceCode" id="cb43"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb43-1"><a href="#cb43-1"></a>(<span class="ex">define</span><span class="fu"> </span>(add-streams s1 s2)</span>
+<span id="cb43-2"><a href="#cb43-2"></a>  (<span class="kw">cond</span> ((empty-stream? s1) s2)</span>
+<span id="cb43-3"><a href="#cb43-3"></a>        ((empty-stream? s2) s1)</span>
+<span id="cb43-4"><a href="#cb43-4"></a>        (<span class="kw">else</span> (cons-stream (<span class="op">+</span> (head s1) (head s2))</span>
+<span id="cb43-5"><a href="#cb43-5"></a>                           (add-streams (tail s1) (tail s2))))))</span>
+<span id="cb43-6"><a href="#cb43-6"></a>(<span class="ex">define</span><span class="fu"> </span>(scale-stream c s)</span>
+<span id="cb43-7"><a href="#cb43-7"></a>  (map-stream (<span class="kw">lambda</span> (x) (* x c)) s))</span></code></pre></div>
+<ul>
+<li>Now, we can define streams all at once:</li>
+</ul>
+<div class="sourceCode" id="cb44"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb44-1"><a href="#cb44-1"></a>(<span class="ex">define</span><span class="fu"> ones </span>(cons-stream <span class="dv">1</span> ones))</span>
+<span id="cb44-2"><a href="#cb44-2"></a>(<span class="ex">define</span><span class="fu"> integers </span>(add-streams integers ones))</span></code></pre></div>
+<h3 id="more-examples">More examples</h3>
+<ul>
+<li>We can calculate the integral <span class="math inline">\int s\,dt</span> the same way you would in signal processing:</li>
+</ul>
+<div class="sourceCode" id="cb45"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb45-1"><a href="#cb45-1"></a>(<span class="ex">define</span><span class="fu"> </span>(integral s initial-value dt)</span>
+<span id="cb45-2"><a href="#cb45-2"></a>  (<span class="ex">define</span><span class="fu"> int</span></span>
+<span id="cb45-3"><a href="#cb45-3"></a>    (cons-stream initial-value</span>
+<span id="cb45-4"><a href="#cb45-4"></a>                 (add-streams (scale-stream dt s) int)))</span>
+<span id="cb45-5"><a href="#cb45-5"></a>  int)</span></code></pre></div>
+<ul>
+<li>Another example, the Fibonacci numbers:</li>
+</ul>
+<div class="sourceCode" id="cb46"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb46-1"><a href="#cb46-1"></a>(<span class="ex">define</span><span class="fu"> fibs</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a>  (cons-stream <span class="dv">0</span></span>
+<span id="cb46-3"><a href="#cb46-3"></a>               (cons-stream <span class="dv">1</span></span>
+<span id="cb46-4"><a href="#cb46-4"></a>                            (add-streams fibs (tail fibs)))))</span></code></pre></div>
+<h3 id="explicit-delay">Explicit <code>delay</code></h3>
+<ul>
+<li>Let’s say we want to solve <span class="math inline">y&#39;=y^2,\;y(0)=1</span> using the step <span class="math inline">dt=0.001</span>.</li>
+<li>We’d like to write a stream program to solve this:</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb47-1"><a href="#cb47-1"></a>(<span class="ex">define</span><span class="fu"> y </span>(integral dy <span class="dv">1</span> <span class="fl">0.001</span>))</span>
+<span id="cb47-2"><a href="#cb47-2"></a>(<span class="ex">define</span><span class="fu"> dy </span>(map-stream square y))</span></code></pre></div>
+<ul>
+<li>This doesn’t work because <code>y</code> and <code>dy</code> each need the other defined first.</li>
+<li>We can fix it the same way <code>cons-stream</code> allows self-referencing definitions: by introducing another <code>delay</code>, so that we can get the first value of the integral stream without knowing what stream it’s integrating.</li>
+</ul>
+<div class="sourceCode" id="cb48"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb48-1"><a href="#cb48-1"></a>(<span class="ex">define</span><span class="fu"> </span>(integral delayed-s initial-value dt)</span>
+<span id="cb48-2"><a href="#cb48-2"></a>  (<span class="ex">define</span><span class="fu"> int</span></span>
+<span id="cb48-3"><a href="#cb48-3"></a>    (cons-stream initial-value</span>
+<span id="cb48-4"><a href="#cb48-4"></a>                 (<span class="kw">let</span> ((s (<span class="kw">force</span> delayed-s)))</span>
+<span id="cb48-5"><a href="#cb48-5"></a>                   (add-streams (scale-stream dt s) int))))</span>
+<span id="cb48-6"><a href="#cb48-6"></a>  int)</span>
+<span id="cb48-7"><a href="#cb48-7"></a>(<span class="ex">define</span><span class="fu"> y </span>(integral (delay dy) <span class="dv">1</span> <span class="fl">0.001</span>))</span>
+<span id="cb48-8"><a href="#cb48-8"></a>(<span class="ex">define</span><span class="fu"> dy </span>(map-stream square y))</span></code></pre></div>
+<h2 id="part-3-9">Part 3</h2>
+<h3 id="normal-order-evaluation">Normal-order evaluation</h3>
+<ul>
+<li>We’ve been divorcing time in the program from time in the computer.</li>
+<li>Sometimes, to really take advantage of this method, you have to write explicit <code>delay</code> s. But in larger programs it can be very difficult to see where you need them.</li>
+<li>Is there a way around this? Yes! By making <em>all</em> arguments to <em>every</em> procedure delayed.</li>
+<li>This is <em>normal-order</em> evaluation, as opposed to <em>applicative-order</em> which we’ve been using.</li>
+<li>We wouldn’t need <code>cons-stream</code> because it would be the same as <code>cons</code>.</li>
+<li>But there’s a price. The language becomes more elegant, but less expressive. For example, we could no longer write iterative procedures.</li>
+<li>You get these “dragging tails” of thunks that haven’t been evaluated, taking up 3 MB (!).</li>
+<li>A more striking issue: normal-order evaluation and side effects just don’t mix.</li>
+<li>The whole idea with streams was to throw away time; but with side effects we want time!</li>
+<li><em>Functional</em> programming languages avoid this issue by disallowing side effects.</li>
+</ul>
+<h3 id="avoiding-mutable-state">Avoiding mutable state</h3>
+<ul>
+<li>What about generating random numbers? We wanted modularity, so we encapsulated the random number generation with local state.</li>
+<li>Instead, we could create an infinite stream of random numbers.</li>
+<li>With bank accounts, instead of using local state and message passing, we can have the bank account process a stream of transaction requests, and emit a stream of balances.</li>
+<li>Can you do everything without assignment? No, there seem to be places where purely functional programming languages break down.</li>
+<li>For example, how do we model a joint bank account with multiple users? We’d have to merge the request streams somehow.</li>
+<li>The conflict between objects/state/time and <code>delay</code>/streams/functional programming might have very little to do with CS, and be more about different ways of viewing the world.</li>
+</ul>
 </body>
 </html>

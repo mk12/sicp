@@ -1483,3 +1483,138 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Streams blur the line between data structures and procedures.
 
 # 6B: Streams, Part 2
+
+## Part 1
+
+### Recap
+
+- We've been looking at stream processing, an on-demand method of computation.
+- We don't compute elements until we've asked for them. When do we "ask" for them?
+- Example: `nth-stream` forces the first `n` elements of a stream.
+
+```scheme
+(define (nth-stream n s)
+  (if (= n 0)
+      (head s)
+      (nth-stream (-1+ n) (tail s))))
+```
+
+### Infinite streams
+
+- How long can a stream be? It can be _infinite_!
+
+```scheme
+(define (integers-from n)
+  (cons-stream n (integers-from (1+ n))))
+(define integers (integers-from 1))
+```
+
+- Is this really all the integers, or is it just cleverly arranged so that whenever you look for an integer you find it there? This is a sort of philosophical question.
+
+### Sieve of Eratosthenes
+
+- Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you're left with is all the primes.
+
+```scheme
+(define (sieve s)
+  (cons-stream
+    (head s)
+    (sieve (filter (lambda (x) (not (divisible? x (head s))))
+                   (tail s)))))
+(define primes (sieve (integers-from 2)))
+(nth-stream 20 primes)
+73
+```
+
+## Part 2
+
+### Defining streams implicitly
+
+- We've so far seen procedures that recursively create streams.
+- There's another way. But first we need some additional procedures:
+
+```scheme
+(define (add-streams s1 s2)
+  (cond ((empty-stream? s1) s2)
+        ((empty-stream? s2) s1)
+        (else (cons-stream (+ (head s1) (head s2))
+                           (add-streams (tail s1) (tail s2))))))
+(define (scale-stream c s)
+  (map-stream (lambda (x) (* x c)) s))
+```
+
+- Now, we can define streams all at once:
+
+```scheme
+(define ones (cons-stream 1 ones))
+(define integers (add-streams integers ones))
+```
+
+### More examples
+
+- We can calculate the integral $\int s\,dt$ the same way you would in signal processing:
+
+```scheme
+(define (integral s initial-value dt)
+  (define int
+    (cons-stream initial-value
+                 (add-streams (scale-stream dt s) int)))
+  int)
+```
+
+- Another example, the Fibonacci numbers:
+
+```scheme
+(define fibs
+  (cons-stream 0
+               (cons-stream 1
+                            (add-streams fibs (tail fibs)))))
+```
+
+### Explicit `delay`
+
+- Let's say we want to solve $y'=y^2,\;y(0)=1$ using the step $dt=0.001$.
+- We'd like to write a stream program to solve this:
+
+```scheme
+(define y (integral dy 1 0.001))
+(define dy (map-stream square y))
+```
+
+- This doesn't work because `y` and `dy` each need the other defined first.
+- We can fix it the same way `cons-stream` allows self-referencing definitions: by introducing another `delay`, so that we can get the first value of the integral stream without knowing what stream it's integrating.
+
+```scheme
+(define (integral delayed-s initial-value dt)
+  (define int
+    (cons-stream initial-value
+                 (let ((s (force delayed-s)))
+                   (add-streams (scale-stream dt s) int))))
+  int)
+(define y (integral (delay dy) 1 0.001))
+(define dy (map-stream square y))
+```
+
+## Part 3
+
+### Normal-order evaluation
+
+- We've been divorcing time in the program from time in the computer.
+- Sometimes, to really take advantage of this method, you have to write explicit `delay`&thinsp;s. But in larger programs it can be very difficult to see where you need them.
+- Is there a way around this? Yes! By making _all_ arguments to _every_ procedure delayed.
+- This is _normal-order_ evaluation, as opposed to _applicative-order_ which we've been using.
+- We wouldn't need `cons-stream` because it would be the same as `cons`.
+- But there's a price. The language becomes more elegant, but less expressive. For example, we could no longer write iterative procedures.
+- You get these "dragging tails" of thunks that haven't been evaluated, taking up 3 MB (!).
+- A more striking issue: normal-order evaluation and side effects just don't mix.
+- The whole idea with streams was to throw away time; but with side effects we want time!
+- _Functional_ programming languages avoid this issue by disallowing side effects.
+
+### Avoiding mutable state
+
+- What about generating random numbers? We wanted modularity, so we encapsulated the random number generation with local state.
+- Instead, we could create an infinite stream of random numbers.
+- With bank accounts, instead of using local state and message passing, we can have the bank account process a stream of transaction requests, and emit a stream of balances.
+- Can you do everything without assignment? No, there seem to be places where purely functional programming languages break down.
+- For example, how do we model a joint bank account with multiple users? We'd have to merge the request streams somehow.
+- The conflict between objects/state/time and `delay`/streams/functional programming might have very little to do with CS, and be more about different ways of viewing the world.
