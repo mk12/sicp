@@ -11,7 +11,8 @@
         (only (src lang core) run-sicp)
         (src chapter-1)
         (src chapter-2)
-        (src chapter-3))
+        (src chapter-3)
+        (src chapter-4))
 
 (define (usage program)
   (format "\
@@ -70,6 +71,7 @@ options:
   chapter-1-effects
   chapter-2-effects
   chapter-3-effects
+  chapter-4-effects
   (unless (run-sicp filters verbose color)
     (exit 1)))
 
