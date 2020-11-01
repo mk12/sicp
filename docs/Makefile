@@ -15,6 +15,6 @@ watch:
 %.html: %.md $(css) $(before)
 	pandoc -o $@ $< --standalone --css=$(css) --katex $(flags) -B $(before)
 
-textbook.html lecture.html quote.html: flags += --toc
-textbook.html quote.html: flags += --toc-depth=3
-lecture.html: flags += --toc-depth=1
+textbook.html: flags += --toc --toc-depth=3
+lecture.html: flags += --toc --toc-depth=1
+quote.html: flags += --toc --toc-depth=3
