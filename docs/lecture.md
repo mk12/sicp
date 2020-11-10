@@ -1618,3 +1618,19 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Can you do everything without assignment? No, there seem to be places where purely functional programming languages break down.
 - For example, how do we model a joint bank account with multiple users? We'd have to merge the request streams somehow.
 - The conflict between objects/state/time and `delay`/streams/functional programming might have very little to do with CS, and be more about different ways of viewing the world.
+
+# 7A: Metacircular Evaluator, Part 1
+
+## Part 1
+
+## Part 2
+
+## Part 3
+
+# 7B: Metacircular Evaluator, Part 2
+
+## Part 1
+
+## Part 2
+
+## Part 3

@@ -36,7 +36,10 @@
 <li><a href="#chapter-1-building-abstractions-with-procedures">Chapter 1: Building Abstractions with Procedures</a></li>
 <li><a href="#chapter-2-building-abstractions-with-data">Chapter 2: Building Abstractions with Data</a></li>
 <li><a href="#chapter-3-modularity-objects-and-state">Chapter 3: Modularity, Objects, and State</a></li>
-<li><a href="#chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</a></li>
+<li><a href="#chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</a>
+<ul>
+<li><a href="#the-metacircular-evaluator">The Metacircular Evaluator</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#lectures">Lectures</a>
 <ul>
@@ -95,6 +98,13 @@
 <p>The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the “objects” is much larger than the state that they share. (486)</p>
 </blockquote>
 <h2 id="chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</h2>
+<blockquote>
+<p>Establishing new languages is a powerful strategy for controlling complexity in engineering design; we can often enhance our ability to deal with a complex problem by adopting a new language that enables us to describe (and hence to think about) the problem in a different way, using [terms] that are particularly well suited to the problem at hand. (488)</p>
+</blockquote>
+<blockquote>
+<p>It is no exaggeration to regard this as the most fundamental idea in programming: The evaluator, which determines the meaning of expressions in a programming language, is just another program. (489)</p>
+</blockquote>
+<h3 id="the-metacircular-evaluator">The Metacircular Evaluator</h3>
 <h1 id="lectures">Lectures</h1>
 <p>Quotes and paraphrases are from the <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/">MIT OCW video lectures</a>.</p>
 <h2 id="a-overview-and-introduction-to-lisp">1A: Overview and Introduction to Lisp</h2>

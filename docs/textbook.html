@@ -80,12 +80,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
    var mathElements = document.getElementsByClassName("math");
+   var macros = [];
    for (var i = 0; i < mathElements.length; i++) {
     var texText = mathElements[i].firstChild;
     if (mathElements[i].tagName == "SPAN") {
      katex.render(texText.data, mathElements[i], {
       displayMode: mathElements[i].classList.contains('display'),
       throwOnError: false,
+      macros: macros,
       fleqn: false
      });
   }}});
@@ -212,7 +214,16 @@
 <li><a href="#modularity-of-functional-programs-and-modularity-of-objects">Modularity of Functional Programs and Modularity of Objects</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</a></li>
+<li><a href="#chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</a>
+<ul>
+<li><a href="#the-metacircular-evaluator">The Metacircular Evaluator</a>
+<ul>
+<li><a href="#the-core-of-the-evaluator">The Core of the Evaluator</a></li>
+<li><a href="#representing-expressions">Representing Expressions</a></li>
+<li><a href="#evaluator-data-structures">Evaluator Data Structures</a></li>
+<li><a href="#running-the-evaluator-as-a-program">Running the Evaluator as a Program</a></li>
+</ul></li>
+</ul></li>
 </ul>
 </nav>
 <h1 id="dedication">Dedication</h1>
@@ -314,25 +325,25 @@
 <p>To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.</p>
 </blockquote>
 <p>An example of procedure application:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1"></a>(f <span class="dv">5</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>(sum-of-squares (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>) (* <span class="dv">5</span> <span class="dv">2</span>))</span>
-<span id="cb1-3"><a href="#cb1-3"></a>(sum-of-squares <span class="dv">6</span> <span class="dv">10</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>(<span class="op">+</span> (square <span class="dv">6</span>) (square <span class="dv">10</span>))</span>
-<span id="cb1-5"><a href="#cb1-5"></a>(<span class="op">+</span> <span class="dv">36</span> <span class="dv">100</span>)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="dv">136</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>(f <span class="dv">5</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>(sum-of-squares (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>) (* <span class="dv">5</span> <span class="dv">2</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>(sum-of-squares <span class="dv">6</span> <span class="dv">10</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>(<span class="op">+</span> (square <span class="dv">6</span>) (square <span class="dv">10</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>(<span class="op">+</span> <span class="dv">36</span> <span class="dv">100</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="dv">136</span></span></code></pre></div>
 <h4 id="applicative-order-versus-normal-order">Applicative order versus normal order</h4>
 <ul>
 <li>That example used <em>applicative order</em>: evaluate everything first, then apply the procedure to the arguments.</li>
 <li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
 </ul>
 <p>An example of normal order procedure application:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1"></a>(f <span class="dv">5</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>(sum-of-squares (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>) (* <span class="dv">5</span> <span class="dv">2</span>))</span>
-<span id="cb2-3"><a href="#cb2-3"></a>(<span class="op">+</span> (square (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>)) (square (* <span class="dv">5</span> <span class="dv">2</span>)))</span>
-<span id="cb2-4"><a href="#cb2-4"></a>(<span class="op">+</span> (* (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>) (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>)) (* (* <span class="dv">5</span> <span class="dv">2</span>) (* <span class="dv">5</span> <span class="dv">2</span>)))</span>
-<span id="cb2-5"><a href="#cb2-5"></a>(<span class="op">+</span> (* <span class="dv">6</span> <span class="dv">6</span>) (* <span class="dv">10</span> <span class="dv">10</span>))</span>
-<span id="cb2-6"><a href="#cb2-6"></a>(<span class="op">+</span> <span class="dv">36</span> <span class="dv">100</span>)</span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="dv">136</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>(f <span class="dv">5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>(sum-of-squares (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>) (* <span class="dv">5</span> <span class="dv">2</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>(<span class="op">+</span> (square (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>)) (square (* <span class="dv">5</span> <span class="dv">2</span>)))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>(<span class="op">+</span> (* (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>) (<span class="op">+</span> <span class="dv">5</span> <span class="dv">1</span>)) (* (* <span class="dv">5</span> <span class="dv">2</span>) (* <span class="dv">5</span> <span class="dv">2</span>)))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>(<span class="op">+</span> (* <span class="dv">6</span> <span class="dv">6</span>) (* <span class="dv">10</span> <span class="dv">10</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>(<span class="op">+</span> <span class="dv">36</span> <span class="dv">100</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="dv">136</span></span></code></pre></div>
 <ul>
 <li>In this example, normal order causes a few combinations to be evaluated multiple times.</li>
 <li>Applicative: evaluate the arguments and then apply.</li>
@@ -398,25 +409,25 @@
 <li>The factorial of <span class="math inline">N</span> is defined as the product of the integers on the interval <span class="math inline">[1,N]</span>.</li>
 <li>The naive <em>recursive</em> implementation creates a curved shape:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1"></a>(factorial <span class="dv">4</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>(* <span class="dv">4</span> (factorial <span class="dv">3</span>))</span>
-<span id="cb3-3"><a href="#cb3-3"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> (factorial <span class="dv">2</span>)))</span>
-<span id="cb3-4"><a href="#cb3-4"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> (* <span class="dv">2</span> (factorial <span class="dv">1</span>))))</span>
-<span id="cb3-5"><a href="#cb3-5"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> (* <span class="dv">2</span> <span class="dv">1</span>)))</span>
-<span id="cb3-6"><a href="#cb3-6"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> <span class="dv">2</span>))</span>
-<span id="cb3-7"><a href="#cb3-7"></a>(* <span class="dv">4</span> <span class="dv">6</span>)</span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="dv">24</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>(factorial <span class="dv">4</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>(* <span class="dv">4</span> (factorial <span class="dv">3</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> (factorial <span class="dv">2</span>)))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> (* <span class="dv">2</span> (factorial <span class="dv">1</span>))))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> (* <span class="dv">2</span> <span class="dv">1</span>)))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>(* <span class="dv">4</span> (* <span class="dv">3</span> <span class="dv">2</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>(* <span class="dv">4</span> <span class="dv">6</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="dv">24</span></span></code></pre></div>
 <ul>
 <li>The <em>iterative</em> implementation maintains a running product and multiplies the numbers from 1 to <span class="math inline">N</span> to it.</li>
 <li>This creates a shape with a straight edge:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1"></a>(factorial <span class="dv">4</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>(fact-iter <span class="dv">1</span> <span class="dv">1</span> <span class="dv">4</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>(fact-iter <span class="dv">1</span> <span class="dv">2</span> <span class="dv">4</span>)</span>
-<span id="cb4-4"><a href="#cb4-4"></a>(fact-iter <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span>)</span>
-<span id="cb4-5"><a href="#cb4-5"></a>(fact-iter <span class="dv">6</span> <span class="dv">4</span> <span class="dv">4</span>)</span>
-<span id="cb4-6"><a href="#cb4-6"></a>(fact-iter <span class="dv">24</span> <span class="dv">5</span> <span class="dv">4</span>)</span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="dv">24</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>(factorial <span class="dv">4</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>(fact-iter <span class="dv">1</span> <span class="dv">1</span> <span class="dv">4</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>(fact-iter <span class="dv">1</span> <span class="dv">2</span> <span class="dv">4</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>(fact-iter <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>(fact-iter <span class="dv">6</span> <span class="dv">4</span> <span class="dv">4</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>(fact-iter <span class="dv">24</span> <span class="dv">5</span> <span class="dv">4</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="dv">24</span></span></code></pre></div>
 <ul>
 <li>Both compute the same mathematical function, but the computational processes evolve very differently.</li>
 <li>The first one is a <em>linear recursive process</em>. The chain of deferred operations causes an expansion (as more operations are added) and a contraction (as the operations are performed).
@@ -486,12 +497,12 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Efficient algorithm uses <span class="math inline">\gcd(a,b) = \gcd(b,a\bmod b)</span>.</li>
 <li>For example, we can reduce <code>(gcd 206 40)</code> as follows:</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1"></a>(<span class="kw">gcd</span> <span class="dv">206</span> <span class="dv">40</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>(<span class="kw">gcd</span> <span class="dv">40</span> <span class="dv">6</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a>(<span class="kw">gcd</span> <span class="dv">6</span> <span class="dv">4</span>)</span>
-<span id="cb5-4"><a href="#cb5-4"></a>(<span class="kw">gcd</span> <span class="dv">4</span> <span class="dv">2</span>)</span>
-<span id="cb5-5"><a href="#cb5-5"></a>(<span class="kw">gcd</span> <span class="dv">2</span> <span class="dv">0</span>)</span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>(<span class="kw">gcd</span> <span class="dv">206</span> <span class="dv">40</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>(<span class="kw">gcd</span> <span class="dv">40</span> <span class="dv">6</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>(<span class="kw">gcd</span> <span class="dv">6</span> <span class="dv">4</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>(<span class="kw">gcd</span> <span class="dv">4</span> <span class="dv">2</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>(<span class="kw">gcd</span> <span class="dv">2</span> <span class="dv">0</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="dv">2</span></span></code></pre></div>
 <ul>
 <li>This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.</li>
 <li>This is called <em>Euclid’s Algorithm</em>.</li>
@@ -542,11 +553,11 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 </ul>
 <h3 id="procedures-as-arguments">Procedures as Arguments</h3>
 <p>Procedures that compute a sum are all similar. They are all based on the following template:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1"></a>(<span class="ex">define</span><span class="fu"> </span>(&lt;name&gt; a b)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>  (<span class="kw">if</span> (<span class="op">&gt;</span> a b)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>      <span class="dv">0</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>      (<span class="op">+</span> (&lt;term&gt; a)</span>
-<span id="cb6-5"><a href="#cb6-5"></a>         (&lt;name&gt; (&lt;next&gt; a) b))))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(&lt;name&gt; a b)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="op">&gt;</span> a b)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>      <span class="dv">0</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>      (<span class="op">+</span> (&lt;term&gt; a)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>         (&lt;name&gt; (&lt;next&gt; a) b))))</span></code></pre></div>
 <p>This is a useful abstraction, just as sigma notation in math is useful because the summation of a series is so common.</p>
 <blockquote>
 <p>The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. (77)</p>
@@ -560,18 +571,18 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special <code>let</code> form that does it.</li>
 </ul>
 <p>The general form of a let-expression is</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1"></a>(<span class="kw">let</span> ((&lt;var1&gt; &lt;exp1&gt;)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>      (&lt;var2&gt; &lt;exp2&gt;)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>      ...</span>
-<span id="cb7-4"><a href="#cb7-4"></a>      (&lt;varn&gt; &lt;expn&gt;))</span>
-<span id="cb7-5"><a href="#cb7-5"></a>  &lt;body&gt;)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>(<span class="kw">let</span> ((&lt;var1&gt; &lt;exp1&gt;)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>      (&lt;var2&gt; &lt;exp2&gt;)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>      ...</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>      (&lt;varn&gt; &lt;expn&gt;))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>  &lt;body&gt;)</span></code></pre></div>
 <p>This is just syntactic sugar for</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1"></a>((<span class="kw">lambda</span> (&lt;var1&gt; &lt;var2&gt; ... &lt;varn&gt;)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>   &lt;body&gt;)</span>
-<span id="cb8-3"><a href="#cb8-3"></a> &lt;exp1&gt;</span>
-<span id="cb8-4"><a href="#cb8-4"></a> &lt;exp2&gt;</span>
-<span id="cb8-5"><a href="#cb8-5"></a> ...</span>
-<span id="cb8-6"><a href="#cb8-6"></a> &lt;expn&gt;)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>((<span class="kw">lambda</span> (&lt;var1&gt; &lt;var2&gt; ... &lt;varn&gt;)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>   &lt;body&gt;)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a> &lt;exp1&gt;</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a> &lt;exp2&gt;</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a> ...</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a> &lt;expn&gt;)</span></code></pre></div>
 <ul>
 <li>The scope of a variable in a let-expression is the body.</li>
 <li>This allows variables to be bound as locally as possible.</li>
@@ -599,13 +610,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 </ul>
 <h3 id="procedures-as-returned-values">Procedures as Returned Values</h3>
 <p>Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb9-1"><a href="#cb9-1"></a>(<span class="ex">define</span><span class="fu"> </span>(average-damp f)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>  (<span class="kw">lambda</span> (x) (average x (f x))))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(average-damp f)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (x) (average x (f x))))</span></code></pre></div>
 <p>If we use <code>average-damp</code> on <code>square</code>, we actually get a procedure that takes the sum of the numbers from 1 to n:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb10-1"><a href="#cb10-1"></a>((average-damp square) <span class="dv">10</span>)</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="dv">55</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>(<span class="op">+</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span> <span class="dv">5</span> <span class="dv">6</span> <span class="dv">7</span> <span class="dv">8</span> <span class="dv">9</span> <span class="dv">10</span>)</span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="dv">55</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>((average-damp square) <span class="dv">10</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="dv">55</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>(<span class="op">+</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span> <span class="dv">5</span> <span class="dv">6</span> <span class="dv">7</span> <span class="dv">8</span> <span class="dv">9</span> <span class="dv">10</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="dv">55</span></span></code></pre></div>
 <blockquote>
 <p>In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.</p>
 </blockquote>
@@ -615,13 +626,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <p>Newton’s method converges very quickly – much faster than the half-interval method in favourable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:</p>
 <p><span class="math display">f&#39;(x) = \frac{f(x+dx) - f(x)}{dx}.</span></p>
 <p>This translates to the following procedure:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb11-1"><a href="#cb11-1"></a>(<span class="ex">define</span><span class="fu"> </span>(deriv f)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>  (<span class="kw">lambda</span> (x) (<span class="op">/</span> (<span class="op">-</span> (f (<span class="op">+</span> x dx)) (f x)) dx)))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(deriv f)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (x) (<span class="op">/</span> (<span class="op">-</span> (f (<span class="op">+</span> x dx)) (f x)) dx)))</span></code></pre></div>
 <p>Now we can do things like this:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb12-1"><a href="#cb12-1"></a>(<span class="ex">define</span><span class="fu"> </span>(cube x) (* x x x))</span>
-<span id="cb12-2"><a href="#cb12-2"></a>(<span class="ex">define</span><span class="fu"> dx </span><span class="fl">0.00001</span>)</span>
-<span id="cb12-3"><a href="#cb12-3"></a>((deriv cube) <span class="dv">5</span>)</span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="fl">75.00014999664018</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cube x) (* x x x))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> dx </span><span class="fl">0.00001</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>((deriv cube) <span class="dv">5</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="fl">75.00014999664018</span></span></code></pre></div>
 <h4 id="abstractions-and-first-class-procedures">Abstractions and first-class procedures</h4>
 <ul>
 <li>Compound procedures permit us to express general methods of computing as explicit elements in our programming language.</li>
@@ -678,17 +689,17 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>A <em>pair</em> is a concrete structure that we create with cons.</li>
 <li>We extract the parts of the pair with car and cdr.</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb13-1"><a href="#cb13-1"></a>(<span class="ex">define</span><span class="fu"> x </span>(<span class="kw">cons</span> <span class="dv">1</span> <span class="dv">2</span>))</span>
-<span id="cb13-2"><a href="#cb13-2"></a>(<span class="kw">car</span> x)</span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="dv">1</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>(<span class="kw">cdr</span> x)</span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="dv">2</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a>(<span class="ex">define</span><span class="fu"> y </span>(<span class="kw">cons</span> <span class="dv">3</span> <span class="dv">4</span>))</span>
-<span id="cb13-7"><a href="#cb13-7"></a>(<span class="ex">define</span><span class="fu"> z </span>(<span class="kw">cons</span> x y))</span>
-<span id="cb13-8"><a href="#cb13-8"></a>(<span class="kw">car</span> (<span class="kw">car</span> z))</span>
-<span id="cb13-9"><a href="#cb13-9"></a><span class="dv">1</span></span>
-<span id="cb13-10"><a href="#cb13-10"></a>(<span class="kw">car</span> (<span class="kw">cdr</span> z))</span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> x </span>(<span class="kw">cons</span> <span class="dv">1</span> <span class="dv">2</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>(<span class="kw">car</span> x)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="dv">1</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>(<span class="kw">cdr</span> x)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="dv">2</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> y </span>(<span class="kw">cons</span> <span class="dv">3</span> <span class="dv">4</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> z </span>(<span class="kw">cons</span> x y))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>(<span class="kw">car</span> (<span class="kw">car</span> z))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a><span class="dv">1</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>(<span class="kw">car</span> (<span class="kw">cdr</span> z))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a><span class="dv">3</span></span></code></pre></div>
 <ul>
 <li>This is all the glue we need to implement all sorts of complex data structures.</li>
 <li>Data objects constructed from pairs are <em>list-structured</em> data.</li>
@@ -718,11 +729,11 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>For pairs, it is even simpler: we need three operations, which we will call <code>cons</code>, <code>car</code>, and <code>cdr</code>, such that if <code>z</code> is <code>(cons x y)</code>, then <code>(car z)</code> is <code>x</code> and <code>(cdr z)</code> is <code>y</code>.</li>
 <li>Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb14-1"><a href="#cb14-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb14-2"><a href="#cb14-2"></a>  (<span class="kw">lambda</span> (m)</span>
-<span id="cb14-3"><a href="#cb14-3"></a>    (<span class="kw">if</span> (<span class="op">=</span> m <span class="dv">0</span>) x y)))</span>
-<span id="cb14-4"><a href="#cb14-4"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> z) (z <span class="dv">0</span>))</span>
-<span id="cb14-5"><a href="#cb14-5"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> z) (z <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (m)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>    (<span class="kw">if</span> (<span class="op">=</span> m <span class="dv">0</span>) x y)))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> z) (z <span class="dv">0</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> z) (z <span class="dv">1</span>))</span></code></pre></div>
 <ul>
 <li>This doesn’t look like <em>data</em>, but it works.</li>
 <li>This is how you implement pairs in the λ-calculus.</li>
@@ -764,34 +775,34 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We can get at the nth item of the list by <code>cdr</code> ing one less than <span class="math inline">n</span> times, and then taking the <code>car</code>.</li>
 <li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is the empty list.</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb15-1"><a href="#cb15-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">list-ref</span> items n)</span>
-<span id="cb15-2"><a href="#cb15-2"></a>  (<span class="kw">if</span> (<span class="op">=</span> n <span class="dv">0</span>)</span>
-<span id="cb15-3"><a href="#cb15-3"></a>      (<span class="kw">car</span> items)</span>
-<span id="cb15-4"><a href="#cb15-4"></a>      (<span class="kw">list-ref</span> (<span class="kw">cdr</span> items) (<span class="op">-</span> n <span class="dv">1</span>))))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">list-ref</span> items n)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="op">=</span> n <span class="dv">0</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>      (<span class="kw">car</span> items)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>      (<span class="kw">list-ref</span> (<span class="kw">cdr</span> items) (<span class="op">-</span> n <span class="dv">1</span>))))</span></code></pre></div>
 <ul>
 <li>We often write recursive procedures that <code>cdr</code> all the way through the list.</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb16-1"><a href="#cb16-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">length</span> items)</span>
-<span id="cb16-2"><a href="#cb16-2"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> items)</span>
-<span id="cb16-3"><a href="#cb16-3"></a>      <span class="dv">0</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a>      (<span class="op">+</span> <span class="dv">1</span> (<span class="kw">length</span> (<span class="kw">cdr</span> items)))))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">length</span> items)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> items)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>      <span class="dv">0</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>      (<span class="op">+</span> <span class="dv">1</span> (<span class="kw">length</span> (<span class="kw">cdr</span> items)))))</span></code></pre></div>
 <ul>
 <li>We can build up lists to return by <code>cons</code> ing them up.</li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb17-1"><a href="#cb17-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">append</span> list1 list2)</span>
-<span id="cb17-2"><a href="#cb17-2"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> list1)</span>
-<span id="cb17-3"><a href="#cb17-3"></a>      list2</span>
-<span id="cb17-4"><a href="#cb17-4"></a>      (<span class="kw">cons</span> (<span class="kw">car</span> list1 (<span class="kw">append</span> (<span class="kw">cdr</span> list1) list2))))</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">append</span> list1 list2)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> list1)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>      list2</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>      (<span class="kw">cons</span> (<span class="kw">car</span> list1 (<span class="kw">append</span> (<span class="kw">cdr</span> list1) list2))))</span></code></pre></div>
 <h4 id="mapping-over-lists">Mapping over lists</h4>
 <ul>
 <li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
 <li>This is a higher-order procedure called <code>map</code>.</li>
 </ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb18-1"><a href="#cb18-1"></a>(<span class="ex">define</span><span class="fu"> </span>(map f xs)</span>
-<span id="cb18-2"><a href="#cb18-2"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> xs)</span>
-<span id="cb18-3"><a href="#cb18-3"></a>      nil</span>
-<span id="cb18-4"><a href="#cb18-4"></a>      (<span class="kw">cons</span> (f (<span class="kw">car</span> xs)</span>
-<span id="cb18-5"><a href="#cb18-5"></a>            (map f (<span class="kw">cdr</span> xs)))))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(map f xs)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> xs)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>      nil</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a>      (<span class="kw">cons</span> (f (<span class="kw">car</span> xs)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>            (map f (<span class="kw">cdr</span> xs)))))</span></code></pre></div>
 <ul>
 <li>Using map, we can do <code>(map abs (list -1 5 -3 0 2 -2))</code> and get back the list <code>(1 5 3 0 2 2)</code>.</li>
 <li>Map establishes a higher level of abstraction for dealing with lists. It suppressive the recursive detail.</li>
@@ -807,11 +818,11 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>The primitive predicate <code>pair?</code> returns true if its argument is a pair (formed with cons).</li>
 <li>We can count the number of leaves in a tree with this:</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb19-1"><a href="#cb19-1"></a>(<span class="ex">define</span><span class="fu"> </span>(count-leaves x)</span>
-<span id="cb19-2"><a href="#cb19-2"></a>  (<span class="kw">cond</span> ((<span class="kw">null?</span> x) <span class="dv">0</span>)</span>
-<span id="cb19-3"><a href="#cb19-3"></a>        ((<span class="kw">not</span> (<span class="kw">pair?</span> x)) <span class="dv">1</span>)</span>
-<span id="cb19-4"><a href="#cb19-4"></a>        (<span class="kw">else</span> (<span class="op">+</span> (count-leaves (<span class="kw">car</span> x))</span>
-<span id="cb19-5"><a href="#cb19-5"></a>                 (count-leaves (<span class="kw">cdr</span> x))))))</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(count-leaves x)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>  (<span class="kw">cond</span> ((<span class="kw">null?</span> x) <span class="dv">0</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>        ((<span class="kw">not</span> (<span class="kw">pair?</span> x)) <span class="dv">1</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a>        (<span class="kw">else</span> (<span class="op">+</span> (count-leaves (<span class="kw">car</span> x))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>                 (count-leaves (<span class="kw">cdr</span> x))))))</span></code></pre></div>
 <h4 id="mapping-over-trees">Mapping over trees</h4>
 <ul>
 <li>We can deal with trees using <code>map</code> together with recursion.</li>
@@ -839,13 +850,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We can use <code>mapcat</code> to flatten the nested mapping result into one list at the end.</li>
 <li>The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!</li>
 </ul>
-<div class="sourceCode" id="cb20"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb20-1"><a href="#cb20-1"></a>(<span class="ex">define</span><span class="fu"> </span>(permutations s)</span>
-<span id="cb20-2"><a href="#cb20-2"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> s)</span>
-<span id="cb20-3"><a href="#cb20-3"></a>      (<span class="kw">list</span> nil)</span>
-<span id="cb20-4"><a href="#cb20-4"></a>      (mapcat (<span class="kw">lambda</span> (x)</span>
-<span id="cb20-5"><a href="#cb20-5"></a>                (map (<span class="kw">lambda</span> (p) (<span class="kw">cons</span> x p))</span>
-<span id="cb20-6"><a href="#cb20-6"></a>                     (permutations (remove x s))))</span>
-<span id="cb20-7"><a href="#cb20-7"></a>              s)))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(permutations s)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> s)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>      (<span class="kw">list</span> nil)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a>      (mapcat (<span class="kw">lambda</span> (x)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>                (map (<span class="kw">lambda</span> (p) (<span class="kw">cons</span> x p))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a>                     (permutations (remove x s))))</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true"></a>              s)))</span></code></pre></div>
 <h3 id="example-a-picture-language">Example: A Picture Language</h3>
 <ul>
 <li>We will use a simple language for drawing pictures.</li>
@@ -908,11 +919,11 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.</li>
 <li>Here is the difference between symbols and their values:</li>
 </ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb21-1"><a href="#cb21-1"></a>(<span class="ex">define</span><span class="fu"> a </span><span class="dv">1</span>)</span>
-<span id="cb21-2"><a href="#cb21-2"></a>(<span class="ex">define</span><span class="fu"> b </span><span class="dv">2</span>)</span>
-<span id="cb21-3"><a href="#cb21-3"></a>(<span class="kw">list</span> a b)   <span class="co">; =&gt; (1 2)</span></span>
-<span id="cb21-4"><a href="#cb21-4"></a>(<span class="kw">list</span> &#39;a &#39;b) <span class="co">; =&gt; (a b)</span></span>
-<span id="cb21-5"><a href="#cb21-5"></a>(<span class="kw">list</span> &#39;a b)  <span class="co">; =&gt; (a 2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> a </span><span class="dv">1</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> b </span><span class="dv">2</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>(<span class="kw">list</span> a b)   <span class="co">; =&gt; (1 2)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>(<span class="kw">list</span> &#39;a &#39;b) <span class="co">; =&gt; (a b)</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>(<span class="kw">list</span> &#39;a b)  <span class="co">; =&gt; (a 2)</span></span></code></pre></div>
 <ul>
 <li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>'()</code>.</li>
 <li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
@@ -928,16 +939,16 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We need the constant rule, the sum rule, and the product rule.</li>
 <li>We will assume we already have these procedures:</li>
 </ul>
-<div class="sourceCode" id="cb22"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb22-1"><a href="#cb22-1"></a>(variable? e)</span>
-<span id="cb22-2"><a href="#cb22-2"></a>(same-variable? v1 v2)</span>
-<span id="cb22-3"><a href="#cb22-3"></a>(sum? e)</span>
-<span id="cb22-4"><a href="#cb22-4"></a>(addend e)</span>
-<span id="cb22-5"><a href="#cb22-5"></a>(augend e)</span>
-<span id="cb22-6"><a href="#cb22-6"></a>(make-sum a1 a2)</span>
-<span id="cb22-7"><a href="#cb22-7"></a>(product? e)</span>
-<span id="cb22-8"><a href="#cb22-8"></a>(multiplier e)</span>
-<span id="cb22-9"><a href="#cb22-9"></a>(multiplicand e)</span>
-<span id="cb22-10"><a href="#cb22-10"></a>(make-product m1 m2)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>(variable? e)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>(same-variable? v1 v2)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>(sum? e)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>(addend e)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>(augend e)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>(make-sum a1 a2)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>(product? e)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>(multiplier e)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>(multiplicand e)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>(make-product m1 m2)</span></code></pre></div>
 <h4 id="representing-algebraic-expressions">Representing algebraic expressions</h4>
 <ul>
 <li>There are many ways we could represent algebraic expressions.</li>
@@ -1102,8 +1113,8 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We can make all operations work on combinations of Scheme numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.</li>
 <li>Here is a typical coercion procedure:</li>
 </ul>
-<div class="sourceCode" id="cb23"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb23-1"><a href="#cb23-1"></a>(<span class="ex">define</span><span class="fu"> </span>(scheme-number-&gt;complex n)</span>
-<span id="cb23-2"><a href="#cb23-2"></a>  (make-complex-from-real-imag (contents n) <span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(scheme-number-&gt;complex n)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>  (make-complex-from-real-imag (contents n) <span class="dv">0</span>))</span></code></pre></div>
 <ul>
 <li>In addition to the generic procedure table, we would need a special coercion table.</li>
 <li>We can modify <code>apply-generic</code> to try coercion if there is no specific procedure available for the given types.</li>
@@ -1205,77 +1216,77 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>If you try to withdraw too much, it should return the string “Insufficient funds”.</li>
 <li>Suppose we begin with $100:</li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb24-1"><a href="#cb24-1"></a>(withdraw <span class="dv">25</span>)</span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="dv">75</span></span>
-<span id="cb24-3"><a href="#cb24-3"></a>(withdraw <span class="dv">25</span>)</span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="dv">50</span></span>
-<span id="cb24-5"><a href="#cb24-5"></a>(withdraw <span class="dv">60</span>)</span>
-<span id="cb24-6"><a href="#cb24-6"></a><span class="st">&quot;Insufficient funds&quot;</span></span>
-<span id="cb24-7"><a href="#cb24-7"></a>(withdraw <span class="dv">15</span>)</span>
-<span id="cb24-8"><a href="#cb24-8"></a><span class="dv">35</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>(withdraw <span class="dv">25</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="dv">75</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>(withdraw <span class="dv">25</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="dv">50</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>(withdraw <span class="dv">60</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a><span class="st">&quot;Insufficient funds&quot;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a>(withdraw <span class="dv">15</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a><span class="dv">35</span></span></code></pre></div>
 <ul>
 <li>Evaluating the same combination twice, <code>(withdraw 25)</code>, returned different values.</li>
 <li>We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
 <li>To implement <code>withdraw</code>, we define a variable called <code>balance</code>:</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb25-1"><a href="#cb25-1"></a>(<span class="ex">define</span><span class="fu"> balance </span><span class="dv">100</span>)</span>
-<span id="cb25-2"><a href="#cb25-2"></a>(<span class="ex">define</span><span class="fu"> </span>(withdraw amount)</span>
-<span id="cb25-3"><a href="#cb25-3"></a>  (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb25-4"><a href="#cb25-4"></a>      (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
-<span id="cb25-5"><a href="#cb25-5"></a>             balance)</span>
-<span id="cb25-6"><a href="#cb25-6"></a>      <span class="st">&quot;Insufficient funds&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> balance </span><span class="dv">100</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(withdraw amount)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a>      (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a>             balance)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>      <span class="st">&quot;Insufficient funds&quot;</span>))</span></code></pre></div>
 <ul>
 <li>This uses the <code>set!</code> special form, whose syntax is <code>(set! &lt;name&gt; &lt;new-value&gt;)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
 <li>The expression <code>(begin &lt;exp1&gt; &lt;exp2&gt; ... &lt;expk&gt;)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
 <li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb26-1"><a href="#cb26-1"></a>(<span class="ex">define</span><span class="fu"> withdraw</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>  (<span class="kw">let</span> ((balance <span class="dv">100</span>))</span>
-<span id="cb26-3"><a href="#cb26-3"></a>    (<span class="kw">lambda</span> (amount)</span>
-<span id="cb26-4"><a href="#cb26-4"></a>      (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb26-5"><a href="#cb26-5"></a>          (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
-<span id="cb26-6"><a href="#cb26-6"></a>                 balance)</span>
-<span id="cb26-7"><a href="#cb26-7"></a>          <span class="st">&quot;Insufficient funds&quot;</span>))))</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> withdraw</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>  (<span class="kw">let</span> ((balance <span class="dv">100</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>    (<span class="kw">lambda</span> (amount)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a>      (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>          (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>                 balance)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>          <span class="st">&quot;Insufficient funds&quot;</span>))))</span></code></pre></div>
 <ul>
 <li>Unfortunately, the substitution model of evaluation is no longer adequate once we have assignment in our procedures.</li>
 <li>For now, we technically have no way to understand how these procedures work. We will develop a new model soon.</li>
 <li>The following procedure creates “withdraw processors”:</li>
 </ul>
-<div class="sourceCode" id="cb27"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb27-1"><a href="#cb27-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-withdraw balance)</span>
-<span id="cb27-2"><a href="#cb27-2"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb27-3"><a href="#cb27-3"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb27-4"><a href="#cb27-4"></a>        (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
-<span id="cb27-5"><a href="#cb27-5"></a>               balance)</span>
-<span id="cb27-6"><a href="#cb27-6"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span>
-<span id="cb27-7"><a href="#cb27-7"></a>(<span class="ex">define</span><span class="fu"> W1 </span>(make-withdraw <span class="dv">100</span>))</span>
-<span id="cb27-8"><a href="#cb27-8"></a>(<span class="ex">define</span><span class="fu"> W2 </span>(make-withdraw <span class="dv">100</span>))</span>
-<span id="cb27-9"><a href="#cb27-9"></a>(W1 <span class="dv">50</span>)</span>
-<span id="cb27-10"><a href="#cb27-10"></a><span class="dv">50</span></span>
-<span id="cb27-11"><a href="#cb27-11"></a>(W2 <span class="dv">70</span>)</span>
-<span id="cb27-12"><a href="#cb27-12"></a><span class="dv">30</span></span>
-<span id="cb27-13"><a href="#cb27-13"></a>(W2 <span class="dv">40</span>)</span>
-<span id="cb27-14"><a href="#cb27-14"></a><span class="st">&quot;Insufficient funds&quot;</span></span>
-<span id="cb27-15"><a href="#cb27-15"></a>(W1 <span class="dv">40</span>)</span>
-<span id="cb27-16"><a href="#cb27-16"></a><span class="dv">10</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-withdraw balance)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (amount)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a>        (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a>               balance)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> W1 </span>(make-withdraw <span class="dv">100</span>))</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> W2 </span>(make-withdraw <span class="dv">100</span>))</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true"></a>(W1 <span class="dv">50</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true"></a><span class="dv">50</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true"></a>(W2 <span class="dv">70</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true"></a><span class="dv">30</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true"></a>(W2 <span class="dv">40</span>)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true"></a><span class="st">&quot;Insufficient funds&quot;</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true"></a>(W1 <span class="dv">40</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true"></a><span class="dv">10</span></span></code></pre></div>
 <ul>
 <li>Here, <code>W1</code> and <code>W2</code> are complement independent objects, each with its own local state variable.</li>
 <li>We can create a “bank-account object” that responds to multiple messages, all operating on the same local state:</li>
 </ul>
-<div class="sourceCode" id="cb28"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb28-1"><a href="#cb28-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-account balance)</span>
-<span id="cb28-2"><a href="#cb28-2"></a>  (<span class="ex">define</span><span class="fu"> </span>(withdraw amount)</span>
-<span id="cb28-3"><a href="#cb28-3"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb28-4"><a href="#cb28-4"></a>        (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
-<span id="cb28-5"><a href="#cb28-5"></a>               balance)</span>
-<span id="cb28-6"><a href="#cb28-6"></a>        <span class="st">&quot;Insufficient funds&quot;</span>))</span>
-<span id="cb28-7"><a href="#cb28-7"></a>  (<span class="ex">define</span><span class="fu"> </span>(deposit amount)</span>
-<span id="cb28-8"><a href="#cb28-8"></a>    (set! balance (<span class="op">+</span> balance amount))</span>
-<span id="cb28-9"><a href="#cb28-9"></a>    balance)</span>
-<span id="cb28-10"><a href="#cb28-10"></a>  (<span class="ex">define</span><span class="fu"> </span>(dispatch m)</span>
-<span id="cb28-11"><a href="#cb28-11"></a>    (<span class="kw">cond</span> ((<span class="kw">eq?</span> m &#39;withdraw) withdraw)</span>
-<span id="cb28-12"><a href="#cb28-12"></a>          ((<span class="kw">eq?</span> m &#39;deposit) deposit)</span>
-<span id="cb28-13"><a href="#cb28-13"></a>          (<span class="kw">else</span> (error <span class="st">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
-<span id="cb28-14"><a href="#cb28-14"></a>  dispatch)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-account balance)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(withdraw amount)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>        (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>               balance)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>        <span class="st">&quot;Insufficient funds&quot;</span>))</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(deposit amount)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true"></a>    (set! balance (<span class="op">+</span> balance amount))</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true"></a>    balance)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(dispatch m)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true"></a>    (<span class="kw">cond</span> ((<span class="kw">eq?</span> m &#39;withdraw) withdraw)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true"></a>          ((<span class="kw">eq?</span> m &#39;deposit) deposit)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true"></a>          (<span class="kw">else</span> (error <span class="st">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true"></a>  dispatch)</span></code></pre></div>
 <h3 id="the-benefits-of-introducing-assignment">The Benefits of Introducing Assignment</h3>
 <ul>
 <li>Introducing assignment “leads us into a thicket of difficult conceptual issues” (305).</li>
@@ -1290,11 +1301,11 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 </ul></li>
 <li>We could implement <code>rand</code> like this:</li>
 </ul>
-<div class="sourceCode" id="cb29"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb29-1"><a href="#cb29-1"></a>(<span class="ex">define</span><span class="fu"> rand</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>  (<span class="kw">let</span> ((x random-init))</span>
-<span id="cb29-3"><a href="#cb29-3"></a>    (<span class="kw">lambda</span> ()</span>
-<span id="cb29-4"><a href="#cb29-4"></a>      (set! x (rand-update x))</span>
-<span id="cb29-5"><a href="#cb29-5"></a>      x)))</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> rand</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>  (<span class="kw">let</span> ((x random-init))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>    (<span class="kw">lambda</span> ()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>      (set! x (rand-update x))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a>      x)))</span></code></pre></div>
 <blockquote>
 <p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306–307)</p>
 </blockquote>
@@ -1312,13 +1323,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Programming without the use of assignment, as we have done in the first two chapters, is called <em>functional programming</em>.</li>
 <li>Observe what happens when we try using the substation model:</li>
 </ul>
-<div class="sourceCode" id="cb30"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb30-1"><a href="#cb30-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-simplified-withdraw balance)</span>
-<span id="cb30-2"><a href="#cb30-2"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb30-3"><a href="#cb30-3"></a>    (set! balance (<span class="op">-</span> balance amount))</span>
-<span id="cb30-4"><a href="#cb30-4"></a>    balance))</span>
-<span id="cb30-5"><a href="#cb30-5"></a>((make-simplified-withdraw <span class="dv">25</span>) <span class="dv">20</span>)</span>
-<span id="cb30-6"><a href="#cb30-6"></a>((<span class="kw">lambda</span> (amount) (set! balance (<span class="op">-</span> <span class="dv">25</span> amount)) <span class="dv">25</span>) <span class="dv">20</span>)</span>
-<span id="cb30-7"><a href="#cb30-7"></a>(set! balance (<span class="op">-</span> <span class="dv">25</span> <span class="dv">20</span>)) <span class="dv">25</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-simplified-withdraw balance)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (amount)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a>    (set! balance (<span class="op">-</span> balance amount))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>    balance))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>((make-simplified-withdraw <span class="dv">25</span>) <span class="dv">20</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a>((<span class="kw">lambda</span> (amount) (set! balance (<span class="op">-</span> <span class="dv">25</span> amount)) <span class="dv">25</span>) <span class="dv">20</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a>(set! balance (<span class="op">-</span> <span class="dv">25</span> <span class="dv">20</span>)) <span class="dv">25</span></span></code></pre></div>
 <ul>
 <li>Adhering to the substation model, we set <code>balance</code> to 5 and then return 25 as the value of the expression.</li>
 <li>This is wrong. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>
@@ -1390,9 +1401,9 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>Let’s evaluate <code>(f 5)</code>, given the following procedures:</li>
 </ul>
-<div class="sourceCode" id="cb31"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb31-1"><a href="#cb31-1"></a>(<span class="ex">define</span><span class="fu"> </span>(square x) (* x x))</span>
-<span id="cb31-2"><a href="#cb31-2"></a>(<span class="ex">define</span><span class="fu"> </span>(sum-of-squares x y) (<span class="op">+</span> (square x) (square y)))</span>
-<span id="cb31-3"><a href="#cb31-3"></a>(<span class="ex">define</span><span class="fu"> </span>(f a) (sum-of-squares (<span class="op">+</span> a <span class="dv">1</span>) (* a <span class="dv">2</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(square x) (* x x))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(sum-of-squares x y) (<span class="op">+</span> (square x) (square y)))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(f a) (sum-of-squares (<span class="op">+</span> a <span class="dv">1</span>) (* a <span class="dv">2</span>)))</span></code></pre></div>
 <ul>
 <li>These definitions create bindings for <code>square</code>, <code>sum-of-squares</code>, and <code>f</code> in the global frame.</li>
 <li>To evaluate <code>(f 5)</code>, we create an environment <span class="math inline">E_1</span> with a frame containing a single binding, associating <code>a</code> with <code>5</code>.</li>
@@ -1409,12 +1420,12 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Now we can see how the environment model makes sense of assignment and local state.</li>
 <li>Consider the “withdrawal processor”:</li>
 </ul>
-<div class="sourceCode" id="cb32"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb32-1"><a href="#cb32-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-withdraw balance)</span>
-<span id="cb32-2"><a href="#cb32-2"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb32-3"><a href="#cb32-3"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb32-4"><a href="#cb32-4"></a>        (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
-<span id="cb32-5"><a href="#cb32-5"></a>               balance)</span>
-<span id="cb32-6"><a href="#cb32-6"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-withdraw balance)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (amount)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>        (<span class="kw">begin</span> (set! balance (<span class="op">-</span> balance amount))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>               balance)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span></code></pre></div>
 <ul>
 <li>This places a single binding in the global environment frame.</li>
 <li>Consider now <code>(define W1 (make-withdraw 100))</code>.
@@ -1459,11 +1470,11 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>The old <code>car</code> is unreachable garbage. We will see later how Lisp recycles this memory.</li>
 <li>We could implement <code>cons</code> in terms of these two procedures in addition to a <code>get-new-part</code> procedure.</li>
 </ul>
-<div class="sourceCode" id="cb33"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb33-1"><a href="#cb33-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb33-2"><a href="#cb33-2"></a>  (<span class="kw">let</span> ((new (get-new-pair)))</span>
-<span id="cb33-3"><a href="#cb33-3"></a>    (<span class="kw">set-car!</span> new x)</span>
-<span id="cb33-4"><a href="#cb33-4"></a>    (<span class="kw">set-cdr!</span> new y)</span>
-<span id="cb33-5"><a href="#cb33-5"></a>    new))</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>  (<span class="kw">let</span> ((new (get-new-pair)))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a>    (<span class="kw">set-car!</span> new x)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a>    (<span class="kw">set-cdr!</span> new y)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a>    new))</span></code></pre></div>
 <h4 id="sharing-and-identity">Sharing and identity</h4>
 <ul>
 <li>Consider <code>(define x (list 'a 'b))</code> and <code>(define z1 (cons x x))</code>.</li>
@@ -1482,26 +1493,26 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>Earlier we said we can represent pairs purely in terms of procedures:</li>
 </ul>
-<div class="sourceCode" id="cb34"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb34-1"><a href="#cb34-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb34-2"><a href="#cb34-2"></a>  (<span class="kw">lambda</span> (sel)</span>
-<span id="cb34-3"><a href="#cb34-3"></a>    (sel x y)))</span>
-<span id="cb34-4"><a href="#cb34-4"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> p)</span>
-<span id="cb34-5"><a href="#cb34-5"></a>  (p (<span class="kw">lambda</span> (x y) x)))</span>
-<span id="cb34-6"><a href="#cb34-6"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> p)</span>
-<span id="cb34-7"><a href="#cb34-7"></a>  (p (<span class="kw">lambda</span> (x y) y)))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (sel)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a>    (sel x y)))</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> p)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a>  (p (<span class="kw">lambda</span> (x y) x)))</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> p)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a>  (p (<span class="kw">lambda</span> (x y) y)))</span></code></pre></div>
 <ul>
 <li>The same is true of mutable data. We can implement mutators with procedures and assignment alone:</li>
 </ul>
-<div class="sourceCode" id="cb35"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb35-1"><a href="#cb35-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb35-2"><a href="#cb35-2"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-x! v) (set! x v))</span>
-<span id="cb35-3"><a href="#cb35-3"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-y! v) (set! y v))</span>
-<span id="cb35-4"><a href="#cb35-4"></a>  (<span class="ex">define</span><span class="fu"> </span>(dispatch m)</span>
-<span id="cb35-5"><a href="#cb35-5"></a>    (<span class="kw">cond</span> ((<span class="kw">eq?</span> m &#39;car) x)</span>
-<span id="cb35-6"><a href="#cb35-6"></a>          ((<span class="kw">eq?</span> m &#39;cdr) y)</span>
-<span id="cb35-7"><a href="#cb35-7"></a>          ((<span class="kw">eq?</span> m &#39;set-car!) set-x!)</span>
-<span id="cb35-8"><a href="#cb35-8"></a>          ((<span class="kw">eq?</span> m &#39;set-cdr!) set-y!)</span>
-<span id="cb35-9"><a href="#cb35-9"></a>          (<span class="kw">else</span> (error <span class="st">&quot;Undefined operation: CONS&quot;</span> m))))</span>
-<span id="cb35-10"><a href="#cb35-10"></a>  dispatch)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-x! v) (set! x v))</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-y! v) (set! y v))</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(dispatch m)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a>    (<span class="kw">cond</span> ((<span class="kw">eq?</span> m &#39;car) x)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true"></a>          ((<span class="kw">eq?</span> m &#39;cdr) y)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true"></a>          ((<span class="kw">eq?</span> m &#39;set-car!) set-x!)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true"></a>          ((<span class="kw">eq?</span> m &#39;set-cdr!) set-y!)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true"></a>          (<span class="kw">else</span> (error <span class="st">&quot;Undefined operation: CONS&quot;</span> m))))</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true"></a>  dispatch)</span></code></pre></div>
 <ul>
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
 </ul>
@@ -1553,13 +1564,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We could use the message-passing style with the <code>dispatch</code> procedure that we’ve seen a few times already.</li>
 <li>We could also take the λ-calculus approach:</li>
 </ul>
-<div class="sourceCode" id="cb36"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb36-1"><a href="#cb36-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-table) (<span class="kw">lambda</span> (k) <span class="dv">#f</span>))</span>
-<span id="cb36-2"><a href="#cb36-2"></a>(<span class="ex">define</span><span class="fu"> </span>(lookup key table) (table key))</span>
-<span id="cb36-3"><a href="#cb36-3"></a>(<span class="ex">define</span><span class="fu"> </span>(insert! key value table)</span>
-<span id="cb36-4"><a href="#cb36-4"></a>  (<span class="kw">lambda</span> (k)</span>
-<span id="cb36-5"><a href="#cb36-5"></a>    (<span class="kw">if</span> (<span class="kw">eq?</span> k key)</span>
-<span id="cb36-6"><a href="#cb36-6"></a>        value</span>
-<span id="cb36-7"><a href="#cb36-7"></a>        (table k))))</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-table) (<span class="kw">lambda</span> (k) <span class="dv">#f</span>))</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(lookup key table) (table key))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(insert! key value table)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true"></a>  (<span class="kw">lambda</span> (k)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true"></a>    (<span class="kw">if</span> (<span class="kw">eq?</span> k key)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true"></a>        value</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true"></a>        (table k))))</span></code></pre></div>
 <h3 id="a-simulator-for-digital-circuits">A Simulator for Digital Circuits</h3>
 <ul>
 <li>Digital circuits are made up of simple elements.</li>
@@ -1689,8 +1700,8 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We can use this to control access to shared variables.</li>
 <li>Before, assignments based on a state variables current value were problematic. We could solve this with the set {<code>get-value</code>, <code>set-value!</code>, and <code>swap-value!</code>} where the latter is defined like so:</li>
 </ul>
-<div class="sourceCode" id="cb37"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb37-1"><a href="#cb37-1"></a>(<span class="ex">define</span><span class="fu"> </span>(swap-value! f)</span>
-<span id="cb37-2"><a href="#cb37-2"></a>  (set-value! (f (get-value)))</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(swap-value! f)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a>  (set-value! (f (get-value)))</span></code></pre></div>
 <h4 id="serializers-in-scheme">Serializers in Scheme</h4>
 <ul>
 <li>Suppose we have a procedure <code>parallel-execute</code> that takes a variable number of arguments that are procedures of no arguments, and executes them all concurrently.</li>
@@ -1704,10 +1715,10 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Things get much more difficult with multiple shared resources.</li>
 <li>Suppose we want to swap the balances in two bank accounts:</li>
 </ul>
-<div class="sourceCode" id="cb38"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb38-1"><a href="#cb38-1"></a>(<span class="ex">define</span><span class="fu"> </span>(exchange acc1 acc2)</span>
-<span id="cb38-2"><a href="#cb38-2"></a>  (<span class="kw">let</span> ((diff (<span class="op">-</span> (acc1 &#39;balance) (acc2 &#39;balance))))</span>
-<span id="cb38-3"><a href="#cb38-3"></a>    ((acc1 &#39;withdraw) diff)</span>
-<span id="cb38-4"><a href="#cb38-4"></a>    ((acc2 &#39;deposit) diff)))</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(exchange acc1 acc2)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a>  (<span class="kw">let</span> ((diff (<span class="op">-</span> (acc1 &#39;balance) (acc2 &#39;balance))))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a>    ((acc1 &#39;withdraw) diff)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true"></a>    ((acc2 &#39;deposit) diff)))</span></code></pre></div>
 <ul>
 <li>Serializing deposits and withdrawals themselves is not enough to ensure correctness.</li>
 <li>The exchange comprises four individually serialized steps, and these may interleave with a concurrent process.</li>
@@ -1783,8 +1794,8 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>With lazy sequences, we can manipulate infinitely long streams!</li>
 <li>We can define Fibonacci sequence explicitly with a generator:</li>
 </ul>
-<div class="sourceCode" id="cb39"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb39-1"><a href="#cb39-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fibgen a b) (cons-stream a (fibgen b (<span class="op">+</span> a b))))</span>
-<span id="cb39-2"><a href="#cb39-2"></a>(<span class="ex">define</span><span class="fu"> fibs </span>(fibgen <span class="dv">0</span> <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(fibgen a b) (cons-stream a (fibgen b (<span class="op">+</span> a b))))</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> fibs </span>(fibgen <span class="dv">0</span> <span class="dv">1</span>))</span></code></pre></div>
 <ul>
 <li>As long as we don’t try to display the whole sequence, we will never get stuck in an infinite loop.</li>
 <li>We can also create an infinite stream of primes.</li>
@@ -1793,12 +1804,12 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.</li>
 </ul>
-<div class="sourceCode" id="cb40"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb40-1"><a href="#cb40-1"></a>(<span class="ex">define</span><span class="fu"> fibs</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a>  (cons-stream</span>
-<span id="cb40-3"><a href="#cb40-3"></a>    <span class="dv">0</span></span>
-<span id="cb40-4"><a href="#cb40-4"></a>    (cons-stream <span class="dv">1</span> (stream-map <span class="op">+</span> fibs (stream-cdr fibs)))))</span>
-<span id="cb40-5"><a href="#cb40-5"></a>(<span class="ex">define</span><span class="fu"> pot</span></span>
-<span id="cb40-6"><a href="#cb40-6"></a>  (cons-stream <span class="dv">1</span> (stream-map (<span class="kw">lambda</span> (x) (* x <span class="dv">2</span>)) pot)))</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> fibs</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a>  (cons-stream</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true"></a>    <span class="dv">0</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true"></a>    (cons-stream <span class="dv">1</span> (stream-map <span class="op">+</span> fibs (stream-cdr fibs)))))</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> pot</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true"></a>  (cons-stream <span class="dv">1</span> (stream-map (<span class="kw">lambda</span> (x) (* x <span class="dv">2</span>)) pot)))</span></code></pre></div>
 <ul>
 <li>This implicit technique is known as <em>corecursion</em>. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.</li>
 </ul>
@@ -1820,9 +1831,9 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Previously, we handled traditional nested loops as processes defined on sequences of pairs.</li>
 <li>We can find all pairs <span class="math inline">(i,j)</span> with <span class="math inline">i ≤ j</span> such that <span class="math inline">i + j</span> is prime like this:</li>
 </ul>
-<div class="sourceCode" id="cb41"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb41-1"><a href="#cb41-1"></a>(stream-filter</span>
-<span id="cb41-2"><a href="#cb41-2"></a>  (<span class="kw">lambda</span> (pair) (prime? (<span class="op">+</span> (<span class="kw">car</span> pair) (<span class="kw">cadr</span> pair))))</span>
-<span id="cb41-3"><a href="#cb41-3"></a>  int-pairs)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>(stream-filter</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>  (<span class="kw">lambda</span> (pair) (prime? (<span class="op">+</span> (<span class="kw">car</span> pair) (<span class="kw">cadr</span> pair))))</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a>  int-pairs)</span></code></pre></div>
 <ul>
 <li>We need some way of producing a stream of all integer pairs.</li>
 <li>More generally, we can combined two streams to get a two-dimensional grid of pairs, and we want to reduce this to a one-dimensional stream.</li>
@@ -1833,12 +1844,12 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We can use streams to model signal-processing systems.</li>
 <li>For example, taking the integral of a signal:</li>
 </ul>
-<div class="sourceCode" id="cb42"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb42-1"><a href="#cb42-1"></a>(<span class="ex">define</span><span class="fu"> </span>(integral integrand initial-value dt)</span>
-<span id="cb42-2"><a href="#cb42-2"></a>  (<span class="ex">define</span><span class="fu"> int</span></span>
-<span id="cb42-3"><a href="#cb42-3"></a>    (cons-stream initial-value</span>
-<span id="cb42-4"><a href="#cb42-4"></a>                 (add-streams (scale-stream integrand dt)</span>
-<span id="cb42-5"><a href="#cb42-5"></a>                              int)))</span>
-<span id="cb42-6"><a href="#cb42-6"></a>  int)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(integral integrand initial-value dt)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> int</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a>    (cons-stream initial-value</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true"></a>                 (add-streams (scale-stream integrand dt)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true"></a>                              int)))</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true"></a>  int)</span></code></pre></div>
 <h3 id="streams-and-delayed-evaluation">Streams and Delayed Evaluation</h3>
 <ul>
 <li>The use of <code>delay</code> in <code>cons-stream</code> is crucial to defining streams with feedback loops.</li>
@@ -1875,5 +1886,114 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <p>The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the “objects” is much larger than the state that they share. (486)</p>
 </blockquote>
 <h1 id="chapter-4-metalinguistic-abstraction">Chapter 4: Metalinguistic Abstraction</h1>
+<ul>
+<li>Expert programmers build up abstractions from simpler concepts to higher-level ones, and preserve modularity by adopting appropriate large-scale views of system structure.</li>
+<li>However, with increasingly complex problems we will find that Lisp, or any programming language, is not sufficient.</li>
+</ul>
+<blockquote>
+<p>We must constantly turn to new languages in order to express our ideas more effectively. Establishing new languages is a powerful strategy for controlling complexity in engineering design; we can often enhance our ability to deal with a complex problem by adopting a new language that enables us to describe (and hence to think about) the problem in a different way, using primitives, means of combination, and means of abstraction that are particularly well suited to the problem at hand. (488)</p>
+</blockquote>
+<ul>
+<li><em>Metalinguistic abstraction</em> means establishing new languages.</li>
+<li>An <em>evaluator</em> (or <em>interpreter</em>) is a procedure that implements a programming language.</li>
+</ul>
+<blockquote>
+<p>It is no exaggeration to regard this as the most fundamental idea in programming: The evaluator, which determines the meaning of expressions in a programming language, is just another program. (489)</p>
+</blockquote>
+<ul>
+<li>Lisp is particularly well suited to metalinguistic abstraction.</li>
+</ul>
+<h2 id="the-metacircular-evaluator">The Metacircular Evaluator</h2>
+<ul>
+<li>We will implement a Lisp evaluator as a Lisp program.</li>
+<li>The metacircular evaluator implements the environment model of evaluation:
+<ol type="1">
+<li>To evaluate a combination, evaluate subexpressions and then apply the operator subexpression to the operand subexpressions.</li>
+<li>To apply a procedure to arguments, evaluate the body of the procedure in a new environment. To construct the new environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied.</li>
+</ol></li>
+<li>This embodies the interplay between two critical procedures, <code>eval</code> and <code>apply</code>.</li>
+</ul>
+<h3 id="the-core-of-the-evaluator">The Core of the Evaluator</h3>
+<h4 id="eval"><code>Eval</code></h4>
+<ul>
+<li><code>eval</code> classifies an expression and directs its evaluation in an environment.</li>
+<li>We use <em>abstract syntax</em> to avoid committing to a particular syntax in the evaluator.</li>
+</ul>
+<div class="sourceCode" id="cb43"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">eval</span> <span class="kw">exp</span> env)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a>  (<span class="kw">cond</span> ((self-evaluating? <span class="kw">exp</span>) <span class="kw">exp</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a>        ((variable? <span class="kw">exp</span>) (lookup-variable-value <span class="kw">exp</span> env))</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a>        ((quoted? <span class="kw">exp</span>) (text-of-quotation <span class="kw">exp</span>))</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true"></a>        ((assignment? <span class="kw">exp</span>) (eval-assignment <span class="kw">exp</span> env))</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true"></a>        ((definition? <span class="kw">exp</span>) (eval-definition <span class="kw">exp</span> env))</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true"></a>        ((if? <span class="kw">exp</span>) (eval-if <span class="kw">exp</span> env))</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true"></a>        ((lambda? <span class="kw">exp</span>) (make-procedure (lambda-parameters <span class="kw">exp</span>)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true"></a>                                       (lambda-body <span class="kw">exp</span>)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true"></a>                                       env))</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true"></a>        ((begin? <span class="kw">exp</span>) (eval-sequence (begin-actions <span class="kw">exp</span>) env))</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true"></a>        ((cond? <span class="kw">exp</span>) (<span class="kw">eval</span> (cond-&gt;if <span class="kw">exp</span>) env))</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true"></a>        ((application? <span class="kw">exp</span>)</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true"></a>         (apply (<span class="kw">eval</span> (operator <span class="kw">exp</span>) env)</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true"></a>                (list-of-values (operands <span class="kw">exp</span>) env)))</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true"></a>        (<span class="kw">else</span> (error <span class="st">&quot;Unknown expression type: EVAL&quot;</span> <span class="kw">exp</span>))))</span></code></pre></div>
+<h4 id="apply"><code>Apply</code></h4>
+<ul>
+<li><code>apply</code> classifies a procedure and directs its application to a list of arguments.</li>
+<li>If compound, it evaluates the procedure body in an extended environment.</li>
+</ul>
+<div class="sourceCode" id="cb44"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(apply procedure arguments)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true"></a>  (<span class="kw">cond</span> ((primitive-procedure? procedure)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true"></a>         (apply-primitive-procedure procedure arguments))</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true"></a>        ((compound-procedure? procedure)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true"></a>         (eval-sequence</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true"></a>           (procedure-body procedure)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true"></a>           (extend-environment</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true"></a>             (procedure-parameters procedure)</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true"></a>             arguments</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true"></a>             (procedure-environment procedure))))</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true"></a>        (<span class="kw">else</span> (error <span class="st">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
+<h3 id="representing-expressions">Representing Expressions</h3>
+<ul>
+<li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
+<li>The syntax of the language is determined solely by procedues that classify and extract pieces of expressions. For example:</li>
+</ul>
+<div class="sourceCode" id="cb45"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(quoted? <span class="kw">exp</span>) (tagged-list? <span class="kw">exp</span> &#39;quote))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(text-of-quotation <span class="kw">exp</span>) (<span class="kw">cadr</span> <span class="kw">exp</span>))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(tagged-list? <span class="kw">exp</span> tag)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="kw">pair?</span> <span class="kw">exp</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true"></a>      (<span class="kw">eq?</span> (<span class="kw">car</span> <span class="kw">exp</span>) tag)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true"></a>      false))</span></code></pre></div>
+<h4 id="derived-expressions">Derived expressions</h4>
+<ul>
+<li>Some special forms cna be defined in terms of others.</li>
+<li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
+</ul>
+<div class="sourceCode" id="cb46"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cond? <span class="kw">exp</span>) (tagged-list? <span class="kw">exp</span> &#39;cond))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cond-clauses <span class="kw">exp</span>) (<span class="kw">cdr</span> <span class="kw">exp</span>))</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cond-else-clause? clause) (<span class="kw">eq?</span> (cond-predicate clause) &#39;else))</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cond-predicate clause) (<span class="kw">car</span> clause))</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cond-actions clause) (<span class="kw">cdr</span> clause))</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(cond-&gt;if <span class="kw">exp</span>) (expand-clauses (cond-clauses <span class="kw">exp</span>)))</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(expand-clauses clauses)</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> clauses)</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true"></a>    &#39;false <span class="co">; no else clause</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true"></a>    (<span class="kw">let</span> ((first (<span class="kw">car</span> clauses))</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true"></a>      (rest (<span class="kw">cdr</span> clauses)))</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true"></a>      (<span class="kw">if</span> (cond-else-clause? first)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true"></a>          (<span class="kw">if</span> (<span class="kw">null?</span> rest)</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true"></a>              (sequence-&gt;exp (cond-actions first))</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true"></a>              (error <span class="st">&quot;ELSE clause isn&#39;t last: COND-&gt;IF&quot;</span> clauses))</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true"></a>          (make-if (cond-predicate first)</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true"></a>                   (sequence-&gt;exp (cond-actions first))</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true"></a>                   (expand-clauses rest))))))</span></code></pre></div>
+<ul>
+<li>Practical Lisp systems allow the user to define new derived expressions by syntactic transformation. These are called <em>macros</em>.</li>
+<li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
+</ul>
+<h3 id="evaluator-data-structures">Evaluator Data Structures</h3>
+<h4 id="testing-of-predicates">Testing of predicates</h4>
+<h4 id="representing-procedures">Representing procedures</h4>
+<h4 id="operations-on-environments">Operations on environments</h4>
+<h3 id="running-the-evaluator-as-a-program">Running the Evaluator as a Program</h3>
 </body>
 </html>

@@ -1729,3 +1729,122 @@ There are a number of possible ways we could represent sets. A set is a collecti
 > The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the "objects" is much larger than the state that they share. (486)
 
 # Chapter 4: Metalinguistic Abstraction 
+
+- Expert programmers build up abstractions from simpler concepts to higher-level ones, and preserve modularity by adopting appropriate large-scale views of system structure.
+- However, with increasingly complex problems we will find that Lisp, or any programming language, is not sufficient.
+
+> We must constantly turn to new languages in order to express our ideas more effectively. Establishing new languages is a powerful strategy for controlling complexity in engineering design; we can often enhance our ability to deal with a complex problem by adopting a new language that enables us to describe (and hence to think about) the problem in a different way, using primitives, means of combination, and means of abstraction that are particularly well suited to the problem at hand. (488)
+
+- _Metalinguistic abstraction_ means establishing new languages.
+- An _evaluator_ (or _interpreter_) is a procedure that implements a programming language.
+
+> It is no exaggeration to regard this as the most fundamental idea in programming: The evaluator, which determines the meaning of expressions in a programming language, is just another program. (489)
+
+- Lisp is particularly well suited to metalinguistic abstraction.
+
+## The Metacircular Evaluator
+
+- We will implement a Lisp evaluator as a Lisp program.
+- The metacircular evaluator implements the environment model of evaluation:
+    1. To evaluate a combination, evaluate subexpressions and then apply the operator subexpression to the operand subexpressions.
+    2. To apply a procedure to arguments, evaluate the body of the procedure in a new environment. To construct the new environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied.
+- This embodies the interplay between two critical procedures, `eval` and `apply`.
+
+### The Core of the Evaluator
+
+#### `Eval`
+
+- `eval` classifies an expression and directs its evaluation in an environment.
+- We use _abstract syntax_ to avoid committing to a particular syntax in the evaluator.
+
+```scheme
+(define (eval exp env)
+  (cond ((self-evaluating? exp) exp)
+        ((variable? exp) (lookup-variable-value exp env))
+        ((quoted? exp) (text-of-quotation exp))
+        ((assignment? exp) (eval-assignment exp env))
+        ((definition? exp) (eval-definition exp env))
+        ((if? exp) (eval-if exp env))
+        ((lambda? exp) (make-procedure (lambda-parameters exp)
+                                       (lambda-body exp)
+                                       env))
+        ((begin? exp) (eval-sequence (begin-actions exp) env))
+        ((cond? exp) (eval (cond->if exp) env))
+        ((application? exp)
+         (apply (eval (operator exp) env)
+                (list-of-values (operands exp) env)))
+        (else (error "Unknown expression type: EVAL" exp))))
+```
+
+#### `Apply`
+
+- `apply` classifies a procedure and directs its application to a list of arguments.
+- If compound, it evaluates the procedure body in an extended environment.
+
+```scheme
+(define (apply procedure arguments)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure procedure arguments))
+        ((compound-procedure? procedure)
+         (eval-sequence
+           (procedure-body procedure)
+           (extend-environment
+             (procedure-parameters procedure)
+             arguments
+             (procedure-environment procedure))))
+        (else (error "Unknown procedure type: APPLY" procedure))))
+```
+
+### Representing Expressions
+
+- The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.
+- The syntax of the language is determined solely by procedues that classify and extract pieces of expressions. For example:
+
+```scheme
+(define (quoted? exp) (tagged-list? exp 'quote))
+(define (text-of-quotation exp) (cadr exp))
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+      (eq? (car exp) tag)
+      false))
+```
+
+#### Derived expressions
+
+- Some special forms cna be defined in terms of others.
+- For example, we can reduce `cond` to an `if` expression:
+
+```scheme
+(define (cond? exp) (tagged-list? exp 'cond))
+(define (cond-clauses exp) (cdr exp))
+(define (cond-else-clause? clause) (eq? (cond-predicate clause) 'else))
+(define (cond-predicate clause) (car clause))
+(define (cond-actions clause) (cdr clause))
+(define (cond->if exp) (expand-clauses (cond-clauses exp)))
+
+(define (expand-clauses clauses)
+  (if (null? clauses)
+    'false ; no else clause
+    (let ((first (car clauses))
+      (rest (cdr clauses)))
+      (if (cond-else-clause? first)
+          (if (null? rest)
+              (sequence->exp (cond-actions first))
+              (error "ELSE clause isn't last: COND->IF" clauses))
+          (make-if (cond-predicate first)
+                   (sequence->exp (cond-actions first))
+                   (expand-clauses rest))))))
+```
+
+- Practical Lisp systems allow the user to define new derived expressions by syntactic transformation. These are called _macros_.
+- There is much research on avoiding name-conflict problems in macro definition languages.
+
+### Evaluator Data Structures
+
+#### Testing of predicates
+
+#### Representing procedures
+
+#### Operations on environments
+
+### Running the Evaluator as a Program

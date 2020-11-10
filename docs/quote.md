@@ -42,6 +42,12 @@ Page numbers correspond to the [2.andresraba5 PDF][pdf].
 
 ## Chapter 4: Metalinguistic Abstraction
 
+> Establishing new languages is a powerful strategy for controlling complexity in engineering design; we can often enhance our ability to deal with a complex problem by adopting a new language that enables us to describe (and hence to think about) the problem in a different way, using [terms] that are particularly well suited to the problem at hand. (488)
+
+> It is no exaggeration to regard this as the most fundamental idea in programming: The evaluator, which determines the meaning of expressions in a programming language, is just another program. (489)
+
+### The Metacircular Evaluator
+
 # Lectures
 
 Quotes and paraphrases are from the [MIT OCW video lectures][lectures].
