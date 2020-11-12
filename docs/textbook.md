@@ -1843,8 +1843,64 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Testing of predicates
 
+- Anything other than `false` is considered "truthy."
+
+```scheme
+(define (true? x) (not (eq? x false)))
+(define (false? x) (eq? x false))
+```
+
 #### Representing procedures
 
+- `(apply-primitive-procedure <proc> <args>)` applies a primitive procedure to `<args>`.
+- `(primitive-procedure? <proc>)` tests whether `<proc>` is a primitive procedure.
+- Compound procedures are represented by the following data structure:
+
+```scheme
+(define (make-procedure parameters body env)
+  (list 'procedure parameters body env))
+(define (compound-procedure? p) (tagged-list? p 'procedure))
+(define (procedure-parameters p) (cadr p)) (define (procedure-body p) (caddr p))
+(define (procedure-environment p) (cadddr p))
+```
+
 #### Operations on environments
+
+- `(lookup-variable-value <var> <env>)` returns the value bound to a variable.
+- `(extend-environment <variables> <values> <base-env>)` returns a new environment extended with a frame containing the given bindings.
+- `(define-variable! <var> <value> <env>)` adds a binding to the first frame of `<env>`.
+- `(set-variable-value! <var> <value> <env>)` changes a binding in `<env>`.
+- Here is a partial implementation:
+
+```scheme
+(define (enclosing-environment env) (cdr env))
+(define (first-frame env) (car env))
+(define the-empty-environment '())
+
+(define (make-frame variables values) (cons variables values))
+(define (frame-variables frame) (car frame))
+(define (frame-values frame) (cdr frame))
+
+(define (extend-environment vars vals base-env)
+  (if (= (length vars) (length vals))
+      (cons (make-frame vars vals) base-env)
+      (if (< (length vars) (length vals))
+          (error "Too many arguments supplied" vars vals)
+          (error "Too few arguments supplied" vars vals))))
+
+(define (lookup-variable-value var env)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars) (env-loop (enclosing-environment env)))
+            ((eq? var (car vars)) (car vals))
+            (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env the-empty-environment)
+        (error "Unbound variable" var)
+        (let ((frame (first-frame env)))
+          (scan (frame-variables frame) (frame-values frame)))))
+  (env-loop env))
+```
+
+- This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called _deep binding_.
 
 ### Running the Evaluator as a Program

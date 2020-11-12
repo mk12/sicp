@@ -1992,8 +1992,59 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 </ul>
 <h3 id="evaluator-data-structures">Evaluator Data Structures</h3>
 <h4 id="testing-of-predicates">Testing of predicates</h4>
+<ul>
+<li>Anything other than <code>false</code> is considered “truthy.”</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(true? x) (<span class="kw">not</span> (<span class="kw">eq?</span> x false)))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(false? x) (<span class="kw">eq?</span> x false))</span></code></pre></div>
 <h4 id="representing-procedures">Representing procedures</h4>
+<ul>
+<li><code>(apply-primitive-procedure &lt;proc&gt; &lt;args&gt;)</code> applies a primitive procedure to <code>&lt;args&gt;</code>.</li>
+<li><code>(primitive-procedure? &lt;proc&gt;)</code> tests whether <code>&lt;proc&gt;</code> is a primitive procedure.</li>
+<li>Compound procedures are represented by the following data structure:</li>
+</ul>
+<div class="sourceCode" id="cb48"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-procedure parameters body env)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true"></a>  (<span class="kw">list</span> &#39;procedure parameters body env))</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(compound-procedure? p) (tagged-list? p &#39;procedure))</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(procedure-parameters p) (<span class="kw">cadr</span> p)) (<span class="ex">define</span><span class="fu"> </span>(procedure-body p) (<span class="kw">caddr</span> p))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(procedure-environment p) (<span class="kw">cadddr</span> p))</span></code></pre></div>
 <h4 id="operations-on-environments">Operations on environments</h4>
+<ul>
+<li><code>(lookup-variable-value &lt;var&gt; &lt;env&gt;)</code> returns the value bound to a variable.</li>
+<li><code>(extend-environment &lt;variables&gt; &lt;values&gt; &lt;base-env&gt;)</code> returns a new environment extended with a frame containing the given bindings.</li>
+<li><code>(define-variable! &lt;var&gt; &lt;value&gt; &lt;env&gt;)</code> adds a binding to the first frame of <code>&lt;env&gt;</code>.</li>
+<li><code>(set-variable-value! &lt;var&gt; &lt;value&gt; &lt;env&gt;)</code> changes a binding in <code>&lt;env&gt;</code>.</li>
+<li>Here is a partial implementation:</li>
+</ul>
+<div class="sourceCode" id="cb49"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(enclosing-environment env) (<span class="kw">cdr</span> env))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(first-frame env) (<span class="kw">car</span> env))</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> the-empty-environment </span>&#39;())</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(make-frame variables <span class="kw">values</span>) (<span class="kw">cons</span> variables <span class="kw">values</span>))</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(frame-variables frame) (<span class="kw">car</span> frame))</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(frame-values frame) (<span class="kw">cdr</span> frame))</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(extend-environment vars vals base-env)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true"></a>  (<span class="kw">if</span> (<span class="op">=</span> (<span class="kw">length</span> vars) (<span class="kw">length</span> vals))</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true"></a>      (<span class="kw">cons</span> (make-frame vars vals) base-env)</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true"></a>      (<span class="kw">if</span> (<span class="op">&lt;</span> (<span class="kw">length</span> vars) (<span class="kw">length</span> vals))</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true"></a>          (error <span class="st">&quot;Too many arguments supplied&quot;</span> vars vals)</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true"></a>          (error <span class="st">&quot;Too few arguments supplied&quot;</span> vars vals))))</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true"></a></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(lookup-variable-value var env)</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> </span>(env-loop env)</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true"></a>    (<span class="ex">define</span><span class="fu"> </span>(scan vars vals)</span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true"></a>      (<span class="kw">cond</span> ((<span class="kw">null?</span> vars) (env-loop (enclosing-environment env)))</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true"></a>            ((<span class="kw">eq?</span> var (<span class="kw">car</span> vars)) (<span class="kw">car</span> vals))</span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true"></a>            (<span class="kw">else</span> (scan (<span class="kw">cdr</span> vars) (<span class="kw">cdr</span> vals)))))</span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true"></a>    (<span class="kw">if</span> (<span class="kw">eq?</span> env the-empty-environment)</span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true"></a>        (error <span class="st">&quot;Unbound variable&quot;</span> var)</span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true"></a>        (<span class="kw">let</span> ((frame (first-frame env)))</span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true"></a>          (scan (frame-variables frame) (frame-values frame)))))</span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true"></a>  (env-loop env))</span></code></pre></div>
+<ul>
+<li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
+</ul>
 <h3 id="running-the-evaluator-as-a-program">Running the Evaluator as a Program</h3>
 </body>
 </html>
