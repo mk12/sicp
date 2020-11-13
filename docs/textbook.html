@@ -222,6 +222,7 @@
 <li><a href="#representing-expressions">Representing Expressions</a></li>
 <li><a href="#evaluator-data-structures">Evaluator Data Structures</a></li>
 <li><a href="#running-the-evaluator-as-a-program">Running the Evaluator as a Program</a></li>
+<li><a href="#data-as-programs">Data as Programs</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -2046,5 +2047,66 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
 <h3 id="running-the-evaluator-as-a-program">Running the Evaluator as a Program</h3>
+<ul>
+<li>We can run our evaluator as a program: Lisp within Lisp.</li>
+<li>The evaluator ultimately reduces expressions to applications of primitive procedures, so we need the evaluator to map these to the underlying Lisp’s primitive procedures.</li>
+<li>We set up a global environment mapping primitive procedures, <code>true</code>, and <code>false</code>:</li>
+</ul>
+<div class="sourceCode" id="cb50"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(setup-environment)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>  (<span class="kw">let</span> ((initial-env</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true"></a>        (extend-environment (primitive-procedure-names)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true"></a>                            (primitive-procedure-objects)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true"></a>                            the-empty-environment)))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true"></a>    (define-variable! &#39;true true initial-env)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true"></a>    (define-variable! &#39;false false initial-env)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true"></a>    initial-env))</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> the-global-environment </span>(setup-environment))</span></code></pre></div>
+<ul>
+<li>We define a list of primitive procedures <code>car</code>, <code>cdr</code>, <code>cons</code>, and <code>null?</code>:</li>
+</ul>
+<div class="sourceCode" id="cb51"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(primitive-procedure? proc) (tagged-list? proc &#39;primitive))</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(primitive-implementation proc) (<span class="kw">cadr</span> proc))</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> primitive-procedures</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true"></a>  (<span class="kw">list</span> (<span class="kw">list</span> &#39;car <span class="kw">car</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true"></a>        (<span class="kw">list</span> &#39;cdr <span class="kw">cdr</span>)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true"></a>        (<span class="kw">list</span> &#39;cons <span class="kw">cons</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true"></a>        (<span class="kw">list</span> &#39;null? <span class="kw">null?</span>)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true"></a>        &lt;more primitives&gt;))</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(primitive-procedure-names)</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true"></a>  (map <span class="kw">car</span> primitive-procedures))</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(primitive-procedure-objects)</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true"></a>  (map (<span class="kw">lambda</span> (proc) (<span class="kw">list</span> &#39;primitive (<span class="kw">cadr</span> proc)))</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true"></a>       primitive-procedures))</span></code></pre></div>
+<ul>
+<li>Here, <code>apply-in-underlying-scheme</code> refers to the built-in <code>apply</code>, not the one we defined:</li>
+</ul>
+<div class="sourceCode" id="cb52"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(apply-primitive-procedure proc args)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>  (apply-in-underlying-scheme (primitive-implementation proc) args))</span></code></pre></div>
+<ul>
+<li>Finally, we make a simple <em>driver loop</em>, or REPL:</li>
+</ul>
+<div class="sourceCode" id="cb53"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> input-prompt </span><span class="st">&quot;;;; M-Eval input:&quot;</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> output-prompt </span><span class="st">&quot;;;; M-Eval value:&quot;</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(driver-loop)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true"></a>  (prompt-for-input input-prompt)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true"></a>  (<span class="kw">let</span> ((input (<span class="kw">read</span>)))</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true"></a>    (<span class="kw">let</span> ((output (<span class="kw">eval</span> input the-global-environment)))</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true"></a>      (announce-output output-prompt)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true"></a>      (user-print output)))</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true"></a>  (driver-loop))</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true"></a></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(prompt-for-input <span class="kw">string</span>)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true"></a>  (<span class="kw">newline</span>) (<span class="kw">newline</span>) (<span class="kw">display</span> <span class="kw">string</span>) (<span class="kw">newline</span>))</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(announce-output <span class="kw">string</span>)</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true"></a>  (<span class="kw">newline</span>) (<span class="kw">display</span> <span class="kw">string</span>) (<span class="kw">newline</span>))</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true"></a>(<span class="ex">define</span><span class="fu"> </span>(user-print object)</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true"></a>  (<span class="kw">if</span> (compound-procedure? object)</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true"></a>      (<span class="kw">display</span> (<span class="kw">list</span> &#39;compound-procedure</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true"></a>                      (procedure-parameters object)</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true"></a>                      (procedure-body object)</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true"></a>                      &#39;&lt;procedure-env&gt;))</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true"></a>      (<span class="kw">display</span> object)))</span></code></pre></div>
+<h3 id="data-as-programs">Data as Programs</h3>
 </body>
 </html>
