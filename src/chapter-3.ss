@@ -1933,7 +1933,8 @@ z2 => '((a b) a b)
 ;; See whiteboard/exercise-3.36.jpg for the environment diagram.
 
 (Exercise ?3.37
-  (use (:3.3.5.2 constant adder multiplier probe) (:3.3.5.3 make-connector set-value!)))
+  (use (:3.3.5.2 constant adder multiplier probe)
+       (:3.3.5.3 make-connector set-value!)))
 
 (define (celsius->fahrenheit x)
   (c+ (c* (c/ (cv 9) (cv 5))
@@ -2135,66 +2136,66 @@ final-values
 ;; If we serialize the procedures, we always get that value:
 (define x 10)
 (let ((s (make-serializer)))
-    (parallel-execute
-      (s (lambda () (set! x (* x x))))
-      (s (lambda () (set! x (* x x x))))))
-  x => 1000000
+  (parallel-execute
+    (s (lambda () (set! x (* x x))))
+    (s (lambda () (set! x (* x x x))))))
+x => 1000000
 
-  (Exercise ?3.41
-    (use (:3.4.2.1 make-account)))
+(Exercise ?3.41
+  (use (:3.4.2.1 make-account)))
 
-  ;; Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank
-  ;; balance because it would make no difference. If we serialize it, then the
-  ;; value will be read either before or after (in sequence) it is written,
-  ;; assuming someone is withdrawing or depositing concurrently. However, if we
-  ;; don't serialize it, we still get one value or the other. There is nothing
-  ;; that can be interleaved because reading the balance takes only one step,
-  ;; assuming the Scheme implementation considers this a thread-safe operation.
+;; Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank
+;; balance because it would make no difference. If we serialize it, then the
+;; value will be read either before or after (in sequence) it is written,
+;; assuming someone is withdrawing or depositing concurrently. However, if we
+;; don't serialize it, we still get one value or the other. There is nothing
+;; that can be interleaved because reading the balance takes only one step,
+;; assuming the Scheme implementation considers this a thread-safe operation.
 
-  (Exercise ?3.42)
+(Exercise ?3.42)
 
-  ;; This is a safe change to make. Each bank account still has one serializer and
-  ;; the deposit and withdraw procedures returned from the dispatcher are always
-  ;; protected by it. It makes no difference in what concurrency is allowed. If it
-  ;; did, then the specification of `make-serializer` must be incorrect.
+;; This is a safe change to make. Each bank account still has one serializer and
+;; the deposit and withdraw procedures returned from the dispatcher are always
+;; protected by it. It makes no difference in what concurrency is allowed. If it
+;; did, then the specification of `make-serializer` must be incorrect.
 
-  (Section :3.4.2.2 "Complexity of using multiple shared resources"
-    (use (:3.4.2.3 make-serializer)))
+(Section :3.4.2.2 "Complexity of using multiple shared resources"
+  (use (:3.4.2.3 make-serializer)))
 
-  (define (exchange account1 account2)
-    (let ((difference (- (account1 'balance)
-                        (account2 'balance))))
-      ((account1 'withdraw) difference)
-      ((account2 'deposit) difference)))
+(define (exchange account1 account2)
+  (let ((difference (- (account1 'balance)
+                      (account2 'balance))))
+    ((account1 'withdraw) difference)
+    ((account2 'deposit) difference)))
 
-  (define (make-account-and-serializer balance)
-    (define (withdraw amount)
-      (if (>= balance amount)
-          (begin (set! balance (- balance amount))
-                balance)
-          "Insufficient funds"))
-    (define (deposit amount)
-      (set! balance (+ balance amount)) balance)
-    (let ((balance-serializer (make-serializer)))
-      (define (dispatch m)
-        (cond ((eq? m 'withdraw) withdraw)
-              ((eq? m 'deposit) deposit)
-              ((eq? m 'balance) balance)
-              ((eq? m 'serializer) balance-serializer)
-              (else (error 'make-account "unknown request" m))))
-      dispatch))
+(define (make-account-and-serializer balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+              balance)
+        "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount)) balance)
+  (let ((balance-serializer (make-serializer)))
+    (define (dispatch m)
+      (cond ((eq? m 'withdraw) withdraw)
+            ((eq? m 'deposit) deposit)
+            ((eq? m 'balance) balance)
+            ((eq? m 'serializer) balance-serializer)
+            (else (error 'make-account "unknown request" m))))
+    dispatch))
 
-  (define (deposit account amount)
-    (let ((s (account 'serializer))
-          (d (account 'deposit)))
-      ((s d) amount)))
+(define (deposit account amount)
+  (let ((s (account 'serializer))
+        (d (account 'deposit)))
+    ((s d) amount)))
 
-  (define (serialized-exchange account1 account2)
-    (let ((serializer1 (account1 'serializer))
-          (serializer2 (account2 'serializer)))
-      ((serializer1 (serializer2 exchange))
-     account1
-     account2)))
+(define (serialized-exchange account1 account2)
+  (let ((serializer1 (account1 'serializer))
+        (serializer2 (account2 'serializer)))
+    ((serializer1 (serializer2 exchange))
+    account1
+    account2)))
 
 (Exercise ?3.43)
 
@@ -3241,7 +3242,8 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
   y)
 
 (Exercise ?3.80
-  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams scale-stream) (:3.5.4 integral)))
+  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams scale-stream)
+       (:3.5.4 integral)))
 
 (define (RLC R L C dt)
   (lambda (vC0 iL0)
