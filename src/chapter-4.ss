@@ -18,58 +18,20 @@
 (Section :4.1 "The Metacircular Evaluator")
 
 (Section :4.1.1 "The Core of the Evaluator"
-  (use (:4.1.2
-self-evaluating?
-variable?
-quoted?
-assignment?
-definition?
-if?
-lambda?
-text-of-quotation
-lambda-parameters
-lambda-body
-if-predicate
-if-consequent
-if-alternative
-last-exp?
-first-exp
-rest-exps
-begin?
-begin-actions
-application?
-operator
-operands
-no-operands?
-first-operand
-rest-operands
-assignment-variable
-assignment-value
-definition-variable
-definition-value
-  )
-  (:4.1.2.1
-  cond?
-  cond->if)
-  (:4.1.2.2
-primitive-procedure?
-primitive-implementation
-apply-primitive-procedure
-  )
-  (:4.1.3.1 false? true?)
-  (:4.1.3.2
-make-procedure
-procedure-body
-procedure-environment
-procedure-parameters
-compound-procedure?
-)
-(:4.1.3.3
-extend-environment
-set-variable-value!
-define-variable!
-lookup-variable-value
-)))
+  (use (:4.1.2 application? assignment-value assignment-variable assignment?
+               begin-actions begin? definition-value definition-variable
+               definition? first-exp first-operand if-alternative if-consequent
+               if-predicate if? lambda-body lambda-parameters lambda? last-exp?
+               no-operands? operands operator quoted? rest-exps rest-operands
+               self-evaluating? text-of-quotation variable? )
+       (:4.1.2.1 cond? cond->if)
+       (:4.1.2.2 apply-primitive-procedure primitive-implementation
+                 primitive-procedure?)
+       (:4.1.3.1 false? true?)
+       (:4.1.3.2 compound-procedure? make-procedure procedure-body
+                 procedure-environment procedure-parameters)
+       (:4.1.3.3 define-variable! extend-environment lookup-variable-value
+                 set-variable-value!)))
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
