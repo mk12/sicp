@@ -17,10 +17,60 @@
 
 (Section :4.1 "The Metacircular Evaluator")
 
-(Section :4.1.1 "The Core of the Evaluator")
+(Section :4.1.1 "The Core of the Evaluator"
+  (use (:4.1.2
+self-evaluating?
+variable?
+quoted?
+assignment?
+definition?
+if?
+lambda?
+text-of-quotation
+lambda-parameters
+lambda-body
+if-predicate
+if-consequent
+if-alternative
+last-exp?
+first-exp
+rest-exps
+begin?
+begin-actions
+application?
+operator
+operands
+no-operands?
+first-operand
+rest-operands
+assignment-variable
+assignment-value
+definition-variable
+definition-value
+  )
+  (:4.1.2.1
+  cond?
+  cond->if)
+  (:4.1.2.2
+primitive-procedure?
+primitive-implementation
+apply-primitive-procedure
+  )
+  (:4.1.3.1 false? true?)
+  (:4.1.3.2
+make-procedure
+procedure-body
+procedure-environment
+procedure-parameters
+compound-procedure?
+)
+(:4.1.3.3
+extend-environment
+set-variable-value!
+define-variable!
+lookup-variable-value
+)))
 
-;; working on lectures/text first
-#|
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
@@ -28,7 +78,7 @@
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
-        ((lambda? exp) (make-propedure (lambda-parameters exp)
+        ((lambda? exp) (make-procedure (lambda-parameters exp)
                                        (lambda-body exp)
                                        env))
         ((begin? exp) (eval-sequence (begin-actions exp) env))
@@ -78,7 +128,9 @@
 
 ;; TODO: tests
 
-(Exercise ?4.1)
+(Exercise ?4.1
+  (use (:4.1.1 eval list-of-values)
+       (:4.1.2 first-operand no-operands? rest-operands)))
 
 (define (list-of-values-ltr exps env)
   (if (no-operands? exps)
@@ -150,7 +202,8 @@
 (define (first-operand ops) (car ops))
 (define (rest-operands ops) (cdr ops))
 
-(Section :4.1.2.1 "Derived expressions")
+(Section :4.1.2.1 "Derived expressions"
+  (use (:4.1.2 make-if sequence->exp tagged-list?)))
 
 (define (cond? exp) (tagged-list? exp 'cond))
 (define (cond-clauses exp) (cdr exp))
@@ -172,6 +225,15 @@
                      (expand-clauses rest))))))
 
 ;; TODO: tests
+
+(Section :4.1.2.2 "Primitive procedures"
+  (use (:4.1.2 tagged-list?)))
+
+;; Moved here from Section 4.1.4 to avoid import cycle.
+(define (primitive-procedure? proc) (tagged-list? proc 'primitive))
+(define (primitive-implementation proc) (cadr proc))
+(define (apply-primitive-procedure proc args)
+  (apply (primitive-implementation proc) args))
 
 (Exercise ?4.2)
 
@@ -216,7 +278,8 @@
 (define (true? x) (not (eq? x #f)))
 (define (false? x) (eq? x #f))
 
-(Section :4.1.3.2 "Representing procedures")
+(Section :4.1.3.2 "Representing procedures"
+  (use (:4.1.2 tagged-list?)))
 
 (define (make-procedure parameters body env)
   (list 'procedure parameters body env))
@@ -251,7 +314,7 @@
             ((eq? var (car vars)) (car vals))
             (else (scan (cdr vars) (cdr vals)))))
     (if (eq? env the-empty-environment)
-        (error 'lookup-variable-value'"unbound variable" var)
+        (error 'lookup-variable-value "unbound variable" var)
         (let ((frame (first-frame env)))
           (scan (frame-variables frame) (frame-values frame)))))
   (env-loop env))
@@ -290,7 +353,10 @@
 
 ;; TODO
 
-(Section :4.1.4 "Running the Evaluator as a Program")
+(Section :4.1.4 "Running the Evaluator as a Program"
+  (use (:4.1.1 eval)
+       (:4.1.3.2 compound-procedure? procedure-body procedure-parameters)
+       (:4.1.3.3 define-variable! extend-environment the-empty-environment)))
 
 (define (setup-environment)
   (let ((initial-env
@@ -300,9 +366,6 @@
     (define-variable! '#t #t initial-env)
     (define-variable! '#f #f initial-env)
     initial-env))
-
-(define (primitive-procedure? proc) (tagged-list? proc 'primitive))
-(define (primitive-implementation proc) (cadr proc))
 
 (define primitive-procedures
   (list (list 'car car)
@@ -314,9 +377,6 @@
 (define (primitive-procedure-objects)
   (map (lambda (proc) (list 'primitive (cadr proc)))
        primitive-procedures))
-
-(define (apply-primitive-procedure proc args)
-  (apply-in-underlying-scheme (primitive-implementation proc) args))
 
 (define input-prompt ";;; M-Eval input:")
 (define output-prompt ";;; M-Eval value:")
@@ -357,8 +417,6 @@
 ;; TODO
 
 (Section :4.1.5 "Data as Programs")
-
-|#
 
 ) ; end of SICP
 ) ; end of library

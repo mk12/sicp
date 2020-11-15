@@ -8,13 +8,13 @@
           capture-output hide-output
           cons-stream delay display force format fxand fxarithmetic-shift-left
           fxarithmetic-shift-right fxxor make-mutex newline parallel-execute
-          quotient random remainder runtime set-car! set-cdr! string-contains?
-          string-count unless when)
+          quotient random read remainder runtime set-car! set-cdr!
+          string-contains? string-count unless when)
   (import (rnrs base (6))
           (only (rnrs arithmetic fixnums (6))
                 fxand fxarithmetic-shift-left fxarithmetic-shift-right fxxor)
           (only (rnrs control (6)) unless when)
-          (only (rnrs io simple (6)) display newline)
+          (only (rnrs io simple (6)) display newline read)
           (only (rnrs mutable-pairs (6)) set-car! set-cdr!)
           (only (rnrs r5rs (6)) delay force quotient remainder)
           (src lang core)
