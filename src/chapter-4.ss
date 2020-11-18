@@ -186,7 +186,15 @@
                      (sequence->exp (cond-actions first))
                      (expand-clauses rest))))))
 
-;; TODO: tests
+(cond->if '(cond ((< x 0) -1)
+                 ((= x 0) 0)
+                 ((> x 0) 1)
+                 (else impossible)))
+=> '(if (< x 0) -1 (if (= x 0) 0 (if (> x 0) 1 impossible)))
+
+(cond->if '(cond (else foo)
+                 ((= x 1) bar)))
+=!> "else clause isn't last"
 
 (Section :4.1.2.2 "Primitive procedures"
   (use (:4.1.2 tagged-list?)))
@@ -196,6 +204,8 @@
 (define (primitive-implementation proc) (cadr proc))
 (define (apply-primitive-procedure proc args)
   (apply (primitive-implementation proc) args))
+
+(apply-primitive-procedure (list 'primitive car) (list '(a . b))) => 'a
 
 (Exercise ?4.2)
 
@@ -269,6 +279,7 @@
         ((< (length vars) (length vals))
          (error 'extend-environment "too many arguments" vars vals))
         (else (error 'extend-environment "too few arguments" vars vals))))
+
 (define (lookup-variable-value var env)
   (define (env-loop env)
     (define (scan vars vals)
@@ -301,7 +312,25 @@
             (else (scan (cdr vars) (cdr vals)))))
     (scan (frame-variables frame) (frame-values frame))))
 
-;; TODO: tests
+(define env1 (extend-environment '() '() the-empty-environment))
+(lookup-variable-value 'x env1) =!> "unbound variable"
+(set-variable-value! 'x 1 env1) =!> "unbound variable"
+(define-variable! 'x 1 env1)
+(define-variable! 'y 10 env1)
+(lookup-variable-value 'x env1) => 1
+(lookup-variable-value 'y env1) => 10
+
+(define env2 (extend-environment '() '() env1))
+(lookup-variable-value 'x env2) => 1
+(lookup-variable-value 'y env2) => 10
+(define-variable! 'x 2 env2)
+(set-variable-value! 'y 20 env2)
+(lookup-variable-value 'x env2) => 2
+(lookup-variable-value 'y env2) => 20
+;; `x` is still 1 in `env1` because we shadowed it with a new `x` in `env2`:
+(lookup-variable-value 'x env1) => 1
+;; `y` is 20 in `env1` because `set-variable-value!` changed it in `env1`:
+(lookup-variable-value 'y env1) => 20
 
 (Exercise ?4.11)
 
