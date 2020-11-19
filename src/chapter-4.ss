@@ -31,7 +31,7 @@
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
        (:4.1.3.3 define-variable! extend-environment lookup-variable-value
-                 set-variable-value!)))
+                 make-environment set-variable-value!)))
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
@@ -88,27 +88,64 @@
                     (eval (definition-value exp) env)
                     env))
 
-;; TODO: tests
+(define env (make-environment))
+(eval 1 env) => 1
+(eval "hi" env) => "hi"
+(eval ''a env) => 'a
+(eval 'x env) =!> "unbound variable"
+(eval '(define x 1) env)
+(eval 'x env) => 1
+(eval '(set! x 2) env)
+(eval 'x env) => 2
+(eval '(if "truthy" "yes" "no") env) => "yes"
+(eval '(cond (else 1)) env) => 1
+(eval '(begin 1 2 3) env) => 3
+(eval '((lambda (x y) y) 1 2) env) => 2
+(eval #\a env) =!> "unknown expression type"
 
 (Exercise ?4.1
-  (use (:4.1.1 eval list-of-values)
-       (:4.1.2 first-operand no-operands? rest-operands)))
+  (use (:4.1.2 application? assignment-value assignment-variable assignment?
+               begin-actions begin? definition-value definition-variable
+               definition? first-exp first-operand if-alternative if-consequent
+               if-predicate if? lambda-body lambda-parameters lambda? last-exp?
+               no-operands? operands operator quoted? rest-exps rest-operands
+               self-evaluating? text-of-quotation variable? )
+       (:4.1.2.1 cond? cond->if)
+       (:4.1.2.2 apply-primitive-procedure primitive-implementation
+                 primitive-procedure?)
+       (:4.1.3.1 false? true?)
+       (:4.1.3.2 compound-procedure? make-procedure procedure-body
+                 procedure-environment procedure-parameters)
+       (:4.1.3.3 define-variable! extend-environment lookup-variable-value
+                 make-environment set-variable-value!)))
 
-(define (list-of-values-ltr exps env)
+;; Paste everything except `list-of-values`:
+(paste (:4.1.1 eval apply eval-if eval-sequence eval-assignment
+               eval-definition))
+
+;; Evaluates operands from left to right:
+(define (list-of-values exps env)
   (if (no-operands? exps)
       '()
       (let ((first-value (eval (first-operand exps) env)))
         (cons first-value
               (list-of-values (rest-operands exps) env)))))
 
-(define (list-of-values-rtl exps env)
+(define env (make-environment))
+(eval '(define x 0) env)
+(eval '((lambda (a b) x) (set! x "left") (set! x "right")) env) => "right"
+
+;; Evaluates operands from right to left:
+(define (list-of-values exps env)
   (if (no-operands? exps)
       '()
       (let ((rest-values (list-of-values (rest-operands exps) env)))
         (cons (eval (first-operand exps) env)
               rest-values))))
 
-;; TODO: tests
+(define env (make-environment))
+(eval '(define x 0) env)
+(eval '((lambda (a b) x) (set! x "left") (set! x "right")) env) => "left"
 
 (Section :4.1.2 "Representing Expressions")
 
@@ -163,6 +200,10 @@
 (define (no-operands? ops) (null? ops))
 (define (first-operand ops) (car ops))
 (define (rest-operands ops) (cdr ops))
+
+(sequence->exp '()) => '()
+(sequence->exp '(1)) => 1
+(sequence->exp '(1 2)) => '(begin 1 2)
 
 (Section :4.1.2.1 "Derived expressions"
   (use (:4.1.2 make-if sequence->exp tagged-list?)))
@@ -262,9 +303,15 @@
 
 (Section :4.1.3.3 "Operations on environments")
 
+(define the-empty-environment '())
+(define (make-environment . args)
+  (let ((base (cond ((null? args) the-empty-environment)
+                    ((null? (cdr args)) (car args))
+                    (else (error 'make-environment "invalid args" args)))))
+    (extend-environment '() '() base)))
+
 (define (enclosing-environment env) (cdr env))
 (define (first-frame env) (car env))
-(define the-empty-environment '())
 
 (define (make-frame variables values) (cons variables values))
 (define (frame-variables frame) (car frame))
@@ -312,25 +359,25 @@
             (else (scan (cdr vars) (cdr vals)))))
     (scan (frame-variables frame) (frame-values frame))))
 
-(define env1 (extend-environment '() '() the-empty-environment))
+(define env1 (make-environment))
 (lookup-variable-value 'x env1) =!> "unbound variable"
 (set-variable-value! 'x 1 env1) =!> "unbound variable"
 (define-variable! 'x 1 env1)
-(define-variable! 'y 10 env1)
+(define-variable! 'y 2 env1)
 (lookup-variable-value 'x env1) => 1
-(lookup-variable-value 'y env1) => 10
+(lookup-variable-value 'y env1) => 2
 
-(define env2 (extend-environment '() '() env1))
+(define env2 (make-environment env1))
 (lookup-variable-value 'x env2) => 1
-(lookup-variable-value 'y env2) => 10
-(define-variable! 'x 2 env2)
-(set-variable-value! 'y 20 env2)
-(lookup-variable-value 'x env2) => 2
-(lookup-variable-value 'y env2) => 20
+(lookup-variable-value 'y env2) => 2
+(define-variable! 'x "apple" env2)
+(set-variable-value! 'y "orange" env2)
+(lookup-variable-value 'x env2) => "apple"
+(lookup-variable-value 'y env2) => "orange"
 ;; `x` is still 1 in `env1` because we shadowed it with a new `x` in `env2`:
 (lookup-variable-value 'x env1) => 1
-;; `y` is 20 in `env1` because `set-variable-value!` changed it in `env1`:
-(lookup-variable-value 'y env1) => 20
+;; `y` is "orange" in `env1` because `set-variable-value!` changed it in `env1`:
+(lookup-variable-value 'y env1) => "orange"
 
 (Exercise ?4.11)
 
