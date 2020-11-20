@@ -27,7 +27,7 @@
        (:4.1.2.1 cond? cond->if)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
-       (:4.1.3.1 false? true?)
+       (:4.1.3.1 true?)
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
        (:4.1.3.3 define-variable! extend-environment lookup-variable-value
@@ -113,7 +113,7 @@
        (:4.1.2.1 cond? cond->if)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
-       (:4.1.3.1 false? true?)
+       (:4.1.3.1 true?)
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
        (:4.1.3.3 define-variable! extend-environment lookup-variable-value
@@ -248,9 +248,32 @@
 
 (apply-primitive-procedure (list 'primitive car) (list '(a . b))) => 'a
 
-(Exercise ?4.2)
+(Exercise ?4.2
+  (use (:4.1.1 apply list-of-values eval-if eval-sequence eval-assignment
+               eval-definition)
+       (:4.1.2 assignment? begin-actions begin? definition? if? lambda-body
+               lambda-parameters lambda? quoted? self-evaluating? tagged-list?
+               text-of-quotation variable?)
+       (:4.1.2.1 cond? cond->if) (:4.1.3.2 make-procedure)
+       (:4.1.3.3 lookup-variable-value make-environment)))
 
-;; TODO
+;; (a) Lous is wrong -- moving the clause for procedure applications further up
+;; will break evaluation. For example, it will treat `(define x 3)` as an
+;; application of the operator `define` to the operands `x` and `3`. This is
+;; because `application?` is implemented simply as `pair?`. We assume a pair is
+;; an application after ruling out all the special forms.
+
+;; (b) We can change the syntax so that applications start with `call`:
+
+(define (application? exp) (tagged-list? exp 'call))
+(define (operator exp) (cadr exp))
+(define (operands exp) (cddr exp))
+
+(paste (:4.1.1 eval))
+
+(define env (make-environment))
+(eval '((lambda (x) x) 1) env) =!> "unknown expression type"
+(eval '(call (lambda (x) x) 1) env) => 1
 
 (Exercise ?4.3)
 
