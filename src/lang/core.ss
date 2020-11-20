@@ -283,8 +283,8 @@
     (queue-push-back! *entries*
                       (make-entry id kind num title imports exports thunk)))
 
-  ;; Converts a queue of entries to a hashtable from `id` to entries. Raises an
-  ;; error if there are two entries with the same `id`.
+  ;; Converts `*entries*` to a hashtable from `id` to entries. Raises an error
+  ;; if there are two entries with the same `id`.
   (define (entries-by-id)
     (define by-id (make-eq-hashtable (queue-length *entries*)))
     (for-each

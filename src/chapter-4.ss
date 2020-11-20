@@ -100,6 +100,7 @@
 (eval '(if "truthy" "yes" "no") env) => "yes"
 (eval '(cond (else 1)) env) => 1
 (eval '(begin 1 2 3) env) => 3
+(eval '((lambda () "hi")) env) => "hi"
 (eval '((lambda (x y) y) 1 2) env) => 2
 (eval #\a env) =!> "unknown expression type"
 
@@ -272,12 +273,80 @@
 (paste (:4.1.1 eval))
 
 (define env (make-environment))
-(eval '((lambda (x) x) 1) env) =!> "unknown expression type"
+(eval '((lambda () "hi")) env) =!> "unknown expression type"
+(eval '(call (lambda () "hi")) env) => "hi"
 (eval '(call (lambda (x) x) 1) env) => 1
 
-(Exercise ?4.3)
+(Exercise ?4.3
+  (use (:1.3.1 identity) (:2.4.3 apply-specific using) (:3.3.3.3 put)
+       (:4.1.2 assignment-value assignment-variable begin-actions
+               definition-value definition-variable first-exp first-operand
+               if-alternative if-consequent if-predicate lambda-body
+               lambda-parameters last-exp? no-operands? rest-exps rest-operands
+               text-of-quotation)
+       (:4.1.2.1 cond->if)
+       (:4.1.2.2 apply-primitive-procedure primitive-implementation
+                 primitive-procedure?)
+       (:4.1.3.1 true?)
+       (:4.1.3.2 compound-procedure? make-procedure procedure-body
+                 procedure-environment procedure-parameters)
+       (:4.1.3.3 define-variable! extend-environment lookup-variable-value
+                 make-environment set-variable-value!)
+       (?4.2 operator operands)))
 
-;; TODO
+(define (eval exp env)
+  (apply-specific 'eval (type-tag exp) exp env))
+
+(define (type-tag datum)
+  (cond ((pair? datum) (car datum))
+        ((number? datum) 'number)
+        ((string? datum) 'string)
+        ((symbol? datum) 'symbol)
+        (else (error 'type-tag "unknown expression type" datum))))
+
+;; Paste everything except `eval`:
+(paste (:4.1.1 apply list-of-values eval-if eval-sequence eval-assignment
+               eval-definition))
+
+(define (install-eval-package)
+  (define (on-exp f) (lambda (exp env) (f exp)))
+  (put 'eval 'number (on-exp identity))
+  (put 'eval 'string (on-exp identity))
+  (put 'eval 'symbol lookup-variable-value)
+  (put 'eval 'quote (on-exp text-of-quotation))
+  (put 'eval 'set! eval-assignment)
+  (put 'eval 'define eval-definition)
+  (put 'eval 'if eval-if)
+  (put 'eval 'lambda
+    (lambda (exp env)
+      (make-procedure (lambda-parameters exp) (lambda-body exp) env)))
+  (put 'eval 'begin
+    (lambda (exp env) (eval-sequence (begin-actions exp) env)))
+  (put 'eval 'cond
+    (lambda (exp env) (eval (cond->if exp) env)))
+  ;; For simplicity, we use the `(call ...)` syntax of Exercise 4.2.
+  (put 'eval 'call
+    (lambda (exp env)
+      (apply (eval (operator exp) env)
+             (list-of-values (operands exp) env)))))
+
+(using install-eval-package)
+
+(define env (make-environment))
+(eval 1 env) => 1
+(eval "hi" env) => "hi"
+(eval ''a env) => 'a
+(eval 'x env) =!> "unbound variable"
+(eval '(define x 1) env)
+(eval 'x env) => 1
+(eval '(set! x 2) env)
+(eval 'x env) => 2
+(eval '(if "truthy" "yes" "no") env) => "yes"
+(eval '(cond (else 1)) env) => 1
+(eval '(begin 1 2 3) env) => 3
+(eval '(call (lambda () "hi")) env) => "hi"
+(eval '(call (lambda (x y) y) 1 2) env) => 2
+(eval #\a env) =!> "unknown expression type"
 
 (Exercise ?4.4)
 
