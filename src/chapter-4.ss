@@ -299,6 +299,7 @@
 
 (define (type-tag datum)
   (cond ((pair? datum) (car datum))
+        ((boolean? datum) 'boolean)
         ((number? datum) 'number)
         ((string? datum) 'string)
         ((symbol? datum) 'symbol)
@@ -310,6 +311,7 @@
 
 (define (install-eval-package)
   (define (on-exp f) (lambda (exp env) (f exp)))
+  (put 'eval 'boolean (on-exp identity))
   (put 'eval 'number (on-exp identity))
   (put 'eval 'string (on-exp identity))
   (put 'eval 'symbol lookup-variable-value)
@@ -348,9 +350,37 @@
 (eval '(call (lambda (x y) y) 1 2) env) => 2
 (eval #\a env) =!> "unknown expression type"
 
-(Exercise ?4.4)
+(Exercise ?4.4
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.1 false? true?)
+       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)))
 
-;; TODO
+(define (install-and-or-package)
+  (define (eval-and exps env)
+    (cond ((null? exps) #t)
+          ((null? (cdr exps)) (eval (car exps) env))
+          ((true? (eval (car exps) env)) (eval-and (cdr exps) env))
+          (else #f)))
+  (define (eval-or exps env)
+    (cond ((null? exps) #f)
+          (else (let ((value (eval (car exps) env)))
+                  (cond ((true? value) value)
+                        (else (eval-or (cdr exps) env)))))))
+  (put 'eval 'and (lambda (exp env) (eval-and (cdr exp) env)))
+  (put 'eval 'or (lambda (exp env) (eval-or (cdr exp) env))))
+
+(using install-eval-package install-and-or-package)
+
+(define env (make-environment))
+(eval '(and) env) => #t
+(eval '(and 1) env) => 1
+(eval '(and 1 2) env) => 2
+(eval '(and 2 #f 1) env) => #f
+(eval '(and #f #f #f) env) => #f
+(eval '(or) env) => #f
+(eval '(or 1) env) => 1
+(eval '(or 1 2) env) => 1
+(eval '(or 2 #f 1) env) => 2
+(eval '(or #f #f #f) env) => #f
 
 (Exercise ?4.5)
 
