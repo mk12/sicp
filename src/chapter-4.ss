@@ -150,7 +150,7 @@
 
 (Section :4.1.2 "Representing Expressions")
 
-(define (self-evaluating? exp) (or (number? exp) (string? exp)))
+(define (self-evaluating? exp) (or (boolean? exp) (number? exp) (string? exp)))
 (define (variable? exp) (symbol? exp))
 (define (quoted? exp) (tagged-list? exp 'quote))
 (define (text-of-quotation exp) (cadr exp))
@@ -179,7 +179,7 @@
 (define (if-alternative exp)
   (if (not (null? (cdddr exp)))
       (cadddr exp)
-      '#f))
+      #f))
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
@@ -217,9 +217,9 @@
 (define (cond->if exp) (expand-clauses (cond-clauses exp)))
 (define (expand-clauses clauses)
   (if (null? clauses)
-      '#f ; no else clause
+      #f ; no else clause
       (let ((first (car clauses))
-        (rest (cdr clauses)))
+            (rest (cdr clauses)))
         (if (cond-else-clause? first)
             (if (null? rest)
                 (sequence->exp (cond-actions first))
@@ -382,9 +382,42 @@
 (eval '(or 2 #f 1) env) => 2
 (eval '(or #f #f #f) env) => #f
 
-(Exercise ?4.5)
+(Exercise ?4.5
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.2.1 cond-actions cond-clauses cond-else-clause? cond-predicate)
+       (:4.1.3.1 true?) (:4.1.3.3 make-environment)
+       (?4.3 apply eval eval-sequence install-eval-package)))
 
-;; TODO
+(define (cond-arrow-clause? clause)
+  (and (not (null? (cdr clause)))
+       (eq? '=> (cadr clause))))
+(define (cond-arrow-recipient clause) (caddr clause))
+
+(define (install-extended-cond-package)
+  ;; Implementing this as a derived expression is hard because it requires
+  ;; generating a let/lambda to avoid evaluating the predicate twice. I've
+  ;; instead used direct evaluation, but without error handling, so for example
+  ;; it will accept malformed clauses if they come after the true one.
+  (define (eval-cond clauses env)
+    (cond ((null? clauses) #f)
+          ((cond-arrow-clause? (car clauses))
+           (let ((value (eval (cond-predicate (car clauses)) env)))
+             (if (true? value)
+                 (apply (eval (cond-arrow-recipient (car clauses)) env)
+                        (list value)))))
+          ((or (cond-else-clause? (car clauses))
+               (true? (eval (cond-predicate (car clauses)) env)))
+           (eval-sequence (cond-actions (car clauses)) exp))
+          (else (eval-cond (cdr clauses) env))))
+  (put 'eval 'cond (lambda (exp env) (eval-cond (cond-clauses exp) env))))
+
+(using install-eval-package install-extended-cond-package)
+
+(define env (make-environment))
+(eval '(cond (else 1)) env) => 1
+(eval '(cond (#f 1)) env) => #f
+(eval '(cond (#f 1) (2 => (lambda (x) x))) env) => 2
+(eval '(cond (2 => (lambda (x) "hi")) (#f 1)) env) => "hi"
 
 (Exercise ?4.6)
 
@@ -518,14 +551,12 @@
        (:4.1.3.2 compound-procedure? procedure-body procedure-parameters)
        (:4.1.3.3 define-variable! extend-environment the-empty-environment)))
 
+;; The textbook defines variables `true` and `false` in the initial environment.
+;; We don't do that because we use the self-evaluating booleans #t and #f.
 (define (setup-environment)
-  (let ((initial-env
-        (extend-environment (primitive-procedure-names)
-                            (primitive-procedure-objects)
-                            the-empty-environment)))
-    (define-variable! '#t #t initial-env)
-    (define-variable! '#f #f initial-env)
-    initial-env))
+  (extend-environment (primitive-procedure-names)
+                      (primitive-procedure-objects)
+                      the-empty-environment))
 
 (define primitive-procedures
   (list (list 'car car)
