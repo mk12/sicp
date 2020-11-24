@@ -507,13 +507,39 @@
 (eval '(let foo ((x 1)) x) env) => 1
 (eval '(let foo ((x #t)) (if x (foo #f) "done")) env) => "done"
 
-(Exercise ?4.9)
+(Exercise ?4.9
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
+       (?4.3 eval install-eval-package)))
 
-;; TODO
+;; A do loop looks like `(while TEST EXP ...)`. It repeatedly executes the EXP
+;; expressions as long as TEST evaluates to true (as in `true?`).
+
+(define (while-test exp) (cadr exp))
+(define (while-actions exp) (cddr exp))
+
+(define (while->combination exp)
+  (list (list 'lambda
+              '(test body)
+              (list 'define '(loop) '(if (test) (begin (body) (loop)) #f))
+              '(loop))
+        (list 'lambda '() (while-test exp))
+        (cons 'lambda (cons '() (while-actions exp)))))
+
+(define (install-while-package)
+  (put 'eval 'while (lambda (exp env) (eval (while->combination exp) env))))
+
+(using install-eval-package install-while-package)
+
+(define env (make-environment))
+(eval '(define x #t) env)
+(eval '(define y 1) env)
+(eval '(while x (set! x #f) (set! y 2)) env)
+(eval 'y env) => 2
 
 (Exercise ?4.10)
 
 ;; TODO
+; (define (definition?))
 
 (Section :4.1.3 "Evaluator Data Structures")
 
