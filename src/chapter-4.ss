@@ -278,12 +278,12 @@
 (eval '(call (lambda (x) x) 1) env) => 1
 
 (Exercise ?4.3
-  (use (:1.3.1 identity) (:2.4.3 apply-specific using) (:3.3.3.3 put)
+  (use (:1.3.1 identity) (:2.4.3 using) (:3.3.3.3 get put)
        (:4.1.2 assignment-value assignment-variable begin-actions
                definition-value definition-variable first-exp first-operand
                if-alternative if-consequent if-predicate lambda-body
-               lambda-parameters last-exp? no-operands? rest-exps rest-operands
-               text-of-quotation)
+               lambda-parameters last-exp? no-operands? operands operator
+               rest-exps rest-operands text-of-quotation)
        (:4.1.2.1 cond->if)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
@@ -291,11 +291,13 @@
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
        (:4.1.3.3 define-variable! extend-environment lookup-variable-value
-                 make-environment set-variable-value!)
-       (?4.2 operator operands)))
+                 make-environment set-variable-value!)))
 
 (define (eval exp env)
-  (apply-specific 'eval (type-tag exp) exp env))
+  (let ((proc (get 'eval (type-tag exp))))
+    (if proc
+        (proc exp env)
+        ((get 'eval 'call) exp env))))
 
 (define (type-tag datum)
   (cond ((pair? datum) (car datum))
@@ -326,7 +328,6 @@
     (lambda (exp env) (eval-sequence (begin-actions exp) env)))
   (put 'eval 'cond
     (lambda (exp env) (eval (cond->if exp) env)))
-  ;; For simplicity, we use the `(call ...)` syntax of Exercise 4.2.
   (put 'eval 'call
     (lambda (exp env)
       (apply (eval (operator exp) env)
@@ -346,8 +347,8 @@
 (eval '(if "truthy" "yes" "no") env) => "yes"
 (eval '(cond (else 1)) env) => 1
 (eval '(begin 1 2 3) env) => 3
-(eval '(call (lambda () "hi")) env) => "hi"
-(eval '(call (lambda (x y) y) 1 2) env) => 2
+(eval '((lambda () "hi")) env) => "hi"
+(eval '((lambda (x y) y) 1 2) env) => 2
 (eval #\a env) =!> "unknown expression type"
 
 (Exercise ?4.4
@@ -419,9 +420,32 @@
 (eval '(cond (#f 1) (2 => (lambda (x) x))) env) => 2
 (eval '(cond (2 => (lambda (x) "hi")) (#f 1)) env) => "hi"
 
-(Exercise ?4.6)
+(Exercise ?4.6
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
+       (?4.3 eval install-eval-package)))
 
-;; TODO
+(define (let-bindings exp) (cadr exp))
+(define (let-actions exp) (cddr exp))
+(define (binding-variable exp) (car exp))
+(define (binding-value exp) (cadr exp))
+(define (let->combination exp)
+  (cons (cons 'lambda
+              (cons (map binding-variable (let-bindings exp))
+                    (let-actions exp)))
+        (map binding-value (let-bindings exp))))
+
+(define (install-let-package)
+  (put 'eval 'let (lambda (exp env) (eval (let->combination exp) env))))
+
+(using install-eval-package install-let-package)
+
+(define env (make-environment))
+(eval '(let () 1) env) => 1
+(eval '(let ((x "hi")) x) env) => "hi"
+(eval '(let ((x 1) (y 2)) x y) env) => 2
+;; Show that the value is only evaluated once:
+(eval '(define f (lambda () "hi")) env)
+(eval '(let ((x (set! f (f)))) x x f) env) => "hi"
 
 (Exercise ?4.7)
 
