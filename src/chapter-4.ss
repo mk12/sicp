@@ -394,22 +394,23 @@
        (eq? '=> (cadr clause))))
 (define (cond-arrow-recipient clause) (caddr clause))
 
+;; Implementing this as a derived expression is hard because it requires
+;; generating a let/lambda to avoid evaluating the predicate twice. I've instead
+;; used direct evaluation, but without error handling, so for example it will
+;; ignore malformed clauses if they come after the selected clause.
+(define (eval-cond clauses env)
+  (cond ((null? clauses) #f)
+        ((cond-arrow-clause? (car clauses))
+          (let ((value (eval (cond-predicate (car clauses)) env)))
+            (if (true? value)
+                (apply (eval (cond-arrow-recipient (car clauses)) env)
+                      (list value)))))
+        ((or (cond-else-clause? (car clauses))
+              (true? (eval (cond-predicate (car clauses)) env)))
+          (eval-sequence (cond-actions (car clauses)) exp))
+        (else (eval-cond (cdr clauses) env))))
+
 (define (install-extended-cond-package)
-  ;; Implementing this as a derived expression is hard because it requires
-  ;; generating a let/lambda to avoid evaluating the predicate twice. I've
-  ;; instead used direct evaluation, but without error handling, so for example
-  ;; it will accept malformed clauses if they come after the true one.
-  (define (eval-cond clauses env)
-    (cond ((null? clauses) #f)
-          ((cond-arrow-clause? (car clauses))
-           (let ((value (eval (cond-predicate (car clauses)) env)))
-             (if (true? value)
-                 (apply (eval (cond-arrow-recipient (car clauses)) env)
-                        (list value)))))
-          ((or (cond-else-clause? (car clauses))
-               (true? (eval (cond-predicate (car clauses)) env)))
-           (eval-sequence (cond-actions (car clauses)) exp))
-          (else (eval-cond (cdr clauses) env))))
   (put 'eval 'cond (lambda (exp env) (eval-cond (cond-clauses exp) env))))
 
 (using install-eval-package install-extended-cond-package)
@@ -428,6 +429,7 @@
 (define (let-actions exp) (cddr exp))
 (define (binding-variable exp) (car exp))
 (define (binding-value exp) (cadr exp))
+
 (define (let->combination exp)
   (cons (cons 'lambda
               (cons (map binding-variable (let-bindings exp))
@@ -447,13 +449,63 @@
 (eval '(define f (lambda () "hi")) env)
 (eval '(let ((x (set! f (f)))) x x f) env) => "hi"
 
-(Exercise ?4.7)
+(Exercise ?4.7
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
+       (?4.3 eval install-eval-package)
+       (?4.6 let-bindings let-actions install-let-package)))
 
-;; TODO
+;; It is sufficient to expand let* to nested let expressions in the new
+;; evaluation clause. It will get expanded to lambdas by the recursive eval.
+(define (let*->nested-lets exp)
+  (define (iter bindings)
+    (cond ((null? bindings) (cons 'begin (let-actions exp)))
+          (else (list 'let (list (car bindings)) (iter (cdr bindings))))))
+  (iter (let-bindings exp)))
 
-(Exercise ?4.8)
+(define (install-let*-package)
+  (put 'eval 'let* (lambda (exp env) (eval (let*->nested-lets exp) env))))
 
-;; TODO
+(using install-eval-package install-let-package install-let*-package)
+
+(define env (make-environment))
+(eval '(let* () 1) env) => 1
+(eval '(let* ((x "hi")) x) env) => "hi"
+(eval '(let ((x 1) (y x)) y) env) =!> "unbound variable" 
+(eval '(let* ((x 1) (y x)) y) env) => 1
+
+(Exercise ?4.8
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
+       (?4.3 eval install-eval-package)
+       (?4.6 binding-value binding-variable let->combination)))
+
+(define (named-let? exp) (symbol? (cadr exp)))
+(define (named-let-name exp) (cadr exp))
+(define (named-let-bindings exp) (caddr exp))
+(define (named-let-actions exp) (cdddr exp))
+
+(define (named-let->combination exp)
+  (list (list 'lambda
+              '()
+              (cons 'define
+                    (cons (cons (named-let-name exp)
+                                (map binding-variable (named-let-bindings exp)))
+                          (named-let-actions exp)))
+              (cons (named-let-name exp)
+                    (map binding-value (named-let-bindings exp))))))
+
+(define (install-named-let-package)
+  (put 'eval 'let
+    (lambda (exp env)
+      (eval ((if (named-let? exp) named-let->combination let->combination) exp)
+            env))))
+
+(using install-eval-package install-named-let-package)
+
+(define env (make-environment))
+(eval '(let () 1) env) => 1
+(eval '(let ((x "hi")) x) env) => "hi"
+(eval '(let foo ((x 1)) x) env) => 1
+(eval '(let foo ((x #t)) (if x (foo #f) "done")) env) => "done"
 
 (Exercise ?4.9)
 
