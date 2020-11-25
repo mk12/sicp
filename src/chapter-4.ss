@@ -168,6 +168,9 @@
   (if (symbol? (cadr exp))
       (caddr exp)
       (make-lambda (cdadr exp) (cddr exp))))
+(define (make-definition variable value) (list 'define variable value))
+(define (make-lambda-definition name parameters body)
+  (cons 'define (cons (cons name parameters) body)))
 (define (lambda? exp) (tagged-list? exp 'lambda))
 (define (lambda-parameters exp) (cadr exp))
 (define (lambda-body exp) (cddr exp))
@@ -185,6 +188,7 @@
 
 (define (begin? exp) (tagged-list? exp 'begin))
 (define (begin-actions exp) (cdr exp))
+(define (make-begin actions) (cons 'begin actions))
 
 (define (last-exp? seq) (null? (cdr seq)))
 (define (first-exp seq) (car seq))
@@ -422,18 +426,18 @@
 (eval '(cond (2 => (lambda (x) "hi")) (#f 1)) env) => "hi"
 
 (Exercise ?4.6
-  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
-       (?4.3 eval install-eval-package)))
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-lambda)
+       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)))
 
 (define (let-bindings exp) (cadr exp))
 (define (let-actions exp) (cddr exp))
 (define (binding-variable exp) (car exp))
 (define (binding-value exp) (cadr exp))
+(define (make-let bindings body) (cons 'let (cons bindings body)))
 
 (define (let->combination exp)
-  (cons (cons 'lambda
-              (cons (map binding-variable (let-bindings exp))
-                    (let-actions exp)))
+  (cons (make-lambda (map binding-variable (let-bindings exp))
+                     (let-actions exp))
         (map binding-value (let-bindings exp))))
 
 (define (install-let-package)
@@ -450,16 +454,17 @@
 (eval '(let ((x (set! f (f)))) x x f) env) => "hi"
 
 (Exercise ?4.7
-  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
-       (?4.3 eval install-eval-package)
-       (?4.6 let-bindings let-actions install-let-package)))
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-begin)
+       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
+       (?4.6 let-bindings let-actions install-let-package make-let)))
 
 ;; It is sufficient to expand let* to nested let expressions in the new
 ;; evaluation clause. It will get expanded to lambdas by the recursive eval.
 (define (let*->nested-lets exp)
   (define (iter bindings)
-    (cond ((null? bindings) (cons 'begin (let-actions exp)))
-          (else (list 'let (list (car bindings)) (iter (cdr bindings))))))
+    (cond ((null? bindings) (make-begin (let-actions exp)))
+          (else (make-let (list (car bindings))
+                          (list (iter (cdr bindings)))))))
   (iter (let-bindings exp)))
 
 (define (install-let*-package)
@@ -474,8 +479,8 @@
 (eval '(let* ((x 1) (y x)) y) env) => 1
 
 (Exercise ?4.8
-  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
-       (?4.3 eval install-eval-package)
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-lambda make-lambda-definition)
+       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
        (?4.6 binding-value binding-variable let->combination)))
 
 (define (named-let? exp) (symbol? (cadr exp)))
@@ -484,14 +489,14 @@
 (define (named-let-actions exp) (cdddr exp))
 
 (define (named-let->combination exp)
-  (list (list 'lambda
+  (list (make-lambda
               '()
-              (cons 'define
-                    (cons (cons (named-let-name exp)
-                                (map binding-variable (named-let-bindings exp)))
-                          (named-let-actions exp)))
-              (cons (named-let-name exp)
-                    (map binding-value (named-let-bindings exp))))))
+              (list (make-lambda-definition
+                      (named-let-name exp)
+                      (map binding-variable (named-let-bindings exp))
+                      (named-let-actions exp))
+                    (cons (named-let-name exp)
+                          (map binding-value (named-let-bindings exp)))))))
 
 (define (install-named-let-package)
   (put 'eval 'let
@@ -508,8 +513,9 @@
 (eval '(let foo ((x #t)) (if x (foo #f) "done")) env) => "done"
 
 (Exercise ?4.9
-  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.3 make-environment)
-       (?4.3 eval install-eval-package)))
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.2 make-begin make-if make-lambda make-lambda-definition)
+       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)))
 
 ;; A do loop looks like `(while TEST EXP ...)`. It repeatedly executes the EXP
 ;; expressions as long as TEST evaluates to true (as in `true?`).
@@ -518,12 +524,17 @@
 (define (while-actions exp) (cddr exp))
 
 (define (while->combination exp)
-  (list (list 'lambda
-              '(test body)
-              (list 'define '(loop) '(if (test) (begin (body) (loop)) #f))
-              '(loop))
-        (list 'lambda '() (while-test exp))
-        (cons 'lambda (cons '() (while-actions exp)))))
+  (list (make-lambda
+          '(test body)
+          (list (make-lambda-definition
+                  'loop
+                  '()
+                  (list (make-if '(test)
+                                 (make-begin (list '(body) '(loop)))
+                                 #f)))
+                '(loop)))
+        (make-lambda '() (list (while-test exp)))
+        (make-lambda '() (while-actions exp))))
 
 (define (install-while-package)
   (put 'eval 'while (lambda (exp env) (eval (while->combination exp) env))))
@@ -536,10 +547,36 @@
 (eval '(while x (set! x #f) (set! y 2)) env)
 (eval 'y env) => 2
 
-(Exercise ?4.10)
+(Exercise ?4.10
+  (use (:4.1.1 apply list-of-values eval-sequence eval-assignment
+               eval-definition)
+       (:4.1.2 application? assignment? begin-actions begin? definition?
+               lambda-body lambda-parameters lambda? operands operator quoted?
+               self-evaluating? text-of-quotation variable?)
+       (:4.1.2.1 cond? cond->if) (:4.1.3.1 true?) (:4.1.3.2 make-procedure)
+       (:4.1.3.3 lookup-variable-value make-environment)))
 
-;; TODO
-; (define (definition?))
+;; We can change the syntax for if expressions to resemble the C ternary
+;; operator: `(if TEST THEN ELSE)` becomes `(TEST ? THEN : ELSE)`.
+
+(define (if? exp)
+  (and (pair? exp)
+       (= (length exp) 5)
+       (eq? '? (cadr exp))
+       (eq? ': (cadddr exp))))
+(define (if-predicate exp) (car exp))
+(define (if-consequent exp) (caddr exp))
+(define (if-alternative exp) (car (cddddr exp)))
+(define (make-if predicate consequent alternative)
+  (list predicate '? consequent ': alternative))
+
+;; Note: Only pasting the minimal amount to make the tests below work, so that
+;; the import list doesn't have to be so long.
+(paste (:4.1.1 eval eval-if))
+
+(define env (make-environment))
+(eval '(#t ? 1 : 2) env) => 1
+(eval '(#f ? 1 : 2) env) => 2
 
 (Section :4.1.3 "Evaluator Data Structures")
 
