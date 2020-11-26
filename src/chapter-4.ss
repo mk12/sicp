@@ -606,6 +606,7 @@
 
 (define (enclosing-environment env) (cdr env))
 (define (first-frame env) (car env))
+(define (set-first-frame! env frame) (set-car! env frame))
 
 (define (make-frame variables values) (cons variables values))
 (define (frame-variables frame) (car frame))
@@ -673,17 +674,152 @@
 ;; `y` is "orange" in `env1` because `set-variable-value!` changed it in `env1`:
 (lookup-variable-value 'y env1) => "orange"
 
-(Exercise ?4.11)
+(Exercise ?4.11
+  (use (:4.1.3.3 enclosing-environment first-frame set-first-frame!
+                 the-empty-environment)))
 
-;; TODO
+(define make-binding cons)
+(define binding-variable car)
+(define binding-value cdr)
+(define set-binding-value! set-cdr!)
 
-(Exercise ?4.12)
+(paste (:4.1.3.3 make-environment))
 
-;; TODO
+(define (extend-environment vars vals base-env)
+  (cond ((= (length vars) (length vals))
+         (cons (map cons vars vals) base-env))
+        ((< (length vars) (length vals))
+         (error 'extend-environment "too many arguments" vars vals))
+        (else (error 'extend-environment "too few arguments" vars vals))))
 
-(Exercise ?4.13)
+(define (lookup-variable-value var env)
+  (define (scan frame)
+    (cond ((null? frame)
+           (lookup-variable-value var (enclosing-environment env)))
+          ((eq? var (binding-variable (car frame)))
+           (binding-value (car frame)))
+          (else (scan (cdr frame)))))
+  (if (eq? env the-empty-environment)
+      (error 'lookup-variable-value "unbound variable" var)
+      (scan (first-frame env))))
 
-;; TODO
+(define (set-variable-value! var val env)
+  (define (scan frame)
+    (cond ((null? frame)
+           (set-variable-value! var val (enclosing-environment env)))
+          ((eq? var (binding-variable (car frame)))
+           (set-binding-value! (car frame) val))
+          (else (scan (cdr frame)))))
+  (if (eq? env the-empty-environment)
+      (error 'set-variable-value! "unbound variable" var)
+      (scan (first-frame env))))
+
+(define (define-variable! var val env)
+  (define (scan frame)
+    (cond ((null? frame)
+           (set-first-frame! env (cons (make-binding var val)
+                                       (first-frame env))))
+          ((eq? var (binding-variable (car frame)))
+           (set-binding-value! (car frame) val))
+          (else (scan (cdr frame)))))
+  (scan (first-frame env)))
+
+(define env1 (make-environment))
+(define env2 (make-environment env1))
+(lookup-variable-value 'x env1) =!> "unbound variable"
+(define-variable! 'x 1 env1)
+(define-variable! 'y 2 env1)
+(define-variable! 'x "apple" env2)
+(set-variable-value! 'y "orange" env2)
+(lookup-variable-value 'x env2) => "apple"
+(lookup-variable-value 'y env2) => "orange"
+(lookup-variable-value 'x env1) => 1
+(lookup-variable-value 'y env1) => "orange"
+
+(Exercise ?4.12
+  (use (:4.1.3.3 add-binding-to-frame! enclosing-environment first-frame
+                 frame-values frame-variables make-environment
+                 the-empty-environment)))
+
+(define (traverse env var action otherwise)
+  (if (eq? env the-empty-environment)
+      (error 'traverse "unbound variable" var)
+      (let ((frame (first-frame env)))
+        (define (scan vars vals)
+          (cond ((null? vars) (otherwise frame (enclosing-environment env)))
+                ((eq? var (car vars)) (action vals))
+                (else (scan (cdr vars) (cdr vals)))))
+        (scan (frame-variables frame) (frame-values frame)))))
+
+(define (lookup-variable-value var env)
+  (traverse env
+            var
+            (lambda (vals) (car vals))
+            (lambda (frame parent) (lookup-variable-value var parent))))
+
+(define (set-variable-value! var val env)
+  (traverse env
+            var
+            (lambda (vals) (set-car! vals val))
+            (lambda (frame parent) (set-variable-value! var val parent))))
+
+(define (define-variable! var val env)
+  (traverse env
+            var
+            (lambda (vals) (set-car! vals val))
+            (lambda (frame parent) (add-binding-to-frame! var val frame))))
+
+(define env1 (make-environment))
+(define env2 (make-environment env1))
+(lookup-variable-value 'x env1) =!> "unbound variable"
+(define-variable! 'x 1 env1)
+(define-variable! 'y 2 env1)
+(define-variable! 'x "apple" env2)
+(set-variable-value! 'y "orange" env2)
+(lookup-variable-value 'x env2) => "apple"
+(lookup-variable-value 'y env2) => "orange"
+(lookup-variable-value 'x env1) => 1
+(lookup-variable-value 'y env1) => "orange"
+
+(Exercise ?4.13
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.3.3 first-frame frame-variables frame-values make-environment
+                 make-frame set-first-frame!)
+       (?4.3 eval install-eval-package)))
+
+;; The special form `make-unbound!` removes the binding of a symbol only if it
+;; exists in the first frame of the current environment. Removing bindings from
+;; enclosing environments would be too dangerous and error-prone.
+
+(define (eval-make-unbound exp env)
+  (unbind-variable! (cadr exp) env))
+(define (unbind-variable! var env)
+  (let ((frame (first-frame env)))
+    (define (scan parent-vars parent-vals vars vals)
+      (cond ((null? vars) (error 'unbind-variable! "unbound variable" var))
+            ((eq? var (car vars))
+             (cond ((null? parent-vars)
+                    (set-first-frame! env (make-frame (cdr vars) (cdr vals))))
+                   (else (set-cdr! parent-vars (cdr vars))
+                         (set-cdr! parent-vals (cdr vals)))))
+            (else (scan vars vals (cdr vars) (cdr vals)))))
+    (scan '() '() (frame-variables frame) (frame-values frame))))
+
+(define (install-make-unbound-package)
+  (put 'eval 'make-unbound! eval-make-unbound))
+
+(using install-eval-package install-make-unbound-package)
+
+(define env (make-environment))
+(eval '(define x 1) env)
+(eval '(define y 2) env)
+(eval 'x env) => 1
+(eval 'y env) => 2
+(eval '(make-unbound! x) env)
+(eval 'x env) =!> "unbound variable"
+(eval 'y env) => 2
+(eval '(make-unbound! y) env)
+(eval 'y env) =!> "unbound variable"
 
 (Section :4.1.4 "Running the Evaluator as a Program"
   (use (:4.1.1 eval)
@@ -732,19 +868,13 @@
 
 (define the-global-environment (setup-environment))
 
-; (driver-loop)
-; ;;; M-Eval input:
-; (define (append x y) (if (null? x)
-; y
-; (cons (car x) (append (cdr x) y)))) ;;; M-Eval value:
-; ok
-; ;;; M-Eval input:
-; (append '(a b c) '(d e f)) ;;; M-Eval value:
-; (a b c d e f)
-
 (Exercise ?4.14)
 
-;; TODO
+;; Louis's `map` fails with compound procedures because it attempts to apply an
+;; object created by `make-procedure` in the underlying Lisp. (It would work
+;; if he only passed other primitive procedures, like `(map car pairs)`.)
+;; Eva's `map` works because evaluation of `map` stays in the metacircular
+;; evaluator, which is capable of evaluating its own procedure format.
 
 (Section :4.1.5 "Data as Programs")
 

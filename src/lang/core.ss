@@ -615,6 +615,7 @@
          (with-syntax ((assert #'(assert-output (capture-output e1) #'e1 #'e2)))
            (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
         ((e1 =!> e2 e* ...)
+         (string? (syntax->datum #'e2))
          (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
            (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
         (((paste (id name ...) ...) e* ...)
