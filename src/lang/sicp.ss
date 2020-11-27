@@ -6,14 +6,16 @@
   (export SICP Chapter Section Exercise
           define => ~> =$> =!> paste
           capture-output hide-output
-          cons-stream delay display force format fxand fxarithmetic-shift-left
-          fxarithmetic-shift-right fxxor make-mutex newline parallel-execute
-          quotient random read remainder runtime set-car! set-cdr!
-          string-contains? string-count unless when)
+          cons-stream delay display eval force format fxand
+          fxarithmetic-shift-left fxarithmetic-shift-right fxxor make-mutex
+          newline parallel-execute quotient random read remainder runtime
+          set-car! set-cdr! string-contains? string-count unless
+          user-initial-environment when)
   (import (rnrs base (6))
           (only (rnrs arithmetic fixnums (6))
                 fxand fxarithmetic-shift-left fxarithmetic-shift-right fxxor)
           (only (rnrs control (6)) unless when)
+          (only (rnrs eval (6)) environment eval)
           (only (rnrs io simple (6)) display newline read)
           (only (rnrs mutable-pairs (6)) set-car! set-cdr!)
           (only (rnrs r5rs (6)) delay force quotient remainder)
@@ -24,6 +26,9 @@
   (define-syntax cons-stream
     (syntax-rules ()
       ((_ x y) (cons x (delay y)))))
+
+  ;; Used in Section 4.1.5.
+  (define user-initial-environment (environment '(rnrs base (6))))
 
   ;; Counts the occurrences of a character in a string.
   (define (string-count char s)

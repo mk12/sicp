@@ -2108,5 +2108,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <span id="cb53-20"><a href="#cb53-20" aria-hidden="true"></a>                      &#39;&lt;procedure-env&gt;))</span>
 <span id="cb53-21"><a href="#cb53-21" aria-hidden="true"></a>      (<span class="kw">display</span> object)))</span></code></pre></div>
 <h3 id="data-as-programs">Data as Programs</h3>
+<ul>
+<li>A program can be viewed as a description of an abstract machine.</li>
+<li>The evaluator is a machine that emulates another machine given its description. In other words, the evaluator is a <em>universal machine</em>.</li>
+<li>Deep idea: any evaluator can emulate any other. This gets to the heart of <em>computability</em>.</li>
+<li>Just as the evaluator can emulate any Lisp-described machine, a <em>universal Turing machine</em> can emulate any other Turing machine.</li>
+<li>The existence of a universal machine is a deep and wonderful property of computation.</li>
+<li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code>eval</code> procedure for evaluating data as programs.</li>
+</ul>
 </body>
 </html>

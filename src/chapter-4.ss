@@ -878,5 +878,23 @@
 
 (Section :4.1.5 "Data as Programs")
 
+(eval '(* 5 5) user-initial-environment)
+=> (eval (cons '* (list 5 5)) user-initial-environment)
+=> 25
+
+(Exercise ?4.15)
+
+(define (halts? p a)
+  (error 'halts? "the halting problem is impossible to solve"))
+
+(define (run-forever) (run-forever))
+(define (try p) (if (halts? p p) (run-forever) 'halted))
+
+;; It is impossible for `halts?` to correctly determine whether `(p a)` halts.
+;; Consider the expression `(try try)`. Suppose it halts. But then
+;; `(halts? p p) => (halts? try try) => #t`, so `(try try) => (run-forever)`.
+;; So it must run forever instead. But then `(halts? try try) => #f`, so
+;; `(try try) => 'halted`, a contradiction. This completes the proof.
+
 ) ; end of SICP
 ) ; end of library

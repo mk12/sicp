@@ -1974,3 +1974,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```
 
 ### Data as Programs
+
+- A program can be viewed as a description of an abstract machine.
+- The evaluator is a machine that emulates another machine given its description. In other words, the evaluator is a _universal machine_.
+- Deep idea: any evaluator can emulate any other. This gets to the heart of _computability_.
+- Just as the evaluator can emulate any Lisp-described machine, a _universal Turing machine_ can emulate any other Turing machine.
+- The existence of a universal machine is a deep and wonderful property of computation.
+- The user's programs are the evaluator's data. Lisp takes advantage of this and provides a primitive `eval` procedure for evaluating data as programs.
+
+### Internal Definitions
