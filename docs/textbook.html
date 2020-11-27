@@ -223,6 +223,7 @@
 <li><a href="#evaluator-data-structures">Evaluator Data Structures</a></li>
 <li><a href="#running-the-evaluator-as-a-program">Running the Evaluator as a Program</a></li>
 <li><a href="#data-as-programs">Data as Programs</a></li>
+<li><a href="#internal-definitions-1">Internal Definitions</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -2115,6 +2116,28 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Just as the evaluator can emulate any Lisp-described machine, a <em>universal Turing machine</em> can emulate any other Turing machine.</li>
 <li>The existence of a universal machine is a deep and wonderful property of computation.</li>
 <li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code>eval</code> procedure for evaluating data as programs.</li>
+</ul>
+<h3 id="internal-definitions-1">Internal Definitions</h3>
+<ul>
+<li>Global definitions have <em>sequential scoping</em>: they are defined one at a time.</li>
+<li>Internal definitions should have <em>simultaneous scoping</em>, as if defined all at once.</li>
+<li>The Scheme standard requires internal definitions to come first in the body and not use each other during evaluation. Although this restriction makes sequential and simultaneous scoping equivalent, simultaneous scoping makes compiler optimization easier.</li>
+<li>To achieve simultaneous scoping, we “scan out” internal definitions:</li>
+</ul>
+<div class="sourceCode" id="cb54"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a>(<span class="kw">lambda</span> &lt;vars&gt;</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> u </span>&lt;e1&gt;)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a>  (<span class="ex">define</span><span class="fu"> v </span>&lt;e2&gt;)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a>  &lt;e3&gt;)</span></code></pre></div>
+<ul>
+<li>Transforming them into a <code>let</code> with assignments:</li>
+</ul>
+<div class="sourceCode" id="cb55"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>(<span class="kw">lambda</span> &lt;vars&gt;</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>  (<span class="kw">let</span> ((u &#39;*unassigned*)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a>        (v &#39;*unassigned*))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a>    (set! u &lt;e1&gt;)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a>    (set! v &lt;e2&gt;) &lt;e3&gt;))</span></code></pre></div>
+<ul>
+<li>Here, <code>*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
 </body>
 </html>

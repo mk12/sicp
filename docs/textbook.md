@@ -1983,3 +1983,29 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The user's programs are the evaluator's data. Lisp takes advantage of this and provides a primitive `eval` procedure for evaluating data as programs.
 
 ### Internal Definitions
+
+- Global definitions have _sequential scoping_: they are defined one at a time.
+- Internal definitions should have _simultaneous scoping_, as if defined all at once.
+- The Scheme standard requires internal definitions to come first in the body and not use each other during evaluation. Although this restriction makes sequential and simultaneous scoping equivalent, simultaneous scoping makes compiler optimization easier.
+- To achieve simultaneous scoping, we "scan out" internal definitions:
+
+```scheme
+(lambda <vars>
+  (define u <e1>)
+  (define v <e2>)
+  <e3>)
+```
+
+- Transforming them into a `let` with assignments:
+
+```scheme
+(lambda <vars>
+  (let ((u '*unassigned*)
+        (v '*unassigned*))
+    (set! u <e1>)
+    (set! v <e2>) <e3>))
+```
+
+- Here, `*unassigned*` is a special symbol causing an error upon variable lookup.
+
+### Separating Syntactic Analysis from Execution

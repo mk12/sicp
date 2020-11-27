@@ -92,7 +92,7 @@
 (eval 1 env) => 1
 (eval "hi" env) => "hi"
 (eval ''a env) => 'a
-(eval 'x env) =!> "unbound variable"
+(eval 'x env) =!> "unbound variable: x"
 (eval '(define x 1) env)
 (eval 'x env) => 1
 (eval '(set! x 2) env)
@@ -158,6 +158,7 @@
 (define (assignment? exp) (tagged-list? exp 'set!))
 (define (assignment-variable exp) (cadr exp))
 (define (assignment-value exp) (caddr exp))
+(define (make-assignment var val) (list 'set! var val))
 
 (define (definition? exp) (tagged-list? exp 'define))
 (define (definition-variable exp)
@@ -309,6 +310,7 @@
         ((number? datum) 'number)
         ((string? datum) 'string)
         ((symbol? datum) 'symbol)
+        ((null? datum) (error 'type-tag "invalid syntax ()"))
         (else (error 'type-tag "unknown expression type" datum))))
 
 ;; Paste everything except `eval`:
@@ -343,7 +345,7 @@
 (eval 1 env) => 1
 (eval "hi" env) => "hi"
 (eval ''a env) => 'a
-(eval 'x env) =!> "unbound variable"
+(eval 'x env) =!> "unbound variable: x"
 (eval '(define x 1) env)
 (eval 'x env) => 1
 (eval '(set! x 2) env)
@@ -475,7 +477,7 @@
 (define env (make-environment))
 (eval '(let* () 1) env) => 1
 (eval '(let* ((x "hi")) x) env) => "hi"
-(eval '(let ((x 1) (y x)) y) env) =!> "unbound variable" 
+(eval '(let ((x 1) (y x)) y) env) =!> "unbound variable: x" 
 (eval '(let* ((x 1) (y x)) y) env) => 1
 
 (Exercise ?4.8
@@ -655,8 +657,8 @@
     (scan (frame-variables frame) (frame-values frame))))
 
 (define env1 (make-environment))
-(lookup-variable-value 'x env1) =!> "unbound variable"
-(set-variable-value! 'x 1 env1) =!> "unbound variable"
+(lookup-variable-value 'x env1) =!> "unbound variable: x"
+(set-variable-value! 'x 1 env1) =!> "unbound variable: x"
 (define-variable! 'x 1 env1)
 (define-variable! 'y 2 env1)
 (lookup-variable-value 'x env1) => 1
@@ -726,7 +728,7 @@
 
 (define env1 (make-environment))
 (define env2 (make-environment env1))
-(lookup-variable-value 'x env1) =!> "unbound variable"
+(lookup-variable-value 'x env1) =!> "unbound variable: x"
 (define-variable! 'x 1 env1)
 (define-variable! 'y 2 env1)
 (define-variable! 'x "apple" env2)
@@ -771,7 +773,7 @@
 
 (define env1 (make-environment))
 (define env2 (make-environment env1))
-(lookup-variable-value 'x env1) =!> "unbound variable"
+(lookup-variable-value 'x env1) =!> "unbound variable: x"
 (define-variable! 'x 1 env1)
 (define-variable! 'y 2 env1)
 (define-variable! 'x "apple" env2)
@@ -816,10 +818,10 @@
 (eval 'x env) => 1
 (eval 'y env) => 2
 (eval '(make-unbound! x) env)
-(eval 'x env) =!> "unbound variable"
+(eval 'x env) =!> "unbound variable: x"
 (eval 'y env) => 2
 (eval '(make-unbound! y) env)
-(eval 'y env) =!> "unbound variable"
+(eval 'y env) =!> "unbound variable: y"
 
 (Section :4.1.4 "Running the Evaluator as a Program"
   (use (:4.1.1 eval)
@@ -895,6 +897,247 @@
 ;; `(halts? p p) => (halts? try try) => #t`, so `(try try) => (run-forever)`.
 ;; So it must run forever instead. But then `(halts? try try) => #f`, so
 ;; `(try try) => 'halted`, a contradiction. This completes the proof.
+
+(Section :4.1.6 "Internal Definitions")
+
+(Exercise ?4.16
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.2 definition-value definition-variable lambda-body
+               lambda-parameters make-assignment make-lambda)
+       (:4.1.3.2 make-procedure) (:4.1.3.3 make-environment)
+       (?4.3 eval install-eval-package) (?4.12 traverse)))
+
+;; (a) Change `lookup-variable-value`
+
+(define (lookup-variable-value var env)
+  (traverse env
+            var
+            (lambda (vals)
+              (if (eq? (car vals) '*unassigned*)
+                  (error 'lookup-variable-value 
+                         "illegal use of internal definition"
+                         var)
+                  (car vals)))
+            (lambda (frame parent) (lookup-variable-value var parent))))
+
+;; (b) Write `scan-out-defines`
+
+(define (scan-out-defines body)
+  ;; `(revmap f src dst)` behaves like `(append (reverse (map f src)) dst)`.
+  (define (revmap f src dst)
+    (cond ((null? src) dst)
+          (else (revmap f (cdr src) (cons (f (car src)) dst)))))
+  (define (iter body defines)
+    (cond ((and (not (null? body)) (pair? (car body)) (eq? 'define (caar body)))
+           (iter (cdr body) (cons (car body) defines)))
+          ((null? defines) body)
+          (else (let ((params (revmap definition-variable defines '()))
+                      (args (map (lambda (d) ''*unassigned*) defines))
+                      (body (revmap (lambda (d)
+                                      (make-assignment (definition-variable d)
+                                                       (definition-value d)))
+                                    defines
+                                    body)))
+                  (list (cons (make-lambda params body) args))))))
+  (iter body '()))
+
+(scan-out-defines '()) => '()
+(scan-out-defines '(1)) => '(1)
+(scan-out-defines '((define x 1)))
+=> '(((lambda (x) (set! x 1)) '*unassigned*))
+(scan-out-defines '((define x 1) (define y 2) #f))
+=> '(((lambda (x y) (set! x 1) (set! y 2) #f) '*unassigned* '*unassigned*))
+(scan-out-defines '((define (f x) x)))
+=> '(((lambda (f) (set! f (lambda (x) x))) '*unassigned*))
+;; We assume that all internal definitions come first.
+(scan-out-defines '(1 (define x 1))) => '(1 (define x 1))
+
+;; (c) Install `scan-out-defines` in the interpreter
+
+;; Placing it in `make-procedure` is better because it will only scan out the
+;; internal definitions once per procedure. Putting it in `procedure-body` would
+;; mean it scans out every time the procedure is evaluated.
+
+(define (install-internal-definition-package)
+  (put 'eval 'symbol lookup-variable-value)
+  (put 'eval 'lambda
+    (lambda (exp env)
+      (make-procedure (lambda-parameters exp)
+                      (scan-out-defines (lambda-body exp))
+                      env))))
+
+(using install-eval-package install-internal-definition-package)
+
+(define env (make-environment))
+(eval '(define (foo)
+         (define (a) "hi")
+         (define (b c) c)
+         (b (a)))
+      env)
+(eval '(foo) env) => "hi"
+(eval '((lambda ()
+          (define x y)
+          (define y 1)
+          #f))
+      env)
+=!> "illegal use of internal definition: y"
+
+(Exercise ?4.17)
+
+;; Before transformation:
+; (lambda <vars>
+;   (define u <e1>)
+;   (define v <e2>)
+;   <e3>)
+;; Environment diagram:
+; global env <-- E1 [<vars>, u, v]
+
+;; After transformation:
+; (lambda <vars>
+;   (let ((u '*unassigned*)
+;         (v '*unassigned*))
+;     (set! u <e1>)
+;     (set! v <e2>)
+;     <e3>))
+;; Environment diagram:
+; global env <-- E1 [<vars] <-- E2 [u, v]
+
+;; There is an extra frame due to the `let` expression, which gets transformed
+;; into a `lambda`. This extra frame can never make a difference in the behavior
+;; of a correct program, since the new `let` scope completely encloses the body.
+;; If one of the internal definitions shadows a parameter, say `x`, then
+;; `(set! x 1)` would have different effects in the two cases -- but not in any
+;; way that could be detected, because there is no code between the two scopes.
+
+;; We can avoid the extra frame by instead making the following transformation:
+
+; (lambda <vars>
+;   (define u '*unassigned*)
+;   (define v '*unassigned*)
+;   (set! u <e1>)
+;   (set! v <e2>)
+;   <e3>)
+
+(Exercise ?4.18)
+
+;; No, the `solve` procedure from Section 3.5.4 will not work if internal
+;; definitions are scanned out using this alternative strategy. We get:
+
+; (define (solve f yo dt)
+;   (let ((y '*unassigned*) (dy '*unassigned*))
+;     (let ((a (integral (delay dy) y0 dt)) (b (stream-map f y)))
+;       (set! y a)
+;       (set! dy b)
+;       y)))
+
+;; The problem is with the evaluation of `(stream-map f y)`. Although streams
+;; are lazy, they still evaluate the first term right away. This cannot be done
+;; when `y` is still '*unassigned*.
+
+;; Yes, the procedure will work if scanning out as shown in the text. We get:
+
+; (define (solve f yo dt)
+;   (let ((y '*unassigned*) (dy '*unassigned*))
+;     (set! y (integral (delay dy) y0 dt))
+;     (set! dy (stream-map f y))
+;     y)))
+
+;; This time, `y` has been initialized by the time `stream-map` is called.
+
+(Exercise ?4.19)
+
+;; I support Alyssa's view. The fact that this case is tricky means that, even
+;; if there are good theoretical grounds for a particular semantics, code like
+;; this is likely to cause confusion and bugs. It is better to simply disallow
+;; it, resulting in code that is more clear.
+
+;; I cannot think of an easy way to implement Eva's preference. If you think of
+;; variables as nodes and uses of other variables as directed edges, then the
+;; set of internal definitions form a graph, and producing Eva's behavior
+;; requires topologically sorting the graph.
+
+(Exercise ?4.20
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-assignment)
+       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
+       (?4.6 binding-value binding-variable install-let-package make-let)))
+
+;; (a) Implement `letrec` as a derived expression
+
+(define letrec-bindings cadr)
+(define letrec-actions cddr)
+
+(define (letrec->let exp)
+  (let ((vars (map binding-variable (letrec-bindings exp)))
+        (vals (map binding-value (letrec-bindings exp))))
+    (make-let (map (lambda (var) (list var ''*unassigned*)) vars)
+              (append (map make-assignment vars vals)
+                      (letrec-actions exp)))))
+
+(define (install-letrec-package)
+  (put 'eval 'letrec (lambda (exp env) (eval (letrec->let exp) env))))
+
+(using install-eval-package install-let-package install-letrec-package)
+
+(define env (make-environment))
+(eval '(letrec () 1) env) => 1
+(eval '(letrec ((x 2)) x) env) => 2
+(eval '(letrec ((x 3) (y x)) y) env) => 3
+(eval '(letrec ((f (lambda (x) (if x (f #f) "done")))) (f #t)) env) => "done"
+
+;; (b) Louis is wrong. When evaluating `(f 5)`, where `f` is defined:
+
+(define (f x)
+  (letrec
+    ((even? (lambda (n)
+              (if (= n 0) #t (odd? (- n 1)))))
+     (odd? (lambda (n)
+             (if (= n 0) #f (even? (- n 1))))))
+    "rest of body of f"))
+
+;; We have the following environment:
+
+; global env [f: ...] <-- E1 [x: 5] <-- E2 [even?, odd?]
+;                                       ^     |     |
+;                                       |     V     V
+;                                       +---[*|*]-[*|*]
+
+;; But when using `let` instead of `letrec`, we have:
+
+; global env [f: ...] <-- E1 [x: 5] <-- E2 [even?, odd?]
+;                         ^                   |     |
+;                         |                   V     V
+;                         +-----------------[*|*]-[*|*]
+
+;; So references to `even?` inside `odd?` and vice versa will not resolve.
+
+(Exercise ?4.21)
+
+;; (a) Check that it works, and devise an analogous expression for Fibonacci.
+
+((lambda (n)
+   ((lambda (fact) (fact fact n))
+    (lambda (ft k) (if (= k 1) 1 (* k (ft ft (- k 1)))))))
+ 10)
+=> 3628800
+
+((lambda (n)
+   ((lambda (fib) (fib fib n))
+    (lambda (f k) (if (<= k 1) k (+ (f f (- k 1)) (f f (- k 2)))))))
+ 10)
+=> 55
+
+;; (b) Fill in the missing expressions for the even/odd mutual recursion.
+
+(define (f x)
+  ((lambda (even? odd?) (even? even? odd? x))
+   (lambda (ev? od? n)
+     (if (= n 0) #t (od? ev? od? (- n 1))))
+   (lambda (ev? od? n)
+     (if (= n 0) #f (ev? ev? od? (- n 1))))))
+
+(map f '(0 1 2 3 4 5)) => '(#t #f #t #f #t #f)
+
+(Section :4.1.7 "Separating Syntactic Analysis from Execution")
 
 ) ; end of SICP
 ) ; end of library
