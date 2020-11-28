@@ -22,18 +22,20 @@
           (src lang core)
           (src compat active))
 
-  ;; Used in Section 3.5.
-  (define-syntax cons-stream
-    (syntax-rules ()
-      ((_ x y) (cons x (delay y)))))
+;; Used in Section 3.5.
+(define-syntax cons-stream
+  (syntax-rules ()
+    ((_ x y) (cons x (delay y)))))
 
-  ;; Used in Section 4.1.5.
-  (define user-initial-environment (environment '(rnrs base (6))))
+;; Used in Section 4.1.5.
+(define user-initial-environment (environment '(rnrs base (6))))
 
-  ;; Counts the occurrences of a character in a string.
-  (define (string-count char s)
-    (let ((len (string-length s)))
-      (let loop ((i 0) (count 0))
-        (cond ((= i len) count)
-              ((char=? (string-ref s i) char) (loop (+ i 1) (+ count 1)))
-              (else (loop (+ i 1) count)))))))
+;; Counts the occurrences of a character in a string.
+(define (string-count char s)
+  (let ((len (string-length s)))
+    (let loop ((i 0) (count 0))
+      (cond ((= i len) count)
+            ((char=? (string-ref s i) char) (loop (+ i 1) (+ count 1)))
+            (else (loop (+ i 1) count))))))
+
+) ; end of library
