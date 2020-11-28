@@ -5,9 +5,15 @@ before := before.html
 
 flags :=
 
-.PHONY: all watch
+.PHONY: all help watch
 
 all: $(dst)
+
+help:
+	@echo "Targets:"
+	@echo "help   show this help message"
+	@echo "all    convert all .md to .html"
+	@echo "watch  rebuild automatically using entr"
 
 watch:
 	ls $(src) $(css) $(before) | entr make

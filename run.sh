@@ -4,25 +4,9 @@ set -eufo pipefail
 
 usage() {
     cat <<EOS
-usage: $0 [--help] {all,clean,chez,chezd,guile,racket} args ...
+usage: $0 [--help] {all,chez,chezd,guile,racket} args ...
 EOS
 }
-
-clean() {
-    find . -type d -name compiled -exec rm -rf {} +
-}
-
-if [[ $# -eq 0 ]]; then
-    usage
-    exit
-fi
-
-readonly arg=$1
-shift
-
-if ! [[ -t 1 ]]; then
-    set -- "--no-color" "$@"
-fi
 
 run_chez() {
     ln -sf chez.ss src/compat/active.ss
@@ -46,9 +30,22 @@ run_racket() {
     plt-r6rs ++path . main.ss "$@"
 }
 
+if [[ $# -eq 0 ]]; then
+    usage
+    exit
+fi
+
+readonly arg=$1
+shift
+
+if ! [[ -t 1 ]]; then
+    set -- "--no-color" "$@"
+fi
+
+cd "$(dirname "$0")"
+
 case $arg in
     -h|--help) usage; exit ;;
-    clean) clean; exit ;;
     chez|chezd|guile|racket) "run_$arg" "$@" ;;
     all) run_chez "$@" && run_guile "$@" && run_racket "$@" ;;
     *) usage >&2; exit 1 ;;
