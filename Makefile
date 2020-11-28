@@ -1,3 +1,5 @@
+CFLAGS := -std=c11 -W -Wall -O3
+
 .PHONY: help lint test clean
 
 help:
@@ -9,8 +11,11 @@ help:
 	@echo
 	@echo "See also: make -C docs help"
 
-lint:
-	@echo TODO
+lint: linter
+	find . -type f -name "*.ss" -print0 | xargs -0 ./$<
+
+linter: linter.c
+	$(CC) $(CFLAGS) -o $@ $^
 
 test:
 	./run.sh all

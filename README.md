@@ -16,6 +16,8 @@ Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Sc
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 
+Racket produces artifacts in `compiled/` directories. To remove them, run `make clean`.
+
 ### Structure
 
 The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/](src), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
@@ -95,6 +97,20 @@ We can also unhygienically paste code, but only from earlier sections in the sam
 (paste (:1 inc))
 (inc 42) => 41
 ```
+
+## Style
+
+This project follows <http://community.schemewiki.org/?scheme-style>, with the following amendments:
+
+- Disregard [Rule 3: Closing parens close the line](http://community.schemewiki.org/?scheme-style#H-vtpinr).
+- Limit all lines to 80 columns.
+- Insert one blank line between top-level definitions.
+- Never insert blank lines within definitions.
+- Use alignment spaces only at the beginning of lines, never within them.
+- Use `;;` for normal comments, and `;` for commented code/diagrams.
+- Use `;` for inline comments. Separate them from code by one space (or more for alignment).
+
+Run `make lint` to verify some of these rules.
 
 ## Known issues
 
