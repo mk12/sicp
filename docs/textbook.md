@@ -500,8 +500,8 @@ Now we can do things like this:
 - We want to add, subtract, multiply, divide, and test equality with our rational numbers.
 - We assume we have `(make-rat <n> <d>)`, `(number <x>)`, and `(denom <x>)` available as the constructor and selectors.
 - This is wishful thinking, and it is a good technique.
-- A _pair_ is a concrete structure that we create with cons.
-- We extract the parts of the pair with car and cdr.
+- A _pair_ is a concrete structure that we create with `cons`.
+- We extract the parts of the pair with `car` and `cdr`.
 
 ```scheme
 (define x (cons 1 2))
