@@ -3,10 +3,13 @@
 #!r6rs
 
 (library (src compat active)
-  (export current-output-port format make-mutex open-output-string
-          parallel-execute parameterize patch-output random runtime seed-rng
-          string-contains? syntax->location with-output-to-string)
+  (export current-output-port extended-define-syntax format make-mutex
+          open-output-string parallel-execute parameterize patch-output random
+          runtime seed-rng string-contains? syntax->location
+          with-output-to-string)
   (import (rnrs base (6))
+          (rename (only (rnrs base (6)) define-syntax)
+                  (define-syntax extended-define-syntax))
           (only (rnrs control (6)) unless when)
           (only (chezscheme)
                 annotation-source condition-signal condition-wait

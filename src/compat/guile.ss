@@ -3,19 +3,26 @@
 #!r6rs
 
 (library (src compat active)
-  (export current-output-port format make-mutex open-output-string
-          parallel-execute parameterize patch-output random runtime seed-rng
-          string-contains? syntax->location with-output-to-string)
+  (export current-output-port extended-define-syntax format make-mutex
+          open-output-string parallel-execute parameterize patch-output random
+          runtime seed-rng string-contains? syntax->location
+          with-output-to-string)
   (import (rnrs base (6))
           (only (guile)
                 *random-state* current-output-port gettimeofday
                 open-output-string parameterize random
                 random-state-from-platform source-property string-contains
                 syntax-source with-output-to-string usleep)
-          (only (ice-9 threads) call-with-new-thread join-thread lock-mutex
-                                unlock-mutex)
+          (only (ice-9 threads)
+                call-with-new-thread join-thread lock-mutex unlock-mutex)
           (prefix (only (guile) format) guile-)
           (prefix (only (ice-9 threads) make-mutex) guile-))
+
+;; Guile does not support the `(define-syntax (foo x) ...)` syntax.
+(define-syntax extended-define-syntax
+  (syntax-rules ()
+    ((_ (name x) e* ...) (define-syntax name (lambda (x) e* ...)))
+    ((_ e* ...) (define-syntax e* ...))))
 
 (define (syntax->location s)
   (let ((props (syntax-source s)))

@@ -6,9 +6,10 @@
   (export SICP Chapter Section Exercise define => ~> =$> =!> paste
           capture-output hide-output
           run-sicp)
-  (import (except (rnrs (6)) current-output-port)
+  (import (except (rnrs (6)) current-output-port define-syntax)
           (rnrs mutable-pairs (6))
-          (src compat active))
+          (rename (src compat active)
+                  (extended-define-syntax define-syntax)))
 
 ;; Global flag for whether to use ANSI color in output.
 (define *color* #f)
@@ -458,17 +459,15 @@
 ;; already an auxiliary keyword used in `cond`).
 (let-syntax
   ((auxiliary
-      (syntax-rules ()
-        ((_ lit ...)
-        (begin
-          (define-syntax lit
-            (lambda (x)
-              (syntax-violation #f "incorrect usage of auxiliary keyword" x)))
-          ...)))))
+    (syntax-rules ()
+      ((_ lit ...)
+       (begin (define-syntax (lit x)
+                (syntax-violation #f "incorrect usage of auxiliary keyword" x))
+              ...)))))
   (auxiliary Chapter Section Exercise ~> =$> =!> paste))
 
 ;; A DSL for SICP code samples and exercises.
-(define-syntax SICP (lambda (x)
+(define-syntax (SICP x)
   ;; Use the `SICP` syntax form in `datum->syntax` calls.
   (define sicp (with-syntax (((s e* ...) x)) #'s))
 
@@ -645,6 +644,6 @@
           (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
   (with-syntax (((_ e* ...) x))
-    #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'())))))
+    #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))))
 
 ) ; end of library

@@ -3,10 +3,11 @@
 #!r6rs
 
 (library (src compat active)
-  (export current-output-port format make-mutex open-output-string
-          parallel-execute parameterize patch-output random runtime seed-rng
-          string-contains? syntax->location with-output-to-string)
-  (import (rnrs base (6))
+  (export current-output-port extended-define-syntax format make-mutex
+          open-output-string parallel-execute parameterize patch-output random
+          runtime seed-rng string-contains? syntax->location
+          with-output-to-string)
+  (import (for (rnrs base (6)) run expand)
           (only (racket base)
                 current-inexact-milliseconds current-output-port current-seconds
                 format make-semaphore open-output-string parameterize random
@@ -15,6 +16,12 @@
                 thread-wait)
           (only (racket string) string-contains? string-replace)
           (only (racket port) with-output-to-string))
+
+;; Racket has the `(define-syntax (foo x) ...)` syntax, but not in R6RS mode.
+(define-syntax extended-define-syntax
+  (syntax-rules ()
+    ((_ (name x) e* ...) (define-syntax name (lambda (x) e* ...)))
+    ((_ e* ...) (define-syntax e* ...))))
 
 (define (syntax->location s)
   (values (path->string (syntax-source s))
