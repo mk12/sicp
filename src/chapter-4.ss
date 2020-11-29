@@ -23,7 +23,7 @@
                definition? first-exp first-operand if-alternative if-consequent
                if-predicate if? lambda-body lambda-parameters lambda? last-exp?
                no-operands? operands operator quoted? rest-exps rest-operands
-               self-evaluating? text-of-quotation variable? )
+               self-evaluating? text-of-quotation variable?)
        (:4.1.2.1 cond? cond->if)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
@@ -54,12 +54,10 @@
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
         ((compound-procedure? procedure)
-         (eval-sequence
-           (procedure-body procedure)
-           (extend-environment
-             (procedure-parameters procedure)
-             arguments
-             (procedure-environment procedure))))
+         (eval-sequence (procedure-body procedure)
+                        (extend-environment (procedure-parameters procedure)
+                                            arguments
+                                            (procedure-environment procedure))))
         (else (error 'apply "unknown procedure type" procedure))))
 
 (define (list-of-values exps env)
@@ -110,7 +108,7 @@
                definition? first-exp first-operand if-alternative if-consequent
                if-predicate if? lambda-body lambda-parameters lambda? last-exp?
                no-operands? operands operator quoted? rest-exps rest-operands
-               self-evaluating? text-of-quotation variable? )
+               self-evaluating? text-of-quotation variable?)
        (:4.1.2.1 cond? cond->if)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
@@ -328,16 +326,16 @@
   (put 'eval 'define eval-definition)
   (put 'eval 'if eval-if)
   (put 'eval 'lambda
-    (lambda (exp env)
-      (make-procedure (lambda-parameters exp) (lambda-body exp) env)))
+       (lambda (exp env)
+         (make-procedure (lambda-parameters exp) (lambda-body exp) env)))
   (put 'eval 'begin
-    (lambda (exp env) (eval-sequence (begin-actions exp) env)))
+       (lambda (exp env) (eval-sequence (begin-actions exp) env)))
   (put 'eval 'cond
-    (lambda (exp env) (eval (cond->if exp) env)))
+       (lambda (exp env) (eval (cond->if exp) env)))
   (put 'eval 'call
-    (lambda (exp env)
-      (apply (eval (operator exp) env)
-             (list-of-values (operands exp) env)))))
+       (lambda (exp env)
+         (apply (eval (operator exp) env)
+                (list-of-values (operands exp) env)))))
 
 (using install-eval-package)
 
@@ -407,13 +405,13 @@
 (define (eval-cond clauses env)
   (cond ((null? clauses) #f)
         ((cond-arrow-clause? (car clauses))
-          (let ((value (eval (cond-predicate (car clauses)) env)))
-            (if (true? value)
-                (apply (eval (cond-arrow-recipient (car clauses)) env)
+         (let ((value (eval (cond-predicate (car clauses)) env)))
+           (if (true? value)
+               (apply (eval (cond-arrow-recipient (car clauses)) env)
                       (list value)))))
         ((or (cond-else-clause? (car clauses))
-              (true? (eval (cond-predicate (car clauses)) env)))
-          (eval-sequence (cond-actions (car clauses)) exp))
+             (true? (eval (cond-predicate (car clauses)) env)))
+         (eval-sequence (cond-actions (car clauses)) exp))
         (else (eval-cond (cdr clauses) env))))
 
 (define (install-extended-cond-package)
@@ -477,7 +475,7 @@
 (define env (make-environment))
 (eval '(let* () 1) env) => 1
 (eval '(let* ((x "hi")) x) env) => "hi"
-(eval '(let ((x 1) (y x)) y) env) =!> "unbound variable: x" 
+(eval '(let ((x 1) (y x)) y) env) =!> "unbound variable: x"
 (eval '(let* ((x 1) (y x)) y) env) => 1
 
 (Exercise ?4.8
@@ -492,19 +490,20 @@
 
 (define (named-let->combination exp)
   (list (make-lambda
-              '()
-              (list (make-lambda-definition
-                      (named-let-name exp)
-                      (map binding-variable (named-let-bindings exp))
-                      (named-let-actions exp))
-                    (cons (named-let-name exp)
-                          (map binding-value (named-let-bindings exp)))))))
+         '()
+         (list (make-lambda-definition
+                (named-let-name exp)
+                (map binding-variable (named-let-bindings exp))
+                (named-let-actions exp))
+               (cons (named-let-name exp)
+                     (map binding-value (named-let-bindings exp)))))))
 
 (define (install-named-let-package)
   (put 'eval 'let
-    (lambda (exp env)
-      (eval ((if (named-let? exp) named-let->combination let->combination) exp)
-            env))))
+       (lambda (exp env)
+         (eval ((if (named-let? exp) named-let->combination let->combination)
+                exp)
+               env))))
 
 (using install-eval-package install-named-let-package)
 
@@ -527,14 +526,14 @@
 
 (define (while->combination exp)
   (list (make-lambda
-          '(test body)
-          (list (make-lambda-definition
-                  'loop
-                  '()
-                  (list (make-if '(test)
-                                 (make-begin (list '(body) '(loop)))
-                                 #f)))
-                '(loop)))
+         '(test body)
+         (list (make-lambda-definition
+                'loop
+                '()
+                (list (make-if '(test)
+                               (make-begin (list '(body) '(loop)))
+                               #f)))
+               '(loop)))
         (make-lambda '() (list (while-test exp)))
         (make-lambda '() (while-actions exp))))
 
@@ -863,9 +862,9 @@
 (define (user-print object)
   (if (compound-procedure? object)
       (display (list 'compound-procedure
-                      (procedure-parameters object)
-                      (procedure-body object)
-                      '<procedure-env>))
+                     (procedure-parameters object)
+                     (procedure-body object)
+                     '<procedure-env>))
       (display object)))
 
 (define the-global-environment (setup-environment))
@@ -914,7 +913,7 @@
             var
             (lambda (vals)
               (if (eq? (car vals) '*unassigned*)
-                  (error 'lookup-variable-value 
+                  (error 'lookup-variable-value
                          "illegal use of internal definition"
                          var)
                   (car vals)))
@@ -961,10 +960,10 @@
 (define (install-internal-definition-package)
   (put 'eval 'symbol lookup-variable-value)
   (put 'eval 'lambda
-    (lambda (exp env)
-      (make-procedure (lambda-parameters exp)
-                      (scan-out-defines (lambda-body exp))
-                      env))))
+       (lambda (exp env)
+         (make-procedure (lambda-parameters exp)
+                         (scan-out-defines (lambda-body exp))
+                         env))))
 
 (using install-eval-package install-internal-definition-package)
 
@@ -984,22 +983,28 @@
 
 (Exercise ?4.17)
 
-;; Before transformation:
+;; Code before:
+
 ; (lambda <vars>
 ;   (define u <e1>)
 ;   (define v <e2>)
 ;   <e3>)
-;; Environment diagram:
+
+;; Environment before:
+
 ; global env <-- E1 [<vars>, u, v]
 
-;; After transformation:
+;; Code after:
+
 ; (lambda <vars>
 ;   (let ((u '*unassigned*)
 ;         (v '*unassigned*))
 ;     (set! u <e1>)
 ;     (set! v <e2>)
 ;     <e3>))
-;; Environment diagram:
+
+;; Environment after:
+
 ; global env <-- E1 [<vars] <-- E2 [u, v]
 
 ;; There is an extra frame due to the `let` expression, which gets transformed
@@ -1008,7 +1013,7 @@
 ;; If one of the internal definitions shadows a parameter, say `x`, then
 ;; `(set! x 1)` would have different effects in the two cases -- but not in any
 ;; way that could be detected, because there is no code between the two scopes.
-
+;;
 ;; We can avoid the extra frame by instead making the following transformation:
 
 ; (lambda <vars>
@@ -1033,7 +1038,7 @@
 ;; The problem is with the evaluation of `(stream-map f y)`. Although streams
 ;; are lazy, they still evaluate the first term right away. This cannot be done
 ;; when `y` is still '*unassigned*.
-
+;;
 ;; Yes, the procedure will work if scanning out as shown in the text. We get:
 
 ; (define (solve f yo dt)
@@ -1050,7 +1055,7 @@
 ;; if there are good theoretical grounds for a particular semantics, code like
 ;; this is likely to cause confusion and bugs. It is better to simply disallow
 ;; it, resulting in code that is more clear.
-
+;;
 ;; I cannot think of an easy way to implement Eva's preference. If you think of
 ;; variables as nodes and uses of other variables as directed edges, then the
 ;; set of internal definitions form a graph, and producing Eva's behavior
@@ -1061,7 +1066,7 @@
        (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
        (?4.6 binding-value binding-variable install-let-package make-let)))
 
-;; (a) Implement `letrec` as a derived expression
+;; (a) Implement `letrec` as a derived expression:
 
 (define letrec-bindings cadr)
 (define letrec-actions cddr)
@@ -1087,11 +1092,10 @@
 ;; (b) Louis is wrong. When evaluating `(f 5)`, where `f` is defined:
 
 (define (f x)
-  (letrec
-    ((even? (lambda (n)
-              (if (= n 0) #t (odd? (- n 1)))))
-     (odd? (lambda (n)
-             (if (= n 0) #f (even? (- n 1))))))
+  (letrec ((even? (lambda (n)
+                    (if (= n 0) #t (odd? (- n 1)))))
+           (odd? (lambda (n)
+                   (if (= n 0) #f (even? (- n 1))))))
     "rest of body of f"))
 
 ;; We have the following environment:

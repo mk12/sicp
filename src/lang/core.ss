@@ -14,21 +14,21 @@
 ;; Global flag for whether to use ANSI color in output.
 (define *color* #f)
 
-;; Returns `str` with ANSI escape codes to make it `color`, if `*color*` is
-;; set. Otherwise, returns `str` unchanged.
+;; Returns `str` with ANSI escape codes to make it `color`, if `*color*` is set.
+;; Otherwise, returns `str` unchanged.
 (define (ansi color str)
-  (if *color*
-    (let ((code (case color
-                  ((bold) "1")
-                  ((bold-red) "1;31")
-                  ((red) "31")
-                  ((green) "32")
-                  ((yellow) "33")
-                  ((blue) "34")
-                  ((magenta) "35")
-                  (else (error 'ansi "unknown color" color)))))
-      (string-append "\x1b;[" code "m" str "\x1b;[0m"))
-    str))
+  (if (not *color*)
+      str
+      (let ((code (case color
+                    ((bold) "1")
+                    ((bold-red) "1;31")
+                    ((red) "31")
+                    ((green) "32")
+                    ((yellow) "33")
+                    ((blue) "34")
+                    ((magenta) "35")
+                    (else (error 'ansi "unknown color" color)))))
+        (string-append "\x1b;[" code "m" str "\x1b;[0m"))))
 
 ;; Global test counters, used for reporting and for setting the exit status.
 ;; When running without a filter, total = passes + fails. Otherwise, the
@@ -53,67 +53,66 @@
   (set! *fails* (+ *fails* 1))
   (let-values (((file line col) (syntax->location expr)))
     (display
-      (format (string-append (ansi 'bold "~a:~a:~a: assertion failed") "\n~a")
-              file line col msg))))
+     (format (string-append (ansi 'bold "~a:~a:~a: assertion failed") "\n~a")
+             file line col msg))))
 
 ;; Asserts that all elements in `vals` are the same, according to `equal?`.
 ;; Expects `exprs` to contain syntax objects for each value in `vals`.
 (define (assert-equal vals exprs)
   (assert-on-pairs
-    equal?
-    (lambda (v1 v2 e1 e2)
-      (format
-        (string-append
-          "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
-          "right: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n")
-        e1 v1 e2 v2))
-    vals
-    exprs))
+   equal?
+   (lambda (v1 v2 e1 e2)
+     (format
+      (string-append
+       "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+       "right: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n")
+      e1 v1 e2 v2))
+   vals
+   exprs))
 
-;; Asserts that each number in `vals` is very close to the previous one.
-;; Expects `exprs` to contain syntax objects for each value in `vals`.
+;; Asserts that each number in `vals` is very close to the previous one. Expects
+;; `exprs` to contain syntax objects for each value in `vals`.
 (define (assert-close vals exprs)
   (define (delta x y) (abs (- x y)))
   (define max-delta 1e-10)
   (assert-on-pairs
-    (lambda (v1 v2)
-      (<= (delta v1 v2) max-delta))
-    (lambda (v1 v2 e1 e2)
-      (format
-        (string-append
-          "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
-          "right: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
-          "delta: " (ansi 'green "~s") " > ~s\n\n")
-        e1 v1 e2 v2 (delta v1 v2) max-delta))
-    vals
-    exprs))
+   (lambda (v1 v2)
+     (<= (delta v1 v2) max-delta))
+   (lambda (v1 v2 e1 e2)
+     (format
+      (string-append
+       "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+       "right: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+       "delta: " (ansi 'green "~s") " > ~s\n\n")
+      e1 v1 e2 v2 (delta v1 v2) max-delta))
+   vals
+   exprs))
 
 ;; Asserts that `pred?` holds for each pair of adjacent elements in `vals`.
 ;; Expects `exprs` to contain syntax objects for each value in `vals`. If
-;; `(pred? v1 v2)` is false, the error message includes the `v1` line number
-;; and the string `(make-msg v1 v2 d1 d2)`, where `d1` and `d2` are the
-;; corresponding unevaluated forms as data (not syntax objects). Also
-;; increments `*passes*` or `*fails*` based on the result.
+;; `(pred? v1 v2)` is false, the error message includes the `v1` line number and
+;; string `(make-msg v1 v2 d1 d2)`, where `d1` and `d2` are the corresponding
+;; unevaluated forms as data (not syntax objects). Also increments `*passes*` or
+;; `*fails*` based on the result.
 (define (assert-on-pairs pred? make-msg vals exprs)
   (for-each
-    (lambda (vpair epair)
-      (let ((v1 (car vpair))
-            (v2 (cdr vpair))
-            (e1 (car epair))
-            (e2 (cdr epair)))
-        (cond
-          ((pred? v1 v2) (test-pass!))
-          (else (test-fail!
-                  e1
-                  (make-msg v1 v2 (syntax->datum e1) (syntax->datum e2)))))))
-    (pairs vals)
-    (pairs (syntax->list exprs))))
+   (lambda (vpair epair)
+     (let ((v1 (car vpair))
+           (v2 (cdr vpair))
+           (e1 (car epair))
+           (e2 (cdr epair)))
+       (cond ((pred? v1 v2) (test-pass!))
+             (else (test-fail!
+                    e1
+                    (make-msg v1 v2 (syntax->datum e1) (syntax->datum e2)))))))
+   (pairs vals)
+   (pairs (syntax->list exprs))))
 
 ;; Asserts that the string `output` matches `expected`, a syntax object
-;; containing either a string or an (unquoted) list. In the string case, we
-;; test for equality. In the list case, we split `output` using `split-lines`
-;; and compare with the list of strings. Expects `expr` to be the syntax
-;; object for the expression which produced the output.
+;; containing either a string or an (unquoted) list. In the string case, we test
+;; for equality. In the list case, we split `output` using `split-lines` and
+;; compare with the list of strings. Expects `expr` to be the syntax object for
+;; the expression which produced the output.
 (define (assert-output output expr expected)
   (define (fmt str-or-list)
     (define (slots xs)
@@ -123,29 +122,28 @@
     (if (string? str-or-list)
         (format (ansi 'yellow "~s") str-or-list)
         (apply format
-                ;; In R6RS square brackets are interchangeable with parens.
-                ;; I do not use them in cond/let/etc. the way the spec does.
-                ;; I use them in =$> assertions just to make them stand out.
-                (string-append
-                  "["
-                  (ansi 'yellow (apply string-append (slots str-or-list)))
-                  "]")
-                str-or-list)))
+               ;; In R6RS square brackets are interchangeable with parens. I do
+               ;; not use them in cond/let/etc. the way the spec does. I just
+               ;; use them in =$> assertions just to make them stand out.
+               (string-append
+                "["
+                (ansi 'yellow (apply string-append (slots str-or-list)))
+                "]")
+               str-or-list)))
   (let* ((expected (syntax->datum expected))
-          (output (cond ((string? expected) output)
-                        ((list? expected) (split-lines output))
-                        (else (error 'assert-output
+         (output (cond ((string? expected) output)
+                       ((list? expected) (split-lines output))
+                       (else (error 'assert-output
                                     "result must be a string or list"
                                     expected)))))
     (if (equal? output expected)
         (test-pass!)
         (test-fail!
-          expr
-          (format
-            (string-append
-              "left: " (ansi 'blue "~s") "\n=$> ~a\n\nright:\n=$> ~a\n\n")
-            (syntax->datum expr) (fmt output) (fmt expected))))))
-
+         expr
+         (format
+          (string-append
+           "left: " (ansi 'blue "~s") "\n=$> ~a\n\nright:\n=$> ~a\n\n")
+          (syntax->datum expr) (fmt output) (fmt expected))))))
 
 ;; Asserts that executing `thunk` raises an error, and that the error message
 ;; formatted as "<who>: <message>: <irritants>" contains `substr` as a
@@ -154,47 +152,47 @@
   (define (format-condition con)
     (let ((irritants (condition-irritants con)))
       (apply format
-            (apply string-append
+             (apply string-append
                     "~a: ~a"
                     (if (null? irritants) "" ":")
                     (map (lambda (x) " ~s") irritants))
-            (condition-who con)
-            (condition-message con)
-            irritants)))
+             (condition-who con)
+             (condition-message con)
+             irritants)))
   (define (fail! raised? result)
     (test-fail!
-      expr
-      (format
-        (string-append
-          "left: " (ansi 'blue "~s") "\n" (if raised? "=!>" "=>") " "
-          (ansi (if raised? 'red 'green) (if raised? "~a" "~s")) "\n\n"
-          "right:\n=!> ... " (ansi 'red substr) " ...\n\n")
-        (syntax->datum expr) result)))
+     expr
+     (format
+      (string-append
+       "left: " (ansi 'blue "~s") "\n" (if raised? "=!>" "=>") " "
+       (ansi (if raised? 'red 'green) (if raised? "~a" "~s")) "\n\n"
+       "right:\n=!> ... " (ansi 'red substr) " ...\n\n")
+      (syntax->datum expr) result)))
   (call/cc
-    (lambda (return)
-      (let ((result
-              (with-exception-handler
-                (lambda (con)
-                  (let ((str (format-condition con)))
-                    (if (string-contains? str substr)
-                        (test-pass!)
-                        (fail! #t str)))
-                  (return))
-                thunk)))
-        (fail! #f result)))))
+   (lambda (return)
+     (let ((result
+            (with-exception-handler
+             (lambda (con)
+               (let ((str (format-condition con)))
+                 (if (string-contains? str substr)
+                     (test-pass!)
+                     (fail! #t str)))
+               (return))
+             thunk)))
+       (fail! #f result)))))
 
 ;; Captures standard output in a string.
 (define-syntax capture-output
   (syntax-rules ()
     ((_ e* ...)
-      (patch-output (with-output-to-string (lambda () e* ...))))))
+     (patch-output (with-output-to-string (lambda () e* ...))))))
 
 ;; Supresses printing to standard output.
 (define-syntax hide-output
   (syntax-rules ()
     ((_ e* ...)
-      (parameterize ((current-output-port (open-output-string)))
-        e* ...))))
+     (parameterize ((current-output-port (open-output-string)))
+       e* ...))))
 
 ;; Splits a string into a list of lines, using "\n" as the delimiter, not
 ;; including the delimiter in the result, and not producing empty strings for
@@ -206,7 +204,7 @@
         (if (< i j) (cons (substring s i j) res) res))
       (cond ((zero? i) (push))
             ((char=? (string-ref s (- i 1)) #\newline)
-              (loop (- i 1) (- i 1) (push)))
+             (loop (- i 1) (- i 1) (push)))
             (else (loop (- i 1) j res))))))
 
 ;; Converts a syntax object to a list of syntax objects.
@@ -220,11 +218,10 @@
 ;; Returns a list of the adjacent pairs of elements in `xs` For example, given
 ;; the list `(a b c d)` it returns `((a . b) (b . c) (c . d))`.
 (define (pairs xs)
-  (cond
-    ((null? xs) '())
-    ((null? (cdr xs)) '())
-    (else (cons (cons (car xs) (cadr xs))
-                (pairs (cdr xs))))))
+  (cond ((null? xs) '())
+        ((null? (cdr xs)) '())
+        (else (cons (cons (car xs) (cadr xs))
+                    (pairs (cdr xs))))))
 
 ;; Like hashtable-ref, but fails if the key is not present.
 (define (hashtable-ref-must table key)
@@ -235,17 +232,16 @@
 
 ;; An entry stores code from a part of the textbook. It consists of a unique
 ;; symbol `id`, a kind ('Chapter, 'Section, or 'Exercise), a string `num`
-;; containing a dotted chapter/section/etc. number like "1.2.3", a title
-;; string (or #f), a list of imported names from other entries formatted as
-;; `((id name ...) ...)`, a list of exported names, and a thunk that takes all
-;; the imported names as one flat list of arguments and returns the exported
-;; values in the same order as `exports`.
+;; containing a dotted number like "1.2.3", a title string (or #f), a list of
+;; imported names from other entries formatted as `((id name ...) ...)`, a list
+;; of exported names, and a thunk taking all the imported names as one flat list
+;; of arguments and returns the exported values in the same order as `exports`.
 (define-record-type entry
   (fields id kind num title imports exports thunk))
 
-;; A queue supports constant time appending to the back, popping from the
-;; front, and accessing the length. (It also supports pushing to the front,
-;; making it more of a deque, but I didn't feel like renaming everything).
+;; A queue supports constant time appending to the back, popping from the front,
+;; and accessing the length. (It also supports pushing to the front, making it
+;; more of a deque, but I didn't feel like renaming everything).
 (define-record-type (queue make-raw-queue queue?)
   (fields (mutable length) (mutable front) (mutable back)))
 (define (make-queue)
@@ -255,28 +251,26 @@
 (define (queue-push-back! q x)
   (let ((new-pair (cons x '())))
     (queue-length-set! q (+ (queue-length q) 1))
-    (cond
-      ((queue-empty? q)
-        (queue-front-set! q new-pair)
-        (queue-back-set! q new-pair))
-      (else
-        (set-cdr! (queue-back q) new-pair)
-        (queue-back-set! q new-pair)))))
+    (cond ((queue-empty? q)
+           (queue-front-set! q new-pair)
+           (queue-back-set! q new-pair))
+          (else
+           (set-cdr! (queue-back q) new-pair)
+           (queue-back-set! q new-pair)))))
 (define (queue-pop-front! q)
   (if (queue-empty? q)
       (error 'queue-pop-front! "empty queue")
       (let ((result (car (queue-front q))))
-        (cond
-          ((eq? (queue-front q) (queue-back q))
-            (queue-front-set! q '())
-            (queue-back-set! q '()))
-          (else
-            (queue-front-set! q (cdr (queue-front q)))))
+        (cond ((eq? (queue-front q) (queue-back q))
+               (queue-front-set! q '())
+               (queue-back-set! q '()))
+              (else
+               (queue-front-set! q (cdr (queue-front q)))))
         result)))
 (define (queue-push-front! q x)
   (if (queue-empty? q)
-    (queue-push-back! q x)
-    (queue-front-set! q (cons x (queue-front q)))))
+      (queue-push-back! q x)
+      (queue-front-set! q (cons x (queue-front q)))))
 
 ;; Global queue of entries. The `SICP` macro produces calls to `add-entry!`.
 (define *entries* (make-queue))
@@ -284,61 +278,63 @@
   (queue-push-back! *entries*
                     (make-entry id kind num title imports exports thunk)))
 
-;; Converts `*entries*` to a hashtable from `id` to entries. Raises an error
-;; if there are two entries with the same `id`.
+;; Converts `*entries*` to a hashtable from `id` to entries. Raises an error if
+;; there are two entries with the same `id`.
 (define (entries-by-id)
   (define by-id (make-eq-hashtable (queue-length *entries*)))
   (for-each
-    (lambda (entry)
-      (when (hashtable-contains? by-id (entry-id entry))
-        (error 'entries-by-id "duplicate entry id" (entry-id entry)))
-      (hashtable-set! by-id (entry-id entry) entry))
-    (queue-front *entries*))
+   (lambda (entry)
+     (when (hashtable-contains? by-id (entry-id entry))
+       (error 'entries-by-id "duplicate entry id" (entry-id entry)))
+     (hashtable-set! by-id (entry-id entry) entry))
+   (queue-front *entries*))
   by-id)
 
 ;; Returns a hashtable from entries in `*entries*` to their in-degrees (the
 ;; number of times they are imported). Includes only entries that satisfy
-;; `pred?` and all their transitive dependencies. Edges from excluded entries
-;; do not count towards in-degree counts for the included entres. Requires
-;; `by-id`, a hashtable produced by `entries-by-id`.
+;; `pred?` and all their transitive dependencies. Edges from excluded entries do
+;; not count towards in-degree counts for the included entres. Requires `by-id`,
+;; a hashtable produced by `entries-by-id`.
 (define (entries-to-in-degrees by-id pred?)
   (define in-degrees (make-eq-hashtable))
   (define q (make-queue))
   (for-each
-    (lambda (entry)
-      (when (pred? entry)
-        (queue-push-back! q entry)))
-    (queue-front *entries*))
+   (lambda (entry)
+     (when (pred? entry)
+       (queue-push-back! q entry)))
+   (queue-front *entries*))
   ;; Explore entries reachable from those satisfying `pred?` using BFS.
   (let loop ()
     (unless (queue-empty? q)
       (let* ((e (queue-pop-front! q))
-              (deps (map (lambda (import-list)
-                          (unless (hashtable-contains? by-id
-                                                        (car import-list))
+             (deps (map (lambda (import-list)
+                          (unless (hashtable-contains? by-id (car import-list))
                             (error 'entries-to-in-degrees
-                                    (format "~a imports from nonexistent ~a"
-                                            (entry-id e)
-                                            (car import-list))))
+                                   (format "~a imports from nonexistent ~a"
+                                           (entry-id e)
+                                           (car import-list))))
                           (hashtable-ref-must by-id (car import-list)))
                         (entry-imports e))))
         (hashtable-set! in-degrees e 0)
         (for-each
-          (lambda (d)
-            (unless (hashtable-contains? in-degrees d)
-              (queue-push-back! q d)))
-          deps)
+         (lambda (d)
+           (unless (hashtable-contains? in-degrees d)
+             (queue-push-back! q d)))
+         deps)
         (loop))))
   ;; Iterate over the entries and calculate in-degrees.
   (vector-for-each
-    (lambda (e)
-      (for-each
-        (lambda (import-list)
-          (let ((d (hashtable-ref-must by-id (car import-list))))
-            (when (hashtable-contains? in-degrees d)
-              (hashtable-update! in-degrees d (lambda (x) (+ x 1)) #f))))
-        (entry-imports e)))
-    (hashtable-keys in-degrees))
+   (lambda (e)
+     (for-each
+      (lambda (import-list)
+        (let ((d (hashtable-ref-must by-id (car import-list))))
+          (when (hashtable-contains? in-degrees d)
+            (hashtable-update! in-degrees
+                               d
+                               (lambda (x) (+ x 1))
+                               #f))))
+      (entry-imports e)))
+   (hashtable-keys in-degrees))
   in-degrees)
 
 ;; Topologically sorts entries from `*entries*`, including only those that
@@ -350,37 +346,37 @@
   (define sources (make-queue))
   (define sorted '())
   (for-each
-    (lambda (entry)
-      (when (zero? (hashtable-ref in-degrees entry -1))
-        (queue-push-back! sources entry)))
-    ;; Go through all of `*entries*` in reverse, rather than just the entries
-    ;; filtered by `pred?`, so that in the absence of forward dependencies
-    ;; entries will be executed in source order.
-    (reverse (queue-front *entries*)))
+   (lambda (entry)
+     (when (zero? (hashtable-ref in-degrees entry -1))
+       (queue-push-back! sources entry)))
+   ;; Go through all of `*entries*` in reverse, rather than just the entries
+   ;; filtered by `pred?`, so that in the absence of forward dependencies
+   ;; entries will be executed in source order.
+   (reverse (queue-front *entries*)))
   (let loop ()
     (unless (queue-empty? sources)
       (let ((node (queue-pop-front! sources)))
         (set! sorted (cons node sorted))
         (for-each
-          (lambda (import-list)
-            (let* ((e (hashtable-ref-must by-id (car import-list)))
-                    (deg (hashtable-ref-must in-degrees e))
-                    (new-deg (- deg 1)))
-              (hashtable-set! in-degrees e new-deg)
-              (when (zero? new-deg)
-                ;; Push to front so that we add entries as soon as they turn
-                ;; into sources. The result is that dependencies are moved
-                ;; to occur just before they are used, and no earlier.
-                (queue-push-front! sources e))))
-          (entry-imports node))
+         (lambda (import-list)
+           (let* ((e (hashtable-ref-must by-id (car import-list)))
+                  (deg (hashtable-ref-must in-degrees e))
+                  (new-deg (- deg 1)))
+             (hashtable-set! in-degrees e new-deg)
+             (when (zero? new-deg)
+               ;; Push to front so that we add entries as soon as they turn
+               ;; into sources. The result is that dependencies are moved
+               ;; to occur just before they are used, and no earlier.
+               (queue-push-front! sources e))))
+         (entry-imports node))
         (loop))))
   (let-values (((entries degrees) (hashtable-entries in-degrees)))
     (vector-for-each
-      (lambda (e deg)
-        (unless (zero? deg)
-          (error 'sort-entries "import cycle in entries" (entry-id e))))
-      entries
-      degrees))
+     (lambda (e deg)
+       (unless (zero? deg)
+         (error 'sort-entries "import cycle in entries" (entry-id e))))
+     entries
+     degrees))
   sorted)
 
 ;; Executes the code in `*entries*`. If `verbose` is true, prints verbose info
@@ -392,13 +388,13 @@
     (define (match? s)
       (let ((s-len (string-length s)))
         (and (> s-len 0)
-              (let* ((sigil (memv (string-ref s 0) '(#\: #\?)))
+             (let* ((sigil (memv (string-ref s 0) '(#\: #\?)))
                     (e (if sigil
-                            (symbol->string (entry-id entry))
-                            (entry-num entry))))
-                (or (string=? s e)
-                    (and sigil (= s-len 1) (string=? s (substring e 0 1)))
-                    (and (< s-len (string-length e))
+                           (symbol->string (entry-id entry))
+                           (entry-num entry))))
+               (or (string=? s e)
+                   (and sigil (= s-len 1) (string=? s (substring e 0 1)))
+                   (and (< s-len (string-length e))
                         (string=? s (substring e 0 s-len))
                         (char=? #\. (string-ref e s-len))))))))
     (or (null? filters)
@@ -409,54 +405,51 @@
   (define (gather-args importer)
     (define (gather import-list)
       (let* ((exporter (hashtable-ref-must by-id (car import-list)))
-              (import-names (cdr import-list))
-              (export-names (entry-exports exporter))
-              (export-values (hashtable-ref-must results exporter)))
+             (import-names (cdr import-list))
+             (export-names (entry-exports exporter))
+             (export-values (hashtable-ref-must results exporter)))
         (define (find-value name)
           (let loop ((en export-names)
-                      (ev export-values))
-            (cond
-              ((or (null? en) (null? ev))
-                (error 'run-sicp
-                      (format "~a imports nonexistent `~a` from ~a"
-                              (entry-id importer)
-                              name
-                              (entry-id exporter))))
-              ((eq? name (car en)) (car ev))
-              (else (loop (cdr en) (cdr ev))))))
+                     (ev export-values))
+            (cond ((or (null? en) (null? ev))
+                   (error 'run-sicp
+                          (format "~a imports nonexistent `~a` from ~a"
+                                  (entry-id importer)
+                                  name
+                                  (entry-id exporter))))
+                  ((eq? name (car en)) (car ev))
+                  (else (loop (cdr en) (cdr ev))))))
         (map find-value import-names)))
     (fold-left append '() (map gather (entry-imports importer))))
   (when color (set! *color* #t))
   (for-each
-    (lambda (e)
-      (when verbose
-        (display
-          (ansi 'yellow
-                (format "* ~a ~a~a\n"
-                        (symbol->string (entry-kind e))
-                        (entry-num e)
-                        (if (entry-title e)
+   (lambda (e)
+     (when verbose
+       (display
+        (ansi 'yellow
+              (format "* ~a ~a~a\n"
+                      (symbol->string (entry-kind e))
+                      (entry-num e)
+                      (if (entry-title e)
                           (string-append ": " (entry-title e))
                           "")))))
-      (hashtable-set!
-        results
-        e
-        (apply (entry-thunk e) (gather-args e))))
-    sorted)
+     (hashtable-set! results
+                     e
+                     (apply (entry-thunk e) (gather-args e))))
+   sorted)
   (when verbose (newline))
   (display
-    (format
-      "test result: ~a. ~a passed; ~a failed; ~a filtered out\n"
-      (if (zero? *fails*) (ansi 'green "ok") (ansi 'bold-red "FAIL"))
-      *passes* *fails* (- *total* *passes* *fails*)))
+   (format "test result: ~a. ~a passed; ~a failed; ~a filtered out\n"
+           (if (zero? *fails*) (ansi 'green "ok") (ansi 'bold-red "FAIL"))
+           *passes* *fails* (- *total* *passes* *fails*)))
   (when (and (zero? *passes*) (zero? *fails*))
     (display (ansi 'magenta "WARNING: did not run any tests\n")))
   (zero? *fails*))
 
-;; In order for `SICP` to match on auxiliary keywords, we must export them.
-;; That implies giving them definitions. We don't need to do this for `define`
-;; and `=>` because we instead re-export the rnrs definitions (the latter is
-;; already an auxiliary keyword used in `cond`).
+;; In order for `SICP` to match on auxiliary keywords, we must export them. That
+;; implies giving them definitions. We don't need to do this for `define` and
+;; `=>` because we instead re-export the rnrs definitions (the latter is already
+;; an auxiliary keyword used in `cond`).
 (let-syntax
   ((auxiliary
     (syntax-rules ()
@@ -471,9 +464,9 @@
   ;; Use the `SICP` syntax form in `datum->syntax` calls.
   (define sicp (with-syntax (((s e* ...) x)) #'s))
 
-  ;; Creates an entry `num` from its `id` syntax. This just chops off the
-  ;; sigil used to differentiate chapters/sections from exercises (and also
-  ;; used because `1.1.1` on its own is an invalid R6RS identifier).
+  ;; Creates an entry `num` from its `id` syntax. This just chops off the sigil
+  ;; used to differentiate chapters/sections from exercises (and also used
+  ;; because `1.1.1` on its own is an invalid R6RS identifier).
   (define (entry-id->num id)
     (let ((str (symbol->string (syntax->datum id))))
       (substring str 1 (string-length str))))
@@ -495,18 +488,15 @@
       (syntax-case names ()
         (() #'())
         ((name e* ...)
-          (let ((pid (paste-id id #'name)))
-            (unless (hashtable-contains? definitions pid)
-              (syntax-violation
-                #f
-                "paste of non-existent definition"
-                #'name))
-            #`(#,(hashtable-ref definitions pid #f)
+         (let ((pid (paste-id id #'name)))
+           (unless (hashtable-contains? definitions pid)
+             (syntax-violation #f "paste of non-existent definition" #'name))
+           #`(#,(hashtable-ref definitions pid #f)
               #,@(inner id #'(e* ...)))))))
     (syntax-case spec ()
       (() #'())
       (((id name* ...) e* ...)
-        #`(#,@(inner #'id #'(name* ...))
+       #`(#,@(inner #'id #'(name* ...))
           #,@(retrieve-paste-code #'(e* ...))))))
 
   ;; Recursive implementation of the macro. It takes:
@@ -518,7 +508,7 @@
   ;; out     - accumulated result of the macro
   (define (go x header exports body ntests out)
     (define (flush)
-        (if (eq? header 'no-header)
+      (if (eq? header 'no-header)
           out
           #`(#,@out #,(build-entry))))
     (define (build-entry)
@@ -526,30 +516,28 @@
                     (((import-id import-name ...) ...) (get-uses))
                     ((export-name ...) exports))
         ;; Make sure no imports are shadowed by definitions.
-        (let ((all-import-names
-                (syntax->datum #'(import-name ... ...))))
+        (let ((all-import-names (syntax->datum #'(import-name ... ...))))
           (for-each
-            (lambda (name)
-              (when (memq name all-import-names)
-                (syntax-violation
-                  #f
-                  (string-append
-                    "imported name '"
-                    (symbol->string name)
-                    "' is shadowed by a local definition")
-                  header)))
-            (syntax->datum exports)))
+           (lambda (name)
+             (when (memq name all-import-names)
+               (syntax-violation
+                #f
+                (string-append "imported name '"
+                               (symbol->string name)
+                               "' is shadowed by a local definition")
+                header)))
+           (syntax->datum exports)))
         #`(add-entry!
-            'id
-            'kind
-            #,(entry-id->num #'id)
-            #,(get-title)
-            '((import-id import-name ...) ...)
-            '#,exports
-            (lambda (import-name ... ...)
-              (define export-name) ...
-              #,@body
-              (list export-name ...)))))
+           'id
+           'kind
+           #,(entry-id->num #'id)
+           #,(get-title)
+           '((import-id import-name ...) ...)
+           '#,exports
+           (lambda (import-name ... ...)
+             (define export-name) ...
+             #,@body
+             (list export-name ...)))))
     (define (get-title)
       (syntax-case header ()
         ((_ _ title _ ...) (string? (syntax->datum #'title)) #'title)
@@ -562,86 +550,85 @@
     (define (add-export name code)
       (with-syntax (((_ id e* ...) header))
         (let ((pid (paste-id #'id name)))
-          (cond
-            ((memq (syntax->datum name) (syntax->datum exports))
-              ;; This is a redefinition of the same export. Remove it from the
-              ;; definition table to disallow pasting the code, since it would
-              ;; be ambiguous which definition it is meant to paste.
-              (hashtable-delete! definitions pid)
-              exports)
-            (else
-              (when code (hashtable-set! definitions pid code))
-              #`(#,@exports #,name))))))
+          (cond ((memq (syntax->datum name) (syntax->datum exports))
+                 ;; This is a redefinition of the same export. Remove it from
+                 ;; the definition table to disallow pasting the code, since it
+                 ;; would be ambiguous which definition it is meant to paste.
+                 (hashtable-delete! definitions pid)
+                 exports)
+                (else
+                 (when code (hashtable-set! definitions pid code))
+                 #`(#,@exports #,name))))))
     (define (add-exports-from-paste names)
       (define (add names result)
         (syntax-case names ()
           (() result)
           ((n n* ...)
-            (memq (syntax->datum #'n) (syntax->datum exports))
-            (add #'(n* ...) result))
+           (memq (syntax->datum #'n) (syntax->datum exports))
+           (add #'(n* ...) result))
           ((n n* ...)
-            (add #'(n* ...) #`(#,@result n)))))
-      ;; This intentionally doesn't add to the definitions table. Pastes
-      ;; should come from the original source -- it would be too confusing
-      ;; if a paste's code comes from another paste.
+           (add #'(n* ...) #`(#,@result n)))))
+      ;; This intentionally doesn't add to the definitions table. Pastes should
+      ;; come from the original source -- it would be too confusing if a paste's
+      ;; code comes from another paste.
       (add names exports))
     (syntax-case x (Chapter Section Exercise define => ~> =$> =!> paste)
       (() #`(#,@(flush) (increase-total-tests! #,ntests)))
       (((Chapter e1* ...) e2* ...)
-        (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
+       (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
       (((Section e1* ...) e2* ...)
-        (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
+       (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
       (((Exercise e1* ...) e2* ...)
-        (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
+       (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
       (((define name) e* ...)
-        (identifier? #'name)
-        (go #'(e* ...) header (add-export #'name #f) body ntests out))
+       (identifier? #'name)
+       (go #'(e* ...) header (add-export #'name #f) body ntests out))
       (((define name e1* ...) e2* ...)
-        (identifier? #'name)
-        (with-syntax ((set #'(set! name e1* ...)))
-          (go #'(e2* ...)
-              header (add-export #'name #'set) #`(#,@body set) ntests out)))
+       (identifier? #'name)
+       (with-syntax ((set #'(set! name e1* ...)))
+         (go #'(e2* ...)
+             header (add-export #'name #'set) #`(#,@body set) ntests out)))
       (((define (name . args) e1* ...) e2* ...)
-        (identifier? #'name)
-        (with-syntax ((set #'(set! name (lambda args e1* ...))))
-          (go #'(e2* ...)
-              header (add-export #'name #'set) #`(#,@body set) ntests out)))
+       (identifier? #'name)
+       (with-syntax ((set #'(set! name (lambda args e1* ...))))
+         (go #'(e2* ...)
+             header (add-export #'name #'set) #`(#,@body set) ntests out)))
       ((e1 => e2 e* ...)
-        (go=> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
+       (go=> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
       ((e1 ~> e2 e* ...)
-        (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
+       (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
       ((e1 =$> e2 e* ...)
-        (with-syntax ((assert #'(assert-output (capture-output e1) #'e1 #'e2)))
-          (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
+       (with-syntax ((assert #'(assert-output (capture-output e1) #'e1 #'e2)))
+         (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
       ((e1 =!> e2 e* ...)
-        (string? (syntax->datum #'e2))
-        (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
-          (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
+       (string? (syntax->datum #'e2))
+       (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
+         (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
       (((paste (id name ...) ...) e* ...)
-        (with-syntax (((code ...) (retrieve-paste-code #'((id name ...) ...))))
-          (go #'(e* ...)
-              header (add-exports-from-paste #'(name ... ...))
-              #`(#,@body code ...) ntests out)))
+       (with-syntax (((code ...) (retrieve-paste-code #'((id name ...) ...))))
+         (go #'(e* ...)
+             header (add-exports-from-paste #'(name ... ...))
+             #`(#,@body code ...) ntests out)))
       ((e e* ...)
-        (go #'(e* ...) header exports #`(#,@body e) ntests out))))
+       (go #'(e* ...) header exports #`(#,@body e) ntests out))))
 
   ;; Helper recursive function when parsing `=>` operators.
   (define (go=> x terms header exports body ntests out)
     (syntax-case x (=>)
       ((=> e e* ...)
-        (go=> #'(e* ...) #`(#,@terms e) header exports body (+ ntests 1) out))
+       (go=> #'(e* ...) #`(#,@terms e) header exports body (+ ntests 1) out))
       ((e* ...)
-        (with-syntax ((assert #`(assert-equal (list #,@terms) #'#,terms)))
-          (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
+       (with-syntax ((assert #`(assert-equal (list #,@terms) #'#,terms)))
+         (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
   ;; Helper recursive function when parsing `~>` operators.
   (define (go~> x terms header exports body ntests out)
     (syntax-case x (~>)
       ((~> e e* ...)
-        (go~> #'(e* ...) #`(#,@terms e) header exports body (+ ntests 1) out))
+       (go~> #'(e* ...) #`(#,@terms e) header exports body (+ ntests 1) out))
       ((e* ...)
-        (with-syntax ((assert #`(assert-close (list #,@terms) #'#,terms)))
-          (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
+       (with-syntax ((assert #`(assert-close (list #,@terms) #'#,terms)))
+         (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
   (with-syntax (((_ e* ...) x))
     #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))))

@@ -28,12 +28,12 @@
           (syntax-line s)
           (+ 1 (syntax-column s)))) ; convert to 1-based
 
-;; Hack: Racket's r6rs mode uses it's mutable pair library for `cons`, `car`,
-;; and `cdr` (which are normally named `mcons`, `mcar`, and `mcdr`). This
-;; leaks when writing lists to strings, because Racket uses braces instead of
-;; parentheses for mutable lists. To make tests work for all implementations,
-;; we patch the output only for Racket, and hope there are no examples that
-;; actually use the characters "{" and "}".
+;; HACK: Racket's r6rs mode uses it's mutable pair library for `cons`, `car`,
+;; and `cdr` (which are normally named `mcons`, `mcar`, and `mcdr`). This leaks
+;; when writing lists to strings, because Racket uses braces instead of parens
+;; for mutable lists. To make tests work for all implementations, we patch the
+;; output only for Racket, and hope there are no examples that actually use the
+;; characters "{" and "}".
 (define (patch-output s)
   (string-replace (string-replace s "{" "(") "}" ")"))
 
@@ -54,10 +54,10 @@
 (define (parallel-execute . thunks)
   (define (spawn proc)
     (thread
-      (lambda ()
-        ;; Sleep for up to 1ms to ensure nondeterminism shows up.
-        (sleep (* 0.001 (random)))
-        (proc))))
+     (lambda ()
+       ;; Sleep for up to 1ms to ensure nondeterminism shows up.
+       (sleep (* 0.001 (random)))
+       (proc))))
   (for-each thread-wait (map spawn thunks)))
 
 ) ; end of library

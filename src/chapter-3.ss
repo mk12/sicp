@@ -174,7 +174,7 @@
 (define (rand-update x0)
   (let* ((x1 (fxxor x0 (fxarithmetic-shift-right x0 13)))
          (x2 (fxxor x1 (fxarithmetic-shift-left x1 18))))
-     (fxand x2 random-max)))
+    (fxand x2 random-max)))
 
 (define rand
   (let ((x random-init))
@@ -944,9 +944,9 @@ z2 => '((a b) a b)
 (define (set-next! node next) (set-cdr! (cdr node) next))
 
 (define (front-ptr dq) (car dq))
-(define (rear-ptr dq)  (cdr dq))
+(define (rear-ptr dq) (cdr dq))
 (define (set-front-ptr! dq x) (set-car! dq x))
-(define (set-rear-ptr!  dq x) (set-cdr! dq x))
+(define (set-rear-ptr! dq x) (set-cdr! dq x))
 (define (make-deque) (cons '() '()))
 
 (define (empty-deque? dq) (null? (front-ptr dq)))
@@ -1158,15 +1158,15 @@ z2 => '((a b) a b)
     (define (insert! key-1 key-2 value)
       (let ((subtable (assoc key-1 (cdr local-table))))
         (if subtable
-          (let ((record (assoc key-2 (cdr subtable))))
-            (if record
-                (set-cdr! record value)
-                (set-cdr! subtable
-                          (cons (cons key-2 value)
-                                (cdr subtable)))))
-          (set-cdr! local-table
-                    (cons (list key-1 (cons key-2 value))
-                          (cdr local-table))))))
+            (let ((record (assoc key-2 (cdr subtable))))
+              (if record
+                  (set-cdr! record value)
+                  (set-cdr! subtable
+                            (cons (cons key-2 value)
+                                  (cdr subtable)))))
+            (set-cdr! local-table
+                      (cons (list key-1 (cons key-2 value))
+                            (cdr local-table))))))
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
@@ -1285,17 +1285,17 @@ z2 => '((a b) a b)
 
 (define memo-fib
   (memoize
-    (lambda (n)
-      (cond ((= n 0) 0)
-            ((= n 1) 1)
-            (else (+ (memo-fib (- n 1))
-                     (memo-fib (- n 2))))))))
+   (lambda (n)
+     (cond ((= n 0) 0)
+           ((= n 1) 1)
+           (else (+ (memo-fib (- n 1))
+                    (memo-fib (- n 2))))))))
 
 (memo-fib 6) => 8
 (memo-fib 100) => 354224848179261915075
 
 ;; See whiteboard/exercise-3.27.jpg for the environment diagram.
-
+;;
 ;; The memoized procedure `memo-fib` computes the nth Fibonacci number in a
 ;; number of steps proportional to `n` because it takes the sum of `n` numbers.
 ;; When we evaluate `(memo-fib n)`, a tree-recursive process is generated and it
@@ -1305,7 +1305,7 @@ z2 => '((a b) a b)
 ;; the values are taken from the table. In general, we descend to the bottom of
 ;; the tree once and then ascend it, never again going down and reaching
 ;; duplicate leaves. This is twice `n` steps, so it grows as O(n).
-
+;;
 ;; If we had defined `memo-fib` as `(memoize fib)`, it would not work because
 ;; recursive calls would use `fib`, not `memo-fib`, and so we would still have
 ;; an exponential number of steps. However, this aspect of the memoization would
@@ -1339,19 +1339,19 @@ z2 => '((a b) a b)
 
 (define (inverter input output)
   (add-action!
-    input
-    (lambda ()
-      (let ((new-signal (logical-not (get-signal input))))
-        (after-delay
-          inverter-delay
-          (lambda () (set-signal! output new-signal)))))))
+   input
+   (lambda ()
+     (let ((new-signal (logical-not (get-signal input))))
+       (after-delay
+        inverter-delay
+        (lambda () (set-signal! output new-signal)))))))
 
 (define (and-gate a b out)
   (define (action)
     (let ((new-signal (logical-and (get-signal a) (get-signal b))))
       (after-delay
-        and-gate-delay
-        (lambda () (set-signal! out new-signal)))))
+       and-gate-delay
+       (lambda () (set-signal! out new-signal)))))
   (add-action! a action)
   (add-action! b action))
 
@@ -1367,8 +1367,8 @@ z2 => '((a b) a b)
   (define (action)
     (let ((new-signal (logical-or (get-signal a) (get-signal b))))
       (after-delay
-        or-gate-delay
-        (lambda () (set-signal! out new-signal)))))
+       or-gate-delay
+       (lambda () (set-signal! out new-signal)))))
   (add-action! a action)
   (add-action! b action))
 
@@ -1475,10 +1475,10 @@ z2 => '((a b) a b)
 
 (define (probe name wire)
   (add-action!
-    wire
-    (lambda ()
-      (display (format "\n~a ~a New-value = ~a"
-                       name (simulation-time the-agenda) (get-signal wire))))))
+   wire
+   (lambda ()
+     (display (format "\n~a ~a New-value = ~a"
+                      name (simulation-time the-agenda) (get-signal wire))))))
 
 (reset)
 (define input-1 (make-wire))
@@ -1514,11 +1514,11 @@ z2 => '((a b) a b)
           (wire m)
           (lambda (action)
             ((wire 'add-action!)
-              (let ((first #t))
-                (lambda ()
-                  (if first
-                      (set! first #f)
-                      (action))))))))))
+             (let ((first #t))
+               (lambda ()
+                 (if first
+                     (set! first #f)
+                     (action))))))))))
 
 ;; Consider an inverter between two wires:
 
@@ -1538,7 +1538,7 @@ z2 => '((a b) a b)
 ;; This is an incorrect state. To fix it, we'd have to flip `a` on and off.
 ;; Therefore, we must execute actions right after adding them to ensure the
 ;; circuit is in a stable state.
-
+;;
 ;; Let's trace through the previous example without calling actions when they
 ;; are added. Nothing is printed when we call `probe` because the probe action
 ;; is not called immediately. Nothing is printed when we propagate setting
@@ -1576,7 +1576,7 @@ z2 => '((a b) a b)
 (define (segments agenda) (cdr agenda))
 (define (set-segments! agenda segments) (set-cdr! agenda segments))
 (define (first-segment agenda) (car (segments agenda)))
-(define (rest-segments agenda)  (cdr (segments agenda)))
+(define (rest-segments agenda) (cdr (segments agenda)))
 
 (define (empty-agenda? agenda)
   (null? (segments agenda)))
@@ -1604,9 +1604,8 @@ z2 => '((a b) a b)
   (let ((segments (segments agenda)))
     (if (belongs-before? segments)
         (set-segments!
-          agenda
-          (cons (make-new-time-segment time action)
-                segments))
+         agenda
+         (cons (make-new-time-segment time action) segments))
         (add-to-segments! segments))))
 
 (define (remove-first-agenda-item! agenda)
@@ -1617,10 +1616,10 @@ z2 => '((a b) a b)
 
 (define (first-agenda-item agenda)
   (if (empty-agenda? agenda)
-    (error 'first-agenda-item "agenda is empty")
-    (let ((first-seg (first-segment agenda)))
-      (set-simulation-time! agenda (segment-time first-seg))
-      (front-queue (segment-queue first-seg)))))
+      (error 'first-agenda-item "agenda is empty")
+      (let ((first-seg (first-segment agenda)))
+        (set-simulation-time! agenda (segment-time first-seg))
+        (front-queue (segment-queue first-seg)))))
 
 (Exercise ?3.32
   (use (:3.3.2 disable-stack-mode enable-stack-mode) (:3.3.4.1 and-gate)
@@ -1641,7 +1640,7 @@ z2 => '((a b) a b)
 (set-signal! b 1)
 (and-gate a b c)
 (probe 'c c)
- =$> ["c 0 New-value = 0"]
+=$> ["c 0 New-value = 0"]
 (propagate) =$> ""
 (set-signal! a 1)
 (set-signal! b 0)
@@ -1993,23 +1992,23 @@ z2 => '((a b) a b)
 ;; Without serialization, there are five possible values:
 (define x 10)
 (parallel-execute
-  (lambda () (set! x (* x x)))
-  (lambda () (set! x (+ x 1))))
+ (lambda () (set! x (* x x)))
+ (lambda () (set! x (+ x 1))))
 (in? x '(11 100 101 110 121)) => #t
 
 ;; With serialization, it narrows to two possible values:
 (define x 10)
 (let ((s (make-serializer)))
   (parallel-execute
-    (s (lambda () (set! x (* x x))))
-    (s (lambda () (set! x (+ x 1))))))
+   (s (lambda () (set! x (* x x))))
+   (s (lambda () (set! x (+ x 1))))))
 (in? x '(101 121)) => #t
 
 (define (make-account balance)
   (define (withdraw amount)
     (if (>= balance amount)
         (begin (set! balance (- balance amount))
-                balance)
+               balance)
         "Insufficient funds"))
   (define (deposit amount)
     (set! balance (+ balance amount))
@@ -2020,7 +2019,7 @@ z2 => '((a b) a b)
             ((eq? m 'deposit) (protected deposit))
             ((eq? m 'balance) balance)
             (else (error 'make-account "unknown request" m))))
-  dispatch))
+    dispatch))
 
 (Exercise ?3.39
   (use (:3.4.2.3 make-serializer) (?3.38 in?)))
@@ -2028,8 +2027,8 @@ z2 => '((a b) a b)
 (define x 10)
 (let ((s (make-serializer)))
   (parallel-execute
-    (lambda () (set! x ((s (lambda () (* x x))))))
-    (s (lambda () (set! x (+ x 1))))))
+   (lambda () (set! x ((s (lambda () (* x x))))))
+   (s (lambda () (set! x (+ x 1))))))
 
 ;; Three of the five values are still possible:
 (in? x '(101   ; squared, then incremented
@@ -2044,10 +2043,10 @@ z2 => '((a b) a b)
 
 (define x 10)
 (parallel-execute
-;; process S:  3        1 2
-  (lambda () (set! x (* x x)))
-;; process C:  7        4 5 6
-  (lambda () (set! x (* x x x))))
+;; process S:  3       1 2
+ (lambda () (set! x (* x x)))
+;; process C:  7       4 5 6
+ (lambda () (set! x (* x x x))))
 
 ;; There are five possible values:
 (in? x '(100 1000 10000 100000 1000000)) => #t
@@ -2137,8 +2136,8 @@ final-values
 (define x 10)
 (let ((s (make-serializer)))
   (parallel-execute
-    (s (lambda () (set! x (* x x))))
-    (s (lambda () (set! x (* x x x))))))
+   (s (lambda () (set! x (* x x))))
+   (s (lambda () (set! x (* x x x))))))
 x => 1000000
 
 (Exercise ?3.41
@@ -2164,7 +2163,7 @@ x => 1000000
 
 (define (exchange account1 account2)
   (let ((difference (- (account1 'balance)
-                      (account2 'balance))))
+                       (account2 'balance))))
     ((account1 'withdraw) difference)
     ((account2 'deposit) difference)))
 
@@ -2172,7 +2171,7 @@ x => 1000000
   (define (withdraw amount)
     (if (>= balance amount)
         (begin (set! balance (- balance amount))
-              balance)
+               balance)
         "Insufficient funds"))
   (define (deposit amount)
     (set! balance (+ balance amount)) balance)
@@ -2194,8 +2193,8 @@ x => 1000000
   (let ((serializer1 (account1 'serializer))
         (serializer2 (account2 'serializer)))
     ((serializer1 (serializer2 exchange))
-    account1
-    account2)))
+     account1
+     account2)))
 
 (Exercise ?3.43)
 
@@ -2298,10 +2297,10 @@ x => 1000000
 (define x 100)
 (let ((s (make-serializer)))
   (parallel-execute
-    ;;              2            1
-    (s (lambda () (set! x (+ 100 x)))) ; process P
-    ;;              2        1
-    (s (lambda () (set! x (/ x 2)))))) ; process Q
+   ;;              2            1
+   (s (lambda () (set! x (+ 100 x)))) ; process P
+   ;;              2        1
+   (s (lambda () (set! x (/ x 2)))))) ; process Q
 
 ;; There are four possible values:
 (in? x '(100  ; P1, P2, Q1, Q2 (serial)
@@ -2316,7 +2315,7 @@ x => 1000000
 (Exercise ?3.47
   (use (:3.4.2.3 clear! test-and-set!) (?3.38 in?)))
 
-;;; (a) Sempahore in terms of mutexes
+;; (a) Sempahore in terms of mutexes
 
 ;; Note: This assumes that any thread can acquire/release the mutex. It does not
 ;; work with mutex implementations that only allow the owner to release it.
@@ -2344,7 +2343,7 @@ x => 1000000
 ;; We can't test this because not all Schemes we support have the required
 ;; property of allowing any thread to release another's mutex.
 
-;;; (b) Semaphore in terms of atomic `test-and-set!` operations
+;; (b) Semaphore in terms of atomic `test-and-set!` operations
 
 (define (make-semaphore-from-scratch n)
   (let ((count n)
@@ -2412,8 +2411,8 @@ x => 1000000
   (let ((s1 (a1 'serializer))
         (s2 (a2 'serializer)))
     ((if (< (a1 'identifier) (a2 'identifier))
-       (s1 (s2 exchange))
-       (s2 (s1 exchange)))
+         (s1 (s2 exchange))
+         (s2 (s1 exchange)))
      a1
      a2)))
 
@@ -2421,8 +2420,8 @@ x => 1000000
 (define a1 (make-account 10))
 (define a2 (make-account 20))
 (parallel-execute
-  (lambda () (serialized-exchange a1 a2))
-  (lambda () (serialized-exchange a2 a1)))
+ (lambda () (serialized-exchange a1 a2))
+ (lambda () (serialized-exchange a2 a1)))
 (a1 'balance) => 10
 (a2 'balance) => 20
 
@@ -2465,7 +2464,7 @@ x => 1000000
 ;; `cons-stream` is defined in src/lang/sicp.ss.
 (define the-empty-stream '())
 (define stream-null? null?)
-(define (stream-car s) (car s ))
+(define (stream-car s) (car s))
 (define (stream-cdr s) (force (cdr s)))
 
 (Section :3.5.1.1 "The stream implementation in action"
@@ -2516,7 +2515,7 @@ x => 1000000
       (unless already-run?
         (set! result (proc))
         (set! already-run? #t))
-        result)))
+      result)))
 
 ;; We would then define `(delay EXPR)` to be `(memo-proc (lambda () EXPR))`.
 
@@ -2526,9 +2525,8 @@ x => 1000000
 (define (stream-map f . ss)
   (if (stream-null? (car ss))
       the-empty-stream
-      (cons-stream
-        (apply f (map stream-car ss))
-        (apply stream-map f (map stream-cdr ss)))))
+      (cons-stream (apply f (map stream-car ss))
+                   (apply stream-map f (map stream-cdr ss)))))
 
 (Exercise ?3.51
   (use (:3.5.1 display-line stream-map stream-ref)
@@ -2589,11 +2587,11 @@ sum => 136
 
 (define (sieve s)
   (cons-stream
-    (stream-car s)
-    (sieve (stream-filter
-             (lambda (x)
-               (not (divisible? x (stream-car s))))
-             (stream-cdr s)))))
+   (stream-car s)
+   (sieve (stream-filter
+           (lambda (x)
+             (not (divisible? x (stream-car s))))
+           (stream-cdr s)))))
 (define primes (sieve (integers-starting-from 2)))
 (stream-ref primes 50) => 233
 
@@ -2673,8 +2671,8 @@ sum => 136
                 (cond ((< x1 x2) (cons-stream x1 (merge (stream-cdr s1) s2)))
                       ((> x1 x2) (cons-stream x2 (merge s1 (stream-cdr s2))))
                       (else (cons-stream
-                              x1
-                              (merge (stream-cdr s1) (stream-cdr s2)))))))))
+                             x1
+                             (merge (stream-cdr s1) (stream-cdr s2)))))))))
 (define S
   (cons-stream 1 (merge (scale-stream S 2)
                         (merge (scale-stream S 3)
@@ -2689,12 +2687,12 @@ sum => 136
 ;; greater if `delay` is implemented without memoization.
 
 (Exercise ?3.58
-   (use (:3.5.2 stream-take)))
+  (use (:3.5.2 stream-take)))
 
 (define (expand num den radix)
   (cons-stream
-    (quotient (* num radix) den)
-    (expand (remainder (* num radix) den) den radix)))
+   (quotient (* num radix) den)
+   (expand (remainder (* num radix) den) den radix)))
 
 ;; This procedure produces the stream of digits in the base given by `radix`
 ;; that represent the quotient of `num` and `den`. It does it without using
@@ -2709,12 +2707,12 @@ sum => 136
   (use (:2.2.3.1 accumulate) (:3.5.2 integers-starting-from stream-take)
        (:3.5.2.1 negate-stream) (?3.50 stream-map)))
 
-;;; (a) Integration
+;; (a) Integration
 
 (define (integrate-series power-series)
   (stream-map / power-series (integers-starting-from 1)))
 
-;;; (b) Exponential, sine, cosine
+;; (b) Exponential, sine, cosine
 
 (define exp-series
   (cons-stream 1 (integrate-series exp-series)))
@@ -2723,7 +2721,7 @@ sum => 136
 (define sine-series
   (cons-stream 0 (integrate-series cosine-series)))
 
-;;; Evaluating series
+;; Evaluating series
 
 (define (eval-series s x n)
   (let ((terms (stream-map (lambda (c k) (* c (expt x k)))
@@ -2757,9 +2755,9 @@ sum => 136
 
 (define (invert-unit-series s)
   (cons-stream
-    1
-    (negate-stream (mul-series (stream-cdr s)
-                               (invert-unit-series s)))))
+   1
+   (negate-stream (mul-series (stream-cdr s)
+                              (invert-unit-series s)))))
 
 ;; Note: `invert-series` requires a nonzero constant term.
 (define (invert-series s)
@@ -2767,8 +2765,8 @@ sum => 136
     (cond ((= constant 0) (error 'invert-series "division by zero" s))
           ((= constant 1) (invert-unit-series s))
           (else (scale-stream
-                  (invert-unit-series (scale-stream s (/ constant)))
-                  (/ constant))))))
+                 (invert-unit-series (scale-stream s (/ constant)))
+                 (/ constant))))))
 
 (Exercise ?3.62
   (use (:3.5.1 stream-car) (?3.59 cosine-series eval-series sine-series)
@@ -2793,9 +2791,9 @@ sum => 136
 (define (sqrt-stream x)
   (define guesses
     (cons-stream
-      1.0
-      (stream-map (lambda (guess) (improve guess x))
-                  guesses)))
+     1.0
+     (stream-map (lambda (guess) (improve guess x))
+                 guesses)))
   guesses)
 
 (define (pi-summands n)
@@ -2834,9 +2832,9 @@ sum => 136
 
 (define (sqrt-stream x)
   (cons-stream
-    1.0
-    (stream-map (lambda (guess) (improve guess x))
-                (sqrt-stream x))))
+   1.0
+   (stream-map (lambda (guess) (improve guess x))
+               (sqrt-stream x))))
 
 ;; This implementation is less efficient because it doesn't take advantage of
 ;; memoization. It improves the first guess to get the second item, but then it
@@ -2884,11 +2882,11 @@ sum => 136
 
 (define (pairs s t)
   (cons-stream
-    (list (stream-car s) (stream-car t))
-    (interleave
-      (stream-map (lambda (x) (list (stream-car s) x))
-                  (stream-cdr t))
-      (pairs (stream-cdr s) (stream-cdr t)))))
+   (list (stream-car s) (stream-car t))
+   (interleave
+    (stream-map (lambda (x) (list (stream-car s) x))
+                (stream-cdr t))
+    (pairs (stream-cdr s) (stream-cdr t)))))
 
 (define (interleave s1 s2)
   (cond ((stream-null? s1) s2)
@@ -2902,6 +2900,8 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 (Exercise ?3.66
   (use (:2.2.3.1 enumerate-interval) (:3.5.1 stream-car stream-cdr stream-ref)
        (:3.5.2 divisible?) (:3.5.3.2 first-10-pairs integer-pairs)))
+
+;; BUG: This hangs sometimes in Racket.
 
 ;; Let f(n) be the nth pair in the stream, starting at 0.
 ;;
@@ -2965,14 +2965,14 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 (define (pairs s t)
   (cons-stream
-    (list (stream-car s) (stream-car t))
+   (list (stream-car s) (stream-car t))
+   (interleave
+    (stream-map (lambda (x) (list (stream-car s) x))
+                (stream-cdr t))
     (interleave
-      (stream-map (lambda (x) (list (stream-car s) x))
-                  (stream-cdr t))
-      (interleave
-        (stream-map (lambda (x) (list x (stream-car t)))
-                    (stream-cdr s))
-        (pairs (stream-cdr s) (stream-cdr t))))))
+     (stream-map (lambda (x) (list x (stream-car t)))
+                 (stream-cdr s))
+     (pairs (stream-cdr s) (stream-cdr t))))))
 
 (stream-take (pairs integers integers) 10)
 => '((1 1) (1 2) (2 1) (1 3) (2 2) (1 4) (3 1) (1 5) (2 3) (1 6))
@@ -2982,9 +2982,9 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 (define (pairs s t)
   (interleave
-    (stream-map (lambda (x) (list (stream-car s) x))
-                t)
-    (pairs (stream-cdr s) (stream-cdr t))))
+   (stream-map (lambda (x) (list (stream-car s) x))
+               t)
+   (pairs (stream-cdr s) (stream-cdr t))))
 
 ;; No, this will not work: there will be an infinite loop. The recursive call
 ;; `(pairs (stream-cdr s) (stream-cdr t))` is not delayed by a `cons-stream`,
@@ -2996,19 +2996,19 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 (define (triples s t u)
   (cons-stream
-    (list (stream-car s) (stream-car t) (stream-car u))
-    (interleave
-      (stream-map (lambda (x) (cons (stream-car s) x))
-                  (stream-cdr (pairs t u)))
-      (triples (stream-cdr s)
-              (stream-cdr t)
-              (stream-cdr u)))))
+   (list (stream-car s) (stream-car t) (stream-car u))
+   (interleave
+    (stream-map (lambda (x) (cons (stream-car s) x))
+                (stream-cdr (pairs t u)))
+    (triples (stream-cdr s)
+             (stream-cdr t)
+             (stream-cdr u)))))
 
 (define pythagorean-triples
   (stream-filter
-    (lambda (x)
-      (= (+ (square (car x)) (square (cadr x))) (square (caddr x))))
-    (triples integers integers integers)))
+   (lambda (x)
+     (= (+ (square (car x)) (square (cadr x))) (square (caddr x))))
+   (triples integers integers integers)))
 
 (stream-car pythagorean-triples) => '(3 4 5)
 
@@ -3029,12 +3029,12 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 (define (weighted-pairs s t weight)
   (cons-stream
-    (list (stream-car s) (stream-car s))
-    (merge-weighted
-      (stream-map (lambda (x) (list (stream-car s) x))
-                  (stream-cdr t))
-      (weighted-pairs (stream-cdr s) (stream-cdr t) weight)
-      weight)))
+   (list (stream-car s) (stream-car s))
+   (merge-weighted
+    (stream-map (lambda (x) (list (stream-car s) x))
+                (stream-cdr t))
+    (weighted-pairs (stream-cdr s) (stream-cdr t) weight)
+    weight)))
 
 ;; (a) Pairs of positive integers (i, j) with i <= j ordered by i + j.
 (define (a-weight p) (apply + p))
@@ -3047,14 +3047,14 @@ a-10 => '((1 1) (1 2) (1 3) (2 2) (1 4) (2 3) (1 5) (2 4) (3 3) (1 6))
 ;; divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.
 (define (b-weight p)
   (+ (* 2 (car p))
-    (* 3 (cadr p))
-    (* 5 (car p) (cadr p))))
+     (* 3 (cadr p))
+     (* 5 (car p) (cadr p))))
 (define b-stream
   (let ((filtered
          (stream-filter
-           (lambda (x)
-             (not (or (divisible? x 2) (divisible? x 3) (divisible? x 5))))
-           integers)))
+          (lambda (x)
+            (not (or (divisible? x 2) (divisible? x 3) (divisible? x 5))))
+          integers)))
     (weighted-pairs filtered filtered b-weight)))
 (define b-10 (stream-take b-stream 10))
 b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
@@ -3067,7 +3067,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 (define (weight p) (+ (cube (car p)) (cube (cadr p))))
 (define (analyze pairs)
   (let* ((w1 (weight (stream-car pairs)))
-          (w2 (weight (stream-car (stream-cdr pairs)))))
+         (w2 (weight (stream-car (stream-cdr pairs)))))
     (if (= w1 w2)
         (cons-stream w1 (analyze (stream-cdr (stream-cdr pairs))))
         (analyze (stream-cdr pairs)))))
@@ -3087,9 +3087,8 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
          (x3 (stream-car (stream-cdr (stream-cdr pairs))))
          (w1 (weight x1)))
     (if (= w1 (weight x2) (weight x3))
-        (cons-stream
-          (list w1 x1 x2 x3)
-          (analyze (stream-cdr (stream-cdr (stream-cdr pairs)))))
+        (cons-stream (list w1 x1 x2 x3)
+                     (analyze (stream-cdr (stream-cdr (stream-cdr pairs)))))
         (analyze (stream-cdr pairs)))))
 (define thrice-square-sums
   (analyze (weighted-pairs integers integers weight)))
@@ -3110,7 +3109,8 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
   int)
 
 (Exercise ?3.73
-  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams ones scale-stream) (:3.5.3.3 integral)))
+  (use (:3.5.2 stream-take) (:3.5.2.1 add-streams ones scale-stream)
+       (:3.5.3.3 integral)))
 
 (define (RC R C dt)
   (lambda (i v0)
@@ -3132,7 +3132,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
           (else (cons-stream (car xs) (iter (cdr xs))))))
   (iter original))
 
-;;; Alyssa's original implementation
+;; Alyssa's original implementation
 
 (define (sign-change-detector new old)
   (cond ((and (< old 0) (>= new 0)) 1)
@@ -3140,15 +3140,15 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
         (else 0)))
 (define (make-zero-crossings input-stream last-value)
   (cons-stream
-    (sign-change-detector (stream-car input-stream) last-value)
-    (make-zero-crossings (stream-cdr input-stream) (stream-car input-stream))))
+   (sign-change-detector (stream-car input-stream) last-value)
+   (make-zero-crossings (stream-cdr input-stream) (stream-car input-stream))))
 (define (zero-crossings sense-data) (make-zero-crossings sense-data 0))
 
 (define test-data (cycle '(1 2 -1 -2 0 -1 0 2 4 5)))
 (define test-result '(0 0 -1 0 1 -1 1 0 0 0))
 (stream-take (zero-crossings test-data) 10) => test-result
 
-;;; My implementation based on Eva Lu Ator's suggestion
+;; My implementation based on Eva Lu Ator's suggestion
 
 (define (zero-crossings sense-data)
   (stream-map sign-change-detector
@@ -3165,8 +3165,8 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
   (let* ((value (stream-car input-stream))
          (avpt (/ (+ value last-value) 2)))
     (cons-stream
-      (sign-change-detector avpt last-avpt)
-      (make-zero-crossings (stream-cdr input-stream) value avpt))))
+     (sign-change-detector avpt last-avpt)
+     (make-zero-crossings (stream-cdr input-stream) value avpt))))
 (define (zero-crossings sense-data) (make-zero-crossings sense-data 0 0))
 
 (define test-result '(0 0 0 -1 0 0 0 1 0 0))
@@ -3188,9 +3188,9 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 (define (integral delayed-integrand initial-value dt)
   (define int
     (cons-stream
-      initial-value
-      (let ((integrand (force delayed-integrand)))
-	      (add-streams (scale-stream integrand dt) int))))
+     initial-value
+     (let ((integrand (force delayed-integrand)))
+       (add-streams (scale-stream integrand dt) int))))
   int)
 
 ;; Solves y' = f(y).
@@ -3208,14 +3208,14 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 
 (define (integral delayed-integrand initial-value dt)
   (cons-stream
-    initial-value
-    (let ((integrand (force delayed-integrand)))
-      (if (stream-null? integrand)
-          the-empty-stream
-            (integral (delay (stream-cdr integrand))
-                      (+ (* dt (stream-car integrand))
-                        initial-value)
-                      dt)))))
+   initial-value
+   (let ((integrand (force delayed-integrand)))
+     (if (stream-null? integrand)
+         the-empty-stream
+         (integral (delay (stream-cdr integrand))
+                   (+ (* dt (stream-car integrand))
+                      initial-value)
+                   dt)))))
 
 (paste (:3.5.4 solve))
 (stream-ref (solve (lambda (y) y) 1 0.001) 1000) ~> 2.716923932235896
@@ -3279,32 +3279,32 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 
 (define (map-successive-pairs f s)
   (cons-stream
-    (f (stream-car s) (stream-car (stream-cdr s)))
-    (map-successive-pairs f (stream-cdr (stream-cdr s)))))
+   (f (stream-car s) (stream-car (stream-cdr s)))
+   (map-successive-pairs f (stream-cdr (stream-cdr s)))))
 
 (define (monte-carlo experiment-stream passed failed)
   (define (next passed failed)
     (cons-stream
-      (/ passed (+ passed failed))
-      (monte-carlo (stream-cdr experiment-stream) passed failed)))
+     (/ passed (+ passed failed))
+     (monte-carlo (stream-cdr experiment-stream) passed failed)))
   (if (stream-car experiment-stream)
       (next (+ passed 1) failed)
       (next passed (+ failed 1))))
 
 (define random-numbers
   (cons-stream
-    ;; Start at `(rand-update random-init)` rather than `random-init` to match
-    ;; the behavior in Section 3.1.2. This ensures the same estimate of pi.
-    (rand-update random-init)
-    (stream-map rand-update random-numbers)))
+   ;; Start at `(rand-update random-init)` rather than `random-init` to match
+   ;; the behavior in Section 3.1.2. This ensures the same estimate of pi.
+   (rand-update random-init)
+   (stream-map rand-update random-numbers)))
 (define cesaro-stream
   (map-successive-pairs
-    (lambda (r1 r2) (= (gcd r1 r2) 1))
-    random-numbers))
+   (lambda (r1 r2) (= (gcd r1 r2) 1))
+   random-numbers))
 (define pi
   (stream-map
-    (lambda (p) (sqrt (/ 6 p)))
-    (monte-carlo cesaro-stream 0 0)))
+   (lambda (p) (sqrt (/ 6 p)))
+   (monte-carlo cesaro-stream 0 0)))
 
 ;; This is deterministic because the `random-init` seed is fixed.
 (stream-ref pi 999) ~> 3.149183286488868
@@ -3340,7 +3340,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
   (let* ((dx (- x2 x1))
          (dy (- y2 y1))
          (experiment-stream
-         (map-successive-pairs
+          (map-successive-pairs
            (lambda (r1 r2)
              (pred (+ x1 (* dx (/ r1 random-max)))
                    (+ y1 (* dy (/ r2 random-max)))))

@@ -78,7 +78,7 @@ circumference ~> 62.8318
 => (sum-of-squares (+ 5 1) (* 5 2))
 => (+ (square (+ 5 1)) (square (* 5 2)))
 => (+ (* (+ 5 1) (+ 5 1)) (* (* 5 2) (* 5 2)))
-=> (+ (* 6 6 ) (* 10 10))
+=> (+ (* 6 6) (* 10 10))
 => (+ 36 100)
 => 136
 
@@ -95,8 +95,8 @@ circumference ~> 62.8318
 
 (define (abs x)
   (if (< x 0)
-    (- x)
-    x))
+      (- x)
+      x))
 
 (define (>= x y) (or (> x y) (= x y)))
 (define (>= x y) (not (< x y)))
@@ -127,13 +127,13 @@ circumference ~> 62.8318
 (* (cond ((> a b) a)
          ((< a b) b)
          (else -1))
-  (+ a 1))
+   (+ a 1))
 => 16
 
 (Exercise ?1.2)
 
 (/ (+ 5 4 (- 2 (- 3 (+ 6 4/5))))
-    (* 3 (- 6 2) (- 2 7)))
+   (* 3 (- 6 2) (- 2 7)))
 => -37/150
 
 (Exercise ?1.3)
@@ -276,8 +276,8 @@ circumference ~> 62.8318
 (define (cube x) (* x x x))
 (define (cbrt-iter guess x)
   (if (good-enough? guess x)
-    guess
-    (cbrt-iter (improve guess x) x)))
+      guess
+      (cbrt-iter (improve guess x) x)))
 (define (improve guess x)
   (/ (+ (/ x (square guess))
         (* 2 guess))
@@ -306,7 +306,8 @@ circumference ~> 62.8318
     (< (abs (- (square guess) x)) 0.001))
   (define (improve guess x) (average guess (/ x guess)))
   (define (sqrt-iter guess x)
-    (if (good-enough? guess x) guess
+    (if (good-enough? guess x)
+        guess
         (sqrt-iter (improve guess x) x)))
   (sqrt-iter 1.0 x))
 
@@ -317,8 +318,9 @@ circumference ~> 62.8318
   (define (improve guess)
     (average guess (/ x guess)))
   (define (sqrt-iter guess)
-    (if (good-enough? guess) guess
-      (sqrt-iter (improve guess))))
+    (if (good-enough? guess)
+        guess
+        (sqrt-iter (improve guess))))
   (sqrt-iter 1.0))
 
 (Section :1.2 "Procedures and the Processes They Generate")
@@ -327,8 +329,8 @@ circumference ~> 62.8318
 
 (define (factorial n)
   (if (= n 1)
-    1
-    (* n (factorial (- n 1)))))
+      1
+      (* n (factorial (- n 1)))))
 
 ;; Linear recursive process:
 (factorial 6)
@@ -350,7 +352,8 @@ circumference ~> 62.8318
   (if (> counter max-count)
       product
       (fact-iter (* counter product)
-                 (+ counter 1) max-count)))
+                 (+ counter 1)
+                 max-count)))
 
 ;; Linear iterative process:
 (factorial 6)
@@ -435,8 +438,8 @@ circumference ~> 62.8318
 (define (fib n)
   (define (iter a b count)
     (if (= count 0)
-      b
-      (iter (+ a b) a (- count 1))))
+        b
+        (iter (+ a b) a (- count 1))))
   (iter 1 0 n))
 
 (fib 6) => 8
@@ -453,9 +456,7 @@ circumference ~> 62.8318
   (cc amount 5))
 
 (define (first-denomination kinds-of-coins)
-  (vector-ref
-    '#(1 5 10 25 50)
-    (- kinds-of-coins 1)))
+  (vector-ref '#(1 5 10 25 50) (- kinds-of-coins 1)))
 
 (count-change 100) => 292
 
@@ -464,10 +465,10 @@ circumference ~> 62.8318
 ;; Recursive process:
 (define (f n)
   (if (< n 3)
-    n
-    (+ (f (- n 1))
-       (* 2 (f (- n 2)))
-       (* 3 (f (- n 3))))))
+      n
+      (+ (f (- n 1))
+         (* 2 (f (- n 2)))
+         (* 3 (f (- n 3))))))
 
 (f 5) => 25
 
@@ -475,8 +476,8 @@ circumference ~> 62.8318
 (define (f n)
   (define (iter a b c counter)
     (if (= counter 0)
-      a
-      (iter b c (+ c (* 2 b) (* 3 a)) (- counter 1))))
+        a
+        (iter b c (+ c (* 2 b) (* 3 a)) (- counter 1))))
   (iter 0 1 2 n))
 
 (f 5) => 25
@@ -485,9 +486,9 @@ circumference ~> 62.8318
 
 (define (pascal i j)
   (if (or (= j 0) (= j i))
-    1
-    (+ (pascal (- i 1) (- j 1))
-       (pascal (- i 1) j))))
+      1
+      (+ (pascal (- i 1) (- j 1))
+         (pascal (- i 1) j))))
 
 (pascal 3 0) => 1
 (pascal 3 1) => 3
@@ -575,8 +576,8 @@ circumference ~> 62.8318
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine theta)
   (if (<= (abs theta) 0.1)
-    theta
-    (p (sine (/ theta 3.0)))))
+      theta
+      (p (sine (/ theta 3.0)))))
 
 ;; (a) The procedure `p` is evaluated five times for `(sine 12.15)`.
 (sine 12.15)
@@ -597,8 +598,8 @@ circumference ~> 62.8318
 ;; Recursive naive: O(n) time, O(n) space
 (define (expt b n)
   (if (= n 0)
-    1
-    (* b (expt b (- n 1)))))
+      1
+      (* b (expt b (- n 1)))))
 
 (expt 2 5) => 32
 
@@ -606,8 +607,8 @@ circumference ~> 62.8318
 (define (expt b n)
   (define (iter counter prod)
     (if (= counter 0)
-      prod
-      (iter (- counter 1) (* prod b))))
+        prod
+        (iter (- counter 1) (* prod b))))
   (iter n 1))
 
 (expt 2 5) => 32
@@ -639,8 +640,8 @@ circumference ~> 62.8318
 ;; Recursive naive: O(n) time, O(n) space
 (define (* a b)
   (if (= b 0)
-    0
-    (+ a (* a (- b 1)))))
+      0
+      (+ a (* a (- b 1)))))
 
 (* 5 4) => 20
 
@@ -710,8 +711,8 @@ circumference ~> 62.8318
 ;; Euclid's Algorithm: O(log(n)) time
 (define (gcd a b)
   (if (= b 0)
-    a
-    (gcd b (remainder a b))))
+      a
+      (gcd b (remainder a b))))
 
 (gcd 206 40) => 2
 
@@ -816,7 +817,7 @@ circumference ~> 62.8318
   (display n)
   (start-prime-test p? n (runtime)))
 (define (start-prime-test p? n start-time)
-  (if (p? n)
+  (when (p? n)
     (report-prime (- (runtime) start-time))))
 (define (report-prime elapsed-time)
   (display " *** ")
@@ -830,8 +831,8 @@ circumference ~> 62.8318
   (iter (if (odd? a) a (+ a 1)) b))
 
 (string-contains?
-  (capture-output (search-for-primes prime? 6 10))
-  "7 *** ")
+ (capture-output (search-for-primes prime? 6 10))
+ "7 *** ")
 => #t
 
 ;; 3 primes greater than 1,000 (A)
@@ -881,8 +882,8 @@ circumference ~> 62.8318
   (= n (smallest-divisor n)))
 
 (string-contains?
-  (capture-output (search-for-primes prime? 6 10))
-  "7 *** ")
+ (capture-output (search-for-primes prime? 6 10))
+ "7 *** ")
 => #t
 
 ;; 3 primes greater than 1,000
@@ -921,8 +922,8 @@ circumference ~> 62.8318
 (define (prime? n) (fast-prime? n 100))
 
 (string-contains?
-  (capture-output (search-for-primes prime? 6 10))
-  "7 *** ")
+ (capture-output (search-for-primes prime? 6 10))
+ "7 *** ")
 => #t
 
 ;; 3 primes greater than 1,000 (A)
@@ -1118,8 +1119,8 @@ circumference ~> 62.8318
     (define (term k)
       (* (f (+ a (* k h)))
          (if (or (= k 0) (= k n))
-           1
-           (+ 2 (* 2 (remainder k 2))))))
+             1
+             (+ 2 (* 2 (remainder k 2))))))
     (* h 1/3 (sum term 0.0 inc n))))
 
 ;; The integral procedure is a bit inaccurate, whereas the `simpson` procedure
@@ -1143,16 +1144,16 @@ circumference ~> 62.8318
 ;; (a) Recursive
 (define (product term a next b)
   (if (> a b)
-    1
-    (* (term a)
-       (product term (next a) next b))))
+      1
+      (* (term a)
+         (product term (next a) next b))))
 
 ;; (b) Iterative
 (define (product term a next b)
   (define (iter a acc)
     (if (> a b)
-      acc
-      (iter (next a) (* acc (term a)))))
+        acc
+        (iter (next a) (* acc (term a)))))
   (iter a 1))
 
 (define (factorial n)
@@ -1179,16 +1180,16 @@ circumference ~> 62.8318
 ;; (a) Recursive
 (define (accumulate combine id term a next b)
   (if (> a b)
-    id
-    (combine (term a)
-             (accumulate combine id term (next a) next b))))
+      id
+      (combine (term a)
+               (accumulate combine id term (next a) next b))))
 
 ;; (b) Iterative
 (define (accumulate combine id term a next b)
   (define (iter a acc)
     (if (> a b)
-      acc
-      (iter (next a) (combine (term a) acc))))
+        acc
+        (iter (next a) (combine (term a) acc))))
   (iter a id))
 
 (define (sum term a next b)
@@ -1211,13 +1212,13 @@ circumference ~> 62.8318
           (else (iter (next a) acc))))
   (iter a id))
 
-;; (a) Sum of squares of primes in the interval `a` to `b`.
+;; (a) Sum of squares of primes in the interval `a` to `b`
 (define (sum-squared-primes a b)
   (filtered-accumulate + prime? 0 square a inc b))
 
 (sum-squared-primes 10 15) => 290
 
-;; (b) Product of positive integers below `n` relatively prime to `n`.
+;; (b) Product of positive integers below `n` relatively prime to `n`
 (define (product-rel-prime n)
   (define (rel-prime? i)
     (= (gcd i n) 1))
@@ -1228,9 +1229,7 @@ circumference ~> 62.8318
 (Section :1.3.2 "Constructing Procedures Using Lambda"
   (use (:1.1.4 square)))
 
-((lambda (x y z) (+ x y (square z)))
- 1 2 3)
-=> 12
+((lambda (x y z) (+ x y (square z))) 1 2 3) => 12
 
 (Exercise ?1.34
   (use (:1.1.4 square)))
@@ -1258,9 +1257,9 @@ circumference ~> 62.8318
         midpoint
         (let ((test-value (f midpoint)))
           (cond ((positive? test-value)
-                (search f neg-point midpoint))
+                 (search f neg-point midpoint))
                 ((negative? test-value)
-                (search f midpoint pos-point))
+                 (search f midpoint pos-point))
                 (else midpoint))))))
 
 (define tolerance 0.001)
@@ -1275,9 +1274,9 @@ circumference ~> 62.8318
           ((and (negative? b-value) (positive? a-value))
            (search f b a))
           (else
-            (error 'half-interval-method
-                   "values are not of opposite sign"
-                   a b)))))
+           (error 'half-interval-method
+                  "values are not of opposite sign"
+                  a b)))))
 
 (half-interval-method sin 2.0 4.0)
 ~> 3.14111328125
@@ -1410,9 +1409,9 @@ golden-ratio
 
 (define (tan-cf x k)
   (cont-frac
-    (lambda (i) (if (= i 1) x (- (square x))))
-    (lambda (i) (- (* i 2) 1))
-    k))
+   (lambda (i) (if (= i 1) x (- (square x))))
+   (lambda (i) (- (* i 2) 1))
+   k))
 
 (define quarter-pi (atan 1))
 
@@ -1453,8 +1452,7 @@ golden-ratio
   (fixed-point (newton-transform g) guess))
 
 (define (sqrt x)
-  (newtons-method
-    (lambda (y) (- (square y) x)) 1.0))
+  (newtons-method (lambda (y) (- (square y) x)) 1.0))
 
 (Section :1.3.4.2 "Abstractions and first-class procedures"
   (use (:1.1.4 square) (:1.1.7 average) (:1.3.3.2 fixed-point)
@@ -1464,12 +1462,10 @@ golden-ratio
   (fixed-point (transform g) guess))
 
 (define (sqrt x)
-  (fixed-point-of-transform
-    (lambda (y) (/ x y)) average-damp 1.0))
+  (fixed-point-of-transform (lambda (y) (/ x y)) average-damp 1.0))
 
 (define (sqrt x)
-  (fixed-point-of-transform
-    (lambda (y) (- (square y) x)) newton-transform 1.0))
+  (fixed-point-of-transform (lambda (y) (- (square y) x)) newton-transform 1.0))
 
 (Exercise ?1.40
   (use (:1.1.4 square) (:1.3.4.1 newtons-method)))
@@ -1500,9 +1496,9 @@ golden-ratio
 => ((double (double (lambda (x) (inc (inc (inc (inc x))))))) 5)
 => ((double (lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc x)))))))))) 5)
 => ((lambda (x) (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
-      (inc (inc (inc (inc x))))))))))))))))) 5)
+      (inc (inc (inc (inc x))))))))))))))))) 5) ; NOALIGN
 => (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
-     (inc 5))))))))))))))))
+     (inc 5)))))))))))))))) ; NOALIGN
 => 21
 
 (Exercise ?1.42
@@ -1544,10 +1540,10 @@ golden-ratio
 ;; We need to average-damp floor(log2(n)) times.
 (define (nth-root x n)
   (fixed-point
-    ((repeated average-damp
-               (floor (/ (log n) (log 2))))
-     (lambda (y) (/ x (expt y (- n 1)))))
-    1.0))
+   ((repeated average-damp
+              (floor (/ (log n) (log 2))))
+    (lambda (y) (/ x (expt y (- n 1)))))
+   1.0))
 
 (nth-root 4 2) ~> 2.000000000000002
 (nth-root 256 8) ~> 2.0000000000039666
@@ -1565,19 +1561,19 @@ golden-ratio
 
 (define (sqrt x)
   ((iterative-improve
-     (lambda (guess)
-       (< (abs (- (square guess) x)) tolerance))
-     (lambda (guess)
-       (average guess (/ x guess))))
+    (lambda (guess)
+      (< (abs (- (square guess) x)) tolerance))
+    (lambda (guess)
+      (average guess (/ x guess))))
    1.0))
 
 (sqrt 2) ~> 1.4142156862745097
 
 (define (fixed-point f first-guess)
   ((iterative-improve
-     (lambda (guess)
-       (< (abs (- guess (f guess))) tolerance))
-     f)
+    (lambda (guess)
+      (< (abs (- guess (f guess))) tolerance))
+    f)
    first-guess))
 
 ;; This is slightly different from the original `fixed-point` implementation

@@ -105,7 +105,6 @@ This project follows <http://community.schemewiki.org/?scheme-style>, with the f
 - Disregard [Rule 3: Closing parens close the line](http://community.schemewiki.org/?scheme-style#H-vtpinr).
 - Limit all lines to 80 columns.
 - Insert one blank line between top-level definitions.
-- Never insert blank lines within definitions.
 - Use alignment spaces only at the beginning of lines, never within them.
 - Use `;;` for normal comments, and `;` for commented code/diagrams.
 - Use `;` for inline comments. Separate them from code by one space (or more for alignment).

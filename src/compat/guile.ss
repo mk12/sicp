@@ -58,10 +58,10 @@
 (define (parallel-execute . thunks)
   (define (spawn proc)
     (call-with-new-thread
-      (lambda ()
-        ;; Sleep for up to 1ms to ensure nondeterminism shows up.
-        (usleep (random 1000))
-        (proc))))
+     (lambda ()
+       ;; Sleep for up to 1ms to ensure nondeterminism shows up.
+       (usleep (random 1000))
+       (proc))))
   (for-each join-thread (map spawn thunks)))
 
 ) ; end of library

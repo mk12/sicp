@@ -107,6 +107,8 @@ static const struct {
     { .name = "syntax-rules", .rules = IR_SPECIAL },
     { .name = "unless", .rules = IR_SPECIAL },
     { .name = "when", .rules = IR_SPECIAL },
+    { .name = "with-mutex", .rules = IR_SPECIAL },
+    { .name = "with-syntax", .rules = IR_SPECIAL },
 };
 
 // Looks up the indentation rules for the given operator.
@@ -158,12 +160,8 @@ static void lint_line(struct State *state, const char *line, int line_len) {
     assert(line[line_len-1] == '\n');
     assert(state->depth >= 0);
     if (line_len == 1) {
-        if (!state->in_string) {
-            if (state->prev_blanks == 0 && state->depth > state->num_wrappers) {
-                fail(state, "blank line in definition");
-            } else if (state->prev_blanks == 1) {
-                fail(state, "multiple blank lines");
-            }
+        if (!state->in_string && state->prev_blanks == 1) {
+            fail(state, "multiple blank lines");
         }
         state->prev_blanks++;
         return;
@@ -241,10 +239,15 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             case '[':
                 mode = OPERATOR;
                 state->stack[++state->depth] = i + 1;
-                if (i > 0 && prev != ' ' && prev != '(' && prev != '['
-                        && prev != '\'' && prev != '`' && prev != ','
-                        && prev != '#') {
-                    fail(state, "expected space before '('");        
+                if (i > 0) {
+                    switch (prev) {
+                        case ' ': case '#': case '\'': case '(': case ',':
+                        case '@': case '[': case '`':
+                            break;
+                        default:
+                            fail(state, "expected space before '('");        
+                            break;
+                    }
                 }
                 if (prev == '\'' || (state->quoted_align != -1
                         && (prev == '(' || prev == '['))) {
@@ -275,7 +278,9 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                     int start = state->stack[state->depth];
                     enum IndentRules rules = 
                         lookup_indent_rules(line + start, i - start);
-                    if ((rules & IR_WRAPPER) != 0) {
+                    // We only recognize wrapper forms occurring at the top
+                    // level (column 1, meaning the paren is on column 0).
+                    if (start == 1 && (rules & IR_WRAPPER) != 0) {
                         state->num_wrappers++;
                     }
                     if (c == ' ') {

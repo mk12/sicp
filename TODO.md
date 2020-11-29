@@ -1,7 +1,9 @@
 # New to do
 
 - change install-foo-package to foo-pkg
-- make a linter
+- fix BUG in chapter-3
+- lint import order
++ make a linter
 + change indentation from two to one spaces unless let/lambda/define/etc.
 + change =/> (looks like does NOT equal) to =$>
 + move study markdown into repo

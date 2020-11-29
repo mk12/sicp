@@ -37,7 +37,7 @@
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
 
-;;; Pairs
+;; Pairs
 
 (define x (cons 1 2))
 (car x) => 1
@@ -48,7 +48,7 @@
 (car (car z)) => 1
 (car (cdr z)) => 3
 
-;;; Representing rational numbers
+;; Representing rational numbers
 
 (define (make-rat n d) (cons n d))
 (define (numer x) (car x))
@@ -116,11 +116,11 @@
   (let ((a (start-segment seg))
         (b (end-segment seg)))
     (make-point
-      (/ (+ (x-point a) (x-point b)) 2)
-      (/ (+ (y-point a) (y-point b)) 2))))
+     (/ (+ (x-point a) (x-point b)) 2)
+     (/ (+ (y-point a) (y-point b)) 2))))
 
 (midpoint-segment
-  (make-segment (make-point 6 5) (make-point 12 13)))
+ (make-segment (make-point 6 5) (make-point 12 13)))
 => '(9 . 9)
 
 (Exercise ?2.3
@@ -189,8 +189,8 @@
   (define (count a n)
     (let ((q (/ a b)))
       (if (integer? q)
-        (count q (+ n 1))
-        n)))
+          (count q (+ n 1))
+          n)))
   (count a 0))
 (define (car z) (count-divides z 2))
 (define (cdr z) (count-divides z 3))
@@ -239,9 +239,9 @@
 
 (define (div-interval x y)
   (mul-interval
-    x
-    (make-interval (/ 1.0 (upper-bound y))
-                   (/ 1.0 (lower-bound y)))))
+   x
+   (make-interval (/ 1.0 (upper-bound y))
+                  (/ 1.0 (lower-bound y)))))
 
 (Exercise ?2.7)
 
@@ -322,10 +322,8 @@
   (let ((y1 (lower-bound y))
         (y2 (upper-bound y)))
     (if (<= y1 0 y2)
-      (error 'div-interval "can't divide by an interval spanning zero" y)
-      (mul-interval
-        x
-        (make-interval (/ y2) (/ y1))))))
+        (error 'div-interval "can't divide by an interval spanning zero" y)
+        (mul-interval x (make-interval (/ y2) (/ y1))))))
 
 (div-interval (make-interval 1 2) (make-interval 3 4)) => '(1/4 . 2/3)
 (div-interval (make-interval 1 2) (make-interval -1 1)) =!> "can't divide"
@@ -420,9 +418,9 @@
 (define (par2 r1 r2)
   (let ((one (make-interval 1 1)))
     (div-interval
-      one
-      (add-interval (div-interval one r1)
-                    (div-interval one r2)))))
+     one
+     (add-interval (div-interval one r1)
+                   (div-interval one r2)))))
 
 ;; Lem is right. The uncertainty of the result is different for mathematically
 ;; equivalent expressions calculated by `par1` and `par2`:
@@ -522,8 +520,8 @@ one-through-four => '(1 2 3 4)
 
 (define (last-pair xs)
   (if (null? (cdr xs))
-    xs
-    (last-pair (cdr xs))))
+      xs
+      (last-pair (cdr xs))))
 
 (last-pair (list 23 72 149 34)) => '(34)
 
@@ -532,9 +530,9 @@ one-through-four => '(1 2 3 4)
 (define (reverse xs)
   (define (iter xs ys)
     (if (null? xs)
-      ys
-      (iter (cdr xs)
-            (cons (car xs) ys))))
+        ys
+        (iter (cdr xs)
+              (cons (car xs) ys))))
   (iter xs '()))
 
 (reverse (list 1 4 9 16 25)) => '(25 16 9 4 1)
@@ -611,9 +609,9 @@ one-through-four => '(1 2 3 4)
 
 (define (square-list xs)
   (if (null? xs)
-    '()
-    (cons (square (car xs))
-          (square-list (cdr xs)))))
+      '()
+      (cons (square (car xs))
+            (square-list (cdr xs)))))
 (square-list (list 1 2 3 4)) => '(1 4 9 16)
 
 (define (square-list xs) (map square xs))
@@ -649,10 +647,10 @@ one-through-four => '(1 2 3 4)
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
-      answer
-      (iter (cdr things)
-            (cons answer
-                  (square (car things))))))
+        answer
+        (iter (cdr things)
+              (cons answer
+                    (square (car things))))))
   (iter items '()))
 
 (square-list (list 1 2 3 4 5)) => '(((((() . 1) . 4) . 9) . 16) . 25)
@@ -665,10 +663,10 @@ one-through-four => '(1 2 3 4)
     (for-each f (cdr xs))))
 
 (for-each
-  (lambda (x)
-    (newline)
-    (display x))
-  (list 57 321 88))
+ (lambda (x)
+   (newline)
+   (display x))
+ (list 57 321 88))
 =$> ["57" "321" "88"]
 
 (Section :2.2.2 "Hierarchical Structures")
@@ -716,7 +714,7 @@ one-through-four => '(1 2 3 4)
 => 7
 
 (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
-  '(1 (2 (3 (4 (5 (6 7))))))))))))))))))
+  '(1 (2 (3 (4 (5 (6 7)))))))))))))))))) ; NOALIGN
 => 7
 
 (Exercise ?2.26)
@@ -768,8 +766,8 @@ one-through-four => '(1 2 3 4)
 (define (branch-weight branch)
   (let ((struct (branch-structure branch)))
     (if (number? struct)
-      struct
-      (mobile-weight struct))))
+        struct
+        (mobile-weight struct))))
 
 ;; (c) Balance
 (define (torque branch)
@@ -844,11 +842,10 @@ one-through-four => '(1 2 3 4)
 
 ;; Without map
 (define (tree-map f t)
-  (cond
-    ((null? t) '())
-    ((not (pair? t)) (f t))
-    (else (cons (tree-map f (car t))
-                (tree-map f (cdr t))))))
+  (cond ((null? t) '())
+        ((not (pair? t)) (f t))
+        (else (cons (tree-map f (car t))
+                    (tree-map f (cdr t))))))
 
 ;; With map
 (define (tree-map f t)
@@ -914,20 +911,19 @@ one-through-four => '(1 2 3 4)
 (map square (list 1 2 3 4 5)) => '(1 4 9 16 25)
 
 (define (filter pred xs)
-  (cond
-    ((null? xs) '())
-    ((pred (car xs))
-     (cons (car xs) (filter pred (cdr xs))))
-    (else (filter pred (cdr xs)))))
+  (cond ((null? xs) '())
+        ((pred (car xs))
+         (cons (car xs) (filter pred (cdr xs))))
+        (else (filter pred (cdr xs)))))
 
 (filter odd? (list 1 2 3 4 5)) => '(1 3 5)
 
 ;; Accumulate is like fold-right (not fold-left).
 (define (accumulate op initial xs)
   (if (null? xs)
-    initial
-    (op (car xs)
-        (accumulate op initial (cdr xs)))))
+      initial
+      (op (car xs)
+          (accumulate op initial (cdr xs)))))
 
 (accumulate + 0 (list 1 2 3 4 5)) => 15
 (accumulate * 1 (list 1 2 3 4 5)) => 120
@@ -949,24 +945,17 @@ one-through-four => '(1 2 3 4)
 (enumerate-tree (list 1 (list 2 (list 3 4)) 5)) => '(1 2 3 4 5)
 
 (define (sum-odd-squares tree)
-  (accumulate
-    + 0 (map square (filter odd? (enumerate-tree tree)))))
+  (accumulate + 0 (map square (filter odd? (enumerate-tree tree)))))
 
 (sum-odd-squares '((1 2 3) (4 (5 6)))) => 35
 
 (define (even-fibs n)
-  (accumulate
-    cons
-    '()
-    (filter even? (map fib (enumerate-interval 0 n)))))
+  (accumulate cons '() (filter even? (map fib (enumerate-interval 0 n)))))
 
 (even-fibs 10) => '(0 2 8 34)
 
 (define (list-fib-squares n)
-  (accumulate
-    cons
-    '()
-    (map square (map fib (enumerate-interval 0 n)))))
+  (accumulate cons '() (map square (map fib (enumerate-interval 0 n)))))
 
 (list-fib-squares 10) => '(0 1 1 4 9 25 64 169 441 1156 3025)
 
@@ -1087,11 +1076,11 @@ one-through-four => '(1 2 3 4)
 
 (define (prime-sum-pairs n)
   (map make-pair-sum
-       (filter prime-sum? (flatmap
-                            (lambda (i)
-                              (map (lambda (j) (list i j))
-                                   (enumerate-interval 1 (- i 1))))
-                            (enumerate-interval 1 n)))))
+       (filter prime-sum?
+               (flatmap (lambda (i)
+                          (map (lambda (j) (list i j))
+                               (enumerate-interval 1 (- i 1))))
+                        (enumerate-interval 1 n)))))
 
 (prime-sum-pairs 5) => '((2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7))
 
@@ -1167,14 +1156,13 @@ one-through-four => '(1 2 3 4)
   (define (queen-cols k)
     (if (= k 0)
         (list empty-board)
-        (filter
-          (lambda (positions) (safe? positions))
-          (flatmap
-            (lambda (rest-of-queens)
-              (map (lambda (new-row)
-                     (adjoin-position new-row k rest-of-queens))
-                   (enumerate-interval 1 board-size)))
-            (queen-cols (- k 1))))))
+        (filter safe?
+                (flatmap
+                 (lambda (rest-of-queens)
+                   (map (lambda (new-row)
+                          (adjoin-position new-row k rest-of-queens))
+                        (enumerate-interval 1 board-size)))
+                 (queen-cols (- k 1))))))
   (queen-cols board-size))
 
 (queens 1) => '(((1 . 1)))
@@ -1289,9 +1277,9 @@ one-through-four => '(1 2 3 4)
 (define (frame-coord-map frame)
   (lambda (v)
     (add-vect
-      (origin-frame frame)
-      (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
-                (scale-vect (ycor-vect v) (edge2-frame frame))))))
+     (origin-frame frame)
+     (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
+               (scale-vect (ycor-vect v) (edge2-frame frame))))))
 
 (Exercise ?2.46)
 
@@ -1334,13 +1322,12 @@ one-through-four => '(1 2 3 4)
 (define (segments->painter segment-list)
   (lambda (frame)
     (for-each
-      (lambda (segment)
-        (draw-line
-          ((frame-coord-map frame)
-           (start-segment segment))
-          ((frame-coord-map frame)
-           (end-segment segment))))
-      segment-list)))
+     (lambda (segment)
+       (draw-line ((frame-coord-map frame)
+                   (start-segment segment))
+                  ((frame-coord-map frame)
+                   (end-segment segment))))
+     segment-list)))
 
 (Exercise ?2.48)
 
@@ -1354,25 +1341,25 @@ one-through-four => '(1 2 3 4)
 ;; (a) The painter that draws the outline of the designated frame
 (define outline
   (segments->painter
-    (list (make-segment (make-vect 0 0) (make-vect 1 0))
-          (make-segment (make-vect 0 1) (make-vect 1 1))
-          (make-segment (make-vect 0 0) (make-vect 0 1))
-          (make-segment (make-vect 1 0) (make-vect 1 1)))))
+   (list (make-segment (make-vect 0 0) (make-vect 1 0))
+         (make-segment (make-vect 0 1) (make-vect 1 1))
+         (make-segment (make-vect 0 0) (make-vect 0 1))
+         (make-segment (make-vect 1 0) (make-vect 1 1)))))
 
 ;; (b) The painter that draws an "X" by connecting opposite corners of the frame
 (define x
   (segments->painter
-    (list (make-segment (make-vect 0 0) (make-vect 1 1))
-          (make-segment (make-vect 0 1) (make-vect 1 0)))))
+   (list (make-segment (make-vect 0 0) (make-vect 1 1))
+         (make-segment (make-vect 0 1) (make-vect 1 0)))))
 
 ;; (c) The painter that draws a diamond shape by connecting the midpoints of the
 ;; sides of the frame
 (define diamond
   (segments->painter
-    (list (make-segment (make-vect 0.5 0.0) (make-vect 1.0 0.5))
-          (make-segment (make-vect 0.0 0.5) (make-vect 0.5 1.0))
-          (make-segment (make-vect 0.0 0.5) (make-vect 0.5 0.0))
-          (make-segment (make-vect 0.5 1.0) (make-vect 1.0 0.5)))))
+   (list (make-segment (make-vect 0.5 0.0) (make-vect 1.0 0.5))
+         (make-segment (make-vect 0.0 0.5) (make-vect 0.5 1.0))
+         (make-segment (make-vect 0.0 0.5) (make-vect 0.5 0.0))
+         (make-segment (make-vect 0.5 1.0) (make-vect 1.0 0.5)))))
 
 ;; (d) The wave painter
 (define wave-segments
@@ -1411,45 +1398,46 @@ one-through-four => '(1 2 3 4)
 
 (define (flip-vert painter)
   (transform-painter
-    painter
-    (make-vect 0 1)
-    (make-vect 1 1)
-    (make-vect 0 0)))
+   painter
+   (make-vect 0 1)
+   (make-vect 1 1)
+   (make-vect 0 0)))
 
 (define (shrink-to-upper-right painter)
   (transform-painter
-    painter
-    (make-vect 0.5 0.5)
-    (make-vect 1 0.5)
-    (make-vect 0.5 1)))
+   painter
+   (make-vect 0.5 0.5)
+   (make-vect 1 0.5)
+   (make-vect 0.5 1)))
 
 (define (rotate90 painter)
   (transform-painter
-    painter
-    (make-vect 1 0)
-    (make-vect 1 1)
-    (make-vect 0 0)))
+   painter
+   (make-vect 1 0)
+   (make-vect 1 1)
+   (make-vect 0 0)))
 
 (define (squash-inwards painter)
   (transform-painter
-    (make-vect 0 0)
-    (make-vect 0.65 0.35)
-    (make-vect 0.35 0.65)))
+   painter
+   (make-vect 0 0)
+   (make-vect 0.65 0.35)
+   (make-vect 0.35 0.65)))
 
 (define (beside painter1 painter2)
   (let ((split-point (make-vect 0.5 0)))
     (let ((paint-left
-            (transform-painter
-              painter1
-              (make-vect 0 0)
-              split-point
-              (make-vect 0 1)))
+           (transform-painter
+            painter1
+            (make-vect 0 0)
+            split-point
+            (make-vect 0 1)))
           (paint-right
-            (transform-painter
-              painter2
-              split-point
-              (make-vect 1 0)
-              (make-vect 0.5 1))))
+           (transform-painter
+            painter2
+            split-point
+            (make-vect 1 0)
+            (make-vect 0.5 1))))
       (lambda (frame)
         (paint-left frame)
         (paint-right frame)))))
@@ -1459,24 +1447,24 @@ one-through-four => '(1 2 3 4)
 
 (define (flip-horiz painter)
   (transform-painter
-    painter
-    (make-vect 1 0)
-    (make-vect 0 0)
-    (make-vect 1 1)))
+   painter
+   (make-vect 1 0)
+   (make-vect 0 0)
+   (make-vect 1 1)))
 
 (define (rotate180 painter)
   (transform-painter
-    painter
-    (make-vect 1 1)
-    (make-vect 0 1)
-    (make-vect 1 0)))
+   painter
+   (make-vect 1 1)
+   (make-vect 0 1)
+   (make-vect 1 0)))
 
 (define (rotate270 painter)
   (transform-painter
-    painter
-    (make-vect 0 1)
-    (make-vect 0 0)
-    (make-vect 1 1)))
+   painter
+   (make-vect 0 1)
+   (make-vect 0 0)
+   (make-vect 1 1)))
 
 (Exercise ?2.51
   (use (:2.2.4.5 beside rotate90 transform-painter) (?2.46 make-vect)
@@ -1486,17 +1474,17 @@ one-through-four => '(1 2 3 4)
 (define (below painter1 painter2)
   (let ((split-point (make-vect 0 0.5)))
     (let ((paint-bottom
-            (transform-painter
-              painter1
-              (make-vect 0 0)
-              (make-vect 1 0.5)
-              split-point))
+           (transform-painter
+            painter1
+            (make-vect 0 0)
+            (make-vect 1 0.5)
+            split-point))
           (paint-top
-            (transform-painter
-              painter2
-              split-point
-              (make-vect 1 0.5)
-              (make-vect 0 1))))
+           (transform-painter
+            painter2
+            split-point
+            (make-vect 1 0.5)
+            (make-vect 0 1))))
       (lambda (frame)
         (paint-bottom frame)
         (paint-top frame)))))
@@ -1504,9 +1492,8 @@ one-through-four => '(1 2 3 4)
 ;; Method 2: In terms of `beside` and rotations
 (define (below painter1 painter2)
   (rotate90
-    (beside
-      (rotate270 painter1)
-      (rotate270 painter2))))
+   (beside (rotate270 painter1)
+           (rotate270 painter2))))
 
 (Exercise ?2.52
   (use (:2.2.4.1 right-split) (:2.2.4.2 square-of-four)
@@ -1516,11 +1503,10 @@ one-through-four => '(1 2 3 4)
 
 ;; (a) I changed `wave` to add a smile.
 (define smile-segments
-  (list
-    (make-segment (make-vect 0.46 0.13) (make-vect 0.46 0.17))
-    (make-segment (make-vect 0.46 0.24) (make-vect 0.50 0.27))
-    (make-segment (make-vect 0.54 0.13) (make-vect 0.54 0.17))
-    (make-segment (make-vect 0.54 0.24) (make-vect 0.50 0.27))))
+  (list (make-segment (make-vect 0.46 0.13) (make-vect 0.46 0.17))
+        (make-segment (make-vect 0.46 0.24) (make-vect 0.50 0.27))
+        (make-segment (make-vect 0.54 0.13) (make-vect 0.54 0.17))
+        (make-segment (make-vect 0.54 0.24) (make-vect 0.50 0.27))))
 (define wave
   (segments->painter (append wave-segments smile-segments)))
 
@@ -1528,12 +1514,12 @@ one-through-four => '(1 2 3 4)
 ;; `right-split` images instead of two.
 (define (corner-split painter n)
   (if (= n 0)
-    painter
-    (let ((up (up-split painter (- n 1)))
-          (right (right-split painter (- n 1)))
-          (corner (corner-split painter (- n 1))))
-      (beside (below painter up)
-              (below right corner)))))
+      painter
+      (let ((up (up-split painter (- n 1)))
+            (right (right-split painter (- n 1)))
+            (corner (corner-split painter (- n 1))))
+        (beside (below painter up)
+                (below right corner)))))
 
 ;; (c) I changed `square-limit` to orient the corners differently.
 (define (square-limit painter n)
@@ -1603,11 +1589,10 @@ one-through-four => '(1 2 3 4)
          (make-sum (deriv (addend expr) var)
                    (deriv (augend expr) var)))
         ((product? expr)
-         (make-sum
-           (make-product (multiplier expr)
-                         (deriv (multiplicand expr) var))
-           (make-product (deriv (multiplier expr) var)
-                         (multiplicand expr))))
+         (make-sum (make-product (multiplier expr)
+                                 (deriv (multiplicand expr) var))
+                   (make-product (deriv (multiplier expr) var)
+                                 (multiplicand expr))))
         (else (error 'deriv "unknown expr type" expr))))
 
 (define (variable? x) (symbol? x))
@@ -1642,16 +1627,14 @@ one-through-four => '(1 2 3 4)
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
         ((=number? a2 0) a1)
-        ((and (number? a1) (number? a2))
-         (+ a1 a2))
+        ((and (number? a1) (number? a2)) (+ a1 a2))
         (else (list '+ a1 a2))))
 
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
         ((=number? m1 1) m2)
         ((=number? m2 1) m1)
-        ((and (number? m1) (number? m2))
-         (* m1 m2))
+        ((and (number? m1) (number? m2)) (* m1 m2))
         (else (list '* m1 m2))))
 
 (deriv '(+ x 3) 'x) => 1
@@ -1670,17 +1653,15 @@ one-through-four => '(1 2 3 4)
          (make-sum (deriv (addend expr) var)
                    (deriv (augend expr) var)))
         ((product? expr)
-         (make-sum
-           (make-product (multiplier expr)
-                         (deriv (multiplicand expr) var))
-           (make-product (deriv (multiplier expr) var)
-                         (multiplicand expr))))
+         (make-sum (make-product (multiplier expr)
+                                 (deriv (multiplicand expr) var))
+                   (make-product (deriv (multiplier expr) var)
+                                 (multiplicand expr))))
         ((exponentiation? expr)
          (make-product
-           (exponent expr)
-           (make-product
-             (make-exponentiation (base expr) (- (exponent expr) 1))
-             (deriv (base expr) var))))
+          (exponent expr)
+          (make-product (make-exponentiation (base expr) (- (exponent expr) 1))
+                        (deriv (base expr) var))))
         (else (error 'deriv "unknown expr type" expr))))
 
 (define (make-exponentiation b e)
@@ -1716,21 +1697,19 @@ one-through-four => '(1 2 3 4)
 
 (paste (:2.3.2 deriv))
 
-;;; (a) Fully parenthesized binary infix form
+;; (a) Fully parenthesized binary infix form
 
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
         ((=number? a2 0) a1)
-        ((and (number? a1) (number? a2))
-         (+ a1 a2))
+        ((and (number? a1) (number? a2)) (+ a1 a2))
         (else (list a1 '+ a2))))
 
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
         ((=number? m1 1) m2)
         ((=number? m2 1) m1)
-        ((and (number? m1) (number? m2))
-         (* m1 m2))
+        ((and (number? m1) (number? m2)) (* m1 m2))
         (else (list m1 '* m2))))
 
 (define (sum? expr)
@@ -1757,16 +1736,16 @@ one-through-four => '(1 2 3 4)
 (define (addend expr)
   (define (until-plus expr)
     (if (eq? '+ (car expr))
-      '()
-      (cons (car expr) (until-plus (cdr expr)))))
+        '()
+        (cons (car expr) (until-plus (cdr expr)))))
   (if (eq? '+ (cadr expr))
-    (car expr)
-    (until-plus expr)))
+      (car expr)
+      (until-plus expr)))
 
 (define (augend expr)
   (if (null? (cdddr expr))
-    (caddr expr)
-    (cddr expr)))
+      (caddr expr)
+      (cddr expr)))
 
 (deriv '(x + 3 * (x + y + 2)) 'x) => 4
 
@@ -1943,13 +1922,11 @@ one-through-four => '(1 2 3 4)
   (define (copy-to-list tree result-list)
     (if (null? tree)
         result-list
-        (copy-to-list
-          (left-branch tree)
-          (cons (entry tree)
-                (copy-to-list (right-branch tree)
-                              result-list)))))
+        (copy-to-list (left-branch tree)
+                      (cons (entry tree)
+                            (copy-to-list (right-branch tree)
+                                          result-list)))))
   (copy-to-list tree '()))
-
 
 ;; Unbalanced (t1) and balanced (t2) trees representing the set {1,2,3,4,5,6}.
 (define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
@@ -2045,8 +2022,8 @@ one-through-four => '(1 2 3 4)
           ((> (car l1) (car l2))
            (cons (car l2) (union-list l1 (cdr l2))))))
   (list->tree
-    (union-list (tree->list-2 set1)
-                (tree->list-2 set2))))
+   (union-list (tree->list-2 set1)
+               (tree->list-2 set2))))
 
 (define (intersection-set set1 set2)
   (define (intersection-list l1 l2)
@@ -2059,8 +2036,8 @@ one-through-four => '(1 2 3 4)
           ((> (car l1) (car l2))
            (intersection-list l1 (cdr l2)))))
   (list->tree
-    (intersection-list (tree->list-2 set1)
-                       (tree->list-2 set2))))
+   (intersection-list (tree->list-2 set1)
+                      (tree->list-2 set2))))
 
 (define t1 '(1 () ()))
 (define t2 '(2 () ()))
@@ -2111,7 +2088,7 @@ one-through-four => '(1 2 3 4)
 
 (Section :2.3.4 "Example: Huffman Encoding Trees")
 
-;;; Representing Huffman trees
+;; Representing Huffman trees
 
 (define (make-leaf symbol weight) (list 'leaf symbol weight))
 (define (leaf? object) (eq? (car object) 'leaf))
@@ -2135,7 +2112,7 @@ one-through-four => '(1 2 3 4)
       (weight-leaf tree)
       (cadddr tree)))
 
-;;; The decoding procedure
+;; The decoding procedure
 
 (define (decode bits tree)
   (define (decode-1 bits current-branch)
@@ -2153,7 +2130,7 @@ one-through-four => '(1 2 3 4)
         ((= bit 1) (right-branch branch))
         (else (error 'choose-branch "bit should be 0 or 1" bit))))
 
-;;; Sets of weighted elements
+;; Sets of weighted elements
 
 (define (adjoin-set x set)
   (cond ((null? set) (list x))
@@ -2174,11 +2151,9 @@ one-through-four => '(1 2 3 4)
 
 (define sample-tree
   (make-code-tree (make-leaf 'A 4)
-                  (make-code-tree
-                    (make-leaf 'B 2)
-                    (make-code-tree
-                      (make-leaf 'D 1)
-                      (make-leaf 'C 1)))))
+                  (make-code-tree (make-leaf 'B 2)
+                                  (make-code-tree (make-leaf 'D 1)
+                                                  (make-leaf 'C 1)))))
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
 (decode sample-message sample-tree) => '(A D A B B C A)
@@ -2224,14 +2199,14 @@ one-through-four => '(1 2 3 4)
 (encode-symbol 'A abcd-tree) => '(0 1)
 (encode-symbol 'B abcd-tree) => '(1)
 (encode-symbol 'C abcd-tree) => '(0 0 1)
-(encode-symbol 'D abcd-tree) =>  '(0 0 0)
+(encode-symbol 'D abcd-tree) => '(0 0 0)
 
 (Exercise ?2.70
   (use (?2.68 encode) (?2.69 generate-huffman-tree)))
 
 (define rock-tree
   (generate-huffman-tree
-    '((a 2) (get 2) (sha 3) (wah 1) (boom 1) (job 2) (na 16) (yip 9))))
+   '((a 2) (get 2) (sha 3) (wah 1) (boom 1) (job 2) (na 16) (yip 9))))
 
 (define song
   '(get a job sha na na na na na na na na
@@ -2310,20 +2285,20 @@ encoded-song
 
 (define (add-complex z1 z2)
   (make-from-real-imag
-    (+ (real-part z1) (real-part z2))
-    (+ (imag-part z1) (imag-part z2))))
+   (+ (real-part z1) (real-part z2))
+   (+ (imag-part z1) (imag-part z2))))
 (define (sub-complex z1 z2)
   (make-from-real-imag
-    (- (real-part z1) (real-part z2))
-    (- (imag-part z1) (imag-part z2))))
+   (- (real-part z1) (real-part z2))
+   (- (imag-part z1) (imag-part z2))))
 (define (mul-complex z1 z2)
   (make-from-mag-ang
-    (* (magnitude z1) (magnitude z2))
-    (+ (angle z1) (angle z2))))
+   (* (magnitude z1) (magnitude z2))
+   (+ (angle z1) (angle z2))))
 (define (div-complex z1 z2)
   (make-from-mag-ang
-    (/ (magnitude z1) (magnitude z2))
-    (- (angle z1) (angle z2))))
+   (/ (magnitude z1) (magnitude z2))
+   (- (angle z1) (angle z2))))
 
 ;; Ben's representation (rectangular form)
 (define real-part car)
@@ -2563,7 +2538,7 @@ z2 => (make-from-mag-ang 30 3)
         ((variable? expr) 'variable)
         (else (operator expr))))
 
-;;; (b) Packages for sum and product differentiation
+;; (b) Packages for sum and product differentiation
 
 (define (install-sum-package)
   (define (deriv-sum terms var)
@@ -2577,11 +2552,10 @@ z2 => (make-from-mag-ang 30 3)
   (define (multiplicand product)
     (accumulate make-product 1 (cdr product)))
   (define (deriv-product product var)
-    (make-sum
-      (make-product (multiplier product)
-                    (deriv (multiplicand product) var))
-      (make-product (deriv (multiplier product) var)
-                    (multiplicand product))))
+    (make-sum (make-product (multiplier product)
+                            (deriv (multiplicand product) var))
+              (make-product (deriv (multiplier product) var)
+                            (multiplicand product))))
   (put 'deriv '* deriv-product))
 
 ;; (c) Package for power differentiation
@@ -2593,11 +2567,11 @@ z2 => (make-from-mag-ang 30 3)
   (define exponent cadr)
   (define (deriv-power power var)
     (make-product
-      (make-product
-        (exponent power)
-        (make-exponentiation (base power)
-                             (make-sum (exponent power) -1)))
-      (deriv (base power) var)))
+     (make-product (exponent power)
+                   (make-exponentiation
+                    (base power)
+                    (make-sum (exponent power) -1)))
+     (deriv (base power) var)))
   (put 'deriv '** deriv-power))
 
 ;; (d) If we wanted to instead use `(get (operator expr) 'deriv)` to get the
@@ -2625,7 +2599,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (get-record file employee-name)
   (apply-specific
-    'get-record (file-division file) (file-records file) employee-name))
+   'get-record (file-division file) (file-records file) employee-name))
 
 ;; (b) The record must also be tagged with the division symbol.
 
@@ -2649,7 +2623,7 @@ z2 => (make-from-mag-ang 30 3)
 ;; the data-directed dispatch system. These procedures must use the division's
 ;; name as their dispatch key.
 
-;;; Example: files for marketing and sales divisions
+;; Example: Files for marketing and sales divisions
 
 (define files
   (list (make-file 'marketing
@@ -2713,19 +2687,19 @@ z2 => (make-from-mag-ang 30 3)
 ;;   consuming and error-prone).
 ;; - Operations: After implementing a new specific procedure for each existing
 ;;   type, you must write a generic operation procedure with explicit dispatch.
-
+;;
 ;; 2. Data-directed style
 ;; - Types: It's easy: you just need to write new specific procedures and
 ;;   install them into the system with their identifying dispatch type.
 ;; - Operations: After implementing a new specific procedure in each of the
 ;;   package installer procedures, you must write a procedure invoking
 ;;   `apply-generic`.
-
+;;
 ;; 3. Message-passing style
 ;; - Types: Simply create a new type that responds to the same message.
 ;; - Operations: Write a specific procedure for all existing types so that they
 ;;   respond to the new message.
-
+;;
 ;; Message passing is best when adding types often and operations rarely.
 ;; Generic operations with explicit dispatch are best when adding types rarely
 ;; and operations often. Data-directed style works well in both scenarios, and
@@ -3306,13 +3280,13 @@ z2 => (make-from-mag-ang 30 3)
   (define (id x) x)
   (define (divide-rat x) (/ (numer x) (denom x)))
   (for-each
-    (lambda (type f)
-      (put 'square-root (list type) (lambda (x) (tag (sqrt (f x)))))
-      (put 'sine (list type) (lambda (x) (tag (sin (f x)))))
-      (put 'cosine (list type) (lambda (x) (tag (cos (f x)))))
-      (put 'atan2 (list type type) (lambda (x y) (tag (atan (f x) (f y))))))
-    '(integer real rational)
-    (list id id divide-rat)))
+   (lambda (type f)
+     (put 'square-root (list type) (lambda (x) (tag (sqrt (f x)))))
+     (put 'sine (list type) (lambda (x) (tag (sin (f x)))))
+     (put 'cosine (list type) (lambda (x) (tag (cos (f x)))))
+     (put 'atan2 (list type type) (lambda (x y) (tag (atan (f x) (f y))))))
+   '(integer real rational)
+   (list id id divide-rat)))
 
 (define (square-root x) (apply-generic 'square-root x))
 (define (sine x) (apply-generic 'sine x))
@@ -3477,11 +3451,10 @@ z2 => (make-from-mag-ang 30 3)
                   (adjoin-term t2
                                (add-terms l1 (rest-terms l2))))
                  (else
-                   (adjoin-term
-                     (make-term (order t1)
-                                (add (coeff t1) (coeff t2)))
-                     (add-terms (rest-terms l1)
-                                (rest-terms l2)))))))))
+                  (adjoin-term (make-term (order t1)
+                                          (add (coeff t1) (coeff t2)))
+                               (add-terms (rest-terms l1)
+                                          (rest-terms l2)))))))))
 
 (define (mul-terms l1 l2)
   (if (empty-termlist? l1)
@@ -3493,10 +3466,9 @@ z2 => (make-from-mag-ang 30 3)
   (if (empty-termlist? l)
       (the-empty-termlist)
       (let ((t2 (first-term l)))
-        (adjoin-term
-          (make-term (+ (order t1) (order t2))
-                     (mul (coeff t1) (coeff t2)))
-          (mul-term-by-all-terms t1 (rest-terms l))))))
+        (adjoin-term (make-term (+ (order t1) (order t2))
+                                (mul (coeff t1) (coeff t2)))
+                     (mul-term-by-all-terms t1 (rest-terms l))))))
 
 (Section :2.5.3.2 "Representing term lists"
   (use (:2.4.3 apply-specific) (?2.78 apply-generic)))
@@ -3564,19 +3536,17 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (negate-terms tl)
   (if (empty-termlist? tl)
-    (the-empty-termlist)
-    (let* ((term (first-term tl))
-           (new-term (make-term (order term) (negate (coeff term)))))
-      (adjoin-term new-term
-                   (negate-terms (rest-terms tl))))))
+      (the-empty-termlist)
+      (let* ((term (first-term tl))
+             (new-term (make-term (order term) (negate (coeff term)))))
+        (adjoin-term new-term
+                     (negate-terms (rest-terms tl))))))
 
 (define (install-negate-package)
   (put 'negate '(scheme-number) -)
   (put 'negate '(polynomial)
        (lambda (p)
-         (make-polynomial
-           (variable p)
-           (negate-terms (term-list p))))))
+         (make-polynomial (variable p) (negate-terms (term-list p))))))
 
 (define (negate x) (apply-generic 'negate x))
 (define (sub x y) (add x (negate y)))
@@ -3711,15 +3681,15 @@ z2 => (make-from-mag-ang 30 3)
       (let ((t1 (first-term l1))
             (t2 (first-term l2)))
         (if (> (order t2) (order t1))
-          (list (the-empty-termlist) l1)
-          (let* ((new-c (div (coeff t1) (coeff t2)))
-                 (new-o (sub (order t1) (order t2)))
-                 (new-term (make-term new-o new-c))
-                 (multiplied (mul-term-by-all-terms new-term l2))
-                 (new-l1 (add-terms l1 (negate-terms multiplied)))
-                 (rest-of-result (div-terms new-l1 l2)))
-            (list (adjoin-term new-term (car rest-of-result))
-                  (cadr rest-of-result)))))))
+            (list (the-empty-termlist) l1)
+            (let* ((new-c (div (coeff t1) (coeff t2)))
+                   (new-o (sub (order t1) (order t2)))
+                   (new-term (make-term new-o new-c))
+                   (multiplied (mul-term-by-all-terms new-term l2))
+                   (new-l1 (add-terms l1 (negate-terms multiplied)))
+                   (rest-of-result (div-terms new-l1 l2)))
+              (list (adjoin-term new-term (car rest-of-result))
+                    (cadr rest-of-result)))))))
 
 (define (install-polynomial-div-package)
   (define (div-poly p1 p2)
@@ -3748,7 +3718,8 @@ z2 => (make-from-mag-ang 30 3)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
                  make-term rest-terms order the-empty-termlist)
        (:3.3.3.3 put)
-       (?2.78 add attach-tag contents install-scheme-number-package mul type-tag)
+       (?2.78 add attach-tag contents install-scheme-number-package mul
+              type-tag)
        (?2.87 install-zero-package)))
 
 (define (polynomial? x)
@@ -3773,12 +3744,12 @@ z2 => (make-from-mag-ang 30 3)
         (the-empty-termlist)
         (let ((ft (first-term tl)))
           (add-terms
-            (if (polynomial? (coeff ft))
-                (mul-term-by-all-terms
-                  (as-constant-term from (make-term (order ft) 1))
-                  (term-list (coerce-poly (contents (coeff ft)) to)))
-                (singleton (as-constant-term from ft)))
-            (coerce-termlist (rest-terms tl) from to)))))
+           (if (polynomial? (coeff ft))
+               (mul-term-by-all-terms
+                (as-constant-term from (make-term (order ft) 1))
+                (term-list (coerce-poly (contents (coeff ft)) to)))
+               (singleton (as-constant-term from ft)))
+           (coerce-termlist (rest-terms tl) from to)))))
   (define (coerce-poly p var)
     (cond ((same-variable? (variable p) var) p)
           (else (make-poly var
@@ -3790,16 +3761,14 @@ z2 => (make-from-mag-ang 30 3)
            (coerce-poly p2 var)))))
   (define add-poly
     (binary-poly-op
-      (lambda (p1 p2)
-        (make-poly
-          (variable p1)
-          (add-terms (term-list p1) (term-list p2))))))
+     (lambda (p1 p2)
+       (make-poly (variable p1)
+                  (add-terms (term-list p1) (term-list p2))))))
   (define mul-poly
     (binary-poly-op
-      (lambda (p1 p2)
-        (make-poly
-          (variable p1)
-          (mul-terms (term-list p1) (term-list p2))))))
+     (lambda (p1 p2)
+       (make-poly (variable p1)
+                  (mul-terms (term-list p1) (term-list p2))))))
   (define (scale-poly k p)
     (make-poly (variable p)
                (map (lambda (t) (make-term (order t) (mul k (coeff t))))
@@ -3866,9 +3835,8 @@ z2 => (make-from-mag-ang 30 3)
 (define rf (make-rational p2 p1))
 
 (add rf rf)
-=> (make-rational
-     (make-polynomial 'x '((5 2) (3 2) (2 2) (0 2)))
-     (make-polynomial 'x '((4 1) (2 2) (0 1))))
+=> (make-rational (make-polynomial 'x '((5 2) (3 2) (2 2) (0 2)))
+                  (make-polynomial 'x '((4 1) (2 2) (0 1))))
 
 (Exercise ?2.94
   (use (:2.3.2 same-variable?) (:2.4.3 using)
@@ -3891,7 +3859,7 @@ z2 => (make-from-mag-ang 30 3)
     (if (same-variable? (variable p1) (variable p2))
         (let ((tl (gcd-terms (term-list p1) (term-list p2))))
           (make-polynomial (variable p1) tl))
-        (error 'gcd-poly "polys not in same var" (list p1 p2))))
+        (error 'gcd-poly "polys not in same var" p1 p2)))
   (put 'greatest-common-divisor '(scheme-number scheme-number) gcd)
   (put 'greatest-common-divisor '(polynomial polynomial) gcd-poly))
 
@@ -4047,7 +4015,7 @@ z2 => (make-from-mag-ang 30 3)
             (reduced (reduce-terms (term-list n) (term-list d))))
         (list (make-polynomial var (car reduced))
               (make-polynomial var (cadr reduced))))
-      (error 'reduce-poly "polys not in same var" (list n d))))
+      (error 'reduce-poly "polys not in same var" n d)))
 
 ;; (b) Generic reducing operation
 
@@ -4083,10 +4051,9 @@ z2 => (make-from-mag-ang 30 3)
 (define rf2 (make-rational p3 p4))
 
 (add rf1 rf2)
-=> '(rational
-      (polynomial x . ((3 1) (2 2) (1 3) (0 1)))
-      .
-      (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))
+=> '(rational (polynomial x . ((3 1) (2 2) (1 3) (0 1)))
+              .
+              (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))
 
 ) ; end of SICP
 ) ; end of library
