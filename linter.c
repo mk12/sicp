@@ -214,6 +214,8 @@ struct State {
     int lineno;
     // Cumulative status, set to 1 if there are any errors.
     int status;
+    // Length of the previous line, excluding newline.
+    int prev_length;
     // Number of blank lines in a row seen.
     int prev_blanks;
     // True if we are inside a string.
@@ -231,6 +233,8 @@ struct State {
     uint8_t stack[MAX_DEPTH];
     // The import block we are currently inside, or IB_NONE.
     enum ImportBlock import_mode;
+    // The value of import_mode at the start of the previous line.
+    enum ImportBlock prev_import_mode;
     // Null-terminated string containing the last id in the import block.
     char last_import_id[MAX_COLUMNS];
     // Null-terminated string containing the last name in the import block.
@@ -290,10 +294,15 @@ static void lint_line(struct State *state, const char *line, int line_len) {
     const size_t na_len = sizeof NO_ALIGN_COMMENT - 1;
     const bool no_align = (size_t)line_len >= na_len
         && strncmp(line + line_len - na_len, NO_ALIGN_COMMENT, na_len) == 0;
-    char prev = '\0';         // previous character
+    bool can_pack_import =
+        (state->prev_import_mode == IB_SEC || state->prev_import_mode == IB_USE)
+        && state->import_mode == IB_USE;
+    state->prev_import_mode = state->import_mode;
+    char prev = 0;            // previous character
     bool escaped = false;     // last character was unescaped backslash
     bool two_spaces = false;  // saw two spaces in a row
-    int word_start = 0;       // start of the last word
+    int word_start = 0;       // start of the last word (used for imports)
+    int last_open = 0;        // column of the last '(' (used for imports)
     enum { INDENT, NORMAL, OPERATOR, STRING, COMMENT, COMMENT_SPACE } mode =
         state->in_string ? STRING : INDENT;
     for (int i = 0; i < line_len; i++) {
@@ -330,7 +339,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             case '"':
                 mode = STRING;
                 state->in_string = true;
-                break;          
+                break;
             case ';':
                 mode = COMMENT;
                 if (prev != ' ') {
@@ -347,7 +356,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                         case '@': case '[': case '`':
                             break;
                         default:
-                            fail(state, i, "expected space before '('");        
+                            fail(state, i, "expected space before '('");
                             break;
                     }
                 }
@@ -357,6 +366,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                 } else {
                     state->quoted_align = -1;
                 }
+                last_open = i;
                 break;
             case ')':
             case ']':
@@ -367,7 +377,6 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                 if (prev == ' ') {
                     fail(state, i, "unexpected space before ')'");
                 }
-                state->depth--;
                 if (state->import_mode != IB_NONE) {
                     if (state->import_mode == IB_ID) {
                         int start = word_start;
@@ -379,11 +388,23 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                                 state->last_import_name, len, line + start);
                         }
                         state->last_import_name[0] = '\0';
+                        int would_be =
+                            state->prev_length + 1 + (i - last_open + 1);
+                        if (i + 1 < line_len && line[i+1] == ')') {
+                            // Close IB_USE and IB_SEC as well.
+                            would_be += 2;
+                        }
+                        if (can_pack_import && would_be <= MAX_COLUMNS) {
+                            fail(state, last_open,
+                                "import can be packed on previous line");
+                        }
                     } else if (state->import_mode == IB_USE) {
                         state->last_import_id[0] = '\0';
                     }
+                    can_pack_import = false;
                     state->import_mode--;
                 }
+                state->depth--;
                 break;
             case ' ':
                 if (prev == ' ') {
@@ -491,6 +512,7 @@ static int lint(const char *filename) {
         .filename = filename,
         .lineno = 1,
         .status = 0,
+        .prev_length = 0,
         .prev_blanks = 0,
         .in_string = false,
         .num_wrappers = 0,
@@ -498,6 +520,7 @@ static int lint(const char *filename) {
         .depth = 0,
         .stack = {0},
         .import_mode = IB_NONE,
+        .prev_import_mode = IB_NONE,
         .last_import_id = {0},
         .last_import_name = {0},
     };
@@ -505,8 +528,9 @@ static int lint(const char *filename) {
     size_t cap = 0;
     ssize_t len;
     while ((len = getline(&line, &cap, fp)) != -1) {
-        lint_line(&state, line, (int)len);
+        lint_line(&state, line, len);
         state.lineno++;
+        state.prev_length = len - 1;
     }
     fclose(fp);
     return state.status;

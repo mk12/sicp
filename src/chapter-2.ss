@@ -262,8 +262,7 @@
 
 (Exercise ?2.9
   (use (:2.1.4 add-interval div-interval mul-interval)
-       (?2.7 lower-bound make-interval upper-bound)
-       (?2.8 sub-interval)))
+       (?2.7 lower-bound make-interval upper-bound) (?2.8 sub-interval)))
 
 (define (width x)
   (/ (- (upper-bound x) (lower-bound x)) 2))
@@ -407,8 +406,7 @@
 (percent i*j) ~> 3.9988003598920323
 
 (Exercise ?2.14
-  (use (:2.1.4 add-interval div-interval mul-interval)
-       (?2.7 make-interval)
+  (use (:2.1.4 add-interval div-interval mul-interval) (?2.7 make-interval)
        (?2.12 center make-center-percent percent)))
 
 (define (par1 r1 r2)
@@ -2845,8 +2843,7 @@ z2 => (make-from-mag-ang 30 3)
 (mul 3 4) => 12
 
 (Exercise ?2.79
-  (use (:2.1.1 denom numer)
-       (:2.4.3 apply-generic imag-part real-part using)
+  (use (:2.1.1 denom numer) (:2.4.3 apply-generic imag-part real-part using)
        (:2.5.1 install-numeric-package make-complex-from-mag-ang
                make-complex-from-real-imag make-rational make-scheme-number)
        (:3.3.3.3 put)))
@@ -3261,8 +3258,7 @@ z2 => (make-from-mag-ang 30 3)
                make-from-real-imag real-part using)
        (:2.5.1 install-rational-package make-complex-from-mag-ang
                make-complex-from-real-imag make-rational)
-       (:3.3.3.3 put)
-       (?2.79 equ? install-equ-package)
+       (:3.3.3.3 put) (?2.79 equ? install-equ-package)
        (?2.83 install-integer-package install-raise-package install-real-package
               make-integer make-real)
        (?2.85 add apply-generic div install-project-package mul sub)))
@@ -3564,8 +3560,7 @@ z2 => (make-from-mag-ang 30 3)
 => (make-polynomial 'x '((3 1) (2 -2) (1 1) (0 1)))
 
 (Exercise ?2.89
-  (use (:2.5.3.2 coeff make-term order the-empty-termlist)
-       (?2.87 =zero?)))
+  (use (:2.5.3.2 coeff make-term order the-empty-termlist) (?2.87 =zero?)))
 
 (define (adjoin-term term term-list)
   (cond ((=zero? (coeff term)) term-list)
