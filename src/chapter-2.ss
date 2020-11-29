@@ -838,7 +838,7 @@ one-through-four => '(1 2 3 4)
 (square-tree tree) => squared-tree
 
 (Exercise ?2.31
-  (use (:1.1.4 square) (?2.30 tree squared-tree)))
+  (use (:1.1.4 square) (?2.30 squared-tree tree)))
 
 ;; Without map
 (define (tree-map f t)
@@ -1271,7 +1271,7 @@ one-through-four => '(1 2 3 4)
 
 (Section :2.2.4.3 "Frames"
   (use (?2.46 add-vect scale-vect xcor-vect ycor-vect)
-       (?2.47 origin-frame edge1-frame edge2-frame)))
+       (?2.47 edge1-frame edge2-frame origin-frame)))
 
 ;; This is a curried procedure.
 (define (frame-coord-map frame)
@@ -1314,7 +1314,7 @@ one-through-four => '(1 2 3 4)
 (define edge2-frame cddr)
 
 (Section :2.2.4.4 "Painters"
-  (use (:2.2.4.3 frame-coord-map) (?2.48 start-segment end-segment)))
+  (use (:2.2.4.3 frame-coord-map) (?2.48 end-segment start-segment)))
 
 (define (draw-line p1 p2)
   (display (format "Line from ~s to ~s\n" p1 p2)))
@@ -1679,7 +1679,7 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.57
   (use (:2.2.3.1 accumulate)
-       (:2.3.2 make-product make-sum product? sum? same-variable? variable?)))
+       (:2.3.2 make-product make-sum product? same-variable? sum? variable?)))
 
 (paste (:2.3.2 deriv))
 
@@ -2709,9 +2709,10 @@ z2 => (make-from-mag-ang 30 3)
 
 (Section :2.5.1 "Generic Arithmetic Operations"
   (use (:2.1.1 add-rat denom div-rat mul-rat numer sub-rat) (:2.4.2 attach-tag)
-       (:2.4.3 add-complex apply-generic div-complex install-rectangular-package
-               install-polar-package make-from-real-imag make-from-mag-ang
-               apply-specific mul-complex sub-complex using)
+       (:2.4.3 add-complex apply-generic apply-specific div-complex
+               install-polar-package install-rectangular-package
+               make-from-mag-ang make-from-real-imag mul-complex sub-complex
+               using)
        (:3.3.3.3 put) (?2.1 make-rat)))
 
 (define (add x y) (apply-generic 'add x y))
@@ -3069,7 +3070,7 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.1.1 denom numer) (:2.4.2 attach-tag)
        (:2.4.3 apply-generic apply-specific using)
        (:2.5.1 add div install-complex-package install-rational-package
-               make-rational make-complex-from-real-imag)
+               make-complex-from-real-imag make-rational)
        (:3.3.3.3 put)))
 
 (define (install-integer-package)
@@ -3183,12 +3184,12 @@ z2 => (make-from-mag-ang 30 3)
 => (make-real 0.5)
 
 (Exercise ?2.85
-  (use (:2.1.1 numer denom) (:2.4.2 contents type-tag) (:2.4.3 real-part using)
+  (use (:2.1.1 denom numer) (:2.4.2 contents type-tag) (:2.4.3 real-part using)
        (:2.5.1 make-complex-from-real-imag make-rational) (:3.3.3.3 get put)
        (?2.79 equ? install-equ-package)
        (?2.83 install-extended-numeric-package install-raise-package
               make-integer make-real raise)
-       (?2.84 tower-position tower-bottom? tower-top?)))
+       (?2.84 tower-bottom? tower-position tower-top?)))
 
 (define (install-project-package)
   (define (complex->real x)
@@ -3256,8 +3257,8 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.86
   (use (:2.1.1 denom numer) (:2.4.2 attach-tag contents type-tag)
-       (:2.4.3 angle apply-specific imag-part magnitude make-from-real-imag
-               make-from-mag-ang real-part using)
+       (:2.4.3 angle apply-specific imag-part magnitude make-from-mag-ang
+               make-from-real-imag real-part using)
        (:2.5.1 install-rational-package make-complex-from-mag-ang
                make-complex-from-real-imag make-rational)
        (:3.3.3.3 put)
@@ -3413,7 +3414,7 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.3.2 same-variable?)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-term order
                  rest-terms the-empty-termlist)
-       (:3.3.3.3 put) (?2.78 attach-tag add mul)))
+       (:3.3.3.3 put) (?2.78 add attach-tag mul)))
 
 ;; Note: We are following Footnote 58 and using the generic arithmetic system
 ;; from Exercise 2.78, where Scheme numbers are not explicitly tagged.
@@ -3716,7 +3717,7 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.3.2 same-variable? variable?) (:2.4.3 using)
        (:2.5.3.1 add-terms mul-term-by-all-terms mul-terms term-list variable)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
-                 make-term rest-terms order the-empty-termlist)
+                 make-term order rest-terms the-empty-termlist)
        (:3.3.3.3 put)
        (?2.78 add attach-tag contents install-scheme-number-package mul
               type-tag)

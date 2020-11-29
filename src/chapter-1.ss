@@ -63,7 +63,7 @@ circumference ~> 62.8318
 (f 5) => 136
 
 (Section :1.1.5 "The Substitution Model for Procedure Application"
-  (use (:1.1.4 square sum-of-squares f)))
+  (use (:1.1.4 f square sum-of-squares)))
 
 ;; Applicative-order evaluation:
 (f 5)
@@ -198,7 +198,7 @@ circumference ~> 62.8318
 ~> 1000.000369924366
 
 (Exercise ?1.6
-  (use (:1.1.7 improve good-enough?)))
+  (use (:1.1.7 good-enough? improve)))
 
 (define (new-if predicate then-clause else-clause)
   (cond (predicate then-clause)

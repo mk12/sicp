@@ -1,6 +1,7 @@
 // Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
 #include <assert.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,9 @@
 
 // Maximum number of columns allowed by the style guide.
 #define MAX_COLUMNS 80
+
+// Maximum paren nesting depth.
+#define MAX_DEPTH 64
 
 // Skip alignment checks on lines ending with this comment.
 static const char NO_ALIGN_COMMENT[] = "; NOALIGN\n";
@@ -112,15 +116,64 @@ static const struct {
 };
 
 // Looks up the indentation rules for the given operator.
-static enum IndentRules lookup_indent_rules(const char *s, int len) {
-    assert(len > 0);
+static enum IndentRules lookup_indent_rules(
+        const char *line, int start, int len) {
+    const char *s = line + start;
     const int array_len = sizeof INDENT_RULES / sizeof INDENT_RULES[0];
     for (int i = 0; i < array_len; i++) {
         if (strncmp(s, INDENT_RULES[i].name, len) == 0) {
-            return INDENT_RULES[i].rules;
+            enum IndentRules rules = INDENT_RULES[i].rules;
+            // We only recognize wrapper forms occurring at the top level
+            // (column 1, meaning the open paren is on column 0).
+            if (start != 1) {
+                rules &= ~IR_WRAPPER;
+            }
+            return rules;
         }
     }
     return IR_DEFAULT;
+}
+
+// Enumeration of the nested blocks used for importing.
+enum ImportBlock {
+    // Not an import block.
+    IB_NONE,
+    // Chapter/Section/Exercise block.
+    IB_SEC,
+    // The (use ...) block inside IB_SEC.
+    IB_USE,
+    // One of the (id name ...) blocks inside IB_USE.
+    IB_ID,
+};
+
+// Looks up the import block for the given operator. Never returns IB_ID.
+static enum ImportBlock lookup_import_block(
+        const char *line, int start, int len) {
+    const char *s = line + start;
+    if (start == 1 && (
+            strncmp(s, "Chapter", len) == 0
+            || strncmp(s, "Section", len) == 0
+            || strncmp(s, "Exercise", len) == 0)) {
+        return IB_SEC;
+    }
+    if (start == 3 && strncmp(s, "use", len) == 0) {
+        return IB_USE;
+    }
+    return IB_NONE;
+}
+
+// Returns true if the Chapter/Section/Exercise ids prev (null-terminated) and
+// current (substring of line) are ordered correctly.
+static bool correct_id_order(
+        const char *prev, const char *line, int start, int len) {
+    return true;
+}
+
+// Returns true if the import names prev (null-terminated) and current
+// (substring of line) are ordered correctly.
+static bool correct_name_order(
+        const char *prev, const char *line, int start, int len) {
+    return strncmp(prev, line + start, len) < 0;
 }
 
 // Linter state for a single file.
@@ -145,13 +198,25 @@ struct State {
     // Stack of alignments, valid from stack[0] to stack[depth] inclusive. A new
     // line is expected to be indented by stack[depth] spaces. The bottom,
     // stack[0], is always 0 because top-level forms should not be indented.
-    int stack[64];
+    uint8_t stack[MAX_DEPTH];
+    // The import block we are currently inside, or IB_NONE.
+    enum ImportBlock import_mode;
+    // Null-terminated string containing the last id in the import block.
+    char last_import_id[MAX_COLUMNS];
+    // Null-terminated string containing the last name in the import block.
+    char last_import_name[MAX_COLUMNS];
 };
 
-// Emits a failure message for the current line.
-static void fail(struct State *state, const char *msg) {
+// Emits a failure message for the current line given a zero-based column and
+// printf-style format string and arguments.
+static void fail(struct State *state, int column, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    printf("%s:%d:%d: ", state->filename, state->lineno, column + 1);
+    vprintf(format, args);
+    putchar('\n');
     state->status = 1;
-    printf("%s:%d: %s\n", state->filename, state->lineno, msg);
+    va_end(args);
 }
 
 // Lints the given line, which must be nonempty and end with a newline.
@@ -159,45 +224,52 @@ static void lint_line(struct State *state, const char *line, int line_len) {
     assert(line_len > 0);
     assert(line[line_len-1] == '\n');
     assert(state->depth >= 0);
+    assert(state->depth < MAX_DEPTH);
+
+    // Step 1. Check basic line length, whitespace, and comments.
     if (line_len == 1) {
         if (!state->in_string && state->prev_blanks == 1) {
-            fail(state, "multiple blank lines");
+            fail(state, 0, "multiple blank lines");
         }
         state->prev_blanks++;
         return;
     }
     state->prev_blanks = 0;
     if (line_len - 1 > MAX_COLUMNS) {
-        fail(state, "line too long");
+        fail(state, MAX_COLUMNS - 1,
+            "line too long: %d > %d" , line_len, MAX_COLUMNS);
     }
     if (line[line_len-2] == ' ') {
-        fail(state, "trailing whitespace");
+        fail(state, line_len - 2, "trailing whitespace");
     }
     if (line[0] == ';') {
         int i;
         for (i = 1; line[i] == ';'; i++);
         if (i > 3) {
-            fail(state, "too many semicolons");
+            fail(state, 0, "too many semicolons");
         } else if (i == 3 && state->lineno != 1) {
-            fail(state, "';;;' only allowed on first line copyright");
+            fail(state, 0, "';;;' only allowed on first line copyright");
         }
         if (line[i] != '\n' && line[i] != ' ') {
-            fail(state, "missing space after ';'");
+            fail(state, i, "missing space after ';'");
         }
         return;
     }
+
+    // Steps 2. Check spacing, alignment, and import ordering.
     const size_t na_len = sizeof NO_ALIGN_COMMENT - 1;
     const bool no_align = (size_t)line_len >= na_len
         && strncmp(line + line_len - na_len, NO_ALIGN_COMMENT, na_len) == 0;
-    char prev = 0;            // previous character
+    char prev = '\0';         // previous character
     bool escaped = false;     // last character was unescaped backslash
     bool two_spaces = false;  // saw two spaces in a row
+    int word_start = 0;       // start of the last word
     enum { INDENT, NORMAL, OPERATOR, STRING, COMMENT, COMMENT_SPACE } mode =
         state->in_string ? STRING : INDENT;
     for (int i = 0; i < line_len; i++) {
         char c = line[i];
         if (c == '\t') {
-            fail(state, "illegal character '\\t'");
+            fail(state, i, "illegal character '\\t'");
         }
         switch (mode) {
         case INDENT:
@@ -213,7 +285,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                     state->stack[state->depth] = state->quoted_align;
                     state->quoted_align = -1;
                 } else {
-                    fail(state, "incorrect indentation");
+                    fail(state, i, "incorrect indentation");
                 }
             }
             mode = NORMAL;
@@ -222,7 +294,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
         case OPERATOR:
             if (two_spaces && c != ' ' && c != ';') {
                 two_spaces = false;
-                fail(state, "unexpected two spaces in a row");
+                fail(state, i, "unexpected two spaces in a row");
             }
             switch (c) {
             case '"':
@@ -232,7 +304,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             case ';':
                 mode = COMMENT;
                 if (prev != ' ') {
-                    fail(state, "expected space before ';'");
+                    fail(state, i, "expected space before ';'");
                 }
                 break;
             case '(':
@@ -245,7 +317,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                         case '@': case '[': case '`':
                             break;
                         default:
-                            fail(state, "expected space before '('");        
+                            fail(state, i, "expected space before '('");        
                             break;
                     }
                 }
@@ -260,12 +332,28 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             case ']':
                 mode = NORMAL;
                 if (i != 0 && state->depth == state->num_wrappers) {
-                    fail(state, "expected ')' at start of line for wrapper");
+                    fail(state, i, "expected ')' at start of line for wrapper");
                 }
                 if (prev == ' ') {
-                    fail(state, "unexpected space before ')'");
+                    fail(state, i, "unexpected space before ')'");
                 }
                 state->depth--;
+                if (state->import_mode != IB_NONE) {
+                    if (state->import_mode == IB_ID) {
+                        int start = word_start;
+                        int len = i - start;
+                        if (!correct_name_order(
+                                state->last_import_name, line, start, len)) {
+                            fail(state, start,
+                                "incorrect import name ordering: %s > %.*s",
+                                state->last_import_name, len, line + start);
+                        }
+                        state->last_import_name[0] = '\0';
+                    } else if (state->import_mode == IB_USE) {
+                        state->last_import_id[0] = '\0';
+                    }
+                    state->import_mode--;
+                }
                 break;
             case ' ':
                 if (prev == ' ') {
@@ -276,11 +364,10 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                 if (mode == OPERATOR) {
                     mode = NORMAL;
                     int start = state->stack[state->depth];
-                    enum IndentRules rules = 
-                        lookup_indent_rules(line + start, i - start);
-                    // We only recognize wrapper forms occurring at the top
-                    // level (column 1, meaning the paren is on column 0).
-                    if (start == 1 && (rules & IR_WRAPPER) != 0) {
+                    int len = i - start;
+                    enum IndentRules rules =
+                        lookup_indent_rules(line, start, len);
+                    if ((rules & IR_WRAPPER) != 0) {
                         state->num_wrappers++;
                     }
                     if (c == ' ') {
@@ -295,6 +382,44 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                             state->stack[state->depth]++;
                         }
                     }
+                    enum ImportBlock block =
+                        lookup_import_block(line, start, len);
+                    switch (state->import_mode) {
+                    case IB_NONE:
+                        if (block == IB_SEC) {
+                            state->import_mode++;
+                        }
+                        break;
+                    case IB_SEC:
+                        if (block == IB_USE) {
+                            state->import_mode++;
+                        }
+                        break;
+                    case IB_USE:
+                        state->import_mode++;
+                        if (!correct_id_order(
+                                state->last_import_id, line, start, len)) {
+                            fail(state, start,
+                                "incorrect import id ordering: %s > %.*s",
+                                state->last_import_id, line + start, len);
+                        }
+                        strncpy(state->last_import_id, line + start, len);
+                        state->last_import_id[len] = '\0';
+                        break;
+                    case IB_ID:
+                        break;
+                    }
+                } else if (state->import_mode == IB_ID) {
+                    int start = word_start;
+                    int len = i - start;
+                    if (!correct_name_order(
+                            state->last_import_name, line, start, len)) {
+                        fail(state, start,
+                            "incorrect import name ordering: %s > %.*s",
+                            state->last_import_name, len, line + start);
+                    }
+                    strncpy(state->last_import_name, line + start, len);
+                    state->last_import_name[len] = '\0';
                 }
                 break;
             }
@@ -313,9 +438,12 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             // fallthrough
         case COMMENT_SPACE:
             if (c != ' ') {
-                fail(state, "expected space after ';'");
+                fail(state, i, "expected space after ';'");
             }
             return;
+        }
+        if (mode == NORMAL && prev == ' ' && c != ' ') {
+            word_start = i;
         }
         prev = c;
         escaped = c == '\\' ? !escaped : false;
@@ -323,7 +451,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
 }
 
 // Reads and lints the given file.
-static int lint(const char* filename) {
+static int lint(const char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
         perror(filename);
@@ -339,6 +467,9 @@ static int lint(const char* filename) {
         .quoted_align = 0,
         .depth = 0,
         .stack = {0},
+        .import_mode = IB_NONE,
+        .last_import_id = {0},
+        .last_import_name = {0},
     };
     char *line = NULL;
     size_t cap = 0;

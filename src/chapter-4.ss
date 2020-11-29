@@ -24,7 +24,7 @@
                if-predicate if? lambda-body lambda-parameters lambda? last-exp?
                no-operands? operands operator quoted? rest-exps rest-operands
                self-evaluating? text-of-quotation variable?)
-       (:4.1.2.1 cond? cond->if)
+       (:4.1.2.1 cond->if cond?)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
        (:4.1.3.1 true?)
@@ -109,7 +109,7 @@
                if-predicate if? lambda-body lambda-parameters lambda? last-exp?
                no-operands? operands operator quoted? rest-exps rest-operands
                self-evaluating? text-of-quotation variable?)
-       (:4.1.2.1 cond? cond->if)
+       (:4.1.2.1 cond->if cond?)
        (:4.1.2.2 apply-primitive-procedure primitive-implementation
                  primitive-procedure?)
        (:4.1.3.1 true?)
@@ -253,12 +253,12 @@
 (apply-primitive-procedure (list 'primitive car) (list '(a . b))) => 'a
 
 (Exercise ?4.2
-  (use (:4.1.1 apply list-of-values eval-if eval-sequence eval-assignment
-               eval-definition)
+  (use (:4.1.1 apply eval-assignment eval-definition eval-if eval-sequence
+               list-of-values)
        (:4.1.2 assignment? begin-actions begin? definition? if? lambda-body
                lambda-parameters lambda? quoted? self-evaluating? tagged-list?
                text-of-quotation variable?)
-       (:4.1.2.1 cond? cond->if) (:4.1.3.2 make-procedure)
+       (:4.1.2.1 cond->if cond?) (:4.1.3.2 make-procedure)
        (:4.1.3.3 lookup-variable-value make-environment)))
 
 ;; (a) Lous is wrong -- moving the clause for procedure applications further up
@@ -456,7 +456,7 @@
 (Exercise ?4.7
   (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-begin)
        (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
-       (?4.6 let-bindings let-actions install-let-package make-let)))
+       (?4.6 install-let-package let-actions let-bindings make-let)))
 
 ;; It is sufficient to expand let* to nested let expressions in the new
 ;; evaluation clause. It will get expanded to lambdas by the recursive eval.
@@ -549,12 +549,12 @@
 (eval 'y env) => 2
 
 (Exercise ?4.10
-  (use (:4.1.1 apply list-of-values eval-sequence eval-assignment
-               eval-definition)
+  (use (:4.1.1 apply eval-assignment eval-definition eval-sequence
+               list-of-values)
        (:4.1.2 application? assignment? begin-actions begin? definition?
                lambda-body lambda-parameters lambda? operands operator quoted?
                self-evaluating? text-of-quotation variable?)
-       (:4.1.2.1 cond? cond->if) (:4.1.3.1 true?) (:4.1.3.2 make-procedure)
+       (:4.1.2.1 cond->if cond?) (:4.1.3.1 true?) (:4.1.3.2 make-procedure)
        (:4.1.3.3 lookup-variable-value make-environment)))
 
 ;; We can change the syntax for if expressions to resemble the C ternary
@@ -784,7 +784,7 @@
 
 (Exercise ?4.13
   (use (:2.4.3 using) (:3.3.3.3 put)
-       (:4.1.3.3 first-frame frame-variables frame-values make-environment
+       (:4.1.3.3 first-frame frame-values frame-variables make-environment
                  make-frame set-first-frame!)
        (?4.3 eval install-eval-package)))
 

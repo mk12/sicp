@@ -222,7 +222,7 @@
     (estimate-integral pred -1.0 1.0 -1.0 1.0 trials)))
 
 (Exercise ?3.6
-  (use (:3.1.2 random-init rand-update)))
+  (use (:3.1.2 rand-update random-init)))
 
 (define rand
   (let ((x random-init))
@@ -693,7 +693,7 @@ z2 => '((a b) a b)
 (count-pairs three-7) => 7
 
 (Exercise ?3.17
-  (use (:2.3.1 memq) (?3.16 one-1 two-2 two-3 three-3 three-4 three-5 three-7)))
+  (use (:2.3.1 memq) (?3.16 one-1 three-3 three-4 three-5 three-7 two-2 two-3)))
 
 (define (count-pairs x)
   (let ((seen '()))
@@ -770,7 +770,7 @@ z2 => '((a b) a b)
 (cdr z) => 'd
 
 (Exercise ?3.20
-  (use (:3.3.1.2 cons car cdr set-car!)))
+  (use (:3.3.1.2 car cdr cons set-car!)))
 
 (define x (cons 1 2))
 (define z (cons x x))
@@ -840,7 +840,7 @@ z2 => '((a b) a b)
 (define (disable-stack-mode) (set! *stack-mode* #f))
 
 (Exercise ?3.21
-  (use (:3.3.2 make-queue delete-queue! front-ptr insert-queue!)))
+  (use (:3.3.2 delete-queue! front-ptr insert-queue! make-queue)))
 
 (define q1 (make-queue))
 (insert-queue! q1 'a) => '((a) a)
@@ -1623,7 +1623,7 @@ z2 => '((a b) a b)
 
 (Exercise ?3.32
   (use (:3.3.2 disable-stack-mode enable-stack-mode) (:3.3.4.1 and-gate)
-       (:3.3.4.2 make-wire set-signal!) (:3.3.4.3 reset propagate)
+       (:3.3.4.2 make-wire set-signal!) (:3.3.4.3 propagate reset)
        (:3.3.4.4 probe)))
 
 ;; The FIFO order of procedure queues for each segment must be used because it
@@ -1932,7 +1932,7 @@ z2 => '((a b) a b)
 ;; See whiteboard/exercise-3.36.jpg for the environment diagram.
 
 (Exercise ?3.37
-  (use (:3.3.5.2 constant adder multiplier probe)
+  (use (:3.3.5.2 adder constant multiplier probe)
        (:3.3.5.3 make-connector set-value!)))
 
 (define (celsius->fahrenheit x)
@@ -2038,7 +2038,7 @@ z2 => '((a b) a b)
 
 (Exercise ?3.40
   (use (:2.2.3.1 filter) (:2.2.3.2 permutations)
-       (:3.3.3.1 make-table insert! lookup) (:3.4.2.3 make-serializer)
+       (:3.3.3.1 insert! lookup make-table) (:3.4.2.3 make-serializer)
        (?3.38 in?)))
 
 (define x 10)
@@ -3203,7 +3203,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 (stream-ref (solve (lambda (y) y) 1 0.001) 1000) ~> 2.716923932235896
 
 (Exercise ?3.77
-  (use (:3.5.1 stream-car stream-cdr stream-null? the-empty-stream stream-ref)
+  (use (:3.5.1 stream-car stream-cdr stream-null? stream-ref the-empty-stream)
        (?3.50 stream-map)))
 
 (define (integral delayed-integrand initial-value dt)
@@ -3274,7 +3274,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 => '("0.000" "1.000" "1.900" "2.660" "3.249" "3.646" "3.841" "3.834" "3.636")
 
 (Section :3.5.5 "Modularity of Functional Programs and Modularity of Objects"
-  (use (:3.1.2 random-init rand-update)
+  (use (:3.1.2 rand-update random-init)
        (:3.5.1 stream-car stream-cdr stream-ref) (?3.50 stream-map)))
 
 (define (map-successive-pairs f s)
@@ -3310,7 +3310,7 @@ b-10 => '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
 (stream-ref pi 999) ~> 3.149183286488868
 
 (Exercise ?3.81
-  (use (:3.1.2 random-init rand-update)
+  (use (:3.1.2 rand-update random-init)
        (:3.5.1 stream-car stream-cdr stream-null? the-empty-stream)
        (:3.5.2 stream-take) (?3.74 cycle)))
 
