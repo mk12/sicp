@@ -142,7 +142,7 @@ enum ImportBlock {
     IB_SEC,
     // The (use ...) block inside IB_SEC.
     IB_USE,
-    // One of the (id name ...) blocks inside IB_USE.
+    // One of the (ID NAME ...) blocks inside IB_USE.
     IB_ID,
 };
 
@@ -166,7 +166,37 @@ static enum ImportBlock lookup_import_block(
 // current (substring of line) are ordered correctly.
 static bool correct_id_order(
         const char *prev, const char *line, int start, int len) {
-    return true;
+    int i, j, cmp = 0;
+    for (i = 0, j = 0; prev[i] != '\0' && j < len; i++, j++) {
+        char ci = prev[i], cj = line[start+j];
+        if (i == 0 && ci != cj) {
+            // The Chapter/Section sigil ':' (0x3a) is numerically less than the
+            // Exercise sigil '?' (0x3f).
+            return ci < cj;
+        }
+        if (ci == '.' && cj == '.') {
+            if (cmp != 0) {
+                return cmp < 0;
+            }
+            cmp = 0;
+        } else if (ci == '.') {
+            return false;
+        } else if (cj == '.') {
+            return true;
+        } else if (cmp == 0) {
+            cmp = ci - cj;
+        }
+    }
+    // Simulate appending a '.' at the end.
+    bool ei = prev[i] == '\0';
+    bool ej = j == len;
+    char ci = ei ? '.' : prev[i];
+    char cj = ej ? '.' : line[start+j];
+    if (ci == '.' && cj == '.' && cmp != 0) {
+        return cmp < 0;
+    }
+    // Prefer the shorter (less specific) coming first.
+    return ei;
 }
 
 // Returns true if the import names prev (null-terminated) and current
@@ -401,7 +431,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                                 state->last_import_id, line, start, len)) {
                             fail(state, start,
                                 "incorrect import id ordering: %s > %.*s",
-                                state->last_import_id, line + start, len);
+                                state->last_import_id, len, line + start);
                         }
                         strncpy(state->last_import_id, line + start, len);
                         state->last_import_id[len] = '\0';

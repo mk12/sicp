@@ -1202,7 +1202,7 @@ circumference ~> 62.8318
 (product identity 1 inc 10) => 3628800
 
 (Exercise ?1.33
-  (use (:1.1.4 square) (?1.23 prime?) (:1.3.1 identity inc)))
+  (use (:1.1.4 square) (:1.3.1 identity inc) (?1.23 prime?)))
 
 (define (filtered-accumulate combine pred? id term a next b)
   (define (iter a acc)
