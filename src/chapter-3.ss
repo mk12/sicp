@@ -2901,8 +2901,6 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
   (use (:2.2.3.1 enumerate-interval) (:3.5.1 stream-car stream-cdr stream-ref)
        (:3.5.2 divisible?) (:3.5.3.2 first-10-pairs integer-pairs)))
 
-;; BUG: This hangs sometimes in Racket.
-
 ;; Let f(n) be the nth pair in the stream, starting at 0.
 ;;
 ;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k
@@ -2932,12 +2930,13 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 (pair->index '(100 100)) => (- (expt 2 100) 2)
 
 ;; We can confirm that it's correct for small indices:
-
 (map pair->index first-10-pairs) => (enumerate-interval 0 9)
 (stream-ref integer-pairs 197) => '(1 100)
-(define random-pair (list (+ 1 (random 5)) (+ 1 (random 50))))
+(define random-pair-fst (+ 1 (random 5)))
+(define random-pair (list random-pair-fst (+ random-pair-fst (random 46))))
 (define random-index (pair->index random-pair))
-(<= random-index 1454) => #t ; ensuring it's not too large
+(>= random-index 0) => #t    ; sanity check
+(<= random-index 1454) => #t ; ensure it's not too large
 (stream-ref integer-pairs random-index) => random-pair
 
 ;; Going the other way, from index to pair, is possible without generating the

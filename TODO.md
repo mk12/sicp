@@ -1,7 +1,7 @@
 # New to do
 
 - change install-foo-package to foo-pkg
-- fix BUG in chapter-3
++ fix BUG in chapter-3
 + lint import order
 + make a linter
 + change indentation from two to one spaces unless let/lambda/define/etc.
