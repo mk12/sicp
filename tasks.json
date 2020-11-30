@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "./run.sh chez",
+            "group": {
+                "kind": "test"
+            },
+            "problemMatcher": [
+                {
+                    "pattern": {
+                        "regexp": "^Exception.*:\\s+(.*) at line (\\d+), char (\\d+) of (.*)$",
+                        "message": 1,
+                        "line": 2,
+                        "column": 3,
+                        "file": 4
+                    }
+                },
+                {
+                    "pattern": [
+                        {
+                            "regexp": "^(.*):(\\d+):(\\d+):\\s+assertion failed$",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        },
+                        {
+                            "regexp": "^left:.*$"
+                        },
+                        {
+                            "regexp": "^(?:=[!$]?|~)>\\s+(.*)$",
+                            "message": 1
+                        }
+                    ]
+                }
+            ],
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "lint",
+            "type": "shell",
+            "command": "make lint",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "message": 4
+                }
+            },
+            "presentation": {
+                "reveal": "never",
+                "revealProblems": "onProblem"
+            }
+        },
+        {
+            "label": "docs",
+            "type": "shell",
+            "command": "make -C docs",
+            "group": {
+                "kind": "build"
+            }
+        }
+    ]
+}

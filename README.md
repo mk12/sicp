@@ -109,7 +109,17 @@ This project follows <http://community.schemewiki.org/?scheme-style>, with the f
 - Use `;;` for normal comments, and `;` for commented code/diagrams.
 - Use `;` for inline comments. Separate them from code by one space (or more for alignment).
 
-Run `make lint` to verify some of these rules.
+Run `make lint` to verify these rules.
+
+## Editor support
+
+Run `make vscode` to set up tasks for VS Code:
+
+- `test`: Runs all tests using Chez Scheme.
+- `lint`: Lints all Scheme and Markdown files.
+- `docs`: Starts rebuilding docs on every save.
+
+The `test` and `lint` tasks parse results into the Problems view. The [Live Server][] extension is useful with the `docs` task.
 
 ## Known issues
 
