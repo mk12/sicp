@@ -6,7 +6,7 @@ This repository is my study of [_Structure and Interpretation of Computer Progra
 
 My notes are published at <https://mk12.github.io/sicp>, generated from Markdown files in [docs/](docs). They are based on the [2.andresraba5 PDF][pdf] and the [MIT OCW video lectures][lectures].
 
-To compile the notes, install [Pandoc][] and run `make -C docs`. To compile automatically on every save, install [entr][] and run `make -C docs watch`. This is useful in combination with the VS Code extension [Live Server][].
+To compile the notes, install [Pandoc][] and run `make -C docs`. To compile automatically on every save, install [entr][] and run `make -C docs watch`.
 
 ## Exercises
 
@@ -115,11 +115,11 @@ Run `make lint` to verify these rules.
 
 Run `make vscode` to set up tasks for VS Code:
 
-- `test`: Runs all tests using Chez Scheme.
-- `lint`: Lints all Scheme and Markdown files.
-- `docs`: Starts rebuilding docs on every save.
+- `test`: Run all tests using Chez Scheme.
+- `lint`: Lint all Scheme and Markdown files.
+- `docs`: Start rebuilding docs on every save.
 
-The `test` and `lint` tasks parse results into the Problems view. The [Live Server][] extension is useful with the `docs` task.
+The `test` and `lint` tasks parse results into the Problems view, which you can advance through with <kbd>F8</kbd>. The `docs` task requires [entr][], and it works well in combination with the [Live Server][] extension.
 
 ## Known issues
 
