@@ -12,7 +12,7 @@ help:
 	@echo "See also: make -C docs help"
 
 lint: linter
-	@find . -type f -name "*.ss" -print0 | xargs -0 ./$<
+	@find . -type f -name "*.ss" -o -name "*.md" -print0 | xargs -0 ./$<
 
 linter: linter.c
 	$(CC) $(CFLAGS) -o $@ $^

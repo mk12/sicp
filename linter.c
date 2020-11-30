@@ -16,6 +16,12 @@
 // Skip alignment checks on lines ending with this comment.
 static const char NO_ALIGN_COMMENT[] = "; NOALIGN\n";
 
+// Line in a Markdown file indicating the start of Scheme code.
+static const char MARKDOWN_SCHEME_START[] = "```scheme\n";
+
+// Line in a Markdown file indicating the end of Scheme code.
+static const char MARKDOWN_SCHEME_END[] = "```\n";
+
 // Bit flags specifying indentation rules for an operator. The indentation of a
 // line is determined by the last unclosed paren's operator.
 enum IndentRules {
@@ -253,8 +259,9 @@ static void fail(struct State *state, int column, const char *format, ...) {
     va_end(args);
 }
 
-// Lints the given line, which must be nonempty and end with a newline.
-static void lint_line(struct State *state, const char *line, int line_len) {
+// Lints the given line, which must be nonempty and end with a newline. Returns
+// true if linting should continue, and false otherwise.
+static bool lint_line(struct State *state, const char *line, int line_len) {
     assert(line_len > 0);
     assert(line[line_len-1] == '\n');
     assert(state->depth >= 0);
@@ -266,7 +273,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             fail(state, 0, "multiple blank lines");
         }
         state->prev_blanks++;
-        return;
+        return true;
     }
     state->prev_blanks = 0;
     if (line_len - 1 > MAX_COLUMNS) {
@@ -287,7 +294,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
         if (line[i] != '\n' && line[i] != ' ') {
             fail(state, i, "missing space after ';'");
         }
-        return;
+        return true;
     }
 
     // Steps 2. Check spacing, alignment, and import ordering.
@@ -405,6 +412,10 @@ static void lint_line(struct State *state, const char *line, int line_len) {
                     state->import_mode--;
                 }
                 state->depth--;
+                if (state->depth < 0) {
+                    fail(state, i, "fatal: unmatched ')'");
+                    return false;
+                }
                 break;
             case ' ':
                 if (prev == ' ') {
@@ -491,7 +502,7 @@ static void lint_line(struct State *state, const char *line, int line_len) {
             if (c != ' ') {
                 fail(state, i, "expected space after ';'");
             }
-            return;
+            return true;
         }
         if (mode == NORMAL && prev == ' ' && c != ' ') {
             word_start = i;
@@ -499,9 +510,20 @@ static void lint_line(struct State *state, const char *line, int line_len) {
         prev = c;
         escaped = c == '\\' ? !escaped : false;
     }
+    return true;
 }
 
-// Reads and lints the given file.
+// Returns the extension of the given filename, excluding the dot.
+static const char *file_extension(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if (!dot || dot == filename) {
+        return "";
+    }
+    return dot + 1;
+}
+
+// Reads and lints the given file. If it is a Markdown file (".md" extension),
+// only lints Scheme code in fenced code blocks.
 static int lint(const char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
@@ -527,11 +549,38 @@ static int lint(const char *filename) {
     char *line = NULL;
     size_t cap = 0;
     ssize_t len;
-    while ((len = getline(&line, &cap, fp)) != -1) {
-        lint_line(&state, line, len);
-        state.lineno++;
-        state.prev_length = len - 1;
+    if (strcmp(file_extension(filename), "md") == 0) {
+        enum { TEXT, SCHEME } mode = TEXT;
+        while ((len = getline(&line, &cap, fp)) != -1) {
+            switch (mode) {
+            case TEXT:
+                if (strncmp(line, MARKDOWN_SCHEME_START, len) == 0) {
+                    mode = SCHEME;
+                }
+                break;
+            case SCHEME:
+                if (strncmp(line, MARKDOWN_SCHEME_END, len) == 0) {
+                    mode = TEXT;
+                    break;
+                }
+                if (!lint_line(&state, line, len)) {
+                    goto end;
+                }
+                state.prev_length = len - 1;
+                break;
+            }
+            state.lineno++;
+        }
+    } else {
+        while ((len = getline(&line, &cap, fp)) != -1) {
+            if (!lint_line(&state, line, len)) {
+                break;
+            }
+            state.prev_length = len - 1;
+            state.lineno++;
+        }
     }
+end:
     fclose(fp);
     return state.status;
 }

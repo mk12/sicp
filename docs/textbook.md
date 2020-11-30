@@ -609,7 +609,7 @@ Now we can do things like this:
 (define (append list1 list2)
   (if (null? list1)
       list2
-      (cons (car list1 (append (cdr list1) list2))))
+      (cons (car list1 (append (cdr list1) list2)))))
 ```
 
 #### Mapping over lists
@@ -621,7 +621,7 @@ Now we can do things like this:
 (define (map f xs)
   (if (null? xs)
       nil
-      (cons (f (car xs)
+      (cons (f (car xs))
             (map f (cdr xs)))))
 ```
 
@@ -1535,7 +1535,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ```scheme
 (define (swap-value! f)
-  (set-value! (f (get-value)))
+  (set-value! (f (get-value))))
 ```
 
 #### Serializers in Scheme
@@ -1645,8 +1645,8 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```scheme
 (define fibs
   (cons-stream
-    0
-    (cons-stream 1 (stream-map + fibs (stream-cdr fibs)))))
+   0
+   (cons-stream 1 (stream-map + fibs (stream-cdr fibs)))))
 (define pot
   (cons-stream 1 (stream-map (lambda (x) (* x 2)) pot)))
 ```
@@ -1673,8 +1673,8 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ```scheme
 (stream-filter
-  (lambda (pair) (prime? (+ (car pair) (cadr pair))))
-  int-pairs)
+ (lambda (pair) (prime? (+ (car pair) (cadr pair))))
+ int-pairs)
 ```
 
 - We need some way of producing a stream of all integer pairs.
@@ -1787,11 +1787,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
          (apply-primitive-procedure procedure arguments))
         ((compound-procedure? procedure)
          (eval-sequence
-           (procedure-body procedure)
-           (extend-environment
-             (procedure-parameters procedure)
-             arguments
-             (procedure-environment procedure))))
+          (procedure-body procedure)
+          (extend-environment
+           (procedure-parameters procedure)
+           arguments
+           (procedure-environment procedure))))
         (else (error "Unknown procedure type: APPLY" procedure))))
 ```
 
@@ -1824,16 +1824,16 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 (define (expand-clauses clauses)
   (if (null? clauses)
-    'false ; no else clause
-    (let ((first (car clauses))
-      (rest (cdr clauses)))
-      (if (cond-else-clause? first)
-          (if (null? rest)
-              (sequence->exp (cond-actions first))
-              (error "ELSE clause isn't last: COND->IF" clauses))
-          (make-if (cond-predicate first)
-                   (sequence->exp (cond-actions first))
-                   (expand-clauses rest))))))
+      'false ; no else clause
+      (let ((first (car clauses))
+            (rest (cdr clauses)))
+        (if (cond-else-clause? first)
+            (if (null? rest)
+                (sequence->exp (cond-actions first))
+                (error "ELSE clause isn't last: COND->IF" clauses))
+            (make-if (cond-predicate first)
+                     (sequence->exp (cond-actions first))
+                     (expand-clauses rest))))))
 ```
 
 - Practical Lisp systems allow the user to define new derived expressions by syntactic transformation. These are called _macros_.
@@ -1912,9 +1912,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```scheme
 (define (setup-environment)
   (let ((initial-env
-        (extend-environment (primitive-procedure-names)
-                            (primitive-procedure-objects)
-                            the-empty-environment)))
+         (extend-environment (primitive-procedure-names)
+                             (primitive-procedure-objects)
+                             the-empty-environment)))
     (define-variable! 'true true initial-env)
     (define-variable! 'false false initial-env)
     initial-env))
@@ -1967,9 +1967,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 (define (user-print object)
   (if (compound-procedure? object)
       (display (list 'compound-procedure
-                      (procedure-parameters object)
-                      (procedure-body object)
-                      '<procedure-env>))
+                     (procedure-parameters object)
+                     (procedure-body object)
+                     '<procedure-env>))
       (display object)))
 ```
 

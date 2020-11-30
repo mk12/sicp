@@ -288,7 +288,7 @@ We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, ... in Lisp:
   (if (< n 2)
       n
       (+ (fib (- n 1))
-        (fib (- n 2)))))
+         (fib (- n 2)))))
 ```
 
 This is a _tree-recursive_ process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.
@@ -337,7 +337,7 @@ We can represent the sigma notation with a procedure that takes other procedures
   (if (> a b)
       0
       (+ (term a)
-        (sum term (next a) next b))))
+         (sum term (next a) next b))))
 ```
 
 Now we can write particular cases easily, without repeating ourselves:
@@ -422,9 +422,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```scheme
 (define (+rat x y)
   (make-rat
-    (+ (* (numer x) (denom y))
-       (* (numer y) (denom x)))
-    (* (denom x) (denom y))))
+   (+ (* (numer x) (denom y))
+      (* (numer y) (denom x)))
+   (* (denom x) (denom y))))
 ```
 
 - The procedure `make-rat` is called a _constructor_.
@@ -714,9 +714,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ```scheme
 (define deriv-rules
-  '(((dd (?c c) (? v) 0)
-    ((dd (?v v) (? v) 1)
-    ((dd (?v u) (? v) 0)
+  '(((dd (?c c) (? v)) 0)
+    ((dd (?v v) (? v)) 1)
+    ((dd (?v u) (? v)) 0)
     ((dd (+ (? x1) (? x2)) (? v))
      (+ (dd (: x1) (: v))
         (dd (: x2) (: v))))
@@ -725,7 +725,7 @@ Then, we learned how to use higher-order procedures to represent general methods
         (* (dd (: x1) (: v)) (: x2))))
     ((dd (** (? x) (?c n)) (? v))
      (* (* (: n)
-           (** *: x) (: (- n 1))))
+           (** (: x) (: (- n 1))))
         (dd (: x) (: v))))))
 ```
 
@@ -840,8 +840,8 @@ Then, we learned how to use higher-order procedures to represent general methods
       (lookup form dict)
       (apply (eval (lookup (car form) dict)
                    user-initial-environment)
-            (mapcar (lambda (v) (lookup v dict))
-                    (cdr form)))))
+             (mapcar (lambda (v) (lookup v dict))
+                     (cdr form)))))
 ```
 
 - Atoms (variable names) are simply looked up in the dictionary.
@@ -884,8 +884,8 @@ Then, we learned how to use higher-order procedures to represent general methods
             (if (eq? dict 'failed)
                 (scan (cdr rules))
                 (simplify-exp
-                  (instantiate (skeleton (car rules))
-                               dict))))))
+                 (instantiate (skeleton (car rules))
+                              dict))))))
     (scan the-rules))
   simplify-exp)
 ```
@@ -897,9 +897,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```scheme
 (define (simplify-exp exp)
   (try-rules
-    (if (compound? exp)
-        (map simplify-exp exp)
-        exp)))
+   (if (compound? exp)
+       (map simplify-exp exp)
+       exp)))
 ```
 
 - This is a different idiom; it works the same way, but you think about it a bit differently.
@@ -923,7 +923,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 (define (empty-dictionary) '())
 (define (extend-dictionary pat dat dict)
   (let ((name (variable-name pat)))
-    (let ((v ((assq name dict)))
+    (let ((v ((assq name dict))))
       (cond ((null? v)
              (cons (list name dat) dict))
             ((eq? (cadr v) dat) dict)
@@ -1400,17 +1400,17 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```scheme
 (define (prime-sum-pairs n)
   (map
+   (lambda (p)
+     (list (car p) (cadr p) (+ (car p) (cadr p))))
+   (filter
     (lambda (p)
-      (list (car p) (cadr p) (+ (car p) (cadr  p))))
-    (filter
-      (lambda (p)
-        (prime (+ (car p) (cadr p))))
-      (flatmap
-        (lambda (i)
-          (map
-            (lambda (j) (list i j))
-            (enumerate-interval 1 (-1+ i))))
-        (enumerate-interval 1 n)))))
+      (prime (+ (car p) (cadr p))))
+    (flatmap
+     (lambda (i)
+       (map
+        (lambda (j) (list i j))
+        (enumerate-interval 1 (-1+ i))))
+     (enumerate-interval 1 n)))))
 ```
 
 - `flatmap` takes the place of nested loops in most other languages.
@@ -1419,10 +1419,10 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```scheme
 (define (prime-sum-pairs n)
   (collect
-    (list i j (+ i j))
-    ((i (enumerate-interval 1 n))
-     (j (enumerate-interval 1 (-1+ i))))
-    (prime? (+ i j))))
+   (list i j (+ i j))
+   ((i (enumerate-interval 1 n))
+    (j (enumerate-interval 1 (-1+ i))))
+   (prime? (+ i j))))
 ```
 
 ### Eight queens puzzle
@@ -1518,9 +1518,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```scheme
 (define (sieve s)
   (cons-stream
-    (head s)
-    (sieve (filter (lambda (x) (not (divisible? x (head s))))
-                   (tail s)))))
+   (head s)
+   (sieve (filter (lambda (x) (not (divisible? x (head s))))
+                  (tail s)))))
 (define primes (sieve (integers-from 2)))
 (nth-stream 20 primes)
 73
