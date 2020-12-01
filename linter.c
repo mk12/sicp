@@ -179,22 +179,6 @@ static enum ImportBlock parent_import_block(enum ImportBlock block) {
     return block == IB_PASTE ? IB_NONE : block >> 1;
 }
 
-// Returns the paren depth of the given import block.
-static int import_block_depth(enum ImportBlock block) {
-    switch (block) {
-        case IB_NONE:
-            return 0;
-        case IB_SEC:
-        case IB_PASTE:
-            return 1;
-        case IB_SEC_USE:
-        case IB_PASTE_ARG:
-            return 2;
-        case IB_SEC_USE_ARG:
-            return 3;
-    }
-}
-
 // Looks up the new import block given the current one and an operator.
 static enum ImportBlock lookup_import_block(
         enum ImportBlock current, const char *line, int start, int len) {
@@ -360,6 +344,7 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
     const size_t na_len = sizeof NO_ALIGN_COMMENT - 1;
     const bool no_align = (size_t)line_len >= na_len
         && strncmp(line + line_len - na_len, NO_ALIGN_COMMENT, na_len) == 0;
+    bool can_pack_inside = (state->import_mode & IB_MASK_INSIDE) != 0;
     bool can_pack_outside =
         state->prev_import_mode != IB_NONE
         && ((state->prev_import_mode & IB_MASK_INSIDE) == 0)
@@ -445,6 +430,7 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                     fail(state, i, "unexpected space before ')'");
                 }
                 if (state->import_mode != IB_NONE) {
+                    int new_mode = parent_import_block(state->import_mode);
                     if ((state->import_mode & IB_MASK_INSIDE) != 0) {
                         int start = word_start;
                         int len = i - start;
@@ -455,22 +441,37 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                                 state->last_import_name, len, line + start);
                         }
                         state->last_import_name[0] = '\0';
-                        int would_be =
-                            state->prev_length + 1 + (i - last_open + 1);
-                        if (i + 1 < line_len && line[i+1] == ')') {
-                            would_be +=
-                                import_block_depth(state->import_mode) - 1;
+                        if (can_pack_outside) {
+                            can_pack_outside = false;
+                            int would_be =
+                                state->prev_length + 1 + (i - last_open + 1);
+                            for (int j = i + 1;
+                                    j < line_len && line[j] == ')'; j++) {
+                                would_be++;
+                            }
+                            if (would_be <= MAX_COLUMNS) {
+                                fail(state, last_open,
+                                    "pack imports on previous line: %.*s",
+                                    i - last_open + 1, line + last_open);
+                            }
                         }
-                        if (can_pack_outside && would_be <= MAX_COLUMNS) {
-                            fail(state, last_open,
-                                "import can be packed on previous line");
+                        if (can_pack_inside) {
+                            can_pack_inside = false;
+                            int would_be = state->prev_length + 1 + len + 1;
+                            for (int j = i + 1;
+                                    j < line_len && line[j] == ')'; j++) {
+                                would_be++;
+                            }
+                            if (would_be <= MAX_COLUMNS) {
+                                fail(state, start,
+                                    "pack import on previous line: %.*s",
+                                    len, line + start);
+                            }
                         }
                     } else if ((state->import_mode & IB_MASK_OUTSIDE) != 0) {
                         state->last_import_id[0] = '\0';
                     }
-                    can_pack_outside = false;
-                    state->import_mode =
-                        parent_import_block(state->import_mode);
+                    state->import_mode = new_mode;
                 }
                 state->depth--;
                 if (state->depth < 0) {
@@ -528,6 +529,19 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                     }
                     strncpy(state->last_import_name, line + start, len);
                     state->last_import_name[len] = '\0';
+                    if (can_pack_inside) {
+                        can_pack_inside = false;
+                        int would_be = state->prev_length + 1 + len;
+                        for (int j = i + 1;
+                                j < line_len && line[j] == ')'; j++) {
+                            would_be++;
+                        }
+                        if (would_be <= MAX_COLUMNS) {
+                            fail(state, start,
+                                "pack import on previous line: %.*s",
+                                len, line + start);
+                        }
+                    }
                 }
                 break;
             }
