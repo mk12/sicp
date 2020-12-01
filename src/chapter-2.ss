@@ -2411,7 +2411,7 @@ z2 => (make-from-mag-ang 30 3)
 (define make-from-mag-ang make-from-mag-ang-polar)
 
 ;; Generic operators
-(paste (:2.4.1 add-complex sub-complex mul-complex div-complex))
+(paste (:2.4.1 add-complex div-complex mul-complex sub-complex))
 
 ;; Now we can get exact answers for all operations:
 (define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
@@ -2501,7 +2501,7 @@ z2 => (make-from-mag-ang 30 3)
   (apply-specific 'make-from-mag-ang 'polar r a))
 
 ;; Generic operators
-(paste (:2.4.1 add-complex sub-complex mul-complex div-complex))
+(paste (:2.4.1 add-complex div-complex mul-complex sub-complex))
 
 ;; Helper function to run installers on a clean slate.
 (define (using . installers)
@@ -2836,7 +2836,7 @@ z2 => (make-from-mag-ang 30 3)
 (contents '(foo . a)) => 'a
 (contents 1) => 1
 
-(paste (:2.4.3 apply-generic) (:2.5.1 add sub mul div scheme-number-pkg))
+(paste (:2.4.3 apply-generic) (:2.5.1 add div mul scheme-number-pkg sub))
 
 (using scheme-number-pkg)
 
@@ -3631,7 +3631,7 @@ z2 => (make-from-mag-ang 30 3)
                (else (apply-specific 'make 'sparse-termlist terms)))))
     (apply-specific 'make 'polynomial var new-terms)))
 
-(paste (:2.5.3.1 polynomial-pkg add-terms mul-terms mul-term-by-all-terms)
+(paste (:2.5.3.1 add-terms mul-term-by-all-terms mul-terms polynomial-pkg)
        (?2.87 zero-pkg))
 
 (using sparse-termlist-pkg dense-termlist-pkg scheme-number-pkg polynomial-pkg
@@ -3999,7 +3999,7 @@ z2 => (make-from-mag-ang 30 3)
   (let ((reduced (reduce n d)))
     (cons (car reduced) (cadr reduced))))
 
-(paste (?2.93 add-rat sub-rat mul-rat div-rat)
+(paste (?2.93 add-rat div-rat mul-rat sub-rat)
        (:2.5.1 rational-pkg))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg

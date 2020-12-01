@@ -119,8 +119,8 @@
                  make-environment set-variable-value!)))
 
 ;; Paste everything except `list-of-values`:
-(paste (:4.1.1 eval apply eval-if eval-sequence eval-assignment
-               eval-definition))
+(paste (:4.1.1 apply eval eval-assignment eval-definition eval-if
+               eval-sequence))
 
 ;; Evaluates operands from left to right:
 (define (list-of-values exps env)
@@ -312,8 +312,8 @@
         (else (error 'type-tag "unknown expression type" datum))))
 
 ;; Paste everything except `eval`:
-(paste (:4.1.1 apply list-of-values eval-if eval-sequence eval-assignment
-               eval-definition))
+(paste (:4.1.1 apply eval-assignment eval-definition eval-if eval-sequence
+               list-of-values))
 
 (define (eval-pkg)
   (define (on-exp f) (lambda (exp env) (f exp)))

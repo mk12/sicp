@@ -141,29 +141,88 @@ static enum IndentRules lookup_indent_rules(
 }
 
 // Enumeration of the nested blocks used for importing.
+//
+// Normal import blocks:
+//
+//     (Section :1.2.3 "Some Title"
+//       (use (:1.1 some proc) (?1.5 another one)))
+//
+// Paste import blocks:
+//
+//     (paste (:1.1 some proc) (?1.5 another one))
+//
 enum ImportBlock {
     // Not an import block.
-    IB_NONE,
-    // Chapter/Section/Exercise block.
-    IB_SEC,
+    IB_NONE = 0x00,
+    // Chapter/Section/Exercise block at the top level.
+    IB_SEC = 0x01,
     // The (use ...) block inside IB_SEC.
-    IB_USE,
+    IB_SEC_USE = 0x02,
     // One of the (ID NAME ...) blocks inside IB_USE.
-    IB_ID,
+    IB_SEC_USE_ARG = 0x04,
+    // A (paste ...) block at the top level.
+    IB_PASTE = 0x08,
+    // One of the (ID NAME ...) blocks inside IB_PASTE.
+    IB_PASTE_ARG = 0x10,
 };
 
-// Looks up the import block for the given operator. Never returns IB_ID.
-static enum ImportBlock lookup_import_block(
-        const char *line, int start, int len) {
-    const char *s = line + start;
-    if (start == 1 && (
-            strncmp(s, "Chapter", len) == 0
-            || strncmp(s, "Section", len) == 0
-            || strncmp(s, "Exercise", len) == 0)) {
-        return IB_SEC;
+// Combinations of ImportBlock values.
+enum {
+    // Bitmask for (ID NAME ...) blocks.
+    IB_MASK_INSIDE = IB_SEC_USE_ARG | IB_PASTE_ARG,
+    // Bitmask for blocks that contain IB_MASK_ARG.
+    IB_MASK_OUTSIDE = IB_SEC_USE | IB_PASTE,
+};
+
+// Returns the parent of the given import block.
+static enum ImportBlock parent_import_block(enum ImportBlock block) {
+    return block == IB_PASTE ? IB_NONE : block >> 1;
+}
+
+// Returns the paren depth of the given import block.
+static int import_block_depth(enum ImportBlock block) {
+    switch (block) {
+        case IB_NONE:
+            return 0;
+        case IB_SEC:
+        case IB_PASTE:
+            return 1;
+        case IB_SEC_USE:
+        case IB_PASTE_ARG:
+            return 2;
+        case IB_SEC_USE_ARG:
+            return 3;
     }
-    if (start == 3 && strncmp(s, "use", len) == 0) {
-        return IB_USE;
+}
+
+// Looks up the new import block given the current one and an operator.
+static enum ImportBlock lookup_import_block(
+        enum ImportBlock current, const char *line, int start, int len) {
+    const char *s = line + start;
+    switch (current) {
+    case IB_NONE:
+        if (start != 1) {
+            break;
+        }
+        if (strncmp(s, "Chapter", len) == 0 || strncmp(s, "Section", len) == 0
+                || strncmp(s, "Exercise", len) == 0) {
+            return IB_SEC;
+        }
+        if (strncmp(s, "paste", len) == 0) {
+            return IB_PASTE;
+        }
+        break;
+    case IB_SEC:
+        if (start == 3 && strncmp(s, "use", len) == 0) {
+            return IB_SEC_USE;
+        }
+        break;
+    case IB_SEC_USE:
+        return IB_SEC_USE_ARG;
+    case IB_PASTE:
+        return IB_PASTE_ARG;
+    default:
+        break;
     }
     return IB_NONE;
 }
@@ -301,9 +360,10 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
     const size_t na_len = sizeof NO_ALIGN_COMMENT - 1;
     const bool no_align = (size_t)line_len >= na_len
         && strncmp(line + line_len - na_len, NO_ALIGN_COMMENT, na_len) == 0;
-    bool can_pack_import =
-        (state->prev_import_mode == IB_SEC || state->prev_import_mode == IB_USE)
-        && state->import_mode == IB_USE;
+    bool can_pack_outside =
+        state->prev_import_mode != IB_NONE
+        && ((state->prev_import_mode & IB_MASK_INSIDE) == 0)
+        && ((state->import_mode & IB_MASK_OUTSIDE) != 0);
     state->prev_import_mode = state->import_mode;
     char prev = 0;            // previous character
     bool escaped = false;     // last character was unescaped backslash
@@ -385,7 +445,7 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                     fail(state, i, "unexpected space before ')'");
                 }
                 if (state->import_mode != IB_NONE) {
-                    if (state->import_mode == IB_ID) {
+                    if ((state->import_mode & IB_MASK_INSIDE) != 0) {
                         int start = word_start;
                         int len = i - start;
                         if (!correct_name_order(
@@ -398,18 +458,19 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                         int would_be =
                             state->prev_length + 1 + (i - last_open + 1);
                         if (i + 1 < line_len && line[i+1] == ')') {
-                            // Close IB_USE and IB_SEC as well.
-                            would_be += 2;
+                            would_be +=
+                                import_block_depth(state->import_mode) - 1;
                         }
-                        if (can_pack_import && would_be <= MAX_COLUMNS) {
+                        if (can_pack_outside && would_be <= MAX_COLUMNS) {
                             fail(state, last_open,
                                 "import can be packed on previous line");
                         }
-                    } else if (state->import_mode == IB_USE) {
+                    } else if ((state->import_mode & IB_MASK_OUTSIDE) != 0) {
                         state->last_import_id[0] = '\0';
                     }
-                    can_pack_import = false;
-                    state->import_mode--;
+                    can_pack_outside = false;
+                    state->import_mode =
+                        parent_import_block(state->import_mode);
                 }
                 state->depth--;
                 if (state->depth < 0) {
@@ -444,21 +505,9 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                             state->stack[state->depth]++;
                         }
                     }
-                    enum ImportBlock block =
-                        lookup_import_block(line, start, len);
-                    switch (state->import_mode) {
-                    case IB_NONE:
-                        if (block == IB_SEC) {
-                            state->import_mode++;
-                        }
-                        break;
-                    case IB_SEC:
-                        if (block == IB_USE) {
-                            state->import_mode++;
-                        }
-                        break;
-                    case IB_USE:
-                        state->import_mode++;
+                    state->import_mode = lookup_import_block(
+                        state->import_mode, line, start, len);
+                    if ((state->import_mode & IB_MASK_OUTSIDE) != 0) {
                         if (!correct_id_order(
                                 state->last_import_id, line, start, len)) {
                             fail(state, start,
@@ -467,11 +516,8 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                         }
                         strncpy(state->last_import_id, line + start, len);
                         state->last_import_id[len] = '\0';
-                        break;
-                    case IB_ID:
-                        break;
                     }
-                } else if (state->import_mode == IB_ID) {
+                } else if ((state->import_mode & IB_MASK_INSIDE) != 0) {
                     int start = word_start;
                     int len = i - start;
                     if (!correct_name_order(
