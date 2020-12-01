@@ -2423,7 +2423,11 @@ z2 => (make-from-mag-ang 30 3)
   (use (:1.1.4 square) (:2.4.2 attach-tag contents type-tag)
        (:3.3.3.3 get put reset)))
 
-(define (install-rectangular-package)
+;; Note: The textbook calls these procedures `install-rectangular-package` and
+;; `install-polar-package`. I use `rectangular-pkg` and `polar-pkg` since there
+;; are many of these procedures and the long names tend to bloat import lists.
+
+(define (rectangular-pkg)
   ;; Internal procedures
   (define real-part car)
   (define imag-part cdr)
@@ -2447,7 +2451,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
-(define (install-polar-package)
+(define (polar-pkg)
   ;; Internal procedures
   (define magnitude car)
   (define angle cdr)
@@ -2504,7 +2508,7 @@ z2 => (make-from-mag-ang 30 3)
   (reset)
   (for-each (lambda (f) (f)) installers))
 
-(using install-rectangular-package install-polar-package)
+(using rectangular-pkg polar-pkg)
 
 (define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
 (define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
@@ -2538,12 +2542,12 @@ z2 => (make-from-mag-ang 30 3)
 
 ;; (b) Packages for sum and product differentiation
 
-(define (install-sum-package)
+(define (sum-pkg)
   (define (deriv-sum terms var)
     (accumulate make-sum 0 (map (lambda (t) (deriv t var)) terms)))
   (put 'deriv '+ deriv-sum))
 
-(define (install-product-package)
+(define (product-pkg)
   ;; Note: We can't reuse these procedures from Exercise 2.57 because those ones
   ;; assume the list includes the operator.
   (define multiplier car)
@@ -2558,7 +2562,7 @@ z2 => (make-from-mag-ang 30 3)
 
 ;; (c) Package for power differentiation
 
-(define (install-power-package)
+(define (power-pkg)
   ;; Note: We can't reuse these procedures from Exercise 2.56 because those ones
   ;; assume the list includes the operator.
   (define base car)
@@ -2576,7 +2580,7 @@ z2 => (make-from-mag-ang 30 3)
 ;; appropriate procedure, we have to change the order of the arguments given to
 ;; `put` in the package installation procedures.
 
-(using install-sum-package install-product-package install-power-package)
+(using sum-pkg product-pkg power-pkg)
 
 (deriv '(+ x 3) 'x) => 1
 (deriv '(* x y) 'x) => 'y
@@ -2630,7 +2634,7 @@ z2 => (make-from-mag-ang 30 3)
                    `(("Joe" ,(make-record 'sales '(40)))
                      ("Jane" ,(make-record 'sales '(50)))))))
 
-(define (install-company-package)
+(define (company-pkg)
   (define (get-record-marketing records name) #f)
   (define (get-record-sales records name)
     (cond ((null? records) #f)
@@ -2641,7 +2645,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'get-record 'sales get-record-sales)
   (put 'get-salary 'sales get-salary-sales))
 
-(using install-company-package)
+(using company-pkg)
 
 (find-employee-record "Bob" files) => #f
 (get-salary (find-employee-record "Joe" files)) => 40
@@ -2708,9 +2712,8 @@ z2 => (make-from-mag-ang 30 3)
 (Section :2.5.1 "Generic Arithmetic Operations"
   (use (:2.1.1 add-rat denom div-rat mul-rat numer sub-rat) (:2.4.2 attach-tag)
        (:2.4.3 add-complex apply-generic apply-specific div-complex
-               install-polar-package install-rectangular-package
-               make-from-mag-ang make-from-real-imag mul-complex sub-complex
-               using)
+               make-from-mag-ang make-from-real-imag mul-complex polar-pkg
+               rectangular-pkg sub-complex using)
        (:3.3.3.3 put) (?2.1 make-rat)))
 
 (define (add x y) (apply-generic 'add x y))
@@ -2718,7 +2721,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
-(define (install-scheme-number-package)
+(define (scheme-number-pkg)
   (define (tag x) (attach-tag 'scheme-number x))
   (put 'add '(scheme-number scheme-number) (lambda (x y) (tag (+ x y))))
   (put 'sub '(scheme-number scheme-number) (lambda (x y) (tag (- x y))))
@@ -2729,7 +2732,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (make-scheme-number n)
   (apply-specific 'make 'scheme-number n))
 
-(define (install-rational-package)
+(define (rational-pkg)
   (define (tag x) (attach-tag 'rational x))
   (put 'add '(rational rational) (lambda (x y) (tag (add-rat x y))))
   (put 'sub '(rational rational) (lambda (x y) (tag (sub-rat x y))))
@@ -2740,10 +2743,10 @@ z2 => (make-from-mag-ang 30 3)
 (define (make-rational n d)
   (apply-specific 'make 'rational n d))
 
-(define (install-complex-package)
+(define (complex-pkg)
   (define (tag z) (attach-tag 'complex z))
-  (install-rectangular-package)
-  (install-polar-package)
+  (rectangular-pkg)
+  (polar-pkg)
   (put 'add '(complex complex) (lambda (z1 z2) (tag (add-complex z1 z2))))
   (put 'sub '(complex complex) (lambda (z1 z2) (tag (sub-complex z1 z2))))
   (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
@@ -2758,12 +2761,12 @@ z2 => (make-from-mag-ang 30 3)
 (define (make-complex-from-mag-ang r a)
   (apply-specific 'make-from-mag-ang 'complex r a))
 
-(define (install-numeric-package)
-  (install-scheme-number-package)
-  (install-rational-package)
-  (install-complex-package))
+(define (numeric-pkg)
+  (scheme-number-pkg)
+  (rational-pkg)
+  (complex-pkg))
 
-(using install-numeric-package)
+(using numeric-pkg)
 
 (add (make-scheme-number 1) (make-scheme-number 2))
 => (make-scheme-number 3)
@@ -2777,10 +2780,9 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.77
   (use (:1.1.4 square)
        (:2.4.3 angle apply-generic imag-part magnitude real-part using)
-       (:2.5.1 install-complex-package make-complex-from-real-imag)
-       (:3.3.3.3 get put)))
+       (:2.5.1 complex-pkg make-complex-from-real-imag) (:3.3.3.3 get put)))
 
-(define (install-complex-components-package)
+(define (complex-components-pkg)
   (put 'real-part '(complex) real-part)
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
@@ -2791,7 +2793,7 @@ z2 => (make-from-mag-ang 30 3)
 ;; procedures when given complex inputs, and (2) the new procedures will
 ;; dispatch on the inner representation (rectangular or polar).
 
-(using install-complex-package install-complex-components-package)
+(using complex-pkg complex-components-pkg)
 
 ;; The object shown in Figure 2.24.
 (define z (make-complex-from-real-imag 3 4))
@@ -2834,21 +2836,20 @@ z2 => (make-from-mag-ang 30 3)
 (contents '(foo . a)) => 'a
 (contents 1) => 1
 
-(paste (:2.4.3 apply-generic)
-       (:2.5.1 add sub mul div install-scheme-number-package))
+(paste (:2.4.3 apply-generic) (:2.5.1 add sub mul div scheme-number-pkg))
 
-(using install-scheme-number-package)
+(using scheme-number-pkg)
 
 (add 1 2) => 3
 (mul 3 4) => 12
 
 (Exercise ?2.79
   (use (:2.1.1 denom numer) (:2.4.3 apply-generic imag-part real-part using)
-       (:2.5.1 install-numeric-package make-complex-from-mag-ang
-               make-complex-from-real-imag make-rational make-scheme-number)
+       (:2.5.1 make-complex-from-mag-ang make-complex-from-real-imag
+               make-rational make-scheme-number numeric-pkg)
        (:3.3.3.3 put)))
 
-(define (install-equ-package)
+(define (equ-pkg)
   (put 'equ? '(scheme-number scheme-number) =)
   (put 'equ? '(rational rational)
        (lambda (x y)
@@ -2864,7 +2865,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (equ? x y) (apply-generic 'equ? x y))
 
-(using install-numeric-package install-equ-package)
+(using numeric-pkg equ-pkg)
 
 (equ? (make-scheme-number 1) (make-scheme-number 1)) => #t
 (equ? (make-scheme-number 1) (make-scheme-number 2)) => #f
@@ -2875,11 +2876,11 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.80
   (use (:2.1.1 numer) (:2.4.3 apply-generic imag-part real-part using)
-       (:2.5.1 install-numeric-package make-complex-from-mag-ang
-               make-complex-from-real-imag make-rational make-scheme-number)
+       (:2.5.1 make-complex-from-mag-ang make-complex-from-real-imag
+               make-rational make-scheme-number numeric-pkg)
        (:3.3.3.3 put)))
 
-(define (install-zero-package)
+(define (zero-pkg)
   (put '=zero? '(scheme-number) zero?)
   (put '=zero? '(rational)
        (lambda (x) (zero? (numer x))))
@@ -2889,7 +2890,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (=zero? n) (apply-generic '=zero? n))
 
-(using install-numeric-package install-zero-package)
+(using numeric-pkg zero-pkg)
 
 (=zero? (make-scheme-number 0)) => #t
 (=zero? (make-scheme-number 1)) => #f
@@ -2900,8 +2901,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (Section :2.5.2 "Combining Data of Different Types"
   (use (:2.4.2 contents type-tag) (:2.4.3 using)
-       (:2.5.1 install-numeric-package make-complex-from-real-imag
-               make-scheme-number)
+       (:2.5.1 make-complex-from-real-imag make-scheme-number numeric-pkg)
        (:3.3.3.3 get put)))
 
 (define (get-coercion type1 type2)
@@ -2938,7 +2938,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
-(using install-numeric-package install-scheme-number->complex-package)
+(using numeric-pkg install-scheme-number->complex-package)
 
 (add (make-scheme-number 1) (make-complex-from-real-imag 0 1))
 => (add (make-complex-from-real-imag 0 1) (make-scheme-number 1))
@@ -2946,16 +2946,16 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.81
   (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 using)
-       (:2.5.1 install-complex-package make-complex-from-real-imag)
+       (:2.5.1 complex-pkg make-complex-from-real-imag)
        (:2.5.2 apply-generic get-coercion put-coercion) (:3.3.3.3 get put)))
 
-(define (install-identity-package)
+(define (identity-pkg)
   (define (scheme-number->scheme-number n) n)
   (define (complex->complex z) z)
   (put-coercion 'scheme-number 'scheme-number scheme-number->scheme-number)
   (put-coercion 'complex 'complex complex->complex))
 
-(define (install-exp-package)
+(define (exp-pkg)
   (define (tag x) (attach-tag 'scheme-number x))
   (put 'exp '(scheme-number scheme-number) (lambda (x y) (tag (expt x y)))))
 
@@ -2966,7 +2966,7 @@ z2 => (make-from-mag-ang 30 3)
 ;; argument to the type of the second, although this brings it no closer to
 ;; being able to find a correct procedure.
 
-(using install-complex-package install-identity-package install-exp-package)
+(using complex-pkg identity-pkg exp-pkg)
 
 (define z (make-complex-from-real-imag 0 0))
 ; (exp z z) ; never terminates
@@ -3006,8 +3006,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.82
   (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 add-complex using)
-       (:2.5.1 install-numeric-package make-complex-from-real-imag
-               make-scheme-number)
+       (:2.5.1 make-complex-from-real-imag make-scheme-number numeric-pkg)
        (:2.5.2 add get-coercion install-scheme-number->complex-package)
        (:3.3.3.3 get put)))
 
@@ -3042,7 +3041,7 @@ z2 => (make-from-mag-ang 30 3)
         (apply proc (map contents args))
         (try type-tags))))
 
-(define (install-add3c-package)
+(define (add3c-pkg)
   (define (tag z) (attach-tag 'complex z))
   (put 'add3c '(complex complex complex)
        (lambda (z1 z2 z3)
@@ -3050,8 +3049,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (add3c z1 z2 z3) (apply-generic 'add3c z1 z2 z3))
 
-(using install-numeric-package install-scheme-number->complex-package
-       install-add3c-package)
+(using numeric-pkg install-scheme-number->complex-package add3c-pkg)
 
 (add3c (make-scheme-number 1)
        (make-complex-from-real-imag 1 1)
@@ -3066,11 +3064,11 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.83
   (use (:2.1.1 denom numer) (:2.4.2 attach-tag)
        (:2.4.3 apply-generic apply-specific using)
-       (:2.5.1 add div install-complex-package install-rational-package
-               make-complex-from-real-imag make-rational)
+       (:2.5.1 add complex-pkg div make-complex-from-real-imag make-rational
+               rational-pkg)
        (:3.3.3.3 put)))
 
-(define (install-integer-package)
+(define (integer-pkg)
   (define (tag x) (attach-tag 'integer x))
   (put 'add '(integer integer) (lambda (x y) (tag (+ x y))))
   (put 'sub '(integer integer) (lambda (x y) (tag (- x y))))
@@ -3083,7 +3081,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (make-integer x) (apply-specific 'make 'integer x))
 
-(define (install-real-package)
+(define (real-pkg)
   (define (tag x) (attach-tag 'real x))
   (put 'add '(real real) (lambda (x y) (tag (+ x y))))
   (put 'sub '(real real) (lambda (x y) (tag (- x y))))
@@ -3094,13 +3092,13 @@ z2 => (make-from-mag-ang 30 3)
 (define (make-real x) (apply-specific 'make 'real x))
 
 ;; The extended numeric package splits 'scheme-number into 'integer and 'real.
-(define (install-extended-numeric-package)
-  (install-integer-package)
-  (install-rational-package)
-  (install-real-package)
-  (install-complex-package))
+(define (extended-numeric-pkg)
+  (integer-pkg)
+  (rational-pkg)
+  (real-pkg)
+  (complex-pkg))
 
-(define (install-raise-package)
+(define (raise-pkg)
   (define (integer->rational n)
     (make-rational n 1))
   (define (rational->real x)
@@ -3113,7 +3111,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (raise x) (apply-generic 'raise x))
 
-(using install-extended-numeric-package install-raise-package)
+(using extended-numeric-pkg raise-pkg)
 
 (add (make-integer 1) (make-integer 2)) => (make-integer 3)
 (div (make-integer 10) (make-integer 2)) => (make-integer 5)
@@ -3126,8 +3124,7 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.84
   (use (:2.4.2 contents type-tag) (:2.4.3 using)
        (:2.5.1 make-complex-from-real-imag make-rational) (:3.3.3.3 get)
-       (?2.83 install-extended-numeric-package install-raise-package
-              make-integer make-real raise)))
+       (?2.83 extended-numeric-pkg make-integer make-real raise raise-pkg)))
 
 (define numeric-tower
   '(integer rational real complex))
@@ -3169,7 +3166,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
-(using install-extended-numeric-package install-raise-package)
+(using extended-numeric-pkg raise-pkg)
 
 (add (make-integer 1) (make-complex-from-real-imag 2.0 3.0))
 => (make-complex-from-real-imag 3.0 3.0)
@@ -3183,12 +3180,11 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.85
   (use (:2.1.1 denom numer) (:2.4.2 contents type-tag) (:2.4.3 real-part using)
        (:2.5.1 make-complex-from-real-imag make-rational) (:3.3.3.3 get put)
-       (?2.79 equ? install-equ-package)
-       (?2.83 install-extended-numeric-package install-raise-package
-              make-integer make-real raise)
+       (?2.79 equ-pkg equ?)
+       (?2.83 extended-numeric-pkg make-integer make-real raise raise-pkg)
        (?2.84 tower-bottom? tower-position tower-top?)))
 
-(define (install-project-package)
+(define (project-pkg)
   (define (complex->real x)
     (make-real (real-part x)))
   (define (real->rational x)
@@ -3244,8 +3240,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
-(using install-extended-numeric-package install-equ-package
-       install-raise-package install-project-package)
+(using extended-numeric-pkg equ-pkg raise-pkg project-pkg)
 
 (div (make-real 1) (make-complex-from-real-imag 2 0)) => (make-rational 1 2)
 (add (make-complex-from-real-imag 1 0) (make-integer 1)) => (make-integer 2)
@@ -3256,12 +3251,11 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.1.1 denom numer) (:2.4.2 attach-tag contents type-tag)
        (:2.4.3 angle apply-specific imag-part magnitude make-from-mag-ang
                make-from-real-imag real-part using)
-       (:2.5.1 install-rational-package make-complex-from-mag-ang
-               make-complex-from-real-imag make-rational)
-       (:3.3.3.3 put) (?2.79 equ? install-equ-package)
-       (?2.83 install-integer-package install-raise-package install-real-package
-              make-integer make-real)
-       (?2.85 add apply-generic div install-project-package mul sub)))
+       (:2.5.1 make-complex-from-mag-ang make-complex-from-real-imag
+               make-rational rational-pkg)
+       (:3.3.3.3 put) (?2.79 equ-pkg equ?)
+       (?2.83 integer-pkg make-integer make-real raise-pkg real-pkg)
+       (?2.85 add apply-generic div mul project-pkg sub)))
 
 ;; This has to be built on top of the numeric tower, rather than just the types
 ;; from Section 2.5.1 (scheme-number, rational, complex) because we need
@@ -3272,7 +3266,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (square x) (mul x x))
 
-(define (install-trig-package)
+(define (trig-pkg)
   (define (tag x) (attach-tag 'real x))
   (define (id x) x)
   (define (divide-rat x) (/ (numer x) (denom x)))
@@ -3290,7 +3284,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (cosine x) (apply-generic 'cosine x))
 (define (atan2 x y) (apply-generic 'atan2 x y))
 
-(define (install-rectangular-package)
+(define (rectangular-pkg)
   (define real-part car)
   (define imag-part cdr)
   (define make-from-real-imag cons)
@@ -3311,7 +3305,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
-(define (install-polar-package)
+(define (polar-pkg)
   (define magnitude car)
   (define angle cdr)
   (define make-from-mag-ang cons)
@@ -3332,7 +3326,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
-(define (install-complex-package)
+(define (complex-pkg)
   (define (tag z) (attach-tag 'complex z))
   (define (add-complex z1 z2)
     (make-from-real-imag (add (real-part z1) (real-part z2))
@@ -3346,8 +3340,8 @@ z2 => (make-from-mag-ang 30 3)
   (define (div-complex z1 z2)
     (make-from-mag-ang (div (magnitude z1) (magnitude z2))
                        (sub (angle z1) (angle z2))))
-  (install-rectangular-package)
-  (install-polar-package)
+  (rectangular-pkg)
+  (polar-pkg)
   (put 'add '(complex complex) (lambda (z1 z2) (tag (add-complex z1 z2))))
   (put 'sub '(complex complex) (lambda (z1 z2) (tag (sub-complex z1 z2))))
   (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
@@ -3363,7 +3357,7 @@ z2 => (make-from-mag-ang 30 3)
 
 ;; Fix complex procedures that previously assumed the complex number's real part
 ;; and imaginary part were plain Scheme numbers.
-(define (install-complex-patch-package)
+(define (complex-patch-pkg)
   (put 'equ? '(complex complex)
        (lambda (z1 z2)
          (and (equ-generic? (real-part z1) (real-part z2))
@@ -3380,21 +3374,21 @@ z2 => (make-from-mag-ang 30 3)
              ((rational) (make-real (inexact (/ (numer value) (denom value)))))
              ((integer) (make-real value)))))))
 
-(define (install-final-numeric-package)
-  (install-integer-package)
-  (install-rational-package)
-  (install-real-package)
-  (install-complex-package)
+(define (final-numeric-pkg)
+  (integer-pkg)
+  (rational-pkg)
+  (real-pkg)
+  (complex-pkg)
   ;; Used by the new complex package.
-  (install-trig-package)
+  (trig-pkg)
   ;; Used by numeric tower coercion and simplifying.
-  (install-equ-package)
-  (install-raise-package)
-  (install-project-package)
+  (equ-pkg)
+  (raise-pkg)
+  (project-pkg)
   ;; Fix up complex entries in the packages above.
-  (install-complex-patch-package))
+  (complex-patch-pkg))
 
-(using install-final-numeric-package)
+(using final-numeric-pkg)
 
 (add (make-complex-from-mag-ang (make-rational 1 2) (make-integer 0))
      (make-complex-from-real-imag (make-rational 3 4) (make-real 2)))
@@ -3418,7 +3412,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (variable p) (car p))
 (define (term-list p) (cdr p))
 
-(define (install-polynomial-package)
+(define (polynomial-pkg)
   (define (make-poly variable term-list) (cons variable term-list))
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
@@ -3489,12 +3483,11 @@ z2 => (make-from-mag-ang 30 3)
   (apply-specific 'make 'polynomial var terms))
 
 (Exercise ?2.87
-  (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package term-list)
+  (use (:2.4.3 using) (:2.5.3.1 polynomial-pkg term-list)
        (:2.5.3.2 coeff empty-termlist? first-term make-polynomial rest-terms)
-       (:3.3.3.3 put)
-       (?2.78 add apply-generic install-scheme-number-package mul)))
+       (:3.3.3.3 put) (?2.78 add apply-generic mul scheme-number-pkg)))
 
-(define (install-zero-package)
+(define (zero-pkg)
   (define (poly-zero? p)
     (define (all-zero? terms)
       (or (empty-termlist? terms)
@@ -3506,8 +3499,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (=zero? n) (apply-generic '=zero? n))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg)
 
 (=zero? (make-polynomial 'x '())) => #t
 (=zero? (make-polynomial 'x '((2 0)))) => #t
@@ -3525,11 +3517,11 @@ z2 => (make-from-mag-ang 30 3)
 =!> "polys not in same var"
 
 (Exercise ?2.88
-  (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package term-list variable)
+  (use (:2.4.3 using) (:2.5.3.1 polynomial-pkg term-list variable)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
                  make-term order rest-terms the-empty-termlist)
-       (:3.3.3.3 put) (?2.78 add apply-generic install-scheme-number-package)
-       (?2.87 install-zero-package)))
+       (:3.3.3.3 put) (?2.78 add apply-generic scheme-number-pkg)
+       (?2.87 zero-pkg)))
 
 (define (negate-terms tl)
   (if (empty-termlist? tl)
@@ -3539,7 +3531,7 @@ z2 => (make-from-mag-ang 30 3)
         (adjoin-term new-term
                      (negate-terms (rest-terms tl))))))
 
-(define (install-negate-package)
+(define (negate-pkg)
   (put 'negate '(scheme-number) -)
   (put 'negate '(polynomial)
        (lambda (p)
@@ -3548,8 +3540,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (negate x) (apply-generic 'negate x))
 (define (sub x y) (add x (negate y)))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg)
 
 (negate 1) => -1
 (sub 5 2) => 3
@@ -3579,10 +3570,10 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.2.3.1 accumulate) (:2.3.2 same-variable?)
        (:2.4.3 apply-specific using) (:2.5.3.1 term-list variable)
        (:2.5.3.2 coeff make-term order) (:3.3.3.3 put)
-       (?2.78 add apply-generic attach-tag install-scheme-number-package mul)
+       (?2.78 add apply-generic attach-tag mul scheme-number-pkg)
        (?2.87 =zero?)))
 
-(define (install-sparse-termlist-package)
+(define (sparse-termlist-pkg)
   (define (the-empty-termlist) '())
   (define empty-termlist? null?)
   (define first-term car)
@@ -3598,7 +3589,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'adjoin-term '(sparse-termlist)
        (lambda (tl) (lambda (t) (tag (adjoin-term t tl))))))
 
-(define (install-dense-termlist-package)
+(define (dense-termlist-pkg)
   (define (the-empty-termlist) '())
   (define empty-termlist? null?)
   (define (first-term tl) (make-term (- (length tl) 1) (car tl)))
@@ -3640,13 +3631,11 @@ z2 => (make-from-mag-ang 30 3)
                (else (apply-specific 'make 'sparse-termlist terms)))))
     (apply-specific 'make 'polynomial var new-terms)))
 
-(paste (:2.5.3.1 install-polynomial-package add-terms mul-terms
-                 mul-term-by-all-terms)
-       (?2.87 install-zero-package))
+(paste (:2.5.3.1 polynomial-pkg add-terms mul-terms mul-term-by-all-terms)
+       (?2.87 zero-pkg))
 
-(using install-sparse-termlist-package install-dense-termlist-package
-       install-scheme-number-package install-polynomial-package
-       install-zero-package)
+(using sparse-termlist-pkg dense-termlist-pkg scheme-number-pkg polynomial-pkg
+       zero-pkg)
 
 ;; It works with both sparse and dense representations.
 (add (make-polynomial 'x '(3 0 0 1)) (make-polynomial 'x '(0 3 3 2)))
@@ -3662,13 +3651,12 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.91
   (use (:2.3.2 same-variable?) (:2.4.3 using)
-       (:2.5.3.1 add-terms install-polynomial-package mul-term-by-all-terms
-                 term-list variable)
+       (:2.5.3.1 add-terms mul-term-by-all-terms polynomial-pkg term-list
+                 variable)
        (:2.5.3.2 adjoin-term make-polynomial make-term)
        (:2.5.3.2 coeff empty-termlist? first-term order the-empty-termlist)
-       (:3.3.3.3 put) (?2.78 apply-generic div install-scheme-number-package)
-       (?2.87 install-zero-package)
-       (?2.88 install-negate-package negate-terms sub)))
+       (:3.3.3.3 put) (?2.78 apply-generic div scheme-number-pkg)
+       (?2.87 zero-pkg) (?2.88 negate-pkg negate-terms sub)))
 
 (define (div-terms l1 l2)
   (if (empty-termlist? l1)
@@ -3687,7 +3675,7 @@ z2 => (make-from-mag-ang 30 3)
               (list (adjoin-term new-term (car rest-of-result))
                     (cadr rest-of-result)))))))
 
-(define (install-polynomial-div-package)
+(define (polynomial-div-pkg)
   (define (div-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
         (let ((var (variable p1))
@@ -3697,9 +3685,7 @@ z2 => (make-from-mag-ang 30 3)
         (error 'div-poly "polys not in same var" p1 p2)))
   (put 'div '(polynomial polynomial) div-poly))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package
-       install-polynomial-div-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg)
 
 ;; (x^5 - 1) / (x^2 - 1) = (x^3 + x), remainder (x - 1)
 (div (make-polynomial 'x '((5 1) (0 -1))) (make-polynomial 'x '((2 1) (0 -1))))
@@ -3714,9 +3700,8 @@ z2 => (make-from-mag-ang 30 3)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
                  make-term order rest-terms the-empty-termlist)
        (:3.3.3.3 put)
-       (?2.78 add attach-tag contents install-scheme-number-package mul
-              type-tag)
-       (?2.87 install-zero-package)))
+       (?2.78 add attach-tag contents mul scheme-number-pkg type-tag)
+       (?2.87 zero-pkg)))
 
 (define (polynomial? x)
   (eq? (type-tag x) 'polynomial))
@@ -3725,7 +3710,7 @@ z2 => (make-from-mag-ang 30 3)
   (string<? (symbol->string a)
             (symbol->string b)))
 
-(define (install-polynomial-package)
+(define (polynomial-pkg)
   (define make-poly cons)
   (define (singleton t)
     (adjoin-term t (the-empty-termlist)))
@@ -3778,8 +3763,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'mul '(polynomial scheme-number) (lambda (p x) (tag (scale-poly x p))))
   (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms)))))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg)
 
 ;; x + y = y + x = (1)x^1 + ((1)y^1)x^0
 (add (make-polynomial 'x '((1 1))) (make-polynomial 'y '((1 1))))
@@ -3799,10 +3783,8 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.93
   (use (:2.1.1 denom numer) (:2.4.3 using) (:2.5.1 make-rational)
-       (:2.5.3.1 install-polynomial-package) (:2.5.3.2 make-polynomial)
-       (:3.3.3.3 put)
-       (?2.78 add attach-tag div install-scheme-number-package mul sub)
-       (?2.87 install-zero-package)))
+       (:2.5.3.1 polynomial-pkg) (:2.5.3.2 make-polynomial) (:3.3.3.3 put)
+       (?2.78 add attach-tag div mul scheme-number-pkg sub) (?2.87 zero-pkg)))
 
 (define (make-rat n d) (cons n d))
 
@@ -3821,10 +3803,9 @@ z2 => (make-from-mag-ang 30 3)
   (make-rat (mul (numer x) (denom y))
             (mul (denom x) (numer y))))
 
-(paste (:2.5.1 install-rational-package))
+(paste (:2.5.1 rational-pkg))
 
-(using install-scheme-number-package install-zero-package
-       install-polynomial-package install-rational-package)
+(using scheme-number-pkg zero-pkg polynomial-pkg rational-pkg)
 
 (define p1 (make-polynomial 'x '((2 1) (0 1))))
 (define p2 (make-polynomial 'x '((3 1) (0 1))))
@@ -3836,11 +3817,10 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.94
   (use (:2.3.2 same-variable?) (:2.4.3 using)
-       (:2.5.3.1 install-polynomial-package term-list variable)
+       (:2.5.3.1 polynomial-pkg term-list variable)
        (:2.5.3.2 empty-termlist? make-polynomial) (:3.3.3.3 put)
-       (?2.78 apply-generic install-scheme-number-package)
-       (?2.87 install-zero-package) (?2.88 install-negate-package)
-       (?2.91 div-terms)))
+       (?2.78 apply-generic scheme-number-pkg) (?2.87 zero-pkg)
+       (?2.88 negate-pkg) (?2.91 div-terms)))
 
 (define (remainder-terms l1 l2)
   (cadr (div-terms l1 l2)))
@@ -3850,7 +3830,7 @@ z2 => (make-from-mag-ang 30 3)
       a
       (gcd-terms b (remainder-terms a b))))
 
-(define (install-greatest-common-divisor-package)
+(define (greatest-common-divisor-pkg)
   (define (gcd-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
         (let ((tl (gcd-terms (term-list p1) (term-list p2))))
@@ -3862,9 +3842,8 @@ z2 => (make-from-mag-ang 30 3)
 (define (greatest-common-divisor a b)
   (apply-generic 'greatest-common-divisor a b))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package
-       install-greatest-common-divisor-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg
+       greatest-common-divisor-pkg)
 
 (greatest-common-divisor 128 40) => 8
 
@@ -3876,15 +3855,13 @@ z2 => (make-from-mag-ang 30 3)
 ;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
 
 (Exercise ?2.95
-  (use (:2.4.3 using) (:2.5.3.1 install-polynomial-package)
-       (:2.5.3.2 make-polynomial) (?2.78 div install-scheme-number-package mul)
-       (?2.87 install-zero-package) (?2.88 install-negate-package)
-       (?2.91 install-polynomial-div-package)
-       (?2.94 greatest-common-divisor install-greatest-common-divisor-package)))
+  (use (:2.4.3 using) (:2.5.3.1 polynomial-pkg) (:2.5.3.2 make-polynomial)
+       (?2.78 div mul scheme-number-pkg) (?2.87 zero-pkg) (?2.88 negate-pkg)
+       (?2.91 polynomial-div-pkg)
+       (?2.94 greatest-common-divisor greatest-common-divisor-pkg)))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package
-       install-polynomial-div-package install-greatest-common-divisor-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
 
 (define p1 (make-polynomial 'x '((2 1) (1 -2) (0 1))))
 (define p2 (make-polynomial 'x '((2 11) (0 7))))
@@ -3911,16 +3888,14 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.96
   (use (:2.2.3.1 accumulate) (:2.3.2 same-variable?) (:2.4.3 using)
-       (:2.5.3.1 install-polynomial-package mul-term-by-all-terms term-list
-                 variable)
+       (:2.5.3.1 mul-term-by-all-terms polynomial-pkg term-list variable)
        (:2.5.3.2 coeff empty-termlist? first-term make-polynomial make-term
                  order rest-terms)
-       (:3.3.3.3 put) (?2.78 install-scheme-number-package mul)
-       (?2.87 install-zero-package) (?2.88 install-negate-package)
-       (?2.91 div-terms install-polynomial-div-package)
+       (:3.3.3.3 put) (?2.78 mul scheme-number-pkg) (?2.87 zero-pkg)
+       (?2.88 negate-pkg) (?2.91 div-terms polynomial-div-pkg)
        (?2.94 greatest-common-divisor remainder-terms) (?2.95 p1 q1 q2)))
 
-(paste (?2.94 install-greatest-common-divisor-package))
+(paste (?2.94 greatest-common-divisor-pkg))
 
 ;; (a) GCD with integer coefficients
 
@@ -3938,9 +3913,8 @@ z2 => (make-from-mag-ang 30 3)
       a
       (gcd-terms b (pseudoremainder-terms a b))))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package
-       install-polynomial-div-package install-greatest-common-divisor-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
 
 (greatest-common-divisor q1 q2)
 => (make-polynomial 'x '((2 1458) (1 -2916) (0 1458)))
@@ -3961,9 +3935,8 @@ z2 => (make-from-mag-ang 30 3)
         (mul-term-by-all-terms (make-term 0 (/ coeff-gcd)) a))
       (gcd-terms b (pseudoremainder-terms a b))))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package
-       install-polynomial-div-package install-greatest-common-divisor-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
 
 (greatest-common-divisor q1 q2)
 => (make-polynomial 'x '((2 1) (1 -2) (0 1)))
@@ -3972,14 +3945,11 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.97
   (use (:2.1.1 denom numer) (:2.2.3.1 accumulate) (:2.3.2 same-variable?)
        (:2.4.3 using) (:2.5.1 make-rational)
-       (:2.5.3.1 install-polynomial-package mul-term-by-all-terms term-list
-                 variable)
+       (:2.5.3.1 mul-term-by-all-terms polynomial-pkg term-list variable)
        (:2.5.3.2 coeff first-term make-polynomial make-term order)
        (:3.3.3.3 put)
-       (?2.78 add apply-generic attach-tag div install-scheme-number-package mul
-              sub)
-       (?2.87 install-zero-package) (?2.88 install-negate-package)
-       (?2.91 div-terms install-polynomial-div-package)
+       (?2.78 add apply-generic attach-tag div mul scheme-number-pkg sub)
+       (?2.87 zero-pkg) (?2.88 negate-pkg) (?2.91 div-terms polynomial-div-pkg)
        (?2.96 gcd-terms termlist-coeffs)))
 
 ;; (a) Reduce a rational function to lowest terms
@@ -4019,7 +3989,7 @@ z2 => (make-from-mag-ang 30 3)
   (let ((g (gcd n d)))
     (list (/ n g) (/ d g))))
 
-(define (install-reduce-package)
+(define (reduce-pkg)
   (put 'reduce '(scheme-number scheme-number) reduce-integers)
   (put 'reduce '(polynomial polynomial) reduce-poly))
 
@@ -4030,12 +4000,10 @@ z2 => (make-from-mag-ang 30 3)
     (cons (car reduced) (cadr reduced))))
 
 (paste (?2.93 add-rat sub-rat mul-rat div-rat)
-       (:2.5.1 install-rational-package))
+       (:2.5.1 rational-pkg))
 
-(using install-scheme-number-package install-polynomial-package
-       install-zero-package install-negate-package
-       install-polynomial-div-package install-rational-package
-       install-reduce-package)
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       rational-pkg reduce-pkg)
 
 (add (make-rational 4 7) (make-rational 30 33)) => '(rational 114 . 77)
 

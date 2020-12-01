@@ -315,7 +315,7 @@
 (paste (:4.1.1 apply list-of-values eval-if eval-sequence eval-assignment
                eval-definition))
 
-(define (install-eval-package)
+(define (eval-pkg)
   (define (on-exp f) (lambda (exp env) (f exp)))
   (put 'eval 'boolean (on-exp identity))
   (put 'eval 'number (on-exp identity))
@@ -337,7 +337,7 @@
          (apply (eval (operator exp) env)
                 (list-of-values (operands exp) env)))))
 
-(using install-eval-package)
+(using eval-pkg)
 
 (define env (make-environment))
 (eval 1 env) => 1
@@ -357,9 +357,9 @@
 
 (Exercise ?4.4
   (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.3.1 false? true?)
-       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)))
+       (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)))
 
-(define (install-and-or-package)
+(define (and-or-pkg)
   (define (eval-and exps env)
     (cond ((null? exps) #t)
           ((null? (cdr exps)) (eval (car exps) env))
@@ -373,7 +373,7 @@
   (put 'eval 'and (lambda (exp env) (eval-and (cdr exp) env)))
   (put 'eval 'or (lambda (exp env) (eval-or (cdr exp) env))))
 
-(using install-eval-package install-and-or-package)
+(using eval-pkg and-or-pkg)
 
 (define env (make-environment))
 (eval '(and) env) => #t
@@ -391,7 +391,7 @@
   (use (:2.4.3 using) (:3.3.3.3 put)
        (:4.1.2.1 cond-actions cond-clauses cond-else-clause? cond-predicate)
        (:4.1.3.1 true?) (:4.1.3.3 make-environment)
-       (?4.3 apply eval eval-sequence install-eval-package)))
+       (?4.3 apply eval eval-pkg eval-sequence)))
 
 (define (cond-arrow-clause? clause)
   (and (not (null? (cdr clause)))
@@ -414,10 +414,10 @@
          (eval-sequence (cond-actions (car clauses)) exp))
         (else (eval-cond (cdr clauses) env))))
 
-(define (install-extended-cond-package)
+(define (extended-cond-pkg)
   (put 'eval 'cond (lambda (exp env) (eval-cond (cond-clauses exp) env))))
 
-(using install-eval-package install-extended-cond-package)
+(using eval-pkg extended-cond-pkg)
 
 (define env (make-environment))
 (eval '(cond (else 1)) env) => 1
@@ -427,7 +427,7 @@
 
 (Exercise ?4.6
   (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-lambda)
-       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)))
+       (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)))
 
 (define (let-bindings exp) (cadr exp))
 (define (let-actions exp) (cddr exp))
@@ -440,10 +440,10 @@
                      (let-actions exp))
         (map binding-value (let-bindings exp))))
 
-(define (install-let-package)
+(define (let-pkg)
   (put 'eval 'let (lambda (exp env) (eval (let->combination exp) env))))
 
-(using install-eval-package install-let-package)
+(using eval-pkg let-pkg)
 
 (define env (make-environment))
 (eval '(let () 1) env) => 1
@@ -455,8 +455,8 @@
 
 (Exercise ?4.7
   (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-begin)
-       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
-       (?4.6 install-let-package let-actions let-bindings make-let)))
+       (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)
+       (?4.6 let-actions let-bindings let-pkg make-let)))
 
 ;; It is sufficient to expand let* to nested let expressions in the new
 ;; evaluation clause. It will get expanded to lambdas by the recursive eval.
@@ -467,10 +467,10 @@
                           (list (iter (cdr bindings)))))))
   (iter (let-bindings exp)))
 
-(define (install-let*-package)
+(define (let*-pkg)
   (put 'eval 'let* (lambda (exp env) (eval (let*->nested-lets exp) env))))
 
-(using install-eval-package install-let-package install-let*-package)
+(using eval-pkg let-pkg let*-pkg)
 
 (define env (make-environment))
 (eval '(let* () 1) env) => 1
@@ -480,7 +480,7 @@
 
 (Exercise ?4.8
   (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-lambda make-lambda-definition)
-       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
+       (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)
        (?4.6 binding-value binding-variable let->combination)))
 
 (define (named-let? exp) (symbol? (cadr exp)))
@@ -498,14 +498,14 @@
                (cons (named-let-name exp)
                      (map binding-value (named-let-bindings exp)))))))
 
-(define (install-named-let-package)
+(define (named-let-pkg)
   (put 'eval 'let
        (lambda (exp env)
          (eval ((if (named-let? exp) named-let->combination let->combination)
                 exp)
                env))))
 
-(using install-eval-package install-named-let-package)
+(using eval-pkg named-let-pkg)
 
 (define env (make-environment))
 (eval '(let () 1) env) => 1
@@ -516,7 +516,7 @@
 (Exercise ?4.9
   (use (:2.4.3 using) (:3.3.3.3 put)
        (:4.1.2 make-begin make-if make-lambda make-lambda-definition)
-       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)))
+       (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)))
 
 ;; A do loop looks like `(while TEST EXP ...)`. It repeatedly executes the EXP
 ;; expressions as long as TEST evaluates to true (as in `true?`).
@@ -537,10 +537,10 @@
         (make-lambda '() (list (while-test exp)))
         (make-lambda '() (while-actions exp))))
 
-(define (install-while-package)
+(define (while-pkg)
   (put 'eval 'while (lambda (exp env) (eval (while->combination exp) env))))
 
-(using install-eval-package install-while-package)
+(using eval-pkg while-pkg)
 
 (define env (make-environment))
 (eval '(define x #t) env)
@@ -786,7 +786,7 @@
   (use (:2.4.3 using) (:3.3.3.3 put)
        (:4.1.3.3 first-frame frame-values frame-variables make-environment
                  make-frame set-first-frame!)
-       (?4.3 eval install-eval-package)))
+       (?4.3 eval eval-pkg)))
 
 ;; The special form `make-unbound!` removes the binding of a symbol only if it
 ;; exists in the first frame of the current environment. Removing bindings from
@@ -806,10 +806,10 @@
             (else (scan vars vals (cdr vars) (cdr vals)))))
     (scan '() '() (frame-variables frame) (frame-values frame))))
 
-(define (install-make-unbound-package)
+(define (make-unbound-pkg)
   (put 'eval 'make-unbound! eval-make-unbound))
 
-(using install-eval-package install-make-unbound-package)
+(using eval-pkg make-unbound-pkg)
 
 (define env (make-environment))
 (eval '(define x 1) env)
@@ -904,7 +904,7 @@
        (:4.1.2 definition-value definition-variable lambda-body
                lambda-parameters make-assignment make-lambda)
        (:4.1.3.2 make-procedure) (:4.1.3.3 make-environment)
-       (?4.3 eval install-eval-package) (?4.12 traverse)))
+       (?4.3 eval eval-pkg) (?4.12 traverse)))
 
 ;; (a) Change `lookup-variable-value`
 
@@ -957,7 +957,7 @@
 ;; internal definitions once per procedure. Putting it in `procedure-body` would
 ;; mean it scans out every time the procedure is evaluated.
 
-(define (install-internal-definition-package)
+(define (internal-definition-pkg)
   (put 'eval 'symbol lookup-variable-value)
   (put 'eval 'lambda
        (lambda (exp env)
@@ -965,7 +965,7 @@
                          (scan-out-defines (lambda-body exp))
                          env))))
 
-(using install-eval-package install-internal-definition-package)
+(using eval-pkg internal-definition-pkg)
 
 (define env (make-environment))
 (eval '(define (foo)
@@ -1063,8 +1063,8 @@
 
 (Exercise ?4.20
   (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-assignment)
-       (:4.1.3.3 make-environment) (?4.3 eval install-eval-package)
-       (?4.6 binding-value binding-variable install-let-package make-let)))
+       (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)
+       (?4.6 binding-value binding-variable let-pkg make-let)))
 
 ;; (a) Implement `letrec` as a derived expression:
 
@@ -1078,10 +1078,10 @@
               (append (map make-assignment vars vals)
                       (letrec-actions exp)))))
 
-(define (install-letrec-package)
+(define (letrec-pkg)
   (put 'eval 'letrec (lambda (exp env) (eval (letrec->let exp) env))))
 
-(using install-eval-package install-let-package install-letrec-package)
+(using eval-pkg let-pkg letrec-pkg)
 
 (define env (make-environment))
 (eval '(letrec () 1) env) => 1
