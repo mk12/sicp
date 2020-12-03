@@ -5,9 +5,7 @@
             "label": "test",
             "type": "shell",
             "command": "./run.sh chez",
-            "group": {
-                "kind": "test"
-            },
+            "group": "test",
             "problemMatcher": [
                 {
                     "pattern": {
@@ -44,9 +42,7 @@
             "label": "lint",
             "type": "shell",
             "command": "make lint",
-            "group": {
-                "kind": "build"
-            },
+            "group": "build",
             "problemMatcher": {
                 "pattern": {
                     "regexp": "^(.*):(\\d+):(\\d+):\\s+(.*)$",
@@ -64,10 +60,9 @@
         {
             "label": "docs",
             "type": "shell",
-            "command": "make -C docs",
-            "group": {
-                "kind": "build"
-            }
+            "command": "make -C docs watch",
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }
