@@ -25,8 +25,7 @@
                no-operands? operands operator quoted? rest-exps rest-operands
                self-evaluating? text-of-quotation variable?)
        (:4.1.2.1 cond->if cond?)
-       (:4.1.2.2 apply-primitive-procedure primitive-implementation
-                 primitive-procedure?)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
        (:4.1.3.1 true?)
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
@@ -110,8 +109,7 @@
                no-operands? operands operator quoted? rest-exps rest-operands
                self-evaluating? text-of-quotation variable?)
        (:4.1.2.1 cond->if cond?)
-       (:4.1.2.2 apply-primitive-procedure primitive-implementation
-                 primitive-procedure?)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
        (:4.1.3.1 true?)
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
@@ -288,8 +286,7 @@
                lambda-parameters last-exp? no-operands? operands operator
                rest-exps rest-operands text-of-quotation)
        (:4.1.2.1 cond->if)
-       (:4.1.2.2 apply-primitive-procedure primitive-implementation
-                 primitive-procedure?)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
        (:4.1.3.1 true?)
        (:4.1.3.2 compound-procedure? make-procedure procedure-body
                  procedure-environment procedure-parameters)
@@ -426,9 +423,10 @@
 (eval '(cond (2 => (lambda (x) "hi")) (#f 1)) env) => "hi"
 
 (Exercise ?4.6
-  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-lambda)
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 make-lambda tagged-list?)
        (:4.1.3.3 make-environment) (?4.3 eval eval-pkg)))
 
+(define (let? exp) (tagged-list? exp 'let))
 (define (let-bindings exp) (cadr exp))
 (define (let-actions exp) (cddr exp))
 (define (binding-variable exp) (car exp))
@@ -1141,7 +1139,210 @@
 
 (map f '(0 1 2 3 4 5)) => '(#t #f #t #f #t #f)
 
-(Section :4.1.7 "Separating Syntactic Analysis from Execution")
+(Section :4.1.7 "Separating Syntactic Analysis from Execution"
+  (use (:4.1.2 application? assignment-value assignment-variable assignment?
+               begin-actions begin? definition-value definition-variable
+               definition? if-alternative if-consequent if-predicate if?
+               lambda-body lambda-parameters lambda? operands operator quoted?
+               self-evaluating? text-of-quotation variable?)
+       (:4.1.2.1 cond->if cond?)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
+       (:4.1.3.1 true?)
+       (:4.1.3.2 compound-procedure? make-procedure procedure-body
+                 procedure-environment procedure-parameters)
+       (:4.1.3.3 define-variable! extend-environment lookup-variable-value
+                 make-environment set-variable-value!)))
+
+(define (eval exp env) ((analyze exp) env))
+
+(define (analyze exp)
+  (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond->if exp)))
+        ((application? exp) (analyze-application exp))
+        (else (error 'analyze "unknown expression type" exp))))
+
+(define (analyze-self-evaluating exp)
+  (lambda (env) exp))
+
+(define (analyze-quoted exp)
+  (let ((qval (text-of-quotation exp)))
+    (lambda (env) qval)))
+
+(define (analyze-variable exp)
+  (lambda (env) (lookup-variable-value exp env)))
+
+(define (analyze-assignment exp)
+  (let ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (lambda (env)
+      (set-variable-value! var (vproc env) env))))
+
+(define (analyze-definition exp)
+  (let ((var (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (lambda (env)
+      (define-variable! var (vproc env) env))))
+
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp)))
+        (aproc (analyze (if-alternative exp))))
+    (lambda (env)
+      (if (true? (pproc env))
+          (cproc env)
+          (aproc env)))))
+
+(define (analyze-lambda exp)
+  (let ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (lambda (env) (make-procedure vars bproc env))))
+
+(define (analyze-sequence exps)
+  (define (sequentially proc1 proc2)
+    (lambda (env) (proc1 env) (proc2 env)))
+  (define (loop first-proc rest-procs)
+    (if (null? rest-procs)
+        first-proc
+        (loop (sequentially first-proc (car rest-procs))
+              (cdr rest-procs))))
+  (let ((procs (map analyze exps)))
+    (if (null? procs)
+        (error 'analyze "empty sequence")
+        (loop (car procs) (cdr procs)))))
+
+(define (analyze-application exp)
+  (let ((fproc (analyze (operator exp)))
+        (aprocs (map analyze (operands exp))))
+    (lambda (env)
+      (execute-application
+       (fproc env)
+       (map (lambda (aproc) (aproc env))
+            aprocs)))))
+(define (execute-application proc args)
+  (cond ((primitive-procedure? proc)
+         (apply-primitive-procedure proc args))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment
+           (procedure-parameters proc)
+           args
+           (procedure-environment proc))))
+        (else (error 'execute-application "unknown procedure type" proc))))
+
+(define env (make-environment))
+(eval 1 env) => 1
+(eval "hi" env) => "hi"
+(eval ''a env) => 'a
+(eval 'x env) =!> "unbound variable: x"
+(eval '(define x 1) env)
+(eval 'x env) => 1
+(eval '(set! x 2) env)
+(eval 'x env) => 2
+(eval '(if "truthy" "yes" "no") env) => "yes"
+(eval '(cond (else 1)) env) => 1
+(eval '(begin 1 2 3) env) => 3
+(eval '((lambda () "hi")) env) => "hi"
+(eval '((lambda (x y) y) 1 2) env) => 2
+(eval #\a env) =!> "unknown expression type"
+
+(Exercise ?4.22
+  (use (:4.1.2 application? assignment-value assignment-variable assignment?
+               begin-actions begin? definition-value definition-variable
+               definition? if-alternative if-consequent if-predicate if?
+               lambda-body lambda-parameters lambda? operands operator quoted?
+               self-evaluating? variable?)
+       (:4.1.2.1 cond->if cond?)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
+       (:4.1.3.1 true?)
+       (:4.1.3.2 compound-procedure? make-procedure procedure-body
+                 procedure-environment procedure-parameters)
+       (:4.1.3.3 define-variable! extend-environment make-environment
+                 set-variable-value!)
+       (:4.1.7 analyze-quoted analyze-self-evaluating analyze-variable)
+       (?4.6 let->combination let?)))
+
+(define (analyze exp)
+  (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond->if exp)))
+        ((let? exp) (analyze-let exp))
+        ((application? exp) (analyze-application exp))
+        (else (error 'analyze "unknown expression type" exp))))
+
+;; Paste everything except `analyze`:
+(paste (:4.1.7 analyze-application analyze-assignment analyze-definition
+               analyze-if analyze-lambda analyze-sequence eval
+               execute-application))
+
+(define (analyze-let exp) (analyze (let->combination exp)))
+
+(define env (make-environment))
+(eval '(let () 1) env) => 1
+(eval '(let ((x "hi")) x) env) => "hi"
+(eval '(let ((x 1) (y 2)) x y) env) => 2
+;; Show that the value is only evaluated once:
+(eval '(define f (lambda () "hi")) env)
+(eval '(let ((x (set! f (f)))) x x f) env) => "hi"
+
+(Exercise ?4.23)
+
+;; In the case of a procedure body with a single expression, Alyssa's program
+;; would result in the following process during evaluation (after analysis):
+
+; (proc)
+; ...
+; ((lambda (env) (execute-sequence procs env)) env)
+; (null? (cdr procs)) => #t
+; ((car procs) env)
+; (*analyzed-proc* env)
+
+;; The program on the text, on the other hand, would jump straight to invoking
+;; the analyzed procedure, without calling `null?` or `car`:
+
+; (proc)
+; ...
+; (*analyzed-proc* env)
+
+;; The differnce is more noticeable for a procedure body with two expressions.
+;; With Alyssa's program:
+
+; (proc)
+; ...
+; ((lambda (env) (execute-sequence procs env)) env)
+; (null? (cdr procs)) => #f
+; ((car procs) env)
+; (*analyzed-proc-1* env)
+; (execute-sequence (cdr procs) env)
+; (null? (cdr procs)) => #t
+; ((car procs) env)
+; (*analyzed-proc-2* env)
+
+;; With the program in the text:
+
+; (proc)
+; ...
+; ((lambda (env) (*analyzed-proc-1* env) (*analyze-proc-2* env)) env)
+; (*analyzed-proc-1* env)
+; (*analyzed-proc-1* env)
+
+(Exercise ?4.24)
+
+; TODO
+
+(Section :4.2 "Variations on a Scheme - Lazy Evaluation")
 
 ) ; end of SICP
 ) ; end of library

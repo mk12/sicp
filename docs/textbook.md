@@ -889,7 +889,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### Data-Directed Programming and Additivity
 
 - The strategy of checking the type and calling an appropriate procedure is called dispatching on type.
-- The implementation in the previous section had two significant weaknesses:
+- The implementation in the [previous section](#tagged-data) had two significant weaknesses:
     1. The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.
     2. We must guarantee that no two procedures have the same name.
 - The underlying issue: the technique we used was not _additive_.
@@ -913,7 +913,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ## Systems with Generic Operations
 
-- The key idea in the previous section: link specific data operations to multiple representations using generic procedures.
+- The key idea in the [previous section](#data-directed-programming-and-additivity): link specific data operations to multiple representations using generic procedures.
 - We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.
 - We have seen several different arithmetic packages -- primitive numbers, rational numbers, intervals, and complex numbers.
 - We will use data-directed techniques to write procedures that work on all of these data structures.
@@ -2009,3 +2009,41 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Here, `*unassigned*` is a special symbol causing an error upon variable lookup.
 
 ### Separating Syntactic Analysis from Execution
+
+- Our evaluator is inefficient because it interleaves syntactic analysis with execution.
+- For example, given a recursive procedure:
+
+```scheme
+(define (factorial n)
+  (if (= n 1) 1 (* (factorial (- n 1)) n)))
+```
+
+- When evaluating `(factorial 4)`, on all four recursive calls the evaluator must determine anew that the body is an `if` expression by reaching the `if?` test.
+- We can arrange the evaluator to analyze syntax only once by splitting `eval` into two parts:
+    - `(analyze exp)` performs syntactic analysis and returns an _execution procedure_.
+    - `((analyze exp) env)` completes the evaluation.
+- `analyze` is similar to the [original `eval`](#the-core-of-the-evaluator), except it only performs analysis, not full evaluation:
+
+```scheme
+(define (analyze exp)
+  (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond->if exp)))
+        ((application? exp) (analyze-application exp))
+        (else (error "Unknown expression type: ANALYZE" exp))))
+```
+
+- Here is one of the helper procedures, `analyze-lambda`. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.
+
+```scheme
+(define (analyze-lambda exp)
+  (let ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (lambda (env) (make-procedure vars bproc env))))
+```
