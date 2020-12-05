@@ -823,7 +823,8 @@
 (Section :4.1.4 "Running the Evaluator as a Program"
   (use (:4.1.1 eval)
        (:4.1.3.2 compound-procedure? procedure-body procedure-parameters)
-       (:4.1.3.3 define-variable! extend-environment the-empty-environment)))
+       (:4.1.3.3 define-variable! extend-environment make-environment
+                 the-empty-environment)))
 
 ;; The textbook defines variables `true` and `false` in the initial environment.
 ;; We don't do that because we use the self-evaluating booleans #t and #f.
@@ -836,7 +837,12 @@
   (list (list 'car car)
         (list 'cdr cdr)
         (list 'cons cons)
-        (list 'null? null?)))
+        (list 'null? null?)
+        ;; The textbook stops here, but I include a few more primitives.
+        (list '+ +)
+        (list '- -)
+        (list '* *)
+        (list '= =)))
 (define (primitive-procedure-names)
   (map car primitive-procedures))
 (define (primitive-procedure-objects)
@@ -866,6 +872,13 @@
       (display object)))
 
 (define the-global-environment (setup-environment))
+
+(define env (make-environment the-global-environment))
+(eval '(null? '()) env) => #t
+(eval '(null? '(1)) env) => #f
+(eval '(car (cons 1 2)) env) => 1
+(eval '(cdr (cons 1 2)) env) => 2
+(eval '(= (+ 1 2) 3 (- 10 7)) env) => #t
 
 (Exercise ?4.14)
 
@@ -1338,9 +1351,77 @@
 ; (*analyzed-proc-1* env)
 ; (*analyzed-proc-1* env)
 
-(Exercise ?4.24)
+(Exercise ?4.24
+  (use (:4.1.1 eval) (:4.1.3.3 make-environment) (:4.1.4 the-global-environment)
+       (:4.1.7 analyze)))
 
-; TODO
+(define (new-eval exp env) ((analyze exp) env))
+
+(define (benchmark definition n)
+  (define (bench eval)
+    (let ((env (make-environment the-global-environment))
+          (code (list (caadr definition) n)))
+      (eval definition env)
+      (let ((start (runtime)))
+        (eval code env)
+        (- (runtime) start))))
+  (let ((old-time (bench eval))
+        (new-time (bench new-eval)))
+    (format "old: ~ss\nnew: ~ss\nestimated analysis time: ~s%\n"
+            old-time
+            new-time
+            ;; In the limit as expressions are re-evaluated many times, the
+            ;; single analysis in `new-time` is negligible. Thus `new-time` over
+            ;; `old-time` gives approximately the fraction spent in evaluation,
+            ;; and subtracting from 1 gives the fraction spent in analysis.
+            (round (* 100 (- 1 (/ new-time old-time)))))))
+
+(define factorial
+  '(define (factorial n)
+     (if (= n 1) 1 (* n (factorial (- n 1))))))
+
+(define strange
+  '(define (strange n)
+     (define x ((lambda (x) x) (lambda (x) x)))
+     (cond ((= n 0) 'done)
+           (else "self-evaluating"
+                 'quoted
+                 strange
+                 (set! n (- n 1))
+                 (if 'cond (strange n) (strange n))
+                 ((lambda () (+ n n n)))
+                 (begin (strange n) (strange n))))))
+
+(string? (benchmark factorial 1)) => #t
+(string? (benchmark strange 1)) => #t
+
+;; For small factorial inputs, the new evaluation strategy is better:
+
+; (display (benchmark factorial 100))
+; old: 9.399999999981645e-5s
+; new: 5.699999999997374e-5s
+; estimated analysis time: 39.0%
+
+;; However, for large inputs, it's actually much slower!
+
+; (display (benchmark factorial 10000))
+; old: 0.06239299999999992s
+; new: 0.11110200000000003s
+; estimated analysis time: -78.0%
+
+;; For *very* large inputs, they become more similar:
+
+; (display (benchmark factorial 40000))
+; old: 0.9885509999999997s
+; new: 1.0609169999999999s
+; estimated analysis time: -7.0%
+
+;; The `strange` procedure spends about half its evaluation time in analysis:
+
+; (display (benchmark strange 13))
+; old: 3.0934s
+; new: 1.577433s
+; estimated analysis time: 49.0%
 
 (Section :4.2 "Variations on a Scheme - Lazy Evaluation")
 
