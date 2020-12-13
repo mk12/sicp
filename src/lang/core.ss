@@ -150,15 +150,18 @@
 ;; substring. Expects `expr` to be the syntax object for `thunk`.
 (define (assert-raises thunk expr substr)
   (define (format-condition con)
-    (let ((irritants (condition-irritants con)))
-      (apply format
-             (apply string-append
-                    "~a: ~a"
-                    (if (null? irritants) "" ":")
-                    (map (lambda (x) " ~s") irritants))
-             (condition-who con)
-             (condition-message con)
-             irritants)))
+    (define (join sep items)
+      (cond ((null? items) "")
+            ((null? (cdr items)) (format "~a" (car items)))
+            (else (format "~a~a~a" (car items) sep (join sep (cdr items))))))
+    (define-syntax coalesce
+      (syntax-rules ()
+        ((_ (test exp) ...) (append (if test (list exp) '()) ...))))
+    (join ": "
+          (coalesce ((who-condition? con) (condition-who con))
+                    ((message-condition? con) (condition-message con))
+                    ((and (irritants-condition? con) (condition-irritants con))
+                     (join " " (condition-irritants con))))))
   (define (fail! raised? result)
     (test-fail!
      expr
