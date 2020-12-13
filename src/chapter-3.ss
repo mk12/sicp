@@ -1783,7 +1783,7 @@ z2 => '((a b) a b)
 (Section :3.3.5.3 "Representing connectors"
   (use (:2.3.1 memq)))
 
-;; Moved from Section 3.3.5.2 to avoid import cycle.
+;; Moved here from Section 3.3.5.2 to avoid import cycle.
 (define (inform-about-value constraint)
   (constraint 'I-have-a-value))
 (define (inform-about-no-value constraint)

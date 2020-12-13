@@ -842,7 +842,10 @@
         (list '+ +)
         (list '- -)
         (list '* *)
-        (list '= =)))
+        (list '= =)
+        (list 'list list)
+        (list 'newline newline)
+        (list 'display display)))
 (define (primitive-procedure-names)
   (map car primitive-procedures))
 (define (primitive-procedure-objects)
@@ -870,10 +873,9 @@
                      (procedure-body object)
                      '<procedure-env>))
       (display object)))
-
 (define the-global-environment (setup-environment))
 
-(define env (make-environment the-global-environment))
+(define env (setup-environment))
 (eval '(null? '()) env) => #t
 (eval '(null? '(1)) env) => #f
 (eval '(car (cons 1 2)) env) => 1
@@ -1352,14 +1354,13 @@
 ; (*analyzed-proc-1* env)
 
 (Exercise ?4.24
-  (use (:4.1.1 eval) (:4.1.3.3 make-environment) (:4.1.4 the-global-environment)
-       (:4.1.7 analyze)))
+  (use (:4.1.1 eval) (:4.1.4 setup-environment) (:4.1.7 analyze)))
 
 (define (new-eval exp env) ((analyze exp) env))
 
 (define (benchmark definition n)
   (define (bench eval)
-    (let ((env (make-environment the-global-environment))
+    (let ((env (setup-environment))
           (code (list (caadr definition) n)))
       (eval definition env)
       (let ((start (runtime)))
@@ -1424,6 +1425,281 @@
 ; estimated analysis time: 49.0%
 
 (Section :4.2 "Variations on a Scheme - Lazy Evaluation")
+
+(define (try a b) (if (= a 0) 1 b))
+
+;; With lazy evaluation, this would return 1 instead of raising an error.
+(try 0 (/ 1 0)) =!> "/"
+
+(define (unless condition usual-value exceptional-value)
+  (if condition exceptional-value usual-value))
+
+(Exercise ?4.25
+  (use (:4.2 unless)))
+
+(define (factorial n)
+  (unless (= n 1) (* n (factorial (- n 1))) 1))
+
+; (factorial 5) ; never terminates
+
+;; This never terminates in our applicative-order Scheme because the call to
+;; `unless` always evaluates all parameters, including the recursive call to
+;; `factorial` when `n` is 1. In a normal-order language, it would work, since
+;; the recursive call in the base case is not used and hence not evaluated.
+
+(Exercise ?4.26
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.4 setup-environment)
+       (?4.3 eval eval-pkg)))
+
+;; Ben is correct. You can implement `unless` as a special form:
+
+(define (unless->if exp)
+  (list 'if (cadr exp) (cadddr exp) (caddr exp)))
+(define (unless-pkg)
+  (put 'eval 'unless (lambda (exp env) (eval (unless->if exp) env))))
+
+(using eval-pkg unless-pkg)
+
+(define env (setup-environment))
+(eval '(unless #f "hi" undefined-variable) env) => "hi"
+
+;; But Alyssa also has a point: this is just syntax, so it can't be used with
+;; higher-order procedures. Here is an example where that would be useful:
+
+(eval '(define (map f as bs cs)
+         (cond ((null? as) '())
+               (else (cons (f (car as) (car bs) (car cs))
+                           (map f (cdr as) (cdr bs) (cdr cs))))))
+      env)
+(eval '(define uppercase '(#t #f)) env)
+(eval '(map unless uppercase '(a b) '(A B)) env) =!> "unbound variable: unless"
+
+(Section :4.2.2 "An Interpreter with Lazy Evaluation")
+
+(Section :4.2.2.1 "Modifying the evaluator"
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.2 first-operand if-alternative if-consequent if-predicate
+               no-operands? operands operator rest-operands)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
+       (:4.1.3.1 true?)
+       (:4.1.3.2 compound-procedure? procedure-body procedure-environment
+                 procedure-parameters)
+       (:4.1.3.3 extend-environment) (:4.1.4 setup-environment)
+       (:4.2.2.2 actual-value delay-it force-it)
+       (?4.3 eval eval-pkg eval-sequence)))
+
+(define (eval-call exp env)
+  (apply (actual-value (operator exp) env)
+         (operands exp)
+         env))
+
+(define (apply procedure arguments env)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure
+          procedure
+          (list-of-arg-values arguments env)))
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
+          (extend-environment
+           (procedure-parameters procedure)
+           (list-of-delayed-args arguments env)
+           (procedure-environment procedure))))
+        (else (error 'apply "unknown procedure type" procedure))))
+
+(define (list-of-arg-values exps env)
+  (cond ((no-operands? exps) '())
+        (else (cons (actual-value (first-operand exps) env)
+                    (list-of-arg-values (rest-operands exps) env)))))
+
+(define (list-of-delayed-args exps env)
+  (cond ((no-operands? exps) '())
+        (else (cons (delay-it (first-operand exps) env)
+                    (list-of-delayed-args (rest-operands exps) env)))))
+
+(define (eval-if exp env)
+  (if (true? (actual-value (if-predicate exp) env))
+      (eval (if-consequent exp) env)
+      (eval (if-alternative exp) env)))
+
+(define (lazy-eval-pkg)
+  (put 'eval 'call eval-call)
+  (put 'eval 'if eval-if))
+
+(using eval-pkg)
+
+(define env (setup-environment))
+(eval '(define (try a b) (if (= a 0) 1 b)) env)
+(eval '(try 0 (/ 1 0)) env) =!> "/"
+
+(using eval-pkg lazy-eval-pkg)
+
+;; Note: With the lazy evaluator, we use `actual-value` for the top-level REPL
+;; rather than `eval`. Thus we have a fourth condition for forcing expressions
+;; in addition to operands, if-predicates, and primitive procedure operands.
+(define env (setup-environment))
+(actual-value '(define (try a b) (if (= a 0) 1 b)) env)
+(actual-value '(try 0 (/ 1 0)) env) => 1
+
+(Section :4.2.2.2 "Representing thunks"
+  (use (:4.1.2 tagged-list?) (?4.3 eval)))
+
+;; Moved here from Section 4.2.2.1 to avoid import cycle.
+(define (actual-value exp env) (force-it (eval exp env)))
+
+(define (delay-it exp env) (list 'thunk exp env))
+(define (thunk? obj) (tagged-list? obj 'thunk))
+(define (thunk-exp thunk) (cadr thunk))
+(define (thunk-env thunk) (caddr thunk))
+(define (evaluated-thunk? obj) (tagged-list? obj 'evaluated-thunk))
+(define (thunk-value thunk) (cadr thunk))
+
+(define (force-it obj)
+  (cond ((thunk? obj)
+         (let ((result (actual-value (thunk-exp obj) (thunk-env obj))))
+           (set-car! obj 'evaluated-thunk)
+           (set-car! (cdr obj) result)
+           (set-cdr! (cdr obj) '())
+           result))
+        ((evaluated-thunk? obj) (thunk-value obj))
+        (else obj)))
+
+(Exercise ?4.27
+  (use (:2.4.3 using) (:4.1.4 setup-environment) (:4.2.2.1 lazy-eval-pkg)
+       (:4.2.2.2 actual-value thunk?) (?4.3 eval-pkg)))
+
+(using eval-pkg lazy-eval-pkg)
+
+(define env (setup-environment))
+(actual-value '(define count 0) env)
+(actual-value '(define (id x) (set! count (+ count 1)) x) env)
+(actual-value '(define w (id (id 10))) env)
+
+;; When we defined `w`, it forced the outer `id` operand, resulting in `count`
+;; being incremented. The `(id 10)` argument is delayed.
+(actual-value 'count env) => 1
+
+;; Using `actual-value` forces the full evaluation of `w` to 10.
+(actual-value 'w env) => 10
+
+;; Forcing `w` caused the inner `(id 10)` to increment `count` again.
+(actual-value 'count env) => 2
+
+(Exercise ?4.28
+  (use (:2.4.3 using) (:4.1.2 operands operator) (:4.1.4 setup-environment)
+       (:4.2.2.1 apply lazy-eval-pkg) (:4.2.2.2 actual-value force-it)
+       (?4.3 eval eval-pkg)))
+
+(using eval-pkg lazy-eval-pkg)
+
+;; Here is an example that demonstrates the need for forcing the operand:
+(define exp '(((lambda (x) x) car) (cons 1 2)))
+(define env (setup-environment))
+
+(define (do-it-with f)
+  (force-it (apply (f (operator exp) env) (operands exp) env)))
+
+;; With `actual-value` (the normal behavior), it works fine.
+(do-it-with actual-value) => 1
+
+;; But with `eval`, the operator `((lambda (x) x) car)` remains a thunk, whereas
+;; `apply` expects either a primitive or compound procedure object.
+(do-it-with eval) =!> "apply: unknown procedure type"
+
+(Exercise ?4.29
+  (use (:1.2.2 fib) (:2.4.3 using) (:4.1.4 setup-environment)
+       (:4.2.2.1 lazy-eval-pkg) (:4.2.2.2 actual-value) (?4.3 eval-pkg)))
+
+;; This program would be much slower without memoization, since it would
+;; re-evaluate then `(fib 100)` thunk five times.
+(define (five-times-fib-hundred)
+  (let ((x (fib 100)))
+    (+ x x x x x)))
+
+(using eval-pkg lazy-eval-pkg)
+
+(define env (setup-environment))
+(actual-value '(define count 0) env)
+(actual-value '(define (id x) (set! count (+ count 1)) x) env)
+(actual-value '(define (square x) (* x x)) env)
+(actual-value '(square (id 10)) env) => 100
+;; With memoization, this is 1. Without memoization, it would be 2.
+(actual-value 'count env) => 1
+
+(Exercise ?4.30
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.2 begin-actions first-exp last-exp? operands operator rest-exps)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
+       (:4.1.3.2 compound-procedure? procedure-body procedure-environment
+                 procedure-parameters)
+       (:4.1.3.3 extend-environment) (:4.1.4 setup-environment)
+       (:4.2.2.1 lazy-eval-pkg list-of-arg-values list-of-delayed-args)
+       (:4.2.2.2 actual-value) (?4.3 eval eval-pkg)))
+
+(paste (:4.2.2.1 apply eval-call))
+
+;; Cy D. Fect proposes the following change:
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env))
+        (else (actual-value (first-exp exps) env)
+              (eval-sequence (rest-exps exps) env))))
+(define (proposed-sequence-pkg)
+  (put 'eval 'begin (lambda (exp env) (eval-sequence (begin-actions exp) env)))
+  (put 'eval 'call eval-call))
+
+(using eval-pkg lazy-eval-pkg)
+
+(define env (setup-environment))
+
+;; Ben Bitdiddle's example program:
+(actual-value
+ '(define (for-each proc items)
+    (if (null? items)
+        'done
+        (begin (proc (car items))
+               (for-each proc (cdr items)))))
+ env)
+(define for-each-exp
+  '(for-each (lambda (x) (newline) (display x)) (list 57 321 88)))
+
+;; Cy D. Fect's example program:
+(actual-value
+ '(define (p1 x) (set! x (cons x '(2))) x)
+ env)
+(actual-value
+ '(define (p2 x) (define (p e) e x) (p (set! x (cons x '(2)))))
+ env)
+
+;; (a) Ben is right about the behavior of `for-each` in his example. Evaluating
+;; `(proc (car items))` is sufficient to enact the side effects in `proc`. There
+;; is no need to force a returned thunk because it does not return anything.
+
+(using eval-pkg lazy-eval-pkg)
+(actual-value for-each-exp env) =$> ["57" "321" "88"]
+
+;; (b) With the original `eval-sequence`, `(p2 1)` has an unexpected result.
+;; With Cy's proposed change, `p2` behaves the same as `p1`.
+
+(using eval-pkg lazy-eval-pkg)
+(actual-value '(p1 1) env) => '(1 2)
+(actual-value '(p2 1) env) => 1
+
+(using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
+(actual-value '(p1 1) env) => '(1 2)
+(actual-value '(p2 1) env) => '(1 2)
+
+;; (c) Cy is write: his proposed `eval-sequence` does not affect part (a). All
+;; it does is force the return value of `display` and `newline`. These are void,
+;; not thunks, so forcing is a no-op.
+
+(using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
+(actual-value for-each-exp env) =$> ["57" "321" "88"]
+
+;; (d) I prefer Cy's approach because otherwise `begin` blocks, or procedures
+;; with multiple expressions in the body, are useless with the lazy evaluator.
+;; This does not totally solve the side-effects confusion, but it helps.
+
+(Exercise ?4.31)
 
 ) ; end of SICP
 ) ; end of library
