@@ -2047,3 +2047,102 @@ There are a number of possible ways we could represent sets. A set is a collecti
         (bproc (analyze-sequence (lambda-body exp))))
     (lambda (env) (make-procedure vars bproc env))))
 ```
+
+## Variations on a Scheme --- Lazy Evaluation
+
+- We can experiment with different language desisn just by modifiying the evaluator.
+- This is often how new languages are invented. It's easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.
+
+### Normal Order and Applicative Order
+
+- [Earlier](#applicative-order-versus-normal-order), we noted that scheme is an _applicative-order_ language.
+- _Normal-order_ languages use _lazy evaluation_ to delay evaluation as long as possible.
+- Consider this procedure:
+
+```scheme
+(define (try a b) (if = a 0) 1 b)
+```
+
+- In Scheme, `(try 0 (/ 1 0))` causes a division-by-zero error. With lazy evaluation, it does not because the value of `b` is never needed.
+- In a lazy language, we can implement `if` as an ordinary procedure.
+
+### An Interpreter with Lazy Evaluation
+
+- In this section, we will modify the interpreter to support lazy evaluation.
+- The lazy evaluator _delays_ certain arguments, transforming them into _thunks_.
+- The expression in a thunk does not get evaluated until the thunk is _forced_.
+- A thunk gets forced when its value is needed:
+    - when passed to a primitive procedure;
+    - when it is the predicate of conditional;
+    - when it is an operator about to be applied as a procedure.
+- This is similar to [streams](#streams-are-delayed-lists), but uniform and automatic throughout the language.
+- For efficiency, we'll make our interpreter _memoize_ thunks.
+    - This is called _call-by-need_, as opposed to non-memoized _call-by-name_.
+    - It raises subtle and confusing issues in the presence of assignments.
+
+#### Modifying the evaluator
+
+- The main change required is the procedure application logic in `eval` and `apply`.
+- The `application?` clause of `eval` becomes:
+
+```scheme
+((application? exp)
+ (apply (actual-value (operator exp) env)
+        (operands exp)
+        env))
+```
+
+- Whenever we need the actual value of an expression, we force in addition to evaluating:
+
+```scheme
+(define (actual-value exp env) (force-it (eval exp env)))
+```
+
+- We change `apply` to take `env`, and use `list-of-arg-values` and `list-of-delayed-args`:
+
+```scheme
+(define (apply procedure arguments env)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure
+          procedure
+          (list-of-arg-values arguments env)))  ; changed
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
+          (extend-environment
+           (procedure-parameters procedure)
+           (list-of-delayed-args arguments env) ; changed
+           (procedure-environment procedure))))
+        (else (error "Unknown procedure type: APPLY" procedure))))
+```
+
+- We also need to change `eval-if` to use `actual-value` on the predicate:
+
+```scheme
+(define (eval-if exp env)
+  (if (true? (actual-value (if-predicate exp) env))
+      (eval (if-consequent exp) env)
+      (eval (if-alternative exp) env)))
+```
+
+#### Representing thunks
+
+- To force a thunk, we evaluate it in its environment. We use `actual-value` instead of `eval` so that it recursively forces if the result is another thunk:
+
+```scheme
+(define (force-it obj)
+  (if (thunk? obj)
+      (actual-value (thunk-exp obj) (thunk-env obj))
+      obj))
+```
+
+- We can represent thunks simply by a list containing the expression and environment:
+
+```scheme
+(define (delay-it exp env) (list 'thunk exp env))
+(define (thunk? obj) (tagged-list? obj 'thunk))
+(define (thunk-exp thunk) (cadr thunk))
+(define (thunk-env thunk) (caddr thunk))
+```
+
+- To memoize thunks, `force-it` becomes a bit more complicated.

@@ -226,6 +226,11 @@
 <li><a href="#internal-definitions-1">Internal Definitions</a></li>
 <li><a href="#separating-syntactic-analysis-from-execution">Separating Syntactic Analysis from Execution</a></li>
 </ul></li>
+<li><a href="#variations-on-a-scheme-lazy-evaluation">Variations on a Scheme — Lazy Evaluation</a>
+<ul>
+<li><a href="#normal-order-and-applicative-order">Normal Order and Applicative Order</a></li>
+<li><a href="#an-interpreter-with-lazy-evaluation">An Interpreter with Lazy Evaluation</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -2175,5 +2180,93 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((vars (lambda-parameters <span class="kw">exp</span>))</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>        (bproc (analyze-sequence (lambda-body <span class="kw">exp</span>))))</span>
 <span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))</span></code></pre></div>
+<h2 id="variations-on-a-scheme-lazy-evaluation">Variations on a Scheme — Lazy Evaluation</h2>
+<ul>
+<li>We can experiment with different language desisn just by modifiying the evaluator.</li>
+<li>This is often how new languages are invented. It’s easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.</li>
+</ul>
+<h3 id="normal-order-and-applicative-order">Normal Order and Applicative Order</h3>
+<ul>
+<li><a href="#applicative-order-versus-normal-order">Earlier</a>, we noted that scheme is an <em>applicative-order</em> language.</li>
+<li><em>Normal-order</em> languages use <em>lazy evaluation</em> to delay evaluation as long as possible.</li>
+<li>Consider this procedure:</li>
+</ul>
+<div class="sourceCode" id="cb59"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(try a b) (<span class="kw">if</span> <span class="op">=</span> a <span class="dv">0</span>) <span class="dv">1</span> b)</span></code></pre></div>
+<ul>
+<li>In Scheme, <code>(try 0 (/ 1 0))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
+<li>In a lazy language, we can implement <code>if</code> as an ordinary procedure.</li>
+</ul>
+<h3 id="an-interpreter-with-lazy-evaluation">An Interpreter with Lazy Evaluation</h3>
+<ul>
+<li>In this section, we will modify the interpreter to support lazy evaluation.</li>
+<li>The lazy evaluator <em>delays</em> certain arguments, transforming them into <em>thunks</em>.</li>
+<li>The expression in a thunk does not get evaluated until the thunk is <em>forced</em>.</li>
+<li>A thunk gets forced when its value is needed:
+<ul>
+<li>when passed to a primitive procedure;</li>
+<li>when it is the predicate of conditional;</li>
+<li>when it is an operator about to be applied as a procedure.</li>
+</ul></li>
+<li>This is similar to <a href="#streams-are-delayed-lists">streams</a>, but uniform and automatic throughout the language.</li>
+<li>For efficiency, we’ll make our interpreter <em>memoize</em> thunks.
+<ul>
+<li>This is called <em>call-by-need</em>, as opposed to non-memoized <em>call-by-name</em>.</li>
+<li>It raises subtle and confusing issues in the presence of assignments.</li>
+</ul></li>
+</ul>
+<h4 id="modifying-the-evaluator">Modifying the evaluator</h4>
+<ul>
+<li>The main change required is the procedure application logic in <code>eval</code> and <code>apply</code>.</li>
+<li>The <code>application?</code> clause of <code>eval</code> becomes:</li>
+</ul>
+<div class="sourceCode" id="cb60"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>((application? <span class="kw">exp</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a> (apply (actual-value (operator <span class="kw">exp</span>) env)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>        (operands <span class="kw">exp</span>)</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>        env))</span></code></pre></div>
+<ul>
+<li>Whenever we need the actual value of an expression, we force in addition to evaluating:</li>
+</ul>
+<div class="sourceCode" id="cb61"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(actual-value <span class="kw">exp</span> env) (force-it (<span class="kw">eval</span> <span class="kw">exp</span> env)))</span></code></pre></div>
+<ul>
+<li>We change <code>apply</code> to take <code>env</code>, and use <code>list-of-arg-values</code> and <code>list-of-delayed-args</code>:</li>
+</ul>
+<div class="sourceCode" id="cb62"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(apply procedure arguments env)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((primitive-procedure? procedure)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>         (apply-primitive-procedure</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>          procedure</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>          (list-of-arg-values arguments env)))  <span class="co">; changed</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>        ((compound-procedure? procedure)</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>         (eval-sequence</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>          (procedure-body procedure)</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>          (extend-environment</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>           (procedure-parameters procedure)</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>           (list-of-delayed-args arguments env) <span class="co">; changed</span></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
+<ul>
+<li>We also need to change <code>eval-if</code> to use <code>actual-value</code> on the predicate:</li>
+</ul>
+<div class="sourceCode" id="cb63"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(eval-if <span class="kw">exp</span> env)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (true? (actual-value (if-predicate <span class="kw">exp</span>) env))</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eval</span> (if-consequent <span class="kw">exp</span>) env)</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eval</span> (if-alternative <span class="kw">exp</span>) env)))</span></code></pre></div>
+<h4 id="representing-thunks">Representing thunks</h4>
+<ul>
+<li>To force a thunk, we evaluate it in its environment. We use <code>actual-value</code> instead of <code>eval</code> so that it recursively forces if the result is another thunk:</li>
+</ul>
+<div class="sourceCode" id="cb64"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(force-it obj)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (thunk? obj)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>      (actual-value (thunk-exp obj) (thunk-env obj))</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>      obj))</span></code></pre></div>
+<ul>
+<li>We can represent thunks simply by a list containing the expression and environment:</li>
+</ul>
+<div class="sourceCode" id="cb65"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(delay-it <span class="kw">exp</span> env) (<span class="kw">list</span> &#39;thunk <span class="kw">exp</span> env))</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(thunk? obj) (tagged-list? obj &#39;thunk))</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(thunk-exp thunk) (<span class="kw">cadr</span> thunk))</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(thunk-env thunk) (<span class="kw">caddr</span> thunk))</span></code></pre></div>
+<ul>
+<li>To memoize thunks, <code>force-it</code> becomes a bit more complicated.</li>
+</ul>
 </body>
 </html>
