@@ -1575,8 +1575,8 @@
        (:4.2.2.2 actual-value thunk?) (?4.3 eval-pkg)))
 
 (using eval-pkg lazy-eval-pkg)
-
 (define env (setup-environment))
+
 (with-eval actual-value env
   (define count 0)
   (define (id x) (set! count (+ count 1)) x)
@@ -1624,8 +1624,8 @@
     (+ x x x x x)))
 
 (using eval-pkg lazy-eval-pkg)
-
 (define env (setup-environment))
+
 (with-eval actual-value env
   (define count 0)
   (define (id x) (set! count (+ count 1)) x)
@@ -1658,8 +1658,8 @@
   (put 'eval 'call eval-call))
 
 (using eval-pkg lazy-eval-pkg)
-
 (define env (setup-environment))
+
 (with-eval actual-value env
   ;; Ben Bitdiddle's example program:
   (define (for-each proc items)
@@ -1752,8 +1752,8 @@
   (put 'eval 'if eval-if))
 
 (using eval-pkg explicit-lazy-pkg)
-
 (define env (setup-environment))
+
 (with-eval actual-value env
   (define (try a b) (if (= a 0) 1 b))
   (define (try-lazy a (lazy b)) (if (= a 0) 1 b))
@@ -1775,33 +1775,41 @@
        (:4.2.2.2 actual-value) (?4.3 eval-pkg)))
 
 (using eval-pkg lazy-eval-pkg)
-
 (define env (setup-environment))
-; (actual-value '(define (cons x y) (lambda (m) (m x y))) env)
-; (actual-value '(define (car z) (z (lambda (p q) p))) env)
-; (actual-value '(define (cdr z) (z (lambda (p q) q))) env)
 
-; (actual-value
-;  '(define (list-ref items n)
-;     (if (= n 0) (car items) (list-ref (cdr items) (- n 1))))
-;  env)
-; (actual-value
-;  '(define (map proc items)
-;     (if (null? items)
-;         '()
-;         (cons (proc (car items)) (map proc (cdr items)))))
-;  env)
-; (actual-value
-;  '(define (scale-list items factor)
-;     (map (lambda (x) (* x factor)) items))
-;  env)
+(with-eval actual-value env
+  (define (cons x y) (lambda (m) (m x y)))
+  (define (car z) (z (lambda (p q) p)))
+  (define (cdr z) (z (lambda (p q) q)))
+  (define (list-ref items n)
+    (if (= n 0) (car items) (list-ref (cdr items) (- n 1))))
+  (define (map proc items)
+    (if (null? items)
+        '()
+        (cons (proc (car items)) (map proc (cdr items)))))
+  (define (scale-list items factor)
+    (map (lambda (x) (* x factor)) items))
+  (define (add-lists list1 list2)
+    (cond ((null? list1) list2) ((null? list2) list1)
+          (else (cons (+ (car list1) (car list2))
+                      (add-lists (cdr list1) (cdr list2))))))
+  (define ones (cons 1 ones))
+  (define integers (cons 1 (add-lists ones integers)))
+  (list-ref integers 17))
+=> 18
 
-; (define (add-lists list1 list2)
-;   (cond ((null? list1) list2) ((null? list2) list1)
-;         (else (cons (+ (car list1) (car list2))
-;                     (add-lists (cdr list1) (cdr list2))))))
-; (define ones (cons 1 ones))
-; (define integers (cons 1 (add-lists ones integers)))
+(with-eval actual-value env
+  (define (integral integrand initial-value dt)
+    (define int
+      (cons initial-value
+            (add-lists (scale-list integrand dt) int)))
+    int)
+  (define (solve f y0 dt)
+    (define y (integral dy y0 dt))
+    (define dy (map f y))
+    y)
+  (list-ref (solve (lambda (x) x) 1 0.001) 1000))
+~> 2.716923932235896
 
 (Exercise ?4.32)
 
