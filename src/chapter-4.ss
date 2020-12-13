@@ -1771,14 +1771,26 @@
 (actual-value '(double-lazy-memo (begin (display "x") 1)) env) =$> "x"
 
 (Section :4.2.3 "Streams as Lazy Lists"
-  (use (:2.4.3 using) (:4.1.4 setup-environment) (:4.2.2.1 lazy-eval-pkg)
+  (use (:2.4.3 using)
+       (:4.1.3.2 compound-procedure? procedure-environment procedure-parameters)
+       (:4.1.3.3 lookup-variable-value make-environment)
+       (:4.1.4 setup-environment) (:4.2.2.1 lazy-eval-pkg)
        (:4.2.2.2 actual-value) (?4.3 eval-pkg)))
 
-(using eval-pkg lazy-eval-pkg)
-(define env (setup-environment))
+;; Used in Exercise 4.34.
+(define (lazy-cons? exp)
+  (and (compound-procedure? exp)
+       (equal? (procedure-parameters exp) '(*lazy-cons*))))
+(define (lazy-cons-car exp)
+  (lookup-variable-value 'car (procedure-environment exp)))
+(define (lazy-cons-cdr exp)
+  (lookup-variable-value 'cdr (procedure-environment exp)))
 
-(with-eval actual-value env
-  (define (cons x y) (lambda (m) (m x y)))
+(using eval-pkg lazy-eval-pkg)
+(define lazy-list-env (setup-environment))
+
+(with-eval actual-value lazy-list-env
+  (define (cons car cdr) (lambda (*lazy-cons*) (*lazy-cons* car cdr)))
   (define (car z) (z (lambda (p q) p)))
   (define (cdr z) (z (lambda (p q) q)))
   (define (list-ref items n)
@@ -1798,7 +1810,7 @@
   (list-ref integers 17))
 => 18
 
-(with-eval actual-value env
+(with-eval actual-value (make-environment lazy-list-env)
   (define (integral integrand initial-value dt)
     (define int
       (cons initial-value
@@ -1811,11 +1823,99 @@
   (list-ref (solve (lambda (x) x) 1 0.001) 1000))
 ~> 2.716923932235896
 
-(Exercise ?4.32)
+(Exercise ?4.32
+  (use (:2.4.3 using) (:4.1.3.3 make-environment) (:4.2.2.1 lazy-eval-pkg)
+       (:4.2.2.2 actual-value) (:4.2.3 lazy-list-env) (?4.3 eval-pkg)))
 
-(Exercise ?4.33)
+(using eval-pkg lazy-eval-pkg)
+(define env (make-environment lazy-list-env))
 
-(Exercise ?4.34)
+;; This example works equally well with the streams from Chapter 3.
+(with-eval actual-value env
+  (define (scan xs)
+    (cons (car xs)
+          (map (lambda (x) (+ x (car xs))) (scan (cdr xs)))))
+  (define pascal (cons ones (map scan pascal)))
+  (define (choose n k) (list-ref (list-ref pascal (- n k)) k))
+  (choose 7 2))
+=> 21
+
+;; This example takes advantage of the extra laziness of lazy lists. With the
+;; streams from Chapter 3, it would display "012345" instead of "5".
+(with-eval actual-value env
+  (define (from n) (cons (display n) (from (+ n 1))))
+  (define display-ints (from 0))
+  (list-ref display-ints 5))
+=$> "5"
+
+(Exercise ?4.33
+  (use (:2.4.3 using) (:3.3.3.3 put) (:4.1.2 text-of-quotation)
+       (:4.1.3.3 make-environment) (:4.2.2.1 lazy-eval-pkg)
+       (:4.2.2.2 actual-value) (:4.2.3 lazy-list-env) (?4.3 eval eval-pkg)))
+
+(define (quoted->lazy x)
+  (cond ((pair? x) (list 'cons (quoted->lazy (car x)) (quoted->lazy (cdr x))))
+        ;; Note: We can't simply move the `eval` call inside `quoted->lazy` and
+        ;; then omit it in this branch, since we might have recursed into a cons
+        ;; structure. We need this "dumb-quote" escape hatch.
+        (else (list 'dumb-quote x))))
+
+(define (lazy-quote-pkg)
+  (put 'eval 'quote
+       (lambda (exp env) (eval (quoted->lazy (text-of-quotation exp)) env)))
+  (put 'eval 'dumb-quote
+       (lambda (exp env) (text-of-quotation exp))))
+
+(define env (make-environment lazy-list-env))
+
+(using eval-pkg lazy-eval-pkg)
+(actual-value ''() env) => '()
+(actual-value ''a env) => 'a
+(actual-value '(car '(a b c)) env) =!> "apply: unknown procedure type"
+
+(using eval-pkg lazy-eval-pkg lazy-quote-pkg)
+(actual-value ''() env) => '()
+(actual-value ''a env) => 'a
+(actual-value '(car '(a b c)) env) => 'a
+
+(Exercise ?4.34
+  (use (:2.4.3 using) (:4.1.3.3 make-environment) (:4.2.2.1 lazy-eval-pkg)
+       (:4.2.2.2 actual-value evaluated-thunk? force-it memo-thunk? thunk-exp)
+       (:4.2.3 lazy-cons-car lazy-cons-cdr lazy-cons? lazy-list-env)
+       (?4.3 eval eval-pkg)))
+
+(define (show exp)
+  (define (go exp ad dd space parens)
+    (cond ((and (null? exp) (not parens)))
+          ((lazy-cons? exp)
+           (when space (display " "))
+           (when parens (display "("))
+           (if (zero? ad)
+               (display "...")
+               (go (lazy-cons-car exp) (- ad 1) dd #f #t))
+           (if (zero? dd)
+               (display " ...")
+               (let* ((exp-cdr (lazy-cons-cdr exp))
+                      (dot (not (or (null? exp-cdr) (pair? exp-cdr)))))
+                 (when dot (display ". "))
+                 (go exp-cdr ad (- dd 1) #t dot)))
+           (when parens (display ")")))
+          ((or (memo-thunk? exp) (evaluated-thunk? exp))
+           (go (force-it exp) ad dd space parens))
+          (else (display exp))))
+  (go exp 9 9 #f #t))
+
+(using eval-pkg lazy-eval-pkg)
+
+(define env (make-environment lazy-list-env))
+(with-eval actual-value env
+  (define x (cons 1 (cons 2 (cons 3 '()))))
+  (define ones (cons 1 ones))
+  (define one-two (cons 1 (cons 2 one-two))))
+
+(show (actual-value 'x env)) =$> "(1 2 3)"
+(show (actual-value 'ones env)) =$> "(1 1 1 1 1 1 1 1 1 1 ...)"
+(show (actual-value 'one-two env)) =$> "(1 2 1 2 1 2 1 2 1 2 ...)"
 
 (Section :4.3 "Variations on a Scheme - Nondeterministic Computing")
 
