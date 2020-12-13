@@ -10,7 +10,7 @@
           fxarithmetic-shift-left fxarithmetic-shift-right fxxor make-mutex
           newline parallel-execute quotient random read remainder runtime
           set-car! set-cdr! string-contains? string-count unless
-          user-initial-environment when)
+          user-initial-environment when with-eval)
   (import (rnrs base (6))
           (only (rnrs arithmetic fixnums (6))
                 fxand fxarithmetic-shift-left fxarithmetic-shift-right fxxor)
@@ -26,6 +26,14 @@
 (define-syntax cons-stream
   (syntax-rules ()
     ((_ x y) (cons x (delay y)))))
+
+;; Used in Chapter 4.
+(define-syntax with-eval
+  (syntax-rules ()
+    ((_ eval env e* ...)
+     (let ((evaluate eval)
+           (environment env))
+       (evaluate 'e* environment) ...))))
 
 ;; Used in Section 4.1.5.
 (define user-initial-environment (environment '(rnrs base (6))))

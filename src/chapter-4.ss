@@ -129,9 +129,10 @@
         (cons first-value
               (list-of-values (rest-operands exps) env)))))
 
-(define env (make-environment))
-(eval '(define x 0) env)
-(eval '((lambda (a b) x) (set! x "left") (set! x "right")) env) => "right"
+(with-eval eval (make-environment)
+  (define x 0)
+  ((lambda (a b) x) (set! x "left") (set! x "right")))
+=> "right"
 
 ;; Evaluates operands from right to left:
 (define (list-of-values exps env)
@@ -141,9 +142,10 @@
         (cons (eval (first-operand exps) env)
               rest-values))))
 
-(define env (make-environment))
-(eval '(define x 0) env)
-(eval '((lambda (a b) x) (set! x "left") (set! x "right")) env) => "left"
+(with-eval eval (make-environment)
+  (define x 0)
+  ((lambda (a b) x) (set! x "left") (set! x "right")))
+=> "left"
 
 (Section :4.1.2 "Representing Expressions")
 
@@ -981,18 +983,19 @@
 
 (using eval-pkg internal-definition-pkg)
 
-(define env (make-environment))
-(eval '(define (foo)
-         (define (a) "hi")
-         (define (b c) c)
-         (b (a)))
-      env)
-(eval '(foo) env) => "hi"
-(eval '((lambda ()
-          (define x y)
-          (define y 1)
-          #f))
-      env)
+(with-eval eval (make-environment)
+  (define (foo)
+    (define (a) "hi")
+    (define (b c) c)
+    (b (a)))
+  (foo))
+=> "hi"
+
+(with-eval eval (make-environment)
+  ((lambda ()
+     (define x y)
+     (define y 1)
+     #f)))
 =!> "illegal use of internal definition: y"
 
 (Exercise ?4.17)
@@ -1467,13 +1470,14 @@
 ;; But Alyssa also has a point: this is just syntax, so it can't be used with
 ;; higher-order procedures. Here is an example where that would be useful:
 
-(eval '(define (map f as bs cs)
-         (cond ((null? as) '())
-               (else (cons (f (car as) (car bs) (car cs))
-                           (map f (cdr as) (cdr bs) (cdr cs))))))
-      env)
-(eval '(define uppercase '(#t #f)) env)
-(eval '(map unless uppercase '(a b) '(A B)) env) =!> "unbound variable: unless"
+(with-eval eval env
+  (define (map f as bs cs)
+    (cond ((null? as) '())
+          (else (cons (f (car as) (car bs) (car cs))
+                      (map f (cdr as) (cdr bs) (cdr cs))))))
+  (define uppercase '(#t #f))
+  (map unless uppercase '(a b) '(A B)))
+=!> "unbound variable: unless"
 
 (Section :4.2.2 "An Interpreter with Lazy Evaluation")
 
@@ -1525,19 +1529,19 @@
   (put 'eval 'if eval-if))
 
 (using eval-pkg)
-
-(define env (setup-environment))
-(eval '(define (try a b) (if (= a 0) 1 b)) env)
-(eval '(try 0 (/ 1 0)) env) =!> "/"
-
-(using eval-pkg lazy-eval-pkg)
+(with-eval eval (setup-environment)
+  (define (try a b) (if (= a 0) 1 b))
+  (try 0 (/ 1 0)))
+=!> "/"
 
 ;; Note: With the lazy evaluator, we use `actual-value` for the top-level REPL
 ;; rather than `eval`. Thus we have a fourth condition for forcing expressions
-;; in addition to operands, if-predicates, and primitive procedure operands.
-(define env (setup-environment))
-(actual-value '(define (try a b) (if (= a 0) 1 b)) env)
-(actual-value '(try 0 (/ 1 0)) env) => 1
+;; (in addition to operands, if-predicates, and primitive procedure operands).
+(using eval-pkg lazy-eval-pkg)
+(with-eval actual-value (setup-environment)
+  (define (try a b) (if (= a 0) 1 b))
+  (try 0 (/ 1 0)))
+=> 1
 
 (Section :4.2.2.2 "Representing thunks"
   (use (:4.1.2 tagged-list?) (?4.3 eval)))
@@ -1573,9 +1577,10 @@
 (using eval-pkg lazy-eval-pkg)
 
 (define env (setup-environment))
-(actual-value '(define count 0) env)
-(actual-value '(define (id x) (set! count (+ count 1)) x) env)
-(actual-value '(define w (id (id 10))) env)
+(with-eval actual-value env
+  (define count 0)
+  (define (id x) (set! count (+ count 1)) x)
+  (define w (id (id 10))))
 
 ;; When we defined `w`, it forced the outer `id` operand, resulting in `count`
 ;; being incremented. The `(id 10)` argument is delayed.
@@ -1621,10 +1626,13 @@
 (using eval-pkg lazy-eval-pkg)
 
 (define env (setup-environment))
-(actual-value '(define count 0) env)
-(actual-value '(define (id x) (set! count (+ count 1)) x) env)
-(actual-value '(define (square x) (* x x)) env)
-(actual-value '(square (id 10)) env) => 100
+(with-eval actual-value env
+  (define count 0)
+  (define (id x) (set! count (+ count 1)) x)
+  (define (square x) (* x x))
+  (square (id 10)))
+=> 100
+
 ;; With memoization, this is 1. Without memoization, it would be 2.
 (actual-value 'count env) => 1
 
@@ -1652,32 +1660,29 @@
 (using eval-pkg lazy-eval-pkg)
 
 (define env (setup-environment))
-
-;; Ben Bitdiddle's example program:
-(actual-value
- '(define (for-each proc items)
+(with-eval actual-value env
+  ;; Ben Bitdiddle's example program:
+  (define (for-each proc items)
     (if (null? items)
         'done
         (begin (proc (car items))
                (for-each proc (cdr items)))))
- env)
-(define for-each-exp
-  '(for-each (lambda (x) (newline) (display x)) (list 57 321 88)))
-
-;; Cy D. Fect's example program:
-(actual-value
- '(define (p1 x) (set! x (cons x '(2))) x)
- env)
-(actual-value
- '(define (p2 x) (define (p e) e x) (p (set! x (cons x '(2)))))
- env)
+  (define (bens-example)
+    (for-each (lambda (x) (newline) (display x))
+              (list 57 321 88)))
+  ;; Cy D. Fect's example program:
+  (define (p1 x)
+    (set! x (cons x '(2))) x)
+  (define (p2 x)
+    (define (p e) e x)
+    (p (set! x (cons x '(2))))))
 
 ;; (a) Ben is right about the behavior of `for-each` in his example. Evaluating
 ;; `(proc (car items))` is sufficient to enact the side effects in `proc`. There
 ;; is no need to force a returned thunk because it does not return anything.
 
 (using eval-pkg lazy-eval-pkg)
-(actual-value for-each-exp env) =$> ["57" "321" "88"]
+(actual-value '(bens-example) env) =$> ["57" "321" "88"]
 
 ;; (b) With the original `eval-sequence`, `(p2 1)` has an unexpected result.
 ;; With Cy's proposed change, `p2` behaves the same as `p1`.
@@ -1695,7 +1700,7 @@
 ;; not thunks, so forcing is a no-op.
 
 (using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
-(actual-value for-each-exp env) =$> ["57" "321" "88"]
+(actual-value '(bens-example) env) =$> ["57" "321" "88"]
 
 ;; (d) I prefer Cy's approach because otherwise `begin` blocks, or procedures
 ;; with multiple expressions in the body, are useless with the lazy evaluator.
@@ -1749,23 +1754,62 @@
 (using eval-pkg explicit-lazy-pkg)
 
 (define env (setup-environment))
+(with-eval actual-value env
+  (define (try a b) (if (= a 0) 1 b))
+  (define (try-lazy a (lazy b)) (if (= a 0) 1 b))
+  (define (try-lazy-memo a (lazy-memo b)) (if (= a 0) 1 b))
+  (define (double x) (+ x x))
+  (define (double-lazy (lazy x)) (+ x x))
+  (define (double-lazy-memo (lazy-memo x)) (+ x x)))
 
-(actual-value '(define (try a b) (if (= a 0) 1 b)) env)
 (actual-value '(try 0 (/ 1 0)) env) =!> "/"
-(actual-value '(define (try a (lazy b)) (if (= a 0) 1 b)) env)
-(actual-value '(try 0 (/ 1 0)) env) => 1
-(actual-value '(define (try a (lazy-memo b)) (if (= a 0) 1 b)) env)
-(actual-value '(try 0 (/ 1 0)) env) => 1
+(actual-value '(try-lazy 0 (/ 1 0)) env) => 1
+(actual-value '(try-lazy-memo 0 (/ 1 0)) env) => 1
 
-(actual-value '((lambda ((lazy x)) (+ x x)) (+ 1 2)) env) => 6
-(actual-value '((lambda ((lazy-memo x)) (+ x x)) (+ 1 2)) env) => 6
+(actual-value '(double (begin (display "x") 1)) env) =$> "x"
+(actual-value '(double-lazy (begin (display "x") 1)) env) =$> "xx"
+(actual-value '(double-lazy-memo (begin (display "x") 1)) env) =$> "x"
 
-(actual-value '((lambda (x) (+ x x)) (begin (display "x") 1)) env)
-=$> "x"
-(actual-value '((lambda ((lazy x)) (+ x x)) (begin (display "x") 1)) env)
-=$> "xx"
-(actual-value '((lambda ((lazy-memo x)) (+ x x)) (begin (display "x") 1)) env)
-=$> "x"
+(Section :4.2.3 "Streams as Lazy Lists"
+  (use (:2.4.3 using) (:4.1.4 setup-environment) (:4.2.2.1 lazy-eval-pkg)
+       (:4.2.2.2 actual-value) (?4.3 eval-pkg)))
+
+(using eval-pkg lazy-eval-pkg)
+
+(define env (setup-environment))
+; (actual-value '(define (cons x y) (lambda (m) (m x y))) env)
+; (actual-value '(define (car z) (z (lambda (p q) p))) env)
+; (actual-value '(define (cdr z) (z (lambda (p q) q))) env)
+
+; (actual-value
+;  '(define (list-ref items n)
+;     (if (= n 0) (car items) (list-ref (cdr items) (- n 1))))
+;  env)
+; (actual-value
+;  '(define (map proc items)
+;     (if (null? items)
+;         '()
+;         (cons (proc (car items)) (map proc (cdr items)))))
+;  env)
+; (actual-value
+;  '(define (scale-list items factor)
+;     (map (lambda (x) (* x factor)) items))
+;  env)
+
+; (define (add-lists list1 list2)
+;   (cond ((null? list1) list2) ((null? list2) list1)
+;         (else (cons (+ (car list1) (car list2))
+;                     (add-lists (cdr list1) (cdr list2))))))
+; (define ones (cons 1 ones))
+; (define integers (cons 1 (add-lists ones integers)))
+
+(Exercise ?4.32)
+
+(Exercise ?4.33)
+
+(Exercise ?4.34)
+
+(Section :4.3 "Variations on a Scheme - Nondeterministic Computing")
 
 ) ; end of SICP
 ) ; end of library

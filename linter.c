@@ -117,6 +117,7 @@ static const struct {
     { .name = "syntax-rules", .rules = IR_SPECIAL },
     { .name = "unless", .rules = IR_SPECIAL },
     { .name = "when", .rules = IR_SPECIAL },
+    { .name = "with-eval", .rules = IR_SPECIAL },
     { .name = "with-mutex", .rules = IR_SPECIAL },
     { .name = "with-syntax", .rules = IR_SPECIAL },
 };
