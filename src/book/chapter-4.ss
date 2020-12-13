@@ -2,11 +2,11 @@
 
 #!r6rs
 
-(library (src chapter-4)
+(library (src book chapter-4)
   (export chapter-4-effects)
   (import (rnrs base (6))
           (src lang sicp)
-          (only (src chapter-3) chapter-3-effects))
+          (only (src book chapter-3) chapter-3-effects))
 
 ;; Introduce a dependency on the previous chapter so that it executes first.
 (define chapter-4-effects chapter-3-effects)

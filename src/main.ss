@@ -9,10 +9,10 @@
         (rnrs programs (6))
         (only (src compat active) format seed-rng)
         (only (src lang core) run-sicp)
-        (src chapter-1)
-        (src chapter-2)
-        (src chapter-3)
-        (src chapter-4))
+        (src book chapter-1)
+        (src book chapter-2)
+        (src book chapter-3)
+        (src book chapter-4))
 
 (define (usage program)
   (format "\
