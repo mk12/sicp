@@ -49,15 +49,16 @@
                 (list-of-values (operands exp) env)))
         (else (error 'eval "unknown expression type" exp))))
 
-(define (apply procedure arguments)
-  (cond ((primitive-procedure? procedure)
-         (apply-primitive-procedure procedure arguments))
-        ((compound-procedure? procedure)
-         (eval-sequence (procedure-body procedure)
-                        (extend-environment (procedure-parameters procedure)
-                                            arguments
-                                            (procedure-environment procedure))))
-        (else (error 'apply "unknown procedure type" procedure))))
+(define (apply proc args)
+  (cond ((primitive-procedure? proc)
+         (apply-primitive-procedure proc args))
+        ((compound-procedure? proc)
+         (eval-sequence
+          (procedure-body proc)
+          (extend-environment (procedure-parameters proc)
+                              args
+                              (procedure-environment proc))))
+        (else (error 'apply "unknown procedure type" proc))))
 
 (define (list-of-values exps env)
   (if (no-operands? exps)
@@ -1485,7 +1486,7 @@
        (:4.1.3.2 compound-procedure? procedure-body procedure-environment
                  procedure-parameters)
        (:4.1.3.3 extend-environment) (:4.1.4 setup-environment)
-       (:4.2.2.2 actual-value delay-it force-it)
+       (:4.2.2.2 actual-value memo-delay-it)
        (?4.3 eval eval-pkg eval-sequence)))
 
 (define (eval-call exp env)
@@ -1493,19 +1494,16 @@
          (operands exp)
          env))
 
-(define (apply procedure arguments env)
-  (cond ((primitive-procedure? procedure)
-         (apply-primitive-procedure
-          procedure
-          (list-of-arg-values arguments env)))
-        ((compound-procedure? procedure)
+(define (apply proc args env)
+  (cond ((primitive-procedure? proc)
+         (apply-primitive-procedure proc (list-of-arg-values args env)))
+        ((compound-procedure? proc)
          (eval-sequence
-          (procedure-body procedure)
-          (extend-environment
-           (procedure-parameters procedure)
-           (list-of-delayed-args arguments env)
-           (procedure-environment procedure))))
-        (else (error 'apply "unknown procedure type" procedure))))
+          (procedure-body proc)
+          (extend-environment (procedure-parameters proc)
+                              (list-of-delayed-args args env)
+                              (procedure-environment proc))))
+        (else (error 'apply "unknown procedure type" proc))))
 
 (define (list-of-arg-values exps env)
   (cond ((no-operands? exps) '())
@@ -1514,7 +1512,7 @@
 
 (define (list-of-delayed-args exps env)
   (cond ((no-operands? exps) '())
-        (else (cons (delay-it (first-operand exps) env)
+        (else (cons (memo-delay-it (first-operand exps) env)
                     (list-of-delayed-args (rest-operands exps) env)))))
 
 (define (eval-if exp env)
@@ -1547,21 +1545,25 @@
 ;; Moved here from Section 4.2.2.1 to avoid import cycle.
 (define (actual-value exp env) (force-it (eval exp env)))
 
+;; Support both non-memoized and memoized thunks, to make Exercise 4.31 easier.
 (define (delay-it exp env) (list 'thunk exp env))
+(define (memo-delay-it exp env) (list 'memo-thunk exp env))
 (define (thunk? obj) (tagged-list? obj 'thunk))
+(define (memo-thunk? obj) (tagged-list? obj 'memo-thunk))
 (define (thunk-exp thunk) (cadr thunk))
 (define (thunk-env thunk) (caddr thunk))
 (define (evaluated-thunk? obj) (tagged-list? obj 'evaluated-thunk))
 (define (thunk-value thunk) (cadr thunk))
 
 (define (force-it obj)
-  (cond ((thunk? obj)
+  (cond ((thunk? obj) (actual-value (thunk-exp obj) (thunk-env obj)))
+        ((evaluated-thunk? obj) (thunk-value obj))
+        ((memo-thunk? obj)
          (let ((result (actual-value (thunk-exp obj) (thunk-env obj))))
            (set-car! obj 'evaluated-thunk)
            (set-car! (cdr obj) result)
            (set-cdr! (cdr obj) '())
            result))
-        ((evaluated-thunk? obj) (thunk-value obj))
         (else obj)))
 
 (Exercise ?4.27
@@ -1699,7 +1701,71 @@
 ;; with multiple expressions in the body, are useless with the lazy evaluator.
 ;; This does not totally solve the side-effects confusion, but it helps.
 
-(Exercise ?4.31)
+(Exercise ?4.31
+  (use (:2.4.3 using) (:3.3.3.3 put)
+       (:4.1.2 first-operand no-operands? operands operator rest-operands)
+       (:4.1.2.2 apply-primitive-procedure primitive-procedure?)
+       (:4.1.3.2 compound-procedure? procedure-body procedure-environment
+                 procedure-parameters)
+       (:4.1.3.3 extend-environment) (:4.1.4 setup-environment)
+       (:4.2.2.1 eval-if list-of-arg-values)
+       (:4.2.2.2 actual-value delay-it force-it memo-delay-it)
+       (?4.3 eval-pkg eval-sequence)))
+
+(paste (:4.2.2.1 eval-call))
+
+(define (procedure-parameter-names p)
+  (map (lambda (x) (if (pair? x) (cadr x) x))
+       (procedure-parameters p)))
+
+(define (list-of-args exps params env)
+  (if (no-operands? exps)
+      '()
+      (let ((f (cond ((symbol? (car params)) actual-value)
+                     ((eq? (caar params) 'lazy) delay-it)
+                     ((eq? (caar params) 'lazy-memo) memo-delay-it)
+                     (else (error 'list-of-args
+                                  "invalid parameter"
+                                  (car params))))))
+        (cons (f (first-operand exps) env)
+              (list-of-args (rest-operands exps) (cdr params) env)))))
+
+(define (apply proc args env)
+  (cond ((primitive-procedure? proc)
+         (apply-primitive-procedure proc (list-of-arg-values args env)))
+        ((compound-procedure? proc)
+         (eval-sequence
+          (procedure-body proc)
+          (extend-environment
+           (procedure-parameter-names proc)
+           (list-of-args args (procedure-parameters proc) env)
+           (procedure-environment proc))))
+        (else (error 'apply "unknown procedure type" proc))))
+
+(define (explicit-lazy-pkg)
+  (put 'eval 'call eval-call)
+  (put 'eval 'if eval-if))
+
+(using eval-pkg explicit-lazy-pkg)
+
+(define env (setup-environment))
+
+(actual-value '(define (try a b) (if (= a 0) 1 b)) env)
+(actual-value '(try 0 (/ 1 0)) env) =!> "/"
+(actual-value '(define (try a (lazy b)) (if (= a 0) 1 b)) env)
+(actual-value '(try 0 (/ 1 0)) env) => 1
+(actual-value '(define (try a (lazy-memo b)) (if (= a 0) 1 b)) env)
+(actual-value '(try 0 (/ 1 0)) env) => 1
+
+(actual-value '((lambda ((lazy x)) (+ x x)) (+ 1 2)) env) => 6
+(actual-value '((lambda ((lazy-memo x)) (+ x x)) (+ 1 2)) env) => 6
+
+(actual-value '((lambda (x) (+ x x)) (begin (display "x") 1)) env)
+=$> "x"
+(actual-value '((lambda ((lazy x)) (+ x x)) (begin (display "x") 1)) env)
+=$> "xx"
+(actual-value '((lambda ((lazy-memo x)) (+ x x)) (begin (display "x") 1)) env)
+=$> "x"
 
 ) ; end of SICP
 ) ; end of library
