@@ -10,6 +10,15 @@ usage: $0 [--help] {all,chez,chezd,guile,racket} args ...
 EOS
 }
 
+run_all() {
+    printf "Chez   ... "
+    run_chez "$@"
+    printf "Guile  ... "
+    run_guile "$@"
+    printf "Racket ... "
+    run_racket "$@"
+}
+
 run_chez() {
     ln -sf chez.ss src/compat/active.ss
     chez --program "$main" "$@"
@@ -48,7 +57,6 @@ cd "$(dirname "$0")"
 
 case $arg in
     -h|--help) usage; exit ;;
-    chez|chezd|guile|racket) "run_$arg" "$@" ;;
-    all) run_chez "$@" && run_guile "$@" && run_racket "$@" ;;
+    all|chez|chezd|guile|racket) "run_$arg" "$@" ;;
     *) usage >&2; exit 1 ;;
 esac

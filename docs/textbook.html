@@ -1,18 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Mitchell Kember" />
-  <title>SICP Textbook Notes</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Study – SICP Textbook Notes</title>
   <style>
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -76,7 +69,6 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
    var mathElements = document.getElementsByClassName("math");
@@ -93,19 +85,31 @@
   }}});
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<a class="index-link" href="index.html">Index</a>
-|
-<a class="index-link" href="https://github.com/mk12/sicp">GitHub</a>
-<header id="title-block-header">
-<h1 class="title">SICP Textbook Notes</h1>
-<p class="subtitle">Notes on <a href="https://mitpress.mit.edu/sites/default/files/sicp/index.html"><em>Structure and Interpretation of Computer Programs</em></a></p>
-<p class="author">Mitchell Kember</p>
+<header class="header">
+  <a class="title" href="index.html">SICP Study</a>
+  <span class="header__gap"></span>
+  <nav>
+    <ul class="nav">
+      <li class="nav__item nav__item--active">Text</li><!--
+      --><li class="nav__item"><a class="nav__link" href="lecture.html">Lectures</a></li>
+      <li class="nav__item"><a class="nav__link" href="quote.html">Quotes</a></li>
+      <li class="nav__item"><a class="nav__link" href="exercise.html">Exercises</a></li>
+      <li class="nav__item"><a class="nav__link" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a></li>
+    </ul>
+  </nav>
 </header>
+<h1>SICP Textbook Notes</h1>
 <nav id="TOC" role="doc-toc">
 <ul>
 <li><a href="#dedication">Dedication</a></li>
@@ -230,7 +234,9 @@
 <ul>
 <li><a href="#normal-order-and-applicative-order">Normal Order and Applicative Order</a></li>
 <li><a href="#an-interpreter-with-lazy-evaluation">An Interpreter with Lazy Evaluation</a></li>
+<li><a href="#streams-as-lazy-lists">Streams as Lazy Lists</a></li>
 </ul></li>
+<li><a href="#variations-on-a-scheme-nondeterministic-computing">Variations on a Scheme — Nondeterministic Computing</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -362,7 +368,7 @@
 <li>To make more useful procedures, we need to be able to make tests and perform different operations accordingly.</li>
 <li>We do <em>case analysis</em> in Scheme using <code>cond</code>.</li>
 <li>Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.</li>
-<li>A predicate is an expression that evalues to true or false, or a procedure that returns true or false.</li>
+<li>A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.</li>
 <li>The symbol <code>else</code> can be used as the last clause – it will always evaluate to true.</li>
 <li>The <code>if</code> conditional can be used when there are two cases.</li>
 <li>Logical values can be combined with <code>and</code>, <code>or</code>, and <code>not</code>. The first two are special forms, not procedures.</li>
@@ -404,11 +410,11 @@
 </ul>
 <h2 id="procedures-and-the-processes-they-generate">Procedures and the Processes They Generate</h2>
 <blockquote>
-<p>To become experts, we must learn to visualize the processes generated by various types of procedures. Only after we have developed such a skill can we learn to reliably construct programs that exhibit the desired behaviour. (40)</p>
+<p>To become experts, we must learn to visualize the processes generated by various types of procedures. Only after we have developed such a skill can we learn to reliably construct programs that exhibit the desired behavior. (40)</p>
 </blockquote>
 <ul>
 <li>A procedure is a pattern for the <em>local evolution</em> of a computation process: how one stage is built on the previous.</li>
-<li>The global behaviour of a computational process is much harder to reason about.</li>
+<li>The global behavior of a computational process is much harder to reason about.</li>
 <li>Processes governed by different types of procedures generate different “shapes” of evolution.</li>
 <li>There are two important resources that computational processes consume: time and space.</li>
 </ul>
@@ -486,7 +492,7 @@ f(A,N-1) + f(A-D,N), &amp; \text{if $A &gt; 0$ and $N &gt; 0$.}
 <li>We say that <span class="math inline">R(n)</span> has order of growth <span class="math inline">Θ(f(n))</span>, or <span class="math inline">R(n) = Θ(f(n))</span>, if there are positive constants <span class="math inline">A</span> and <span class="math inline">B</span> independent of <span class="math inline">n</span> such that <span class="math inline">Af(n) ≤ R(n) ≤ Bf(n)</span> for any sufficiently large value of <span class="math inline">n</span>.</li>
 <li>The value <span class="math inline">R(n)</span> is sandwiched between <span class="math inline">Af(n)</span> and <span class="math inline">Bf(n)</span>.</li>
 <li>The linear recursive process for computing factorials had <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(n)</span> space (both linear), whereas the linear iterative process had <span class="math inline">Θ(1)</span> space (constant).</li>
-<li>The order of growth is a crude description of the behaviour of a process.</li>
+<li>The order of growth is a crude description of the behavior of a process.</li>
 <li>Its importance is allowing us to see the <em>change</em> in the amount of resources required when you, say, increment <span class="math inline">n</span> or double <span class="math inline">n</span>.</li>
 </ul>
 <h3 id="exponentiation">Exponentiation</h3>
@@ -631,7 +637,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <h4 id="newtons-method">Newton’s method</h4>
 <p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function <span class="math inline">f(x)</span>, the solution to <span class="math inline">f(x) = 0</span> is given by the fixed point of</p>
 <p><span class="math display">x ↦ x − \frac{f(x)}{f&#39;(x)}.</span></p>
-<p>Newton’s method converges very quickly – much faster than the half-interval method in favourable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:</p>
+<p>Newton’s method converges very quickly – much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:</p>
 <p><span class="math display">f&#39;(x) = \frac{f(x+dx) - f(x)}{dx}.</span></p>
 <p>This translates to the following procedure:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(deriv f)</span>
@@ -668,7 +674,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Before we made compound procedures from other procedures; now we will make compound data from other, simpler data.</li>
 </ul>
 <blockquote>
-<p>the ability to construct compound data objects enables us to deal with data at a higher conceptual level than that of the primitive data objects of the language. (108)</p>
+<p>[…] the ability to construct compound data objects enables us to deal with data at a higher conceptual level than that of the primitive data objects of the language. (108)</p>
 </blockquote>
 <ul>
 <li>Consider functions dealing with rational numbers: this becomes awkward if they can return only one number.</li>
@@ -748,7 +754,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>In real Lisp implementations, pairs are implemented directly, for reasons of efficiency – but they <em>could</em> be implemented this way and you wouldn’t be able to tell the difference.</li>
 </ul>
 <blockquote>
-<p>the ability to manipulate procedures as objects automatically provides the ability to represent compound data. (125)</p>
+<p>[…] the ability to manipulate procedures as objects automatically provides the ability to represent compound data. (125)</p>
 </blockquote>
 <ul>
 <li>This style of programming is often called <em>message passing</em>.</li>
@@ -817,7 +823,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>We think about the process differently when we use map.</li>
 </ul>
 <blockquote>
-<p>this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
+<p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
 </blockquote>
 <h3 id="hierarchical-structures">Hierarchical Structures</h3>
 <ul>
@@ -1688,7 +1694,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Two such expressions executed concurrently on the same <code>balance</code> variable could have their three steps interleaved.</li>
 <li>The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.</li>
 </ul>
-<h4 id="correct-behaviour-of-concurrent-programs">Correct behaviour of concurrent programs</h4>
+<h4 id="correct-behavior-of-concurrent-programs">Correct behavior of concurrent programs</h4>
 <ul>
 <li>We already know we have to be careful about order with <code>set!</code>.</li>
 <li>With concurrent programs we must be especially careful.</li>
@@ -1700,7 +1706,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>If one process has three ordered events <span class="math inline">(a,b,c)</span> and another, running concurrently, has three ordered events <span class="math inline">(x,y,z)</span>, then there are twenty ways of interleaving them.</li>
 <li>The programmer would have to consider the results in all twenty cases to be confident in the program.</li>
-<li>A better approach is to use mechanisms to constrain interleaving to ensure correct behaviour.</li>
+<li>A better approach is to use mechanisms to constrain interleaving to ensure correct behavior.</li>
 </ul>
 <h4 id="serializing-access-to-shared-state">Serializing access to shared state</h4>
 <ul>
@@ -1769,8 +1775,8 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <h2 id="streams">Streams</h2>
 <ul>
 <li>We’ve used assignment as a powerful tool and dealt with some of the complex problems it raises.</li>
-<li>Now we will consider another approach to modelling state, using data structures called <em>streams</em>.</li>
-<li>We want to avoid identifying time in the computer with time in the modelled world.</li>
+<li>Now we will consider another approach to modeling state, using data structures called <em>streams</em>.</li>
+<li>We want to avoid identifying time in the computer with time in the modeled world.</li>
 <li>If <span class="math inline">x</span> is a function of time <span class="math inline">x(t)</span>, we can think of the identity <span class="math inline">x</span> as a history of values (and these don’t change).</li>
 <li>With time measured in discrete steps, we can model a time function as a sequence of values.</li>
 <li>Stream processing allows us to model state without assignments.</li>
@@ -1869,7 +1875,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <h4 id="normal-order-evaluation">Normal-order evaluation</h4>
 <ul>
 <li>Explicit use of <code>delay</code> and <code>force</code> is powerful, but makes our programs more complex.</li>
-<li>It creates two clasess of procedures: normal, and ones that take delayed arguments.</li>
+<li>It creates two classes of procedures: normal, and ones that take delayed arguments.</li>
 <li>(This is similar to the sync vs. async divide in modern programming languages.)</li>
 <li>This forces us to define separate classes of higher-order procedures, unless we make everything delayed, equivalent to normal-order evaluation (like Haskell).</li>
 <li>Mutability and delayed evaluation do not mix well.</li>
@@ -1962,7 +1968,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <h3 id="representing-expressions">Representing Expressions</h3>
 <ul>
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
-<li>The syntax of the language is determined solely by procedues that classify and extract pieces of expressions. For example:</li>
+<li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
 </ul>
 <div class="sourceCode" id="cb45"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(quoted? <span class="kw">exp</span>) (tagged-list? <span class="kw">exp</span> &#39;quote))</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(text-of-quotation <span class="kw">exp</span>) (<span class="kw">cadr</span> <span class="kw">exp</span>))</span>
@@ -1972,7 +1978,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>      false))</span></code></pre></div>
 <h4 id="derived-expressions">Derived expressions</h4>
 <ul>
-<li>Some special forms cna be defined in terms of others.</li>
+<li>Some special forms can be defined in terms of others.</li>
 <li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
 </ul>
 <div class="sourceCode" id="cb46"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(cond? <span class="kw">exp</span>) (tagged-list? <span class="kw">exp</span> &#39;cond))</span>
@@ -2182,7 +2188,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))</span></code></pre></div>
 <h2 id="variations-on-a-scheme-lazy-evaluation">Variations on a Scheme — Lazy Evaluation</h2>
 <ul>
-<li>We can experiment with different language desisn just by modifiying the evaluator.</li>
+<li>We can experiment with different language design just by modifying the evaluator.</li>
 <li>This is often how new languages are invented. It’s easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.</li>
 </ul>
 <h3 id="normal-order-and-applicative-order">Normal Order and Applicative Order</h3>
@@ -2268,5 +2274,27 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>To memoize thunks, <code>force-it</code> becomes a bit more complicated.</li>
 </ul>
+<h3 id="streams-as-lazy-lists">Streams as Lazy Lists</h3>
+<ul>
+<li>Before introducing lazy evaluation, we <a href="#streams-are-delayed-lists">implemented streams as delayed lists</a>.</li>
+<li>We can instead formulate streams as <em>lazy</em> lists. There are two advantages:
+<ol type="1">
+<li>No need for special forms <code>delay</code> and <code>cons-stream</code>.</li>
+<li>No need for separate list and stream operations.</li>
+</ol></li>
+<li>All we need to do is make <code>cons</code> lazy, either by introducing non-strict primitives or by defining <code>cons</code>, <code>car</code>, and <code>cdr</code> <a href="#what-is-meant-by-data">as compound procedures</a>.</li>
+<li>Now we can write code without distinguishing normal lists from infinite ones:</li>
+</ul>
+<div class="sourceCode" id="cb66"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> ones </span>(<span class="kw">cons</span> <span class="dv">1</span> ones))</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(scale-list items factor) (map (<span class="kw">lambda</span> (x) (<span class="op">*</span> x factor)) items))</span></code></pre></div>
+<ul>
+<li>These lazy lists are even lazier than our original streams, since the <code>car</code> is delayed too.</li>
+<li>This also eliminates <a href="#streams-and-delayed-evaluation">the problems we had earlier</a> around having to explicitly delay and force some arguments when computing integrals.</li>
+</ul>
+<h2 id="variations-on-a-scheme-nondeterministic-computing">Variations on a Scheme — Nondeterministic Computing</h2>
+<ul>
+<li><em>Nondeterministic computing</em></li>
+</ul>
+<footer class="footer">© 2020 Mitchell Kember</footer>
 </body>
 </html>

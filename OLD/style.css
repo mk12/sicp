@@ -7,10 +7,62 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 50px;
-    background: #fafafa;
+    background: #eee;
     color: #333;
     font: 20px sans-serif;
     line-height: 1.4;
+}
+
+.header {
+    padding-bottom: 10px;
+    border-bottom: 3px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.navigation ul {
+    display: flex;
+}
+
+.navigation li {
+    list-style: none;
+    padding: 0 10px;
+}
+
+.wizard-image {
+    max-width: 500px;
+    /* margin: 20px auto; */
+    /* display: block; */
+    float: right;
+    margin: 20px 0 0 20px;
+}
+
+.footer {
+    margin-top: 30px;
+    border-top: 3px solid #ccc;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.title {
+    color: #000;
+    font-size: 30px;
+}
+
+.github {
+    color: #000;
+    fill: #000;
+}
+
+.github-mark {
+    vertical-align: -5px;
+}
+
+.title:hover, .github:hover {
+    text-decoration: none;
+    color: #005ca7;
+    fill: #005ca7;
 }
 
 a {
@@ -28,26 +80,6 @@ p, ul, ol, blockquote, pre {
 
 p:first-child {
     margin-top: 0;
-}
-
-.index-link {
-    /* position: absolute; */
-}
-
-.title, .subtitle, .author {
-    text-align: center;
-    margin: 1em 0 0;
-}
-
-.title {
-    font-size: 2.5em;
-    border: none;
-    text-align: center;
-    line-height: 1.2;
-}
-
-.author {
-    margin-bottom: 2em;
 }
 
 h1, h2, h3, h4{
@@ -130,6 +162,6 @@ h1 code, h2 code, h3 code, h4 code {
 }
 
 .math {
-    /* Default size is slightly too large side-by-side with Menlo. */
+    /* Default size is slightly too large side-by-side with Helvetica. */
     font-size: 18px;
 }

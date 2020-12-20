@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Study$if(index)$$else$ – $title$$endif$</title>
+$if(highlighting-css)$
+  <style>
+    $highlighting-css$
+  </style>
+$endif$
+$if(math)$
+  $math$
+$endif$
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="index.html">SICP Study</a>
+  <span class="header__gap"></span>
+  <nav>
+    <ul class="nav">
+      <li class="nav__item$if(textbook)$ nav__item--active$endif$">$if(textbook)$Text$else$<a class="nav__link" href="textbook.html">Text</a>$endif$</li><!--
+      --><li class="nav__item$if(lecture)$ nav__item--active$endif$">$if(lecture)$Lectures$else$<a class="nav__link" href="lecture.html">Lectures</a>$endif$</li>
+      <li class="nav__item$if(quote)$ nav__item--active$endif$">$if(quote)$Quotes$else$<a class="nav__link" href="quote.html">Quotes</a>$endif$</li>
+      <li class="nav__item$if(exercise)$ nav__item--active$endif$">$if(exercise)$Exercises$else$<a class="nav__link" href="exercise.html">Exercises</a>$endif$</li>
+      <li class="nav__item"><a class="nav__link" href="https://github.com/mk12/sicp">Source $github.svg()$</a></li>
+    </ul>
+  </nav>
+</header>
+$if(index)$
+$else$
+<h1>$title$</h1>
+$endif$
+$if(toc)$
+<nav id="$idprefix$TOC" role="doc-toc">
+$if(toc-title)$
+<h2 id="$idprefix$toc-title">$toc-title$</h2>
+$endif$
+$table-of-contents$
+</nav>
+$endif$
+$body$
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>

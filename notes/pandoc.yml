@@ -1,0 +1,6 @@
+from: markdown
+to: html5
+standalone: true
+highlight-style: pygments
+html-math-method:
+  method: katex

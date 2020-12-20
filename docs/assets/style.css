@@ -1,0 +1,103 @@
+html, body, blockquote, p, ul, ol, li {
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    color-scheme: light dark;
+    --fg: #333;
+    --bg: #fafafa;
+    --intense: #000;
+    --subdued: #888;
+    --border: #ccc;
+    --link: #4973c1;
+}
+
+body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 50px;
+    color: var(--fg);
+    background: var(--bg);
+    font: 20px sans-serif;
+    line-height: 1.4;
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* @media (prefers-color-scheme: dark) {
+    :root {
+        --fg: #ccc;
+        --bg: #2a2a2a;
+    }
+} */
+
+.header {
+    display: flex;
+}
+
+.header__gap {
+    flex-grow: 1;
+    box-shadow: 0 3px var(--border);
+}
+
+.title {
+    font-size: 30px;
+    color: var(--intense);
+    padding-bottom: 2px;
+    box-shadow: 0 3px var(--border);
+}
+
+.title:hover {
+    text-decoration: none;
+    color: var(--subdued);
+}
+
+.nav {
+    height: 100%;
+    display: flex;
+}
+
+.nav__item {
+    list-style: none;
+    display: inline;
+    margin-top: 5px;
+    padding: 6px 14px 0;
+    box-shadow: 0 3px var(--border);
+    /* color: var(--subdued); */
+}
+
+.nav__item--active {
+    box-shadow:
+        -3px -3px var(--border),
+        3px -3px var(--border),
+        -3px 0 var(--border),
+        3px 0 var(--border);
+}
+
+.nav__link {
+    color: var(--intense);
+    text-decoration: none;
+}
+
+.nav__link:hover {
+    text-decoration: none;
+    color: var(--subdued);
+    fill: var(--subdued);
+}
+
+.nav__item:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+.github-mark {
+    vertical-align: -5px;
+}

@@ -1,5 +1,14 @@
 # New to do
 
+- scheme https://coolors.co/98c1d9-2c497f-db5461-fbb5b1-38302e
+- improve Scheme highlighting in docs
+- BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
+- spell checker for Markdown, integrated in Makefile
+- docs dark mode
+- drawing of wizard book yin/yang for index.hml
+x switch to netlify to avoid checking in docs?
+    x No, GitHub pages is simpler. No containers, no slow builds. Just HTML.
++ make check for shellcheck (needs to be distinct from lint for vscode task error recognition)
 + change install-foo-package to foo-pkg
 + fix BUG in chapter-3
 + lint import order
