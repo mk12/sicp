@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
-  <title>SICP Study$if(index)$$else$ – $title$$endif$</title>
+  <title>$title$</title>
 $if(highlighting-css)$
   <style>
     $highlighting-css$
@@ -13,31 +13,27 @@ $endif$
 $if(math)$
   $math$
 $endif$
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="$root$assets/style.css">
 </head>
 <body>
 <header class="header">
-  <a class="title" href="index.html">SICP Study</a>
+  <a class="title" href="$root$index.html">SICP Study</a>
   <span class="header__gap"></span>
   <nav>
     <ul class="nav">
-      <li class="nav__item$if(textbook)$ nav__item--active$endif$">$if(textbook)$Text$else$<a class="nav__link" href="textbook.html">Text</a>$endif$</li><!--
-      --><li class="nav__item$if(lecture)$ nav__item--active$endif$">$if(lecture)$Lectures$else$<a class="nav__link" href="lecture.html">Lectures</a>$endif$</li>
-      <li class="nav__item$if(quote)$ nav__item--active$endif$">$if(quote)$Quotes$else$<a class="nav__link" href="quote.html">Quotes</a>$endif$</li>
-      <li class="nav__item$if(exercise)$ nav__item--active$endif$">$if(exercise)$Exercises$else$<a class="nav__link" href="exercise.html">Exercises</a>$endif$</li>
-      <li class="nav__item"><a class="nav__link" href="https://github.com/mk12/sicp">Source $github.svg()$</a></li>
+      <li class="nav__item$if(text)$ nav__item--active$endif$"><a class="nav__link" href="$root$text/index.html">Text</a></li>
+      <li class="nav__item$if(lecture)$ nav__item--active$endif$"><a class="nav__link" href="$root$lecture/index.html">Lectures</a></li>
+      <li class="nav__item$if(quote)$ nav__item--active$endif$"><a class="nav__link" href="$root$quote.html">Quotes</a></li>
+      <li class="nav__item$if(exercise)$ nav__item--active$endif$"><a class="nav__link" href="$root$exercise/index.html">Exercises</a></li>
+      <li class="nav__item"><a class="nav__link" href="https://github.com/mk12/sicp">Source $assets/github.svg()$</a></li>
     </ul>
   </nav>
 </header>
-$if(index)$
-$else$
-<h1>$title$</h1>
-$endif$
+$for(include-before)$
+$include-before$
+$endfor$
 $if(toc)$
-<nav id="$idprefix$TOC" role="doc-toc">
-$if(toc-title)$
-<h2 id="$idprefix$toc-title">$toc-title$</h2>
-$endif$
+<nav class="intra-toc">
 $table-of-contents$
 </nav>
 $endif$

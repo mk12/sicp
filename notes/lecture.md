@@ -1,8 +1,3 @@
----
-title: SICP Lecture Notes
-lecture: true
----
-
 # 1A: Overview and Introduction to Lisp
 
 ## Part 1

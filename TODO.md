@@ -1,5 +1,9 @@
 # New to do
 
+- put highlight styles in standalone CSS
+- use /text/1#1.2 for section 1.2, /exercise/1#1.32 for Exercise 1.32, etc.
+- note: GH pages allows omitting .html (without need for subfolder + index.html)
+- little hash anchors on headings, like github
 - scheme https://coolors.co/98c1d9-2c497f-db5461-fbb5b1-38302e
 - improve Scheme highlighting in docs
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$

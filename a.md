@@ -1,13 +1,12 @@
----
-title: SICP Textbook Notes
-textbook: true
----
 
-# Dedication
+
+# Frontmatter
+
+## Dedication
 
 > What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. (xii)
 
-# Foreword
+## Foreword
 
 - Three foci: the human mind, collections of computer programs, and the computer.
 - Idioms form "an arsenal of standard program structures of whose correctness we have become sure" (xiv).
@@ -17,7 +16,7 @@ textbook: true
 
 > It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures. (xvii)
 
-# Preface
+## Preface
 
 - Computer language: a novel formal medium for expressing ideas about methodology.
 
@@ -27,7 +26,7 @@ textbook: true
 
 > Mathematics provides a framework for dealing precisely with notions of "what is." Computation provides a framework for dealing precisely with notions of "how to." (xxiii)
 
-# Chapter 1: Building Abstractions with Procedures
+# Building Abstractions with Procedures
 
 - A computational process evolves to manipulate data.
 - The evolution is controlled by a program, a pattern of rules.
@@ -467,7 +466,7 @@ Now we can do things like this:
     - They may be included in data structures.
 - In Lisp, procedures have first-class status. This gives us an enormous gain in expressive power.
 
-# Chapter 2: Building Abstractions with Data
+# Building Abstractions with Data
 
 - Recap: we looked at computations processes and the role of procedures in program design.
     - We saw primitive data (numbers), primitive operations (arithmetic operators), combinations, and abstractions.
@@ -1015,7 +1014,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.
 - This one is very slow. Probabilistic algorithms are faster.
 
-# Chapter 3: Modularity, Objects, and State
+# Modularity, Objects, and State
 
 - Primitive procedures and primitive data combine to construct compound entities; abstraction controls complexity.
 - But these tools are not sufficient for designing programs.
@@ -1727,7 +1726,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 > The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the "objects" is much larger than the state that they share. (486)
 
-# Chapter 4: Metalinguistic Abstraction 
+# Metalinguistic Abstraction 
 
 - Expert programmers build up abstractions from simpler concepts to higher-level ones, and preserve modularity by adopting appropriate large-scale views of system structure.
 - However, with increasingly complex problems we will find that Lisp, or any programming language, is not sufficient.

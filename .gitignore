@@ -8,5 +8,6 @@
 # Pandoc output
 out.html
 
-# Linter binary
+# Binaries
+/docgen
 /linter

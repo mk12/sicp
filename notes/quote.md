@@ -1,8 +1,3 @@
----
-title: Quotes
-quote: true
----
-
 # Textbook
 
 Page numbers correspond to the [2.andresraba5 PDF][pdf].
