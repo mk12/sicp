@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 4.2 Notes</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="../../index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item sitenav__item--active" href="../../text/index.html">Text</a>
+    <a class="sitenav__item" href="../../lecture/index.html">Lecture</a>
+    <a class="sitenav__item" href="../../exercise/index.html">Exercise</a>
+    <a class="sitenav__item" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a>
+  </nav>
+</header>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+</nav>
+<h1>
+Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
+</h1>
+<ul>
+<li>We can experiment with different language design just by modifying the evaluator.</li>
+<li>This is often how new languages are invented. It’s easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.</li>
+</ul>
+<h3 id="4.2.1">
+<a class="anchor" href="#4.2.1">#</a>Normal Order and Applicative Order<small class="number">4.2.1</small>
+</h3>
+<ul>
+<li><a href="#applicative-order-versus-normal-order">Earlier</a>, we noted that scheme is an <em>applicative-order</em> language.</li>
+<li><em>Normal-order</em> languages use <em>lazy evaluation</em> to delay evaluation as long as possible.</li>
+<li>Consider this procedure:</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(try a b) (<span class="kw">if</span> <span class="op">=</span> a <span class="dv">0</span>) <span class="dv">1</span> b)</span></code></pre></div>
+<ul>
+<li>In Scheme, <code>(try 0 (/ 1 0))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
+<li>In a lazy language, we can implement <code>if</code> as an ordinary procedure.</li>
+</ul>
+<h3 id="4.2.2">
+<a class="anchor" href="#4.2.2">#</a>An Interpreter with Lazy Evaluation<small class="number">4.2.2</small>
+</h3>
+<ul>
+<li>In this section, we will modify the interpreter to support lazy evaluation.</li>
+<li>The lazy evaluator <em>delays</em> certain arguments, transforming them into <em>thunks</em>.</li>
+<li>The expression in a thunk does not get evaluated until the thunk is <em>forced</em>.</li>
+<li>A thunk gets forced when its value is needed:
+<ul>
+<li>when passed to a primitive procedure;</li>
+<li>when it is the predicate of conditional;</li>
+<li>when it is an operator about to be applied as a procedure.</li>
+</ul></li>
+<li>This is similar to <a href="#streams-are-delayed-lists">streams</a>, but uniform and automatic throughout the language.</li>
+<li>For efficiency, we’ll make our interpreter <em>memoize</em> thunks.
+<ul>
+<li>This is called <em>call-by-need</em>, as opposed to non-memoized <em>call-by-name</em>.</li>
+<li>It raises subtle and confusing issues in the presence of assignments.</li>
+</ul></li>
+</ul>
+<h4 id="4.2.2.2">
+<a class="anchor" href="#4.2.2.2">#</a>Modifying the evaluator
+</h4>
+<ul>
+<li>The main change required is the procedure application logic in <code>eval</code> and <code>apply</code>.</li>
+<li>The <code>application?</code> clause of <code>eval</code> becomes:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>((application? <span class="kw">exp</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> (apply (actual-value (operator <span class="kw">exp</span>) env)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        (operands <span class="kw">exp</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        env))</span></code></pre></div>
+<ul>
+<li>Whenever we need the actual value of an expression, we force in addition to evaluating:</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(actual-value <span class="kw">exp</span> env) (force-it (<span class="kw">eval</span> <span class="kw">exp</span> env)))</span></code></pre></div>
+<ul>
+<li>We change <code>apply</code> to take <code>env</code>, and use <code>list-of-arg-values</code> and <code>list-of-delayed-args</code>:</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(apply procedure arguments env)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((primitive-procedure? procedure)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         (apply-primitive-procedure</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>          procedure</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>          (list-of-arg-values arguments env)))  <span class="co">; changed</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        ((compound-procedure? procedure)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         (eval-sequence</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>          (procedure-body procedure)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>          (extend-environment</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>           (procedure-parameters procedure)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>           (list-of-delayed-args arguments env) <span class="co">; changed</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
+<ul>
+<li>We also need to change <code>eval-if</code> to use <code>actual-value</code> on the predicate:</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(eval-if <span class="kw">exp</span> env)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (true? (actual-value (if-predicate <span class="kw">exp</span>) env))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eval</span> (if-consequent <span class="kw">exp</span>) env)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eval</span> (if-alternative <span class="kw">exp</span>) env)))</span></code></pre></div>
+<h4 id="4.2.2.2">
+<a class="anchor" href="#4.2.2.2">#</a>Representing thunks
+</h4>
+<ul>
+<li>To force a thunk, we evaluate it in its environment. We use <code>actual-value</code> instead of <code>eval</code> so that it recursively forces if the result is another thunk:</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(force-it obj)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (thunk? obj)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      (actual-value (thunk-exp obj) (thunk-env obj))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      obj))</span></code></pre></div>
+<ul>
+<li>We can represent thunks simply by a list containing the expression and environment:</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(delay-it <span class="kw">exp</span> env) (<span class="kw">list</span> &#39;thunk <span class="kw">exp</span> env))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(thunk? obj) (tagged-list? obj &#39;thunk))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(thunk-exp thunk) (<span class="kw">cadr</span> thunk))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(thunk-env thunk) (<span class="kw">caddr</span> thunk))</span></code></pre></div>
+<ul>
+<li>To memoize thunks, <code>force-it</code> becomes a bit more complicated.</li>
+</ul>
+<h3 id="4.2.3">
+<a class="anchor" href="#4.2.3">#</a>Streams as Lazy Lists<small class="number">4.2.3</small>
+</h3>
+<ul>
+<li>Before introducing lazy evaluation, we <a href="#streams-are-delayed-lists">implemented streams as delayed lists</a>.</li>
+<li>We can instead formulate streams as <em>lazy</em> lists. There are two advantages:
+<ol type="1">
+<li>No need for special forms <code>delay</code> and <code>cons-stream</code>.</li>
+<li>No need for separate list and stream operations.</li>
+</ol></li>
+<li>All we need to do is make <code>cons</code> lazy, either by introducing non-strict primitives or by defining <code>cons</code>, <code>car</code>, and <code>cdr</code> <a href="#what-is-meant-by-data">as compound procedures</a>.</li>
+<li>Now we can write code without distinguishing normal lists from infinite ones:</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> ones </span>(<span class="kw">cons</span> <span class="dv">1</span> ones))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(scale-list items factor) (map (<span class="kw">lambda</span> (x) (<span class="op">*</span> x factor)) items))</span></code></pre></div>
+<ul>
+<li>These lazy lists are even lazier than our original streams, since the <code>car</code> is delayed too.</li>
+<li>This also eliminates <a href="#streams-and-delayed-evaluation">the problems we had earlier</a> around having to explicitly delay and force some arguments when computing integrals.</li>
+</ul>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+</nav>
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>

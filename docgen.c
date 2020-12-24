@@ -19,11 +19,6 @@
 // Returns the length of an array.
 #define ARRAYLEN(a) (sizeof a / sizeof a[0])
 
-// Helpers to construct input/output paths.
-#define MARKDOWN(f) ("notes/" f ".md")
-#define HTML(f) ("docs/" f ".html")
-#define SUBDIR(d) ("docs/" d "/")
-
 // Returns true if s starts with the given prefix.
 static bool startswith(const char *s, const char *prefix) {
     return strncmp(s, prefix, strlen(prefix)) == 0;
@@ -32,7 +27,7 @@ static bool startswith(const char *s, const char *prefix) {
 // Returns true if s ends with the given suffix.
 static bool endswith(const char *s, const char *suffix) {
     const int n = strlen(s);
-    const int m = strlen(s);
+    const int m = strlen(suffix);
     return n >= m && strncmp(s + (n - m), suffix, m) == 0;
 }
 
@@ -191,8 +186,8 @@ static bool wait_pandoc(struct PandocProc *proc) {
 
 // A Markdown section is represented by an integer s, where:
 //
-//     s & (MS_MASK << 0*MS_BITS)  gives the h1 level,
-//     s & (MS_MASK << 1*MS_BITS)  gives the h2 level,
+//     (s >> 0*MS_BITS) & MS_MASK  gives the h1 level,
+//     (s >> 1*MS_BITS) & MS_MASK  gives the h2 level,
 //     ...
 //
 // A level of 0 means that heading has not been encountered yet.
@@ -316,6 +311,25 @@ static struct MarkdownHeading parse_md_heading(const char *line, int len) {
     };
 }
 
+// Helpers to construct input/output paths.
+#define MARKDOWN(f) ("notes/" f ".md")
+#define HTML(f) ("docs/" f ".html")
+#define SUBDIR(d) ("docs/" d "/")
+
+// Number of chapters in the textbook.
+#define NUM_CHAPTERS 5
+
+// Returns the number of sections in the given chapter.
+static int num_sections(int chapter) {
+    return (int[]){3, 5, 5, 4, 5}[chapter-1];
+}
+
+// Returns the Markdown section for the given textbook chapter/section.
+static MarkdownSection text_md_section(int chapter, int section) {
+    // Add 1 since "# Frontmatter" is the first h1.
+    return chapter + 1 | (section << MS_BITS);
+}
+
 // Generates docs/index.html.
 static bool gen_index(void) {
     return pandoc((struct PandocOpts){
@@ -430,12 +444,180 @@ static bool gen_text_front(void) {
 
 // Generates docs/text/*/index.html.
 static bool gen_text_chapter(const char *output) {
-    return true;
+    const char *slash = strrchr(output, '/');
+    if (!(slash && slash > output && strcmp(slash, "/index.html") == 0)) {
+        goto invalid;
+    }
+    const int chapter = slash[-1] - '0';
+    if (!(chapter >= 1 && chapter <= NUM_CHAPTERS)) {
+        goto invalid;
+    }
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("text"))) {
+        return false;
+    }
+    char title[] = "SICP Chapter _ Notes";
+    title[13] = '0' + chapter;
+    const char *prev;
+    char prev_buf[] = "../_/_.html";
+    if (chapter == 1) {
+        prev = "../front.html";
+    } else {
+        prev_buf[3] = '0' + chapter - 1;
+        prev_buf[5] = '0' + num_sections(chapter - 1);
+        prev = prev_buf;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = output,
+        .title = title,
+        .active = "text",
+        .root = "../../",
+        .prev = prev,
+        .up = "../index.html",
+        .next = "1.html",
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    const MarkdownSection target_section = text_md_section(chapter, 0);
+    while (scan_md(&state) && state.section != target_section);
+    assert(state.section == target_section);
+    struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+    assert(h.label);
+    dprintf(proc.in, "<h1>%.*s<small class=\"number\">%.*s</small></h1>\n",
+        h.title_len, h.title, h.label_len, h.label);
+    while (scan_md(&state) && state.heading == 0) {
+        write(proc.in, state.line, state.len);
+    }
+    dprintf(proc.in,
+        "\n## Contents\n\n"
+        "<ul class=\"toc\">");
+    const char *close = "";
+    do {
+        if (state.heading == 2) {
+            h = parse_md_heading(state.line, state.len);
+            const int section = (state.section >> MS_BITS) & MS_MASK;
+            dprintf(proc.in,
+                "%s<li class=\"toc__item\">"
+                "<span class=\"toc__label\">%.*s</span>"
+                "<a class=\"toc__link\" href=\"%d.html\">%.*s</a>"
+                "<ul>",
+                close, h.label_len, h.label, section, h.title_len, h.title);
+            close = "</ul></li>";
+        } else if (state.heading == 3) {
+            h = parse_md_heading(state.line, state.len);
+            const int section = (state.section >> MS_BITS) & MS_MASK;
+            const int subsection = (state.section >> 2*MS_BITS) & MS_MASK;
+            dprintf(proc.in,
+                "<li class=\"toc__item\">"
+                "<span class=\"toc__label\">%.*s</span>"
+                "<a class=\"toc__link\" href=\"%d.html#%d.%d.%d\">%.*s</a>"
+                "</li>",
+                h.label_len, h.label, section, chapter, section, subsection,
+                h.title_len, h.title);
+        }
+    } while (scan_md(&state) && state.heading != 1);
+    dprintf(proc.in, "</ul></li></ul>\n");
+    return wait_pandoc(&proc);
+invalid:
+    fprintf(stderr, "%s: invalid text chapter\n", output);
+    return false;
 }
 
 // Generates docs/text/*/*.html.
 static bool gen_text_section(const char *output) {
-    return true;
+    const char *slash = strrchr(output, '/');
+    if (!(slash && slash > output && slash[1])) {
+        goto invalid;
+    }
+    const int chapter = slash[-1] - '0';
+    const int section = slash[1] - '0';
+    const int last_section = num_sections(chapter);
+    if (!(chapter >= 1 && chapter <= 5
+            && section >= 1 && section <= last_section)) {
+        goto invalid;
+    }
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("text"))) {
+        return false;
+    }
+    char title[] = "SICP Section _._ Notes";
+    title[13] = '0' + chapter;
+    title[15] = '0' + section;
+    const char *prev;
+    char prev_buf[] = "_.html";
+    if (section == 1) {
+        prev = "index.html";
+    } else {
+        prev_buf[0] = '0' + section - 1;
+        prev = prev_buf;
+    }
+    char *next;
+    char next_buf[] = "../_/index.html";
+    if (chapter == NUM_CHAPTERS && section == last_section) {
+        next = NULL;
+    } else if (section == last_section) {
+        next_buf[3] = '0' + chapter + 1;
+        next = next_buf;
+    } else {
+        snprintf(next_buf, sizeof next_buf, "%d.html", section + 1);
+        next = next_buf;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = output,
+        .title = title,
+        .active = "text",
+        .root = "../../",
+        .prev = prev,
+        .up = "index.html",
+        .next = next,
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    const MarkdownSection target_section = text_md_section(chapter, section);
+    while (scan_md(&state) && state.section != target_section);
+    assert(state.section == target_section);
+    struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+    assert(h.label);
+    dprintf(proc.in, "<h1>%.*s<small class=\"number\">%.*s</small></h1>\n",
+        h.title_len, h.title, h.label_len, h.label);
+    while (scan_md(&state) && state.heading != 1 && state.heading != 2) {
+        if (state.heading >= 3) {
+            h = parse_md_heading(state.line, state.len);
+            if (h.label) {
+                dprintf(proc.in,
+                    "<h%d id=\"%.*s\">"
+                    "<a class=\"anchor\" href=\"#%.*s\">#</a>"
+                    "%.*s"
+                    "<small class=\"number\">%.*s</small>"
+                    "</h%d>\n",
+                    state.heading, h.label_len, h.label, h.label_len, h.label,
+                    h.title_len, h.title, h.label_len, h.label, state.heading);
+            } else {
+                char id[] = "_._._._";
+                snprintf(id, sizeof id, "%d.%d.%d.%d", chapter, section,
+                    (int)((state.section >> MS_BITS) & MS_MASK),
+                    (int)((state.section >> 2*MS_BITS) & MS_MASK));
+                dprintf(proc.in,
+                    "<h%d id=\"%s\">"
+                    "<a class=\"anchor\" href=\"#%s\">#</a>"
+                    "%.*s"
+                    "</h%d>\n",
+                    state.heading, id, id, h.title_len, h.title, state.heading);
+            }
+        } else {
+            write(proc.in, state.line, state.len);
+        }
+    }
+    return wait_pandoc(&proc);
+invalid:
+    fprintf(stderr, "%s: invalid text section\n", output);
+    return false;
 }
 
 // Generates docs/lecture/index.html.
@@ -475,11 +657,9 @@ static bool gen_lecture_index(void) {
             dprintf(proc.in,
                 "<li class=\"toc__item\">"
                 "<span class=\"toc__label\">%.*s</span>"
-                "<a class=\"toc__link\" href=\"%.*s.html\">%.*s</a>"
+                "<a class=\"toc__link\" href=\"%s.html\">%.*s</a>"
                 "</li>",
-                h.label_len, h.label,
-                h.label_len, href,
-                h.title_len, h.title);
+                h.label_len, h.label, href, h.title_len, h.title);
             free(href);
         }
     } while (scan_md(&state));

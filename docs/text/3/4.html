@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 3.4 Notes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   var macros = [];
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      macros: macros,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="../../index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item sitenav__item--active" href="../../text/index.html">Text</a>
+    <a class="sitenav__item" href="../../lecture/index.html">Lecture</a>
+    <a class="sitenav__item" href="../../exercise/index.html">Exercise</a>
+    <a class="sitenav__item" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a>
+  </nav>
+</header>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+</nav>
+<h1>
+Concurrency: Time Is of the Essence<small class="number">3.4</small>
+</h1>
+<ul>
+<li>The power of stateful computational objects comes at a price: the loss of referential transparency.</li>
+<li>This gives rise to a thicket of questions about sameness and change, and we had to create a more intricate evaluation model.</li>
+<li>The central issue is that by introducing assignment we are forced to admit <em>time</em> in the computational model.</li>
+<li>We can go further in structuring the model to match the world: in the physical world, we perceive simultaneous changes.</li>
+<li>We want computational processes executing <em>concurrently</em>.</li>
+<li>Writing programs this way forces us to avoid inessential timing constraints, making the program more modular.</li>
+<li>It can also provide a speed advantage on multicore computers.</li>
+<li>The complexities introduces by assignment become even more problematic in the presence of concurrency.</li>
+</ul>
+<h3 id="3.4.1">
+<a class="anchor" href="#3.4.1">#</a>The Nature of Time in Concurrent Systems<small class="number">3.4.1</small>
+</h3>
+<ul>
+<li>On the surface, time is straightforward: it is an ordering.</li>
+<li>Two events either occur in one order, or the other, or simultaneously.</li>
+<li>Consider <code>(set! balance (- balance amount))</code>. There are three steps: accessing the value of <code>balance</code>, computing the new balance, and setting <code>balance</code> to this value.</li>
+<li>Two such expressions executed concurrently on the same <code>balance</code> variable could have their three steps interleaved.</li>
+<li>The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.</li>
+</ul>
+<h4 id="3.4.4.1">
+<a class="anchor" href="#3.4.4.1">#</a>Correct behavior of concurrent programs
+</h4>
+<ul>
+<li>We already know we have to be careful about order with <code>set!</code>.</li>
+<li>With concurrent programs we must be especially careful.</li>
+<li>A very stringent restriction to ensure correctness: disallow changing more than one state variable at a time.</li>
+<li>A less stringent restriction: to ensure that the system produces the same result as if the processes had run sequentially in some order (we don’t specify a particular order).</li>
+<li>Concurrent programs are inherently <em>nondeterministic</em>, because we don’t what order of execution its result is equivalent to, so there is a set of possible values it could take.</li>
+</ul>
+<h3 id="3.4.2">
+<a class="anchor" href="#3.4.2">#</a>Mechanisms for Controlling Concurrency<small class="number">3.4.2</small>
+</h3>
+<ul>
+<li>If one process has three ordered events <span class="math inline">(a,b,c)</span> and another, running concurrently, has three ordered events <span class="math inline">(x,y,z)</span>, then there are twenty ways of interleaving them.</li>
+<li>The programmer would have to consider the results in all twenty cases to be confident in the program.</li>
+<li>A better approach is to use mechanisms to constrain interleaving to ensure correct behavior.</li>
+</ul>
+<h4 id="3.4.4.2">
+<a class="anchor" href="#3.4.4.2">#</a>Serializing access to shared state
+</h4>
+<ul>
+<li>Serialization groups procedures into sets such and prevents multiple procedures in the same set from executing concurrently.</li>
+<li>We can use this to control access to shared variables.</li>
+<li>Before, assignments based on a state variables current value were problematic. We could solve this with the set {<code>get-value</code>, <code>set-value!</code>, and <code>swap-value!</code>} where the latter is defined like so:</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(swap-value! f)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (set-value! (f (get-value))))</span></code></pre></div>
+<h4 id="3.4.4.2">
+<a class="anchor" href="#3.4.4.2">#</a>Serializers in Scheme
+</h4>
+<ul>
+<li>Suppose we have a procedure <code>parallel-execute</code> that takes a variable number of arguments that are procedures of no arguments, and executes them all concurrently.</li>
+<li>We construct <em>serializers</em> with <code>(make-serializer)</code>.</li>
+<li>A serializer takes a procedure as its argument and returns a serialized procedure that behaves like the original.</li>
+<li>Calls to the same serializer return procedures in the same set.</li>
+</ul>
+<h4 id="3.4.4.2">
+<a class="anchor" href="#3.4.4.2">#</a>Complexity of using multiple shared resources
+</h4>
+<ul>
+<li>Serializers are powerful, and easy to use for one resource.</li>
+<li>Things get much more difficult with multiple shared resources.</li>
+<li>Suppose we want to swap the balances in two bank accounts:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(exchange acc1 acc2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((diff (<span class="op">-</span> (acc1 &#39;balance) (acc2 &#39;balance))))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    ((acc1 &#39;withdraw) diff)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ((acc2 &#39;deposit) diff)))</span></code></pre></div>
+<ul>
+<li>Serializing deposits and withdrawals themselves is not enough to ensure correctness.</li>
+<li>The exchange comprises four individually serialized steps, and these may interleave with a concurrent process.</li>
+<li>One solution is to expose the serializer from <code>make-account</code>, and use that to serialize the entire exchanging procedure.</li>
+<li>We would have to manually serialize deposits, but this would give us the flexibility to serialize the exchanging procedure.</li>
+</ul>
+<h4 id="3.4.4.2">
+<a class="anchor" href="#3.4.4.2">#</a>Implementing serializers
+</h4>
+<ul>
+<li>Serializers are implemented in terms of the primitive <em>mutex</em>.</li>
+<li>A mutex can be <em>acquired</em> and it can be <em>released</em>.</li>
+<li>Once acquired, no other acquire operations can proceed until the mutex is released.</li>
+<li>Each serializer has an associated mutex.</li>
+<li>A serialized procedure (created with <code>(s proc)</code> where <code>s</code> is a serializer) does the following when it is run:
+<ul>
+<li>acquire the mutex,</li>
+<li>run the procedure <code>proc</code>,</li>
+<li>release the mutex.</li>
+</ul></li>
+<li>The mutex is a mutable object, represented by a <em>cell</em> (a one-element list). It holds a boolean value, indicating whether or not it is currently locked.</li>
+<li>To acquire the mutex, we test the cell. We wait until it is false, then we set it to true and proceed.</li>
+<li>To release the mutex, we set its contents to false.</li>
+</ul>
+<h4 id="3.4.4.2">
+<a class="anchor" href="#3.4.4.2">#</a>Deadlock
+</h4>
+<ul>
+<li>Even with a proper implementation of mutexes and seralizers, we still have a problem with the account exchanging procedure.</li>
+<li>We serialize the whole procedure with both accounts so that an account may only participate in one exchange at a time.</li>
+<li>There are two mutexes, so it is possible for something to happen in between acquiring the first and the second.</li>
+<li>If we exchange <code>a1</code> with <code>a2</code> and concurrently do the reverse exchange, it is possible for the first process to lock <code>a1</code> and the second process to lock <code>a2</code>.</li>
+<li>Now both need to lock the other, but they can’t. This situation is called <em>deadlock</em>.</li>
+<li>In this case, we can fix the problem by locking accounts in a particular order based on a unique identifier.</li>
+<li>In some cases, it is not possible to avoid deadlock, and we simply have to “back out” and try again.</li>
+</ul>
+<h4 id="3.4.4.2">
+<a class="anchor" href="#3.4.4.2">#</a>Concurrency, time, and communication
+</h4>
+<ul>
+<li>Concurrency can be tricky because it’s not always clear what is meant by “shared state.”</li>
+<li>It also becomes more complicated in large, distributed systems.</li>
+<li>The notion of time in concurrency control must be intimately linked to <em>communication</em>.</li>
+<li>There are some parallels with the theory of relativity.</li>
+</ul>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+</nav>
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 2.4 Notes</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="../../index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item sitenav__item--active" href="../../text/index.html">Text</a>
+    <a class="sitenav__item" href="../../lecture/index.html">Lecture</a>
+    <a class="sitenav__item" href="../../exercise/index.html">Exercise</a>
+    <a class="sitenav__item" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a>
+  </nav>
+</header>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+</nav>
+<h1>
+Multiple Representations for Abstract Data<small class="number">2.4</small>
+</h1>
+<ul>
+<li>Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.</li>
+<li>We erect abstraction barriers to control complexity.</li>
+<li>This still isn’t powerful enough – it doesn’t always make sense to speak of the “underlying representation.”</li>
+<li>We might want to deal with multiple representations.</li>
+<li>For example, complex numbers can be represented in rectangular form or in polar form.</li>
+<li>We need abstraction barriers that isolate representation from use <em>and</em> others that isolate design choices.</li>
+<li>We want to permit multiple design choices to coexist.</li>
+<li>This is important for modularity.</li>
+<li>We will construct <em>generic procedures</em>, which can operate on data that may be represented in more than one way.</li>
+<li>We will accomplish this with <em>type tags</em>. We will also discuss <em>data-directed</em> programming.</li>
+<li>We now have horizontal abstraction barriers, separating higher-level from lower-level, and vertical ones, separately alternative representations.</li>
+</ul>
+<h3 id="2.4.1">
+<a class="anchor" href="#2.4.1">#</a>Representations for Complex Numbers<small class="number">2.4.1</small>
+</h3>
+<ul>
+<li>This system will perform arithmetic operations on complex numbers represented in rectangular form <em>or</em> polar form.</li>
+<li>Different representations are appropriate for different operations.</li>
+<li>We have four selectors: <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>.</li>
+<li>We have two constructors: <code>make-from-real-img</code> and <code>make-from-mag-ang</code>.</li>
+</ul>
+<h3 id="2.4.2">
+<a class="anchor" href="#2.4.2">#</a>Tagged Data<small class="number">2.4.2</small>
+</h3>
+<ul>
+<li>One way to view data abstraction: principle of least commitment.</li>
+<li>We waited until the last minute to choose the concrete representation, retaining maximum flexibility.</li>
+<li>We can take it even further: let’s use <em>both</em>!</li>
+<li>To include both in the same system, we need some way of distinguishing between them.</li>
+<li>We will use a symbol as a type tag.</li>
+<li>Each generic selector uses case analysis to check the tag of its argument and dispatches the appropriate procedure.</li>
+<li>Our general mechanism for interfacing separate representations: in a specific implementation, the data object is an untyped pair. The generic selectors dispatch on the tag and strip off the tag before passing the data to the appropriate procedure.</li>
+</ul>
+<h3 id="2.4.3">
+<a class="anchor" href="#2.4.3">#</a>Data-Directed Programming and Additivity<small class="number">2.4.3</small>
+</h3>
+<ul>
+<li>The strategy of checking the type and calling an appropriate procedure is called dispatching on type.</li>
+<li>The implementation in the <a href="#tagged-data">previous section</a> had two significant weaknesses:
+<ol type="1">
+<li>The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.</li>
+<li>We must guarantee that no two procedures have the same name.</li>
+</ol></li>
+<li>The underlying issue: the technique we used was not <em>additive</em>.</li>
+<li>This is a source of inconvenience and error.</li>
+<li>The solution is a technique known as data-directed programming.</li>
+<li>We imagine a table with operations on one axis and possible types on the other axis.</li>
+<li>Before, we used case analysis to perform explicit dispatch.</li>
+<li>With DDP, we use a single procedure that looks up the operation name and the argument type in the table.</li>
+<li>We assume we have procedures <code>put</code> and <code>get</code>.</li>
+<li><code>(put op type item)</code> installs <code>item</code> in the table.</li>
+<li><code>(get op type)</code> retrieves the item.</li>
+</ul>
+<h4 id="2.4.4.3">
+<a class="anchor" href="#2.4.4.3">#</a>Message passing
+</h4>
+<ul>
+<li>Data-directed programming handles generic operations by dealing explicitly with operation-and-type tables.</li>
+<li>In our example, each operation took care of its own dispatching.</li>
+<li>An alternative approach is to dispatch on the operator name within the data object itself.</li>
+<li>Rather than applying a generic operation to a data object on which it dispatches to the appropriate procedure, we apply the data object to a message.</li>
+<li>This is called message-passing style, and we can accomplish it in Scheme using closures.</li>
+<li>Message passing can be a powerful tool for structuring simulation programs.</li>
+</ul>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+</nav>
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 2.3 Notes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   var macros = [];
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      macros: macros,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="../../index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item sitenav__item--active" href="../../text/index.html">Text</a>
+    <a class="sitenav__item" href="../../lecture/index.html">Lecture</a>
+    <a class="sitenav__item" href="../../exercise/index.html">Exercise</a>
+    <a class="sitenav__item" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a>
+  </nav>
+</header>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="4.html">Next →</a></div>
+</nav>
+<h1>
+Symbolic Data<small class="number">2.3</small>
+</h1>
+<ul>
+<li>So far we have constructed compound data from numbers only.</li>
+<li>Now, we will work with arbitrary symbols.</li>
+</ul>
+<h3 id="2.3.1">
+<a class="anchor" href="#2.3.1">#</a>Quotation<small class="number">2.3.1</small>
+</h3>
+<ul>
+<li>Lists containing symbols look just like expressions (code).</li>
+<li>We need to <em>quote</em> data objects to manipulate symbols.</li>
+<li>To make the list <code>(a b)</code>, we can’t just do <code>(list a b)</code> because this will evaluate <code>a</code> and <code>b</code>.</li>
+<li>This is just like natural language. If I say, “Say your name,” you will say the <em>value</em> of “your name.” If I instead say, “Say ‘your name,’” you will literally say the words “your name.”</li>
+<li>To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.</li>
+<li>Here is the difference between symbols and their values:</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> a </span><span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> b </span><span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">list</span> a b)   <span class="co">; =&gt; (1 2)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">list</span> &#39;a &#39;b) <span class="co">; =&gt; (a b)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">list</span> &#39;a b)  <span class="co">; =&gt; (a 2)</span></span></code></pre></div>
+<ul>
+<li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>'()</code>.</li>
+<li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
+</ul>
+<h3 id="2.3.2">
+<a class="anchor" href="#2.3.2">#</a>Example: Symbolic Differentiation<small class="number">2.3.2</small>
+</h3>
+<ul>
+<li>Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.</li>
+<li>We will worry about representation later (data abstraction).</li>
+</ul>
+<h4 id="2.3.3.2">
+<a class="anchor" href="#2.3.3.2">#</a>The differentiation program with abstract data
+</h4>
+<ul>
+<li>To start, we will only consider addition and multiplication.</li>
+<li>We need the constant rule, the sum rule, and the product rule.</li>
+<li>We will assume we already have these procedures:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(variable? e)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(same-variable? v1 v2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(sum? e)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(addend e)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(augend e)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(make-sum a1 a2)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>(product? e)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>(multiplier e)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(multiplicand e)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>(make-product m1 m2)</span></code></pre></div>
+<h4 id="2.3.3.2">
+<a class="anchor" href="#2.3.3.2">#</a>Representing algebraic expressions
+</h4>
+<ul>
+<li>There are many ways we could represent algebraic expressions.</li>
+<li>The most straightforward is in parenthesized Polish notation: Lisp syntax.</li>
+<li>We can simplify the answers just like we did in the rational number example: by changing the constructors.</li>
+<li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
+</ul>
+<h3 id="2.3.3">
+<a class="anchor" href="#2.3.3">#</a>Example: Representing Sets<small class="number">2.3.3</small>
+</h3>
+<p>There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:</p>
+<ul>
+<li><code>union-set</code>: new set containing all items of given sets</li>
+<li><code>intersection-set</code>: new set containing only the items that all given sets share</li>
+<li><code>element-of-set?</code>: predicate for an item’s presence in a set</li>
+<li><code>adjoin-set</code>: new set containing one new item</li>
+</ul>
+<h4 id="2.3.3.3">
+<a class="anchor" href="#2.3.3.3">#</a>Sets as unordered lists
+</h4>
+<ul>
+<li>One method is to just use lists. Each time we add a new element, we have to check to make sure it isn’t already in the set.</li>
+<li>This isn’t very efficient.</li>
+<li>The time complexity of <code>element-of-set?</code> (and therefore for <code>adjoin-set</code>) is <span class="math inline">Θ(n)</span>.</li>
+<li>For union and intersection, it’s <span class="math inline">Θ(n^2)</span>.</li>
+<li>If we don’t eliminate duplicates, most operations are faster.</li>
+<li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
+</ul>
+<h4 id="2.3.3.3">
+<a class="anchor" href="#2.3.3.3">#</a>Sets as ordered lists
+</h4>
+<ul>
+<li>A more efficient representation is a sorted list.</li>
+<li>We will only consider sets of numbers to keep things simple.</li>
+<li>Now, scanning the entire list in <code>element-of-set?</code> is a worst-case scenario. Most of the time we won’t have to.</li>
+<li>On average we should expect to scan about half of the set.</li>
+<li>This is still <span class="math inline">Θ(n)</span>; however, intersection gets much faster. Instead of <span class="math inline">Θ(n^2)</span>, it is <span class="math inline">Θ(n)</span>.</li>
+</ul>
+<h4 id="2.3.3.3">
+<a class="anchor" href="#2.3.3.3">#</a>Sets as binary trees
+</h4>
+<ul>
+<li>An even more efficient representation: binary trees.</li>
+<li>Each node contains an element of the set.</li>
+<li>The left branch contains smaller numbers, and the right branch contains larger numbers.</li>
+<li>The same set can be represented by a tree in many ways.</li>
+<li>If the tree is balanced, each subtree is about half the size of the original tree.</li>
+<li>This allows us to do <code>element-of-set?</code> in <span class="math inline">Θ(\log(n))</span> time.</li>
+<li>We will use the following list structure to represent trees: each node is the list <code>(number left-subtree right-subtree)</code>.</li>
+<li>Efficiency hinges on the tree being balanced.</li>
+<li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
+</ul>
+<h4 id="2.3.3.3">
+<a class="anchor" href="#2.3.3.3">#</a>Sets and information retrieval
+</h4>
+<ul>
+<li>The techniques discussed for sets show up again and again in information retrieval.</li>
+<li>In a data-management system, each record is identified by a key.</li>
+<li>The key must be unique.</li>
+<li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides <span class="math inline">Θ(n)</span> access.</li>
+<li>For “random access,” meaning <span class="math inline">Θ(1)</span> access time complexity, trees are usually used.</li>
+<li>Data abstraction is important here – you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
+</ul>
+<h3 id="2.3.4">
+<a class="anchor" href="#2.3.4">#</a>Example: Huffman Encoding Trees<small class="number">2.3.4</small>
+</h3>
+<ul>
+<li>We can represent data as sequences of ones and zeros (bits).</li>
+<li>Codes like ASCII are fixed-length. Each symbol is represented by the same number of bits.</li>
+<li>On the other hand, Morse code is variable-length. Since <em>e</em> is the most common letter, it is represented by a single dot.</li>
+<li>The issue with variable-length is that you must have a way of knowing when you’ve reached the end of a symbol.</li>
+<li>Morse code uses a temporal pause. Prefix codes, like Huffman encoding, ensure that no code for a symbol is a prefix of the code for another symbol. This eliminates any ambiguity.</li>
+<li>A Huffman code can be represented as a binary tree with a symbol and its weight (relative frequency) at each leaf.</li>
+<li>Each non-leaf node has a weight (sum of all below) and the set of all the symbols below it. The root node has the set of all the symbols in the tree.</li>
+<li>Each left branch is a zero, and each right branch is a one.</li>
+</ul>
+<h4 id="2.3.3.4">
+<a class="anchor" href="#2.3.3.4">#</a>Generating Huffman trees
+</h4>
+<ul>
+<li>Huffman gave an algorithm for constructing the best code for a given set of symbols and their relative frequencies.</li>
+<li>Begin with all the nodes as leaves, then form a node branching off to the two least frequent symbols.</li>
+<li>Repeat until there is only one node left, the root node.</li>
+</ul>
+<h4 id="2.3.3.4">
+<a class="anchor" href="#2.3.3.4">#</a>Representing Huffman trees
+</h4>
+<ul>
+<li>Leaves are represented by the list beginning with the symbol <code>leaf</code> and with two more elements: the symbol and the weight.</li>
+<li>Trees are represented by the list <code>(left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
+</ul>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="4.html">Next →</a></div>
+</nav>
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>

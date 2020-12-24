@@ -2165,3 +2165,17 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ## 4.3: Variations on a Scheme --- Nondeterministic Computing
 
 - _Nondeterministic computing_
+
+## 4.4: Logic Programming
+
+# 5: Computing with Register Machines
+
+## 5.1: Designing Register Machines
+
+## 5.2: A Register-Machine Simulator
+
+## 5.3: Storage Allocation and Garbage Collection
+
+## 5.4: The Explicit-Control Evaluator
+
+## 5.5: Compilation

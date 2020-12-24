@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 2.2 Notes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   var macros = [];
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      macros: macros,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="../../index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item sitenav__item--active" href="../../text/index.html">Text</a>
+    <a class="sitenav__item" href="../../lecture/index.html">Lecture</a>
+    <a class="sitenav__item" href="../../exercise/index.html">Exercise</a>
+    <a class="sitenav__item" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a>
+  </nav>
+</header>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+</nav>
+<h1>
+Hierarchical Data and the Closure Property<small class="number">2.2</small>
+</h1>
+<ul>
+<li>Paris form a primitive “glue” for compound data objects.</li>
+<li>We can visualize cons pairs with <em>box-and-pointer</em> notation.</li>
+<li>Each pair is a double box. Both the left box and the right box contain an arrow pointing to something else: either to a primitive data object, or to another cons pair.</li>
+<li>The <em>closure property</em> of cons is the ability to make pairs whose elements are pairs.</li>
+<li>Closure allows us to create hierarchal structures.</li>
+<li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
+</ul>
+<h3 id="2.2.1">
+<a class="anchor" href="#2.2.1">#</a>Representing Sequences<small class="number">2.2.1</small>
+</h3>
+<ul>
+<li>Among the things we can build with pairs is a sequence.</li>
+<li>A sequence is an ordered collection of data objects.</li>
+<li>The <code>car</code> of each pair is the corresponding item in the chain, and the <code>cdr</code> of the pair is the next pair in the chain.</li>
+<li>The <code>cdr</code> of the final pair is a special value, nil.</li>
+<li>This sequence of nested conses is called a <em>list</em>.</li>
+<li>We usually represent such lists by placing each element one after the other and enclosing the whole thing in parentheses.</li>
+<li>The procedure <code>car</code> gives us the first item; <code>cdr</code> gives us the sublist containing all items but the first; <code>cons</code> returns a list with an item added to the front.</li>
+<li>The nil value can be thought of as an empty list.</li>
+</ul>
+<h4 id="2.2.2.1">
+<a class="anchor" href="#2.2.2.1">#</a>List operations
+</h4>
+<ul>
+<li>We can get at the nth item of the list by <code>cdr</code> ing one less than <span class="math inline">n</span> times, and then taking the <code>car</code>.</li>
+<li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is the empty list.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">list-ref</span> items n)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">=</span> n <span class="dv">0</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">car</span> items)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">list-ref</span> (<span class="kw">cdr</span> items) (<span class="op">-</span> n <span class="dv">1</span>))))</span></code></pre></div>
+<ul>
+<li>We often write recursive procedures that <code>cdr</code> all the way through the list.</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">length</span> items)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> items)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="dv">0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> <span class="dv">1</span> (<span class="kw">length</span> (<span class="kw">cdr</span> items)))))</span></code></pre></div>
+<ul>
+<li>We can build up lists to return by <code>cons</code> ing them up.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">append</span> list1 list2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> list1)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      list2</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cons</span> (<span class="kw">car</span> list1 (<span class="kw">append</span> (<span class="kw">cdr</span> list1) list2)))))</span></code></pre></div>
+<h4 id="2.2.2.1">
+<a class="anchor" href="#2.2.2.1">#</a>Mapping over lists
+</h4>
+<ul>
+<li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
+<li>This is a higher-order procedure called <code>map</code>.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(map f xs)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> xs)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      nil</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cons</span> (f (<span class="kw">car</span> xs))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            (map f (<span class="kw">cdr</span> xs)))))</span></code></pre></div>
+<ul>
+<li>Using map, we can do <code>(map abs (list -1 5 -3 0 2 -2))</code> and get back the list <code>(1 5 3 0 2 2)</code>.</li>
+<li>Map establishes a higher level of abstraction for dealing with lists. It suppressive the recursive detail.</li>
+<li>We think about the process differently when we use map.</li>
+</ul>
+<blockquote>
+<p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
+</blockquote>
+<h3 id="2.2.2">
+<a class="anchor" href="#2.2.2">#</a>Hierarchical Structures<small class="number">2.2.2</small>
+</h3>
+<ul>
+<li>We can represent lists whose elements themselves may also be lists. We can also think of them as <em>trees</em>.</li>
+<li>Recursion is a natural tool for dealing with trees.</li>
+<li>The primitive predicate <code>pair?</code> returns true if its argument is a pair (formed with cons).</li>
+<li>We can count the number of leaves in a tree with this:</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(count-leaves x)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((<span class="kw">null?</span> x) <span class="dv">0</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        ((<span class="kw">not</span> (<span class="kw">pair?</span> x)) <span class="dv">1</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="op">+</span> (count-leaves (<span class="kw">car</span> x))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 (count-leaves (<span class="kw">cdr</span> x))))))</span></code></pre></div>
+<h4 id="2.2.2.2">
+<a class="anchor" href="#2.2.2.2">#</a>Mapping over trees
+</h4>
+<ul>
+<li>We can deal with trees using <code>map</code> together with recursion.</li>
+<li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
+</ul>
+<h3 id="2.2.3">
+<a class="anchor" href="#2.2.3">#</a>Sequences as Conventional Interfaces<small class="number">2.2.3</small>
+</h3>
+<ul>
+<li>Abstractions preserves the flexibility to experiment with alternative representations.</li>
+<li>Another powerful design principle for working with data structures is the use of conventional interfaces.</li>
+<li>To make abstract operations for things other than numbers, we need to have a conventional style in which we manipulate data.</li>
+</ul>
+<h4 id="2.2.2.3">
+<a class="anchor" href="#2.2.2.3">#</a>Sequence operations
+</h4>
+<ul>
+<li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
+<li>To help, we can implement <code>filter</code> and <code>accumulate</code>.</li>
+<li>Expressing programs as sequence operations helps us make program designs that are <em>modular</em> – made of relatively independent pieces that we can connect in flexible ways.</li>
+<li>This is a strategy for controlling complexity.</li>
+<li>A vast range of operations can be expressed as sequence operations, even if you don’t realize it at first.</li>
+<li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
+</ul>
+<h4 id="2.2.2.3">
+<a class="anchor" href="#2.2.2.3">#</a>Nested mappings
+</h4>
+<ul>
+<li>For many computations, the sequence paradigm can be used where loops would otherwise be needed.</li>
+<li>Sometimes we need to use <em>nested</em> mappings, where each mapping maps to a second set of mappings.</li>
+<li>We can use <code>mapcat</code> to flatten the nested mapping result into one list at the end.</li>
+<li>The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(permutations s)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> s)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">list</span> nil)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (mapcat (<span class="kw">lambda</span> (x)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                (map (<span class="kw">lambda</span> (p) (<span class="kw">cons</span> x p))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     (permutations (<span class="kw">remove</span> x s))))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              s)))</span></code></pre></div>
+<h3 id="2.2.4">
+<a class="anchor" href="#2.2.4">#</a>Example: A Picture Language<small class="number">2.2.4</small>
+</h3>
+<ul>
+<li>We will use a simple language for drawing pictures.</li>
+<li>The data objects are represented as procedures rather than as list structure.</li>
+</ul>
+<h4 id="2.2.2.4">
+<a class="anchor" href="#2.2.2.4">#</a>The picture language
+</h4>
+<ul>
+<li>There is only one kind of element, called a <em>painter</em>.</li>
+<li>The painter draws an image transformed into a parallelogram.</li>
+<li>We combine images with operations like <code>beside</code> and <code>below</code>.</li>
+<li>We transform single images with operations like <code>flip-vert</code> and <code>flip-horiz</code>.</li>
+<li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
+</ul>
+<h4 id="2.2.2.4">
+<a class="anchor" href="#2.2.2.4">#</a>Higher-order operations
+</h4>
+<ul>
+<li>Just as we have higher-order procedures, we can have higher-order painting operations.</li>
+<li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
+</ul>
+<h4 id="2.2.2.4">
+<a class="anchor" href="#2.2.2.4">#</a>Frames
+</h4>
+<ul>
+<li>Painters paint their contents in frames.</li>
+<li>A frame can be represented by three vectors: a position vector for one of the corners, and two vectors going along the edges.</li>
+<li>We can use data abstraction to avoid being specific about how these vectors will actually be represented.</li>
+<li>We will use coordinates in the unit square.</li>
+<li>We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.</li>
+</ul>
+<h4 id="2.2.2.4">
+<a class="anchor" href="#2.2.2.4">#</a>Painters
+</h4>
+<ul>
+<li>A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.</li>
+<li>The details of primitive painters depend on the characteristics of the graphics system.</li>
+<li>Painters as procedures is a powerful abstraction barrier.</li>
+</ul>
+<h4 id="2.2.2.4">
+<a class="anchor" href="#2.2.2.4">#</a>Transforming and combining painters
+</h4>
+<ul>
+<li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
+<li>They are all based on the procedure <code>transform-painter</code>.</li>
+</ul>
+<h4 id="2.2.2.4">
+<a class="anchor" href="#2.2.2.4">#</a>Levels of language for robust design
+</h4>
+<ul>
+<li>The picture language uses abstraction with procedures and data.</li>
+<li>Painters are the data abstraction.</li>
+<li>This example also uses <em>stratified design</em>, the notion that a complex system should be structured as a sequence of levels.</li>
+<li>Each time we start a new level, we treat the old complex things as primitive black boxes and combine them.</li>
+<li>Stratified design helps make programs <em>robust</em>: small changes in a specification will likely mean small changes in the program.</li>
+</ul>
+<blockquote>
+<p>In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it.</p>
+</blockquote>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+</nav>
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>
