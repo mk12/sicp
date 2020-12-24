@@ -1,15 +1,19 @@
 # New to do
 
+- have special callout thing at end of text sections with exercise links
 - put highlight styles in standalone CSS
 - use /text/1#1.2 for section 1.2, /exercise/1#1.32 for Exercise 1.32, etc.
-- note: GH pages allows omitting .html (without need for subfolder + index.html)
+x note: GH pages allows omitting .html (without need for subfolder + index.html)
+    x but want it to work locally, so sticking with .html links
+x link quotes to the SICP website
+    x can't link to precise quote locations so no point.
 - little hash anchors on headings, like github
 - scheme https://coolors.co/98c1d9-2c497f-db5461-fbb5b1-38302e
 - improve Scheme highlighting in docs
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - spell checker for Markdown, integrated in Makefile
 - docs dark mode
-- drawing of wizard book yin/yang for index.hml
++ drawing of wizard book yin/yang for index.hml
 x switch to netlify to avoid checking in docs?
     x No, GitHub pages is simpler. No containers, no slow builds. Just HTML.
 + make check for shellcheck (needs to be distinct from lint for vscode task error recognition)

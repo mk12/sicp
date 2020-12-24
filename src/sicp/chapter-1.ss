@@ -2,7 +2,7 @@
 
 #!r6rs
 
-(library (src book chapter-1)
+(library (src sicp chapter-1)
   (export chapter-1-effects)
   (import (rnrs base (6))
           (src lang sicp))

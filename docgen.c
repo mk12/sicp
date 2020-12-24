@@ -1,56 +1,40 @@
 // Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
 #include <assert.h>
+#include <ctype.h>
+#include <libgen.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
+#include <sys/errno.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-// Path to the output file.
-static const char *output;
+// Returns the length of an array.
+#define ARRAYLEN(a) (sizeof a / sizeof a[0])
 
-// Returns true if s starts with the prefix p.
-#define STARTSWITH(s, p) (strncmp(s, p, strlen(p)) == 0)
-
-// Checks if the output is a given file, or is under a given directory.
-#define IS_FILE(f) (strcmp(output, "docs/" f ".html") == 0)
-#define IS_UNDER(d) (STARTSWITH(output, "docs/" d "/"))
-
-// Constructs the path for an input Markdown file.
+// Helpers to construct input/output paths.
 #define MARKDOWN(f) ("notes/" f ".md")
+#define HTML(f) ("docs/" f ".html")
+#define SUBDIR(d) ("docs/" d "/")
 
-// Name of the pandoc binary.
-static const char *const PANDOC = "pandoc";
+// Returns true if s starts with the given prefix.
+static bool startswith(const char *s, const char *prefix) {
+    return strncmp(s, prefix, strlen(prefix)) == 0;
+}
 
-// Default options to pass to pandoc.
-static const char *const DEFAULT_OPTIONS[] = {
-    "--from=markdown",
-    "--to=html5",
-    "--standalone",
-    "--template=notes/template.html",
-    "--highlight-style=pygments",
-};
-const int N_DEFAULT_OPTIONS =
-    sizeof DEFAULT_OPTIONS / sizeof DEFAULT_OPTIONS[0];
-
-// Options used to invoke pandoc.
-struct PandocOptions {
-    // String that identifies the active page/tab.
-    const char *id;
-    // Contents of <title>...</title>.
-    const char *title;
-    // Relative path to the root of the website.
-    const char *root;
-    // Path to the input file.
-    const char *input;
-    // Depth for table of contents (0 for no TOC).
-    int toc_depth;
-};
+// Returns true if s ends with the given suffix.
+static bool endswith(const char *s, const char *suffix) {
+    const int n = strlen(s);
+    const int m = strlen(s);
+    return n >= m && strncmp(s + (n - m), suffix, m) == 0;
+}
 
 // Concatenates two strings into a newly allocated string.
 static char *concat(const char *s1, const char *s2) {
@@ -63,65 +47,180 @@ static char *concat(const char *s1, const char *s2) {
     return dest;
 }
 
+// Converts s to lowercase in a newly allocated string.
+static char *tolower_s(const char *s, int len) {
+    char *d = strndup(s, len);
+    for (int i = 0; i < len; i++) {
+        d[i] = tolower(d[i]);
+    }
+    return d;
+}
+
+// Name of the pandoc executable.
+static const char *const PANDOC = "pandoc";
+
+// Pandoc options used for all invocations.
+static const char *const PANDOC_OPTIONS[] = {
+    "--from=markdown",
+    "--to=html5",
+    "--standalone",
+    "--template=notes/template.html",
+    "--highlight-style=pygments",
+    "--katex",
+};
+static const int N_PANDOC_OPTIONS = ARRAYLEN(PANDOC_OPTIONS);
+
+// Pandoc options that differ between invocations.
+struct PandocOpts {
+    // Path to the input file.
+    const char *input;
+    // Path to the output file.
+    const char *output;
+    // Contents of <title>...</title>.
+    const char *title;
+    // String that identifies the active tab. Allowed values: "index", "text",
+    // "lecture", and "exercise".
+    const char *active;
+    // Relative path to the root of the website, e.g. "", "../", "../../", etc.
+    const char *root;
+    // Links to up/prev/next page. If any are set, up must be set.
+    const char *up;
+    const char *prev;
+    const char *next;
+};
+
 // Invokes pandoc, printing the command before executing it. Normally does not
-// return since it replaces the current process. Returns 1 on error.
-static int pandoc(const struct PandocOptions opts) {
+// return since it replaces the current process. Returns false on error.
+static bool pandoc(const struct PandocOpts opts) {
     const int LEN =
         1  // pandoc
-        + N_DEFAULT_OPTIONS
-        + 3   // id, title, root
-        + 2   // (optional) toc, toc-depth
         + 2   // -o output
+        + N_PANDOC_OPTIONS
+        + 3   // id, title, root
+        + 3   // (optional) prev, up, next
         + 1   // input
         + 1;  // NULL
     const char *argv[LEN];
     int i = 0;
     argv[i++] = PANDOC;
-    memcpy(argv + i, DEFAULT_OPTIONS, N_DEFAULT_OPTIONS * sizeof argv[0]);
-    i += N_DEFAULT_OPTIONS;
-    // We don't have to clean up these allocations because all this process's
-    // memory will go poof after we call exec.
-    argv[i++] = concat("--metadata=", opts.id);
-    argv[i++] = concat("--metadata=title:", opts.title);
-    argv[i++] = concat("--metadata=root:", opts.root);
-    char toc_depth_arg[] = "--toc-depth=N";
-    if (opts.toc_depth > 0) {
-        assert(opts.toc_depth <= 9);
-        toc_depth_arg[sizeof toc_depth_arg - 2] = '0' + opts.toc_depth;
-        argv[i++] = "--toc";
-        argv[i++] = toc_depth_arg;
-    }
     argv[i++] = "-o";
-    argv[i++] = output;
+    argv[i++] = opts.output;
+    memcpy(argv + i, PANDOC_OPTIONS, N_PANDOC_OPTIONS * sizeof argv[0]);
+    i += N_PANDOC_OPTIONS;
+    // Note: We don't need to free memory allocated by concat because it will
+    // all disappear when execvp replaces the process image.
+    const int title_idx = i;
+    argv[i++] = concat("--metadata=title:", opts.title);
+    argv[i++] = concat("--variable=", opts.active);
+    argv[i++] = concat("--variable=root:", opts.root);
+    if (opts.up) {
+        argv[i++] = concat("--variable=up:", opts.up);
+        if (opts.prev) {
+            argv[i++] = concat("--variable=prev:", opts.prev);
+        }
+        if (opts.next) {
+            argv[i++] = concat("--variable=next:", opts.next);
+        }
+    }
     argv[i++] = opts.input;
     argv[i++] = NULL;
     assert(i <= LEN);
     for (int j = 0; j < i - 1; j++) {
         // Quote the title argument since it has spaces.
-        const char *quote = j == 5 ? "'" : "";
+        const char *quote = j == title_idx ? "'" : "";
         const char *space = j == i - 2 ? "" : " ";
         printf("%s%s%s%s", quote, argv[j], quote, space);
     }
     putchar('\n');
+    // It is safe to cast to (char **) because execvp will not modify argv
+    // except as a consequence of replacing the process image.
     execvp(PANDOC, (char **)argv);
-    perror(NULL);
-    return 1;
+    perror(PANDOC);
+    return false;
+}
+
+// Represents a child process executing pandoc.
+struct PandocProc {
+    // PID of the child process.
+    pid_t pid;
+    // File descriptor for writing to the child's stdin.
+    int in;
+};
+
+// Runs pandoc with opts in a child process, storing its information in proc.
+// The caller should call wait_pandoc after. Returns true on success.
+static bool fork_pandoc(struct PandocProc *proc, struct PandocOpts opts) {
+    // Fork the process, using a pipe for the child's stdin.
+    int fd[2];
+    if (pipe(fd) == -1) {
+        perror("pipe");
+        return false;
+    }
+    if ((proc->pid = fork()) == -1) {
+        perror("fork");
+        close(fd[0]);
+        close(fd[1]);
+        return false;
+    }
+    if (proc->pid == 0) {
+        // Close the pipe's write-side.
+        close(fd[1]);
+        // Move the pipe's read-side to file descriptor 0 (stdin).
+        dup2(fd[0], 0);
+        close(fd[0]);
+        // Replace this process with pandoc.
+        return pandoc(opts);
+    }
+    // Close the pipe's read-side and store the write-side.
+    close(fd[0]);
+    proc->in = fd[1];
+    return true;
+}
+
+// Closes proc's pipe and waits for it to finish. Returns true on success.
+static bool wait_pandoc(struct PandocProc *proc) {
+    close(proc->in);
+    if (waitpid(proc->pid, NULL, 0) == -1) {
+        perror("waitpid");
+        return false;
+    };
+    proc->pid = -1;
+    proc->in = -1;
+    return true;
 }
 
 // A Markdown section is represented by an integer s, where:
 //
-//     s & (MD_MASK << 0*MD_LEVEL)  gives the h1 level,
-//     s & (MD_MASK << 1*MD_LEVEL)  gives the h2 level,
+//     s & (MS_MASK << 0*MS_BITS)  gives the h1 level,
+//     s & (MS_MASK << 1*MS_BITS)  gives the h2 level,
 //     ...
 //
 // A level of 0 means that heading has not been encountered yet.
 typedef uint64_t MarkdownSection;
-#define MD_MASK 0xff
-#define MD_LEVEL 8
+#define MS_MASK UINT64_C(0xff)
+#define MS_BITS UINT64_C(8)
+#define MS_MASK_UPTO(h) ((UINT64_C(1) << h*MS_BITS) - 1)
+#define MS_INCREMENT(h) (UINT64_C(1) << (h - 1)*MS_BITS)
+#define MS_NEXT(s, h) ((s & MS_MASK_UPTO(h)) + MS_INCREMENT(h))
 
-// State for the Markdown line scanner.
+// Writes a dotted string representation of the section in buf. Writes no more
+// than size characters (including the null terminator). For example, the
+// section 0x030201 becomes "1.2.3".
+static void write_dotted_section(char *buf, int size, MarkdownSection section) {
+    assert(size >= 2);
+    assert(section != 0);
+    int i = 0;
+    i += snprintf(buf + i, size - i, "%d", (int)(section & MS_MASK));
+    section >>= MS_BITS;
+    while (section && i < size) {
+        i += snprintf(buf + i, size - i, ".%d", (int)(section & MS_MASK));
+        section >>= MS_BITS;
+    }
+}
+
+// Markdown line scanner state.
 struct MarkdownState {
-    // File descriptor.
+    // The Markdown file.
     FILE *file;
     // Current line, capacity, and length (excluding null terminator).
     char *line;
@@ -131,93 +230,446 @@ struct MarkdownState {
     bool code;
     // Current section within the document.
     MarkdownSection section;
-    // If this line is a heading, 0/1/... for h1/h2/..., otherwise -1.
+    // If this line is a heading, 1/2/... for h1/h2/..., otherwise 0.
     int heading;
 };
 
-// Initializes a Markdown line scanner. Returns 1 on error.
-static int init_md(struct MarkdownState *state, const char *path) {
+// Initializes a Markdown line scanner. Returns true on success.
+static bool init_md(struct MarkdownState *state, const char *path) {
     FILE *file = fopen(path, "r");
     if (!file) {
         perror(path);
-        return 1;
+        return false;
     }
     state->file = file;
     state->line = NULL;
     state->len = 1;
     state->code = false;
     state->section = 0;
-    state->heading = -1;
-    return 0;
+    state->heading = 0;
+    return true;
 }
 
-// Advances a Markdown line scanner to the next line. Returns true if there are
-// still more lines to scan.
+// Advances a Markdown line scanner to the next line. Returns true on successs,
+// and false on failure or EOF. Takes care of closing the file.
 static bool scan_md(struct MarkdownState *state) {
-    const bool prev_blank = state->len == 1;
-    state->len = getline(&state->line, &state->cap, state->file);
-    state->heading = -1;
-    if (state->len == -1) {
-        fclose(state->file);
+    if (!state->file) {
         return false;
     }
-    if (STARTSWITH(state->line, "```")) {
+    const bool prev_blank = state->len == 1;
+    state->len = getline(&state->line, &state->cap, state->file);
+    state->heading = 0;
+    if (state->len == -1) {
+        fclose(state->file);
+        state->file = NULL;
+        return false;
+    }
+    if (startswith(state->line, "```")) {
         state->code = !state->code;
         return true;
     }
     if (!state->code && prev_blank) {
         int h = 0;
-        while (h < state->len && state->line[h++] == '#');
+        while (h < state->len && state->line[h] == '#') h++;
         if (h > 0 && h < state->len && state->line[h] == ' ') {
-            const MarkdownSection mask = (1 << h*MD_LEVEL) - 1;
-            const MarkdownSection inc = 1 << (h - 1)*MD_LEVEL;
-            state->section = (state->section & mask) + inc;
-            state->heading = h - 1;
+            state->section = MS_NEXT(state->section, h);
+            state->heading = h;
         }
     }
     return true;
 }
 
-// Generates the index page for text.md or lecture.md. Returns 1 on error.
-static int gen_index_from_md(struct PandocOptions opts) {
-    // Fork the process, using a pipe for the child's stdin.
-    int child_stdin[2];
-    if (pipe(child_stdin) == -1) {
-        perror("pipe");
-        return 1;
+// A parsed Markdown heading.
+struct MarkdownHeading {
+    // If the heading looks like, "# 1A: Foo bar", this is "1A". Otherwise NULL.
+    const char *label;
+    int label_len;
+    // If the heading looks like "# 1A: Foo bar", this is "Foo bar". If there is
+    // no label, it is the whole heading with only the leading "# " removed.
+    const char *title;
+    int title_len;
+};
+
+// Parses a Markdown heading.
+static struct MarkdownHeading parse_md_heading(const char *line, int len) {
+    assert(len >= 2 && line[0] == '#'  && line[len-1] == '\n');
+    int i = 1;
+    while (i < len && line[i] == '#') i++;
+    assert(line[i++] == ' ' && i < len);
+    if (line[i] >= '1' && line[i] <= '9') {
+        int j = i;
+        while (j < len && line[j] != ':') j++;
+        if (j + 2 < len && line[j+1] == ' ') {
+            return (struct MarkdownHeading){
+                .label = line + i,
+                .label_len = j - i,
+                .title = line + j + 2,
+                .title_len = len - j - 3,
+            };
+        }
     }
-    pid_t pid;
-    if ((pid = fork()) == -1) {
-        perror("fork");
-        close(child_stdin[0]);
-        close(child_stdin[1]);
-        return 1;
-    }
-    if (pid == 0) {
-        // Close the write-side of child_stdin.
-        close(child_stdin[1]);
-        // Move the read-side of child_stdin to file descriptor 0 (stdin).
-        dup2(child_stdin[0], 0);
-        close(child_stdin[0]);
-        // Invoke pandoc on stdin.
-        opts.input = "/dev/stdin";
-        opts.toc_depth = 0;
-        return pandoc(opts);
-    }
-    // Close the read-side of child_stdin.
-    close(child_stdin[0]);
-    // Write to the write-side of child_stdin.
-    struct MarkdownState state;
-    init_md(&state, opts.input);
-    while (scan_md(&state)) {
-        dprintf(child_stdin[1], "");
-    }
-    // Wait for the child process to finish.
-    if (waitpid(pid, NULL, 0) == -1) {
-        perror("waitpid");
-        return 1;
+    return (struct MarkdownHeading){
+        .label = NULL,
+        .label_len = 0,
+        .title = line + i,
+        .title_len = len - i - 1,
     };
-    return 0;
+}
+
+// Generates docs/index.html.
+static bool gen_index(void) {
+    return pandoc((struct PandocOpts){
+        .input = MARKDOWN("index"),
+        .output = HTML("index"),
+        .title = "SICP Study",
+        .active = "index",
+        .root = "",
+        .prev = NULL,
+        .up = NULL,
+        .next = NULL,
+    });
+}
+
+// Generates docs/text/index.html.
+static bool gen_text_index(void) {
+    return true;
+}
+
+// Generates docs/text/quote.html.
+static bool gen_text_quote(void) {
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("quote"))) {
+        return false;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = HTML("text/quote"),
+        .title = "SICP Highlights",
+        .active = "text",
+        .root = "../",
+        .prev = "index.html",
+        .up = "index.html",
+        .next = "front.html",
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    dprintf(proc.in, "# Highlights\n\n");
+    while (scan_md(&state) && state.section != 1);
+    while (scan_md(&state)) {
+        if (state.heading > 1) {
+            struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+            if (h.label) {
+                dprintf(proc.in,
+                    "<h%d id=\"%.*s\">"
+                    "<a class=\"anchor\" href=\"#%.*s\">#</a>"
+                    "<a class =\"h-link\" href=\"%.*s/index.html\">%.*s</a>"
+                    "<small class=\"number\">%.*s</small>"
+                    "</h%d>\n",
+                    state.heading, h.label_len, h.label, h.label_len, h.label,
+                    h.label_len, h.label, h.title_len, h.title,
+                    h.label_len, h.label, state.heading);
+            } else {
+                char *id = tolower_s(h.title, h.title_len);
+                dprintf(proc.in,
+                    "<h%d id=\"%s\">"
+                    "<a class=\"anchor\" href=\"#%s\">#</a>"
+                    "<a class=\"h-link\" href=\"front.html#%s\">%.*s</a>"
+                    "</h%d>\n",
+                    state.heading, id, id, id, h.title_len, h.title,
+                    state.heading);
+                free(id);
+            }
+        } else {
+            write(proc.in, state.line, state.len);
+        }
+    }
+    return wait_pandoc(&proc);
+}
+
+// Generates docs/text/front.html.
+static bool gen_text_front(void) {
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("text"))) {
+        return false;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = HTML("text/front"),
+        .title = "SICP Frontmatter Notes",
+        .active = "text",
+        .root = "../",
+        .prev = "quote.html",
+        .up = "index.html",
+        .next = "1/index.html",
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    while (scan_md(&state) && state.section != 1);
+    do {
+        if (state.heading > 1) {
+            struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+            assert(!h.label);
+            char *id = tolower_s(h.title, h.title_len);
+            dprintf(proc.in,
+                "<h%d id=\"%s\">"
+                "<a class=\"anchor\" href=\"#%s\">#</a>"
+                "%.*s"
+                "</h%d>\n",
+                state.heading, id, id, h.title_len, h.title, state.heading);
+            free(id);
+        } else {
+            write(proc.in, state.line, state.len);
+        }
+    } while (scan_md(&state) && state.heading != 1);
+    return wait_pandoc(&proc);
+}
+
+// Generates docs/text/*/index.html.
+static bool gen_text_chapter(const char *output) {
+    return true;
+}
+
+// Generates docs/text/*/*.html.
+static bool gen_text_section(const char *output) {
+    return true;
+}
+
+// Generates docs/lecture/index.html.
+static bool gen_lecture_index(void) {
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("lecture"))) {
+        return false;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = HTML("lecture/index"),
+        .title = "SICP Lecture Notes",
+        .active = "lecture",
+        .root = "../",
+        .prev = NULL,
+        .up = "../index.html",
+        .next = "quote.html",
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    dprintf(proc.in, "# Lecture Notes\n\n");
+    while (scan_md(&state) && state.section == 0) {
+        write(proc.in, state.line, state.len);
+    }
+    dprintf(proc.in,
+        "\n## Contents\n\n"
+        "<ul class=\"toc\">"
+        "<li class=\"toc__item\">"
+        "<a class=\"toc__link\" href=\"quote.html\">Highlights</a>"
+        "</li>");
+    do {
+        if (state.heading == 1) {
+            struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+            char *href = tolower_s(h.label, h.label_len);
+            dprintf(proc.in,
+                "<li class=\"toc__item\">"
+                "<span class=\"toc__label\">%.*s</span>"
+                "<a class=\"toc__link\" href=\"%.*s.html\">%.*s</a>"
+                "</li>",
+                h.label_len, h.label,
+                h.label_len, href,
+                h.title_len, h.title);
+            free(href);
+        }
+    } while (scan_md(&state));
+    dprintf(proc.in, "</ul>\n");
+    return wait_pandoc(&proc);
+}
+
+// Generates docs/lecture/quote.html.
+static bool gen_lecture_quote(void) {
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("quote"))) {
+        return false;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = HTML("lecture/quote"),
+        .title = "SICP Lecture Highlights",
+        .active = "lecture",
+        .root = "../",
+        .prev = "index.html",
+        .up = "index.html",
+        .next = "1a.html",
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    dprintf(proc.in, "# Highlights\n\n");
+    while (scan_md(&state) && state.section != 2);
+    while (scan_md(&state)) {
+        if (state.heading > 1) {
+            struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+            assert(h.label);
+            char *id = tolower_s(h.label, h.label_len);
+            dprintf(proc.in,
+                "<h%d id=\"%s\">"
+                "<a class=\"anchor\" href=\"#%s\">#</a>"
+                "<a class =\"h-link\" href=\"%s.html\">%.*s</a>"
+                "<small class=\"number\">%.*s</small>"
+                "</h%d>\n",
+                state.heading, id, id, id, h.title_len, h.title,
+                h.label_len, h.label, state.heading);
+            free(id);
+        } else {
+            write(proc.in, state.line, state.len);
+        }
+    }
+    return wait_pandoc(&proc);
+}
+
+// Generates docs/lecture/*.html.
+static bool gen_lecture_page(const char *output) {
+    const char *slash = strrchr(output, '/');
+    if (!(slash && slash[1] && slash[2] && slash[3])) {
+        goto invalid;
+    }
+    const char *endptr;
+    const int number = strtol(slash + 1, (char **)&endptr, 10);
+    if (number == 0 || !*endptr) {
+        goto invalid;
+    }
+    const char a_or_b = *endptr;
+    if (a_or_b != 'a' && a_or_b != 'b') {
+        goto invalid;
+    }
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("lecture"))) {
+        return false;
+    }
+    char title[] = "SICP Lecture ___ Notes";
+    snprintf(title, sizeof title, "SICP Lecture %d%c Notes",
+        number, toupper(a_or_b));
+    const char *prev;
+    char prev_buf[] = "___.html";
+    if (number == 1 && a_or_b == 'a') {
+        prev = "quote.html";
+    } else {
+        int ab = a_or_b - 'a';
+        snprintf(prev_buf, sizeof prev_buf, "%d%c.html",
+            number + ab - 1, 'b' - ab);
+        prev = prev_buf;
+    }
+    const char *next;
+    char next_buf[] = "___.html";
+    if (number == 10 && a_or_b == 'b') {
+        next = NULL;
+    } else {
+        int ab = a_or_b - 'a';
+        snprintf(next_buf, sizeof next_buf, "%d%c.html",
+            number + ab, 'b' - ab);
+        next = next_buf;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = output,
+        .title = title,
+        .active = "lecture",
+        .root = "../",
+        .prev = prev,
+        .up = "index.html",
+        .next = next,
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    const MarkdownSection target_section = 1 + (number - 1) * 2 + a_or_b - 'a';
+    while (scan_md(&state) && state.section != target_section);
+    assert(state.section == target_section);
+    struct MarkdownHeading h = parse_md_heading(state.line, state.len);
+    assert(h.label);
+    dprintf(proc.in, "<h1>%.*s<small class=\"number\">%.*s</small></h1>\n",
+        h.title_len, h.title, h.label_len, h.label);
+    char id[10];
+    while (scan_md(&state) && state.heading != 1) {
+        if (state.heading > 1) {
+            h = parse_md_heading(state.line, state.len);
+            assert(!h.label);
+            write_dotted_section(id, sizeof id, state.section >> MS_BITS);
+            dprintf(proc.in,
+                "<h%d id=\"%s\">"
+                "<a class=\"anchor\" href=\"#%s\">#</a>"
+                "%.*s"
+                "</h%d>\n",
+                state.heading, id, id, h.title_len, h.title, state.heading);
+        } else {
+            write(proc.in, state.line, state.len);
+        }
+    }
+    return wait_pandoc(&proc);
+invalid:
+    fprintf(stderr, "%s: invalid lecture\n", output);
+    return false;
+}
+
+// Generates docs/exercise/index.html.
+static bool gen_exercise_index(void) {
+    return true;
+}
+
+// Generates docs/exercise/*/index.html.
+static bool gen_exercise_chapter(const char *output) {
+    return true;
+}
+
+// Generates docs/exercise/*/*.html.
+static bool gen_exercise_section(const char *output) {
+    return true;
+}
+
+// Generates the given output file.
+static bool gen(const char *output) {
+    if (strcmp(output, HTML("index")) == 0) {
+        return gen_index();
+    }
+    if (startswith(output, SUBDIR("text"))) {
+        if (strcmp(output, HTML("text/index")) == 0) {
+            return gen_text_index();
+        }
+        if (strcmp(output, HTML("text/quote")) == 0) {
+            return gen_text_quote();
+        }
+        if (strcmp(output, HTML("text/front")) == 0) {
+            return gen_text_front();
+        }
+        if (endswith(output, "/index.html")) {
+            return gen_text_chapter(output);
+        }
+        return gen_text_section(output);
+    }
+    if (startswith(output, SUBDIR("lecture"))) {
+        if (strcmp(output, HTML("lecture/index")) == 0) {
+            return gen_lecture_index();
+        }
+        if (strcmp(output, HTML("lecture/quote")) == 0) {
+            return gen_lecture_quote();
+        }
+        return gen_lecture_page(output);
+    }
+    if (startswith(output, SUBDIR("exercise"))) {
+        if (strcmp(output, HTML("exercise/index")) == 0) {
+            return gen_exercise_index();
+        }
+        if (endswith(output, "/index.html")) {
+            return gen_exercise_chapter(output);
+        }
+        return gen_exercise_section(output);
+    }
+    fprintf(stderr, "%s: invalid output file\n", output);
+    return false;
 }
 
 int main(int argc, char **argv) {
@@ -225,54 +677,14 @@ int main(int argc, char **argv) {
         fprintf(stderr, "usage: %s OUT_FILE\n", argv[0]);
         return 1;
     }
-    output = argv[1];
-    if (IS_FILE("index")) {
-        return pandoc((struct PandocOptions){
-            .id = "index",
-            .title = "SICP Study",
-            .root = "",
-            .input = MARKDOWN("index"),
-            .toc_depth = 0,
-        });
+    const char *output = argv[1];
+    char *parent = strdup(output);
+    parent = dirname(parent);
+    if (mkdir(parent, 0777) == -1 && errno != EEXIST) {
+        perror(parent);
+        free(parent);
+        return 1;
     }
-    if (IS_FILE("quote")) {
-        return pandoc((struct PandocOptions){
-            .id = "quote",
-            .title = "SICP Quotes",
-            .root = "",
-            .input = MARKDOWN("quote"),
-            .toc_depth = 2,
-        });
-    }
-    if (IS_UNDER("text")) {
-        if (IS_FILE("text/index")) {
-            return gen_index_from_md((struct PandocOptions) {
-                .id = "text",
-                .title = "SICP Text Notes",
-                .root = "..",
-                .input = MARKDOWN("text"),
-                .toc_depth = 3,
-            });
-        }
-    }  
-    if (IS_UNDER("lecture")) {
-        if (IS_FILE("lecture/index")) {
-            return gen_index_from_md((struct PandocOptions) {
-                .id = "lecture",
-                .title = "SICP Lecture Notes",
-                .root = "..",
-                .input = MARKDOWN("text"),
-                .toc_depth = 3,
-            });
-        }
-    }
-    if (IS_UNDER("exercise")) {
-        if (IS_FILE("exercise/index")) {
-
-        } else {
-
-        }
-    }
-    fprintf(stderr, "%s: %s: invalid output file\n", argv[0], argv[1]);
-    return 1;
+    free(parent);
+    return gen(output) ? 0 : 1;
 }

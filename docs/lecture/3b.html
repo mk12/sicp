@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Lecture 3B Notes</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title" href="../index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item" href="../text/index.html">Text</a>
+    <a class="sitenav__item sitenav__item--active" href="../lecture/index.html">Lecture</a>
+    <a class="sitenav__item" href="../exercise/index.html">Exercise</a>
+    <a class="sitenav__item" href="https://github.com/mk12/sicp">Source <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-568.001,-447.669)">
+      <g transform="matrix(4.16667,0,0,4.16667,0,0)">
+          <g transform="matrix(1,0,0,1,152.608,139.345)">
+              <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.778 -11.354,-8.279 -11.354,-8.279C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.154 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.237C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.839 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.839 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904"/>
+          </g>
+      </g>
+  </g>
+</svg></a>
+  </nav>
+</header>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="3a.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="4a.html">Next →</a></div>
+</nav>
+<h1>
+Symbolic Differentiation; Quotation<small class="number">3B</small>
+</h1>
+<h2 id="1">
+<a class="anchor" href="#1">#</a>Part 1
+</h2>
+<h3 id="1.1">
+<a class="anchor" href="#1.1">#</a>Recap
+</h3>
+<ul>
+<li>In order to make a robust system, it needs to be insensitive to small changes.</li>
+<li>A small change in the problem leads to a small change in the solution.</li>
+<li>Don’t solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.</li>
+<li>We’ve seen the power of embedding languages.</li>
+<li>We are going to confuse the distinction between procedures and data even more badly.</li>
+</ul>
+<h3 id="1.2">
+<a class="anchor" href="#1.2">#</a>Derivatives and integrals
+</h3>
+<ul>
+<li>Instead of doing a numerical approximation of the derivative, we want to apply the rules of calculus to algebraic expressions.</li>
+<li>Producing derivatives of arbitrary expressions is easy; producing integrals, the inverse operation, is hard.</li>
+<li>Why is it easy to go one way but not the other? Because the rules for differentiation are reduction rules.</li>
+<li>Big problems turn into multiple simpler problems.</li>
+</ul>
+<h3 id="1.3">
+<a class="anchor" href="#1.3">#</a>Differentiation procedure
+</h3>
+<ul>
+<li>The reduction rules of differentiation are appropriate for recursion.</li>
+<li>We can write the rules as a case analysis.</li>
+<li>But, we need to be able to <em>represent</em> the expressions.</li>
+<li>The differentiation procedure that takes an <em>expression</em> as an argument is different from the one that takes a function.</li>
+<li>You can’t open up a function. You can only get answers from it.</li>
+<li>An expression is an object representing the algebraic expression that defines a function.</li>
+<li>We can write the procedure <code>deriv</code> using a lot of wishful thinking.</li>
+</ul>
+<h3 id="1.4">
+<a class="anchor" href="#1.4">#</a>Expression representation
+</h3>
+<ul>
+<li>To represent sums, products, quotients, etc., why not use the same language we’re writing the program in?</li>
+<li>We can just use list structure.</li>
+<li>There are more built-in predicates we haven’t seen yet: <code>atom?</code> and <code>eq?</code>.</li>
+</ul>
+<h3 id="1.5">
+<a class="anchor" href="#1.5">#</a>Quotation
+</h3>
+<ul>
+<li>We are also introducing <em>quotation</em>. The words of English are ambiguous: <em>say your name</em> is different from <em>say “your name”</em>.</li>
+<li>The notation in Lisp is to precede the expression with a single quotation mark.</li>
+<li>Quotation makes a language more complex because we can no longer substitute equals for equals (see Bertrand Russell’s “On Denoting”).</li>
+<li>The names <code>car</code> and <code>cdr</code> have survived (originally the address register and the decrement register) because we can do things like <code>cadddr</code> and <code>cadar</code>.</li>
+</ul>
+<h2 id="2">
+<a class="anchor" href="#2">#</a>Part 2
+</h2>
+<h3 id="2.1">
+<a class="anchor" href="#2.1">#</a>Simplifying expressions
+</h3>
+<ul>
+<li>The expressions we get from the <code>deriv</code> procedure are ugly.</li>
+<li>Nothing is simplified, and it is hard to read.</li>
+</ul>
+<blockquote>
+<p>The form of the process is expanded from the local rules that you see in the procedure.</p>
+</blockquote>
+<ul>
+<li>There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.</li>
+</ul>
+<blockquote>
+<p>This is one the pieces of artillery we have in our war against complexity.</p>
+</blockquote>
+<ul>
+<li>We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).</li>
+</ul>
+<h3 id="2.2">
+<a class="anchor" href="#2.2">#</a>Conclusion
+</h3>
+<ul>
+<li>Quotation stops and says, “I’m talking about this expression itself.”</li>
+<li>We can write languages that are not only embedded in Lisp, that are completely different, using quotation.</li>
+<li>Quotation gives us tremendous power.</li>
+</ul>
+<nav class="pagenav">
+  <div class="pagenav__prev"><a class="pagenav__link" href="3a.html">← Prev</a></div>
+  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__next"><a class="pagenav__link" href="4a.html">Next →</a></div>
+</nav>
+<footer class="footer">© 2020 Mitchell Kember</footer>
+</body>
+</html>

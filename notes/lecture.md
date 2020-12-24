@@ -1,3 +1,5 @@
+TODO: This is some description!!!
+
 # 1A: Overview and Introduction to Lisp
 
 ## Part 1
@@ -304,7 +306,7 @@ Move an n-high tower from spike `from` to spike `to` using spike `spare` as a sp
           (move (-1+m) spare to from))))
 ```
 
-# 2A: Higher-order Procedures
+# 2A: Higher-Order Procedures
 
 ## Part 1
 
@@ -680,7 +682,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We can write languages that are not only embedded in Lisp, that are completely different, using quotation.
 - Quotation gives us tremendous power.
 
-# 4A: Pattern Matching and Rule-based Substitution
+# 4A: Pattern Matching and Rule-Based Substitution
 
 ## Part 1
 
@@ -1041,7 +1043,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.
 - The true complexity comes in with _coercion_ -- when you add a complex and a rational, who worries about converting what?
 
-# 5A: Assignment, State, and Side-effects
+# 5A: Assignment, State, and Side-Effects
 
 ## Part 1
 
@@ -1628,3 +1630,15 @@ Then, we learned how to use higher-order procedures to represent general methods
 ## Part 2
 
 ## Part 3
+
+# 8A: Logic Programming, Part 1
+
+# 8B: Logic Programming, Part 2
+
+# 9A: Register Machines
+
+# 9B: Explicit-Control Evaluator
+
+# 10A: Compilation
+
+# 10B: Storage Allocation and Garbage Collection
