@@ -1,5 +1,7 @@
 # New to do
 
+- fix intra-doc links ("earlier section")
+- remove scheme from all ```scheme... insert it auto, also on inline!!
 - have special callout thing at end of text sections with exercise links
 - put highlight styles in standalone CSS
 + use /text/1#1.2 for section 1.2, /exercise/1#1.32 for Exercise 1.32, etc.

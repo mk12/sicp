@@ -1,7 +1,11 @@
+/* Reset */
+
 html, body, blockquote, p, ul, ol, li {
     padding: 0;
     margin: 0;
 }
+
+/* Colors */
 
 :root {
     color-scheme: light dark;
@@ -14,31 +18,80 @@ html, body, blockquote, p, ul, ol, li {
     --link: #4973c1;
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
+    /* TODO */
     :root {
         --fg: #ccc;
         --bg: #2a2a2a;
     }
-} */
+}
+
+/* General styles */
 
 body {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 50px;
     color: var(--fg);
     background: var(--bg);
     font: 20px sans-serif;
     line-height: 1.4;
 }
 
+p, ul, ol, blockquote, pre {
+    margin-top: 1em;
+}
+
+p:first-child, ul ul, ol ul, ol ol, ul ol {
+    margin-top: 0;
+}
+
+ul {
+    margin-left: 1.05em;
+}
+
+ol {
+    margin-left: 1.45em;
+}
+
 a {
     color: var(--link);
     text-decoration: none;
+    /* border-bottom: 1px dotted var(--subdued); */
 }
 
 a:hover {
-    text-decoration: underline;
+    /* border-bottom: 1px solid var(--subdued); */
 }
+
+code {
+    /* Fits 80 columns at max-width. */
+    font: 16px Menlo, Consolas, monospace;
+    background: var(--highlight);
+    border-radius: 6px;
+    padding: 2px 5px;
+}
+
+pre code {
+    display: block;
+    padding: 15px;
+    line-height: 1.2;
+}
+
+h1 code, h2 code, h3 code, h4 code, .toc__item code {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.math {
+    /* 20px is too large beside Helvetica. */
+    font-size: 19px;
+}
+
+blockquote {
+    border-left: 10px solid var(--border);
+    padding: 0 calc(1.05em - 10px);
+    /* background: var(--highlight); */
+}
+
+/* Specific styles */
 
 .anchor {
     margin-left: -0.82em;
@@ -73,6 +126,7 @@ a:hover {
 
 .toc {
     display: table;
+    margin: 0;
 }
 
 .toc__item {
@@ -84,6 +138,14 @@ a:hover {
     display: table-cell;
     text-align: right;
     padding-right: 15px;
+}
+
+/* Page layout */
+
+body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 50px 25px;
 }
 
 .header {
@@ -150,35 +212,22 @@ a:hover {
     font-size: 16px;
 }
 
-.pagenav--top {
-    border-bottom: 1px solid var(--border);
-}
-
-.pagenav--bottom {
-    border-top: 1px solid var(--border);
-}
+.pagenav--top { border-bottom: 1px solid var(--border); }
+.pagenav--bottom { border-top: 1px solid var(--border); }
 
 .pagenav__item {
     flex-grow: 1;
     color: var(--subdued);
 }
 
-.pagenav__item--prev {
-    text-align: left;
-}
-
-.pagenav__item--up {
-    text-align: center;
-}
-
-.pagenav__item--next {
-    text-align: right;
-}
+.pagenav__item--prev { text-align: left; }
+.pagenav__item--up { text-align: center; }
+.pagenav__item--next { text-align: right; }
 
 .pagenav__link {
     display: block;
     color: var(--intense);
-    padding: 5px 0;
+    padding: 6px 0;
     background-clip: padding-box;
 }
 
@@ -188,7 +237,7 @@ a:hover {
 }
 
 .footer {
-    padding-top: 5px;
+    padding-top: 6px;
     border-top: 3px solid var(--border);
     font-size: 18px;
     text-align: center;
@@ -197,3 +246,32 @@ a:hover {
 .pagenav--bottom, .footer--lone {
     margin-top: 20px;
 }
+
+/* Code highlighting */
+
+.al { color: #ff0000; font-weight: bold; }
+.an { color: #60a0b0; font-weight: bold; font-style: italic; }
+.at { color: #7d9029; }
+.bn { color: #40a070; }
+.cf { color: #007020; font-weight: bold; }
+.ch { color: #4070a0; }
+.cn { color: #880000; }
+.co { color: #60a0b0; font-style: italic; }
+.cv { color: #60a0b0; font-weight: bold; font-style: italic; }
+.do { color: #ba2121; font-style: italic; }
+.dt { color: #902000; }
+.dv { color: #40a070; }
+.er { color: #ff0000; font-weight: bold; }
+.fl { color: #40a070; }
+.fu { color: #06287e; }
+.in { color: #60a0b0; font-weight: bold; font-style: italic; }
+.kw { color: #007020; font-weight: bold; }
+.op { color: #666666; }
+.ot { color: #007020; }
+.pp { color: #bc7a00; }
+.sc { color: #4070a0; }
+.ss { color: #bb6688; }
+.st { color: #4070a0; }
+.va { color: #19177c; }
+.vs { color: #4070a0; }
+.wa { color: #60a0b0; font-weight: bold; font-style: italic; }

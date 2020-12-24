@@ -562,7 +562,7 @@ Now we can do things like this:
 
 ## 2.2: Hierarchical Data and the Closure Property
 
-- Paris form a primitive "glue" for compound data objects.
+- Pairs form a primitive "glue" for compound data objects.
 - We can visualize cons pairs with _box-and-pointer_ notation.
 - Each pair is a double box. Both the left box and the right box contain an arrow pointing to something else: either to a primitive data object, or to another cons pair.
 - The _closure property_ of cons is the ability to make pairs whose elements are pairs.
@@ -1138,6 +1138,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We could implement `rand` like this:
 
 ```scheme
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
 (define rand
   (let ((x random-init))
     (lambda ()

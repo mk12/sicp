@@ -376,7 +376,7 @@ static bool gen_text_index(void) {
     if (!fork_pandoc(&proc, opts)) {
         return false;
     }
-    dprintf(proc.in, "# Notes\n\n");
+    dprintf(proc.in, "# Textbook Notes\n\n");
     while (scan_md(&state) && state.section == 0) {
         write(proc.in, state.line, state.len);
     }
