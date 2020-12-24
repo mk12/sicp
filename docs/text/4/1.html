@@ -26,10 +26,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2.html">Next →</a></div>
 </nav>
 <h1>
 The Metacircular Evaluator<small class="number">4.1</small>
@@ -43,12 +43,12 @@ The Metacircular Evaluator<small class="number">4.1</small>
 </ol></li>
 <li>This embodies the interplay between two critical procedures, <code>eval</code> and <code>apply</code>.</li>
 </ul>
-<h3 id="4.1.1">
-<a class="anchor" href="#4.1.1">#</a>The Core of the Evaluator<small class="number">4.1.1</small>
+<h2 id="4.1.1" class="anchor">
+<a class="anchor__link" href="#4.1.1">#</a>The Core of the Evaluator<small class="number">4.1.1</small>
 </h3>
-<h4 id="4.1.1.1">
-<a class="anchor" href="#4.1.1.1">#</a><code>Eval</code>
-</h4>
+<h3 id="4.1.1.1" class="anchor">
+<a class="anchor__link" href="#4.1.1.1">#</a><code>Eval</code>
+</h3>
 <ul>
 <li><code>eval</code> classifies an expression and directs its evaluation in an environment.</li>
 <li>We use <em>abstract syntax</em> to avoid committing to a particular syntax in the evaluator.</li>
@@ -69,9 +69,9 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         (apply (<span class="kw">eval</span> (operator <span class="kw">exp</span>) env)</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                (list-of-values (operands <span class="kw">exp</span>) env)))</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown expression type: EVAL&quot;</span> <span class="kw">exp</span>))))</span></code></pre></div>
-<h4 id="4.1.1.1">
-<a class="anchor" href="#4.1.1.1">#</a><code>Apply</code>
-</h4>
+<h3 id="4.1.1.2" class="anchor">
+<a class="anchor__link" href="#4.1.1.2">#</a><code>Apply</code>
+</h3>
 <ul>
 <li><code>apply</code> classifies a procedure and directs its application to a list of arguments.</li>
 <li>If compound, it evaluates the procedure body in an extended environment.</li>
@@ -87,8 +87,8 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>           arguments</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
-<h3 id="4.1.2">
-<a class="anchor" href="#4.1.2">#</a>Representing Expressions<small class="number">4.1.2</small>
+<h2 id="4.1.2" class="anchor">
+<a class="anchor__link" href="#4.1.2">#</a>Representing Expressions<small class="number">4.1.2</small>
 </h3>
 <ul>
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
@@ -100,9 +100,9 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">pair?</span> <span class="kw">exp</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eq?</span> (<span class="kw">car</span> <span class="kw">exp</span>) tag)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      false))</span></code></pre></div>
-<h4 id="4.1.1.2">
-<a class="anchor" href="#4.1.1.2">#</a>Derived expressions
-</h4>
+<h3 id="4.1.2.1" class="anchor">
+<a class="anchor__link" href="#4.1.2.1">#</a>Derived expressions
+</h3>
 <ul>
 <li>Some special forms can be defined in terms of others.</li>
 <li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
@@ -130,20 +130,20 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>Practical Lisp systems allow the user to define new derived expressions by syntactic transformation. These are called <em>macros</em>.</li>
 <li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
 </ul>
-<h3 id="4.1.3">
-<a class="anchor" href="#4.1.3">#</a>Evaluator Data Structures<small class="number">4.1.3</small>
+<h2 id="4.1.3" class="anchor">
+<a class="anchor__link" href="#4.1.3">#</a>Evaluator Data Structures<small class="number">4.1.3</small>
 </h3>
-<h4 id="4.1.1.3">
-<a class="anchor" href="#4.1.1.3">#</a>Testing of predicates
-</h4>
+<h3 id="4.1.3.1" class="anchor">
+<a class="anchor__link" href="#4.1.3.1">#</a>Testing of predicates
+</h3>
 <ul>
 <li>Anything other than <code>false</code> is considered “truthy.”</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(true? x) (<span class="kw">not</span> (<span class="kw">eq?</span> x false)))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(false? x) (<span class="kw">eq?</span> x false))</span></code></pre></div>
-<h4 id="4.1.1.3">
-<a class="anchor" href="#4.1.1.3">#</a>Representing procedures
-</h4>
+<h3 id="4.1.3.2" class="anchor">
+<a class="anchor__link" href="#4.1.3.2">#</a>Representing procedures
+</h3>
 <ul>
 <li><code>(apply-primitive-procedure &lt;proc&gt; &lt;args&gt;)</code> applies a primitive procedure to <code>&lt;args&gt;</code>.</li>
 <li><code>(primitive-procedure? &lt;proc&gt;)</code> tests whether <code>&lt;proc&gt;</code> is a primitive procedure.</li>
@@ -154,9 +154,9 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(compound-procedure? p) (tagged-list? p &#39;procedure))</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(procedure-parameters p) (<span class="kw">cadr</span> p)) (<span class="ex">define</span><span class="fu"> </span>(procedure-body p) (<span class="kw">caddr</span> p))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(procedure-environment p) (<span class="kw">cadddr</span> p))</span></code></pre></div>
-<h4 id="4.1.1.3">
-<a class="anchor" href="#4.1.1.3">#</a>Operations on environments
-</h4>
+<h3 id="4.1.3.3" class="anchor">
+<a class="anchor__link" href="#4.1.3.3">#</a>Operations on environments
+</h3>
 <ul>
 <li><code>(lookup-variable-value &lt;var&gt; &lt;env&gt;)</code> returns the value bound to a variable.</li>
 <li><code>(extend-environment &lt;variables&gt; &lt;values&gt; &lt;base-env&gt;)</code> returns a new environment extended with a frame containing the given bindings.</li>
@@ -193,8 +193,8 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <ul>
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
-<h3 id="4.1.4">
-<a class="anchor" href="#4.1.4">#</a>Running the Evaluator as a Program<small class="number">4.1.4</small>
+<h2 id="4.1.4" class="anchor">
+<a class="anchor__link" href="#4.1.4">#</a>Running the Evaluator as a Program<small class="number">4.1.4</small>
 </h3>
 <ul>
 <li>We can run our evaluator as a program: Lisp within Lisp.</li>
@@ -256,8 +256,8 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                     (procedure-body object)</span>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                     &#39;&lt;procedure-env&gt;))</span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">display</span> object)))</span></code></pre></div>
-<h3 id="4.1.5">
-<a class="anchor" href="#4.1.5">#</a>Data as Programs<small class="number">4.1.5</small>
+<h2 id="4.1.5" class="anchor">
+<a class="anchor__link" href="#4.1.5">#</a>Data as Programs<small class="number">4.1.5</small>
 </h3>
 <ul>
 <li>A program can be viewed as a description of an abstract machine.</li>
@@ -267,8 +267,8 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>The existence of a universal machine is a deep and wonderful property of computation.</li>
 <li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code>eval</code> procedure for evaluating data as programs.</li>
 </ul>
-<h3 id="4.1.6">
-<a class="anchor" href="#4.1.6">#</a>Internal Definitions<small class="number">4.1.6</small>
+<h2 id="4.1.6" class="anchor">
+<a class="anchor__link" href="#4.1.6">#</a>Internal Definitions<small class="number">4.1.6</small>
 </h3>
 <ul>
 <li>Global definitions have <em>sequential scoping</em>: they are defined one at a time.</li>
@@ -291,8 +291,8 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <ul>
 <li>Here, <code>*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
-<h3 id="4.1.7">
-<a class="anchor" href="#4.1.7">#</a>Separating Syntactic Analysis from Execution<small class="number">4.1.7</small>
+<h2 id="4.1.7" class="anchor">
+<a class="anchor__link" href="#4.1.7">#</a>Separating Syntactic Analysis from Execution<small class="number">4.1.7</small>
 </h3>
 <ul>
 <li>Our evaluator is inefficient because it interleaves syntactic analysis with execution.</li>
@@ -328,10 +328,10 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((vars (lambda-parameters <span class="kw">exp</span>))</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        (bproc (analyze-sequence (lambda-body <span class="kw">exp</span>))))</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))</span></code></pre></div>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

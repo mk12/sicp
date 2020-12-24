@@ -42,19 +42,19 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2b.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2b.html">Next →</a></div>
 </nav>
 <h1>
 Higher-Order Procedures<small class="number">2A</small>
 </h1>
-<h2 id="1">
-<a class="anchor" href="#1">#</a>Part 1
+<h2 id="1" class="anchor">
+<a class="anchor__link" href="#1">#</a>Part 1
 </h2>
-<h3 id="1.1">
-<a class="anchor" href="#1.1">#</a>Don’t repeat yourself
+<h3 id="1.1" class="anchor">
+<a class="anchor__link" href="#1.1">#</a>Don’t repeat yourself
 </h3>
 <ul>
 <li>So far Lisp might just seem like a different language with funny syntax. It’s time to shatter that illusion.</li>
@@ -71,8 +71,8 @@ Higher-Order Procedures<small class="number">2A</small>
 <li>An <em>idiom</em> is a common pattern in a language that is useful to know. In Lisp, we can give idioms names and abstract them.</li>
 <li>There is nothing very special about numbers. Numbers are just one kind of data. Procedures are also data.</li>
 </ul>
-<h3 id="1.2">
-<a class="anchor" href="#1.2">#</a>Summation
+<h3 id="1.2" class="anchor">
+<a class="anchor__link" href="#1.2">#</a>Summation
 </h3>
 <p>We can represent the sigma notation with a procedure that takes other procedures as arguments:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sum term a next b)</span>
@@ -92,11 +92,11 @@ Higher-Order Procedures<small class="number">2A</small>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">lambda</span> (i) (<span class="op">+</span> i <span class="dv">4</span>))</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>       b))</span></code></pre></div>
 <p>We are separating the things we are adding up from the method of doing the addition. Now, we can change the sum procedure so that it generates an iterative process, and all the specific procedures using sum will benefit.</p>
-<h2 id="2">
-<a class="anchor" href="#2">#</a>Part 2
+<h2 id="2" class="anchor">
+<a class="anchor__link" href="#2">#</a>Part 2
 </h2>
-<h3 id="2.1">
-<a class="anchor" href="#2.1">#</a>Higher-order procedures
+<h3 id="2.1" class="anchor">
+<a class="anchor__link" href="#2.1">#</a>Higher-order procedures
 </h3>
 <ul>
 <li>We use abstraction for the purpose of making programs easier to read and write.</li>
@@ -105,11 +105,11 @@ Higher-Order Procedures<small class="number">2A</small>
 <li>The damping part is also a general signal processing strategy, and we can also treat is as a separate thing using a higher-order procedure.</li>
 <li>Higher-order procedures can take procedures as arguments and they can return new procedures.</li>
 </ul>
-<h2 id="3">
-<a class="anchor" href="#3">#</a>Part 3
+<h2 id="3" class="anchor">
+<a class="anchor__link" href="#3">#</a>Part 3
 </h2>
-<h3 id="3.1">
-<a class="anchor" href="#3.1">#</a>Newton’s method
+<h3 id="3.1" class="anchor">
+<a class="anchor__link" href="#3.1">#</a>Newton’s method
 </h3>
 <ul>
 <li>Newton’s method: general method to find the zeros (an <span class="math inline">x</span> such that <span class="math inline">f(x) = 0</span>).</li>
@@ -121,8 +121,8 @@ Higher-Order Procedures<small class="number">2A</small>
 <ul>
 <li>We can use names of procedures that we haven’t defined yet while writing a program (top-down design).</li>
 </ul>
-<h3 id="3.2">
-<a class="anchor" href="#3.2">#</a>The rights and privileges of first-class citizens
+<h3 id="3.2" class="anchor">
+<a class="anchor__link" href="#3.2">#</a>The rights and privileges of first-class citizens
 </h3>
 <ul>
 <li>To be named by variables.</li>
@@ -130,10 +130,10 @@ Higher-Order Procedures<small class="number">2A</small>
 <li>To be returned as values of procedures.</li>
 <li>To be incorporating into data structures.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2b.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2b.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

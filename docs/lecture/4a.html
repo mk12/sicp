@@ -26,19 +26,19 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="3b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="4b.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="3b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="4b.html">Next →</a></div>
 </nav>
 <h1>
 Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 </h1>
-<h2 id="1">
-<a class="anchor" href="#1">#</a>Part 1
+<h2 id="1" class="anchor">
+<a class="anchor__link" href="#1">#</a>Part 1
 </h2>
-<h3 id="1.1">
-<a class="anchor" href="#1.1">#</a>Recap
+<h3 id="1.1" class="anchor">
+<a class="anchor__link" href="#1.1">#</a>Recap
 </h3>
 <ul>
 <li>We wrote a program to differentiate expressions that had a highly stylized behaviour and structure.</li>
@@ -47,8 +47,8 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>Our program was a conditional dispatch on the type of the expression.</li>
 <li>Is there some other, more clear way of writing this program?</li>
 </ul>
-<h3 id="1.2">
-<a class="anchor" href="#1.2">#</a>Rules
+<h3 id="1.2" class="anchor">
+<a class="anchor__link" href="#1.2">#</a>Rules
 </h3>
 <ul>
 <li>We follow rules to differentiate expressions. What is a rule, exactly?</li>
@@ -61,8 +61,8 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.</li>
 <li>We want to build a language that allows us to directly express these rules. We will work bottom-up, like before.</li>
 </ul>
-<h3 id="1.3">
-<a class="anchor" href="#1.3">#</a>Representation
+<h3 id="1.3" class="anchor">
+<a class="anchor__link" href="#1.3">#</a>Representation
 </h3>
 <ul>
 <li>We can represent the differentiation rules like this:</li>
@@ -97,11 +97,11 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">+</span> <span class="dv">0</span> (<span class="op">?</span> e)) (: e))</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">*</span> <span class="dv">1</span> (<span class="op">?</span> e)) (: e))</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">*</span> <span class="dv">0</span> (<span class="op">?</span> e)) <span class="dv">0</span>)))</span></code></pre></div>
-<h3 id="1.4">
-<a class="anchor" href="#1.4">#</a>Syntax
+<h3 id="1.4" class="anchor">
+<a class="anchor__link" href="#1.4">#</a>Syntax
 </h3>
-<h4 id="1.4.1">
-<a class="anchor" href="#1.4.1">#</a>Patterns
+<h4 id="1.4.1" class="anchor">
+<a class="anchor__link" href="#1.4.1">#</a>Patterns
 </h4>
 <ul>
 <li><code>foo</code> <em>matches</em> exactly <code>foo</code>.</li>
@@ -110,16 +110,16 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li><code>(?c x)</code> <em>matches</em> a constant, and calls it <code>x</code>.</li>
 <li><code>(?v x)</code> <em>matches</em> a variable, and calls it <code>x</code>.</li>
 </ul>
-<h4 id="1.4.2">
-<a class="anchor" href="#1.4.2">#</a>Skeletons
+<h4 id="1.4.2" class="anchor">
+<a class="anchor__link" href="#1.4.2">#</a>Skeletons
 </h4>
 <ul>
 <li><code>foo</code> <em>instantiates</em> to exactly <code>foo</code>.</li>
 <li><code>(f a b)</code> <em>instantiates</em> to a list of three elements, the results of instantiating each of <code>f</code>, <code>a</code>, and <code>b</code>.</li>
 <li><code>(: x)</code> <em>instantiates</em> to the value of <code>x</code> in the pattern matched.</li>
 </ul>
-<h3 id="1.5">
-<a class="anchor" href="#1.5">#</a>Simplification process
+<h3 id="1.5" class="anchor">
+<a class="anchor__link" href="#1.5">#</a>Simplification process
 </h3>
 <ul>
 <li>We can imagine the rules as a deck of cards, each one with a pattern and a skeleton.</li>
@@ -129,11 +129,11 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>All of the rules must be tried on the expression, and on all its subexpressions. We can stop when it no longer changes.</li>
 <li>If you don’t write your rules carefully, there is a danger of going into an infinite loop.</li>
 </ul>
-<h2 id="2">
-<a class="anchor" href="#2">#</a>Part 2
+<h2 id="2" class="anchor">
+<a class="anchor__link" href="#2">#</a>Part 2
 </h2>
-<h3 id="2.1">
-<a class="anchor" href="#2.1">#</a>Matcher
+<h3 id="2.1" class="anchor">
+<a class="anchor__link" href="#2.1">#</a>Matcher
 </h3>
 <ul>
 <li>The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.</li>
@@ -172,8 +172,8 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>If the pattern is an arbitrary expression variable like <code>(? x)</code>, we simply add the expression to the dictionary.</li>
 <li>If it is an arbitrary constant or variable, we make sure it is the correct one before adding to the dictionary.</li>
 </ul>
-<h3 id="2.2">
-<a class="anchor" href="#2.2">#</a>Instantiator
+<h3 id="2.2" class="anchor">
+<a class="anchor__link" href="#2.2">#</a>Instantiator
 </h3>
 <ul>
 <li>The instantiator takes a dictionary and a skeleton as input and outputs an expression.</li>
@@ -204,11 +204,11 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>For more complicated expressions, we lookup and evaluate the <code>car</code> of the form (the operator) and apply it to the result of looking up everything from the <code>cdr</code> (the operands).</li>
 <li>This is magic. We don’t know everything going on with <code>apply</code> and <code>eval</code> yet. We will later.</li>
 </ul>
-<h2 id="3">
-<a class="anchor" href="#3">#</a>Part 3
+<h2 id="3" class="anchor">
+<a class="anchor__link" href="#3">#</a>Part 3
 </h2>
-<h3 id="3.1">
-<a class="anchor" href="#3.1">#</a>Plan
+<h3 id="3.1" class="anchor">
+<a class="anchor__link" href="#3.1">#</a>Plan
 </h3>
 <ul>
 <li>We’ve seen the two halves of the rule system: the matcher and the instantiator.</li>
@@ -216,8 +216,8 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>We want to apply all of the rules to every node.</li>
 <li>We call the basic idea <em>garbage in, garbage out</em> (GIGO).</li>
 </ul>
-<h3 id="3.2">
-<a class="anchor" href="#3.2">#</a>Simplifier
+<h3 id="3.2" class="anchor">
+<a class="anchor__link" href="#3.2">#</a>Simplifier
 </h3>
 <ul>
 <li>We want to be able to evaluate <code>(simplifier rules)</code> and get a procedure that simplifies expressions according to the rules:</li>
@@ -264,8 +264,8 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>The <code>try-rules</code> procedure scans the rules and tries each one. It returns the original expression if none matched.</li>
 <li>When a rule’s pattern matches, <code>try-rules</code> instantiates the skeleton and tries to simplify that further.</li>
 </ul>
-<h3 id="3.3">
-<a class="anchor" href="#3.3">#</a>Complexity
+<h3 id="3.3" class="anchor">
+<a class="anchor__link" href="#3.3">#</a>Complexity
 </h3>
 <ul>
 <li>The pattern of recursions here is very complicated.</li>
@@ -275,8 +275,8 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <blockquote>
 <p>The key to very good programming, and very good design, is to know what not to think about.</p>
 </blockquote>
-<h3 id="3.4">
-<a class="anchor" href="#3.4">#</a>Dictionaries
+<h3 id="3.4" class="anchor">
+<a class="anchor__link" href="#3.4">#</a>Dictionaries
 </h3>
 <ul>
 <li>The implementation of the dictionary is pretty simple:</li>
@@ -297,10 +297,10 @@ Pattern Matching and Rule-Based Substitution<small class="number">4A</small>
 <li>If not, we add it. If it is, but has the same value, we return the dictionary unchanged.</li>
 <li>If we are trying to give it a different value, we fail.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="3b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="4b.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="3b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="4b.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

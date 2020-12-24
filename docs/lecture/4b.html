@@ -42,19 +42,19 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="4a.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5a.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="4a.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5a.html">Next →</a></div>
 </nav>
 <h1>
 Generic Operators<small class="number">4B</small>
 </h1>
-<h2 id="1">
-<a class="anchor" href="#1">#</a>Part 1
+<h2 id="1" class="anchor">
+<a class="anchor__link" href="#1">#</a>Part 1
 </h2>
-<h3 id="1.1">
-<a class="anchor" href="#1.1">#</a>Limits of data abstraction
+<h3 id="1.1" class="anchor">
+<a class="anchor__link" href="#1.1">#</a>Limits of data abstraction
 </h3>
 <ul>
 <li>So far, we’ve talked a lot about data abstraction.</li>
@@ -65,8 +65,8 @@ Generic Operators<small class="number">4B</small>
 <li>We want <em>generic operators</em>. What these operators precisely do depends on the data format it is looking at.</li>
 <li>It should be easy to add new data types to the system, so that the generic operators work on them, too, with minimal changes.</li>
 </ul>
-<h3 id="1.2">
-<a class="anchor" href="#1.2">#</a>Complex number arithmetic
+<h3 id="1.2" class="anchor">
+<a class="anchor__link" href="#1.2">#</a>Complex number arithmetic
 </h3>
 <ul>
 <li>We can represent a complex number in two ways:
@@ -82,8 +82,8 @@ Generic Operators<small class="number">4B</small>
 <li>We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.</li>
 <li>We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.</li>
 </ul>
-<h3 id="1.3">
-<a class="anchor" href="#1.3">#</a>Incompatible representations
+<h3 id="1.3" class="anchor">
+<a class="anchor__link" href="#1.3">#</a>Incompatible representations
 </h3>
 <ul>
 <li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
@@ -94,11 +94,11 @@ Generic Operators<small class="number">4B</small>
 <li>We can simply <code>cons</code> the symbol <code>'rectangular</code> or <code>'polar</code> to the complex number data.</li>
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
 </ul>
-<h2 id="2">
-<a class="anchor" href="#2">#</a>Part 2
+<h2 id="2" class="anchor">
+<a class="anchor__link" href="#2">#</a>Part 2
 </h2>
-<h3 id="2.1">
-<a class="anchor" href="#2.1">#</a>Problems with the manager
+<h3 id="2.1" class="anchor">
+<a class="anchor__link" href="#2.1">#</a>Problems with the manager
 </h3>
 <ul>
 <li>The strategy we just looked at is called <em>dispatch on type</em>.</li>
@@ -111,8 +111,8 @@ Generic Operators<small class="number">4B</small>
 <li>This is annoying because the generic procedure case analyses are very repetitive.</li>
 </ul></li>
 </ul>
-<h3 id="2.2">
-<a class="anchor" href="#2.2">#</a>Data-directed programming
+<h3 id="2.2" class="anchor">
+<a class="anchor__link" href="#2.2">#</a>Data-directed programming
 </h3>
 <ul>
 <li>Our system has a table with types on the horizontal axis and operators on the vertical axis.</li>
@@ -142,11 +142,11 @@ Generic Operators<small class="number">4B</small>
 <li>This style of programming called <em>data-directed</em> programming.</li>
 <li>The data objects themselves are carrying the information about how you should operate on them.</li>
 </ul>
-<h2 id="3">
-<a class="anchor" href="#3">#</a>Part 3
+<h2 id="3" class="anchor">
+<a class="anchor__link" href="#3">#</a>Part 3
 </h2>
-<h3 id="3.1">
-<a class="anchor" href="#3.1">#</a>Generic arithmetic system
+<h3 id="3.1" class="anchor">
+<a class="anchor__link" href="#3.1">#</a>Generic arithmetic system
 </h3>
 <ul>
 <li>We just looked at data-directed programming for complex numbers.</li>
@@ -158,8 +158,8 @@ Generic Operators<small class="number">4B</small>
 <li>Now, our complex numbers will have two labels on them: <code>'complex</code> <em>and</em> either <code>'rectangular</code> or <code>'polar</code>.</li>
 <li>At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.</li>
 </ul>
-<h3 id="3.2">
-<a class="anchor" href="#3.2">#</a>Polynomials
+<h3 id="3.2" class="anchor">
+<a class="anchor__link" href="#3.2">#</a>Polynomials
 </h3>
 <ul>
 <li>We could also add polynomials to the generic arithmetic system.</li>
@@ -170,8 +170,8 @@ Generic Operators<small class="number">4B</small>
 <li>All because we wrote <code>add</code> instead of <code>+</code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
 <li>If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.</li>
 </ul>
-<h3 id="3.3">
-<a class="anchor" href="#3.3">#</a>Conclusion
+<h3 id="3.3" class="anchor">
+<a class="anchor__link" href="#3.3">#</a>Conclusion
 </h3>
 <ul>
 <li>We built a system that has decentralized control.</li>
@@ -179,10 +179,10 @@ Generic Operators<small class="number">4B</small>
 <li>This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.</li>
 <li>The true complexity comes in with <em>coercion</em> – when you add a complex and a rational, who worries about converting what?</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="4a.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5a.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="4a.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5a.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

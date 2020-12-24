@@ -26,10 +26,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <h1>
 Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
@@ -38,8 +38,8 @@ Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
 <li>We can experiment with different language design just by modifying the evaluator.</li>
 <li>This is often how new languages are invented. It’s easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.</li>
 </ul>
-<h3 id="4.2.1">
-<a class="anchor" href="#4.2.1">#</a>Normal Order and Applicative Order<small class="number">4.2.1</small>
+<h2 id="4.2.1" class="anchor">
+<a class="anchor__link" href="#4.2.1">#</a>Normal Order and Applicative Order<small class="number">4.2.1</small>
 </h3>
 <ul>
 <li><a href="#applicative-order-versus-normal-order">Earlier</a>, we noted that scheme is an <em>applicative-order</em> language.</li>
@@ -51,8 +51,8 @@ Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
 <li>In Scheme, <code>(try 0 (/ 1 0))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
 <li>In a lazy language, we can implement <code>if</code> as an ordinary procedure.</li>
 </ul>
-<h3 id="4.2.2">
-<a class="anchor" href="#4.2.2">#</a>An Interpreter with Lazy Evaluation<small class="number">4.2.2</small>
+<h2 id="4.2.2" class="anchor">
+<a class="anchor__link" href="#4.2.2">#</a>An Interpreter with Lazy Evaluation<small class="number">4.2.2</small>
 </h3>
 <ul>
 <li>In this section, we will modify the interpreter to support lazy evaluation.</li>
@@ -71,9 +71,9 @@ Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
 <li>It raises subtle and confusing issues in the presence of assignments.</li>
 </ul></li>
 </ul>
-<h4 id="4.2.2.2">
-<a class="anchor" href="#4.2.2.2">#</a>Modifying the evaluator
-</h4>
+<h3 id="4.2.2.1" class="anchor">
+<a class="anchor__link" href="#4.2.2.1">#</a>Modifying the evaluator
+</h3>
 <ul>
 <li>The main change required is the procedure application logic in <code>eval</code> and <code>apply</code>.</li>
 <li>The <code>application?</code> clause of <code>eval</code> becomes:</li>
@@ -109,9 +109,9 @@ Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (true? (actual-value (if-predicate <span class="kw">exp</span>) env))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eval</span> (if-consequent <span class="kw">exp</span>) env)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">eval</span> (if-alternative <span class="kw">exp</span>) env)))</span></code></pre></div>
-<h4 id="4.2.2.2">
-<a class="anchor" href="#4.2.2.2">#</a>Representing thunks
-</h4>
+<h3 id="4.2.2.2" class="anchor">
+<a class="anchor__link" href="#4.2.2.2">#</a>Representing thunks
+</h3>
 <ul>
 <li>To force a thunk, we evaluate it in its environment. We use <code>actual-value</code> instead of <code>eval</code> so that it recursively forces if the result is another thunk:</li>
 </ul>
@@ -129,8 +129,8 @@ Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
 <ul>
 <li>To memoize thunks, <code>force-it</code> becomes a bit more complicated.</li>
 </ul>
-<h3 id="4.2.3">
-<a class="anchor" href="#4.2.3">#</a>Streams as Lazy Lists<small class="number">4.2.3</small>
+<h2 id="4.2.3" class="anchor">
+<a class="anchor__link" href="#4.2.3">#</a>Streams as Lazy Lists<small class="number">4.2.3</small>
 </h3>
 <ul>
 <li>Before introducing lazy evaluation, we <a href="#streams-are-delayed-lists">implemented streams as delayed lists</a>.</li>
@@ -148,10 +148,10 @@ Variations on a Scheme — Lazy Evaluation<small class="number">4.2</small>
 <li>These lazy lists are even lazier than our original streams, since the <code>car</code> is delayed too.</li>
 <li>This also eliminates <a href="#streams-and-delayed-evaluation">the problems we had earlier</a> around having to explicitly delay and force some arguments when computing integrals.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <h1>
 The Environment Model of Evaluation<small class="number">3.2</small>
@@ -68,8 +68,8 @@ The Environment Model of Evaluation<small class="number">3.2</small>
 <li>The environment determines the context in which an expression should be evaluated. An expression has no meaning otherwise.</li>
 <li>The global environment consists of a single frame, and it is implicitly used in interactions with the interpreter.</li>
 </ul>
-<h3 id="3.2.1">
-<a class="anchor" href="#3.2.1">#</a>The Rules for Evaluation<small class="number">3.2.1</small>
+<h2 id="3.2.1" class="anchor">
+<a class="anchor__link" href="#3.2.1">#</a>The Rules for Evaluation<small class="number">3.2.1</small>
 </h3>
 <ul>
 <li>To evaluate a combination:
@@ -88,8 +88,8 @@ The Environment Model of Evaluation<small class="number">3.2</small>
 <li>Evaluating <code>(set! &lt;var&gt; &lt;val&gt;)</code> locates the binding of <code>&lt;var&gt;</code> in the current environment (the first frame that has a binding for it) and changes the bound value to <code>&lt;val&gt;</code>.</li>
 <li>We use <code>define</code> for variables that are currently unbound, and <code>set!</code> for variables that are already bound.</li>
 </ul>
-<h3 id="3.2.2">
-<a class="anchor" href="#3.2.2">#</a>Applying Simple Procedures<small class="number">3.2.2</small>
+<h2 id="3.2.2" class="anchor">
+<a class="anchor__link" href="#3.2.2">#</a>Applying Simple Procedures<small class="number">3.2.2</small>
 </h3>
 <ul>
 <li>Let’s evaluate <code>(f 5)</code>, given the following procedures:</li>
@@ -108,8 +108,8 @@ The Environment Model of Evaluation<small class="number">3.2</small>
 <li>In <span class="math inline">E_2</span>, we evaluate <code>(+ (square x) (square y))</code>.</li>
 <li>The process continues recursively. We end up with <code>(+ 36 100)</code>, which evaluates to <code>136</code>.</li>
 </ul>
-<h3 id="3.2.3">
-<a class="anchor" href="#3.2.3">#</a>Frames as the Repository of Local State<small class="number">3.2.3</small>
+<h2 id="3.2.3" class="anchor">
+<a class="anchor__link" href="#3.2.3">#</a>Frames as the Repository of Local State<small class="number">3.2.3</small>
 </h3>
 <ul>
 <li>Now we can see how the environment model makes sense of assignment and local state.</li>
@@ -142,8 +142,8 @@ The Environment Model of Evaluation<small class="number">3.2</small>
 <li>On the other hand, <code>W1</code> and <code>W2</code> share the same code.</li>
 </ul></li>
 </ul>
-<h3 id="3.2.4">
-<a class="anchor" href="#3.2.4">#</a>Internal Definitions<small class="number">3.2.4</small>
+<h2 id="3.2.4" class="anchor">
+<a class="anchor__link" href="#3.2.4">#</a>Internal Definitions<small class="number">3.2.4</small>
 </h3>
 <ul>
 <li>With block structure, we nested definitions using <code>define</code> to avoid exposing helper procedures.</li>
@@ -154,10 +154,10 @@ The Environment Model of Evaluation<small class="number">3.2</small>
 <li>This means each internal procedure has access to the arguments of the procedure they are defined within.</li>
 <li>The names of local procedures don’t interfere with names external to the enclosing procedure, due to <span class="math inline">E_1</span>.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

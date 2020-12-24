@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5.html">Next →</a></div>
 </nav>
 <h1>
 Concurrency: Time Is of the Essence<small class="number">3.4</small>
@@ -60,8 +60,8 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 <li>It can also provide a speed advantage on multicore computers.</li>
 <li>The complexities introduces by assignment become even more problematic in the presence of concurrency.</li>
 </ul>
-<h3 id="3.4.1">
-<a class="anchor" href="#3.4.1">#</a>The Nature of Time in Concurrent Systems<small class="number">3.4.1</small>
+<h2 id="3.4.1" class="anchor">
+<a class="anchor__link" href="#3.4.1">#</a>The Nature of Time in Concurrent Systems<small class="number">3.4.1</small>
 </h3>
 <ul>
 <li>On the surface, time is straightforward: it is an ordering.</li>
@@ -70,9 +70,9 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 <li>Two such expressions executed concurrently on the same <code>balance</code> variable could have their three steps interleaved.</li>
 <li>The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.</li>
 </ul>
-<h4 id="3.4.4.1">
-<a class="anchor" href="#3.4.4.1">#</a>Correct behavior of concurrent programs
-</h4>
+<h3 id="3.4.1.1" class="anchor">
+<a class="anchor__link" href="#3.4.1.1">#</a>Correct behavior of concurrent programs
+</h3>
 <ul>
 <li>We already know we have to be careful about order with <code>set!</code>.</li>
 <li>With concurrent programs we must be especially careful.</li>
@@ -80,17 +80,17 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 <li>A less stringent restriction: to ensure that the system produces the same result as if the processes had run sequentially in some order (we don’t specify a particular order).</li>
 <li>Concurrent programs are inherently <em>nondeterministic</em>, because we don’t what order of execution its result is equivalent to, so there is a set of possible values it could take.</li>
 </ul>
-<h3 id="3.4.2">
-<a class="anchor" href="#3.4.2">#</a>Mechanisms for Controlling Concurrency<small class="number">3.4.2</small>
+<h2 id="3.4.2" class="anchor">
+<a class="anchor__link" href="#3.4.2">#</a>Mechanisms for Controlling Concurrency<small class="number">3.4.2</small>
 </h3>
 <ul>
 <li>If one process has three ordered events <span class="math inline">(a,b,c)</span> and another, running concurrently, has three ordered events <span class="math inline">(x,y,z)</span>, then there are twenty ways of interleaving them.</li>
 <li>The programmer would have to consider the results in all twenty cases to be confident in the program.</li>
 <li>A better approach is to use mechanisms to constrain interleaving to ensure correct behavior.</li>
 </ul>
-<h4 id="3.4.4.2">
-<a class="anchor" href="#3.4.4.2">#</a>Serializing access to shared state
-</h4>
+<h3 id="3.4.2.1" class="anchor">
+<a class="anchor__link" href="#3.4.2.1">#</a>Serializing access to shared state
+</h3>
 <ul>
 <li>Serialization groups procedures into sets such and prevents multiple procedures in the same set from executing concurrently.</li>
 <li>We can use this to control access to shared variables.</li>
@@ -98,18 +98,18 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(swap-value! f)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (set-value! (f (get-value))))</span></code></pre></div>
-<h4 id="3.4.4.2">
-<a class="anchor" href="#3.4.4.2">#</a>Serializers in Scheme
-</h4>
+<h3 id="3.4.2.2" class="anchor">
+<a class="anchor__link" href="#3.4.2.2">#</a>Serializers in Scheme
+</h3>
 <ul>
 <li>Suppose we have a procedure <code>parallel-execute</code> that takes a variable number of arguments that are procedures of no arguments, and executes them all concurrently.</li>
 <li>We construct <em>serializers</em> with <code>(make-serializer)</code>.</li>
 <li>A serializer takes a procedure as its argument and returns a serialized procedure that behaves like the original.</li>
 <li>Calls to the same serializer return procedures in the same set.</li>
 </ul>
-<h4 id="3.4.4.2">
-<a class="anchor" href="#3.4.4.2">#</a>Complexity of using multiple shared resources
-</h4>
+<h3 id="3.4.2.3" class="anchor">
+<a class="anchor__link" href="#3.4.2.3">#</a>Complexity of using multiple shared resources
+</h3>
 <ul>
 <li>Serializers are powerful, and easy to use for one resource.</li>
 <li>Things get much more difficult with multiple shared resources.</li>
@@ -125,9 +125,9 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 <li>One solution is to expose the serializer from <code>make-account</code>, and use that to serialize the entire exchanging procedure.</li>
 <li>We would have to manually serialize deposits, but this would give us the flexibility to serialize the exchanging procedure.</li>
 </ul>
-<h4 id="3.4.4.2">
-<a class="anchor" href="#3.4.4.2">#</a>Implementing serializers
-</h4>
+<h3 id="3.4.2.4" class="anchor">
+<a class="anchor__link" href="#3.4.2.4">#</a>Implementing serializers
+</h3>
 <ul>
 <li>Serializers are implemented in terms of the primitive <em>mutex</em>.</li>
 <li>A mutex can be <em>acquired</em> and it can be <em>released</em>.</li>
@@ -143,9 +143,9 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 <li>To acquire the mutex, we test the cell. We wait until it is false, then we set it to true and proceed.</li>
 <li>To release the mutex, we set its contents to false.</li>
 </ul>
-<h4 id="3.4.4.2">
-<a class="anchor" href="#3.4.4.2">#</a>Deadlock
-</h4>
+<h3 id="3.4.2.5" class="anchor">
+<a class="anchor__link" href="#3.4.2.5">#</a>Deadlock
+</h3>
 <ul>
 <li>Even with a proper implementation of mutexes and seralizers, we still have a problem with the account exchanging procedure.</li>
 <li>We serialize the whole procedure with both accounts so that an account may only participate in one exchange at a time.</li>
@@ -155,19 +155,19 @@ Concurrency: Time Is of the Essence<small class="number">3.4</small>
 <li>In this case, we can fix the problem by locking accounts in a particular order based on a unique identifier.</li>
 <li>In some cases, it is not possible to avoid deadlock, and we simply have to “back out” and try again.</li>
 </ul>
-<h4 id="3.4.4.2">
-<a class="anchor" href="#3.4.4.2">#</a>Concurrency, time, and communication
-</h4>
+<h3 id="3.4.2.6" class="anchor">
+<a class="anchor__link" href="#3.4.2.6">#</a>Concurrency, time, and communication
+</h3>
 <ul>
 <li>Concurrency can be tricky because it’s not always clear what is meant by “shared state.”</li>
 <li>It also becomes more complicated in large, distributed systems.</li>
 <li>The notion of time in concurrency control must be intimately linked to <em>communication</em>.</li>
 <li>There are some parallels with the theory of relativity.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

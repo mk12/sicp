@@ -22,20 +22,20 @@ $endif$
   </nav>
 </header>
 $if(up)$
-<nav class="pagenav">
-  <div class="pagenav__prev">$if(prev)$<a class="pagenav__link" href="$prev$">← Prev</a>$else$← Prev$endif$</div>
-  <div class="pagenav__up"><a class="pagenav__link" href="$up$">↑ Up</a></div>
-  <div class="pagenav__next">$if(next)$<a class="pagenav__link" href="$next$">Next →</a>$else$Next →$endif$</div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev">$if(prev)$<a class="pagenav__link" href="$prev$">← Prev</a>$else$← Prev$endif$</div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="$up$">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next">$if(next)$<a class="pagenav__link" href="$next$">Next →</a>$else$Next →$endif$</div>
 </nav>
 $endif$
 $body$
 $if(up)$
-<nav class="pagenav">
-  <div class="pagenav__prev">$if(prev)$<a class="pagenav__link" href="$prev$">← Prev</a>$else$← Prev$endif$</div>
-  <div class="pagenav__up"><a class="pagenav__link" href="$up$">↑ Up</a></div>
-  <div class="pagenav__next">$if(next)$<a class="pagenav__link" href="$next$">Next →</a>$else$Next →$endif$</div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev">$if(prev)$<a class="pagenav__link" href="$prev$">← Prev</a>$else$← Prev$endif$</div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="$up$">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next">$if(next)$<a class="pagenav__link" href="$next$">Next →</a>$else$Next →$endif$</div>
 </nav>
 $endif$
-<footer class="footer">© 2020 Mitchell Kember</footer>
+<footer class="footer$if(up)$$else$ footer--lone$endif$">© 2020 Mitchell Kember</footer>
 </body>
 </html>

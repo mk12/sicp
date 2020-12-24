@@ -42,19 +42,19 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="5b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="6b.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="5b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="6b.html">Next →</a></div>
 </nav>
 <h1>
 Streams, Part 1<small class="number">6A</small>
 </h1>
-<h2 id="1">
-<a class="anchor" href="#1">#</a>Part 1
+<h2 id="1" class="anchor">
+<a class="anchor__link" href="#1">#</a>Part 1
 </h2>
-<h3 id="1.1">
-<a class="anchor" href="#1.1">#</a>Recap
+<h3 id="1.1" class="anchor">
+<a class="anchor__link" href="#1.1">#</a>Recap
 </h3>
 <ul>
 <li>We’ve learned about assignment and its frightening implications.</li>
@@ -64,8 +64,8 @@ Streams, Part 1<small class="number">6A</small>
 <li>Our goal was <em>modularity</em>, writing programs that mirror reality.</li>
 <li>Maybe we have the wrong view of reality; maybe time is an illusion and nothing changes.</li>
 </ul>
-<h3 id="1.2">
-<a class="anchor" href="#1.2">#</a>Motivation
+<h3 id="1.2" class="anchor">
+<a class="anchor__link" href="#1.2">#</a>Motivation
 </h3>
 <ul>
 <li>We’re going to look at another way to decompose systems: <em>stream processing</em>.</li>
@@ -98,8 +98,8 @@ Streams, Part 1<small class="number">6A</small>
 <blockquote>
 <p>Going back to this fundamental principle of computer science that in order to control something you need the name of it.</p>
 </blockquote>
-<h3 id="1.3">
-<a class="anchor" href="#1.3">#</a>Defining streams
+<h3 id="1.3" class="anchor">
+<a class="anchor__link" href="#1.3">#</a>Defining streams
 </h3>
 <ul>
 <li>The arrows between the boxes represent data structures called <em>streams</em>.</li>
@@ -113,8 +113,8 @@ Streams, Part 1<small class="number">6A</small>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      the-empty-stream</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (cons-stream (proc (head s))</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   (map-stream proc (tail se)))))</span></code></pre></div>
-<h3 id="1.4">
-<a class="anchor" href="#1.4">#</a>Using the language
+<h3 id="1.4" class="anchor">
+<a class="anchor__link" href="#1.4">#</a>Using the language
 </h3>
 <ul>
 <li>Now we can reimplement those problems with explicit stream processing:</li>
@@ -136,11 +136,11 @@ Streams, Part 1<small class="number">6A</small>
 <li>The advantage of stream processing is that it establishes <em>conventional interfaces</em>.</li>
 <li>Conventional interfaces are powerful because we can easily glue things together.</li>
 </ul>
-<h2 id="2">
-<a class="anchor" href="#2">#</a>Part 2
+<h2 id="2" class="anchor">
+<a class="anchor__link" href="#2">#</a>Part 2
 </h2>
-<h3 id="2.1">
-<a class="anchor" href="#2.1">#</a>More complicated stream processing
+<h3 id="2.1" class="anchor">
+<a class="anchor__link" href="#2.1">#</a>More complicated stream processing
 </h3>
 <ul>
 <li>Suppose we have a stream of streams <span class="math inline">\{\{1,2,3,\dots\},\{10,20,30,\dots\},\dots\}</span>.</li>
@@ -170,8 +170,8 @@ Streams, Part 1<small class="number">6A</small>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   ((i (enumerate-interval <span class="dv">1</span> n))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (j (enumerate-interval <span class="dv">1</span> (-<span class="dv">1</span>+ i))))</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   (prime? (<span class="op">+</span> i j))))</span></code></pre></div>
-<h3 id="2.2">
-<a class="anchor" href="#2.2">#</a>Eight queens puzzle
+<h3 id="2.2" class="anchor">
+<a class="anchor__link" href="#2.2">#</a>Eight queens puzzle
 </h3>
 <ul>
 <li>Solving this typically uses a <em>backtracking search</em>, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).</li>
@@ -191,11 +191,11 @@ Streams, Part 1<small class="number">6A</small>
 <li>This gives us <em>all solutions</em> to the <span class="math inline">k</span>-queens puzzle.</li>
 <li>We changed our view from things that evolve in time and have state to a global view where we’re not concerned with time.</li>
 </ul>
-<h2 id="3">
-<a class="anchor" href="#3">#</a>Part 3
+<h2 id="3" class="anchor">
+<a class="anchor__link" href="#3">#</a>Part 3
 </h2>
-<h3 id="3.1">
-<a class="anchor" href="#3.1">#</a>Streams are not lists
+<h3 id="3.1" class="anchor">
+<a class="anchor__link" href="#3.1">#</a>Streams are not lists
 </h3>
 <ul>
 <li>By now you should be suspicious – what’s the catch?</li>
@@ -205,8 +205,8 @@ Streams, Part 1<small class="number">6A</small>
 <li>But we can have our cake and eat it to! We can make it just as efficient.</li>
 <li>The key to this is that streams are <em>not</em> lists.</li>
 </ul>
-<h3 id="3.2">
-<a class="anchor" href="#3.2">#</a>Implementing streams
+<h3 id="3.2" class="anchor">
+<a class="anchor__link" href="#3.2">#</a>Implementing streams
 </h3>
 <ul>
 <li>We want the stream to compute itself incrementally, to be an “on demand” data structure.
@@ -234,10 +234,10 @@ Streams, Part 1<small class="number">6A</small>
 <ul>
 <li>Streams blur the line between data structures and procedures.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="5b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="6b.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="5b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="6b.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <h1>
 Procedures and the Processes They Generate<small class="number">1.2</small>
@@ -59,8 +59,8 @@ Procedures and the Processes They Generate<small class="number">1.2</small>
 <li>Processes governed by different types of procedures generate different “shapes” of evolution.</li>
 <li>There are two important resources that computational processes consume: time and space.</li>
 </ul>
-<h3 id="1.2.1">
-<a class="anchor" href="#1.2.1">#</a>Linear Recursion and Iteration<small class="number">1.2.1</small>
+<h2 id="1.2.1" class="anchor">
+<a class="anchor__link" href="#1.2.1">#</a>Linear Recursion and Iteration<small class="number">1.2.1</small>
 </h3>
 <ul>
 <li>The factorial of <span class="math inline">N</span> is defined as the product of the integers on the interval <span class="math inline">[1,N]</span>.</li>
@@ -104,8 +104,8 @@ Procedures and the Processes They Generate<small class="number">1.2</small>
 <li>A recursive <em>process</em> refers to the evolution of the process described above.</li>
 <li>A recursive procedure can generate an iterative process in Scheme thanks to tail-call optimization. In other languages, special-purpose looping constructs are needed for this.</li>
 </ul>
-<h3 id="1.2.2">
-<a class="anchor" href="#1.2.2">#</a>Tree Recursion<small class="number">1.2.2</small>
+<h2 id="1.2.2" class="anchor">
+<a class="anchor__link" href="#1.2.2">#</a>Tree Recursion<small class="number">1.2.2</small>
 </h3>
 <ul>
 <li>With tree recursion, the procedure invokes itself more than once, causing the process to evolve in the shape of a tree.</li>
@@ -117,10 +117,10 @@ Procedures and the Processes They Generate<small class="number">1.2</small>
 <ul>
 <li>The iterative implementation of the Fibonacci procedure is vastly more efficient in space and in time.</li>
 </ul>
-<h4 id="1.2.2.2">
-<a class="anchor" href="#1.2.2.2">#</a>Example: Counting change
-</h4>
-<p>Let <span class="math inline">f(A,N)</span> represent the number of ways of changing the amount A using <span class="math inline">N</span> kinds of coins. If the first kind of coin has denomination <span class="math inline">N</span>, then <span class="math inline">f(A,N) = f(A,N−1) + f(A−D,N)</span>. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of <span class="math inline">f(A,N−1)</span> assumes we don’t use the first kind at all; the value of <span class="math inline">f(A−D,N)</span> assumes we use one or more of the first kind.</p>
+<h3 id="1.2.2.1" class="anchor">
+<a class="anchor__link" href="#1.2.2.1">#</a>Example: Counting change
+</h3>
+<p>Let <span class="math inline">f(A,N)</span> represent the number of ways of changing the amount A using <span class="math inline">N</span> kinds of coins. If the first kind of coin has denomination <span class="math inline">N</span>, then <span class="math inline">f(A,N) = f(A,N-1) + f(A-D,N)</span>. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of <span class="math inline">f(A,N-1)</span> assumes we don’t use the first kind at all; the value of <span class="math inline">f(A-D,N)</span> assumes we use one or more of the first kind.</p>
 <p>That rule and a few degenerate cases is sufficient to describe an algorithm for counting the number of ways of changing amounts of money. We can define it with the following piecewise function:</p>
 <p><span class="math display">
 f(A,N) = \begin{cases}
@@ -130,22 +130,22 @@ f(A,N-1) + f(A-D,N), &amp; \text{if $A &gt; 0$ and $N &gt; 0$.}
 \end{cases}
 </span></p>
 <p>Like Fibonacci, the easy tree-recursive implementation involves a lot of redundancy. Unlike it, there is no obvious iterative solution (it is possible, just harder). One way to improve the performance of the tree-recursive process is to use <em>memoization</em> (maintaining a lookup table).</p>
-<h3 id="1.2.3">
-<a class="anchor" href="#1.2.3">#</a>Orders of Growth<small class="number">1.2.3</small>
+<h2 id="1.2.3" class="anchor">
+<a class="anchor__link" href="#1.2.3">#</a>Orders of Growth<small class="number">1.2.3</small>
 </h3>
 <ul>
 <li>Some processes consume more or less computational resources than others.</li>
 <li>We compare this using <em>order of growth</em>, a gross measure of the resources required by a process as the inputs becomes larger.</li>
 <li>Let <span class="math inline">n</span> be a parameter that measures the size of a problem – it could be the input itself, the tolerance, the number of rows in the matrix, etc. There are many properties that <span class="math inline">n</span> can measure.</li>
 <li>Let <span class="math inline">R(n)</span> be the amount of resources the process requires for a problem of size <span class="math inline">n</span>. This could be time, space (amount of memory), number of registers used, etc.</li>
-<li>We say that <span class="math inline">R(n)</span> has order of growth <span class="math inline">Θ(f(n))</span>, or <span class="math inline">R(n) = Θ(f(n))</span>, if there are positive constants <span class="math inline">A</span> and <span class="math inline">B</span> independent of <span class="math inline">n</span> such that <span class="math inline">Af(n) ≤ R(n) ≤ Bf(n)</span> for any sufficiently large value of <span class="math inline">n</span>.</li>
+<li>We say that <span class="math inline">R(n)</span> has order of growth <span class="math inline">Θ(f(n))</span>, or <span class="math inline">R(n) = Θ(f(n))</span>, if there are positive constants <span class="math inline">A</span> and <span class="math inline">B</span> independent of <span class="math inline">n</span> such that <span class="math inline">Af(n) ≤ R(n) ≤ Bf(n)</span> for any sufficiently large value of <span class="math inline">n</span>.</li>
 <li>The value <span class="math inline">R(n)</span> is sandwiched between <span class="math inline">Af(n)</span> and <span class="math inline">Bf(n)</span>.</li>
 <li>The linear recursive process for computing factorials had <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(n)</span> space (both linear), whereas the linear iterative process had <span class="math inline">Θ(1)</span> space (constant).</li>
 <li>The order of growth is a crude description of the behavior of a process.</li>
 <li>Its importance is allowing us to see the <em>change</em> in the amount of resources required when you, say, increment <span class="math inline">n</span> or double <span class="math inline">n</span>.</li>
 </ul>
-<h3 id="1.2.4">
-<a class="anchor" href="#1.2.4">#</a>Exponentiation<small class="number">1.2.4</small>
+<h2 id="1.2.4" class="anchor">
+<a class="anchor__link" href="#1.2.4">#</a>Exponentiation<small class="number">1.2.4</small>
 </h3>
 <p>One way to calculate b to the nth power is via the following recursive definition:</p>
 <p><span class="math display">b^0 = 1, \qquad b^n = b * b^{n-1}.</span></p>
@@ -156,12 +156,12 @@ b^n = \begin{cases}
 b * b^{n-1}, &amp; \text{if $n$ is odd.}
 \end{cases}
 </span></p>
-<h3 id="1.2.5">
-<a class="anchor" href="#1.2.5">#</a>Greatest Common Divisors<small class="number">1.2.5</small>
+<h2 id="1.2.5" class="anchor">
+<a class="anchor__link" href="#1.2.5">#</a>Greatest Common Divisors<small class="number">1.2.5</small>
 </h3>
 <ul>
-<li>The GCD of integers <span class="math inline">a</span> and <span class="math inline">b</span> is the largest integer that divides both <span class="math inline">a</span> and <span class="math inline">b</span> with no remainder. For example, <span class="math inline">\gcd(16,28) = 4</span>.</li>
-<li>Efficient algorithm uses <span class="math inline">\gcd(a,b) = \gcd(b,a\bmod b)</span>.</li>
+<li>The GCD of integers <span class="math inline">a</span> and <span class="math inline">b</span> is the largest integer that divides both <span class="math inline">a</span> and <span class="math inline">b</span> with no remainder. For example, <span class="math inline">\gcd(16,28) = 4</span>.</li>
+<li>Efficient algorithm uses <span class="math inline">\gcd(a,b) = \gcd(b,a\bmod b)</span>.</li>
 <li>For example, we can reduce <code>(gcd 206 40)</code> as follows:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">gcd</span> <span class="dv">206</span> <span class="dv">40</span>)</span>
@@ -173,35 +173,35 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.</li>
 <li>This is called <em>Euclid’s Algorithm</em>.</li>
-<li>Lamé’s Theorem: If Euclid’s Algorithm requires <span class="math inline">k</span> steps to compute the GCD of some pair <span class="math inline">(a,b)</span>, then <span class="math inline">\min\{a,b\} ≥ \text{Fib}(k)</span>.</li>
+<li>Lamé’s Theorem: If Euclid’s Algorithm requires <span class="math inline">k</span> steps to compute the GCD of some pair <span class="math inline">(a,b)</span>, then <span class="math inline">\min\{a,b\} ≥ \text{Fib}(k)</span>.</li>
 </ul>
-<h3 id="1.2.6">
-<a class="anchor" href="#1.2.6">#</a>Example: Testing for Primality<small class="number">1.2.6</small>
+<h2 id="1.2.6" class="anchor">
+<a class="anchor__link" href="#1.2.6">#</a>Example: Testing for Primality<small class="number">1.2.6</small>
 </h3>
-<h4 id="1.2.2.6">
-<a class="anchor" href="#1.2.2.6">#</a>Searching for divisors
-</h4>
+<h3 id="1.2.6.1" class="anchor">
+<a class="anchor__link" href="#1.2.6.1">#</a>Searching for divisors
+</h3>
 <ul>
 <li>One way to test for primality is to find the number’s divisors.</li>
 <li>A number is prime if and only if it is its own smallest divisor.</li>
 </ul>
-<h4 id="1.2.2.6">
-<a class="anchor" href="#1.2.2.6">#</a>The Fermat test
-</h4>
+<h3 id="1.2.6.2" class="anchor">
+<a class="anchor__link" href="#1.2.6.2">#</a>The Fermat test
+</h3>
 <p>The Fermat test is a <span class="math inline">Θ(log(n))</span> primality test based on Fermat’s Little Theorem:</p>
 <blockquote>
 <p>If <span class="math inline">n</span> is a prime number and a is any positive integer less than <span class="math inline">n</span>, then a raised to the <span class="math inline">n</span>th power is congruent to a modulo <span class="math inline">n</span>.</p>
 </blockquote>
 <p>The test works like this:</p>
 <ol type="1">
-<li>Given a number <span class="math inline">n</span>, pick a random number <span class="math inline">a &lt; n</span> and calculate <span class="math inline">a^n\bmod n</span>.</li>
+<li>Given a number <span class="math inline">n</span>, pick a random number <span class="math inline">a &lt; n</span> and calculate <span class="math inline">a^n\bmod n</span>.</li>
 <li>Fail: If the result is not equal to <span class="math inline">a</span>, then <span class="math inline">n</span> is not prime.</li>
 <li>Pass: If the result is equal to <span class="math inline">a</span>, then <span class="math inline">n</span> is likely prime.</li>
 <li>Repeat. The more times the number passes the test, the more confident we are that <span class="math inline">n</span> is prime. If there is a single failure, <span class="math inline">n</span> is certainly not prime.</li>
 </ol>
-<h4 id="1.2.2.6">
-<a class="anchor" href="#1.2.2.6">#</a>Probabilistic methods
-</h4>
+<h3 id="1.2.6.3" class="anchor">
+<a class="anchor__link" href="#1.2.6.3">#</a>Probabilistic methods
+</h3>
 <ul>
 <li>Most familiar algorithms compute an answer that is guaranteed to be correct. Not so with the Fermat test.</li>
 <li>We can make the probability error in our primality test as small as we like simply by running more tests – except for Carmichael numbers.</li>
@@ -211,10 +211,10 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <blockquote>
 <p>Numbers that fool the Fermat test are called Carmichael numbers, and little is known about them other than that they are extremely rare. There are 255 Carmichael numbers below 100,000,000. The smallest few are 561, 1105, 1729, 2465, 2821, and 6601. In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a “correct” algorithm. Considering an algorithm to be inadequate for the first reason but not for the second <em>illustrates the difference between mathematics and engineering</em>. (69)</p>
 </blockquote>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

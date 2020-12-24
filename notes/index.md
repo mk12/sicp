@@ -1,4 +1,4 @@
-<img class="wizard-image" src="assets/wizard.svg">
+![](assets/wizard.svg){.wizard-image}
 
 Welcome to my study website for [_Structure and Interpretation of Computer Programs_][sicp], a.k.a. the Wizard Book. I started reading it in during my high school computer science class in 2012, and as of 2020 I'm still chipping away at it. Here, you will find:
 

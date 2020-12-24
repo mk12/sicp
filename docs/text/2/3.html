@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="4.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="4.html">Next →</a></div>
 </nav>
 <h1>
 Symbolic Data<small class="number">2.3</small>
@@ -54,8 +54,8 @@ Symbolic Data<small class="number">2.3</small>
 <li>So far we have constructed compound data from numbers only.</li>
 <li>Now, we will work with arbitrary symbols.</li>
 </ul>
-<h3 id="2.3.1">
-<a class="anchor" href="#2.3.1">#</a>Quotation<small class="number">2.3.1</small>
+<h2 id="2.3.1" class="anchor">
+<a class="anchor__link" href="#2.3.1">#</a>Quotation<small class="number">2.3.1</small>
 </h3>
 <ul>
 <li>Lists containing symbols look just like expressions (code).</li>
@@ -74,16 +74,16 @@ Symbolic Data<small class="number">2.3</small>
 <li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>'()</code>.</li>
 <li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
 </ul>
-<h3 id="2.3.2">
-<a class="anchor" href="#2.3.2">#</a>Example: Symbolic Differentiation<small class="number">2.3.2</small>
+<h2 id="2.3.2" class="anchor">
+<a class="anchor__link" href="#2.3.2">#</a>Example: Symbolic Differentiation<small class="number">2.3.2</small>
 </h3>
 <ul>
 <li>Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.</li>
 <li>We will worry about representation later (data abstraction).</li>
 </ul>
-<h4 id="2.3.3.2">
-<a class="anchor" href="#2.3.3.2">#</a>The differentiation program with abstract data
-</h4>
+<h3 id="2.3.2.1" class="anchor">
+<a class="anchor__link" href="#2.3.2.1">#</a>The differentiation program with abstract data
+</h3>
 <ul>
 <li>To start, we will only consider addition and multiplication.</li>
 <li>We need the constant rule, the sum rule, and the product rule.</li>
@@ -99,17 +99,17 @@ Symbolic Data<small class="number">2.3</small>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>(multiplier e)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(multiplicand e)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>(make-product m1 m2)</span></code></pre></div>
-<h4 id="2.3.3.2">
-<a class="anchor" href="#2.3.3.2">#</a>Representing algebraic expressions
-</h4>
+<h3 id="2.3.2.2" class="anchor">
+<a class="anchor__link" href="#2.3.2.2">#</a>Representing algebraic expressions
+</h3>
 <ul>
 <li>There are many ways we could represent algebraic expressions.</li>
 <li>The most straightforward is in parenthesized Polish notation: Lisp syntax.</li>
 <li>We can simplify the answers just like we did in the rational number example: by changing the constructors.</li>
 <li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
 </ul>
-<h3 id="2.3.3">
-<a class="anchor" href="#2.3.3">#</a>Example: Representing Sets<small class="number">2.3.3</small>
+<h2 id="2.3.3" class="anchor">
+<a class="anchor__link" href="#2.3.3">#</a>Example: Representing Sets<small class="number">2.3.3</small>
 </h3>
 <p>There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:</p>
 <ul>
@@ -118,9 +118,9 @@ Symbolic Data<small class="number">2.3</small>
 <li><code>element-of-set?</code>: predicate for an item’s presence in a set</li>
 <li><code>adjoin-set</code>: new set containing one new item</li>
 </ul>
-<h4 id="2.3.3.3">
-<a class="anchor" href="#2.3.3.3">#</a>Sets as unordered lists
-</h4>
+<h3 id="2.3.3.1" class="anchor">
+<a class="anchor__link" href="#2.3.3.1">#</a>Sets as unordered lists
+</h3>
 <ul>
 <li>One method is to just use lists. Each time we add a new element, we have to check to make sure it isn’t already in the set.</li>
 <li>This isn’t very efficient.</li>
@@ -129,9 +129,9 @@ Symbolic Data<small class="number">2.3</small>
 <li>If we don’t eliminate duplicates, most operations are faster.</li>
 <li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
 </ul>
-<h4 id="2.3.3.3">
-<a class="anchor" href="#2.3.3.3">#</a>Sets as ordered lists
-</h4>
+<h3 id="2.3.3.2" class="anchor">
+<a class="anchor__link" href="#2.3.3.2">#</a>Sets as ordered lists
+</h3>
 <ul>
 <li>A more efficient representation is a sorted list.</li>
 <li>We will only consider sets of numbers to keep things simple.</li>
@@ -139,9 +139,9 @@ Symbolic Data<small class="number">2.3</small>
 <li>On average we should expect to scan about half of the set.</li>
 <li>This is still <span class="math inline">Θ(n)</span>; however, intersection gets much faster. Instead of <span class="math inline">Θ(n^2)</span>, it is <span class="math inline">Θ(n)</span>.</li>
 </ul>
-<h4 id="2.3.3.3">
-<a class="anchor" href="#2.3.3.3">#</a>Sets as binary trees
-</h4>
+<h3 id="2.3.3.3" class="anchor">
+<a class="anchor__link" href="#2.3.3.3">#</a>Sets as binary trees
+</h3>
 <ul>
 <li>An even more efficient representation: binary trees.</li>
 <li>Each node contains an element of the set.</li>
@@ -153,9 +153,9 @@ Symbolic Data<small class="number">2.3</small>
 <li>Efficiency hinges on the tree being balanced.</li>
 <li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
 </ul>
-<h4 id="2.3.3.3">
-<a class="anchor" href="#2.3.3.3">#</a>Sets and information retrieval
-</h4>
+<h3 id="2.3.3.4" class="anchor">
+<a class="anchor__link" href="#2.3.3.4">#</a>Sets and information retrieval
+</h3>
 <ul>
 <li>The techniques discussed for sets show up again and again in information retrieval.</li>
 <li>In a data-management system, each record is identified by a key.</li>
@@ -164,8 +164,8 @@ Symbolic Data<small class="number">2.3</small>
 <li>For “random access,” meaning <span class="math inline">Θ(1)</span> access time complexity, trees are usually used.</li>
 <li>Data abstraction is important here – you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
 </ul>
-<h3 id="2.3.4">
-<a class="anchor" href="#2.3.4">#</a>Example: Huffman Encoding Trees<small class="number">2.3.4</small>
+<h2 id="2.3.4" class="anchor">
+<a class="anchor__link" href="#2.3.4">#</a>Example: Huffman Encoding Trees<small class="number">2.3.4</small>
 </h3>
 <ul>
 <li>We can represent data as sequences of ones and zeros (bits).</li>
@@ -177,25 +177,25 @@ Symbolic Data<small class="number">2.3</small>
 <li>Each non-leaf node has a weight (sum of all below) and the set of all the symbols below it. The root node has the set of all the symbols in the tree.</li>
 <li>Each left branch is a zero, and each right branch is a one.</li>
 </ul>
-<h4 id="2.3.3.4">
-<a class="anchor" href="#2.3.3.4">#</a>Generating Huffman trees
-</h4>
+<h3 id="2.3.4.1" class="anchor">
+<a class="anchor__link" href="#2.3.4.1">#</a>Generating Huffman trees
+</h3>
 <ul>
 <li>Huffman gave an algorithm for constructing the best code for a given set of symbols and their relative frequencies.</li>
 <li>Begin with all the nodes as leaves, then form a node branching off to the two least frequent symbols.</li>
 <li>Repeat until there is only one node left, the root node.</li>
 </ul>
-<h4 id="2.3.3.4">
-<a class="anchor" href="#2.3.3.4">#</a>Representing Huffman trees
-</h4>
+<h3 id="2.3.4.2" class="anchor">
+<a class="anchor__link" href="#2.3.4.2">#</a>Representing Huffman trees
+</h3>
 <ul>
 <li>Leaves are represented by the list beginning with the symbol <code>leaf</code> and with two more elements: the symbol and the weight.</li>
 <li>Trees are represented by the list <code>(left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="4.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="4.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

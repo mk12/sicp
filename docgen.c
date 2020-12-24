@@ -191,9 +191,21 @@ static bool wait_pandoc(struct PandocProc *proc) {
 //     ...
 //
 // A level of 0 means that heading has not been encountered yet.
+//
+// Example:
+//
+//     Some text.      ms=0x0000
+//                     ms=0x0000
+//     # First         ms=0x0001
+//                     ms=0x0001
+//     ## A            ms=0x0101
+//     ## B            ms=0x0201
+//     # Second        ms=0x0002
+//
 typedef uint64_t MarkdownSection;
 #define MS_MASK UINT64_C(0xff)
 #define MS_BITS UINT64_C(8)
+#define MS_LEVEL(s, h) ((int)(((s) >> (h - 1)*MS_BITS) & MS_MASK))
 #define MS_MASK_UPTO(h) ((UINT64_C(1) << h*MS_BITS) - 1)
 #define MS_INCREMENT(h) (UINT64_C(1) << (h - 1)*MS_BITS)
 #define MS_NEXT(s, h) ((s & MS_MASK_UPTO(h)) + MS_INCREMENT(h))
@@ -327,7 +339,7 @@ static int num_sections(int chapter) {
 // Returns the Markdown section for the given textbook chapter/section.
 static MarkdownSection text_md_section(int chapter, int section) {
     // Add 1 since "# Frontmatter" is the first h1.
-    return chapter + 1 | (section << MS_BITS);
+    return (MarkdownSection)chapter + 1 | ((MarkdownSection)section << MS_BITS);
 }
 
 // Generates docs/index.html.
@@ -346,7 +358,72 @@ static bool gen_index(void) {
 
 // Generates docs/text/index.html.
 static bool gen_text_index(void) {
-    return true;
+    struct MarkdownState state;
+    if (!init_md(&state, MARKDOWN("text"))) {
+        return false;
+    }
+    const struct PandocOpts opts = {
+        .input = "/dev/stdin",
+        .output = HTML("text/index"),
+        .title = "SICP Notes",
+        .active = "text",
+        .root = "../",
+        .prev = NULL,
+        .up = "../index.html",
+        .next = "quote.html",
+    };
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, opts)) {
+        return false;
+    }
+    dprintf(proc.in, "# Notes\n\n");
+    while (scan_md(&state) && state.section == 0) {
+        write(proc.in, state.line, state.len);
+    }
+    dprintf(proc.in,
+        "\n## Contents\n\n"
+        "<ul class=\"toc\">"
+        "<li class=\"toc__item\">"
+        "<span class=\"toc__label\"></span>"
+        "<a href=\"quote.html\">Highlights</a>"
+        "</li>");
+    const char *close = "";
+    struct MarkdownHeading h;
+    do {
+        if (state.heading == 1 && state.section != 1) {
+            h = parse_md_heading(state.line, state.len);
+            dprintf(proc.in,
+                "%s<li class=\"toc__item\">"
+                "<span class=\"toc__label\">%.*s</span>"
+                "<a href=\"%d/index.html\">%.*s</a>"
+                "<ul class=\"toc\">",
+                close, h.label_len, h.label, MS_LEVEL(state.section, 1) - 1,
+                h.title_len, h.title);
+            close = "</ul></li>";
+        } else if (state.heading == 2 && MS_LEVEL(state.section, 1) == 1) {
+            h = parse_md_heading(state.line, state.len);
+            assert(!h.label);
+            char *id = tolower_s(h.title, h.title_len);
+            dprintf(proc.in,
+                "<li class=\"toc__item\">"
+                "<span class=\"toc__label\"></span>"
+                "<a href=\"front.html#%s\">%.*s</a>"
+                "</li>",
+                id, h.title_len, h.title);
+            free(id);
+        } else if (state.heading == 2) {
+            h = parse_md_heading(state.line, state.len);
+            dprintf(proc.in,
+                "<li class=\"toc__item\">"
+                "<span class=\"toc__label\">%.*s</span>"
+                "<a href=\"%d/%d.html\">%.*s</a>"
+                "</li>",
+                h.label_len, h.label, MS_LEVEL(state.section, 1) - 1,
+                MS_LEVEL(state.section, 2), h.title_len, h.title);
+        }
+    } while (scan_md(&state));
+    dprintf(proc.in, "%s</ul>\n", close);
+    return wait_pandoc(&proc);
 }
 
 // Generates docs/text/quote.html.
@@ -371,13 +448,13 @@ static bool gen_text_quote(void) {
     }
     dprintf(proc.in, "# Highlights\n\n");
     while (scan_md(&state) && state.section != 1);
-    while (scan_md(&state)) {
+    while (scan_md(&state) && state.heading != 1) {
         if (state.heading > 1) {
             struct MarkdownHeading h = parse_md_heading(state.line, state.len);
             if (h.label) {
                 dprintf(proc.in,
-                    "<h%d id=\"%.*s\">"
-                    "<a class=\"anchor\" href=\"#%.*s\">#</a>"
+                    "<h%d id=\"%.*s\" class=\"anchor\">"
+                    "<a class=\"anchor__link\" href=\"#%.*s\">#</a>"
                     "<a class =\"h-link\" href=\"%.*s/index.html\">%.*s</a>"
                     "<small class=\"number\">%.*s</small>"
                     "</h%d>\n",
@@ -387,8 +464,8 @@ static bool gen_text_quote(void) {
             } else {
                 char *id = tolower_s(h.title, h.title_len);
                 dprintf(proc.in,
-                    "<h%d id=\"%s\">"
-                    "<a class=\"anchor\" href=\"#%s\">#</a>"
+                    "<h%d id=\"%s\" class=\"anchor\">"
+                    "<a class=\"anchor__link\" href=\"#%s\">#</a>"
                     "<a class=\"h-link\" href=\"front.html#%s\">%.*s</a>"
                     "</h%d>\n",
                     state.heading, id, id, id, h.title_len, h.title,
@@ -429,8 +506,8 @@ static bool gen_text_front(void) {
             assert(!h.label);
             char *id = tolower_s(h.title, h.title_len);
             dprintf(proc.in,
-                "<h%d id=\"%s\">"
-                "<a class=\"anchor\" href=\"#%s\">#</a>"
+                "<h%d id=\"%s\" class=\"anchor\">"
+                "<a class=\"anchor__link\" href=\"#%s\">#</a>"
                 "%.*s"
                 "</h%d>\n",
                 state.heading, id, id, h.title_len, h.title, state.heading);
@@ -498,28 +575,28 @@ static bool gen_text_chapter(const char *output) {
     do {
         if (state.heading == 2) {
             h = parse_md_heading(state.line, state.len);
-            const int section = (state.section >> MS_BITS) & MS_MASK;
+            const int section = MS_LEVEL(state.section, 2);
             dprintf(proc.in,
                 "%s<li class=\"toc__item\">"
                 "<span class=\"toc__label\">%.*s</span>"
-                "<a class=\"toc__link\" href=\"%d.html\">%.*s</a>"
-                "<ul>",
+                "<a href=\"%d.html\">%.*s</a>"
+                "<ul class=\"toc\">",
                 close, h.label_len, h.label, section, h.title_len, h.title);
             close = "</ul></li>";
         } else if (state.heading == 3) {
             h = parse_md_heading(state.line, state.len);
-            const int section = (state.section >> MS_BITS) & MS_MASK;
-            const int subsection = (state.section >> 2*MS_BITS) & MS_MASK;
+            const int section = MS_LEVEL(state.section, 2);
+            const int subsection = MS_LEVEL(state.section, 3);
             dprintf(proc.in,
                 "<li class=\"toc__item\">"
                 "<span class=\"toc__label\">%.*s</span>"
-                "<a class=\"toc__link\" href=\"%d.html#%d.%d.%d\">%.*s</a>"
+                "<a href=\"%d.html#%d.%d.%d\">%.*s</a>"
                 "</li>",
                 h.label_len, h.label, section, chapter, section, subsection,
                 h.title_len, h.title);
         }
     } while (scan_md(&state) && state.heading != 1);
-    dprintf(proc.in, "</ul></li></ul>\n");
+    dprintf(proc.in, "%s</ul>\n", close);
     return wait_pandoc(&proc);
 invalid:
     fprintf(stderr, "%s: invalid text chapter\n", output);
@@ -590,25 +667,28 @@ static bool gen_text_section(const char *output) {
         if (state.heading >= 3) {
             h = parse_md_heading(state.line, state.len);
             if (h.label) {
+                assert(state.heading == 3);
                 dprintf(proc.in,
-                    "<h%d id=\"%.*s\">"
-                    "<a class=\"anchor\" href=\"#%.*s\">#</a>"
+                    "<h%d id=\"%.*s\" class=\"anchor\">"
+                    "<a class=\"anchor__link\" href=\"#%.*s\">#</a>"
                     "%.*s"
                     "<small class=\"number\">%.*s</small>"
                     "</h%d>\n",
-                    state.heading, h.label_len, h.label, h.label_len, h.label,
-                    h.title_len, h.title, h.label_len, h.label, state.heading);
+                    state.heading - 1, h.label_len, h.label,
+                    h.label_len, h.label, h.title_len, h.title,
+                    h.label_len, h.label, state.heading);
             } else {
+                assert(state.heading == 4);
                 char id[] = "_._._._";
                 snprintf(id, sizeof id, "%d.%d.%d.%d", chapter, section,
-                    (int)((state.section >> MS_BITS) & MS_MASK),
-                    (int)((state.section >> 2*MS_BITS) & MS_MASK));
+                    MS_LEVEL(state.section, 3), MS_LEVEL(state.section, 4));
                 dprintf(proc.in,
-                    "<h%d id=\"%s\">"
-                    "<a class=\"anchor\" href=\"#%s\">#</a>"
+                    "<h%d id=\"%s\" class=\"anchor\">"
+                    "<a class=\"anchor__link\" href=\"#%s\">#</a>"
                     "%.*s"
                     "</h%d>\n",
-                    state.heading, id, id, h.title_len, h.title, state.heading);
+                    state.heading - 1, id, id, h.title_len, h.title,
+                    state.heading - 1);
             }
         } else {
             write(proc.in, state.line, state.len);
@@ -648,7 +728,8 @@ static bool gen_lecture_index(void) {
         "\n## Contents\n\n"
         "<ul class=\"toc\">"
         "<li class=\"toc__item\">"
-        "<a class=\"toc__link\" href=\"quote.html\">Highlights</a>"
+        "<span class=\"toc__label\"></span>"
+        "<a href=\"quote.html\">Highlights</a>"
         "</li>");
     do {
         if (state.heading == 1) {
@@ -657,7 +738,7 @@ static bool gen_lecture_index(void) {
             dprintf(proc.in,
                 "<li class=\"toc__item\">"
                 "<span class=\"toc__label\">%.*s</span>"
-                "<a class=\"toc__link\" href=\"%s.html\">%.*s</a>"
+                "<a href=\"%s.html\">%.*s</a>"
                 "</li>",
                 h.label_len, h.label, href, h.title_len, h.title);
             free(href);
@@ -695,8 +776,8 @@ static bool gen_lecture_quote(void) {
             assert(h.label);
             char *id = tolower_s(h.label, h.label_len);
             dprintf(proc.in,
-                "<h%d id=\"%s\">"
-                "<a class=\"anchor\" href=\"#%s\">#</a>"
+                "<h%d id=\"%s\" class=\"anchor\">"
+                "<a class=\"anchor__link\" href=\"#%s\">#</a>"
                 "<a class =\"h-link\" href=\"%s.html\">%.*s</a>"
                 "<small class=\"number\">%.*s</small>"
                 "</h%d>\n",
@@ -780,8 +861,8 @@ static bool gen_lecture_page(const char *output) {
             assert(!h.label);
             write_dotted_section(id, sizeof id, state.section >> MS_BITS);
             dprintf(proc.in,
-                "<h%d id=\"%s\">"
-                "<a class=\"anchor\" href=\"#%s\">#</a>"
+                "<h%d id=\"%s\" class=\"anchor\">"
+                "<a class=\"anchor__link\" href=\"#%s\">#</a>"
                 "%.*s"
                 "</h%d>\n",
                 state.heading, id, id, h.title_len, h.title, state.heading);

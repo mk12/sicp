@@ -42,19 +42,19 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="4b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5b.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="4b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5b.html">Next →</a></div>
 </nav>
 <h1>
 Assignment, State, and Side-Effects<small class="number">5A</small>
 </h1>
-<h2 id="1">
-<a class="anchor" href="#1">#</a>Part 1
+<h2 id="1" class="anchor">
+<a class="anchor__link" href="#1">#</a>Part 1
 </h2>
-<h3 id="1.1">
-<a class="anchor" href="#1.1">#</a>Introducing assignment
+<h3 id="1.1" class="anchor">
+<a class="anchor__link" href="#1.1">#</a>Introducing assignment
 </h3>
 <ul>
 <li>We’ve learned enough about programming in Lisp to do fairly complex things.</li>
@@ -64,8 +64,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>After all, we only add something to the language if we have a good reason for doing so.</li>
 <li>We are adding assignment because it will allow us to break some problems up into certain sets of pieces, and this new means of decomposition would be impossible without assignment.</li>
 </ul>
-<h3 id="1.2">
-<a class="anchor" href="#1.2">#</a>Functional programming
+<h3 id="1.2" class="anchor">
+<a class="anchor__link" href="#1.2">#</a>Functional programming
 </h3>
 <ul>
 <li>Functional programs encode mathematical truths.</li>
@@ -73,8 +73,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>Methods may be distinguished by the choice of truths expressed.</li>
 <li>Although functional, Lisp is not quite the same as math. Math is declarative, but Lisp is imperative.</li>
 </ul>
-<h3 id="1.3">
-<a class="anchor" href="#1.3">#</a>Assignment and Time
+<h3 id="1.3" class="anchor">
+<a class="anchor__link" href="#1.3">#</a>Assignment and Time
 </h3>
 <ul>
 <li>To do assignment, we use <code>(set! &lt;variable&gt; &lt;value&gt;)</code>.</li>
@@ -88,8 +88,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>The substitution model completely breaks down. It is static.</li>
 <li>We need a new model of computation for this “bad thing.” We had better have a good reason for introducing assignment.</li>
 </ul>
-<h3 id="1.4">
-<a class="anchor" href="#1.4">#</a>Identity
+<h3 id="1.4" class="anchor">
+<a class="anchor__link" href="#1.4">#</a>Identity
 </h3>
 <ul>
 <li>Symbols for variables no longer refer directly to their values, but to some <em>place</em>.</li>
@@ -97,8 +97,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>The state of an identity is it’s current associated value.</li>
 <li>When we talk about <em>time</em>, we mean the before/after ordering of causal values.</li>
 </ul>
-<h3 id="1.5">
-<a class="anchor" href="#1.5">#</a>Factorial example
+<h3 id="1.5" class="anchor">
+<a class="anchor__link" href="#1.5">#</a>Factorial example
 </h3>
 <ul>
 <li>Here’s how we implemented factorial functionally:</li>
@@ -122,19 +122,19 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>There are ways of making errors in the second program that simply didn’t exist when we couldn’t do assignment.</li>
 <li>If we change the ordering of the assignments, the procedure calculates the wrong value.</li>
 </ul>
-<h2 id="2">
-<a class="anchor" href="#2">#</a>Part 2
+<h2 id="2" class="anchor">
+<a class="anchor__link" href="#2">#</a>Part 2
 </h2>
-<h3 id="2.1">
-<a class="anchor" href="#2.1">#</a>Environment model
+<h3 id="2.1" class="anchor">
+<a class="anchor__link" href="#2.1">#</a>Environment model
 </h3>
 <ul>
 <li>We need a new model of computation that can allow us to understand programs that use assignment.</li>
 <li>The new model is called the <em>environment model</em>.</li>
 <li>Unfortunately, it is significantly more complicated than the substitution model.</li>
 </ul>
-<h3 id="2.2">
-<a class="anchor" href="#2.2">#</a>Free and bound variables
+<h3 id="2.2" class="anchor">
+<a class="anchor__link" href="#2.2">#</a>Free and bound variables
 </h3>
 <ul>
 <li>A variable <code>v</code> is <em>bound</em> in an expression <code>E</code> if the meaning of <code>E</code> is unchanged by the uniform replacement of a variable <code>w</code> not occurring in <code>E</code>, for every occurrence of <code>v</code> in <code>E</code>.</li>
@@ -145,8 +145,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>The list of formal parameters is called the <em>bound variable list</em>. The λ-expression <em>binds</em> the variables <em>declared</em> in its bound variable list.</li>
 <li>The parts of the expression where a variable has a value defined by the λ-expression binding it is the <em>scope</em> of the variable.</li>
 </ul>
-<h3 id="2.3">
-<a class="anchor" href="#2.3">#</a>Environments, frames, and bindings
+<h3 id="2.3" class="anchor">
+<a class="anchor__link" href="#2.3">#</a>Environments, frames, and bindings
 </h3>
 <ul>
 <li>Environments are a way of doing substitutions virtually.</li>
@@ -156,8 +156,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>We look up the value of a variable in an environment by traversing up the frames, finding the first one that has a binding for the variable, and reading its associated value.</li>
 <li>If a variable is bound twice in an environment, the binding in the earlier (lower) frame <em>shadows</em> the other.</li>
 </ul>
-<h3 id="2.4">
-<a class="anchor" href="#2.4">#</a>Procedure creation and application
+<h3 id="2.4" class="anchor">
+<a class="anchor__link" href="#2.4">#</a>Procedure creation and application
 </h3>
 <ul>
 <li>A procedure is a pair: some code, and (a pointer to) an environment. Free variables are found in this environment.</li>
@@ -171,11 +171,11 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 </ol></li>
 <li>In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.</li>
 </ul>
-<h2 id="3">
-<a class="anchor" href="#3">#</a>Part 3
+<h2 id="3" class="anchor">
+<a class="anchor__link" href="#3">#</a>Part 3
 </h2>
-<h3 id="3.1">
-<a class="anchor" href="#3.1">#</a>Counter example
+<h3 id="3.1" class="anchor">
+<a class="anchor__link" href="#3.1">#</a>Counter example
 </h3>
 <ul>
 <li>We’ve introduced a very complicated thing, assignment, which destroys most of the interesting mathematical properties of our programs.</li>
@@ -202,8 +202,8 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
 <li>The <em>global environment</em> is the topmost environment. Its frame contains <code>car</code>, <code>+</code>, <code>*</code>, etc., and all top-level definitions.</li>
 </ul>
-<h3 id="3.2">
-<a class="anchor" href="#3.2">#</a>Objects
+<h3 id="3.2" class="anchor">
+<a class="anchor__link" href="#3.2">#</a>Objects
 </h3>
 <ul>
 <li>We like to think about the world as being made up of independent objects, each having their own state.</li>
@@ -212,15 +212,15 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>If you cut off your fingernail, the “before” and “after” of you is enormously different in terms of atoms. You have changed and feel that you are the “same” person, but how do you know that?</li>
 <li>By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.</li>
 </ul>
-<h3 id="3.3">
-<a class="anchor" href="#3.3">#</a>Actions and identity
+<h3 id="3.3" class="anchor">
+<a class="anchor__link" href="#3.3">#</a>Actions and identity
 </h3>
 <ul>
 <li>An action <span class="math inline">A</span> had an effect on an object <span class="math inline">x</span> (or equivalently, that <span class="math inline">x</span> was changed by <span class="math inline">A</span>) if some property <span class="math inline">P</span> which was true of <span class="math inline">x</span> before <span class="math inline">A</span> became false of <span class="math inline">x</span> after <span class="math inline">A</span>.</li>
 <li>Two objects <span class="math inline">x</span> and <span class="math inline">y</span> are the same if any action which has an effect on <span class="math inline">x</span> has the same effect on <span class="math inline">y</span>.</li>
 </ul>
-<h3 id="3.4">
-<a class="anchor" href="#3.4">#</a>Uses of objection orientation
+<h3 id="3.4" class="anchor">
+<a class="anchor__link" href="#3.4">#</a>Uses of objection orientation
 </h3>
 <ul>
 <li>One of the nice things about objects is the way it lets us model the world. We like to think of the world as being made up of these independent objects.</li>
@@ -229,10 +229,10 @@ Assignment, State, and Side-Effects<small class="number">5A</small>
 <li>Sometimes, though, they are essential.</li>
 <li>It can also improve modularity greatly – consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can’t decompose certain problems very well.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="4b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5b.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="4b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5b.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

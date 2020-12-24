@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="4.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="../3/index.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="4.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="../3/index.html">Next →</a></div>
 </nav>
 <h1>
 Systems with Generic Operations<small class="number">2.5</small>
@@ -58,8 +58,8 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>This will require many abstraction barriers.</li>
 <li>The result will be additive (modular) – easy to add new types.</li>
 </ul>
-<h3 id="2.5.1">
-<a class="anchor" href="#2.5.1">#</a>Generic Arithmetic Operations<small class="number">2.5.1</small>
+<h2 id="2.5.1" class="anchor">
+<a class="anchor__link" href="#2.5.1">#</a>Generic Arithmetic Operations<small class="number">2.5.1</small>
 </h3>
 <ul>
 <li>We want <code>add</code> to work for primitive numbers, rational numbers, and complex numbers.</li>
@@ -68,8 +68,8 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>For complex numbers we have two levels of tagging: a <code>'complex</code> tag on top of the <code>'rectangular</code> or <code>'polar</code> tag.</li>
 <li>The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.</li>
 </ul>
-<h3 id="2.5.2">
-<a class="anchor" href="#2.5.2">#</a>Combining Data of Different Types<small class="number">2.5.2</small>
+<h2 id="2.5.2" class="anchor">
+<a class="anchor__link" href="#2.5.2">#</a>Combining Data of Different Types<small class="number">2.5.2</small>
 </h3>
 <ul>
 <li>In our unified arithmetic system, we ignored an important issue.</li>
@@ -77,9 +77,9 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>One solution would be to design a procedure for each possible combination of types.</li>
 <li>This is cumbersome, and it violates modularity.</li>
 </ul>
-<h4 id="2.5.5.2">
-<a class="anchor" href="#2.5.5.2">#</a>Coercion
-</h4>
+<h3 id="2.5.2.1" class="anchor">
+<a class="anchor__link" href="#2.5.2.1">#</a>Coercion
+</h3>
 <ul>
 <li>Often the different data types are not completely independent.</li>
 <li>For example, any real number can be expressed as a complex number with an imaginary part of zero (but not vice versa).</li>
@@ -94,9 +94,9 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to write specific operation procedures once per type.</li>
 <li>It gets more complicated: what if both types can be converted to a third type? What if A can be converted to B and then from B to C? We have a graph of relations among the types.</li>
 </ul>
-<h4 id="2.5.5.2">
-<a class="anchor" href="#2.5.5.2">#</a>Hierarchies of types
-</h4>
+<h3 id="2.5.2.2" class="anchor">
+<a class="anchor__link" href="#2.5.2.2">#</a>Hierarchies of types
+</h3>
 <ul>
 <li>Integers are a subtype of rationals, which are a subtype of real numbers, and so on for complex numbers.</li>
 <li>We have supertypes going in the opposite order.</li>
@@ -105,16 +105,16 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>We can write fewer procedures by allowing types to <em>inherit</em> the operations on supertypes.</li>
 <li>In some cases we can also lower a value down the type tower.</li>
 </ul>
-<h4 id="2.5.5.2">
-<a class="anchor" href="#2.5.5.2">#</a>Inadequacies of hierarchies
-</h4>
+<h3 id="2.5.2.3" class="anchor">
+<a class="anchor__link" href="#2.5.2.3">#</a>Inadequacies of hierarchies
+</h3>
 <ul>
 <li>In general, a type may have more than one subtype (not a tower).</li>
 <li>Having multiple super types is tricky, since the type can be raised via multiple paths to search for a procedure.</li>
 <li>Large numbers of interrelated types conflicts with modularity.</li>
 </ul>
-<h3 id="2.5.3">
-<a class="anchor" href="#2.5.3">#</a>Example: Symbolic Algebra<small class="number">2.5.3</small>
+<h2 id="2.5.3" class="anchor">
+<a class="anchor__link" href="#2.5.3">#</a>Example: Symbolic Algebra<small class="number">2.5.3</small>
 </h3>
 <ul>
 <li>The manipulation of symbolic algebraic expressions is hard.</li>
@@ -122,9 +122,9 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>A complete system would be exceedingly complex.</li>
 <li>We will just look at the arithmetic of polynomials.</li>
 </ul>
-<h4 id="2.5.5.3">
-<a class="anchor" href="#2.5.5.3">#</a>Arithmetic on polynomials
-</h4>
+<h3 id="2.5.3.1" class="anchor">
+<a class="anchor__link" href="#2.5.3.1">#</a>Arithmetic on polynomials
+</h3>
 <ul>
 <li>A polynomial is relative to certain variables, the <em>indeterminates</em>.</li>
 <li>We will only consider univariate polynomials.</li>
@@ -137,9 +137,9 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>The <em>poly</em> data structure consists of a variable (the indeterminate) and a list of terms.</li>
 <li>Our system works with polynomials with polynomial coefficients “for free” because of data-directed recursion – because we are using generic procedures.</li>
 </ul>
-<h4 id="2.5.5.3">
-<a class="anchor" href="#2.5.5.3">#</a>Representing term lists
-</h4>
+<h3 id="2.5.3.2" class="anchor">
+<a class="anchor__link" href="#2.5.3.2">#</a>Representing term lists
+</h3>
 <ul>
 <li>Our procedures <code>add-terms</code> and <code>mul-terms</code> always access term lists sequentially from highest to lowest order.</li>
 <li>So, we need some kind of ordered list representation.</li>
@@ -147,18 +147,18 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>Dense term lists, where most coefficients are nonzero, are best represented by simple lists.</li>
 <li>Sparse term lists, where there are many zeros, are better represented by some kind of associative list or map.</li>
 </ul>
-<h4 id="2.5.5.3">
-<a class="anchor" href="#2.5.5.3">#</a>Hierarchies of types in symbolic algebra
-</h4>
+<h3 id="2.5.3.3" class="anchor">
+<a class="anchor__link" href="#2.5.3.3">#</a>Hierarchies of types in symbolic algebra
+</h3>
 <ul>
 <li>Our polynomial system used complex objects that had objects of many different parts as types.</li>
 <li>It was recursive data abstraction because the terms of the polynomial could themselves be polynomials.</li>
 <li>The data types in polynomial algebra cannot be arranged in a tower.</li>
 <li>Controlling coercion is a hard problem in these systems.</li>
 </ul>
-<h4 id="2.5.5.3">
-<a class="anchor" href="#2.5.5.3">#</a>Extended exercise: Rational functions
-</h4>
+<h3 id="2.5.3.4" class="anchor">
+<a class="anchor__link" href="#2.5.3.4">#</a>Extended exercise: Rational functions
+</h3>
 <ul>
 <li>Rational functions are “fractions” with polynomial numerators and denominators.</li>
 <li>We can use our old rational package, but we need to change a few things (like using generic <code>add</code>, <code>mul</code>, etc.).</li>
@@ -167,17 +167,17 @@ Systems with Generic Operations<small class="number">2.5</small>
 <li>We can use our GCD procedure to reduce rational functions to lowest terms:
 <ol type="1">
 <li>Compute the integerized GCD of the numerator and denominator.</li>
-<li>Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power <span class="math inline">1 + O_1 − O_2</span>, where <span class="math inline">O_2</span> is the order of the GCD and <span class="math inline">O_1</span> is the maximum of order of the numerator and the order of the denominator.</li>
+<li>Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power <span class="math inline">1 + O_1 - O_2</span>, where <span class="math inline">O_2</span> is the order of the GCD and <span class="math inline">O_1</span> is the maximum of order of the numerator and the order of the denominator.</li>
 <li>Divide the new numerator and new denominator by the GCD.</li>
 <li>Divide both by the GCD of all their coefficients.</li>
 </ol></li>
 <li>This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.</li>
 <li>This one is very slow. Probabilistic algorithms are faster.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="4.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="../3/index.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="4.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="../3/index.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

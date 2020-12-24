@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2.html">Next →</a></div>
 </nav>
 <h1>
 Assignment and Local State<small class="number">3.1</small>
@@ -57,8 +57,8 @@ Assignment and Local State<small class="number">3.1</small>
 <li>An object’s state can be characterized by <em>state variables</em>.</li>
 <li>We need an <em>assignment operator</em> to change the value associated with a name representing a local variable of an object.</li>
 </ul>
-<h3 id="3.1.1">
-<a class="anchor" href="#3.1.1">#</a>Local State Variables<small class="number">3.1.1</small>
+<h2 id="3.1.1" class="anchor">
+<a class="anchor__link" href="#3.1.1">#</a>Local State Variables<small class="number">3.1.1</small>
 </h3>
 <ul>
 <li>Let’s model the situation of withdrawing from a bank account.</li>
@@ -137,8 +137,8 @@ Assignment and Local State<small class="number">3.1</small>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          ((<span class="kw">eq?</span> m &#39;deposit) deposit)</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
-<h3 id="3.1.2">
-<a class="anchor" href="#3.1.2">#</a>The Benefits of Introducing Assignment<small class="number">3.1.2</small>
+<h2 id="3.1.2" class="anchor">
+<a class="anchor__link" href="#3.1.2">#</a>The Benefits of Introducing Assignment<small class="number">3.1.2</small>
 </h3>
 <ul>
 <li>Introducing assignment “leads us into a thicket of difficult conceptual issues” (305).</li>
@@ -168,8 +168,8 @@ Assignment and Local State<small class="number">3.1</small>
 <blockquote>
 <p>The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behaviour changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. (309)</p>
 </blockquote>
-<h3 id="3.1.3">
-<a class="anchor" href="#3.1.3">#</a>The Costs of Introducing Assignment<small class="number">3.1.3</small>
+<h2 id="3.1.3" class="anchor">
+<a class="anchor__link" href="#3.1.3">#</a>The Costs of Introducing Assignment<small class="number">3.1.3</small>
 </h3>
 <ul>
 <li>The advantages of local state and assignment come at a price.</li>
@@ -190,9 +190,9 @@ Assignment and Local State<small class="number">3.1</small>
 <li>Before, a variable was simply a name for a value.</li>
 <li>Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.</li>
 </ul>
-<h4 id="3.1.1.3">
-<a class="anchor" href="#3.1.1.3">#</a>Sameness and change
-</h4>
+<h3 id="3.1.3.1" class="anchor">
+<a class="anchor__link" href="#3.1.3.1">#</a>Sameness and change
+</h3>
 <ul>
 <li>By introducing change into our computational models, many previously straightforward notions become problematic.</li>
 <li>Consider the concept of two things being “the same.”</li>
@@ -207,9 +207,9 @@ Assignment and Local State<small class="number">3.1</small>
 <li>A bank account is still “the same” account after a withdrawal. Conversely, two distinct accounts with the same balance are “different.”</li>
 <li>The name is attached to an identity rather than the data itself.</li>
 </ul>
-<h4 id="3.1.1.3">
-<a class="anchor" href="#3.1.1.3">#</a>Pitfalls of imperative programming
-</h4>
+<h3 id="3.1.3.2" class="anchor">
+<a class="anchor__link" href="#3.1.3.2">#</a>Pitfalls of imperative programming
+</h3>
 <ul>
 <li>Programming that makes extensive use of assignment is called <em>imperative programming</em>.</li>
 <li>Imperative programs are susceptible to bugs that cannot occur in functional programs.</li>
@@ -218,10 +218,10 @@ Assignment and Local State<small class="number">3.1</small>
 <blockquote>
 <p>In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. (318–319)</p>
 </blockquote>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

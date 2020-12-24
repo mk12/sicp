@@ -26,10 +26,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5.html">Next →</a></div>
 </nav>
 <h1>
 Multiple Representations for Abstract Data<small class="number">2.4</small>
@@ -47,8 +47,8 @@ Multiple Representations for Abstract Data<small class="number">2.4</small>
 <li>We will accomplish this with <em>type tags</em>. We will also discuss <em>data-directed</em> programming.</li>
 <li>We now have horizontal abstraction barriers, separating higher-level from lower-level, and vertical ones, separately alternative representations.</li>
 </ul>
-<h3 id="2.4.1">
-<a class="anchor" href="#2.4.1">#</a>Representations for Complex Numbers<small class="number">2.4.1</small>
+<h2 id="2.4.1" class="anchor">
+<a class="anchor__link" href="#2.4.1">#</a>Representations for Complex Numbers<small class="number">2.4.1</small>
 </h3>
 <ul>
 <li>This system will perform arithmetic operations on complex numbers represented in rectangular form <em>or</em> polar form.</li>
@@ -56,8 +56,8 @@ Multiple Representations for Abstract Data<small class="number">2.4</small>
 <li>We have four selectors: <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>.</li>
 <li>We have two constructors: <code>make-from-real-img</code> and <code>make-from-mag-ang</code>.</li>
 </ul>
-<h3 id="2.4.2">
-<a class="anchor" href="#2.4.2">#</a>Tagged Data<small class="number">2.4.2</small>
+<h2 id="2.4.2" class="anchor">
+<a class="anchor__link" href="#2.4.2">#</a>Tagged Data<small class="number">2.4.2</small>
 </h3>
 <ul>
 <li>One way to view data abstraction: principle of least commitment.</li>
@@ -68,8 +68,8 @@ Multiple Representations for Abstract Data<small class="number">2.4</small>
 <li>Each generic selector uses case analysis to check the tag of its argument and dispatches the appropriate procedure.</li>
 <li>Our general mechanism for interfacing separate representations: in a specific implementation, the data object is an untyped pair. The generic selectors dispatch on the tag and strip off the tag before passing the data to the appropriate procedure.</li>
 </ul>
-<h3 id="2.4.3">
-<a class="anchor" href="#2.4.3">#</a>Data-Directed Programming and Additivity<small class="number">2.4.3</small>
+<h2 id="2.4.3" class="anchor">
+<a class="anchor__link" href="#2.4.3">#</a>Data-Directed Programming and Additivity<small class="number">2.4.3</small>
 </h3>
 <ul>
 <li>The strategy of checking the type and calling an appropriate procedure is called dispatching on type.</li>
@@ -88,9 +88,9 @@ Multiple Representations for Abstract Data<small class="number">2.4</small>
 <li><code>(put op type item)</code> installs <code>item</code> in the table.</li>
 <li><code>(get op type)</code> retrieves the item.</li>
 </ul>
-<h4 id="2.4.4.3">
-<a class="anchor" href="#2.4.4.3">#</a>Message passing
-</h4>
+<h3 id="2.4.3.1" class="anchor">
+<a class="anchor__link" href="#2.4.3.1">#</a>Message passing
+</h3>
 <ul>
 <li>Data-directed programming handles generic operations by dealing explicitly with operation-and-type tables.</li>
 <li>In our example, each operation took care of its own dispatching.</li>
@@ -99,10 +99,10 @@ Multiple Representations for Abstract Data<small class="number">2.4</small>
 <li>This is called message-passing style, and we can accomplish it in Scheme using closures.</li>
 <li>Message passing can be a powerful tool for structuring simulation programs.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="5.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="3.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="5.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

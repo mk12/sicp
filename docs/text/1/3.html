@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="../2/index.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="../2/index.html">Next →</a></div>
 </nav>
 <h1>
 Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</small>
@@ -64,8 +64,8 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 <li>To abstract more general programming patterns, we need to write precedes that take other procedures as arguments and return new procedures.</li>
 <li>These are called <em>higher-order</em> procedures.</li>
 </ul>
-<h3 id="1.3.1">
-<a class="anchor" href="#1.3.1">#</a>Procedures as Arguments<small class="number">1.3.1</small>
+<h2 id="1.3.1" class="anchor">
+<a class="anchor__link" href="#1.3.1">#</a>Procedures as Arguments<small class="number">1.3.1</small>
 </h3>
 <p>Procedures that compute a sum are all similar. They are all based on the following template:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(&lt;name&gt; a b)</span>
@@ -77,14 +77,14 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 <blockquote>
 <p>The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. (77)</p>
 </blockquote>
-<h3 id="1.3.2">
-<a class="anchor" href="#1.3.2">#</a>Constructing Procedures Using <code>Lambda</code><small class="number">1.3.2</small>
+<h2 id="1.3.2" class="anchor">
+<a class="anchor__link" href="#1.3.2">#</a>Constructing Procedures Using <code>Lambda</code><small class="number">1.3.2</small>
 </h3>
 <p><code>lambda</code> creates anonymous procedures. They are just like the procedures created by <code>define</code>, but without a name: <code>(lambda (&lt;formal-parameters&gt;) &lt;body&gt;)</code>.</p>
 <p>A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.</p>
-<h4 id="1.3.3.2">
-<a class="anchor" href="#1.3.3.2">#</a>Using <code>let</code> to create local variables
-</h4>
+<h3 id="1.3.2.1" class="anchor">
+<a class="anchor__link" href="#1.3.2.1">#</a>Using <code>let</code> to create local variables
+</h3>
 <ul>
 <li>We often need local variables other than the ones that have been bound as formal parameters.</li>
 <li>We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special <code>let</code> form that does it.</li>
@@ -108,8 +108,8 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 <li>The variables in the let-expression are parallel and independent. They cannot refer to each other, and their order does not matter.</li>
 <li>You can use let-expressions (<code>let</code>, <code>let*</code>, and <code>letrec</code>) instead of internal definitions (block structure).</li>
 </ul>
-<h3 id="1.3.3">
-<a class="anchor" href="#1.3.3">#</a>Procedures as General Methods<small class="number">1.3.3</small>
+<h2 id="1.3.3" class="anchor">
+<a class="anchor__link" href="#1.3.3">#</a>Procedures as General Methods<small class="number">1.3.3</small>
 </h3>
 <p>So far, we have seen</p>
 <ul>
@@ -117,24 +117,24 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 <li>higher-order procedures that express a more powerful kind of abstraction, independent of the procedures involved.</li>
 </ul>
 <p>Now we will take it a bit further.</p>
-<h4 id="1.3.3.3">
-<a class="anchor" href="#1.3.3.3">#</a>Finding roots of equations by the half-interval method
-</h4>
+<h3 id="1.3.3.1" class="anchor">
+<a class="anchor__link" href="#1.3.3.1">#</a>Finding roots of equations by the half-interval method
+</h3>
 <ul>
-<li>The <em>half-interval</em> method: a simple but powerful technique for finding the solutions to <span class="math inline">f(x) = 0</span>.</li>
-<li>Given <span class="math inline">f(a) &lt; 0 &lt; f(b)</span>, there must be at least one zero between <span class="math inline">a</span> and <span class="math inline">b</span>.</li>
+<li>The <em>half-interval</em> method: a simple but powerful technique for finding the solutions to <span class="math inline">f(x) = 0</span>.</li>
+<li>Given <span class="math inline">f(a) &lt; 0 &lt; f(b)</span>, there must be at least one zero between <span class="math inline">a</span> and <span class="math inline">b</span>.</li>
 <li>To narrow it down, we let <span class="math inline">x</span> be the average of <span class="math inline">a</span> and <span class="math inline">b</span>, and then replace either the left bound or the right bound with it.</li>
 </ul>
-<h4 id="1.3.3.3">
-<a class="anchor" href="#1.3.3.3">#</a>Finding fixed points of a function
-</h4>
+<h3 id="1.3.3.2" class="anchor">
+<a class="anchor__link" href="#1.3.3.2">#</a>Finding fixed points of a function
+</h3>
 <ul>
 <li>A number <span class="math inline">x</span> is a <em>fixed point</em> of a function if <span class="math inline">f(x) = x</span>.</li>
 <li>In some cases, repeatedly applying the function to an initial guess will converge on the fixed point.</li>
 <li>The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.</li>
 </ul>
-<h3 id="1.3.4">
-<a class="anchor" href="#1.3.4">#</a>Procedures as Returned Values<small class="number">1.3.4</small>
+<h2 id="1.3.4" class="anchor">
+<a class="anchor__link" href="#1.3.4">#</a>Procedures as Returned Values<small class="number">1.3.4</small>
 </h3>
 <p>Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(average-damp f)</span>
@@ -147,11 +147,11 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 <blockquote>
 <p>In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.</p>
 </blockquote>
-<h4 id="1.3.3.4">
-<a class="anchor" href="#1.3.3.4">#</a>Newton’s method
-</h4>
-<p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function <span class="math inline">f(x)</span>, the solution to <span class="math inline">f(x) = 0</span> is given by the fixed point of</p>
-<p><span class="math display">x ↦ x − \frac{f(x)}{f&#39;(x)}.</span></p>
+<h3 id="1.3.4.1" class="anchor">
+<a class="anchor__link" href="#1.3.4.1">#</a>Newton’s method
+</h3>
+<p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function <span class="math inline">f(x)</span>, the solution to <span class="math inline">f(x) = 0</span> is given by the fixed point of</p>
+<p><span class="math display">x ↦ x - \frac{f(x)}{f&#39;(x)}.</span></p>
 <p>Newton’s method converges very quickly – much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:</p>
 <p><span class="math display">f&#39;(x) = \frac{f(x+dx) - f(x)}{dx}.</span></p>
 <p>This translates to the following procedure:</p>
@@ -162,9 +162,9 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> dx </span><span class="fl">0.00001</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>((deriv cube) <span class="dv">5</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fl">75.00014999664018</span></span></code></pre></div>
-<h4 id="1.3.3.4">
-<a class="anchor" href="#1.3.3.4">#</a>Abstractions and first-class procedures
-</h4>
+<h3 id="1.3.4.2" class="anchor">
+<a class="anchor__link" href="#1.3.4.2">#</a>Abstractions and first-class procedures
+</h3>
 <ul>
 <li>Compound procedures permit us to express general methods of computing as explicit elements in our programming language.</li>
 <li>Higher-order procedures permit us to manipulate these general methods to create further abstractions.</li>
@@ -179,10 +179,10 @@ Formulating Abstractions with Higher-Order Procedures<small class="number">1.3</
 </ul></li>
 <li>In Lisp, procedures have first-class status. This gives us an enormous gain in expressive power.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="../2/index.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="../2/index.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

@@ -231,7 +231,7 @@ An example of normal order procedure application:
 
 #### Example: Counting change
 
-Let $f(A,N)$ represent the number of ways of changing the amount A using $N$ kinds of coins. If the first kind of coin has denomination $N$, then $f(A,N) = f(A,N−1) + f(A−D,N)$. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of $f(A,N−1)$ assumes we don't use the first kind at all; the value of $f(A−D,N)$ assumes we use one or more of the first kind.
+Let $f(A,N)$ represent the number of ways of changing the amount A using $N$ kinds of coins. If the first kind of coin has denomination $N$, then $f(A,N) = f(A,N-1) + f(A-D,N)$. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of $f(A,N-1)$ assumes we don't use the first kind at all; the value of $f(A-D,N)$ assumes we use one or more of the first kind.
 
 That rule and a few degenerate cases is sufficient to describe an algorithm for counting the number of ways of changing amounts of money. We can define it with the following piecewise function:
 
@@ -251,8 +251,8 @@ Like Fibonacci, the easy tree-recursive implementation involves a lot of redunda
 - We compare this using _order of growth_, a gross measure of the resources required by a process as the inputs becomes larger.
 - Let $n$ be a parameter that measures the size of a problem -- it could be the input itself, the tolerance, the number of rows in the matrix, etc. There are many properties that $n$ can measure.
 - Let $R(n)$ be the amount of resources the process requires for a problem of size $n$. This could be time, space (amount of memory), number of registers used, etc.
-- We say that $R(n)$ has order of growth $Θ(f(n))$, or $R(n) = Θ(f(n))$,
-if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) ≤ R(n) ≤ Bf(n)$ for any sufficiently large value of $n$.
+- We say that $R(n)$ has order of growth $Θ(f(n))$, or $R(n) = Θ(f(n))$,
+if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) ≤ R(n) ≤ Bf(n)$ for any sufficiently large value of $n$.
 - The value $R(n)$ is sandwiched between $Af(n)$ and $Bf(n)$.
 - The linear recursive process for computing factorials had $Θ(n)$ time and $Θ(n)$ space (both linear), whereas the linear iterative process had $Θ(1)$ space (constant).
 - The order of growth is a crude description of the behavior of a process.
@@ -275,8 +275,8 @@ $$
 
 ### 1.2.5: Greatest Common Divisors
 
-- The GCD of integers $a$ and $b$ is the largest integer that divides both $a$ and $b$ with no remainder. For example, $\gcd(16,28) = 4$.
-- Efficient algorithm uses $\gcd(a,b) = \gcd(b,a\bmod b)$.
+- The GCD of integers $a$ and $b$ is the largest integer that divides both $a$ and $b$ with no remainder. For example, $\gcd(16,28) = 4$.
+- Efficient algorithm uses $\gcd(a,b) = \gcd(b,a\bmod b)$.
 - For example, we can reduce `(gcd 206 40)` as follows:
 
 ```scheme
@@ -290,7 +290,7 @@ $$
 
 - This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.
 - This is called _Euclid's Algorithm_.
-- Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair $(a,b)$, then $\min\{a,b\} ≥ \text{Fib}(k)$.
+- Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair $(a,b)$, then $\min\{a,b\} ≥ \text{Fib}(k)$.
 
 ### 1.2.6: Example: Testing for Primality
 
@@ -307,7 +307,7 @@ The Fermat test is a $Θ(log(n))$ primality test based on Fermat's Little Theore
 
 The test works like this:
 
-1. Given a number $n$, pick a random number $a < n$ and calculate $a^n\bmod n$.
+1. Given a number $n$, pick a random number $a < n$ and calculate $a^n\bmod n$.
 2. Fail: If the result is not equal to $a$, then $n$ is not prime.
 3. Pass: If the result is equal to $a$, then $n$ is likely prime.
 4. Repeat. The more times the number passes the test, the more confident we are that $n$ is prime. If there is a single failure, $n$ is certainly not prime.
@@ -397,8 +397,8 @@ Now we will take it a bit further.
 
 #### Finding roots of equations by the half-interval method
 
-- The _half-interval_ method: a simple but powerful technique for finding the solutions to $f(x) = 0$.
-- Given $f(a) < 0 < f(b)$, there must be at least one zero between $a$ and $b$.
+- The _half-interval_ method: a simple but powerful technique for finding the solutions to $f(x) = 0$.
+- Given $f(a) < 0 < f(b)$, there must be at least one zero between $a$ and $b$.
 - To narrow it down, we let $x$ be the average of $a$ and $b$, and then replace either the left bound or the right bound with it.
 
 #### Finding fixed points of a function
@@ -429,9 +429,9 @@ If we use `average-damp` on `square`, we actually get a procedure that takes the
 
 #### Newton's method
 
-The square-root procedure we did earlier was a special case of Newton's method.  Given a function $f(x)$, the solution to $f(x) = 0$ is given by the fixed point of
+The square-root procedure we did earlier was a special case of Newton's method.  Given a function $f(x)$, the solution to $f(x) = 0$ is given by the fixed point of
 
-$$x ↦ x − \frac{f(x)}{f'(x)}.$$
+$$x ↦ x - \frac{f(x)}{f'(x)}.$$
 
 Newton's method converges very quickly -- much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:
 
@@ -1008,7 +1008,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Problem: we end up with a GCD polynomial that has fractional coefficients. Solution: multiply the first argument by an _integerizing factor_.
 - We can use our GCD procedure to reduce rational functions to lowest terms:
     1. Compute the integerized GCD of the numerator and denominator.
-    2. Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power $1 + O_1 − O_2$, where $O_2$ is the order of the GCD and $O_1$ is the maximum of order of the numerator and the order of the denominator.
+    2. Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power $1 + O_1 - O_2$, where $O_2$ is the order of the GCD and $O_1$ is the maximum of order of the numerator and the order of the denominator.
     3. Divide the new numerator and new denominator by the GCD.
     4. Divide both by the GCD of all their coefficients.
 - This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.

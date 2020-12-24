@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2.html">Next →</a></div>
 </nav>
 <h1>
 The Elements of Programming<small class="number">1.1</small>
@@ -57,8 +57,8 @@ The Elements of Programming<small class="number">1.1</small>
 <li>means of abstraction.</li>
 </ul>
 <p>Programming deals with <em>procedures</em> and <em>data</em> (which are almost the same thing in Lisp). Procedures manipulate data.</p>
-<h3 id="1.1.1">
-<a class="anchor" href="#1.1.1">#</a>Expressions<small class="number">1.1.1</small>
+<h2 id="1.1.1" class="anchor">
+<a class="anchor__link" href="#1.1.1">#</a>Expressions<small class="number">1.1.1</small>
 </h3>
 <ul>
 <li>The REPL reads an expression, evaluates it, prints the result, and repeats.</li>
@@ -70,15 +70,15 @@ The Elements of Programming<small class="number">1.1</small>
 <li>Lisp combinations use prefix notation.</li>
 <li>Combinations can be nested: an operator or operand can itself be another combination.</li>
 </ul>
-<h3 id="1.1.2">
-<a class="anchor" href="#1.1.2">#</a>Naming and the Environment<small class="number">1.1.2</small>
+<h2 id="1.1.2" class="anchor">
+<a class="anchor__link" href="#1.1.2">#</a>Naming and the Environment<small class="number">1.1.2</small>
 </h3>
 <ul>
 <li>Scheme names things with the <code>define</code>. This is the simplest means of abstraction.</li>
 <li>The name-value pairs are stored in an <em>environment</em>.</li>
 </ul>
-<h3 id="1.1.3">
-<a class="anchor" href="#1.1.3">#</a>Evaluating Combinations<small class="number">1.1.3</small>
+<h2 id="1.1.3" class="anchor">
+<a class="anchor__link" href="#1.1.3">#</a>Evaluating Combinations<small class="number">1.1.3</small>
 </h3>
 <ul>
 <li>To evaluate a combination, do the following:
@@ -103,8 +103,8 @@ The Elements of Programming<small class="number">1.1</small>
 <blockquote>
 <p>Syntactic sugar causes cancer of the semicolon. (Alan Perlis)</p>
 </blockquote>
-<h3 id="1.1.4">
-<a class="anchor" href="#1.1.4">#</a>Compound Procedures<small class="number">1.1.4</small>
+<h2 id="1.1.4" class="anchor">
+<a class="anchor__link" href="#1.1.4">#</a>Compound Procedures<small class="number">1.1.4</small>
 </h3>
 <ul>
 <li>Procedure definitions are very powerful for abstraction.</li>
@@ -113,8 +113,8 @@ The Elements of Programming<small class="number">1.1</small>
 <li>The general form of a procedure definition is <code>(define (&lt;name&gt; &lt;formal parameters&gt;) &lt;body&gt;)</code>.</li>
 <li>If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.</li>
 </ul>
-<h3 id="1.1.5">
-<a class="anchor" href="#1.1.5">#</a>The Substitution Model for Procedure Application<small class="number">1.1.5</small>
+<h2 id="1.1.5" class="anchor">
+<a class="anchor__link" href="#1.1.5">#</a>The Substitution Model for Procedure Application<small class="number">1.1.5</small>
 </h3>
 <p>This is the substation model:</p>
 <blockquote>
@@ -127,9 +127,9 @@ The Elements of Programming<small class="number">1.1</small>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (square <span class="dv">6</span>) (square <span class="dv">10</span>))</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> <span class="dv">36</span> <span class="dv">100</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dv">136</span></span></code></pre></div>
-<h4 id="1.1.1.5">
-<a class="anchor" href="#1.1.1.5">#</a>Applicative order versus normal order
-</h4>
+<h3 id="1.1.5.1" class="anchor">
+<a class="anchor__link" href="#1.1.5.1">#</a>Applicative order versus normal order
+</h3>
 <ul>
 <li>That example used <em>applicative order</em>: evaluate everything first, then apply the procedure to the arguments.</li>
 <li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
@@ -147,8 +147,8 @@ The Elements of Programming<small class="number">1.1</small>
 <li>Applicative: evaluate the arguments and then apply.</li>
 <li>Normal: fully expand and then reduce.</li>
 </ul>
-<h3 id="1.1.6">
-<a class="anchor" href="#1.1.6">#</a>Conditional Expressions and Predicates<small class="number">1.1.6</small>
+<h2 id="1.1.6" class="anchor">
+<a class="anchor__link" href="#1.1.6">#</a>Conditional Expressions and Predicates<small class="number">1.1.6</small>
 </h3>
 <ul>
 <li>To make more useful procedures, we need to be able to make tests and perform different operations accordingly.</li>
@@ -159,8 +159,8 @@ The Elements of Programming<small class="number">1.1</small>
 <li>The <code>if</code> conditional can be used when there are two cases.</li>
 <li>Logical values can be combined with <code>and</code>, <code>or</code>, and <code>not</code>. The first two are special forms, not procedures.</li>
 </ul>
-<h3 id="1.1.7">
-<a class="anchor" href="#1.1.7">#</a>Example: Square Roots by Newton’s Method<small class="number">1.1.7</small>
+<h2 id="1.1.7" class="anchor">
+<a class="anchor__link" href="#1.1.7">#</a>Example: Square Roots by Newton’s Method<small class="number">1.1.7</small>
 </h3>
 <blockquote>
 <p>But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. (28)</p>
@@ -170,8 +170,8 @@ The Elements of Programming<small class="number">1.1</small>
 <li>Mathematical functions describes things (declarative knowledge); procedures describe how to do things (imperative knowledge).</li>
 <li>Declarative is <em>what is</em>, imperative is <em>how to</em>.</li>
 </ul>
-<h3 id="1.1.8">
-<a class="anchor" href="#1.1.8">#</a>Procedures as Black-Box Abstractions<small class="number">1.1.8</small>
+<h2 id="1.1.8" class="anchor">
+<a class="anchor__link" href="#1.1.8">#</a>Procedures as Black-Box Abstractions<small class="number">1.1.8</small>
 </h3>
 <ul>
 <li>Each procedure in a program should accomplish and identifiable task that can be used as a module in defining other procedures.</li>
@@ -181,9 +181,9 @@ The Elements of Programming<small class="number">1.1</small>
 <blockquote>
 <p>A user should not need to know how the procedure is implemented in order to use it. (35)</p>
 </blockquote>
-<h4 id="1.1.1.8">
-<a class="anchor" href="#1.1.1.8">#</a>Local names
-</h4>
+<h3 id="1.1.8.1" class="anchor">
+<a class="anchor__link" href="#1.1.8.1">#</a>Local names
+</h3>
 <ul>
 <li>The choice of names for the procedure’s formal parameters should not matter to the user of the procedure.</li>
 <li>Consequentially, the parameter names must be local to the body of the procedure.</li>
@@ -193,19 +193,19 @@ The Elements of Programming<small class="number">1.1</small>
 <li>Using the same name for a bound variable and an existing free variable is called <em>capturing</em> the variable.</li>
 <li>The names of the free variables <em>do</em> matter for the meaning of the procedure.</li>
 </ul>
-<h4 id="1.1.1.8">
-<a class="anchor" href="#1.1.1.8">#</a>Internal definitions and block structure
-</h4>
+<h3 id="1.1.8.2" class="anchor">
+<a class="anchor__link" href="#1.1.8.2">#</a>Internal definitions and block structure
+</h3>
 <ul>
 <li>Putting a definition in the body of a procedure makes it local to that procedure. This nesting is called <em>block structure</em>.</li>
 <li>Now we have two kinds of name isolation: formal parameters and internal definitions.</li>
 <li>By internalizing auxiliary procedures, we can often eliminate bindings by allowing variables to remain free.</li>
 <li>Lexical scoping: free variables in a procedure refer to bindings in enclosing procedure definitions.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="2.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="index.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="2.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

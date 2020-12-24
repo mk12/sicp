@@ -26,19 +26,19 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3b.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3b.html">Next →</a></div>
 </nav>
 <h1>
 Henderson Escher Example<small class="number">3A</small>
 </h1>
-<h2 id="1">
-<a class="anchor" href="#1">#</a>Part 1
+<h2 id="1" class="anchor">
+<a class="anchor__link" href="#1">#</a>Part 1
 </h2>
-<h3 id="1.1">
-<a class="anchor" href="#1.1">#</a>Recap
+<h3 id="1.1" class="anchor">
+<a class="anchor__link" href="#1.1">#</a>Recap
 </h3>
 <ul>
 <li>Now we know about procedural abstract and data abstraction.</li>
@@ -48,8 +48,8 @@ Henderson Escher Example<small class="number">3A</small>
 <li>We can glue together arbitrary things with <code>cons</code>, not just numbers.</li>
 <li>We learned about closure: the things that we combine can themselves be combined. This allows us to build complexity.</li>
 </ul>
-<h3 id="1.2">
-<a class="anchor" href="#1.2">#</a>Lists
+<h3 id="1.2" class="anchor">
+<a class="anchor__link" href="#1.2">#</a>Lists
 </h3>
 <ul>
 <li>Their are a lot of different ways of building list structure.</li>
@@ -59,8 +59,8 @@ Henderson Escher Example<small class="number">3A</small>
 <li>The predicate <code>null?</code> checks if a list is empty (is nil).</li>
 <li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested conses.</li>
 </ul>
-<h3 id="1.3">
-<a class="anchor" href="#1.3">#</a>Mapping lists
+<h3 id="1.3" class="anchor">
+<a class="anchor__link" href="#1.3">#</a>Mapping lists
 </h3>
 <ul>
 <li>It is common to write a procedure that does the same thing to each item in a list and returns a new list.</li>
@@ -69,11 +69,11 @@ Henderson Escher Example<small class="number">3A</small>
 <li>Thinking in terms of operations on aggregates is a powerful idea. We don’t worry about recursion or other details.</li>
 <li><code>for-each</code> is like map, but it doesn’t build up a new list. It is just for side-effects.</li>
 </ul>
-<h2 id="2">
-<a class="anchor" href="#2">#</a>Part 2
+<h2 id="2" class="anchor">
+<a class="anchor__link" href="#2">#</a>Part 2
 </h2>
-<h3 id="2.1">
-<a class="anchor" href="#2.1">#</a>Henderson Escher example
+<h3 id="2.1" class="anchor">
+<a class="anchor__link" href="#2.1">#</a>Henderson Escher example
 </h3>
 <ul>
 <li>A language for describing self-similar, fractal-like figures.</li>
@@ -86,11 +86,11 @@ Henderson Escher Example<small class="number">3A</small>
 <li>We can build primitive painters from lists of line segments.</li>
 <li>A painter is a procedure that takes a frame and draws its image within the frame.</li>
 </ul>
-<h2 id="3">
-<a class="anchor" href="#3">#</a>Part 3
+<h2 id="3" class="anchor">
+<a class="anchor__link" href="#3">#</a>Part 3
 </h2>
-<h3 id="3.1">
-<a class="anchor" href="#3.1">#</a>Importance of closure
+<h3 id="3.1" class="anchor">
+<a class="anchor__link" href="#3.1">#</a>Importance of closure
 </h3>
 <ul>
 <li>This representation is nice because, once primitives are implemented in this way, the means of combination just fall out because you automatically get the closure property.</li>
@@ -100,16 +100,16 @@ Henderson Escher Example<small class="number">3A</small>
 <li>We can write recursive painters without ever having purposely built recursion into the painting language.</li>
 <li>We can even write higher-order painters.</li>
 </ul>
-<h3 id="3.2">
-<a class="anchor" href="#3.2">#</a>The power of Lisp
+<h3 id="3.2" class="anchor">
+<a class="anchor__link" href="#3.2">#</a>The power of Lisp
 </h3>
 <ul>
 <li>The difference between merely implementing something in a language and embedding something in the language: you don’t lost the original power of the language.</li>
 <li>Lisp is a lousy language for any particular problem. But it’s good for figuring out the right language and embedding that in Lisp. That’s the real power of this approach to design.</li>
 <li>There is no difference between procedures and data.</li>
 </ul>
-<h3 id="3.3">
-<a class="anchor" href="#3.3">#</a>Software engineering
+<h3 id="3.3" class="anchor">
+<a class="anchor__link" href="#3.3">#</a>Software engineering
 </h3>
 <ul>
 <li>We have been creating a sequence of layers of language.</li>
@@ -129,10 +129,10 @@ Henderson Escher Example<small class="number">3A</small>
 <li>We are talking about levels of language rather than a strict hierarchy. Each level has its own vocabulary.</li>
 <li>The design process is not so much implementing programs as implementing languages. That’s the powerful idea of Lisp.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2b.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3b.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2b.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3b.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

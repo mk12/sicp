@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="4.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="4.html">Next →</a></div>
 </nav>
 <h1>
 Modeling with Mutable Data<small class="number">3.3</small>
@@ -55,8 +55,8 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>To model stateful objects, we need <em>mutators</em> in addition to constructors and selectors.</li>
 <li>A mutator is a procedure that modifies the data object.</li>
 </ul>
-<h3 id="3.3.1">
-<a class="anchor" href="#3.3.1">#</a>Mutable List Structure<small class="number">3.3.1</small>
+<h2 id="3.3.1" class="anchor">
+<a class="anchor__link" href="#3.3.1">#</a>Mutable List Structure<small class="number">3.3.1</small>
 </h3>
 <ul>
 <li>The primitive mutators for pairs are <code>set-car!</code> and <code>set-cdr!</code>.</li>
@@ -69,9 +69,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set-car!</span> new x)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set-cdr!</span> new y)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    new))</span></code></pre></div>
-<h4 id="3.3.3.1">
-<a class="anchor" href="#3.3.3.1">#</a>Sharing and identity
-</h4>
+<h3 id="3.3.1.1" class="anchor">
+<a class="anchor__link" href="#3.3.1.1">#</a>Sharing and identity
+</h3>
 <ul>
 <li>Consider <code>(define x (list 'a 'b))</code> and <code>(define z1 (cons x x))</code>.</li>
 <li><code>z1</code> is a pair whose <code>car</code> and <code>cdr</code> both point to the same <code>x</code>.</li>
@@ -85,9 +85,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li><code>(eq? x y)</code> tests whether <code>x</code> and <code>y</code> point to the same object.</li>
 <li>We can exploit sharing for good, but it can be dangerous.</li>
 </ul>
-<h4 id="3.3.3.1">
-<a class="anchor" href="#3.3.3.1">#</a>Mutation is just assignment
-</h4>
+<h3 id="3.3.1.2" class="anchor">
+<a class="anchor__link" href="#3.3.1.2">#</a>Mutation is just assignment
+</h3>
 <ul>
 <li>Earlier we said we can represent pairs purely in terms of procedures:</li>
 </ul>
@@ -114,8 +114,8 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <ul>
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
 </ul>
-<h3 id="3.3.2">
-<a class="anchor" href="#3.3.2">#</a>Representing Queues<small class="number">3.3.2</small>
+<h2 id="3.3.2" class="anchor">
+<a class="anchor__link" href="#3.3.2">#</a>Representing Queues<small class="number">3.3.2</small>
 </h3>
 <ul>
 <li>The mutators allow us to construct new data structures.</li>
@@ -133,8 +133,8 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>A simply modification lets us implement all the operations with <span class="math inline">Θ(1)</span> time complexity: keep a pointer to the end as well.</li>
 <li>A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.</li>
 </ul>
-<h3 id="3.3.3">
-<a class="anchor" href="#3.3.3">#</a>Representing Tables<small class="number">3.3.3</small>
+<h2 id="3.3.3" class="anchor">
+<a class="anchor__link" href="#3.3.3">#</a>Representing Tables<small class="number">3.3.3</small>
 </h3>
 <ul>
 <li>In a one-dimensional table, each value is indexed by one key.</li>
@@ -151,9 +151,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>The <code>lookup</code> procedure returns the value associated with a key in a table, or <code>#f</code> if it cannot be found.</li>
 <li>It uses <code>assoc</code>, which returns the whole record rather than just the associated value.</li>
 </ul>
-<h4 id="3.3.3.3">
-<a class="anchor" href="#3.3.3.3">#</a>Two-dimensional tables
-</h4>
+<h3 id="3.3.3.1" class="anchor">
+<a class="anchor__link" href="#3.3.3.1">#</a>Two-dimensional tables
+</h3>
 <ul>
 <li>Two-dimensional tables are indexed by two keys.</li>
 <li>In some cases, we could just use a one dimensional table whose keys are pairs of keys.</li>
@@ -161,9 +161,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>We could just use them like that without any specific procedures. However, insertion with two keys is complex enough to merit a convenient two-dimensional procedure.</li>
 <li>We don’t need to box the subtables. They key of the record serves the purpose of <code>'*table*</code>.</li>
 </ul>
-<h4 id="3.3.3.3">
-<a class="anchor" href="#3.3.3.3">#</a>Creating local tables
-</h4>
+<h3 id="3.3.3.2" class="anchor">
+<a class="anchor__link" href="#3.3.3.2">#</a>Creating local tables
+</h3>
 <ul>
 <li>With our <code>lookup</code> and <code>insert!</code> procedures taking the table as an argument, we can manage multiple tables.</li>
 <li>Another approach is to have separate procedures for each table.</li>
@@ -177,8 +177,8 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">eq?</span> k key)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        value</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        (table k))))</span></code></pre></div>
-<h3 id="3.3.4">
-<a class="anchor" href="#3.3.4">#</a>A Simulator for Digital Circuits<small class="number">3.3.4</small>
+<h2 id="3.3.4" class="anchor">
+<a class="anchor__link" href="#3.3.4">#</a>A Simulator for Digital Circuits<small class="number">3.3.4</small>
 </h3>
 <ul>
 <li>Digital circuits are made up of simple elements.</li>
@@ -197,9 +197,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>Evaluating <code>(define a (make-wire))</code> and <code>(define b (make-wire))</code> followed by <code>(inverter a b)</code> connects <code>a</code> and <code>b</code> with an inverter.</li>
 <li>The primitive functions are our primitive elements; wiring is the means of combination; specifying wiring patterns as procedures is the means of abstraction.</li>
 </ul>
-<h4 id="3.3.3.4">
-<a class="anchor" href="#3.3.3.4">#</a>Primitive function boxes
-</h4>
+<h3 id="3.3.4.1" class="anchor">
+<a class="anchor__link" href="#3.3.4.1">#</a>Primitive function boxes
+</h3>
 <ul>
 <li>The primitives boxes implement “forces” by which changes in the signal of one wire influence the signal of another.</li>
 <li>We have the following operations on wires:
@@ -210,9 +210,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 </ul></li>
 <li>The procedure <code>after-delay</code> executes a procedure after a given time delay.</li>
 </ul>
-<h4 id="3.3.3.4">
-<a class="anchor" href="#3.3.3.4">#</a>Representing wires
-</h4>
+<h3 id="3.3.4.2" class="anchor">
+<a class="anchor__link" href="#3.3.4.2">#</a>Representing wires
+</h3>
 <ul>
 <li>Our wires will be computational objects each having two local state variables: <code>signal-value</code> and <code>action-procedures</code>.</li>
 <li>We use the message-passing style as before.</li>
@@ -220,9 +220,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>A wire is shared between the devices connected to it. If one changes it, the rest see the change.</li>
 <li>This would be impossible if you didn’t model the wire as an identity, separate from its signal value.</li>
 </ul>
-<h4 id="3.3.3.4">
-<a class="anchor" href="#3.3.3.4">#</a>The agenda
-</h4>
+<h3 id="3.3.4.3" class="anchor">
+<a class="anchor__link" href="#3.3.4.3">#</a>The agenda
+</h3>
 <ul>
 <li>The only thing left is <code>after-delay</code>.</li>
 <li>An <em>agenda</em> is a data structure that schedules things to do.</li>
@@ -231,9 +231,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>We call the global agenda <code>the-agenda</code>.</li>
 <li>The simulation is driven by <code>propagate</code>, which executes each item on the agenda in sequence.</li>
 </ul>
-<h4 id="3.3.3.4">
-<a class="anchor" href="#3.3.3.4">#</a>Implementing the agenda
-</h4>
+<h3 id="3.3.4.4" class="anchor">
+<a class="anchor__link" href="#3.3.4.4">#</a>Implementing the agenda
+</h3>
 <ul>
 <li>The agenda is a pair: the current time, and a list of <em>time segments</em> sorted in increasing order of time.</li>
 <li>A time segment is a pair: a number (the time) and a queue of procedures that are scheduled to run during that time segment.</li>
@@ -241,8 +241,8 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>To remove the first agenda item, we delete the first item in the first queue, and if this makes the queue empty, we delete the first time segment as well.</li>
 <li>Whenever we extract the first item with <code>first-agenda-item</code>, we also update the current time.</li>
 </ul>
-<h3 id="3.3.5">
-<a class="anchor" href="#3.3.5">#</a>Propagation of Constraints<small class="number">3.3.5</small>
+<h2 id="3.3.5" class="anchor">
+<a class="anchor__link" href="#3.3.5">#</a>Propagation of Constraints<small class="number">3.3.5</small>
 </h3>
 <ul>
 <li>We often organize computer programs in one direction: from input to output.</li>
@@ -258,9 +258,9 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>The means of combination are constructing <em>constraint networks</em> in which constraints are joined by <em>connectors</em>.</li>
 <li>The means of abstraction are procedures.</li>
 </ul>
-<h4 id="3.3.3.5">
-<a class="anchor" href="#3.3.3.5">#</a>Using the constraint system
-</h4>
+<h3 id="3.3.5.1" class="anchor">
+<a class="anchor__link" href="#3.3.5.1">#</a>Using the constraint system
+</h3>
 <ul>
 <li>We create connectors with <code>(make-connector)</code>, just like wires.</li>
 <li>We use <code>(probe "name" &lt;connector&gt;)</code>, again just like wires.</li>
@@ -268,27 +268,27 @@ Modeling with Mutable Data<small class="number">3.3</small>
 <li>This will give an error if the new value causes a contradiction.</li>
 <li><code>(forget-value! &lt;connector&gt; 'user)</code> undoes the assignment.</li>
 </ul>
-<h4 id="3.3.3.5">
-<a class="anchor" href="#3.3.3.5">#</a>Implementing the constraint system
-</h4>
+<h3 id="3.3.5.2" class="anchor">
+<a class="anchor__link" href="#3.3.5.2">#</a>Implementing the constraint system
+</h3>
 <ul>
 <li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
 <li>There are five basic operations on a connector <code>c</code>: <code>(has-value? c)</code>, <code>(get-value c)</code>, <code>(set-value! c &lt;value&gt; &lt;informant&gt;)</code>, <code>(forget-value! c &lt;retractor&gt;)</code>, and <code>(connect c &lt;constraint&gt;)</code>.</li>
 <li>The procedures <code>inform-about-value</code> and <code>inform-about-no-value</code> tells the constraint that a connector has (lost) a value.</li>
 <li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
 </ul>
-<h4 id="3.3.3.5">
-<a class="anchor" href="#3.3.3.5">#</a>Representing connectors
-</h4>
+<h3 id="3.3.5.3" class="anchor">
+<a class="anchor__link" href="#3.3.5.3">#</a>Representing connectors
+</h3>
 <ul>
 <li>A connector is a procedural object with local state variables – again, just like a wire.</li>
 <li>Each time the connector’s value is set, it remembers the informant. This could be a constraint, or a symbol like <code>'user</code>.</li>
 <li><code>for-each-except</code> is used to notify all <em>other</em> constraints.</li>
 </ul>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="4.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="2.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="4.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>

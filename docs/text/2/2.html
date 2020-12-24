@@ -42,10 +42,10 @@
 </svg></a>
   </nav>
 </header>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <h1>
 Hierarchical Data and the Closure Property<small class="number">2.2</small>
@@ -58,8 +58,8 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <li>Closure allows us to create hierarchal structures.</li>
 <li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
 </ul>
-<h3 id="2.2.1">
-<a class="anchor" href="#2.2.1">#</a>Representing Sequences<small class="number">2.2.1</small>
+<h2 id="2.2.1" class="anchor">
+<a class="anchor__link" href="#2.2.1">#</a>Representing Sequences<small class="number">2.2.1</small>
 </h3>
 <ul>
 <li>Among the things we can build with pairs is a sequence.</li>
@@ -71,9 +71,9 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <li>The procedure <code>car</code> gives us the first item; <code>cdr</code> gives us the sublist containing all items but the first; <code>cons</code> returns a list with an item added to the front.</li>
 <li>The nil value can be thought of as an empty list.</li>
 </ul>
-<h4 id="2.2.2.1">
-<a class="anchor" href="#2.2.2.1">#</a>List operations
-</h4>
+<h3 id="2.2.1.1" class="anchor">
+<a class="anchor__link" href="#2.2.1.1">#</a>List operations
+</h3>
 <ul>
 <li>We can get at the nth item of the list by <code>cdr</code> ing one less than <span class="math inline">n</span> times, and then taking the <code>car</code>.</li>
 <li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is the empty list.</li>
@@ -96,9 +96,9 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> list1)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      list2</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cons</span> (<span class="kw">car</span> list1 (<span class="kw">append</span> (<span class="kw">cdr</span> list1) list2)))))</span></code></pre></div>
-<h4 id="2.2.2.1">
-<a class="anchor" href="#2.2.2.1">#</a>Mapping over lists
-</h4>
+<h3 id="2.2.1.2" class="anchor">
+<a class="anchor__link" href="#2.2.1.2">#</a>Mapping over lists
+</h3>
 <ul>
 <li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
 <li>This is a higher-order procedure called <code>map</code>.</li>
@@ -116,8 +116,8 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <blockquote>
 <p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
 </blockquote>
-<h3 id="2.2.2">
-<a class="anchor" href="#2.2.2">#</a>Hierarchical Structures<small class="number">2.2.2</small>
+<h2 id="2.2.2" class="anchor">
+<a class="anchor__link" href="#2.2.2">#</a>Hierarchical Structures<small class="number">2.2.2</small>
 </h3>
 <ul>
 <li>We can represent lists whose elements themselves may also be lists. We can also think of them as <em>trees</em>.</li>
@@ -130,24 +130,24 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        ((<span class="kw">not</span> (<span class="kw">pair?</span> x)) <span class="dv">1</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="op">+</span> (count-leaves (<span class="kw">car</span> x))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 (count-leaves (<span class="kw">cdr</span> x))))))</span></code></pre></div>
-<h4 id="2.2.2.2">
-<a class="anchor" href="#2.2.2.2">#</a>Mapping over trees
-</h4>
+<h3 id="2.2.2.1" class="anchor">
+<a class="anchor__link" href="#2.2.2.1">#</a>Mapping over trees
+</h3>
 <ul>
 <li>We can deal with trees using <code>map</code> together with recursion.</li>
 <li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
 </ul>
-<h3 id="2.2.3">
-<a class="anchor" href="#2.2.3">#</a>Sequences as Conventional Interfaces<small class="number">2.2.3</small>
+<h2 id="2.2.3" class="anchor">
+<a class="anchor__link" href="#2.2.3">#</a>Sequences as Conventional Interfaces<small class="number">2.2.3</small>
 </h3>
 <ul>
 <li>Abstractions preserves the flexibility to experiment with alternative representations.</li>
 <li>Another powerful design principle for working with data structures is the use of conventional interfaces.</li>
 <li>To make abstract operations for things other than numbers, we need to have a conventional style in which we manipulate data.</li>
 </ul>
-<h4 id="2.2.2.3">
-<a class="anchor" href="#2.2.2.3">#</a>Sequence operations
-</h4>
+<h3 id="2.2.3.1" class="anchor">
+<a class="anchor__link" href="#2.2.3.1">#</a>Sequence operations
+</h3>
 <ul>
 <li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
 <li>To help, we can implement <code>filter</code> and <code>accumulate</code>.</li>
@@ -156,9 +156,9 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <li>A vast range of operations can be expressed as sequence operations, even if you don’t realize it at first.</li>
 <li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
 </ul>
-<h4 id="2.2.2.3">
-<a class="anchor" href="#2.2.2.3">#</a>Nested mappings
-</h4>
+<h3 id="2.2.3.2" class="anchor">
+<a class="anchor__link" href="#2.2.3.2">#</a>Nested mappings
+</h3>
 <ul>
 <li>For many computations, the sequence paradigm can be used where loops would otherwise be needed.</li>
 <li>Sometimes we need to use <em>nested</em> mappings, where each mapping maps to a second set of mappings.</li>
@@ -172,16 +172,16 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                (map (<span class="kw">lambda</span> (p) (<span class="kw">cons</span> x p))</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     (permutations (<span class="kw">remove</span> x s))))</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              s)))</span></code></pre></div>
-<h3 id="2.2.4">
-<a class="anchor" href="#2.2.4">#</a>Example: A Picture Language<small class="number">2.2.4</small>
+<h2 id="2.2.4" class="anchor">
+<a class="anchor__link" href="#2.2.4">#</a>Example: A Picture Language<small class="number">2.2.4</small>
 </h3>
 <ul>
 <li>We will use a simple language for drawing pictures.</li>
 <li>The data objects are represented as procedures rather than as list structure.</li>
 </ul>
-<h4 id="2.2.2.4">
-<a class="anchor" href="#2.2.2.4">#</a>The picture language
-</h4>
+<h3 id="2.2.4.1" class="anchor">
+<a class="anchor__link" href="#2.2.4.1">#</a>The picture language
+</h3>
 <ul>
 <li>There is only one kind of element, called a <em>painter</em>.</li>
 <li>The painter draws an image transformed into a parallelogram.</li>
@@ -189,16 +189,16 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <li>We transform single images with operations like <code>flip-vert</code> and <code>flip-horiz</code>.</li>
 <li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
 </ul>
-<h4 id="2.2.2.4">
-<a class="anchor" href="#2.2.2.4">#</a>Higher-order operations
-</h4>
+<h3 id="2.2.4.2" class="anchor">
+<a class="anchor__link" href="#2.2.4.2">#</a>Higher-order operations
+</h3>
 <ul>
 <li>Just as we have higher-order procedures, we can have higher-order painting operations.</li>
 <li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
 </ul>
-<h4 id="2.2.2.4">
-<a class="anchor" href="#2.2.2.4">#</a>Frames
-</h4>
+<h3 id="2.2.4.3" class="anchor">
+<a class="anchor__link" href="#2.2.4.3">#</a>Frames
+</h3>
 <ul>
 <li>Painters paint their contents in frames.</li>
 <li>A frame can be represented by three vectors: a position vector for one of the corners, and two vectors going along the edges.</li>
@@ -206,24 +206,24 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <li>We will use coordinates in the unit square.</li>
 <li>We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.</li>
 </ul>
-<h4 id="2.2.2.4">
-<a class="anchor" href="#2.2.2.4">#</a>Painters
-</h4>
+<h3 id="2.2.4.4" class="anchor">
+<a class="anchor__link" href="#2.2.4.4">#</a>Painters
+</h3>
 <ul>
 <li>A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.</li>
 <li>The details of primitive painters depend on the characteristics of the graphics system.</li>
 <li>Painters as procedures is a powerful abstraction barrier.</li>
 </ul>
-<h4 id="2.2.2.4">
-<a class="anchor" href="#2.2.2.4">#</a>Transforming and combining painters
-</h4>
+<h3 id="2.2.4.5" class="anchor">
+<a class="anchor__link" href="#2.2.4.5">#</a>Transforming and combining painters
+</h3>
 <ul>
 <li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
 <li>They are all based on the procedure <code>transform-painter</code>.</li>
 </ul>
-<h4 id="2.2.2.4">
-<a class="anchor" href="#2.2.2.4">#</a>Levels of language for robust design
-</h4>
+<h3 id="2.2.4.6" class="anchor">
+<a class="anchor__link" href="#2.2.4.6">#</a>Levels of language for robust design
+</h3>
 <ul>
 <li>The picture language uses abstraction with procedures and data.</li>
 <li>Painters are the data abstraction.</li>
@@ -234,10 +234,10 @@ Hierarchical Data and the Closure Property<small class="number">2.2</small>
 <blockquote>
 <p>In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it.</p>
 </blockquote>
-<nav class="pagenav">
-  <div class="pagenav__prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
-  <div class="pagenav__up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
-  <div class="pagenav__next"><a class="pagenav__link" href="3.html">Next →</a></div>
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev"><a class="pagenav__link" href="1.html">← Prev</a></div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link" href="index.html">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next"><a class="pagenav__link" href="3.html">Next →</a></div>
 </nav>
 <footer class="footer">© 2020 Mitchell Kember</footer>
 </body>
