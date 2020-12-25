@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>$title$</title>
+$if(math)$
+  $math$
+$endif$
+  <link rel="stylesheet" href="$root$assets/style.css">
+</head>
+<body>
+<header class="header">
+  <a class="title link" href="$root$index.html">SICP Study</a>
+  <span class="gap"></span>
+  <nav class="sitenav">
+    <a class="sitenav__item link $if(text)$ sitenav__item--active$endif$" href="$root$text/index.html">Text</a>
+    <a class="sitenav__item link $if(lecture)$ sitenav__item--active$endif$" href="$root$lecture/index.html">Lecture</a>
+    <a class="sitenav__item link $if(exercise)$ sitenav__item--active$endif$" href="$root$exercise/index.html">Exercise</a>
+    <a class="sitenav__item link" href="https://github.com/mk12/sicp">Source $../assets/github.svg()$</a>
+  </nav>
+</header>
+$if(up)$
+<nav class="pagenav pagenav--top">
+  <div class="pagenav__item pagenav__item--prev">$if(prev)$<a class="pagenav__link link" href="$prev$">← Prev</a>$else$← Prev$endif$</div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link link" href="$up$">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next">$if(next)$<a class="pagenav__link link" href="$next$">Next →</a>$else$Next →$endif$</div>
+</nav>
+$endif$
+$if(index)$
+$../assets/wizard.svg()$
+$endif$
+$body$
+$if(up)$
+<nav class="pagenav pagenav--bottom">
+  <div class="pagenav__item pagenav__item--prev">$if(prev)$<a class="pagenav__link link" href="$prev$">← Prev</a>$else$← Prev$endif$</div>
+  <div class="pagenav__item pagenav__item--up"><a class="pagenav__link link" href="$up$">↑ Up</a></div>
+  <div class="pagenav__item pagenav__item--next">$if(next)$<a class="pagenav__link link" href="$next$">Next →</a>$else$Next →$endif$</div>
+</nav>
+$endif$
+<footer class="footer$if(up)$$else$ footer--lone$endif$">© 2020 Mitchell Kember</footer>
+</body>
+</html>

@@ -1,7 +1,6 @@
 # Text
 
-<!-- Page numbers correspond to the [2.andresraba5 PDF][pdf]. -->
-TODO: TEXT HIGHLIGHTS
+These are my favorite quotes from each chapter of the book.
 
 ## Preface
 
@@ -49,8 +48,7 @@ TODO: TEXT HIGHLIGHTS
 
 # Lecture
 
-<!-- Quotes and paraphrases are from the [MIT OCW video lectures][lectures]. -->
-TODO: LECTURE HIGHLIGHTS STUFF
+These are my favorite quotes from each lecture.
 
 ## 1A: Overview and Introduction to Lisp
 

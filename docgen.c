@@ -59,7 +59,8 @@ static const char *const PANDOC_OPTIONS[] = {
     "--from=markdown",
     "--to=html5",
     "--standalone",
-    "--template=notes/template.html",
+    "--template=notes/pandoc/template.html",
+    "--lua-filter=notes/pandoc/filter.lua",
     "--highlight-style=pygments",
     "--katex",
 };
@@ -454,8 +455,8 @@ static bool gen_text_quote(void) {
             if (h.label) {
                 dprintf(proc.in,
                     "<h%d id=\"%.*s\" class=\"anchor\">"
-                    "<a class=\"anchor__link\" href=\"#%.*s\">#</a>"
-                    "<a class =\"h-link\" href=\"%.*s/index.html\">%.*s</a>"
+                    "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
+                    "<a class=\"link\" href=\"%.*s/index.html\">%.*s</a>"
                     "<small class=\"number\">%.*s</small>"
                     "</h%d>\n",
                     state.heading, h.label_len, h.label, h.label_len, h.label,
@@ -465,8 +466,8 @@ static bool gen_text_quote(void) {
                 char *id = tolower_s(h.title, h.title_len);
                 dprintf(proc.in,
                     "<h%d id=\"%s\" class=\"anchor\">"
-                    "<a class=\"anchor__link\" href=\"#%s\">#</a>"
-                    "<a class=\"h-link\" href=\"front.html#%s\">%.*s</a>"
+                    "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
+                    "<a class=\"link\" href=\"front.html#%s\">%.*s</a>"
                     "</h%d>\n",
                     state.heading, id, id, id, h.title_len, h.title,
                     state.heading);
@@ -507,7 +508,7 @@ static bool gen_text_front(void) {
             char *id = tolower_s(h.title, h.title_len);
             dprintf(proc.in,
                 "<h%d id=\"%s\" class=\"anchor\">"
-                "<a class=\"anchor__link\" href=\"#%s\">#</a>"
+                "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
                 "%.*s"
                 "</h%d>\n",
                 state.heading, id, id, h.title_len, h.title, state.heading);
@@ -670,7 +671,7 @@ static bool gen_text_section(const char *output) {
                 assert(state.heading == 3);
                 dprintf(proc.in,
                     "<h%d id=\"%.*s\" class=\"anchor\">"
-                    "<a class=\"anchor__link\" href=\"#%.*s\">#</a>"
+                    "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
                     "%.*s"
                     "<small class=\"number\">%.*s</small>"
                     "</h%d>\n",
@@ -684,7 +685,7 @@ static bool gen_text_section(const char *output) {
                     MS_LEVEL(state.section, 3), MS_LEVEL(state.section, 4));
                 dprintf(proc.in,
                     "<h%d id=\"%s\" class=\"anchor\">"
-                    "<a class=\"anchor__link\" href=\"#%s\">#</a>"
+                    "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
                     "%.*s"
                     "</h%d>\n",
                     state.heading - 1, id, id, h.title_len, h.title,
@@ -777,8 +778,8 @@ static bool gen_lecture_quote(void) {
             char *id = tolower_s(h.label, h.label_len);
             dprintf(proc.in,
                 "<h%d id=\"%s\" class=\"anchor\">"
-                "<a class=\"anchor__link\" href=\"#%s\">#</a>"
-                "<a class =\"h-link\" href=\"%s.html\">%.*s</a>"
+                "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
+                "<a class=\"link\" href=\"%s.html\">%.*s</a>"
                 "<small class=\"number\">%.*s</small>"
                 "</h%d>\n",
                 state.heading, id, id, id, h.title_len, h.title,
@@ -862,7 +863,7 @@ static bool gen_lecture_page(const char *output) {
             write_dotted_section(id, sizeof id, state.section >> MS_BITS);
             dprintf(proc.in,
                 "<h%d id=\"%s\" class=\"anchor\">"
-                "<a class=\"anchor__link\" href=\"#%s\">#</a>"
+                "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
                 "%.*s"
                 "</h%d>\n",
                 state.heading, id, id, h.title_len, h.title, state.heading);

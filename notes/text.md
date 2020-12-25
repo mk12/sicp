@@ -1,4 +1,9 @@
-TODO: This is some description!!!
+These notes are based on the second edition of [_Structure and Interpretation of Computer Programs_][sicp] by Hal Abelson, Jerry Sussman, and Julie Sussman. For the best reading experience I recommend [Andres Raba's version][ebook], available [online][] or as a [PDF][].
+
+[sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
+[ebook]: https://sicpebook.wordpress.com/ebook/
+[online]: http://sarabander.github.io/sicp/
+[pdf]: https://github.com/sarabander/sicp-pdf/raw/master/sicp.pdf
 
 # Frontmatter
 
@@ -95,7 +100,7 @@ This is the substation model:
 
 An example of procedure application:
 
-```scheme
+```
 (f 5)
 (sum-of-squares (+ 5 1) (* 5 2))
 (sum-of-squares 6 10)
@@ -111,7 +116,7 @@ An example of procedure application:
 
 An example of normal order procedure application:
 
-```scheme
+```
 (f 5)
 (sum-of-squares (+ 5 1) (* 5 2))
 (+ (square (+ 5 1)) (square (* 5 2)))
@@ -182,7 +187,7 @@ An example of normal order procedure application:
 - The factorial of $N$ is defined as the product of the integers on the interval $[1,N]$.
 - The naive _recursive_ implementation creates a curved shape:
 
-```scheme
+```
 (factorial 4)
 (* 4 (factorial 3))
 (* 4 (* 3 (factorial 2)))
@@ -196,7 +201,7 @@ An example of normal order procedure application:
 - The _iterative_ implementation maintains a running product and multiplies the numbers from 1 to $N$ to it.
 - This creates a shape with a straight edge:
 
-```scheme
+```
 (factorial 4)
 (fact-iter 1 1 4)
 (fact-iter 1 2 4)
@@ -279,7 +284,7 @@ $$
 - Efficient algorithm uses $\gcd(a,b) = \gcd(b,a\bmod b)$.
 - For example, we can reduce `(gcd 206 40)` as follows:
 
-```scheme
+```
 (gcd 206 40)
 (gcd 40 6)
 (gcd 6 4)
@@ -337,7 +342,7 @@ The test works like this:
 
 Procedures that compute a sum are all similar. They are all based on the following template:
 
-```scheme
+```
 (define (<name> a b)
   (if (> a b)
       0
@@ -362,7 +367,7 @@ A lambda expression can be used as the operand in a combination. It will be eval
 
 The general form of a let-expression is
 
-```scheme
+```
 (let ((<var1> <exp1>)
       (<var2> <exp2>)
       ...
@@ -372,7 +377,7 @@ The general form of a let-expression is
 
 This is just syntactic sugar for
 
-```scheme
+```
 ((lambda (<var1> <var2> ... <varn>)
    <body>)
  <exp1>
@@ -411,14 +416,14 @@ Now we will take it a bit further.
 
 Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:
 
-```scheme
+```
 (define (average-damp f)
   (lambda (x) (average x (f x))))
 ```
 
 If we use `average-damp` on `square`, we actually get a procedure that takes the sum of the numbers from 1 to n:
 
-```scheme
+```
 ((average-damp square) 10)
 55
 (+ 1 2 3 4 5 6 7 8 9 10)
@@ -439,14 +444,14 @@ $$f'(x) = \frac{f(x+dx) - f(x)}{dx}.$$
 
 This translates to the following procedure:
 
-```scheme
+```
 (define (deriv f)
   (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
 ```
 
 Now we can do things like this:
 
-```scheme
+```
 (define (cube x) (* x x x))
 (define dx 0.00001)
 ((deriv cube) 5)
@@ -501,7 +506,7 @@ Now we can do things like this:
 - A _pair_ is a concrete structure that we create with `cons`.
 - We extract the parts of the pair with `car` and `cdr`.
 
-```scheme
+```
 (define x (cons 1 2))
 (car x)
 1
@@ -539,7 +544,7 @@ Now we can do things like this:
 - For pairs, it is even simpler: we need three operations, which we will call `cons`, `car`, and `cdr`, such that if `z` is `(cons x y)`, then `(car z)` is `x` and `(cdr z)` is `y`.
 - Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:
 
-```scheme
+```
 (define (cons x y)
   (lambda (m)
     (if (= m 0) x y)))
@@ -585,7 +590,7 @@ Now we can do things like this:
 - We can get at the nth item of the list by `cdr`&thinsp;ing one less than $n$ times, and then taking the `car`.
 - Scheme includes a primitive predicate `null?` which is true if its argument is the empty list.
 
-```scheme
+```
 (define (list-ref items n)
   (if (= n 0)
       (car items)
@@ -594,7 +599,7 @@ Now we can do things like this:
 
 - We often write recursive procedures that `cdr` all the way through the list.
 
-```scheme
+```
 (define (length items)
   (if (null? items)
       0
@@ -603,7 +608,7 @@ Now we can do things like this:
 
 - We can build up lists to return by `cons`&thinsp;ing them up.
 
-```scheme
+```
 (define (append list1 list2)
   (if (null? list1)
       list2
@@ -615,7 +620,7 @@ Now we can do things like this:
 - Useful operation: applying the same transformation to each element in a list, producing a new list.
 - This is a higher-order procedure called `map`.
 
-```scheme
+```
 (define (map f xs)
   (if (null? xs)
       nil
@@ -636,7 +641,7 @@ Now we can do things like this:
 - The primitive predicate `pair?` returns true if its argument is a pair (formed with cons).
 - We can count the number of leaves in a tree with this:
 
-```scheme
+```
 (define (count-leaves x)
   (cond ((null? x) 0)
         ((not (pair? x)) 1)
@@ -671,7 +676,7 @@ Now we can do things like this:
 - We can use `mapcat` to flatten the nested mapping result into one list at the end.
 - The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!
 
-```scheme
+```
 (define (permutations s)
   (if (null? s)
       (list nil)
@@ -742,7 +747,7 @@ Now we can do things like this:
 - To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.
 - Here is the difference between symbols and their values:
 
-```scheme
+```
 (define a 1)
 (define b 2)
 (list a b)   ; => (1 2)
@@ -764,7 +769,7 @@ Now we can do things like this:
 - We need the constant rule, the sum rule, and the product rule.
 - We will assume we already have these procedures:
 
-```scheme
+```
 (variable? e)
 (same-variable? v1 v2)
 (sum? e)
@@ -940,7 +945,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can make all operations work on combinations of Scheme numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.
 - Here is a typical coercion procedure:
 
-```scheme
+```
 (define (scheme-number->complex n)
   (make-complex-from-real-imag (contents n) 0))
 ```
@@ -1043,7 +1048,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - If you try to withdraw too much, it should return the string "Insufficient funds".
 - Suppose we begin with \$100:
 
-```scheme
+```
 (withdraw 25)
 75
 (withdraw 25)
@@ -1058,7 +1063,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.
 - To implement `withdraw`, we define a variable called `balance`:
 
-```scheme
+```
 (define balance 100)
 (define (withdraw amount)
   (if (>= balance amount)
@@ -1072,7 +1077,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The expression `(begin <exp1> <exp2> ... <expk>)` evaluates all the expressions in sequence and returns the value of the last.
 - We made `balance` a global variable. It is much better to have it _encapsulated_ within `withdraw`, like so:
 
-```scheme
+```
 (define withdraw
   (let ((balance 100))
     (lambda (amount)
@@ -1086,7 +1091,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - For now, we technically have no way to understand how these procedures work. We will develop a new model soon.
 - The following procedure creates "withdraw processors":
 
-```scheme
+```
 (define (make-withdraw balance)
   (lambda (amount)
     (if (>= balance amount)
@@ -1108,7 +1113,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Here, `W1` and `W2` are complement independent objects, each with its own local state variable.
 - We can create a "bank-account object" that responds to multiple messages, all operating on the same local state:
 
-```scheme
+```
 (define (make-account balance)
   (define (withdraw amount)
     (if (>= balance amount)
@@ -1137,8 +1142,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - This is a _pseudorandom_ sequence, since each number is a function of the previous one.
 - We could implement `rand` like this:
 
-```scheme
-01234567890123456789012345678901234567890123456789012345678901234567890123456789
+```
 (define rand
   (let ((x random-init))
     (lambda ()
@@ -1160,7 +1164,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Programming without the use of assignment, as we have done in the first two chapters, is called _functional programming_.
 - Observe what happens when we try using the substation model:
 
-```scheme
+```
 (define (make-simplified-withdraw balance)
   (lambda (amount)
     (set! balance (- balance amount))
@@ -1235,7 +1239,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Let's evaluate `(f 5)`, given the following procedures:
 
-```scheme
+```
 (define (square x) (* x x))
 (define (sum-of-squares x y) (+ (square x) (square y)))
 (define (f a) (sum-of-squares (+ a 1) (* a 2)))
@@ -1256,7 +1260,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Now we can see how the environment model makes sense of assignment and local state.
 - Consider the "withdrawal processor":
 
-```scheme
+```
 (define (make-withdraw balance)
   (lambda (amount)
     (if (>= balance amount)
@@ -1302,7 +1306,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The old `car` is unreachable garbage. We will see later how Lisp recycles this memory.
 - We could implement `cons` in terms of these two procedures in addition to a `get-new-part` procedure.
 
-```scheme
+```
 (define (cons x y)
   (let ((new (get-new-pair)))
     (set-car! new x)
@@ -1328,7 +1332,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Earlier we said we can represent pairs purely in terms of procedures:
 
-```scheme
+```
 (define (cons x y)
   (lambda (sel)
     (sel x y)))
@@ -1340,7 +1344,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - The same is true of mutable data. We can implement mutators with procedures and assignment alone:
 
-```scheme
+```
 (define (cons x y)
   (define (set-x! v) (set! x v))
   (define (set-y! v) (set! y v))
@@ -1399,7 +1403,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We could use the message-passing style with the `dispatch` procedure that we've seen a few times already.
 - We could also take the λ-calculus approach:
 
-```scheme
+```
 (define (make-table) (lambda (k) #f))
 (define (lookup key table) (table key))
 (define (insert! key value table)
@@ -1532,7 +1536,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can use this to control access to shared variables.
 - Before, assignments based on a state variables current value were problematic. We could solve this with the set {`get-value`, `set-value!`, and `swap-value!`} where the latter is defined like so:
 
-```scheme
+```
 (define (swap-value! f)
   (set-value! (f (get-value))))
 ```
@@ -1550,7 +1554,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Things get much more difficult with multiple shared resources.
 - Suppose we want to swap the balances in two bank accounts:
 
-```scheme
+```
 (define (exchange acc1 acc2)
   (let ((diff (- (acc1 'balance) (acc2 'balance))))
     ((acc1 'withdraw) diff)
@@ -1629,7 +1633,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - With lazy sequences, we can manipulate infinitely long streams!
 - We can define Fibonacci sequence explicitly with a generator:
 
-```scheme
+```
 (define (fibgen a b) (cons-stream a (fibgen b (+ a b))))
 (define fibs (fibgen 0 1))
 ```
@@ -1641,7 +1645,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.
 
-```scheme
+```
 (define fibs
   (cons-stream
    0
@@ -1670,7 +1674,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Previously, we handled traditional nested loops as processes defined on sequences of pairs.
 - We can find all pairs $(i,j)$ with $i ≤ j$ such that $i + j$ is prime like this:
 
-```scheme
+```
 (stream-filter
  (lambda (pair) (prime? (+ (car pair) (cadr pair))))
  int-pairs)
@@ -1685,7 +1689,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can use streams to model signal-processing systems.
 - For example, taking the integral of a signal:
 
-```scheme
+```
 (define (integral integrand initial-value dt)
   (define int
     (cons-stream initial-value
@@ -1756,7 +1760,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `eval` classifies an expression and directs its evaluation in an environment.
 - We use _abstract syntax_ to avoid committing to a particular syntax in the evaluator.
 
-```scheme
+```
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
@@ -1780,7 +1784,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `apply` classifies a procedure and directs its application to a list of arguments.
 - If compound, it evaluates the procedure body in an extended environment.
 
-```scheme
+```
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
@@ -1799,7 +1803,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.
 - The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:
 
-```scheme
+```
 (define (quoted? exp) (tagged-list? exp 'quote))
 (define (text-of-quotation exp) (cadr exp))
 (define (tagged-list? exp tag)
@@ -1813,7 +1817,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Some special forms can be defined in terms of others.
 - For example, we can reduce `cond` to an `if` expression:
 
-```scheme
+```
 (define (cond? exp) (tagged-list? exp 'cond))
 (define (cond-clauses exp) (cdr exp))
 (define (cond-else-clause? clause) (eq? (cond-predicate clause) 'else))
@@ -1844,7 +1848,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Anything other than `false` is considered "truthy."
 
-```scheme
+```
 (define (true? x) (not (eq? x false)))
 (define (false? x) (eq? x false))
 ```
@@ -1855,7 +1859,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `(primitive-procedure? <proc>)` tests whether `<proc>` is a primitive procedure.
 - Compound procedures are represented by the following data structure:
 
-```scheme
+```
 (define (make-procedure parameters body env)
   (list 'procedure parameters body env))
 (define (compound-procedure? p) (tagged-list? p 'procedure))
@@ -1871,7 +1875,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `(set-variable-value! <var> <value> <env>)` changes a binding in `<env>`.
 - Here is a partial implementation:
 
-```scheme
+```
 (define (enclosing-environment env) (cdr env))
 (define (first-frame env) (car env))
 (define the-empty-environment '())
@@ -1908,7 +1912,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The evaluator ultimately reduces expressions to applications of primitive procedures, so we need the evaluator to map these to the underlying Lisp's primitive procedures.
 - We set up a global environment mapping primitive procedures, `true`, and `false`:
 
-```scheme
+```
 (define (setup-environment)
   (let ((initial-env
          (extend-environment (primitive-procedure-names)
@@ -1922,7 +1926,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - We define a list of primitive procedures `car`, `cdr`, `cons`, and `null?`:
 
-```scheme
+```
 (define (primitive-procedure? proc) (tagged-list? proc 'primitive))
 (define (primitive-implementation proc) (cadr proc))
 
@@ -1941,14 +1945,14 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Here, `apply-in-underlying-scheme` refers to the built-in `apply`, not the one we defined:
 
-```scheme
+```
 (define (apply-primitive-procedure proc args)
   (apply-in-underlying-scheme (primitive-implementation proc) args))
 ```
 
 - Finally, we make a simple _driver loop_, or REPL:
 
-```scheme
+```
 (define input-prompt ";;; M-Eval input:")
 (define output-prompt ";;; M-Eval value:")
 (define (driver-loop)
@@ -1988,7 +1992,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The Scheme standard requires internal definitions to come first in the body and not use each other during evaluation. Although this restriction makes sequential and simultaneous scoping equivalent, simultaneous scoping makes compiler optimization easier.
 - To achieve simultaneous scoping, we "scan out" internal definitions:
 
-```scheme
+```
 (lambda <vars>
   (define u <e1>)
   (define v <e2>)
@@ -1997,7 +2001,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Transforming them into a `let` with assignments:
 
-```scheme
+```
 (lambda <vars>
   (let ((u '*unassigned*)
         (v '*unassigned*))
@@ -2012,7 +2016,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Our evaluator is inefficient because it interleaves syntactic analysis with execution.
 - For example, given a recursive procedure:
 
-```scheme
+```
 (define (factorial n)
   (if (= n 1) 1 (* (factorial (- n 1)) n)))
 ```
@@ -2023,7 +2027,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - `((analyze exp) env)` completes the evaluation.
 - `analyze` is similar to the [original `eval`](#the-core-of-the-evaluator), except it only performs analysis, not full evaluation:
 
-```scheme
+```
 (define (analyze exp)
   (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
         ((quoted? exp) (analyze-quoted exp))
@@ -2040,7 +2044,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Here is one of the helper procedures, `analyze-lambda`. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.
 
-```scheme
+```
 (define (analyze-lambda exp)
   (let ((vars (lambda-parameters exp))
         (bproc (analyze-sequence (lambda-body exp))))
@@ -2058,7 +2062,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - _Normal-order_ languages use _lazy evaluation_ to delay evaluation as long as possible.
 - Consider this procedure:
 
-```scheme
+```
 (define (try a b) (if = a 0) 1 b)
 ```
 
@@ -2084,7 +2088,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The main change required is the procedure application logic in `eval` and `apply`.
 - The `application?` clause of `eval` becomes:
 
-```scheme
+```
 ((application? exp)
  (apply (actual-value (operator exp) env)
         (operands exp)
@@ -2093,13 +2097,13 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Whenever we need the actual value of an expression, we force in addition to evaluating:
 
-```scheme
+```
 (define (actual-value exp env) (force-it (eval exp env)))
 ```
 
 - We change `apply` to take `env`, and use `list-of-arg-values` and `list-of-delayed-args`:
 
-```scheme
+```
 (define (apply procedure arguments env)
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure
@@ -2117,7 +2121,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - We also need to change `eval-if` to use `actual-value` on the predicate:
 
-```scheme
+```
 (define (eval-if exp env)
   (if (true? (actual-value (if-predicate exp) env))
       (eval (if-consequent exp) env)
@@ -2128,7 +2132,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - To force a thunk, we evaluate it in its environment. We use `actual-value` instead of `eval` so that it recursively forces if the result is another thunk:
 
-```scheme
+```
 (define (force-it obj)
   (if (thunk? obj)
       (actual-value (thunk-exp obj) (thunk-env obj))
@@ -2137,7 +2141,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - We can represent thunks simply by a list containing the expression and environment:
 
-```scheme
+```
 (define (delay-it exp env) (list 'thunk exp env))
 (define (thunk? obj) (tagged-list? obj 'thunk))
 (define (thunk-exp thunk) (cadr thunk))
@@ -2155,7 +2159,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - All we need to do is make `cons` lazy, either by introducing non-strict primitives or by defining `cons`, `car`, and `cdr` [as compound procedures](#what-is-meant-by-data).
 - Now we can write code without distinguishing normal lists from infinite ones:
 
-```scheme
+```
 (define ones (cons 1 ones))
 (define (scale-list items factor) (map (lambda (x) (* x factor)) items))
 ```

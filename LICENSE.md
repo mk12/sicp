@@ -1,4 +1,8 @@
-# The MIT License
+# Original work
+
+This section applies to all files in this repository unless otherwise specified.
+
+## The MIT License
 
 © 2020 Mitchell Kember
 
@@ -7,3 +11,33 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# GitHub mark
+
+This section applies to the following file:
+
+- [notes/assets/github.svg](notes/assets/github.svg)
+
+The GitHub Mark is a registered trademark of GitHub, Inc. and is used [with permission](https://github.com/logos).
+
+# SICP derivative work
+
+This section applies to the following files ("derivative works"):
+
+- [notes/text.md](notes/text.md)
+- [notes/lecture.md](notes/lecture.md)
+- [notes/quote.md](notes/quote.md)
+- [notes/assets/wizard.afdesign](notes/assets/wizard.afdesign)
+- [notes/assets/wizard.svg](notes/assets/wizard.svg)
+- [docs/assets/wizard.svg](docs/assets/wizard.svg)
+- all files under [docs/text/](docs/text/)
+- all files under [docs/lecture/](docs/lecture/)
+
+## CC BY-SA 4.0
+
+_Structure and Interpretation of Computer Programs_ by Harold Abelson and Gerald Jay Sussman with Julie Sussman is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License][cc] by the MIT Press.
+
+The derivative works listed above are licensed under the same
+[Creative Commons Attribution-ShareAlike 4.0 International License][cc].
+
+[cc]: http://creativecommons.org/licenses/by-sa/4.0/

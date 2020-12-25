@@ -1,4 +1,7 @@
-TODO: This is some description!!!
+These notes are based on the [MIT OpenCourseWare video lectures][ocw] given in July 1986 by Hal Abelson and Gerald Jay Sussman. They follow the first edition (1985) of _Structure and Interpretation of Computer Programs_, so there are some differences from the [textbook notes][text]  which follow the second edition (1996).
+
+[ocw]: https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
+[text]: ../text/index.html
 
 # 1A: Overview and Introduction to Lisp
 
@@ -96,13 +99,13 @@ Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all n
 
 This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure -- it is a _special form_. We can also define procedures this way:
 
-```scheme
+```
 (define (square x) (* x x))
 ```
 
 We can also make it more clear that we are naming something:
 
-```scheme
+```
 (define square (lambda (x) (* x x)))
 ```
 
@@ -114,7 +117,7 @@ In Lisp, you do not make arbitrary distinctions between things that are defined 
 
 We do case analysis in Lisp using `cond`.
 
-```scheme
+```
 (define (abs x)
   (cond ((< x 0) (- x))
         ((= x 0) 0)
@@ -123,7 +126,7 @@ We do case analysis in Lisp using `cond`.
 
 Each line is a clause consisting of a predicate (true or false) and an action. We can use `if` if there is a single case:
 
-```scheme
+```
 (define (abs x)
   (if (< x 0)
       (- x)
@@ -181,14 +184,14 @@ These are the substitution rules for evaluating a combination. Note that the ord
 
 The `sos` procedure takes the sum of the squares:
 
-```scheme
+```
 (define (sq a) (* a a))
 (define (sos x y) (+ (sq x) (sq y)))
 ```
 
 Let's evaluate the sum of the square of 3 and the square of 4:
 
-```scheme
+```
 (sos 3 4)
 (+ (sq 3) (sq 4))
 (+ (sq 3) (* 4 4))
@@ -214,7 +217,7 @@ To evaluate `(if <predicate> <consequent> <alternative>)`, follow these steps:
 
 The addition operator in Peano arithmetic uses a conditional:
 
-```scheme
+```
 (define (+ x y)
   (if (= x 0)
       y
@@ -223,7 +226,7 @@ The addition operator in Peano arithmetic uses a conditional:
 
 Now we can evaluate `(+ 3 4)` like so:
 
-```scheme
+```
 (+ 3 4)
 (if (= 3 0) 4 (+ (-1+ 3) (1+ 4)))
 (+ (-1+ 3) (1+ 4))
@@ -254,7 +257,7 @@ Now we can evaluate `(+ 3 4)` like so:
 
 There are two ways to add whole numbers in Peano arithmetic.
 
-```scheme
+```
 (define (+ x y)
   (if (= x 0)
       y
@@ -279,7 +282,7 @@ Make small changes to the program, see how it affects the process.
 
 We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, ... in Lisp:
 
-```scheme
+```
 (define (fib n)
   (if (< n 2)
       n
@@ -297,7 +300,7 @@ This is a _tree-recursive_ process. We can represent the evaluation with a tree.
 
 Move an n-high tower from spike `from` to spike `to` using spike `spare` as a spare:
 
-```scheme
+```
 (define (move n from to spare)
   (cond
     ((= n 0) "DONE")
@@ -328,7 +331,7 @@ Move an n-high tower from spike `from` to spike `to` using spike `spare` as a sp
 
 We can represent the sigma notation with a procedure that takes other procedures as arguments:
 
-```scheme
+```
 (define (sum term a next b)
   (if (> a b)
       0
@@ -338,7 +341,7 @@ We can represent the sigma notation with a procedure that takes other procedures
 
 Now we can write particular cases easily, without repeating ourselves:
 
-```scheme
+```
 (define (sum-int a b)
   (define (identity x) x)
   (sum identity a 1+ b))
@@ -415,7 +418,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We need to apply the strategy of wishful thinking: let's imagine that we have procedures `make-rat`, `numer`, and `denom`.
 - We can implement a procedure for adding rationals like so:
 
-```scheme
+```
 (define (+rat x y)
   (make-rat
    (+ (* (numer x) (denom y))
@@ -454,7 +457,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This isn't the problem of the addition procedure; the `make-rat` procedure should be responsible for reducing to lowest terms.
 - We can use the greatest common divisor to fix this:
 
-```scheme
+```
 (define (make-rat n d)
   (let ((g (gcd n d)))
     (cons (/ n g) (/ d g))))
@@ -521,7 +524,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Pairs are the same: they happen to satisfy the contract that `(car (cons x y))` is `x` and `(cdr (cons x y))` is `y`.
 - We can implement pairs with procedures. We don't even need special primitives -- all we need are lambdas:
 
-```scheme
+```
 (define (cons a b)
   (lambda (pick)
     (cond ((= pick 1) a)
@@ -708,7 +711,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We can represent the differentiation rules like this:
 
-```scheme
+```
 (define deriv-rules
   '(((dd (?c c) (? v)) 0)
     ((dd (?v v) (? v)) 1)
@@ -732,7 +735,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The forms beginning with colons in the RHS are called _substitution objects_. They are skeleton evaluations.
 - Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:
 
-```scheme
+```
 (define algebra-rules
   '((((? op) (?c e1) (?c e2))
      (: (op e1 e2)))
@@ -774,7 +777,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.
 
-```scheme
+```
 (define (match pat exp dict)
   (cond ((eq? dict 'failed) 'failed)
         ((atom? pat)
@@ -814,7 +817,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The instantiator takes a dictionary and a skeleton as input and outputs an expression.
 
-```scheme
+```
 (define (instantiate skeleton dict)
   (define (loop s)
     (cond ((atom? s) s)
@@ -830,7 +833,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The only reason we have the internal procedure is to avoid passing the same `dict` on every recursive call.
 - The skeleton evaluation forms like `(: x)` use `evaluate`:
 
-```scheme
+```
 (define (evaluate form dict)
   (if (atom? form)
       (lookup form dict)
@@ -859,7 +862,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - For `deriv-rules`, this would be `(define dsimp (simplifier deriv-rules))`.
 - This is the `simplifier` procedure:
 
-```scheme
+```
 (define (simplifier the-rules)
   (define (simplify-exp exp)
     (try-rules (if (compound? exp)
@@ -890,7 +893,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Since the `exp` in `simplify-exp` can be either atomic or compound, this naturally recurses through a tree of expressions.
 - We could have just used one procedure, using `map`:
 
-```scheme
+```
 (define (simplify-exp exp)
   (try-rules
    (if (compound? exp)
@@ -915,7 +918,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The implementation of the dictionary is pretty simple:
 
-```scheme
+```
 (define (empty-dictionary) '())
 (define (extend-dictionary pat dat dict)
   (let ((name (variable-name pat)))
@@ -990,7 +993,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - It is the procedures that go in the table, not their names.
 - The key procedure in this whole system is `operate`:
 
-```scheme
+```
 (define (operate op obj)
   (let ((proc (get (type obj) op)))
     (if (null? proc)
@@ -1001,7 +1004,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This uses the table to look up the correct procedure, and applies it to the given object.
 - This is what happens when we try to extract the real part of a complex number in polar form:
 
-```scheme
+```
 (real-part z)
 (operate 'real-part z)
 ((get 'polar 'real-part) (contents z))
@@ -1087,7 +1090,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Here's how we implemented factorial functionally:
 
-```scheme
+```
 (define (fact n)
   (define (iter p i)
     (if (> i n) m (iter (* i p) (+ i 1))))
@@ -1096,7 +1099,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We could instead write it with assignments:
 
-```scheme
+```
 (define (fact n)
   (let ((p 1) (i 1))
     (define (loop)
@@ -1156,7 +1159,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We wouldn't have done this if there wasn't a good reason.
 - Consider the following program:
 
-```scheme
+```
 (define make-counter
   (lambda (n)
     (lambda ()
@@ -1269,7 +1272,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Assignment and mutators are equally powerful. We can implement the cons mutators in terms of `set!`.
 - We've already seen Alonzo Church's way of creating pairs just with lambda expressions:
 
-```scheme
+```
 (define (cons x y)
   (lambda (m)
     (m x y)))
@@ -1279,7 +1282,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We can change it to allow mutation:
 
-```scheme
+```
 (define (cons x y)
   (lambda (m)
     (m x
@@ -1316,7 +1319,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We're going to look at another way to decompose systems: _stream processing_.
 - Consider summing the odd squares in a binary tree of integers:
 
-```scheme
+```
 (define (sum-odd-squares tree)
   (if (leaf-node? tree)
       (if (odd? tree)
@@ -1328,7 +1331,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - And contrast with collecting the odd Fibonacci numbers:
 
-```scheme
+```
 (define (odd-fibs n)
   (define (next k)
     (if (> k n)
@@ -1354,7 +1357,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - For any `x` and `y`, `(tail (cons-stream x y))` is `y`.
 - We can define higher-order procedures like we did for lists:
 
-```scheme
+```
 (define (map-stream proc s)
   (if (empty-stream? s)
       the-empty-stream
@@ -1366,7 +1369,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Now we can reimplement those problems with explicit stream processing:
 
-```scheme
+```
 (define (sum-odd-squares tree)
   (accumulate +
               0
@@ -1393,7 +1396,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We can define a procedure `flatten` to accumulate them into a single flat stream.
 - Problem: Given $N$, find all pairs $0<j<i≤N$ such that $i+j$ is prime.
 
-```scheme
+```
 (define (prime-sum-pairs n)
   (map
    (lambda (p)
@@ -1412,7 +1415,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - `flatmap` takes the place of nested loops in most other languages.
 - We can simplify it with syntactic sugar `collect`:
 
-```scheme
+```
 (define (prime-sum-pairs n)
   (collect
    (list i j (+ i j))
@@ -1427,7 +1430,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This is unnecessary -- it's inordinately concerned with _time_.
 - A simpler way is to employ _wishful thinking_ and go from $k$ columns to $k+1$ columns.
 
-```scheme
+```
 (define (queens size)
   (define (fill-cols k)
     (if (= k 0)
@@ -1465,7 +1468,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - `delay` decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.
 - One little hack: to be efficient, `(delay <expr>)` is `(memo-proc (lambda () <expr>))`.
 
-```scheme
+```
 (define (memo-proc proc)
   (let ((already-run? nil) (result nil))
     (lambda ()
@@ -1488,7 +1491,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We don't compute elements until we've asked for them. When do we "ask" for them?
 - Example: `nth-stream` forces the first `n` elements of a stream.
 
-```scheme
+```
 (define (nth-stream n s)
   (if (= n 0)
       (head s)
@@ -1499,7 +1502,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - How long can a stream be? It can be _infinite_!
 
-```scheme
+```
 (define (integers-from n)
   (cons-stream n (integers-from (1+ n))))
 (define integers (integers-from 1))
@@ -1511,7 +1514,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you're left with is all the primes.
 
-```scheme
+```
 (define (sieve s)
   (cons-stream
    (head s)
@@ -1529,7 +1532,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We've so far seen procedures that recursively create streams.
 - There's another way. But first we need some additional procedures:
 
-```scheme
+```
 (define (add-streams s1 s2)
   (cond ((empty-stream? s1) s2)
         ((empty-stream? s2) s1)
@@ -1541,7 +1544,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Now, we can define streams all at once:
 
-```scheme
+```
 (define ones (cons-stream 1 ones))
 (define integers (add-streams integers ones))
 ```
@@ -1550,7 +1553,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We can calculate the integral $\int s\,dt$ the same way you would in signal processing:
 
-```scheme
+```
 (define (integral s initial-value dt)
   (define int
     (cons-stream initial-value
@@ -1560,7 +1563,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Another example, the Fibonacci numbers:
 
-```scheme
+```
 (define fibs
   (cons-stream 0
                (cons-stream 1
@@ -1572,7 +1575,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Let's say we want to solve $y'=y^2,\;y(0)=1$ using the step $dt=0.001$.
 - We'd like to write a stream program to solve this:
 
-```scheme
+```
 (define y (integral dy 1 0.001))
 (define dy (map-stream square y))
 ```
@@ -1580,7 +1583,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - This doesn't work because `y` and `dy` each need the other defined first.
 - We can fix it the same way `cons-stream` allows self-referencing definitions: by introducing another `delay`, so that we can get the first value of the integral stream without knowing what stream it's integrating.
 
-```scheme
+```
 (define (integral delayed-s initial-value dt)
   (define int
     (cons-stream initial-value

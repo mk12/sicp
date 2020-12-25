@@ -21,8 +21,8 @@ html, body, blockquote, p, ul, ol, li {
 @media (prefers-color-scheme: dark) {
     /* TODO */
     :root {
-        --fg: #ccc;
-        --bg: #2a2a2a;
+        /* --fg: #ccc; */
+        /* --bg: #2a2a2a; */
     }
 }
 
@@ -43,22 +43,29 @@ p:first-child, ul ul, ol ul, ol ol, ul ol {
     margin-top: 0;
 }
 
-ul {
-    margin-left: 1.05em;
-}
+ul { margin-left: 1.05em; }
+ol { margin-left: 1.45em; }
 
-ol {
-    margin-left: 1.45em;
-}
+h1, h2, h3 { font-weight: bold; }
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.17em; }
 
 a {
-    color: var(--link);
     text-decoration: none;
-    /* border-bottom: 1px dotted var(--subdued); */
+    color: var(--fg);
 }
 
 a:hover {
-    /* border-bottom: 1px solid var(--subdued); */
+    color: var(--link);
+}
+
+a:not(.link) {
+    border-bottom: 1px dotted var(--subdued);
+}
+
+a:not(.link):hover {
+    border-bottom: 1px solid var(--link);
 }
 
 code {
@@ -72,12 +79,14 @@ code {
 pre code {
     display: block;
     padding: 15px;
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
 h1 code, h2 code, h3 code, h4 code, .toc__item code {
     font-size: inherit;
     font-weight: inherit;
+    background: inherit;
+    padding: inherit;
 }
 
 .math {
@@ -87,8 +96,9 @@ h1 code, h2 code, h3 code, h4 code, .toc__item code {
 
 blockquote {
     border-left: 10px solid var(--border);
-    padding: 0 calc(1.05em - 10px);
-    /* background: var(--highlight); */
+    padding: 15px;
+    background: var(--highlight);
+    border-radius: 6px;
 }
 
 /* Specific styles */
@@ -102,26 +112,17 @@ blockquote {
     margin-left: -0.82em;
     visibility: hidden;
     position: absolute;
+    color: var(--subdued);
 }
 
 .anchor:hover .anchor__link {
     visibility: visible;
-    text-decoration: none;
-    color: var(--subdued);
-}
-
-.anchor .anchor__link:hover {
-    color: var(--fg);
 }
 
 .number {
     color: var(--subdued);
     font-size: inherit;
     float: right;
-}
-
-.h-link {
-    color: inherit;
 }
 
 .toc {
@@ -138,6 +139,8 @@ blockquote {
     display: table-cell;
     text-align: right;
     padding-right: 15px;
+    color: var(--subdued);
+    font-weight: bold;
 }
 
 /* Page layout */
@@ -164,11 +167,6 @@ body {
     border-bottom: 3px solid var(--border);
 }
 
-.title:hover {
-    text-decoration: none;
-    color: var(--subdued);
-}
-
 .sitenav {
     display: contents;
 }
@@ -183,9 +181,7 @@ body {
 }
 
 .sitenav__item:hover {
-    text-decoration: none;
-    color: var(--subdued);
-    fill: var(--subdued);
+    fill: var(--link);
 }
 
 .sitenav__item--active {
@@ -198,10 +194,6 @@ body {
 
 .sitenav__item:last-child {
     padding-right: 0;
-}
-
-.github-mark {
-    vertical-align: -5px;
 }
 
 .pagenav {
@@ -227,17 +219,17 @@ body {
 .pagenav__link {
     display: block;
     color: var(--intense);
-    padding: 6px 0;
+    padding: 8px 0;
     background-clip: padding-box;
 }
 
 .pagenav__link:hover {
-    text-decoration: none;
+    color: var(--intense);
     background: var(--highlight);
 }
 
 .footer {
-    padding-top: 6px;
+    padding-top: 5px;
     border-top: 3px solid var(--border);
     font-size: 18px;
     text-align: center;
@@ -245,6 +237,26 @@ body {
 
 .pagenav--bottom, .footer--lone {
     margin-top: 20px;
+}
+
+/* SVGs */
+
+svg {
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.github-mark {
+    vertical-align: -5px;
+}
+
+.wizard {
+    float: right;
+    margin: 1em 0 1em 1em;
+}
+
+.wizard__lambda:hover {
+    fill: black;
 }
 
 /* Code highlighting */

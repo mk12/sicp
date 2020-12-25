@@ -1,16 +1,21 @@
 # New to do
 
+- distinguish h2/h3 more (especialy matttes in lecture, no numbers on h2)
+- decide on frontmatter in TOC or not
+- attribute lecture quotes to Hal/Gerald
++ settle on max-width
+    + sticking with 800: want wide enough for SICP drawing; need code 80 chars; want blockquotes to look same as code, meaning same length
 - fix intra-doc links ("earlier section")
-- remove scheme from all ```scheme... insert it auto, also on inline!!
++ remove scheme from all ```scheme... insert it auto, also on inline!!
 - have special callout thing at end of text sections with exercise links
-- put highlight styles in standalone CSS
++ put highlight styles in standalone CSS
 + use /text/1#1.2 for section 1.2, /exercise/1#1.32 for Exercise 1.32, etc.
 x note: GH pages allows omitting .html (without need for subfolder + index.html)
     x but want it to work locally, so sticking with .html links
 x link quotes to the SICP website
     x can't link to precise quote locations so no point.
 + little hash anchors on headings, like github
-- color scheme https://coolors.co/98c1d9-2c497f-db5461-fbb5b1-38302e
++ color scheme https://coolors.co/98c1d9-2c497f-db5461-fbb5b1-38302e
 - improve Scheme highlighting in docs
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - spell checker for Markdown, integrated in Makefile
