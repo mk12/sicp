@@ -1,5 +1,7 @@
 # New to do
 
+- DRY up docgen.c templates
+- optimize SVGs with https://jakearchibald.github.io/svgomg/, and consider <use>
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - if quotes always included in notes, maybe quote.md should just be references/line numbers/something (and then maybe place back into the main file)
 - attribute lecture quotes to Hal/Gerald
@@ -10,6 +12,9 @@
 - fix intra-doc links ("earlier section")
 - have special callout thing at end of text sections with exercise links
 - responsive
+x text-rendering: optimizeLegbility
+    x seems to make no difference on helvetica
++ SVG for arrows in pagenav
 + tighten leading on headings without changing margins
 + fix chapter/section numbers when heading wraps
 + distinguish h2/h3 more (especialy matttes in lecture, no numbers on h2)

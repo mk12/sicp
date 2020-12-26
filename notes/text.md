@@ -281,7 +281,7 @@ $$
 ### 1.2.5: Greatest Common Divisors
 
 - The GCD of integers $a$ and $b$ is the largest integer that divides both $a$ and $b$ with no remainder. For example, $\gcd(16,28) = 4$.
-- Efficient algorithm uses $\gcd(a,b) = \gcd(b,a\bmod b)$.
+- An efficient algorithm uses $\gcd(a,b) = \gcd(b,a\bmod b)$.
 - For example, we can reduce `(gcd 206 40)` as follows:
 
 ```
@@ -1666,7 +1666,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Before, we made iterative processes by updating state variables in recursive calls.
 - To compute the square root, we improved a guess until the values didn't change very much.
-- We can make a stream that converges on the square root of `x`, and a stream to approximate π.
+- We can make a stream that converges on the square root of `x`, and a stream to approximate $π$.
 - One neat thing we can do with these streams is use sequence accelerators, such as Euler's transform.
 
 #### Infinite streams of pairs

@@ -31,7 +31,7 @@ html, body, blockquote, p, ul, ol, li {
 body {
     color: var(--fg);
     background: var(--bg);
-    font: 20px sans-serif;
+    font: 20px Helvetica, Arial, sans-serif;
     line-height: 1.4;
 }
 
@@ -107,7 +107,7 @@ h1 code, h2 code, h3 code, h4 code, .toc__item code {
 
 .math {
     /* 20px is too large beside Helvetica. */
-    font-size: 19px;
+    font-size: 18px;
 }
 
 blockquote {
@@ -261,6 +261,34 @@ body {
     margin-top: 2em;
 }
 
+@media screen and (max-width: 600px) {
+    body {
+        padding: 20px 10px;
+    }
+    .header {
+        display: block;
+        text-align: center;
+    }
+    .title, .sitenav__item, .sitenav__item--active {
+        border: none;
+    }
+    .sitenav {
+        display: flex;
+        flex-wrap: wrap;
+        padding-bottom: 6px;
+        border-bottom: 3px solid var(--border);
+    }
+    .sitenav__item {
+        flex-grow: 1;
+    }
+    .sitenav__item--active {
+        margin-top: 5px;
+        padding: 6px 14px;
+        background: var(--highlight);
+        border-radius: 6px;
+    }
+}
+
 /* SVGs */
 
 svg {
@@ -272,9 +300,21 @@ svg {
     vertical-align: -5px;
 }
 
+.arrow {
+    vertical-align: -3px;
+}
+
 .wizard {
     float: right;
-    margin: 0 -40px 2em 1em;
+    margin: 0 clamp(-50px, calc(-100vw + 870px), 0px) 2em 2em;
+}
+
+@media screen and (max-width: 750px) {
+    .wizard {
+        float: none;
+        display: block;
+        margin: 0 auto 1em;
+    }
 }
 
 /* Code highlighting */

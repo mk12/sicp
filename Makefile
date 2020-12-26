@@ -15,7 +15,8 @@ doc_exercise := $(patsubst %,docs/exercise/%.html,index $(doc_sections))
 doc_quote := docs/text/quote.html docs/lecture/quote.html
 doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_quote)
 
-doc_assets := docs/assets/style.css
+doc_link_assets := docs/assets/style.css
+doc_embed_assets := $(patsubst %,notes/assets/%.svg,left right up)
 doc_pandoc_aux := notes/pandoc/template.html notes/pandoc/filter.lua
 
 .PHONY: all help test docs lint spell check clean vscode
@@ -41,9 +42,9 @@ test:
 docgen linter: %: %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-docs: $(doc_html) $(doc_assets)
+docs: $(doc_html) $(doc_link_assets)
 
-$(doc_html): docgen $(doc_pandoc_aux) notes/assets/github.svg
+$(doc_html): docgen $(doc_embed_assets) $(doc_pandoc_aux)
 	./docgen $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -57,7 +58,7 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_4)): src/sicp/chapter-4.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
 
-$(doc_assets): docs/assets/%: | notes/assets/%
+$(doc_link_assets): docs/assets/%: | notes/assets/%
 	mkdir -p docs/assets
 	ln -s ../../$< $@
 
