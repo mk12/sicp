@@ -155,6 +155,10 @@ body {
     display: flex;
 }
 
+.header--lone {
+    margin-bottom: 2em;
+}
+
 .gap {
     flex-grow: 1;
     border-bottom: 3px solid var(--border);
@@ -233,10 +237,11 @@ body {
     border-top: 3px solid var(--border);
     font-size: 18px;
     text-align: center;
+    clear: both;
 }
 
 .pagenav--bottom, .footer--lone {
-    margin-top: 20px;
+    margin-top: 2em;
 }
 
 /* SVGs */
@@ -252,11 +257,7 @@ svg {
 
 .wizard {
     float: right;
-    margin: 1em 0 1em 1em;
-}
-
-.wizard__lambda:hover {
-    fill: black;
+    margin: 0 -50px 2em 1em;
 }
 
 /* Code highlighting */

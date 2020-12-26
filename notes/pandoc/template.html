@@ -11,7 +11,7 @@ $endif$
   <link rel="stylesheet" href="$root$assets/style.css">
 </head>
 <body>
-<header class="header">
+<header class="header $if(up)$$else$ header--lone$endif$">
   <a class="title link" href="$root$index.html">SICP Study</a>
   <span class="gap"></span>
   <nav class="sitenav">

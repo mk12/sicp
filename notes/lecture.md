@@ -488,7 +488,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 > See, in general, as systems designers, you're forced with the necessity to make decisions about how you're going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you're forced to do it. The problem is, there's a very, very narrow line between deferring decisions and outright procrastination. So you'd like to make progress, but also at the same time never be bound by the consequences of your decisions.
 
-> I said that computer science is a lot like magic, and it's sort of good that it's like magic. There's a bad part of computer since that's a lot like religion.
+> I said that computer science is a lot like magic, and it's sort of good that it's like magic. There's a bad part of computer that's a lot like religion.
 
 ## Part 3
 

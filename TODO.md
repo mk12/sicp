@@ -1,13 +1,23 @@
 # New to do
 
+- figure out exercise chapter pages (there's never code between chapter & first section)
+- if quotes always included in notes, maybe quote.md should just be references/line numbers/something (and then maybe place back into the main file)
 - distinguish h2/h3 more (especialy matttes in lecture, no numbers on h2)
-- decide on frontmatter in TOC or not
+x decide on frontmatter in TOC or not
+    x no, looks bad since it doesn't have number
+- finish homepage
 - attribute lecture quotes to Hal/Gerald
+- improve Scheme highlighting in docs
+- BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
+- spell checker for Markdown, integrated in Makefile
+- docs dark mode
+- fix intra-doc links ("earlier section")
+- have special callout thing at end of text sections with exercise links
+- responsive
++ licenses (MIT + CC-BY-SA)
 + settle on max-width
     + sticking with 800: want wide enough for SICP drawing; need code 80 chars; want blockquotes to look same as code, meaning same length
-- fix intra-doc links ("earlier section")
 + remove scheme from all ```scheme... insert it auto, also on inline!!
-- have special callout thing at end of text sections with exercise links
 + put highlight styles in standalone CSS
 + use /text/1#1.2 for section 1.2, /exercise/1#1.32 for Exercise 1.32, etc.
 x note: GH pages allows omitting .html (without need for subfolder + index.html)
@@ -16,10 +26,6 @@ x link quotes to the SICP website
     x can't link to precise quote locations so no point.
 + little hash anchors on headings, like github
 + color scheme https://coolors.co/98c1d9-2c497f-db5461-fbb5b1-38302e
-- improve Scheme highlighting in docs
-- BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
-- spell checker for Markdown, integrated in Makefile
-- docs dark mode
 + drawing of wizard book yin/yang for index.hml
 x switch to netlify to avoid checking in docs?
     x No, GitHub pages is simpler. No containers, no slow builds. Just HTML.
