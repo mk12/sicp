@@ -32,7 +32,7 @@
   <div class="pagenav__item pagenav__item--next"><a class="pagenav__link link" href="2.html">Next →</a></div>
 </nav>
 <h1>
-The Metacircular Evaluator<small class="number">4.1</small>
+<small class="number">4.1</small>The Metacircular Evaluator
 </h1>
 <ul>
 <li>We will implement a Lisp evaluator as a Lisp program.</li>
@@ -44,7 +44,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>This embodies the interplay between two critical procedures, <code>eval</code> and <code>apply</code>.</li>
 </ul>
 <h2 id="4.1.1" class="anchor">
-<a class="anchor__link link" href="#4.1.1">#</a>The Core of the Evaluator<small class="number">4.1.1</small>
+<a class="anchor__link link" href="#4.1.1">#</a><small class="number">4.1.1</small>The Core of the Evaluator
 </h3>
 <h3 id="4.1.1.1" class="anchor">
 <a class="anchor__link link" href="#4.1.1.1">#</a><code>Eval</code>
@@ -88,7 +88,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
 <h2 id="4.1.2" class="anchor">
-<a class="anchor__link link" href="#4.1.2">#</a>Representing Expressions<small class="number">4.1.2</small>
+<a class="anchor__link link" href="#4.1.2">#</a><small class="number">4.1.2</small>Representing Expressions
 </h3>
 <ul>
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
@@ -131,7 +131,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
 </ul>
 <h2 id="4.1.3" class="anchor">
-<a class="anchor__link link" href="#4.1.3">#</a>Evaluator Data Structures<small class="number">4.1.3</small>
+<a class="anchor__link link" href="#4.1.3">#</a><small class="number">4.1.3</small>Evaluator Data Structures
 </h3>
 <h3 id="4.1.3.1" class="anchor">
 <a class="anchor__link link" href="#4.1.3.1">#</a>Testing of predicates
@@ -194,7 +194,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
 <h2 id="4.1.4" class="anchor">
-<a class="anchor__link link" href="#4.1.4">#</a>Running the Evaluator as a Program<small class="number">4.1.4</small>
+<a class="anchor__link link" href="#4.1.4">#</a><small class="number">4.1.4</small>Running the Evaluator as a Program
 </h3>
 <ul>
 <li>We can run our evaluator as a program: Lisp within Lisp.</li>
@@ -257,7 +257,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                     &#39;&lt;procedure-env&gt;))</span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">display</span> object)))</span></code></pre></div>
 <h2 id="4.1.5" class="anchor">
-<a class="anchor__link link" href="#4.1.5">#</a>Data as Programs<small class="number">4.1.5</small>
+<a class="anchor__link link" href="#4.1.5">#</a><small class="number">4.1.5</small>Data as Programs
 </h3>
 <ul>
 <li>A program can be viewed as a description of an abstract machine.</li>
@@ -268,7 +268,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code>eval</code> procedure for evaluating data as programs.</li>
 </ul>
 <h2 id="4.1.6" class="anchor">
-<a class="anchor__link link" href="#4.1.6">#</a>Internal Definitions<small class="number">4.1.6</small>
+<a class="anchor__link link" href="#4.1.6">#</a><small class="number">4.1.6</small>Internal Definitions
 </h3>
 <ul>
 <li>Global definitions have <em>sequential scoping</em>: they are defined one at a time.</li>
@@ -292,7 +292,7 @@ The Metacircular Evaluator<small class="number">4.1</small>
 <li>Here, <code>*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
 <h2 id="4.1.7" class="anchor">
-<a class="anchor__link link" href="#4.1.7">#</a>Separating Syntactic Analysis from Execution<small class="number">4.1.7</small>
+<a class="anchor__link link" href="#4.1.7">#</a><small class="number">4.1.7</small>Separating Syntactic Analysis from Execution
 </h3>
 <ul>
 <li>Our evaluator is inefficient because it interleaves syntactic analysis with execution.</li>

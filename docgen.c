@@ -456,12 +456,12 @@ static bool gen_text_quote(void) {
                 dprintf(proc.in,
                     "<h%d id=\"%.*s\" class=\"anchor\">"
                     "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                    "<a class=\"link\" href=\"%.*s/index.html\">%.*s</a>"
                     "<small class=\"number\">%.*s</small>"
+                    "<a class=\"link\" href=\"%.*s/index.html\">%.*s</a>"
                     "</h%d>\n",
                     state.heading, h.label_len, h.label, h.label_len, h.label,
-                    h.label_len, h.label, h.title_len, h.title,
-                    h.label_len, h.label, state.heading);
+                    h.label_len, h.label, h.label_len, h.label,
+                    h.title_len, h.title, state.heading);
             } else {
                 char *id = tolower_s(h.title, h.title_len);
                 dprintf(proc.in,
@@ -564,8 +564,8 @@ static bool gen_text_chapter(const char *output) {
     assert(state.section == target_section);
     struct MarkdownHeading h = parse_md_heading(state.line, state.len);
     assert(h.label);
-    dprintf(proc.in, "<h1>%.*s<small class=\"number\">%.*s</small></h1>\n",
-        h.title_len, h.title, h.label_len, h.label);
+    dprintf(proc.in, "<h1><small class=\"number\">%.*s</small>%.*s</h1>\n",
+        h.label_len, h.label, h.title_len, h.title);
     while (scan_md(&state) && state.heading == 0) {
         write(proc.in, state.line, state.len);
     }
@@ -662,8 +662,8 @@ static bool gen_text_section(const char *output) {
     assert(state.section == target_section);
     struct MarkdownHeading h = parse_md_heading(state.line, state.len);
     assert(h.label);
-    dprintf(proc.in, "<h1>%.*s<small class=\"number\">%.*s</small></h1>\n",
-        h.title_len, h.title, h.label_len, h.label);
+    dprintf(proc.in, "<h1><small class=\"number\">%.*s</small>%.*s</h1>\n",
+        h.label_len, h.label, h.title_len, h.title);
     while (scan_md(&state) && state.heading != 1 && state.heading != 2) {
         if (state.heading >= 3) {
             h = parse_md_heading(state.line, state.len);
@@ -672,12 +672,12 @@ static bool gen_text_section(const char *output) {
                 dprintf(proc.in,
                     "<h%d id=\"%.*s\" class=\"anchor\">"
                     "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                    "%.*s"
                     "<small class=\"number\">%.*s</small>"
+                    "%.*s"
                     "</h%d>\n",
                     state.heading - 1, h.label_len, h.label,
-                    h.label_len, h.label, h.title_len, h.title,
-                    h.label_len, h.label, state.heading);
+                    h.label_len, h.label, h.label_len, h.label,
+                    h.title_len, h.title, state.heading);
             } else {
                 assert(state.heading == 4);
                 char id[] = "_._._._";
@@ -779,11 +779,11 @@ static bool gen_lecture_quote(void) {
             dprintf(proc.in,
                 "<h%d id=\"%s\" class=\"anchor\">"
                 "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
-                "<a class=\"link\" href=\"%s.html\">%.*s</a>"
                 "<small class=\"number\">%.*s</small>"
+                "<a class=\"link\" href=\"%s.html\">%.*s</a>"
                 "</h%d>\n",
-                state.heading, id, id, id, h.title_len, h.title,
-                h.label_len, h.label, state.heading);
+                state.heading, id, id, h.label_len, h.label, id,
+                h.title_len, h.title, state.heading);
             free(id);
         } else {
             write(proc.in, state.line, state.len);
@@ -853,8 +853,8 @@ static bool gen_lecture_page(const char *output) {
     assert(state.section == target_section);
     struct MarkdownHeading h = parse_md_heading(state.line, state.len);
     assert(h.label);
-    dprintf(proc.in, "<h1>%.*s<small class=\"number\">%.*s</small></h1>\n",
-        h.title_len, h.title, h.label_len, h.label);
+    dprintf(proc.in, "<h1><small class=\"number\">%.*s</small>%.*s</h1>\n",
+        h.label_len, h.label, h.title_len, h.title);
     char id[10];
     while (scan_md(&state) && state.heading != 1) {
         if (state.heading > 1) {

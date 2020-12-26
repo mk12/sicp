@@ -46,10 +46,26 @@ p:first-child, ul ul, ol ul, ol ol, ul ol {
 ul { margin-left: 1.05em; }
 ol { margin-left: 1.45em; }
 
-h1, h2, h3 { font-weight: bold; }
+h1, h2, h3 {
+    font-weight: bold;
+    line-height: 1.2;
+}
+
 h1 { font-size: 2em; }
 h2 { font-size: 1.5em; }
 h3 { font-size: 1.17em; }
+
+h1 { margin: 0.77em 0; }
+h2 { margin: 0.93em 0 0.835em; }
+h3 { margin: 1.1em 0; }
+
+h2::after {
+    /* Can't put the border on h2 because .anchor adds left padding. */
+    content: "";
+    display: block;
+    margin-top: 0.1667em;
+    border-bottom: 1px solid var(--border);
+}
 
 a {
     text-decoration: none;
@@ -123,6 +139,7 @@ blockquote {
     color: var(--subdued);
     font-size: inherit;
     float: right;
+    margin-left: 0.5em;
 }
 
 .toc {
@@ -153,10 +170,6 @@ body {
 
 .header {
     display: flex;
-}
-
-.header--lone {
-    margin-bottom: 2em;
 }
 
 .gap {
@@ -240,6 +253,10 @@ body {
     clear: both;
 }
 
+.header--lone {
+    margin-bottom: 2em;
+}
+
 .pagenav--bottom, .footer--lone {
     margin-top: 2em;
 }
@@ -257,7 +274,7 @@ svg {
 
 .wizard {
     float: right;
-    margin: 0 -50px 2em 1em;
+    margin: 0 -40px 2em 1em;
 }
 
 /* Code highlighting */

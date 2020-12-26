@@ -2,10 +2,6 @@
 
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - if quotes always included in notes, maybe quote.md should just be references/line numbers/something (and then maybe place back into the main file)
-- distinguish h2/h3 more (especialy matttes in lecture, no numbers on h2)
-x decide on frontmatter in TOC or not
-    x no, looks bad since it doesn't have number
-- finish homepage
 - attribute lecture quotes to Hal/Gerald
 - improve Scheme highlighting in docs
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
@@ -14,6 +10,12 @@ x decide on frontmatter in TOC or not
 - fix intra-doc links ("earlier section")
 - have special callout thing at end of text sections with exercise links
 - responsive
++ tighten leading on headings without changing margins
++ fix chapter/section numbers when heading wraps
++ distinguish h2/h3 more (especialy matttes in lecture, no numbers on h2)
+x decide on frontmatter in TOC or not
+    x no, looks bad since it doesn't have number
++ finish homepage
 + licenses (MIT + CC-BY-SA)
 + settle on max-width
     + sticking with 800: want wide enough for SICP drawing; need code 80 chars; want blockquotes to look same as code, meaning same length
