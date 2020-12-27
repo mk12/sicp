@@ -185,11 +185,10 @@ body {
 .title {
     font-size: 30px;
     color: var(--intense);
-    flex: 1;
 }
 
 .sitenav {
-    display: contents;
+    display: flex;
 }
 
 .sitenav__item {
@@ -261,12 +260,15 @@ body {
         padding: 20px 10px;
     }
     .header {
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
     }
     .title {
-        flex: 100%;
         margin-bottom: 10px;
-        text-align: center;
+    }
+    .sitenav {
+        align-self: stretch;
+        flex-wrap: wrap;
     }
     .sitenav__item {
         flex: 1;
@@ -277,7 +279,7 @@ body {
     }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 410px) {
     .sitenav__item {
         flex: 0 50%;
         padding-left: 0;
