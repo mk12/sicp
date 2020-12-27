@@ -8,5 +8,8 @@ Enjoy!
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [timeless classic]: https://people.eecs.berkeley.edu/~bh/sicp.html
+    "Why SICP Matters (Brian Harvey)"
 [r6rs]: http://www.r6rs.org
+    "The Revised(6) Report on the Algorithmic Language Scheme"
 [cc]: https://creativecommons.org/licenses/by-sa/4.0/
+    "Creative Commons Attribution-ShareAlike 4.0 International"

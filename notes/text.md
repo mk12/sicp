@@ -89,7 +89,7 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
 - Procedure definitions are very powerful for abstraction.
 - A squaring procedure: `(define (square x) (* x x))`.
 - This is a compound procedure given the name _square_.
-- The general form of a procedure definition is `(define (<name> <formal parameters>) <body>)`.
+- The general form of a procedure definition is `(define («name» «formal-parameters») «body»)`.
 - If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.
 
 ### 1.1.5: The Substitution Model for Procedure Application
@@ -343,11 +343,11 @@ The test works like this:
 Procedures that compute a sum are all similar. They are all based on the following template:
 
 ```
-(define (<name> a b)
+(define («name» a b)
   (if (> a b)
       0
-      (+ (<term> a)
-         (<name> (<next> a) b))))
+      (+ («term» a)
+         («name» («next» a) b))))
 ```
 
 This is a useful abstraction, just as sigma notation in math is useful because the summation of a series is so common.
@@ -356,7 +356,7 @@ This is a useful abstraction, just as sigma notation in math is useful because t
 
 ### 1.3.2: Constructing Procedures Using `Lambda`
 
-`lambda` creates anonymous procedures. They are just like the procedures created by `define`, but without a name: `(lambda (<formal-parameters>) <body>)`.
+`lambda` creates anonymous procedures. They are just like the procedures created by `define`, but without a name: `(lambda («formal-parameters») «body»)`.
 
 A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.
 
@@ -368,22 +368,22 @@ A lambda expression can be used as the operand in a combination. It will be eval
 The general form of a let-expression is
 
 ```
-(let ((<var1> <exp1>)
-      (<var2> <exp2>)
+(let ((«var1» «exp1»)
+      («var2» «exp2»)
       ...
-      (<varn> <expn>))
-  <body>)
+      («varn» «expn»))
+  «body»)
 ```
 
 This is just syntactic sugar for
 
 ```
-((lambda (<var1> <var2> ... <varn>)
-   <body>)
- <exp1>
- <exp2>
+((lambda («var1» «var2» ... «varn»)
+   «body»)
+ «exp1»
+ «exp2»
  ...
- <expn>)
+ «expn»)
 ```
 
 - The scope of a variable in a let-expression is the body.
@@ -501,7 +501,7 @@ Now we can do things like this:
 ### 2.1.1: Example: Arithmetic Operations for Rational Numbers
 
 - We want to add, subtract, multiply, divide, and test equality with our rational numbers.
-- We assume we have `(make-rat <n> <d>)`, `(number <x>)`, and `(denom <x>)` available as the constructor and selectors.
+- We assume we have `(make-rat «n» «d»)`, `(number «x»)`, and `(denom «x»)` available as the constructor and selectors.
 - This is wishful thinking, and it is a good technique.
 - A _pair_ is a concrete structure that we create with `cons`.
 - We extract the parts of the pair with `car` and `cdr`.
@@ -1072,9 +1072,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
       "Insufficient funds"))
 ```
 
-- This uses the `set!` special form, whose syntax is `(set! <name> <new-value>)`.
+- This uses the `set!` special form, whose syntax is `(set! «name» «new-value»)`.
 - Procedures names that end with a bang change the values of variables or of data structures.
-- The expression `(begin <exp1> <exp2> ... <expk>)` evaluates all the expressions in sequence and returns the value of the last.
+- The expression `(begin «exp1» «exp2» ... «expk»)` evaluates all the expressions in sequence and returns the value of the last.
 - We made `balance` a global variable. It is much better to have it _encapsulated_ within `withdraw`, like so:
 
 ```
@@ -1231,8 +1231,8 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Then, within the new environment, evaluate the procedure body.
 - `(lambda (x) (* x x))` evaluates a to pair: the parameters and the procedure body as one item, and a pointer to the global environment as the other.
 - `(define square (lambda (x) (* x x)))` associates the symbol `square` with that procedure object in the global frame.
-- Evaluating `(define <var> <val>)` creates a binding in the current environment frame to associate `<var>` with `<val>`.
-- Evaluating `(set! <var> <val>)` locates the binding of `<var>` in the current environment (the first frame that has a binding for it) and changes the bound value to `<val>`.
+- Evaluating `(define «var» «val»)` creates a binding in the current environment frame to associate `«var»` with `«val»`.
+- Evaluating `(set! «var» «val»)` locates the binding of `«var»` in the current environment (the first frame that has a binding for it) and changes the bound value to `«val»`.
 - We use `define` for variables that are currently unbound, and `set!` for variables that are already bound.
 
 ### 3.2.2: Applying Simple Procedures
@@ -1272,11 +1272,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This places a single binding in the global environment frame.
 - Consider now `(define W1 (make-withdraw 100))`.
     - We set up $E_1$ where `100` is bound to the formal parameter `balance`, and then we evaluate the body of `make-withdraw`.
-    - This returns a lambda procedure who environment is $E_1$, and this is then bound to `W1` in the global frame.
+    - This returns a lambda procedure whose environment is $E_1$, and this is then bound to `W1` in the global frame.
 - Now, we apply this procedure: `(W1 50)`.
     - We construct a frame in $E_2$ that binds `amount` to `50`, and then we evaluate the body of `W1`.
     - The enclosing environment of $E_2$ is $E_1$, _not_ the global environment.
-    - Evaluating the body results in the `set!` rebinding `balance` in $E_`$ to the value `(- 100 50)`, which is `50`.
+    - Evaluating the body results in the `set!` rebinding `balance` in $E_1$ to the value `(- 100 50)`, which is `50`.
     - After calling `W1`, the environment $E_2$ is irrelevant because nothing points to it.
     - Each call to `W1` creates a new environment to hold `amount`, but uses the same $E_1$ (which holds `balance`).
 - `(define W2 (make-withdraw 100))` creates another environment with a `balance` binding.
@@ -1385,7 +1385,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - It would only change the parameter in $E_1$, not the value in the calling environment.
     - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
     - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`, `*x`, and `*x = ...`.
-- The `lookup` procedure returns the value associated with a key in a table, or `#f` if it cannot be found.
+- The `lookup` procedure returns the value associated with a key in a table, or `false` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
 
 #### Two-dimensional tables
@@ -1404,7 +1404,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We could also take the λ-calculus approach:
 
 ```
-(define (make-table) (lambda (k) #f))
+(define (make-table) (lambda (k) false))
 (define (lookup key table) (table key))
 (define (insert! key value table)
   (lambda (k)
@@ -1433,9 +1433,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - The primitives boxes implement "forces" by which changes in the signal of one wire influence the signal of another.
 - We have the following operations on wires:
-    - `(get-signal <wire>)` returns the current value of the signal.
-    - `(set-signal! <wire> <value>)` changes the value of the signal.
-    - `(add-action! <wire> <procedure of no arguments>)` asserts that the given procedure should be run whenever the signal on the wire changes value.
+    - `(get-signal «wire»)` returns the current value of the signal.
+    - `(set-signal! «wire» «value»)` changes the value of the signal.
+    - `(add-action! «wire» «procedure-of-no-arguments»)` asserts that the given procedure should be run whenever the signal on the wire changes value.
 - The procedure `after-delay` executes a procedure after a given time delay.
 
 #### Representing wires
@@ -1451,7 +1451,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The only thing left is `after-delay`.
 - An _agenda_ is a data structure that schedules things to do.
 - For an agenda `(define a (make-agenda))`, the operations `(empty-agenda? a)`, `(first-agenda-item a)`, `(remove-first-agenda-item! a)`, and `(current-time a)` are self-explanatory.
-- We schedule new items with `(add-to-agenda <time> <action> a)`.
+- We schedule new items with `(add-to-agenda «time» «action» a)`.
 - We call the global agenda `the-agenda`.
 - The simulation is driven by `propagate`, which executes each item on the agenda in sequence.
 
@@ -1479,15 +1479,15 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Using the constraint system
 
 - We create connectors with `(make-connector)`, just like wires.
-- We use `(probe "name" <connector>)`, again just like wires.
-- `(set-value! <connector> <value> 'user) assigns a value to the connector, and this information propagates through the network.
+- We use `(probe "name" «connector»)`, again just like wires.
+- `(set-value! «connector» «value» 'user)` assigns a value to the connector, and this information propagates through the network.
 - This will give an error if the new value causes a contradiction.
-- `(forget-value! <connector> 'user)` undoes the assignment.
+- `(forget-value! «connector» 'user)` undoes the assignment.
 
 #### Implementing the constraint system
 
 - The overall system is simpler than the digital circuit system because there are no propagation delays.
-- There are five basic operations on a connector `c`: `(has-value? c)`, `(get-value c)`, `(set-value! c <value> <informant>)`, `(forget-value! c <retractor>)`, and `(connect c <constraint>)`.
+- There are five basic operations on a connector `c`: `(has-value? c)`, `(get-value c)`, `(set-value! c «value» «informant»)`, `(forget-value! c «retractor»)`, and `(connect c «constraint»)`.
 - The procedures `inform-about-value` and `inform-about-no-value` tells the constraint that a connector has (lost) a value.
 - Whenever an adder gets a new value, it checks if it has two and can calculate the third.
 
@@ -1614,7 +1614,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We only construct an item of the stream when it is needed.
 - We have `cons-stream`, `stream-car`, `stream-cdr`, `the-empty-stream`, and `stream-null?`.
 - The `cons-stream` procedure must not evaluate its second argument until it is accessed by `stream-cdr`.
-- To implement streams, we will use _promises_. `(delay <exp>)` does not evaluate the argument but returns a promise. `(force <promise>)` evaluates a promise and returns the value.
+- To implement streams, we will use _promises_. `(delay «exp»)` does not evaluate the argument but returns a promise. `(force «promise»)` evaluates a promise and returns the value.
 - `(cons-stream a b)` is a special form equivalent to `(cons a (delay b))`.
 
 #### The stream implementation in action
@@ -1624,7 +1624,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Implementing `delay` and `force`
 
 - Promises are quite straightforward to implement.
-- `(delay <exp>)` is syntactic sugar for `(lambda () <exp>)`.
+- `(delay «exp»)` is syntactic sugar for `(lambda () «exp»)`.
 - `force` simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.
 - The promise stored in the `cdr` of the stream is also known as a _thunk_.
 
@@ -1855,8 +1855,8 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Representing procedures
 
-- `(apply-primitive-procedure <proc> <args>)` applies a primitive procedure to `<args>`.
-- `(primitive-procedure? <proc>)` tests whether `<proc>` is a primitive procedure.
+- `(apply-primitive-procedure «proc» «args»)` applies a primitive procedure to `«args»`.
+- `(primitive-procedure? «proc»)` tests whether `«proc»` is a primitive procedure.
 - Compound procedures are represented by the following data structure:
 
 ```
@@ -1869,10 +1869,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Operations on environments
 
-- `(lookup-variable-value <var> <env>)` returns the value bound to a variable.
-- `(extend-environment <variables> <values> <base-env>)` returns a new environment extended with a frame containing the given bindings.
-- `(define-variable! <var> <value> <env>)` adds a binding to the first frame of `<env>`.
-- `(set-variable-value! <var> <value> <env>)` changes a binding in `<env>`.
+- `(lookup-variable-value «var» «env»)` returns the value bound to a variable.
+- `(extend-environment «variables» «values» «base-env»)` returns a new environment extended with a frame containing the given bindings.
+- `(define-variable! «var» «value» «env»)` adds a binding to the first frame of `«env»`.
+- `(set-variable-value! «var» «value» «env»)` changes a binding in `«env»`.
 - Here is a partial implementation:
 
 ```
@@ -1935,7 +1935,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
-        <more primitives>))
+        «more-primitives»))
 (define (primitive-procedure-names)
   (map car primitive-procedures))
 (define (primitive-procedure-objects)
@@ -1972,7 +1972,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
       (display (list 'compound-procedure
                      (procedure-parameters object)
                      (procedure-body object)
-                     '<procedure-env>))
+                     '«procedure-env»))
       (display object)))
 ```
 
@@ -1993,20 +1993,20 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - To achieve simultaneous scoping, we "scan out" internal definitions:
 
 ```
-(lambda <vars>
-  (define u <e1>)
-  (define v <e2>)
-  <e3>)
+(lambda «vars»
+  (define u «e1»)
+  (define v «e2»)
+  «e3»)
 ```
 
 - Transforming them into a `let` with assignments:
 
 ```
-(lambda <vars>
+(lambda «vars»
   (let ((u '*unassigned*)
         (v '*unassigned*))
-    (set! u <e1>)
-    (set! v <e2>) <e3>))
+    (set! u «e1»)
+    (set! v «e2») «e3»))
 ```
 
 - Here, `*unassigned*` is a special symbol causing an error upon variable lookup.

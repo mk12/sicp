@@ -1,5 +1,11 @@
 function add_scheme_class(el)
-    if #el.classes == 0 and string.find(el.text, " ") then
+    -- Only highlight code if it is more than one word, or if it contains the
+    -- guillements used for meta-variables (e.g. `(set! «var» «val»)`).
+    if #el.classes == 0 and (
+        string.find(el.text, " ") 
+        or string.find(el.text, "«")
+        or string.find(el.text, "»")
+    ) then
         el.classes = {"scheme"}
         return el
     end

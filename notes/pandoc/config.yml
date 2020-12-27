@@ -1,0 +1,11 @@
+from: markdown
+to: html5
+standalone: true
+highlight-style: pygments
+html-math-method:
+  method: katex
+template: notes/pandoc/template.html
+filters:
+- notes/pandoc/filter.lua
+syntax-definitions:
+- notes/pandoc/scheme.xml

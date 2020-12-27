@@ -54,19 +54,6 @@ static char *tolower_s(const char *s, int len) {
 // Name of the pandoc executable.
 static const char *const PANDOC = "pandoc";
 
-// Pandoc options used for all invocations.
-static const char *const PANDOC_OPTIONS[] = {
-    "--from=markdown",
-    "--to=html5",
-    "--standalone",
-    "--template=notes/pandoc/template.html",
-    "--lua-filter=notes/pandoc/filter.lua",
-    "--syntax-definition=notes/pandoc/scheme.xml",
-    "--highlight-style=pygments",
-    "--katex",
-};
-static const int N_PANDOC_OPTIONS = ARRAYLEN(PANDOC_OPTIONS);
-
 // Pandoc options that differ between invocations.
 struct PandocOpts {
     // Path to the input file.
@@ -90,11 +77,10 @@ struct PandocOpts {
 // return since it replaces the current process. Returns false on error.
 static bool pandoc(const struct PandocOpts opts) {
     const int LEN =
-        1  // pandoc
-        + 2   // -o output
-        + N_PANDOC_OPTIONS
-        + 3   // id, title, root
-        + 3   // (optional) prev, up, next
+        1     // pandoc
+        + 3   // -o output -dconfig
+        + 6   // -M title -V active -V root
+        + 6   // -V prev -V up -V next
         + 1   // input
         + 1;  // NULL
     const char *argv[LEN];
@@ -102,21 +88,26 @@ static bool pandoc(const struct PandocOpts opts) {
     argv[i++] = PANDOC;
     argv[i++] = "-o";
     argv[i++] = opts.output;
-    memcpy(argv + i, PANDOC_OPTIONS, N_PANDOC_OPTIONS * sizeof argv[0]);
-    i += N_PANDOC_OPTIONS;
+    argv[i++] = "-dnotes/pandoc/config.yml";
     // Note: We don't need to free memory allocated by concat because it will
     // all disappear when execvp replaces the process image.
+    argv[i++] = "-M";
     const int title_idx = i;
-    argv[i++] = concat("--metadata=title:", opts.title);
-    argv[i++] = concat("--variable=", opts.active);
-    argv[i++] = concat("--variable=root:", opts.root);
+    argv[i++] = concat("title=", opts.title);
+    argv[i++] = "-V";
+    argv[i++] = opts.active;
+    argv[i++] = "-V";
+    argv[i++] = concat("root=", opts.root);
     if (opts.up) {
-        argv[i++] = concat("--variable=up:", opts.up);
+        argv[i++] = "-V";
+        argv[i++] = concat("up=", opts.up);
         if (opts.prev) {
-            argv[i++] = concat("--variable=prev:", opts.prev);
+            argv[i++] = "-V";
+            argv[i++] = concat("prev=", opts.prev);
         }
         if (opts.next) {
-            argv[i++] = concat("--variable=next:", opts.next);
+            argv[i++] = "-V";
+            argv[i++] = concat("next=", opts.next);
         }
     }
     argv[i++] = opts.input;

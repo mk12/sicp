@@ -10,7 +10,7 @@ html, body, blockquote, p, ul, ol, li {
 :root {
     color-scheme: light dark;
     --bg: #fafafa;
-    --block: #efefef;
+    --block: #f0f0f0;
     --highlight: #e8e8e8;
     --border: #ccc;
     --subdued: #888;
@@ -22,7 +22,7 @@ html, body, blockquote, p, ul, ol, li {
 @media (prefers-color-scheme: dark) {
     :root {
         --bg: #202020;
-        --block: #303030;
+        --block: #2e2e2e;
         --highlight: #444;
         --border: #666;
         --subdued: #888;
@@ -295,15 +295,14 @@ svg {
 }
 
 .github-mark {
-    fill: var(--intense);
+    fill: currentColor;
     vertical-align: -5px;
 }
 
-.sitenav__item:hover .github-mark {
-    fill: var(--link);
-}
-
 .arrow {
+    stroke: currentColor;
+    stroke-width: 2px;
+    fill: none;
     vertical-align: -3px;
 }
 
@@ -322,9 +321,9 @@ svg {
     }
 }
 
-.wfw { fill: #fff; }
-.wfb { fill: #38302e; }
-.wsb { stroke: #38302e; }
+.wfw { fill: #fff; } /* wizard fill white */
+.wfb { fill: #38302e; } /* wizard fill black */
+.wsb { stroke: #38302e; } /* wizard stroke black */
 
 @media (prefers-color-scheme: dark) {
     .wfw { fill: #38302e; }
@@ -334,18 +333,23 @@ svg {
 
 /* Code highlighting */
 
-.co { color: #8d8e92; font-style: italic; }
-.dv { color: #986801; }
-.ex { color: #a626a4; }
-.kw { color: #4078f2; }
-.op { color: #0184bc; }
+.kw { color: #a626a4; }
+.fu { color: #4078f2; }
+.cn { color: #C0392B; }
 .st { color: #50a14f; }
+.co { color: #8d8e92; font-style: italic; }
 
 @media (prefers-color-scheme: dark) {
-    .co { color: #7f848e; }
-    .dv { color: #e5c07b; }
-    .ex { color: #c678dd; }
-    .kw { color: #61afef; }
-    .op { color: #56b6c2; }
+    .kw { color: #c678dd; }
+    .fu { color: #61afef; }
+    .cn { color: #e06c75; }
     .st { color: #98c379; }
+    .co { color: #7f848e; }
+}
+
+.sc { display: none; }
+.ss {
+    font-style: italic;
+    text-decoration: underline;
+    text-decoration-color: #8d8e92;
 }

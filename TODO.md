@@ -3,10 +3,16 @@
 - DRY up docgen.c templates
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
-- optimize SVGs with https://jakearchibald.github.io/svgomg/, and consider `<use>`
 - spell checker for Markdown, integrated in Makefile
 - have special callout thing at end of text sections with exercise links
 - attribute lecture quotes to Hal/Gerald
++ fix contrast in code highlighting (revamp colors)
++ fix `<formal parameters>` etc.
++ use config.yml for pandoc and short options for better Make output
++ optimize SVGs with https://jakearchibald.github.io/svgomg/
+    + note: not using `<use>` for arrows since they're so small
++ test in Safari, Firefox, Chrome
++ improve accessibility, alt/title text, main tag etc.
 + improve Scheme highlighting in docs (and support dark mode)
 + decide on en/em dashes (going with closed-set em)
 x if quotes always included in notes, maybe quote.md should just be references/line numbers/something (and then maybe place back into the main file)
