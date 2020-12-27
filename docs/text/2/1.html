@@ -145,14 +145,14 @@
 <li>Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (m)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">=</span> m <span class="dv">0</span>) x y)))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(m)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> m <span class="dv">0</span>) x y)))</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> z) (z <span class="dv">0</span>))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> z) (z <span class="dv">1</span>))</span></code></pre></div>
 <ul>
 <li>This doesn’t look like <em>data</em>, but it works.</li>
 <li>This is how you implement pairs in the λ-calculus.</li>
-<li>In real Lisp implementations, pairs are implemented directly, for reasons of efficiency – but they <em>could</em> be implemented this way and you wouldn’t be able to tell the difference.</li>
+<li>In real Lisp implementations, pairs are implemented directly, for reasons of efficiency—but they <em>could</em> be implemented this way and you wouldn’t be able to tell the difference.</li>
 </ul>
 <blockquote>
 <p>[…] the ability to manipulate procedures as objects automatically provides the ability to represent compound data. (125) FOO</p>
@@ -165,7 +165,7 @@
 </h3>
 <ul>
 <li>We want to design a system that allows us to manipulate inexact quantities with known precision (uncertainty).</li>
-<li>To do this, we need arithmetic operations for combining intervals – ranges of possible values.</li>
+<li>To do this, we need arithmetic operations for combining intervals—ranges of possible values.</li>
 </ul>
 <nav class="pagenav pagenav--bottom">
   <div class="pagenav__item pagenav__item--prev">

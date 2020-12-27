@@ -165,7 +165,7 @@ f(A,N-1) + f(A-D,N), &amp; \text{if $A &gt; 0$ and $N &gt; 0$.}
 <ul>
 <li>Some processes consume more or less computational resources than others.</li>
 <li>We compare this using <em>order of growth</em>, a gross measure of the resources required by a process as the inputs becomes larger.</li>
-<li>Let <span class="math inline">n</span> be a parameter that measures the size of a problem – it could be the input itself, the tolerance, the number of rows in the matrix, etc. There are many properties that <span class="math inline">n</span> can measure.</li>
+<li>Let <span class="math inline">n</span> be a parameter that measures the size of a problem—it could be the input itself, the tolerance, the number of rows in the matrix, etc. There are many properties that <span class="math inline">n</span> can measure.</li>
 <li>Let <span class="math inline">R(n)</span> be the amount of resources the process requires for a problem of size <span class="math inline">n</span>. This could be time, space (amount of memory), number of registers used, etc.</li>
 <li>We say that <span class="math inline">R(n)</span> has order of growth <span class="math inline">Θ(f(n))</span>, or <span class="math inline">R(n) = Θ(f(n))</span>, if there are positive constants <span class="math inline">A</span> and <span class="math inline">B</span> independent of <span class="math inline">n</span> such that <span class="math inline">Af(n) ≤ R(n) ≤ Bf(n)</span> for any sufficiently large value of <span class="math inline">n</span>.</li>
 <li>The value <span class="math inline">R(n)</span> is sandwiched between <span class="math inline">Af(n)</span> and <span class="math inline">Bf(n)</span>.</li>
@@ -233,7 +233,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 </h3>
 <ul>
 <li>Most familiar algorithms compute an answer that is guaranteed to be correct. Not so with the Fermat test.</li>
-<li>We can make the probability error in our primality test as small as we like simply by running more tests – except for Carmichael numbers.</li>
+<li>We can make the probability error in our primality test as small as we like simply by running more tests—except for Carmichael numbers.</li>
 <li>If <span class="math inline">n</span> passes the test for one random value of a, the chances are more than 50% that <span class="math inline">n</span> is prime.</li>
 <li>Probabilistic algorithms: algorithms for which one can prove that the chance of error becomes arbitrarily small.</li>
 </ul>

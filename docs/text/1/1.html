@@ -116,7 +116,7 @@
 <li>Apply the procedure (value of left more subexpression, the operator) to the arguments (values of other subexpressions, the operands).</li>
 </ol></li>
 <li>Before evaluating a combination, we must first evaluate each element inside it.</li>
-<li>Evaluation is recursive in nature – one of its steps is invoking itself.</li>
+<li>Evaluation is recursive in nature—one of its steps is invoking itself.</li>
 <li>The evaluation of a combination can be represents with a tree.</li>
 <li>Recursion is a powerful technique for dealing with hierarchical, tree-like objects.</li>
 <li>To end the recursion, we stipulate the following:
@@ -160,7 +160,7 @@
 <a class="anchor__link link" href="#1.1.5.1">#</a>Applicative order versus normal order
 </h3>
 <ul>
-<li>That example used <em>applicative order</em>: evaluate everything first, then apply the procedure to the arguments.</li>
+<li>That example used <em>applicative order</em> : evaluate everything first, then apply the procedure to the arguments.</li>
 <li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
 </ul>
 <p>An example of normal order procedure application:</p>
@@ -184,7 +184,7 @@
 <li>We do <em>case analysis</em> in Scheme using <code>cond</code>.</li>
 <li>Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.</li>
 <li>A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.</li>
-<li>The symbol <code>else</code> can be used as the last clause – it will always evaluate to true.</li>
+<li>The symbol <code>else</code> can be used as the last clause—it will always evaluate to true.</li>
 <li>The <code>if</code> conditional can be used when there are two cases.</li>
 <li>Logical values can be combined with <code>and</code>, <code>or</code>, and <code>not</code>. The first two are special forms, not procedures.</li>
 </ul>

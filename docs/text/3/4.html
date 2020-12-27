@@ -95,7 +95,7 @@
 <ul>
 <li>On the surface, time is straightforward: it is an ordering.</li>
 <li>Two events either occur in one order, or the other, or simultaneously.</li>
-<li>Consider <code class="sourceCode scheme">(<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</code>. There are three steps: accessing the value of <code>balance</code>, computing the new balance, and setting <code>balance</code> to this value.</li>
+<li>Consider <code class="sourceCode scheme">(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</code>. There are three steps: accessing the value of <code>balance</code>, computing the new balance, and setting <code>balance</code> to this value.</li>
 <li>Two such expressions executed concurrently on the same <code>balance</code> variable could have their three steps interleaved.</li>
 <li>The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.</li>
 </ul>
@@ -145,7 +145,7 @@
 <li>Suppose we want to swap the balances in two bank accounts:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(exchange acc1 acc2)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((diff (<span class="op">-</span> (acc1 &#39;balance) (acc2 &#39;balance))))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((diff (<span class="op">-</span> (acc1 &#39;balance) (acc2 &#39;balance))))</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    ((acc1 &#39;withdraw) diff)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ((acc2 &#39;deposit) diff)))</span></code></pre></div>
 <ul>

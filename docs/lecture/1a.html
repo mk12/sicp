@@ -126,7 +126,7 @@
 <li>We know as much as we want about the components; we don’t need to worry about tolerance.</li>
 <li>Not much difference between what I can <em>build</em> and what I can <em>image</em>.</li>
 <li>Other disciplines have physical constraints; in CS, the only constraint is your mind.</li>
-<li>CS is an abstract kind of engineering – ignore the constraints imposed by reality.</li>
+<li>CS is an abstract kind of engineering—ignore the constraints imposed by reality.</li>
 </ul>
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5">#</a>Techniques for managing complexity
@@ -134,7 +134,7 @@
 <h4 id="1.5.1" class="anchor">
 <a class="anchor__link link" href="#1.5.1">#</a>Black box abstraction
 </h4>
-<p>Take something and build a box around it. The important thing is that you don’t care what is going on inside the box – it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and build bigger boxes.</p>
+<p>Take something and build a box around it. The important thing is that you don’t care what is going on inside the box—it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and build bigger boxes.</p>
 <ul>
 <li>Primitive objects: primitive procedures, primitive data.</li>
 <li>Means of combination: procedure composition, construction of compound data.</li>
@@ -175,7 +175,7 @@
 <a class="anchor__link link" href="#2.1.2">#</a>Means of combination
 </h4>
 <ul>
-<li>We can take the sum using a <em>combination</em>: <code class="sourceCode scheme">(<span class="op">+</span> <span class="dv">3</span> <span class="fl">14.4</span> <span class="dv">5</span>)</code>.</li>
+<li>We can take the sum using a <em>combination</em>: <code class="sourceCode scheme">(<span class="op">+</span> <span class="dv">3</span> <span class="dv">14.4</span> <span class="dv">5</span>)</code>.</li>
 <li>Combination: applying and operator to operands.</li>
 <li>The operator and operands themselves can be combinations.</li>
 <li>Lisp uses fully parenthesized (unambiguous) prefix notation.</li>
@@ -186,10 +186,10 @@
 <h4 id="2.1.3" class="anchor">
 <a class="anchor__link link" href="#2.1.3">#</a>Means of abstraction
 </h4>
-<p>This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure – it is a <em>special form</em>. We can also define procedures this way:</p>
+<p>This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure—it is a <em>special form</em>. We can also define procedures this way:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(square x) (<span class="op">*</span> x x))</span></code></pre></div>
 <p>We can also make it more clear that we are naming something:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> square </span>(<span class="kw">lambda</span> (x) (<span class="op">*</span> x x)))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> square </span>(<span class="ex">lambda</span><span class="fu"> </span>(x) (<span class="op">*</span> x x)))</span></code></pre></div>
 <p>The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former <em>desugars</em> to the latter.</p>
 <p>In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in.</p>
 <h3 id="2.2" class="anchor">
@@ -197,12 +197,12 @@
 </h3>
 <p>We do case analysis in Lisp using <code>cond</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">abs</span> x)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((<span class="op">&lt;</span> x <span class="dv">0</span>) (<span class="op">-</span> x))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">cond</span><span class="fu"> </span>((<span class="op">&lt;</span> x <span class="dv">0</span>) (<span class="op">-</span> x))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        ((<span class="op">=</span> x <span class="dv">0</span>) <span class="dv">0</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        ((<span class="op">&gt;</span> x <span class="dv">0</span>) x)))</span></code></pre></div>
 <p>Each line is a clause consisting of a predicate (true or false) and an action. We can use <code>if</code> if there is a single case:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">abs</span> x)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">&lt;</span> x <span class="dv">0</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&lt;</span> x <span class="dv">0</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      (<span class="op">-</span> x)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      x))</span></code></pre></div>
 <p>You can think of <code>if</code> as syntactic sugar for <code>cond</code> or vice versa.</p>

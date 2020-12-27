@@ -97,16 +97,16 @@
 <li>We can represent the differentiation rules like this:</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> deriv-rules</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  &#39;(((dd (?c c) (<span class="op">?</span> v)) <span class="dv">0</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ((dd (?v v) (<span class="op">?</span> v)) <span class="dv">1</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ((dd (?v u) (<span class="op">?</span> v)) <span class="dv">0</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ((dd (<span class="op">+</span> (<span class="op">?</span> x1) (<span class="op">?</span> x2)) (<span class="op">?</span> v))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  &#39;(((dd (?c c) (? v)) <span class="dv">0</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ((dd (?v v) (? v)) <span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ((dd (?v u) (? v)) <span class="dv">0</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ((dd (<span class="op">+</span> (? x1) (? x2)) (? v))</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>     (<span class="op">+</span> (dd (: x1) (: v))</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        (dd (: x2) (: v))))</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    ((dd (<span class="op">*</span> (<span class="op">?</span> x1) (<span class="op">?</span> x2)) (<span class="op">?</span> v))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    ((dd (<span class="op">*</span> (? x1) (? x2)) (? v))</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>     (<span class="op">+</span> (<span class="op">*</span> (: x1) (dd (: x2) (: v)))</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        (<span class="op">*</span> (dd (: x1) (: v)) (: x2))))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ((dd (** (<span class="op">?</span> x) (?c n)) (<span class="op">?</span> v))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ((dd (** (? x) (?c n)) (? v))</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>     (<span class="op">*</span> (<span class="op">*</span> (: n)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>           (** (: x) (: (<span class="op">-</span> n <span class="dv">1</span>))))</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        (dd (: x) (: v))))))</span></code></pre></div>
@@ -119,13 +119,13 @@
 <li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> algebra-rules</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  &#39;((((<span class="op">?</span> op) (?c e1) (?c e2))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  &#39;((((? op) (?c e1) (?c e2))</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>     (: (op e1 e2)))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    (((<span class="op">?</span> op) (<span class="op">?</span> e1) (?c e2))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    (((? op) (? e1) (?c e2))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>     ((: op) (: e2) (: e1)))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">+</span> <span class="dv">0</span> (<span class="op">?</span> e)) (: e))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">*</span> <span class="dv">1</span> (<span class="op">?</span> e)) (: e))</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">*</span> <span class="dv">0</span> (<span class="op">?</span> e)) <span class="dv">0</span>)))</span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">+</span> <span class="dv">0</span> (? e)) (: e))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">*</span> <span class="dv">1</span> (? e)) (: e))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">*</span> <span class="dv">0</span> (? e)) <span class="dv">0</span>)))</span></code></pre></div>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4">#</a>Syntax
 </h3>
@@ -135,7 +135,7 @@
 <ul>
 <li><code>foo</code> <em>matches</em> exactly <code>foo</code>.</li>
 <li><code class="sourceCode scheme">(f a b)</code> <em>matches</em> a list of three elements with first, second, and third elements being <code>f</code>, <code>a</code>, and <code>b</code>, respectively.</li>
-<li><code class="sourceCode scheme">(<span class="op">?</span> x)</code> <em>matches</em> anything, and calls it <code>x</code>.</li>
+<li><code class="sourceCode scheme">(? x)</code> <em>matches</em> anything, and calls it <code>x</code>.</li>
 <li><code class="sourceCode scheme">(?c x)</code> <em>matches</em> a constant, and calls it <code>x</code>.</li>
 <li><code class="sourceCode scheme">(?v x)</code> <em>matches</em> a variable, and calls it <code>x</code>.</li>
 </ul>
@@ -167,38 +167,38 @@
 <ul>
 <li>The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(match pat <span class="kw">exp</span> dict)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((<span class="kw">eq?</span> dict &#39;failed) &#39;failed)</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(match pat exp dict)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">cond</span><span class="fu"> </span>((<span class="kw">eq?</span> dict &#39;failed) &#39;failed)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        ((atom? pat)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         (<span class="kw">if</span> (<span class="kw">and</span> (atom? <span class="kw">exp</span>) (<span class="kw">eq?</span> pat <span class="kw">exp</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         (<span class="ex">if</span><span class="fu"> </span>(<span class="ex">and</span><span class="fu"> </span>(atom? exp) (<span class="kw">eq?</span> pat exp))</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             dict</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>             &#39;failed))</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        ((arbitrary-constant? pat)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         (<span class="kw">if</span> (constant? <span class="kw">exp</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>             (extend-dict pat <span class="kw">exp</span> dict)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         (<span class="ex">if</span><span class="fu"> </span>(constant? exp)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>             (extend-dict pat exp dict)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>             &#39;failed))</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        ((arbitrary-variable? pat)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>         (<span class="kw">if</span> (variable? <span class="kw">exp</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             (extend-dict pat <span class="kw">exp</span> dict)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>         (<span class="ex">if</span><span class="fu"> </span>(variable? exp)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             (extend-dict pat exp dict)</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>             &#39;failed))</span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        ((arbitrary-expression? pat)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>         (extend-dict pat <span class="kw">exp</span> dict))</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        ((atom? <span class="kw">exp</span>) &#39;failed)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>         (match (<span class="kw">cdr</span> pat)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                (<span class="kw">cdr</span> <span class="kw">exp</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>         (extend-dict pat exp dict))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        ((atom? exp) &#39;failed)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">else</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">         </span>(match (<span class="kw">cdr</span> pat)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                (<span class="kw">cdr</span> exp)</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                (match (<span class="kw">car</span> pat)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                       (<span class="kw">car</span> <span class="kw">exp</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                       (<span class="kw">car</span> exp)</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                       dict)))))</span></code></pre></div>
 <ul>
 <li>The <code>else</code> clause recursion is very important.</li>
 <li>We examine two trees simultaneously: the tree of the expression, and that of the pattern.</li>
-<li>Consider this pattern: <code class="sourceCode scheme">(<span class="op">+</span> (<span class="op">*</span> (<span class="op">?</span> x) (<span class="op">?</span> y)) (<span class="op">?</span> y))</code>. We could draw this as a tree.</li>
+<li>Consider this pattern: <code class="sourceCode scheme">(<span class="op">+</span> (<span class="op">*</span> (? x) (? y)) (? y))</code>. We could draw this as a tree.</li>
 <li>The expression matching it, <code class="sourceCode scheme">(<span class="op">+</span> (<span class="op">*</span> <span class="dv">3</span> x)) x)</code>, has a very similar tree structure.</li>
 <li>We want to traverse both trees simultaneously and compare them.</li>
 <li>The matcher can fail at any point. The first clause checks this and propagates the failure. (This could be done more efficiently in continuation-passing style.)</li>
 <li>If the pattern is an atom, we make sure the expression is the same atom.</li>
-<li>If the pattern is an arbitrary expression variable like <code class="sourceCode scheme">(<span class="op">?</span> x)</code>, we simply add the expression to the dictionary.</li>
+<li>If the pattern is an arbitrary expression variable like <code class="sourceCode scheme">(? x)</code>, we simply add the expression to the dictionary.</li>
 <li>If it is an arbitrary constant or variable, we make sure it is the correct one before adding to the dictionary.</li>
 </ul>
 <h3 id="2.2" class="anchor">
@@ -209,10 +209,10 @@
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(instantiate skeleton dict)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(loop s)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((atom? s) s)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">cond</span><span class="fu"> </span>((atom? s) s)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>          ((skeleton-evaluation? s)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>           (evaluate (eval-exp s) dict))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="kw">cons</span> (loop (<span class="kw">car</span> s))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          (<span class="ex">else</span><span class="fu"> </span>(<span class="kw">cons</span> (loop (<span class="kw">car</span> s))</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                      (loop (<span class="kw">cdr</span> s))))))</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  (loop skeleton))</span></code></pre></div>
 <ul>
@@ -222,11 +222,11 @@
 <li>The skeleton evaluation forms like <code class="sourceCode scheme">(: x)</code> use <code>evaluate</code>:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(evaluate form dict)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (atom? form)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(atom? form)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      (lookup form dict)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (apply (<span class="kw">eval</span> (lookup (<span class="kw">car</span> form) dict)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                   user-initial-environment)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>             (mapcar (<span class="kw">lambda</span> (v) (lookup v dict))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>             (mapcar (<span class="ex">lambda</span><span class="fu"> </span>(v) (lookup v dict))</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                     (<span class="kw">cdr</span> form)))))</span></code></pre></div>
 <ul>
 <li>Atoms (variable names) are simply looked up in the dictionary.</li>
@@ -254,23 +254,23 @@
 <li>This is the <code>simplifier</code> procedure:</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(simplifier the-rules)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(simplify-exp <span class="kw">exp</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (try-rules (<span class="kw">if</span> (compound? <span class="kw">exp</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                   (simplify-parts <span class="kw">exp</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                   <span class="kw">exp</span>)))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(simplify-parts <span class="kw">exp</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">null?</span> <span class="kw">exp</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(simplify-exp exp)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (try-rules (<span class="ex">if</span><span class="fu"> </span>(compound? exp)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                   (simplify-parts exp)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                   exp)))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(simplify-parts exp)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> exp)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        &#39;()</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">cons</span> (simplify-exp (<span class="kw">car</span> <span class="kw">exp</span>))</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>              (simplify-parts (<span class="kw">cdr</span> <span class="kw">exp</span>)))))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(try-rules <span class="kw">exp</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">cons</span> (simplify-exp (<span class="kw">car</span> exp))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>              (simplify-parts (<span class="kw">cdr</span> exp)))))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(try-rules exp)</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">define</span><span class="fu"> </span>(scan rules)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="kw">null?</span> rules)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="kw">exp</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">let</span> ((dict (match (pattern (<span class="kw">car</span> rules))</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                             <span class="kw">exp</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> rules)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          exp</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          (<span class="ex">let</span><span class="fu"> </span>((dict (match (pattern (<span class="kw">car</span> rules))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                             exp</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                             (empty-dictionary))))</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>            (<span class="kw">if</span> (<span class="kw">eq?</span> dict &#39;failed)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>            (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">eq?</span> dict &#39;failed)</span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                (scan (<span class="kw">cdr</span> rules))</span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>                (simplify-exp</span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                 (instantiate (skeleton (<span class="kw">car</span> rules))</span>
@@ -282,11 +282,11 @@
 <li>Since the <code>exp</code> in <code>simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
 <li>We could have just used one procedure, using <code>map</code>:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(simplify-exp <span class="kw">exp</span>)</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(simplify-exp exp)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (try-rules</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">if</span> (compound? <span class="kw">exp</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>       (map simplify-exp <span class="kw">exp</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>       <span class="kw">exp</span>)))</span></code></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   (<span class="ex">if</span><span class="fu"> </span>(compound? exp)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">map</span> simplify-exp exp)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>       exp)))</span></code></pre></div>
 <ul>
 <li>This is a different idiom; it works the same way, but you think about it a bit differently.</li>
 <li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code>map</code> in one of our procedures. It is best to extract those common patterns.</li>
@@ -312,15 +312,15 @@
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(empty-dictionary) &#39;())</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(extend-dictionary pat dat dict)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((name (variable-name pat)))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">let</span> ((v ((<span class="kw">assq</span> name dict))))</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cond</span> ((<span class="kw">null?</span> v)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((name (variable-name pat)))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">let</span><span class="fu"> </span>((v ((<span class="kw">assq</span> name dict))))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">cond</span><span class="fu"> </span>((<span class="kw">null?</span> v)</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>             (<span class="kw">cons</span> (<span class="kw">list</span> name dat) dict))</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            ((<span class="kw">eq?</span> (<span class="kw">cadr</span> v) dat) dict)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            (<span class="kw">else</span> &#39;failed)))))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            (<span class="ex">else</span><span class="fu"> </span>&#39;failed)))))</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(lookup var dict)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((v (<span class="kw">assq</span> var dict)))</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">null?</span> v) var (<span class="kw">cadr</span> v))))</span></code></pre></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((v (<span class="kw">assq</span> var dict)))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> v) var (<span class="kw">cadr</span> v))))</span></code></pre></div>
 <ul>
 <li>When extending the dictionary, we check if the name is already present in the dictionary.</li>
 <li>If not, we add it. If it is, but has the same value, we return the dictionary unchanged.</li>

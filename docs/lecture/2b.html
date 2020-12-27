@@ -98,7 +98,7 @@
 <ul>
 <li>We already know how to express the arithmetic operators for fractions in math.</li>
 <li>Combining two fractions with addition, subtraction, multiplication, or division produces another fraction.</li>
-<li>The computations are easy – but how to we represent a rational number? They are not primitive numbers.</li>
+<li>The computations are easy—but how to we represent a rational number? They are not primitive numbers.</li>
 <li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
 <li>We can implement a procedure for adding rationals like so:</li>
 </ul>
@@ -147,7 +147,7 @@
 <li>We can use the greatest common divisor to fix this:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-rat n d)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((g (<span class="kw">gcd</span> n d)))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((g (<span class="kw">gcd</span> n d)))</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cons</span> (<span class="op">/</span> n g) (<span class="op">/</span> d g))))</span></code></pre></div>
 <ul>
 <li>Now our fractions will always be reduced to lowest terms.</li>
@@ -172,7 +172,7 @@
 <li>Maybe it would be marginally more efficient to skip the data abstraction!</li>
 <li>It goes back to naming. If you have the name of the spirit, you have control over it.</li>
 <li>One advantage: you might want to have alternative representations. If we use <code>cons</code> directly, we would have to reduce to lowest terms every time we make a rational number.</li>
-<li>With the data abstraction, we could even move the lowest terms stuff to the selectors – no other change in the code required.</li>
+<li>With the data abstraction, we could even move the lowest terms stuff to the selectors—no other change in the code required.</li>
 <li>Data abstraction lets us postpone decisions.</li>
 </ul>
 <h3 id="2.5" class="anchor">
@@ -226,11 +226,11 @@
 <li>Rational numbers <em>really</em> are just this contract, this axiom.</li>
 <li>They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.</li>
 <li>Pairs are the same: they happen to satisfy the contract that <code class="sourceCode scheme">(<span class="kw">car</span> (<span class="kw">cons</span> x y))</code> is <code>x</code> and <code class="sourceCode scheme">(<span class="kw">cdr</span> (<span class="kw">cons</span> x y))</code> is <code>y</code>.</li>
-<li>We can implement pairs with procedures. We don’t even need special primitives – all we need are lambdas:</li>
+<li>We can implement pairs with procedures. We don’t even need special primitives—all we need are lambdas:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> a b)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (pick)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((<span class="op">=</span> pick <span class="dv">1</span>) a)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(pick)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">cond</span><span class="fu"> </span>((<span class="op">=</span> pick <span class="dv">1</span>) a)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>          ((<span class="op">=</span> pick <span class="dv">2</span>) b))))</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> x) (x <span class="dv">1</span>))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> x) (x <span class="dv">2</span>))</span></code></pre></div>

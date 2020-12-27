@@ -101,8 +101,8 @@
 <li>Consider summing the odd squares in a binary tree of integers:</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sum-odd-squares tree)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (leaf-node? tree)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="kw">odd?</span> tree)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(leaf-node? tree)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">odd?</span> tree)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>          (square tree)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>          <span class="dv">0</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> (sum-odd-squares (left-branch tree))</span>
@@ -112,12 +112,12 @@
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(odd-fibs n)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(next k)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">&gt;</span> k n)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&gt;</span> k n)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        &#39;()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">let</span> ((f (fib k)))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">if</span> (<span class="kw">odd?</span> f)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>              (<span class="kw">cons</span> f (next (<span class="dv">1</span>+ k)))</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>              (next (<span class="dv">1</span>+ k))))))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">let</span><span class="fu"> </span>((f (fib k)))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>          (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">odd?</span> f)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>              (<span class="kw">cons</span> f (next (<span class="kw">1+</span> k)))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>              (next (<span class="kw">1+</span> k))))))</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  (next <span class="dv">1</span>))</span></code></pre></div>
 <ul>
 <li>1st procedure: enumerate leaves → filter <code>odd?</code> → map <code>square</code> → accumulate <code>+</code>, 0.</li>
@@ -132,15 +132,15 @@
 </h3>
 <ul>
 <li>The arrows between the boxes represent data structures called <em>streams</em>.</li>
-<li><code class="sourceCode scheme">(cons-stream x y)</code> and <code>the-empty-stream</code> construct streams.</li>
-<li>For any <code>x</code> and <code>y</code>, <code class="sourceCode scheme">(head (cons-stream x y))</code> is <code>x</code>.</li>
-<li>For any <code>x</code> and <code>y</code>, <code class="sourceCode scheme">(tail (cons-stream x y))</code> is <code>y</code>.</li>
+<li><code class="sourceCode scheme">(<span class="ex">cons-stream</span><span class="fu"> x </span>y)</code> and <code>the-empty-stream</code> construct streams.</li>
+<li>For any <code>x</code> and <code>y</code>, <code class="sourceCode scheme">(head (<span class="ex">cons-stream</span><span class="fu"> x </span>y))</code> is <code>x</code>.</li>
+<li>For any <code>x</code> and <code>y</code>, <code class="sourceCode scheme">(tail (<span class="ex">cons-stream</span><span class="fu"> x </span>y))</code> is <code>y</code>.</li>
 <li>We can define higher-order procedures like we did for lists:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(map-stream proc s)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (empty-stream? s)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(empty-stream? s)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      the-empty-stream</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (cons-stream (proc (head s))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">cons-stream</span><span class="fu"> </span>(proc (head s))</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   (map-stream proc (tail se)))))</span></code></pre></div>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4">#</a>Using the language
@@ -151,14 +151,14 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(sum-odd-squares tree)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (accumulate <span class="op">+</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>              <span class="dv">0</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>              (map square</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>              (<span class="kw">map</span> square</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                   (<span class="kw">filter</span> odd</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                           (enumerate-tree tree)))))</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(odd-fibs n)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  (accumulate <span class="kw">cons</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>              &#39;()</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>              (<span class="kw">filter</span> odd</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                      (map fib</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                      (<span class="kw">map</span> fib</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                           (enumerate-interval <span class="dv">1</span> n)))))</span></code></pre></div>
 <ul>
 <li>This reveals their commonality, and makes it easy to mix and match boxes.</li>
@@ -177,17 +177,17 @@
 <li>Problem: Given <span class="math inline">N</span>, find all pairs <span class="math inline">0&lt;j&lt;i≤N</span> such that <span class="math inline">i+j</span> is prime.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(prime-sum-pairs n)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (map</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">lambda</span> (p)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">map</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   (<span class="ex">lambda</span><span class="fu"> </span>(p)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">list</span> (<span class="kw">car</span> p) (<span class="kw">cadr</span> p) (<span class="op">+</span> (<span class="kw">car</span> p) (<span class="kw">cadr</span> p))))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">filter</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> (p)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">lambda</span><span class="fu"> </span>(p)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      (prime (<span class="op">+</span> (<span class="kw">car</span> p) (<span class="kw">cadr</span> p))))</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (flatmap</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">lambda</span> (i)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>       (map</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">lambda</span> (j) (<span class="kw">list</span> i j))</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        (enumerate-interval <span class="dv">1</span> (-<span class="dv">1</span>+ i))))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>     (<span class="ex">lambda</span><span class="fu"> </span>(i)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">map</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">lambda</span><span class="fu"> </span>(j) (<span class="kw">list</span> i j))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        (enumerate-interval <span class="dv">1</span> (<span class="kw">-1+</span> i))))</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>     (enumerate-interval <span class="dv">1</span> n)))))</span></code></pre></div>
 <ul>
 <li><code>flatmap</code> takes the place of nested loops in most other languages.</li>
@@ -197,22 +197,22 @@
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (collect</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">list</span> i j (<span class="op">+</span> i j))</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   ((i (enumerate-interval <span class="dv">1</span> n))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (j (enumerate-interval <span class="dv">1</span> (-<span class="dv">1</span>+ i))))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (j (enumerate-interval <span class="dv">1</span> (<span class="kw">-1+</span> i))))</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   (prime? (<span class="op">+</span> i j))))</span></code></pre></div>
 <h3 id="2.2" class="anchor">
 <a class="anchor__link link" href="#2.2">#</a>Eight queens puzzle
 </h3>
 <ul>
 <li>Solving this typically uses a <em>backtracking search</em>, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).</li>
-<li>This is unnecessary – it’s inordinately concerned with <em>time</em>.</li>
+<li>This is unnecessary—it’s inordinately concerned with <em>time</em>.</li>
 <li>A simpler way is to employ <em>wishful thinking</em> and go from <span class="math inline">k</span> columns to <span class="math inline">k+1</span> columns.</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(queens size)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(fill-cols k)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">=</span> k <span class="dv">0</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> k <span class="dv">0</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        (singleton empty-board)</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        (collect (adjoin-position try-row k rest-queens)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                 ((rest-queens (fill-cols (-<span class="dv">1</span>+ k)))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                 ((rest-queens (fill-cols (<span class="kw">-1+</span> k)))</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                  (try-row (enumerate-interval <span class="dv">1</span> size)))</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                 (safe? try-row k rest-queens))))</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  (fill-cols size))</span></code></pre></div>
@@ -227,7 +227,7 @@
 <a class="anchor__link link" href="#3.1">#</a>Streams are not lists
 </h3>
 <ul>
-<li>By now you should be suspicious – what’s the catch?</li>
+<li>By now you should be suspicious—what’s the catch?</li>
 <li>Problem: Find the second prime between 10,000 and 1,000,000.</li>
 <li>Stream solution: enumerate 10,000 to 1,000,000 → filter <code>prime?</code> → take 2nd.</li>
 <li>This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.</li>
@@ -240,24 +240,24 @@
 <ul>
 <li>We want the stream to compute itself incrementally, to be an “on demand” data structure.
 <ul>
-<li><code class="sourceCode scheme">(cons-stream x y)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="kw">cons</span> x (delay y))</code></li>
+<li><code class="sourceCode scheme">(<span class="ex">cons-stream</span><span class="fu"> x </span>y)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="kw">cons</span> x (<span class="ex">delay</span><span class="fu"> y</span>))</code></li>
 <li><code class="sourceCode scheme">(head s)</code> is <code class="sourceCode scheme">(<span class="kw">car</span> s)</code></li>
 <li><code class="sourceCode scheme">(tail s)</code> is <code class="sourceCode scheme">(<span class="kw">force</span> (<span class="kw">cdr</span> s))</code></li>
 </ul></li>
 <li><code>delay</code> creates a promise to compute something when <code>force</code> d.
 <ul>
-<li><code class="sourceCode scheme">(delay &lt;expr&gt;)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="kw">lambda</span> () &lt;expr&gt;)</code></li>
+<li><code class="sourceCode scheme">(<span class="ex">delay</span><span class="fu"> &lt;expr&gt;</span>)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="ex">lambda</span><span class="fu"> </span>() &lt;expr&gt;)</code></li>
 <li><code class="sourceCode scheme">(<span class="kw">force</span> p)</code> is <code>(p)</code></li>
 </ul></li>
 <li><code>delay</code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
-<li>One little hack: to be efficient, <code class="sourceCode scheme">(delay &lt;expr&gt;)</code> is <code class="sourceCode scheme">(memo-proc (<span class="kw">lambda</span> () &lt;expr&gt;))</code>.</li>
+<li>One little hack: to be efficient, <code class="sourceCode scheme">(<span class="ex">delay</span><span class="fu"> &lt;expr&gt;</span>)</code> is <code class="sourceCode scheme">(memo-proc (<span class="ex">lambda</span><span class="fu"> </span>() &lt;expr&gt;))</code>.</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(memo-proc proc)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((already-run? nil) (result nil))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> ()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="kw">not</span> already-run?)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>          (sequence (<span class="kw">set!</span> result (proc))</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                    (<span class="kw">set!</span> already-run? (<span class="kw">not</span> nil))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((already-run? nil) (result nil))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">lambda</span><span class="fu"> </span>()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">not</span> already-run?)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>          (sequence (<span class="ex">set!</span><span class="fu"> result </span>(proc))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                    (<span class="ex">set!</span><span class="fu"> already-run? </span>(<span class="kw">not</span> nil))</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                    result)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>          result))))</span></code></pre></div>
 <ul>

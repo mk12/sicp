@@ -110,21 +110,21 @@
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> balance </span><span class="dv">100</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(withdraw amount)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">begin</span><span class="fu"> </span>(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>             balance)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Insufficient funds&quot;</span>))</span></code></pre></div>
 <ul>
-<li>This uses the <code>set!</code> special form, whose syntax is <code class="sourceCode scheme">(<span class="kw">set!</span> &lt;name&gt; &lt;new-value&gt;)</code>.</li>
+<li>This uses the <code>set!</code> special form, whose syntax is <code class="sourceCode scheme">(<span class="ex">set!</span><span class="fu"> &lt;name&gt; </span>&lt;new-value&gt;)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
-<li>The expression <code class="sourceCode scheme">(<span class="kw">begin</span> &lt;exp1&gt; &lt;exp2&gt; <span class="op">...</span> &lt;expk&gt;)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
+<li>The expression <code class="sourceCode scheme">(<span class="ex">begin</span><span class="fu"> &lt;exp1&gt; </span>&lt;exp2&gt; ... &lt;expk&gt;)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
 <li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> withdraw</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((balance <span class="dv">100</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> (amount)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((balance <span class="dv">100</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">lambda</span><span class="fu"> </span>(amount)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>          (<span class="ex">begin</span><span class="fu"> </span>(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 balance)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;Insufficient funds&quot;</span>))))</span></code></pre></div>
 <ul>
@@ -133,9 +133,9 @@
 <li>The following procedure creates “withdraw processors”:</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-withdraw balance)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(amount)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">begin</span><span class="fu"> </span>(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> W1 </span>(make-withdraw <span class="dv">100</span>))</span>
@@ -154,17 +154,17 @@
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-account balance)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(withdraw amount)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">begin</span><span class="fu"> </span>(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Insufficient funds&quot;</span>))</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(deposit amount)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> balance (<span class="op">+</span> balance amount))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">+</span> balance amount))</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    balance)</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(dispatch m)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((<span class="kw">eq?</span> m &#39;withdraw) withdraw)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">cond</span><span class="fu"> </span>((<span class="kw">eq?</span> m &#39;withdraw) withdraw)</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          ((<span class="kw">eq?</span> m &#39;deposit) deposit)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="ex">else</span><span class="fu"> </span>(<span class="kw">error</span> <span class="st">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
 <h2 id="3.1.2" class="anchor">
 <a class="anchor__link link" href="#3.1.2">#</a><small class="number">3.1.2</small>The Benefits of Introducing Assignment
@@ -183,9 +183,9 @@
 <li>We could implement <code>rand</code> like this:</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> rand</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((x random-init))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> ()</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">set!</span> x (rand-update x))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((x random-init))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">lambda</span><span class="fu"> </span>()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (<span class="ex">set!</span><span class="fu"> x </span>(rand-update x))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      x)))</span></code></pre></div>
 <blockquote>
 <p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306–307) FOO</p>
@@ -207,12 +207,12 @@
 <li>Observe what happens when we try using the substation model:</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-simplified-withdraw balance)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(amount)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    balance))</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>((make-simplified-withdraw <span class="dv">25</span>) <span class="dv">20</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="op">-</span> <span class="dv">25</span> amount)) <span class="dv">25</span>) <span class="dv">20</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set!</span> balance (<span class="op">-</span> <span class="dv">25</span> <span class="dv">20</span>)) <span class="dv">25</span></span></code></pre></div>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>((<span class="ex">lambda</span><span class="fu"> </span>(amount) (<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> <span class="dv">25</span> amount)) <span class="dv">25</span>) <span class="dv">20</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> <span class="dv">25</span> <span class="dv">20</span>)) <span class="dv">25</span></span></code></pre></div>
 <ul>
 <li>Adhering to the substation model, we set <code>balance</code> to 5 and then return 25 as the value of the expression.</li>
 <li>This is wrong. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>
@@ -230,7 +230,7 @@
 <li>Reasoning about programs that use assignment is much more difficult for this reason.</li>
 <li>The concepts of “sameness” and “change” chase each other around in circles; it is hard to formally define them.</li>
 <li>If we have <code class="sourceCode scheme">(<span class="ex">define</span><span class="fu"> peter-acc </span>(make-account <span class="dv">100</span>))</code>, there is a big difference between defining <code>paul-acc</code> in the same way and defining it with <code class="sourceCode scheme">(<span class="ex">define</span><span class="fu"> paul-acc </span>peter-acc)</code>.</li>
-<li>In the first case, they have distinct accounts. In the second, both refer to the same account – this is called <em>aliasing</em>.</li>
+<li>In the first case, they have distinct accounts. In the second, both refer to the same account—this is called <em>aliasing</em>.</li>
 <li>As long as we never modify objects, we can regard them to be precisely the totality of their pieces.</li>
 <li>This is no longer valid in the presence of change, because “identity” is something different from the pieces.</li>
 <li>A bank account is still “the same” account after a withdrawal. Conversely, two distinct accounts with the same balance are “different.”</li>

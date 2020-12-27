@@ -118,7 +118,7 @@
 <li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
 <li>What if we want <em>both</em> representations? Data abstraction allows us to postpone the representation decision, but we don’t want to make a decision at all!</li>
 <li>We need a vertical barrier between rectangular and polar forms.</li>
-<li>The selectors for complex numbers – <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code> – must be generic operators.</li>
+<li>The selectors for complex numbers—<code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>—must be generic operators.</li>
 <li>For this to work, we need <em>typed data</em>. We need to tag our data objects with labels telling us the type of their contents.</li>
 <li>We can simply <code>cons</code> the symbol <code>'rectangular</code> or <code>'polar</code> to the complex number data.</li>
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
@@ -148,13 +148,13 @@
 <li>Instead of writing these generic procedures manually, we should just use a table directly.</li>
 <li>We introduce two new procedures: <code class="sourceCode scheme">(put key1 key2 value)</code> and <code class="sourceCode scheme">(get key1 key2)</code>. This is a map, or associative list.</li>
 <li>Now we just need to use <code>put</code> to insert our specific procedures into the table, and the rest will be automated.</li>
-<li>We wouldn’t even have to name our procedures – we could just pass a lambda expression as the last argument.</li>
+<li>We wouldn’t even have to name our procedures—we could just pass a lambda expression as the last argument.</li>
 <li>It is the procedures that go in the table, not their names.</li>
 <li>The key procedure in this whole system is <code>operate</code>:</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(operate op obj)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((proc (get (type obj) op)))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">null?</span> proc)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((proc (get (type obj) op)))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> proc)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">error</span> <span class="st">&quot;undefined OP&quot;</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        (proc (contents obj)))))</span></code></pre></div>
 <ul>
@@ -164,9 +164,9 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">real-part</span> z)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(operate &#39;real-part z)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>((get &#39;polar &#39;real-part) (contents z))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(real-part-polar &#39;(<span class="dv">1</span> <span class="op">.</span> <span class="dv">2</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(real-part-polar &#39;(<span class="dv">1</span> . <span class="dv">2</span>))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="op">*</span> <span class="dv">1</span> (<span class="kw">cos</span> <span class="dv">2</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>-<span class="fl">0.4161468365</span></span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>-<span class="dv">0.4161468365</span></span></code></pre></div>
 <ul>
 <li>This style of programming called <em>data-directed</em> programming.</li>
 <li>The data objects themselves are carrying the information about how you should operate on them.</li>
@@ -206,7 +206,7 @@
 <li>We built a system that has decentralized control.</li>
 <li>We don’t have to worry about how operations are actually performed.</li>
 <li>This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.</li>
-<li>The true complexity comes in with <em>coercion</em> – when you add a complex and a rational, who worries about converting what?</li>
+<li>The true complexity comes in with <em>coercion</em>—when you add a complex and a rational, who worries about converting what?</li>
 </ul>
 <nav class="pagenav pagenav--bottom">
   <div class="pagenav__item pagenav__item--prev">

@@ -141,7 +141,7 @@
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4">#</a>Evaluating conditionals
 </h3>
-<p>To evaluate <code class="sourceCode scheme">(<span class="kw">if</span> &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)</code>, follow these steps:</p>
+<p>To evaluate <code class="sourceCode scheme">(<span class="ex">if</span><span class="fu"> &lt;predicate&gt; </span>&lt;consequent&gt; &lt;alternative&gt;)</code>, follow these steps:</p>
 <ol type="1">
 <li>Evaluate the predicate expression.
 <ol type="1">
@@ -154,24 +154,24 @@
 </h4>
 <p>The addition operator in Peano arithmetic uses a conditional:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="op">+</span> x y)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">=</span> x <span class="dv">0</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> x <span class="dv">0</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      y</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> (-<span class="dv">1</span>+ x) (<span class="dv">1</span>+ y))))</span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> (<span class="kw">-1+</span> x) (<span class="kw">1+</span> y))))</span></code></pre></div>
 <p>Now we can evaluate <code class="sourceCode scheme">(<span class="op">+</span> <span class="dv">3</span> <span class="dv">4</span>)</code> like so:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> <span class="dv">3</span> <span class="dv">4</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">3</span> <span class="dv">0</span>) <span class="dv">4</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">3</span>) (<span class="dv">1</span>+ <span class="dv">4</span>)))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">3</span>) (<span class="dv">1</span>+ <span class="dv">4</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">3</span>) <span class="dv">5</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> <span class="dv">3</span> <span class="dv">0</span>) <span class="dv">4</span> (<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">3</span>) (<span class="kw">1+</span> <span class="dv">4</span>)))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">3</span>) (<span class="kw">1+</span> <span class="dv">4</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">3</span>) <span class="dv">5</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> <span class="dv">2</span> <span class="dv">5</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">2</span> <span class="dv">0</span>) <span class="dv">5</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">2</span>) (<span class="dv">1</span>+ <span class="dv">5</span>)))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">2</span>) (<span class="dv">1</span>+ <span class="dv">5</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">2</span>) <span class="dv">6</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>(<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> <span class="dv">2</span> <span class="dv">0</span>) <span class="dv">5</span> (<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">2</span>) (<span class="kw">1+</span> <span class="dv">5</span>)))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">2</span>) (<span class="kw">1+</span> <span class="dv">5</span>))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">2</span>) <span class="dv">6</span>)</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> <span class="dv">1</span> <span class="dv">6</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">1</span> <span class="dv">0</span>) <span class="dv">6</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">1</span>) (<span class="dv">1</span>+ <span class="dv">6</span>)))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">1</span>) (<span class="dv">1</span>+ <span class="dv">6</span>))</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">1</span>) <span class="dv">7</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>(<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> <span class="dv">1</span> <span class="dv">0</span>) <span class="dv">6</span> (<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">1</span>) (<span class="kw">1+</span> <span class="dv">6</span>)))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">1</span>) (<span class="kw">1+</span> <span class="dv">6</span>))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">1</span>) <span class="dv">7</span>)</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span> <span class="dv">0</span> <span class="dv">7</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>(<span class="kw">if</span> (<span class="op">=</span> <span class="dv">0</span> <span class="dv">0</span>) <span class="dv">7</span> (<span class="op">+</span> (-<span class="dv">1</span>+ <span class="dv">0</span>) (<span class="dv">1</span>+ <span class="dv">7</span>)))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>(<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> <span class="dv">0</span> <span class="dv">0</span>) <span class="dv">7</span> (<span class="op">+</span> (<span class="kw">-1+</span> <span class="dv">0</span>) (<span class="kw">1+</span> <span class="dv">7</span>)))</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span></span></code></pre></div>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2">#</a>Part 2
@@ -190,13 +190,13 @@
 </h3>
 <p>There are two ways to add whole numbers in Peano arithmetic.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="op">+</span> x y)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">=</span> x <span class="dv">0</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> x <span class="dv">0</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      y</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> (-<span class="dv">1</span>+ x) (<span class="dv">1</span>+ y))))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> (<span class="kw">-1+</span> x) (<span class="kw">1+</span> y))))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="op">+</span> x y)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">=</span> x <span class="dv">0</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> x <span class="dv">0</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      y</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      (<span class="dv">1</span>+ (<span class="op">+</span> (-<span class="dv">1</span>+ x) y))))</span></code></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">1+</span> (<span class="op">+</span> (<span class="kw">-1+</span> x) y))))</span></code></pre></div>
 <p>Both are written using recursion, but they are different: the first generates a <em>linear iterative</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(n)</span> space; the second generates a <em>linear recursive</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(1)</span> space.</p>
 <p>The iteration has all of its state in explicit variables. The recursion does not.</p>
 <h2 id="3" class="anchor">
@@ -211,13 +211,13 @@
 </h3>
 <p>We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, … in Lisp:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fib n)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">&lt;</span> n <span class="dv">2</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&lt;</span> n <span class="dv">2</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      n</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> (fib (<span class="op">-</span> n <span class="dv">1</span>))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         (fib (<span class="op">-</span> n <span class="dv">2</span>)))))</span></code></pre></div>
 <p>This is a <em>tree-recursive</em> process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.</p>
 <blockquote>
-<p>The reason why people think programming is hard is because you’re writing down a general rule which is going to be used for lots of instances – it’s going to control all of those instances.</p>
+<p>The reason why people think programming is hard is because you’re writing down a general rule which is going to be used for lots of instances—it’s going to control all of those instances.</p>
 </blockquote>
 <h3 id="3.3" class="anchor">
 <a class="anchor__link link" href="#3.3">#</a>Tower of Hanoi
@@ -227,11 +227,11 @@
 </blockquote>
 <p>Move an n-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(move n from to spare)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    ((<span class="op">=</span> n <span class="dv">0</span>) <span class="st">&quot;DONE&quot;</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">else</span> (move (-<span class="dv">1</span>+ n) from spare to)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">cond</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">    </span>((<span class="op">=</span> n <span class="dv">0</span>) <span class="st">&quot;DONE&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">else</span><span class="fu"> </span>(move (<span class="kw">-1+</span> n) from spare to)</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>          (print-move from to)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>          (move (-<span class="dv">1</span>+m) spare to from))))</span></code></pre></div>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>          (move (<span class="kw">-1+</span> m) spare to from))))</span></code></pre></div>
 <nav class="pagenav pagenav--bottom">
   <div class="pagenav__item pagenav__item--prev">
     <a class="pagenav__link link" href="1a.html">

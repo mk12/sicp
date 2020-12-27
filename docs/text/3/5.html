@@ -97,8 +97,8 @@
 <li>We only construct an item of the stream when it is needed.</li>
 <li>We have <code>cons-stream</code>, <code>stream-car</code>, <code>stream-cdr</code>, <code>the-empty-stream</code>, and <code>stream-null?</code>.</li>
 <li>The <code>cons-stream</code> procedure must not evaluate its second argument until it is accessed by <code>stream-cdr</code>.</li>
-<li>To implement streams, we will use <em>promises</em>. <code class="sourceCode scheme">(delay &lt;exp&gt;)</code> does not evaluate the argument but returns a promise. <code class="sourceCode scheme">(<span class="kw">force</span> &lt;promise&gt;)</code> evaluates a promise and returns the value.</li>
-<li><code class="sourceCode scheme">(cons-stream a b)</code> is a special form equivalent to <code class="sourceCode scheme">(<span class="kw">cons</span> a (delay b))</code>.</li>
+<li>To implement streams, we will use <em>promises</em>. <code class="sourceCode scheme">(<span class="ex">delay</span><span class="fu"> &lt;exp&gt;</span>)</code> does not evaluate the argument but returns a promise. <code class="sourceCode scheme">(<span class="kw">force</span> &lt;promise&gt;)</code> evaluates a promise and returns the value.</li>
+<li><code class="sourceCode scheme">(<span class="ex">cons-stream</span><span class="fu"> a </span>b)</code> is a special form equivalent to <code class="sourceCode scheme">(<span class="kw">cons</span> a (<span class="ex">delay</span><span class="fu"> b</span>))</code>.</li>
 </ul>
 <h3 id="3.5.1.1" class="anchor">
 <a class="anchor__link link" href="#3.5.1.1">#</a>The stream implementation in action
@@ -111,7 +111,7 @@
 </h3>
 <ul>
 <li>Promises are quite straightforward to implement.</li>
-<li><code class="sourceCode scheme">(delay &lt;exp&gt;)</code> is syntactic sugar for <code class="sourceCode scheme">(<span class="kw">lambda</span> () &lt;exp&gt;)</code>.</li>
+<li><code class="sourceCode scheme">(<span class="ex">delay</span><span class="fu"> &lt;exp&gt;</span>)</code> is syntactic sugar for <code class="sourceCode scheme">(<span class="ex">lambda</span><span class="fu"> </span>() &lt;exp&gt;)</code>.</li>
 <li><code>force</code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
 <li>The promise stored in the <code>cdr</code> of the stream is also known as a <em>thunk</em>.</li>
 </ul>
@@ -122,7 +122,7 @@
 <li>With lazy sequences, we can manipulate infinitely long streams!</li>
 <li>We can define Fibonacci sequence explicitly with a generator:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fibgen a b) (cons-stream a (fibgen b (<span class="op">+</span> a b))))</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(fibgen a b) (<span class="ex">cons-stream</span><span class="fu"> a </span>(fibgen b (<span class="op">+</span> a b))))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> fibs </span>(fibgen <span class="dv">0</span> <span class="dv">1</span>))</span></code></pre></div>
 <ul>
 <li>As long as we don’t try to display the whole sequence, we will never get stuck in an infinite loop.</li>
@@ -135,11 +135,11 @@
 <li>Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> fibs</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (cons-stream</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>   <span class="dv">0</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>   (cons-stream <span class="dv">1</span> (stream-map <span class="op">+</span> fibs (stream-cdr fibs)))))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">cons-stream</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">   0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>   (<span class="ex">cons-stream</span><span class="fu"> 1 </span>(stream-map <span class="op">+</span> fibs (stream-cdr fibs)))))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> pot</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  (cons-stream <span class="dv">1</span> (stream-map (<span class="kw">lambda</span> (x) (<span class="op">*</span> x <span class="dv">2</span>)) pot)))</span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">cons-stream</span><span class="fu"> 1 </span>(stream-map (<span class="ex">lambda</span><span class="fu"> </span>(x) (<span class="op">*</span> x <span class="dv">2</span>)) pot)))</span></code></pre></div>
 <ul>
 <li>This implicit technique is known as <em>corecursion</em>. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.</li>
 </ul>
@@ -168,7 +168,7 @@
 <li>We can find all pairs <span class="math inline">(i,j)</span> with <span class="math inline">i ≤ j</span> such that <span class="math inline">i + j</span> is prime like this:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(stream-filter</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> (<span class="kw">lambda</span> (pair) (prime? (<span class="op">+</span> (<span class="kw">car</span> pair) (<span class="kw">cadr</span> pair))))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> (<span class="ex">lambda</span><span class="fu"> </span>(pair) (prime? (<span class="op">+</span> (<span class="kw">car</span> pair) (<span class="kw">cadr</span> pair))))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> int-pairs)</span></code></pre></div>
 <ul>
 <li>We need some way of producing a stream of all integer pairs.</li>
@@ -184,7 +184,7 @@
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(integral integrand initial-value dt)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> int</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (cons-stream initial-value</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">cons-stream</span><span class="fu"> initial-value</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                 (add-streams (scale-stream integrand dt)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                              int)))</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  int)</span></code></pre></div>

@@ -80,12 +80,12 @@
 <small class="number">2.5</small>Systems with Generic Operations
 </h1>
 <ul>
-<li>The key idea in the <a href="#data-directed-programming-and-additivity">previous section</a>: link specific data operations to multiple representations using generic procedures.</li>
+<li>The key idea in <a href="4.html#2.4.3">§ 2.4.3</a>: link specific data operations to multiple representations using generic procedures.</li>
 <li>We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.</li>
-<li>We have seen several different arithmetic packages – primitive numbers, rational numbers, intervals, and complex numbers.</li>
+<li>We have seen several different arithmetic packages—primitive numbers, rational numbers, intervals, and complex numbers.</li>
 <li>We will use data-directed techniques to write procedures that work on all of these data structures.</li>
 <li>This will require many abstraction barriers.</li>
-<li>The result will be additive (modular) – easy to add new types.</li>
+<li>The result will be additive (modular)—easy to add new types.</li>
 </ul>
 <h2 id="2.5.1" class="anchor">
 <a class="anchor__link link" href="#2.5.1">#</a><small class="number">2.5.1</small>Generic Arithmetic Operations
@@ -147,7 +147,7 @@
 </h3>
 <ul>
 <li>The manipulation of symbolic algebraic expressions is hard.</li>
-<li>We can view them as hierarchical structures – a tree of operators applied to operands.</li>
+<li>We can view them as hierarchical structures—a tree of operators applied to operands.</li>
 <li>A complete system would be exceedingly complex.</li>
 <li>We will just look at the arithmetic of polynomials.</li>
 </ul>
@@ -164,7 +164,7 @@
 <li>We will only do addition and multiplication.</li>
 <li>Both operands must have the same indeterminate.</li>
 <li>The <em>poly</em> data structure consists of a variable (the indeterminate) and a list of terms.</li>
-<li>Our system works with polynomials with polynomial coefficients “for free” because of data-directed recursion – because we are using generic procedures.</li>
+<li>Our system works with polynomials with polynomial coefficients “for free” because of data-directed recursion—because we are using generic procedures.</li>
 </ul>
 <h3 id="2.5.3.2" class="anchor">
 <a class="anchor__link link" href="#2.5.3.2">#</a>Representing term lists

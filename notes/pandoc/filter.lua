@@ -21,5 +21,5 @@ end
 return {
     {Code = add_scheme_class},
     {CodeBlock = add_scheme_class},
-    {BlockQuote = format_citation}
+    {BlockQuote = format_citation},
 }

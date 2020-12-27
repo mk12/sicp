@@ -17,7 +17,8 @@ doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_quote)
 
 doc_link_assets := docs/assets/style.css
 doc_embed_assets := $(patsubst %,notes/assets/%.svg,left right up)
-doc_pandoc_aux := notes/pandoc/template.html notes/pandoc/filter.lua
+doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
+	template.html filter.lua scheme.xml)
 
 .PHONY: all help test docs lint spell check clean vscode
 

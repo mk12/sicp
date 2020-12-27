@@ -108,21 +108,21 @@
 <li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is the empty list.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">list-ref</span> items n)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="op">=</span> n <span class="dv">0</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="op">=</span> n <span class="dv">0</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">car</span> items)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">list-ref</span> (<span class="kw">cdr</span> items) (<span class="op">-</span> n <span class="dv">1</span>))))</span></code></pre></div>
 <ul>
 <li>We often write recursive procedures that <code>cdr</code> all the way through the list.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">length</span> items)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> items)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> items)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="dv">0</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="op">+</span> <span class="dv">1</span> (<span class="kw">length</span> (<span class="kw">cdr</span> items)))))</span></code></pre></div>
 <ul>
 <li>We can build up lists to return by <code>cons</code> ing them up.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">append</span> list1 list2)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> list1)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> list1)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      list2</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cons</span> (<span class="kw">car</span> list1 (<span class="kw">append</span> (<span class="kw">cdr</span> list1) list2)))))</span></code></pre></div>
 <h3 id="2.2.1.2" class="anchor">
@@ -132,13 +132,13 @@
 <li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
 <li>This is a higher-order procedure called <code>map</code>.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(map f xs)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> xs)</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">map</span> f xs)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> xs)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      nil</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cons</span> (f (<span class="kw">car</span> xs))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            (map f (<span class="kw">cdr</span> xs)))))</span></code></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            (<span class="kw">map</span> f (<span class="kw">cdr</span> xs)))))</span></code></pre></div>
 <ul>
-<li>Using map, we can do <code class="sourceCode scheme">(map <span class="kw">abs</span> (<span class="kw">list</span> -<span class="dv">1</span> <span class="dv">5</span> -<span class="dv">3</span> <span class="dv">0</span> <span class="dv">2</span> -<span class="dv">2</span>))</code> and get back the list <code class="sourceCode scheme">(<span class="dv">1</span> <span class="dv">5</span> <span class="dv">3</span> <span class="dv">0</span> <span class="dv">2</span> <span class="dv">2</span>)</code>.</li>
+<li>Using map, we can do <code class="sourceCode scheme">(<span class="kw">map</span> <span class="kw">abs</span> (<span class="kw">list</span> -<span class="dv">1</span> <span class="dv">5</span> -<span class="dv">3</span> <span class="dv">0</span> <span class="dv">2</span> -<span class="dv">2</span>))</code> and get back the list <code class="sourceCode scheme">(<span class="dv">1</span> <span class="dv">5</span> <span class="dv">3</span> <span class="dv">0</span> <span class="dv">2</span> <span class="dv">2</span>)</code>.</li>
 <li>Map establishes a higher level of abstraction for dealing with lists. It suppressive the recursive detail.</li>
 <li>We think about the process differently when we use map.</li>
 </ul>
@@ -155,9 +155,9 @@
 <li>We can count the number of leaves in a tree with this:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(count-leaves x)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((<span class="kw">null?</span> x) <span class="dv">0</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">cond</span><span class="fu"> </span>((<span class="kw">null?</span> x) <span class="dv">0</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        ((<span class="kw">not</span> (<span class="kw">pair?</span> x)) <span class="dv">1</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="op">+</span> (count-leaves (<span class="kw">car</span> x))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">else</span><span class="fu"> </span>(<span class="op">+</span> (count-leaves (<span class="kw">car</span> x))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 (count-leaves (<span class="kw">cdr</span> x))))))</span></code></pre></div>
 <h3 id="2.2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.2.1">#</a>Mapping over trees
@@ -180,7 +180,7 @@
 <ul>
 <li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
 <li>To help, we can implement <code>filter</code> and <code>accumulate</code>.</li>
-<li>Expressing programs as sequence operations helps us make program designs that are <em>modular</em> – made of relatively independent pieces that we can connect in flexible ways.</li>
+<li>Expressing programs as sequence operations helps us make program designs that are <em>modular</em>—made of relatively independent pieces that we can connect in flexible ways.</li>
 <li>This is a strategy for controlling complexity.</li>
 <li>A vast range of operations can be expressed as sequence operations, even if you don’t realize it at first.</li>
 <li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
@@ -195,10 +195,10 @@
 <li>The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(permutations s)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">null?</span> s)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">null?</span> s)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">list</span> nil)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (mapcat (<span class="kw">lambda</span> (x)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                (map (<span class="kw">lambda</span> (p) (<span class="kw">cons</span> x p))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (mapcat (<span class="ex">lambda</span><span class="fu"> </span>(x)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                (<span class="kw">map</span> (<span class="ex">lambda</span><span class="fu"> </span>(p) (<span class="kw">cons</span> x p))</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     (permutations (<span class="kw">remove</span> x s))))</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              s)))</span></code></pre></div>
 <h2 id="2.2.4" class="anchor">

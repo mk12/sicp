@@ -1,17 +1,22 @@
 # New to do
 
 - DRY up docgen.c templates
-- optimize SVGs with https://jakearchibald.github.io/svgomg/, and consider <use>
 - figure out exercise chapter pages (there's never code between chapter & first section)
-- if quotes always included in notes, maybe quote.md should just be references/line numbers/something (and then maybe place back into the main file)
-- attribute lecture quotes to Hal/Gerald
-- improve Scheme highlighting in docs
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
+- optimize SVGs with https://jakearchibald.github.io/svgomg/, and consider `<use>`
 - spell checker for Markdown, integrated in Makefile
-- docs dark mode
-- fix intra-doc links ("earlier section")
 - have special callout thing at end of text sections with exercise links
-- responsive
+- attribute lecture quotes to Hal/Gerald
++ improve Scheme highlighting in docs (and support dark mode)
++ decide on en/em dashes (going with closed-set em)
+x if quotes always included in notes, maybe quote.md should just be references/line numbers/something (and then maybe place back into the main file)
+    x too much work
++ dark mode
++ fix monospace in heading, weird spacing
++ fix italics collisions
+    + only a problem with "r", so manually added `&hairsp;` in 1.1.5
++ fix intra-doc links ("earlier section")
++ responsive
 x text-rendering: optimizeLegbility
     x seems to make no difference on helvetica
 + SVG for arrows in pagenav

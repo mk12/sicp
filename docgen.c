@@ -61,6 +61,7 @@ static const char *const PANDOC_OPTIONS[] = {
     "--standalone",
     "--template=notes/pandoc/template.html",
     "--lua-filter=notes/pandoc/filter.lua",
+    "--syntax-definition=notes/pandoc/scheme.xml",
     "--highlight-style=pygments",
     "--katex",
 };

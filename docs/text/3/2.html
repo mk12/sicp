@@ -111,10 +111,10 @@
 <li>The resulting procedure object is a pair consisting of the text of the λ-expression and a pointer to the environment in which the procedure was created.</li>
 <li>To apply a procedure to arguments, create a new environment whose frame binds the parameters to the values of the arguments and whose enclosing environment is specified by the procedure.</li>
 <li>Then, within the new environment, evaluate the procedure body.</li>
-<li><code class="sourceCode scheme">(<span class="kw">lambda</span> (x) (<span class="op">*</span> x x))</code> evaluates a to pair: the parameters and the procedure body as one item, and a pointer to the global environment as the other.</li>
-<li><code class="sourceCode scheme">(<span class="ex">define</span><span class="fu"> square </span>(<span class="kw">lambda</span> (x) (<span class="op">*</span> x x)))</code> associates the symbol <code>square</code> with that procedure object in the global frame.</li>
+<li><code class="sourceCode scheme">(<span class="ex">lambda</span><span class="fu"> </span>(x) (<span class="op">*</span> x x))</code> evaluates a to pair: the parameters and the procedure body as one item, and a pointer to the global environment as the other.</li>
+<li><code class="sourceCode scheme">(<span class="ex">define</span><span class="fu"> square </span>(<span class="ex">lambda</span><span class="fu"> </span>(x) (<span class="op">*</span> x x)))</code> associates the symbol <code>square</code> with that procedure object in the global frame.</li>
 <li>Evaluating <code class="sourceCode scheme">(<span class="ex">define</span><span class="fu"> &lt;var&gt; </span>&lt;val&gt;)</code> creates a binding in the current environment frame to associate <code>&lt;var&gt;</code> with <code>&lt;val&gt;</code>.</li>
-<li>Evaluating <code class="sourceCode scheme">(<span class="kw">set!</span> &lt;var&gt; &lt;val&gt;)</code> locates the binding of <code>&lt;var&gt;</code> in the current environment (the first frame that has a binding for it) and changes the bound value to <code>&lt;val&gt;</code>.</li>
+<li>Evaluating <code class="sourceCode scheme">(<span class="ex">set!</span><span class="fu"> &lt;var&gt; </span>&lt;val&gt;)</code> locates the binding of <code>&lt;var&gt;</code> in the current environment (the first frame that has a binding for it) and changes the bound value to <code>&lt;val&gt;</code>.</li>
 <li>We use <code>define</code> for variables that are currently unbound, and <code>set!</code> for variables that are already bound.</li>
 </ul>
 <h2 id="3.2.2" class="anchor">
@@ -145,9 +145,9 @@
 <li>Consider the “withdrawal processor”:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-withdraw balance)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">&gt;=</span> balance amount)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="op">-</span> balance amount))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(amount)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="op">&gt;=</span> balance amount)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        (<span class="ex">begin</span><span class="fu"> </span>(<span class="ex">set!</span><span class="fu"> balance </span>(<span class="op">-</span> balance amount))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span></code></pre></div>
 <ul>

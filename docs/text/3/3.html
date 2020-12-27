@@ -94,7 +94,7 @@
 <li>We could implement <code>cons</code> in terms of these two procedures in addition to a <code>get-new-part</code> procedure.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((new (get-new-pair)))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">let</span><span class="fu"> </span>((new (get-new-pair)))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set-car!</span> new x)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set-cdr!</span> new y)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    new))</span></code></pre></div>
@@ -121,24 +121,24 @@
 <li>Earlier we said we can represent pairs purely in terms of procedures:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (sel)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(sel)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (sel x y)))</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">car</span> p)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  (p (<span class="kw">lambda</span> (x y) x)))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  (p (<span class="ex">lambda</span><span class="fu"> </span>(x y) x)))</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cdr</span> p)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  (p (<span class="kw">lambda</span> (x y) y)))</span></code></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  (p (<span class="ex">lambda</span><span class="fu"> </span>(x y) y)))</span></code></pre></div>
 <ul>
 <li>The same is true of mutable data. We can implement mutators with procedures and assignment alone:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(<span class="kw">cons</span> x y)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-x! v) (<span class="kw">set!</span> x v))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-y! v) (<span class="kw">set!</span> y v))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-x! v) (<span class="ex">set!</span><span class="fu"> x </span>v))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(set-y! v) (<span class="ex">set!</span><span class="fu"> y </span>v))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">define</span><span class="fu"> </span>(dispatch m)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((<span class="kw">eq?</span> m &#39;car) x)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">cond</span><span class="fu"> </span>((<span class="kw">eq?</span> m &#39;car) x)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>          ((<span class="kw">eq?</span> m &#39;cdr) y)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          ((<span class="kw">eq?</span> m &#39;set-car!) set-x!)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>          ((<span class="kw">eq?</span> m &#39;set-cdr!) set-y!)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="kw">error</span> <span class="st">&quot;Undefined operation: CONS&quot;</span> m))))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          (<span class="ex">else</span><span class="fu"> </span>(<span class="kw">error</span> <span class="st">&quot;Undefined operation: CONS&quot;</span> m))))</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
 <ul>
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
@@ -174,8 +174,8 @@
 <li>If a table was just a pointer to the first actual record, then when we wouldn’t be able to write a mutator to add a record to the front.</li>
 <li>We would need to change the table to point to the new front, but <code>set!</code> on a formal parameter doesn’t work as desired.</li>
 <li>It would only change the parameter in <span class="math inline">E_1</span>, not the value in the calling environment.</li>
-<li>We didn’t need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the <code>car</code> and <code>cdr</code> – but we couldn’t change the set <em>itself</em>, since it was effectively a pointer to the pair, <em>copied</em> on application.</li>
-<li>We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide <code>box</code>, <code>unbox</code>, and <code>set-box!</code> for this purpose. In C, these are <code>&amp;x</code>, <code>*x</code>, and <code class="sourceCode scheme">*x <span class="op">=</span> <span class="op">...</span></code>.</li>
+<li>We didn’t need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the <code>car</code> and <code>cdr</code>—but we couldn’t change the set <em>itself</em>, since it was effectively a pointer to the pair, <em>copied</em> on application.</li>
+<li>We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide <code>box</code>, <code>unbox</code>, and <code>set-box!</code> for this purpose. In C, these are <code>&amp;x</code>, <code>*x</code>, and <code class="sourceCode scheme">*x <span class="op">=</span> ...</code>.</li>
 </ul></li>
 <li>The <code>lookup</code> procedure returns the value associated with a key in a table, or <code>#f</code> if it cannot be found.</li>
 <li>It uses <code>assoc</code>, which returns the whole record rather than just the associated value.</li>
@@ -199,11 +199,11 @@
 <li>We could use the message-passing style with the <code>dispatch</code> procedure that we’ve seen a few times already.</li>
 <li>We could also take the λ-calculus approach:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-table) (<span class="kw">lambda</span> (k) <span class="dv">#f</span>))</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(make-table) (<span class="ex">lambda</span><span class="fu"> </span>(k) <span class="dv">#f</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(lookup key table) (table key))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>(<span class="ex">define</span><span class="fu"> </span>(insert! key value table)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (k)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">eq?</span> k key)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  (<span class="ex">lambda</span><span class="fu"> </span>(k)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    (<span class="ex">if</span><span class="fu"> </span>(<span class="kw">eq?</span> k key)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        value</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        (table k))))</span></code></pre></div>
 <h2 id="3.3.4" class="anchor">
@@ -282,7 +282,7 @@
 <ul>
 <li><code class="sourceCode scheme">(adder a b c)</code> specifies <span class="math inline">a + b = c</span>.</li>
 <li><code class="sourceCode scheme">(multiplier x y z)</code> specifies <span class="math inline">xy = z</span>.</li>
-<li><code class="sourceCode scheme">(constant <span class="fl">3.14</span> x)</code> says that the value of <code>x</code> must be 3.14.</li>
+<li><code class="sourceCode scheme">(constant <span class="dv">3.14</span> x)</code> says that the value of <code>x</code> must be 3.14.</li>
 </ul></li>
 <li>The means of combination are constructing <em>constraint networks</em> in which constraints are joined by <em>connectors</em>.</li>
 <li>The means of abstraction are procedures.</li>
@@ -310,7 +310,7 @@
 <a class="anchor__link link" href="#3.3.5.3">#</a>Representing connectors
 </h3>
 <ul>
-<li>A connector is a procedural object with local state variables – again, just like a wire.</li>
+<li>A connector is a procedural object with local state variables—again, just like a wire.</li>
 <li>Each time the connector’s value is set, it remembers the informant. This could be a constraint, or a symbol like <code>'user</code>.</li>
 <li><code>for-each-except</code> is used to notify all <em>other</em> constraints.</li>
 </ul>

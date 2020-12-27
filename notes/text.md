@@ -17,7 +17,7 @@ These notes are based on the second edition of [_Structure and Interpretation of
 - Idioms form "an arsenal of standard program structures of whose correctness we have become sure" (xiv).
 - Algorithms are programs that perform a precise mathematical function (optimized for execution time and data storage).
 
-> Lisp is for building organisms -- imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place. (xvii)
+> Lisp is for building organisms---imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place. (xvii)
 
 > It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures. (xvii)
 
@@ -71,7 +71,7 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
     1. Evaluate the subexpressions of the combination.
     2. Apply the procedure (value of left more subexpression, the operator) to the arguments (values of other subexpressions, the operands).
 - Before evaluating a combination, we must first evaluate each element inside it.
-- Evaluation is recursive in nature -- one of its steps is invoking itself.
+- Evaluation is recursive in nature---one of its steps is invoking itself.
 - The evaluation of a combination can be represents with a tree.
 - Recursion is a powerful technique for dealing with hierarchical, tree-like objects.
 - To end the recursion, we stipulate the following:
@@ -111,7 +111,7 @@ An example of procedure application:
 
 #### Applicative order versus normal order
 
-- That example used _applicative order_: evaluate everything first, then apply the procedure to the arguments.
+- That example used _applicative order_&hairsp;: evaluate everything first, then apply the procedure to the arguments.
 - With _normal order_, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.
 
 An example of normal order procedure application:
@@ -136,7 +136,7 @@ An example of normal order procedure application:
 - We do _case analysis_ in Scheme using `cond`.
 - Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.
 - A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.
-- The symbol `else` can be used as the last clause -- it will always evaluate to true.
+- The symbol `else` can be used as the last clause---it will always evaluate to true.
 - The `if` conditional can be used when there are two cases.
 - Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures.
 
@@ -254,7 +254,7 @@ Like Fibonacci, the easy tree-recursive implementation involves a lot of redunda
 
 - Some processes consume more or less computational resources than others.
 - We compare this using _order of growth_, a gross measure of the resources required by a process as the inputs becomes larger.
-- Let $n$ be a parameter that measures the size of a problem -- it could be the input itself, the tolerance, the number of rows in the matrix, etc. There are many properties that $n$ can measure.
+- Let $n$ be a parameter that measures the size of a problem---it could be the input itself, the tolerance, the number of rows in the matrix, etc. There are many properties that $n$ can measure.
 - Let $R(n)$ be the amount of resources the process requires for a problem of size $n$. This could be time, space (amount of memory), number of registers used, etc.
 - We say that $R(n)$ has order of growth $Θ(f(n))$, or $R(n) = Θ(f(n))$,
 if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) ≤ R(n) ≤ Bf(n)$ for any sufficiently large value of $n$.
@@ -320,7 +320,7 @@ The test works like this:
 #### Probabilistic methods
 
 - Most familiar algorithms compute an answer that is guaranteed to be correct. Not so with the Fermat test.
-- We can make the probability error in our primality test as small as we like simply by running more tests -- except for Carmichael numbers.
+- We can make the probability error in our primality test as small as we like simply by running more tests---except for Carmichael numbers.
 - If $n$ passes the test for one random value of a, the chances are more than 50% that $n$ is prime.
 - Probabilistic algorithms: algorithms for which one can prove that the chance of error becomes arbitrarily small.
 
@@ -438,7 +438,7 @@ The square-root procedure we did earlier was a special case of Newton's method. 
 
 $$x ↦ x - \frac{f(x)}{f'(x)}.$$
 
-Newton's method converges very quickly -- much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:
+Newton's method converges very quickly---much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:
 
 $$f'(x) = \frac{f(x+dx) - f(x)}{dx}.$$
 
@@ -554,7 +554,7 @@ Now we can do things like this:
 
 - This doesn't look like _data_, but it works.
 - This is how you implement pairs in the λ-calculus.
-- In real Lisp implementations, pairs are implemented directly, for reasons of efficiency -- but they _could_ be implemented this way and you wouldn't be able to tell the difference.
+- In real Lisp implementations, pairs are implemented directly, for reasons of efficiency---but they _could_ be implemented this way and you wouldn't be able to tell the difference.
 
 > [...] the ability to manipulate procedures as objects automatically provides the ability to represent compound data. (125)
 
@@ -563,7 +563,7 @@ Now we can do things like this:
 ### 2.1.4: Extended Exercise: Interval Arithmetic
 
 - We want to design a system that allows us to manipulate inexact quantities with known precision (uncertainty).
-- To do this, we need arithmetic operations for combining intervals -- ranges of possible values.
+- To do this, we need arithmetic operations for combining intervals---ranges of possible values.
 
 ## 2.2: Hierarchical Data and the Closure Property
 
@@ -664,7 +664,7 @@ Now we can do things like this:
 
 - Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.
 - To help, we can implement `filter` and `accumulate`.
-- Expressing programs as sequence operations helps us make program designs that are _modular_ -- made of relatively independent pieces that we can connect in flexible ways.
+- Expressing programs as sequence operations helps us make program designs that are _modular_---made of relatively independent pieces that we can connect in flexible ways.
 - This is a strategy for controlling complexity.
 - A vast range of operations can be expressed as sequence operations, even if you don't realize it at first.
 - Sequences (here, they are lists) serve as a conventional interface for the modules of the program.
@@ -834,7 +834,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The key must be unique.
 - The simplest, least efficient method is to use a set of records represented by an unordered list. This provides $Θ(n)$ access.
 - For "random access," meaning $Θ(1)$ access time complexity, trees are usually used.
-- Data abstraction is important here -- you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
+- Data abstraction is important here---you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
 
 ### 2.3.4: Example: Huffman Encoding Trees
 
@@ -862,7 +862,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.
 - We erect abstraction barriers to control complexity.
-- This still isn't powerful enough -- it doesn't always make sense to speak of the "underlying representation."
+- This still isn't powerful enough---it doesn't always make sense to speak of the "underlying representation."
 - We might want to deal with multiple representations.
 - For example, complex numbers can be represented in rectangular form or in polar form.
 - We need abstraction barriers that isolate representation from use _and_ others that isolate design choices.
@@ -892,7 +892,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 2.4.3: Data-Directed Programming and Additivity
 
 - The strategy of checking the type and calling an appropriate procedure is called dispatching on type.
-- The implementation in the [previous section](#tagged-data) had two significant weaknesses:
+- The implementation in [§ 2.4.2](#2.4.2) had two significant weaknesses:
     1. The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.
     2. We must guarantee that no two procedures have the same name.
 - The underlying issue: the technique we used was not _additive_.
@@ -916,12 +916,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ## 2.5: Systems with Generic Operations
 
-- The key idea in the [previous section](#data-directed-programming-and-additivity): link specific data operations to multiple representations using generic procedures.
+- The key idea in [§ 2.4.3](4.html#2.4.3): link specific data operations to multiple representations using generic procedures.
 - We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.
-- We have seen several different arithmetic packages -- primitive numbers, rational numbers, intervals, and complex numbers.
+- We have seen several different arithmetic packages---primitive numbers, rational numbers, intervals, and complex numbers.
 - We will use data-directed techniques to write procedures that work on all of these data structures.
 - This will require many abstraction barriers.
-- The result will be additive (modular) -- easy to add new types.
+- The result will be additive (modular)---easy to add new types.
 
 ### 2.5.1: Generic Arithmetic Operations
 
@@ -973,7 +973,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 2.5.3: Example: Symbolic Algebra
 
 - The manipulation of symbolic algebraic expressions is hard.
-- We can view them as hierarchical structures -- a tree of operators applied to operands.
+- We can view them as hierarchical structures---a tree of operators applied to operands.
 - A complete system would be exceedingly complex.
 - We will just look at the arithmetic of polynomials.
 
@@ -988,7 +988,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We will only do addition and multiplication.
 - Both operands must have the same indeterminate.
 - The _poly_ data structure consists of a variable (the indeterminate) and a list of terms.
-- Our system works with polynomials with polynomial coefficients "for free" because of data-directed recursion -- because we are using generic procedures.
+- Our system works with polynomials with polynomial coefficients "for free" because of data-directed recursion---because we are using generic procedures.
 
 #### Representing term lists
 
@@ -1188,7 +1188,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Reasoning about programs that use assignment is much more difficult for this reason.
 - The concepts of "sameness" and "change" chase each other around in circles; it is hard to formally define them.
 - If we have `(define peter-acc (make-account 100))`, there is a big difference between defining `paul-acc` in the same way and defining it with `(define paul-acc peter-acc)`.
-- In the first case, they have distinct accounts. In the second, both refer to the same account -- this is called _aliasing_.
+- In the first case, they have distinct accounts. In the second, both refer to the same account---this is called _aliasing_.
 - As long as we never modify objects, we can regard them to be precisely the totality of their pieces.
 - This is no longer valid in the presence of change, because "identity" is something different from the pieces.
 - A bank account is still "the same" account after a withdrawal. Conversely, two distinct accounts with the same balance are "different."
@@ -1383,7 +1383,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - If a table was just a pointer to the first actual record, then when we wouldn't be able to write a mutator to add a record to the front.
     - We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
     - It would only change the parameter in $E_1$, not the value in the calling environment.
-    - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr` -- but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
+    - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
     - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`, `*x`, and `*x = ...`.
 - The `lookup` procedure returns the value associated with a key in a table, or `#f` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
@@ -1493,7 +1493,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Representing connectors
 
-- A connector is a procedural object with local state variables -- again, just like a wire.
+- A connector is a procedural object with local state variables---again, just like a wire.
 - Each time the connector's value is set, it remembers the informant. This could be a constraint, or a symbol like `'user`.
 - `for-each-except` is used to notify all _other_ constraints.
 
@@ -2025,7 +2025,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can arrange the evaluator to analyze syntax only once by splitting `eval` into two parts:
     - `(analyze exp)` performs syntactic analysis and returns an _execution procedure_.
     - `((analyze exp) env)` completes the evaluation.
-- `analyze` is similar to the [original `eval`](#the-core-of-the-evaluator), except it only performs analysis, not full evaluation:
+- `analyze` is similar to the [original](#4.1.1) `eval`, except it only performs analysis, not full evaluation:
 
 ```
 (define (analyze exp)
@@ -2058,7 +2058,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 4.2.1: Normal Order and Applicative Order
 
-- [Earlier](#applicative-order-versus-normal-order), we noted that scheme is an _applicative-order_ language.
+- In [§ 1.1.5](../1/1.html#1.1.5), we noted that Scheme is an _applicative-order_ language.
 - _Normal-order_ languages use _lazy evaluation_ to delay evaluation as long as possible.
 - Consider this procedure:
 
@@ -2078,7 +2078,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - when passed to a primitive procedure;
     - when it is the predicate of conditional;
     - when it is an operator about to be applied as a procedure.
-- This is similar to [streams](#streams-are-delayed-lists), but uniform and automatic throughout the language.
+- This is similar to [streams](../3/5.html#3.5.1), but uniform and automatic throughout the language.
 - For efficiency, we'll make our interpreter _memoize_ thunks.
     - This is called _call-by-need_, as opposed to non-memoized _call-by-name_.
     - It raises subtle and confusing issues in the presence of assignments.
@@ -2152,11 +2152,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 4.2.3: Streams as Lazy Lists
 
-- Before introducing lazy evaluation, we [implemented streams as delayed lists](#streams-are-delayed-lists).
+- Before introducing lazy evaluation, we implemented [streams as delayed lists](../3/5.html#3.5.1).
 - We can instead formulate streams as _lazy_ lists. There are two advantages:
     1. No need for special forms `delay` and `cons-stream`.
     2. No need for separate list and stream operations.
-- All we need to do is make `cons` lazy, either by introducing non-strict primitives or by defining `cons`, `car`, and `cdr` [as compound procedures](#what-is-meant-by-data).
+- All we need to do is make `cons` lazy, either by introducing non-strict primitives or by defining `cons`, `car`, and `cdr` [as compound procedures](../2/1.html#2.1.3).
 - Now we can write code without distinguishing normal lists from infinite ones:
 
 ```
@@ -2165,7 +2165,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```
 
 - These lazy lists are even lazier than our original streams, since the `car` is delayed too.
-- This also eliminates [the problems we had earlier](#streams-and-delayed-evaluation) around having to explicitly delay and force some arguments when computing integrals.
+- This also eliminates [the problems we had earlier](../3/5.html#3.5.4) around having to explicitly delay and force some arguments when computing integrals.
 
 ## 4.3: Variations on a Scheme --- Nondeterministic Computing
 

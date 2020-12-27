@@ -45,13 +45,13 @@ Imperative instructions (how-to knowledge): approximate the square root of $x$ w
 - We know as much as we want about the components; we don't need to worry about tolerance.
 - Not much difference between what I can _build_ and what I can _image_.
 - Other disciplines have physical constraints; in CS, the only constraint is your mind.
-- CS is an abstract kind of engineering -- ignore the constraints imposed by reality.
+- CS is an abstract kind of engineering---ignore the constraints imposed by reality.
 
 ### Techniques for managing complexity
 
 #### Black box abstraction
 
-Take something and build a box around it. The important thing is that you don't care what is going on inside the box -- it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
+Take something and build a box around it. The important thing is that you don't care what is going on inside the box---it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
 
 - Primitive objects: primitive procedures, primitive data.
 - Means of combination: procedure composition, construction of compound data.
@@ -97,7 +97,7 @@ Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all n
 
 #### Means of abstraction
 
-This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure -- it is a _special form_. We can also define procedures this way:
+This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure---it is a _special form_. We can also define procedures this way:
 
 ```
 (define (square x) (* x x))
@@ -292,7 +292,7 @@ We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, ... in Lisp:
 
 This is a _tree-recursive_ process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.
 
-> The reason why people think programming is hard is because you're writing down a general rule which is going to be used for lots of instances -- it's going to control all of those instances.
+> The reason why people think programming is hard is because you're writing down a general rule which is going to be used for lots of instances---it's going to control all of those instances.
 
 ### Tower of Hanoi
 
@@ -306,7 +306,7 @@ Move an n-high tower from spike `from` to spike `to` using spike `spare` as a sp
     ((= n 0) "DONE")
     (else (move (-1+ n) from spare to)
           (print-move from to)
-          (move (-1+m) spare to from))))
+          (move (-1+ m) spare to from))))
 ```
 
 # 2A: Higher-Order Procedures
@@ -414,7 +414,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We already know how to express the arithmetic operators for fractions in math.
 - Combining two fractions with addition, subtraction, multiplication, or division produces another fraction.
-- The computations are easy -- but how to we represent a rational number? They are not primitive numbers.
+- The computations are easy---but how to we represent a rational number? They are not primitive numbers.
 - We need to apply the strategy of wishful thinking: let's imagine that we have procedures `make-rat`, `numer`, and `denom`.
 - We can implement a procedure for adding rationals like so:
 
@@ -481,7 +481,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Maybe it would be marginally more efficient to skip the data abstraction!
 - It goes back to naming. If you have the name of the spirit, you have control over it.
 - One advantage: you might want to have alternative representations. If we use `cons` directly, we would have to reduce to lowest terms every time we make a rational number.
-- With the data abstraction, we could even move the lowest terms stuff to the selectors -- no other change in the code required.
+- With the data abstraction, we could even move the lowest terms stuff to the selectors---no other change in the code required.
 - Data abstraction lets us postpone decisions.
 
 ### Designing systems
@@ -522,7 +522,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Rational numbers _really_ are just this contract, this axiom.
 - They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.
 - Pairs are the same: they happen to satisfy the contract that `(car (cons x y))` is `x` and `(cdr (cons x y))` is `y`.
-- We can implement pairs with procedures. We don't even need special primitives -- all we need are lambdas:
+- We can implement pairs with procedures. We don't even need special primitives---all we need are lambdas:
 
 ```
 (define (cons a b)
@@ -966,7 +966,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We could expose rectangular and polar functions but still use on particular representation under the hood. This isn't really new.
 - What if we want _both_ representations? Data abstraction allows us to postpone the representation decision, but we don't want to make a decision at all!
 - We need a vertical barrier between rectangular and polar forms.
-- The selectors for complex numbers -- `real-part`, `imag-part`, `magnitude`, and `angle` -- must be generic operators.
+- The selectors for complex numbers---`real-part`, `imag-part`, `magnitude`, and `angle`---must be generic operators.
 - For this to work, we need _typed data_. We need to tag our data objects with labels telling us the type of their contents.
 - We can simply `cons` the symbol `'rectangular` or `'polar` to the complex number data.
 - The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.
@@ -989,7 +989,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Instead of writing these generic procedures manually, we should just use a table directly.
 - We introduce two new procedures: `(put key1 key2 value)` and `(get key1 key2)`. This is a map, or associative list.
 - Now we just need to use `put` to insert our specific procedures into the table, and the rest will be automated.
-- We wouldn't even have to name our procedures -- we could just pass a lambda expression as the last argument.
+- We wouldn't even have to name our procedures---we could just pass a lambda expression as the last argument.
 - It is the procedures that go in the table, not their names.
 - The key procedure in this whole system is `operate`:
 
@@ -1044,7 +1044,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We built a system that has decentralized control.
 - We don't have to worry about how operations are actually performed.
 - This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.
-- The true complexity comes in with _coercion_ -- when you add a complex and a rational, who worries about converting what?
+- The true complexity comes in with _coercion_---when you add a complex and a rational, who worries about converting what?
 
 # 5A: Assignment, State, and Side-Effects
 
@@ -1200,7 +1200,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - If we want to understand the program well and we want small changes in the world to lead to small changes in the program, we would like isomorphisms between the world and the model.
 - For most things, objects and assignment are not the right way to think. We should only use them if we need them.
 - Sometimes, though, they are essential.
-- It can also improve modularity greatly -- consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can't decompose certain problems very well.
+- It can also improve modularity greatly---consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can't decompose certain problems very well.
 
 # 5B: Computational Objects
 
@@ -1427,7 +1427,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Eight queens puzzle
 
 - Solving this typically uses a _backtracking search_, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).
-- This is unnecessary -- it's inordinately concerned with _time_.
+- This is unnecessary---it's inordinately concerned with _time_.
 - A simpler way is to employ _wishful thinking_ and go from $k$ columns to $k+1$ columns.
 
 ```
@@ -1449,7 +1449,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Streams are not lists
 
-- By now you should be suspicious -- what's the catch?
+- By now you should be suspicious---what's the catch?
 - Problem: Find the second prime between 10,000 and 1,000,000.
 - Stream solution: enumerate 10,000 to 1,000,000 → filter `prime?` → take 2nd.
 - This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.

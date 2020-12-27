@@ -66,7 +66,7 @@
 <ul>
 <li>Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.</li>
 <li>We erect abstraction barriers to control complexity.</li>
-<li>This still isn’t powerful enough – it doesn’t always make sense to speak of the “underlying representation.”</li>
+<li>This still isn’t powerful enough—it doesn’t always make sense to speak of the “underlying representation.”</li>
 <li>We might want to deal with multiple representations.</li>
 <li>For example, complex numbers can be represented in rectangular form or in polar form.</li>
 <li>We need abstraction barriers that isolate representation from use <em>and</em> others that isolate design choices.</li>
@@ -102,7 +102,7 @@
 </h3>
 <ul>
 <li>The strategy of checking the type and calling an appropriate procedure is called dispatching on type.</li>
-<li>The implementation in the <a href="#tagged-data">previous section</a> had two significant weaknesses:
+<li>The implementation in <a href="#2.4.2">§ 2.4.2</a> had two significant weaknesses:
 <ol type="1">
 <li>The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.</li>
 <li>We must guarantee that no two procedures have the same name.</li>
