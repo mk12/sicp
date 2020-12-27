@@ -170,18 +170,16 @@ body {
 
 .header {
     display: flex;
-}
-
-.gap {
-    flex-grow: 1;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 5px;
     border-bottom: 3px solid var(--border);
 }
 
 .title {
     font-size: 30px;
     color: var(--intense);
-    padding-bottom: 2px;
-    border-bottom: 3px solid var(--border);
+    flex: 1;
 }
 
 .sitenav {
@@ -189,12 +187,9 @@ body {
 }
 
 .sitenav__item {
-    list-style: none;
-    display: inline;
-    margin-top: 5px;
-    padding: 6px 14px 0;
-    border-bottom: 3px solid var(--border);
     color: var(--intense);
+    padding: 6px 14px;
+    white-space: nowrap;
 }
 
 .sitenav__item:hover {
@@ -202,14 +197,11 @@ body {
 }
 
 .sitenav__item--active {
-    margin-top: 2px;
-    padding-left: 11px;
-    padding-right: 11px;
-    border: 3px solid var(--border);
-    border-bottom: none;
+    background: var(--highlight);
+    border-radius: 6px;
 }
 
-.sitenav__item:last-child {
+.sitenav__item--last {
     padding-right: 0;
 }
 
@@ -225,8 +217,9 @@ body {
 .pagenav--bottom { border-top: 1px solid var(--border); }
 
 .pagenav__item {
-    flex-grow: 1;
+    flex: 1;
     color: var(--subdued);
+    white-space: nowrap;
 }
 
 .pagenav__item--prev { text-align: left; }
@@ -261,31 +254,32 @@ body {
     margin-top: 2em;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 590px) {
     body {
         padding: 20px 10px;
     }
     .header {
-        display: block;
+        flex-wrap: wrap;
+    }
+    .title {
+        flex: 100%;
+        margin-bottom: 10px;
         text-align: center;
     }
-    .title, .sitenav__item, .sitenav__item--active {
-        border: none;
-    }
-    .sitenav {
-        display: flex;
-        flex-wrap: wrap;
-        padding-bottom: 6px;
-        border-bottom: 3px solid var(--border);
-    }
     .sitenav__item {
-        flex-grow: 1;
+        flex: 1;
+        text-align: center;
     }
-    .sitenav__item--active {
-        margin-top: 5px;
-        padding: 6px 14px;
-        background: var(--highlight);
-        border-radius: 6px;
+    .sitenav__item--last {
+        padding-right: 14px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .sitenav__item {
+        flex: 0 50%;
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 
@@ -306,14 +300,16 @@ svg {
 
 .wizard {
     float: right;
-    margin: 0 clamp(-50px, calc(-100vw + 870px), 0px) 2em 2em;
+    max-width: 100%;
+    height: auto;
+    margin: 0px -50px 2em 1em;
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 915px) {
     .wizard {
         float: none;
         display: block;
-        margin: 0 auto 1em;
+        margin: -10px auto 1em;
     }
 }
 
