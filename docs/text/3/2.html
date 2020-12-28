@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">3.2</small>The Environment Model of Evaluation
+<span class="number">3.2</span> The Environment Model of Evaluation
 </h1>
 <ul>
 <li>Recall the substitution model:</li>
@@ -86,8 +86,8 @@
 <li>The global environment consists of a single frame, and it is implicitly used in interactions with the interpreter.</li>
 </ul>
 <h2 id="3.2.1" class="anchor">
-<a class="anchor__link link" href="#3.2.1">#</a><small class="number">3.2.1</small>The Rules for Evaluation
-</h3>
+<a class="anchor__link link" href="#3.2.1">#</a><span class="number">3.2.1</span> The Rules for Evaluation
+</h2>
 <ul>
 <li>To evaluate a combination:
 <ol type="1">
@@ -100,14 +100,14 @@
 <li>To apply a procedure to arguments, create a new environment whose frame binds the parameters to the values of the arguments and whose enclosing environment is specified by the procedure.</li>
 <li>Then, within the new environment, evaluate the procedure body.</li>
 <li><code class="sourceCode scheme">(<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x))</code> evaluates a to pair: the parameters and the procedure body as one item, and a pointer to the global environment as the other.</li>
-<li><code class="sourceCode scheme">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code> associates the symbol <code>square</code> with that procedure object in the global frame.</li>
+<li><code class="sourceCode scheme">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code> associates the symbol <code class="sourceCode scheme">square</code> with that procedure object in the global frame.</li>
 <li>Evaluating <code class="sourceCode scheme">(<span class="kw">define</span> <span class="sc">«</span><span class="ss">var</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">val</span><span class="sc">»</span>)</code> creates a binding in the current environment frame to associate <code class="sourceCode scheme"><span class="sc">«</span><span class="ss">var</span><span class="sc">»</span></code> with <code class="sourceCode scheme"><span class="sc">«</span><span class="ss">val</span><span class="sc">»</span></code>.</li>
 <li>Evaluating <code class="sourceCode scheme">(<span class="kw">set!</span> <span class="sc">«</span><span class="ss">var</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">val</span><span class="sc">»</span>)</code> locates the binding of <code class="sourceCode scheme"><span class="sc">«</span><span class="ss">var</span><span class="sc">»</span></code> in the current environment (the first frame that has a binding for it) and changes the bound value to <code class="sourceCode scheme"><span class="sc">«</span><span class="ss">val</span><span class="sc">»</span></code>.</li>
-<li>We use <code>define</code> for variables that are currently unbound, and <code>set!</code> for variables that are already bound.</li>
+<li>We use <code class="sourceCode scheme"><span class="kw">define</span></code> for variables that are currently unbound, and <code class="sourceCode scheme"><span class="kw">set!</span></code> for variables that are already bound.</li>
 </ul>
 <h2 id="3.2.2" class="anchor">
-<a class="anchor__link link" href="#3.2.2">#</a><small class="number">3.2.2</small>Applying Simple Procedures
-</h3>
+<a class="anchor__link link" href="#3.2.2">#</a><span class="number">3.2.2</span> Applying Simple Procedures
+</h2>
 <ul>
 <li>Let’s evaluate <code class="sourceCode scheme">(f <span class="cn">5</span>)</code>, given the following procedures:</li>
 </ul>
@@ -115,19 +115,19 @@
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (sum-of-squares x y) (<span class="fu">+</span> (square x) (square y)))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (f a) (sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>)))</span></code></pre></div>
 <ul>
-<li>These definitions create bindings for <code>square</code>, <code>sum-of-squares</code>, and <code>f</code> in the global frame.</li>
-<li>To evaluate <code class="sourceCode scheme">(f <span class="cn">5</span>)</code>, we create an environment <span class="math inline">E_1</span> with a frame containing a single binding, associating <code>a</code> with <code>5</code>.</li>
+<li>These definitions create bindings for <code class="sourceCode scheme">square</code>, <code class="sourceCode scheme">sum-of-squares</code>, and <code class="sourceCode scheme">f</code> in the global frame.</li>
+<li>To evaluate <code class="sourceCode scheme">(f <span class="cn">5</span>)</code>, we create an environment <span class="math inline">E_1</span> with a frame containing a single binding, associating <code class="sourceCode scheme">a</code> with <code class="sourceCode scheme"><span class="cn">5</span></code>.</li>
 <li>In <span class="math inline">E_1</span>, we evaluate <code class="sourceCode scheme">(sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>))</code>.</li>
 <li>We must evaluate the subexpressions of this combination.</li>
-<li>We find the value associated with <code>sum-of-squares</code> not in <span class="math inline">E_1</span> but in the global environment.</li>
-<li>Evaluating the operand subexpressions yields <code>6</code> and <code>10</code>.</li>
-<li>Now we create <span class="math inline">E_2</span> with a frame containing two bindings: <code>x</code> is bound to <code>6</code>, and <code>y</code> is bound to <code>10</code>.</li>
+<li>We find the value associated with <code class="sourceCode scheme">sum-of-squares</code> not in <span class="math inline">E_1</span> but in the global environment.</li>
+<li>Evaluating the operand subexpressions yields <code class="sourceCode scheme"><span class="cn">6</span></code> and <code class="sourceCode scheme"><span class="cn">10</span></code>.</li>
+<li>Now we create <span class="math inline">E_2</span> with a frame containing two bindings: <code class="sourceCode scheme">x</code> is bound to <code class="sourceCode scheme"><span class="cn">6</span></code>, and <code class="sourceCode scheme">y</code> is bound to <code class="sourceCode scheme"><span class="cn">10</span></code>.</li>
 <li>In <span class="math inline">E_2</span>, we evaluate <code class="sourceCode scheme">(<span class="fu">+</span> (square x) (square y))</code>.</li>
-<li>The process continues recursively. We end up with <code class="sourceCode scheme">(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)</code>, which evaluates to <code>136</code>.</li>
+<li>The process continues recursively. We end up with <code class="sourceCode scheme">(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)</code>, which evaluates to <code class="sourceCode scheme"><span class="cn">136</span></code>.</li>
 </ul>
 <h2 id="3.2.3" class="anchor">
-<a class="anchor__link link" href="#3.2.3">#</a><small class="number">3.2.3</small>Frames as the Repository of Local State
-</h3>
+<a class="anchor__link link" href="#3.2.3">#</a><span class="number">3.2.3</span> Frames as the Repository of Local State
+</h2>
 <ul>
 <li>Now we can see how the environment model makes sense of assignment and local state.</li>
 <li>Consider the “withdrawal processor”:</li>
@@ -137,35 +137,35 @@
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">&quot;Insufficient funds&quot;</span>)))</span></code></pre></div>
 <ul>
 <li>This places a single binding in the global environment frame.</li>
 <li>Consider now <code class="sourceCode scheme">(<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))</code>.
 <ul>
-<li>We set up <span class="math inline">E_1</span> where <code>100</code> is bound to the formal parameter <code>balance</code>, and then we evaluate the body of <code>make-withdraw</code>.</li>
-<li>This returns a lambda procedure whose environment is <span class="math inline">E_1</span>, and this is then bound to <code>W1</code> in the global frame.</li>
+<li>We set up <span class="math inline">E_1</span> where <code class="sourceCode scheme"><span class="cn">100</span></code> is bound to the formal parameter <code class="sourceCode scheme">balance</code>, and then we evaluate the body of <code class="sourceCode scheme">make-withdraw</code>.</li>
+<li>This returns a lambda procedure whose environment is <span class="math inline">E_1</span>, and this is then bound to <code class="sourceCode scheme">W1</code> in the global frame.</li>
 </ul></li>
 <li>Now, we apply this procedure: <code class="sourceCode scheme">(W1 <span class="cn">50</span>)</code>.
 <ul>
-<li>We construct a frame in <span class="math inline">E_2</span> that binds <code>amount</code> to <code>50</code>, and then we evaluate the body of <code>W1</code>.</li>
+<li>We construct a frame in <span class="math inline">E_2</span> that binds <code class="sourceCode scheme">amount</code> to <code class="sourceCode scheme"><span class="cn">50</span></code>, and then we evaluate the body of <code class="sourceCode scheme">W1</code>.</li>
 <li>The enclosing environment of <span class="math inline">E_2</span> is <span class="math inline">E_1</span>, <em>not</em> the global environment.</li>
-<li>Evaluating the body results in the <code>set!</code> rebinding <code>balance</code> in <span class="math inline">E_1</span> to the value <code class="sourceCode scheme">(<span class="fu">-</span> <span class="cn">100</span> <span class="cn">50</span>)</code>, which is <code>50</code>.</li>
-<li>After calling <code>W1</code>, the environment <span class="math inline">E_2</span> is irrelevant because nothing points to it.</li>
-<li>Each call to <code>W1</code> creates a new environment to hold <code>amount</code>, but uses the same <span class="math inline">E_1</span> (which holds <code>balance</code>).</li>
+<li>Evaluating the body results in the <code class="sourceCode scheme"><span class="kw">set!</span></code> rebinding <code class="sourceCode scheme">balance</code> in <span class="math inline">E_1</span> to the value <code class="sourceCode scheme">(<span class="fu">-</span> <span class="cn">100</span> <span class="cn">50</span>)</code>, which is <code class="sourceCode scheme"><span class="cn">50</span></code>.</li>
+<li>After calling <code class="sourceCode scheme">W1</code>, the environment <span class="math inline">E_2</span> is irrelevant because nothing points to it.</li>
+<li>Each call to <code class="sourceCode scheme">W1</code> creates a new environment to hold <code class="sourceCode scheme">amount</code>, but uses the same <span class="math inline">E_1</span> (which holds <code class="sourceCode scheme">balance</code>).</li>
 </ul></li>
-<li><code class="sourceCode scheme">(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))</code> creates another environment with a <code>balance</code> binding.
+<li><code class="sourceCode scheme">(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))</code> creates another environment with a <code class="sourceCode scheme">balance</code> binding.
 <ul>
-<li>This is independent from <span class="math inline">E_1</span>, which is why the <code>W2</code> object and its local state is independent from <code>W1</code>.</li>
-<li>On the other hand, <code>W1</code> and <code>W2</code> share the same code.</li>
+<li>This is independent from <span class="math inline">E_1</span>, which is why the <code class="sourceCode scheme">W2</code> object and its local state is independent from <code class="sourceCode scheme">W1</code>.</li>
+<li>On the other hand, <code class="sourceCode scheme">W1</code> and <code class="sourceCode scheme">W2</code> share the same code.</li>
 </ul></li>
 </ul>
 <h2 id="3.2.4" class="anchor">
-<a class="anchor__link link" href="#3.2.4">#</a><small class="number">3.2.4</small>Internal Definitions
-</h3>
+<a class="anchor__link link" href="#3.2.4">#</a><span class="number">3.2.4</span> Internal Definitions
+</h2>
 <ul>
-<li>With block structure, we nested definitions using <code>define</code> to avoid exposing helper procedures.</li>
+<li>With block structure, we nested definitions using <code class="sourceCode scheme"><span class="kw">define</span></code> to avoid exposing helper procedures.</li>
 <li>Internal definitions work according to the environmental model.</li>
-<li>When we apply a procedure that has internal definitions, there are <code>define</code> forms at the beginning of the body.</li>
+<li>When we apply a procedure that has internal definitions, there are <code class="sourceCode scheme"><span class="kw">define</span></code> forms at the beginning of the body.</li>
 <li>We are in <span class="math inline">E_1</span>, so evaluating these adds bindings to the first frame of <span class="math inline">E_1</span>, right after the arguments.</li>
 <li>When we apply the internal procedures, the formal parameter environment <span class="math inline">E_n</span> is created, and its enclosing environment is <span class="math inline">E_1</span> because that was where the procedure was defined.</li>
 <li>This means each internal procedure has access to the arguments of the procedure they are defined within.</li>

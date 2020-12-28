@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">5A</small>Assignment, State, and Side-Effects
+<span class="number">5A</span> Assignment, State, and Side-Effects
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1">#</a>Part 1
@@ -96,10 +96,10 @@
 <ul>
 <li>To do assignment, we use <code class="sourceCode scheme">(<span class="kw">set!</span> &lt;variable&gt; &lt;value&gt;)</code>.</li>
 <li>By convention, we suffix a bang to the names of procedures that do assignment-like things.</li>
-<li><code>set!</code> is like <code>define</code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
+<li><code class="sourceCode scheme"><span class="kw">set!</span></code> is like <code class="sourceCode scheme"><span class="kw">define</span></code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
 <li>When we add assignment, we also have to consider <em>time</em>.</li>
 <li>The assignment produces a moment in time: a difference between a <em>before</em> and an <em>after</em> in time.</li>
-<li>After the moment, <code>&lt;variable&gt;</code> has the value <code>&lt;value&gt;</code>, independent of what value it had before.</li>
+<li>After the moment, <code class="sourceCode scheme">&lt;variable&gt;</code> has the value <code class="sourceCode scheme">&lt;value&gt;</code>, independent of what value it had before.</li>
 <li>So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.</li>
 <li>This isn’t the case when we have assignment. The same expression can lead to different answers because it depends on time.</li>
 <li>The substitution model completely breaks down. It is static.</li>
@@ -154,11 +154,11 @@
 <a class="anchor__link link" href="#2.2">#</a>Free and bound variables
 </h3>
 <ul>
-<li>A variable <code>v</code> is <em>bound</em> in an expression <code>E</code> if the meaning of <code>E</code> is unchanged by the uniform replacement of a variable <code>w</code> not occurring in <code>E</code>, for every occurrence of <code>v</code> in <code>E</code>.</li>
+<li>A variable <code class="sourceCode scheme">v</code> is <em>bound</em> in an expression <code class="sourceCode scheme">E</code> if the meaning of <code class="sourceCode scheme">E</code> is unchanged by the uniform replacement of a variable <code class="sourceCode scheme">w</code> not occurring in <code class="sourceCode scheme">E</code>, for every occurrence of <code class="sourceCode scheme">v</code> in <code class="sourceCode scheme">E</code>.</li>
 <li>We use bound variables all the time.</li>
-<li>The <code>lambda</code> is the essential thing that binds variables.</li>
+<li>The <code class="sourceCode scheme"><span class="kw">lambda</span></code> is the essential thing that binds variables.</li>
 <li>If a variable isn’t bound, we say it is a <em>free</em> variable.</li>
-<li>If <code>x</code> is a bound variable in <code>E</code> then there is λ-expression where it is bound.</li>
+<li>If <code class="sourceCode scheme">x</code> is a bound variable in <code class="sourceCode scheme">E</code> then there is λ-expression where it is bound.</li>
 <li>The list of formal parameters is called the <em>bound variable list</em>. The λ-expression <em>binds</em> the variables <em>declared</em> in its bound variable list.</li>
 <li>The parts of the expression where a variable has a value defined by the λ-expression binding it is the <em>scope</em> of the variable.</li>
 </ul>
@@ -216,8 +216,8 @@
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cn">12</span></span></code></pre></div>
 <ul>
 <li>These two counters are independent and have their own state.</li>
-<li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
-<li>The <em>global environment</em> is the topmost environment. Its frame contains <code>car</code>, <code>+</code>, <code>*</code>, etc., and all top-level definitions.</li>
+<li>The environment of <code class="sourceCode scheme">c1</code> points to some frame with <code class="sourceCode scheme">n</code>. That of <code class="sourceCode scheme">c2</code> points to a different frame with a different <code class="sourceCode scheme">n</code>. The parent of both frames is the global environment.</li>
+<li>The <em>global environment</em> is the topmost environment. Its frame contains <code class="sourceCode scheme"><span class="fu">car</span></code>, <code class="sourceCode scheme"><span class="fu">+</span></code>, <code class="sourceCode scheme"><span class="fu">*</span></code>, etc., and all top-level definitions.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2">#</a>Objects

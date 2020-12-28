@@ -49,7 +49,7 @@
 <main>
 
 <h1>
-<small class="number">4.1</small>The Metacircular Evaluator
+<span class="number">4.1</span> The Metacircular Evaluator
 </h1>
 <ul>
 <li>We will implement a Lisp evaluator as a Lisp program.</li>
@@ -58,16 +58,16 @@
 <li>To evaluate a combination, evaluate subexpressions and then apply the operator subexpression to the operand subexpressions.</li>
 <li>To apply a procedure to arguments, evaluate the body of the procedure in a new environment. To construct the new environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied.</li>
 </ol></li>
-<li>This embodies the interplay between two critical procedures, <code>eval</code> and <code>apply</code>.</li>
+<li>This embodies the interplay between two critical procedures, <code class="sourceCode scheme"><span class="fu">eval</span></code> and <code class="sourceCode scheme"><span class="fu">apply</span></code>.</li>
 </ul>
 <h2 id="4.1.1" class="anchor">
-<a class="anchor__link link" href="#4.1.1">#</a><small class="number">4.1.1</small>The Core of the Evaluator
-</h3>
+<a class="anchor__link link" href="#4.1.1">#</a><span class="number">4.1.1</span> The Core of the Evaluator
+</h2>
 <h3 id="4.1.1.1" class="anchor">
 <a class="anchor__link link" href="#4.1.1.1">#</a><code>Eval</code>
 </h3>
 <ul>
-<li><code>eval</code> classifies an expression and directs its evaluation in an environment.</li>
+<li><code class="sourceCode scheme"><span class="fu">eval</span></code> classifies an expression and directs its evaluation in an environment.</li>
 <li>We use <em>abstract syntax</em> to avoid committing to a particular syntax in the evaluator.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">eval</span> exp env)</span>
@@ -83,17 +83,17 @@
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        ((begin? exp) (eval-sequence (begin-actions exp) env))</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        ((cond? exp) (<span class="fu">eval</span> (cond-&gt;if exp) env))</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        ((application? exp)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         (apply (<span class="fu">eval</span> (operator exp) env)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         (<span class="fu">apply</span> (<span class="fu">eval</span> (operator exp) env)</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                (list-of-values (operands exp) env)))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="st">&quot;Unknown expression type: EVAL&quot;</span> exp))))</span></code></pre></div>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: EVAL&quot;</span> exp))))</span></code></pre></div>
 <h3 id="4.1.1.2" class="anchor">
 <a class="anchor__link link" href="#4.1.1.2">#</a><code>Apply</code>
 </h3>
 <ul>
-<li><code>apply</code> classifies a procedure and directs its application to a list of arguments.</li>
+<li><code class="sourceCode scheme"><span class="fu">apply</span></code> classifies a procedure and directs its application to a list of arguments.</li>
 <li>If compound, it evaluates the procedure body in an extended environment.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (apply procedure arguments)</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((primitive-procedure? procedure)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         (apply-primitive-procedure procedure arguments))</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        ((compound-procedure? procedure)</span>
@@ -103,10 +103,10 @@
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>           (procedure-parameters procedure)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>           arguments</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="st">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
 <h2 id="4.1.2" class="anchor">
-<a class="anchor__link link" href="#4.1.2">#</a><small class="number">4.1.2</small>Representing Expressions
-</h3>
+<a class="anchor__link link" href="#4.1.2">#</a><span class="number">4.1.2</span> Representing Expressions
+</h2>
 <ul>
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
 <li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
@@ -122,7 +122,7 @@
 </h3>
 <ul>
 <li>Some special forms can be defined in terms of others.</li>
-<li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
+<li>For example, we can reduce <code class="sourceCode scheme"><span class="kw">cond</span></code> to an <code class="sourceCode scheme"><span class="kw">if</span></code> expression:</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="cn">&#39;cond</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (cond-clauses exp) (<span class="fu">cdr</span> exp))</span>
@@ -139,7 +139,7 @@
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">if</span> (cond-else-clause? first)</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            (<span class="kw">if</span> (<span class="fu">null?</span> rest)</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                (sequence-&gt;exp (cond-actions first))</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                (<span class="fu">error</span> <span class="st">&quot;ELSE clause isn&#39;t last: COND-&gt;IF&quot;</span> clauses))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                (<span class="fu">error</span> <span class="cn">&quot;ELSE clause isn&#39;t last: COND-&gt;IF&quot;</span> clauses))</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            (make-if (cond-predicate first)</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                     (sequence-&gt;exp (cond-actions first))</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                     (expand-clauses rest))))))</span></code></pre></div>
@@ -148,13 +148,13 @@
 <li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
 </ul>
 <h2 id="4.1.3" class="anchor">
-<a class="anchor__link link" href="#4.1.3">#</a><small class="number">4.1.3</small>Evaluator Data Structures
-</h3>
+<a class="anchor__link link" href="#4.1.3">#</a><span class="number">4.1.3</span> Evaluator Data Structures
+</h2>
 <h3 id="4.1.3.1" class="anchor">
 <a class="anchor__link link" href="#4.1.3.1">#</a>Testing of predicates
 </h3>
 <ul>
-<li>Anything other than <code>false</code> is considered “truthy.”</li>
+<li>Anything other than <code class="sourceCode scheme"><span class="cn">false</span></code> is considered “truthy.”</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (false? x) (<span class="fu">eq?</span> x <span class="cn">false</span>))</span></code></pre></div>
@@ -193,8 +193,8 @@
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">=</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">cons</span> (make-frame vars vals) base-env)</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="fu">&lt;</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>          (<span class="fu">error</span> <span class="st">&quot;Too many arguments supplied&quot;</span> vars vals)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>          (<span class="fu">error</span> <span class="st">&quot;Too few arguments supplied&quot;</span> vars vals))))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>          (<span class="fu">error</span> <span class="cn">&quot;Too many arguments supplied&quot;</span> vars vals)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>          (<span class="fu">error</span> <span class="cn">&quot;Too few arguments supplied&quot;</span> vars vals))))</span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (lookup-variable-value var env)</span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (env-loop env)</span>
@@ -203,7 +203,7 @@
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            ((<span class="fu">eq?</span> var (<span class="fu">car</span> vars)) (<span class="fu">car</span> vals))</span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            (<span class="kw">else</span> (scan (<span class="fu">cdr</span> vars) (<span class="fu">cdr</span> vals)))))</span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">error</span> <span class="st">&quot;Unbound variable&quot;</span> var)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">error</span> <span class="cn">&quot;Unbound variable&quot;</span> var)</span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">let</span> ((frame (first-frame env)))</span>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>          (scan (frame-variables frame) (frame-values frame)))))</span>
 <span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  (env-loop env))</span></code></pre></div>
@@ -211,12 +211,12 @@
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
 <h2 id="4.1.4" class="anchor">
-<a class="anchor__link link" href="#4.1.4">#</a><small class="number">4.1.4</small>Running the Evaluator as a Program
-</h3>
+<a class="anchor__link link" href="#4.1.4">#</a><span class="number">4.1.4</span> Running the Evaluator as a Program
+</h2>
 <ul>
 <li>We can run our evaluator as a program: Lisp within Lisp.</li>
 <li>The evaluator ultimately reduces expressions to applications of primitive procedures, so we need the evaluator to map these to the underlying Lisp’s primitive procedures.</li>
-<li>We set up a global environment mapping primitive procedures, <code>true</code>, and <code>false</code>:</li>
+<li>We set up a global environment mapping primitive procedures, <code class="sourceCode scheme"><span class="cn">true</span></code>, and <code class="sourceCode scheme"><span class="cn">false</span></code>:</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (setup-environment)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((initial-env</span>
@@ -228,7 +228,7 @@
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    initial-env))</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> the-global-environment (setup-environment))</span></code></pre></div>
 <ul>
-<li>We define a list of primitive procedures <code>car</code>, <code>cdr</code>, <code>cons</code>, and <code>null?</code>:</li>
+<li>We define a list of primitive procedures <code class="sourceCode scheme"><span class="fu">car</span></code>, <code class="sourceCode scheme"><span class="fu">cdr</span></code>, <code class="sourceCode scheme"><span class="fu">cons</span></code>, and <code class="sourceCode scheme"><span class="fu">null?</span></code>:</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="cn">&#39;primitive</span>))</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (primitive-implementation proc) (<span class="fu">cadr</span> proc))</span>
@@ -245,15 +245,15 @@
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="cn">&#39;primitive</span> (<span class="fu">cadr</span> proc)))</span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>       primitive-procedures))</span></code></pre></div>
 <ul>
-<li>Here, <code>apply-in-underlying-scheme</code> refers to the built-in <code>apply</code>, not the one we defined:</li>
+<li>Here, <code class="sourceCode scheme">apply-in-underlying-scheme</code> refers to the built-in <code class="sourceCode scheme"><span class="fu">apply</span></code>, not the one we defined:</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (apply-primitive-procedure proc args)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  (apply-in-underlying-scheme (primitive-implementation proc) args))</span></code></pre></div>
 <ul>
 <li>Finally, we make a simple <em>driver loop</em>, or REPL:</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> input-prompt <span class="st">&quot;;;; M-Eval input:&quot;</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> output-prompt <span class="st">&quot;;;; M-Eval value:&quot;</span>)</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> input-prompt <span class="cn">&quot;;;; M-Eval input:&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> output-prompt <span class="cn">&quot;;;; M-Eval value:&quot;</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (driver-loop)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  (prompt-for-input input-prompt)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((input (<span class="fu">read</span>)))</span>
@@ -274,19 +274,19 @@
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                     &#39;<span class="sc">«</span><span class="ss">procedure-env</span><span class="sc">»</span>))</span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">display</span> object)))</span></code></pre></div>
 <h2 id="4.1.5" class="anchor">
-<a class="anchor__link link" href="#4.1.5">#</a><small class="number">4.1.5</small>Data as Programs
-</h3>
+<a class="anchor__link link" href="#4.1.5">#</a><span class="number">4.1.5</span> Data as Programs
+</h2>
 <ul>
 <li>A program can be viewed as a description of an abstract machine.</li>
 <li>The evaluator is a machine that emulates another machine given its description. In other words, the evaluator is a <em>universal machine</em>.</li>
 <li>Deep idea: any evaluator can emulate any other. This gets to the heart of <em>computability</em>.</li>
 <li>Just as the evaluator can emulate any Lisp-described machine, a <em>universal Turing machine</em> can emulate any other Turing machine.</li>
 <li>The existence of a universal machine is a deep and wonderful property of computation.</li>
-<li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code>eval</code> procedure for evaluating data as programs.</li>
+<li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code class="sourceCode scheme"><span class="fu">eval</span></code> procedure for evaluating data as programs.</li>
 </ul>
 <h2 id="4.1.6" class="anchor">
-<a class="anchor__link link" href="#4.1.6">#</a><small class="number">4.1.6</small>Internal Definitions
-</h3>
+<a class="anchor__link link" href="#4.1.6">#</a><span class="number">4.1.6</span> Internal Definitions
+</h2>
 <ul>
 <li>Global definitions have <em>sequential scoping</em>: they are defined one at a time.</li>
 <li>Internal definitions should have <em>simultaneous scoping</em>, as if defined all at once.</li>
@@ -298,7 +298,7 @@
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> v <span class="sc">«</span><span class="ss">e2</span><span class="sc">»</span>)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">«</span><span class="ss">e3</span><span class="sc">»</span>)</span></code></pre></div>
 <ul>
-<li>Transforming them into a <code>let</code> with assignments:</li>
+<li>Transforming them into a <code class="sourceCode scheme"><span class="kw">let</span></code> with assignments:</li>
 </ul>
 <div class="sourceCode" id="cb13"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">lambda</span> <span class="sc">«</span><span class="ss">vars</span><span class="sc">»</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((u <span class="cn">&#39;*unassigned*</span>)</span>
@@ -306,11 +306,11 @@
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> u <span class="sc">«</span><span class="ss">e1</span><span class="sc">»</span>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> v <span class="sc">«</span><span class="ss">e2</span><span class="sc">»</span>) <span class="sc">«</span><span class="ss">e3</span><span class="sc">»</span>))</span></code></pre></div>
 <ul>
-<li>Here, <code>*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
+<li>Here, <code class="sourceCode scheme">*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
 <h2 id="4.1.7" class="anchor">
-<a class="anchor__link link" href="#4.1.7">#</a><small class="number">4.1.7</small>Separating Syntactic Analysis from Execution
-</h3>
+<a class="anchor__link link" href="#4.1.7">#</a><span class="number">4.1.7</span> Separating Syntactic Analysis from Execution
+</h2>
 <ul>
 <li>Our evaluator is inefficient because it interleaves syntactic analysis with execution.</li>
 <li>For example, given a recursive procedure:</li>
@@ -318,13 +318,13 @@
 <div class="sourceCode" id="cb14"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (factorial n)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">1</span>) <span class="cn">1</span> (<span class="fu">*</span> (factorial (<span class="fu">-</span> n <span class="cn">1</span>)) n)))</span></code></pre></div>
 <ul>
-<li>When evaluating <code class="sourceCode scheme">(factorial <span class="cn">4</span>)</code>, on all four recursive calls the evaluator must determine anew that the body is an <code>if</code> expression by reaching the <code>if?</code> test.</li>
-<li>We can arrange the evaluator to analyze syntax only once by splitting <code>eval</code> into two parts:
+<li>When evaluating <code class="sourceCode scheme">(factorial <span class="cn">4</span>)</code>, on all four recursive calls the evaluator must determine anew that the body is an <code class="sourceCode scheme"><span class="kw">if</span></code> expression by reaching the <code class="sourceCode scheme">if?</code> test.</li>
+<li>We can arrange the evaluator to analyze syntax only once by splitting <code class="sourceCode scheme"><span class="fu">eval</span></code> into two parts:
 <ul>
 <li><code class="sourceCode scheme">(analyze exp)</code> performs syntactic analysis and returns an <em>execution procedure</em>.</li>
 <li><code class="sourceCode scheme">((analyze exp) env)</code> completes the evaluation.</li>
 </ul></li>
-<li><code>analyze</code> is similar to the <a href="#4.1.1">original</a> <code>eval</code>, except it only performs analysis, not full evaluation:</li>
+<li><code class="sourceCode scheme">analyze</code> is similar to the <a href="#4.1.1">original</a> <code class="sourceCode scheme"><span class="fu">eval</span></code>, except it only performs analysis, not full evaluation:</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (analyze exp)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))</span>
@@ -337,9 +337,9 @@
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        ((begin? exp) (analyze-sequence (begin-actions exp)))</span>
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        ((cond? exp) (analyze (cond-&gt;if exp)))</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        ((application? exp) (analyze-application exp))</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="st">&quot;Unknown expression type: ANALYZE&quot;</span> exp))))</span></code></pre></div>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: ANALYZE&quot;</span> exp))))</span></code></pre></div>
 <ul>
-<li>Here is one of the helper procedures, <code>analyze-lambda</code>. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.</li>
+<li>Here is one of the helper procedures, <code class="sourceCode scheme">analyze-lambda</code>. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.</li>
 </ul>
 <div class="sourceCode" id="cb16"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (analyze-lambda exp)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((vars (lambda-parameters exp))</span>

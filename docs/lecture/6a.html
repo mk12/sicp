@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">6A</small>Streams, Part 1
+<span class="number">6A</span> Streams, Part 1
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1">#</a>Part 1
@@ -108,8 +108,8 @@
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>              (next (<span class="fu">1+</span> k))))))</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  (next <span class="cn">1</span>))</span></code></pre></div>
 <ul>
-<li>1st procedure: enumerate leaves → filter <code>odd?</code> → map <code>square</code> → accumulate <code>+</code>, 0.</li>
-<li>2nd procedure: enumerate interval → map <code>fib</code> → filter <code>odd?</code> → accumulate <code>cons</code>, <code>'()</code>.</li>
+<li>1st procedure: enumerate leaves → filter <code class="sourceCode scheme"><span class="fu">odd?</span></code> → map <code class="sourceCode scheme">square</code> → accumulate <code class="sourceCode scheme"><span class="fu">+</span></code>, 0.</li>
+<li>2nd procedure: enumerate interval → map <code class="sourceCode scheme">fib</code> → filter <code class="sourceCode scheme"><span class="fu">odd?</span></code> → accumulate <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme">&#39;()</code>.</li>
 <li>These are similar, but the commonality is obscured by how we wrote the procedures.</li>
 </ul>
 <blockquote>
@@ -120,9 +120,9 @@
 </h3>
 <ul>
 <li>The arrows between the boxes represent data structures called <em>streams</em>.</li>
-<li><code class="sourceCode scheme">(<span class="kw">cons-stream</span> x y)</code> and <code>the-empty-stream</code> construct streams.</li>
-<li>For any <code>x</code> and <code>y</code>, <code class="sourceCode scheme">(head (<span class="kw">cons-stream</span> x y))</code> is <code>x</code>.</li>
-<li>For any <code>x</code> and <code>y</code>, <code class="sourceCode scheme">(tail (<span class="kw">cons-stream</span> x y))</code> is <code>y</code>.</li>
+<li><code class="sourceCode scheme">(<span class="kw">cons-stream</span> x y)</code> and <code class="sourceCode scheme">the-empty-stream</code> construct streams.</li>
+<li>For any <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">y</code>, <code class="sourceCode scheme">(head (<span class="kw">cons-stream</span> x y))</code> is <code class="sourceCode scheme">x</code>.</li>
+<li>For any <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">y</code>, <code class="sourceCode scheme">(tail (<span class="kw">cons-stream</span> x y))</code> is <code class="sourceCode scheme">y</code>.</li>
 <li>We can define higher-order procedures like we did for lists:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (map-stream proc s)</span>
@@ -161,7 +161,7 @@
 </h3>
 <ul>
 <li>Suppose we have a stream of streams <span class="math inline">\{\{1,2,3,\dots\},\{10,20,30,\dots\},\dots\}</span>.</li>
-<li>We can define a procedure <code>flatten</code> to accumulate them into a single flat stream.</li>
+<li>We can define a procedure <code class="sourceCode scheme">flatten</code> to accumulate them into a single flat stream.</li>
 <li>Problem: Given <span class="math inline">N</span>, find all pairs <span class="math inline">0&lt;j&lt;i≤N</span> such that <span class="math inline">i+j</span> is prime.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (prime-sum-pairs n)</span>
@@ -178,8 +178,8 @@
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        (enumerate-interval <span class="cn">1</span> (<span class="fu">-1+</span> i))))</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>     (enumerate-interval <span class="cn">1</span> n)))))</span></code></pre></div>
 <ul>
-<li><code>flatmap</code> takes the place of nested loops in most other languages.</li>
-<li>We can simplify it with syntactic sugar <code>collect</code>:</li>
+<li><code class="sourceCode scheme">flatmap</code> takes the place of nested loops in most other languages.</li>
+<li>We can simplify it with syntactic sugar <code class="sourceCode scheme">collect</code>:</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (prime-sum-pairs n)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (collect</span>
@@ -217,7 +217,7 @@
 <ul>
 <li>By now you should be suspicious—what’s the catch?</li>
 <li>Problem: Find the second prime between 10,000 and 1,000,000.</li>
-<li>Stream solution: enumerate 10,000 to 1,000,000 → filter <code>prime?</code> → take 2nd.</li>
+<li>Stream solution: enumerate 10,000 to 1,000,000 → filter <code class="sourceCode scheme">prime?</code> → take 2nd.</li>
 <li>This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.</li>
 <li>But we can have our cake and eat it to! We can make it just as efficient.</li>
 <li>The key to this is that streams are <em>not</em> lists.</li>
@@ -232,12 +232,12 @@
 <li><code class="sourceCode scheme">(head s)</code> is <code class="sourceCode scheme">(<span class="fu">car</span> s)</code></li>
 <li><code class="sourceCode scheme">(tail s)</code> is <code class="sourceCode scheme">(<span class="fu">force</span> (<span class="fu">cdr</span> s))</code></li>
 </ul></li>
-<li><code>delay</code> creates a promise to compute something when <code>force</code> d.
+<li><code class="sourceCode scheme"><span class="kw">delay</span></code> creates a promise to compute something when <code class="sourceCode scheme"><span class="fu">force</span></code> d.
 <ul>
 <li><code class="sourceCode scheme">(<span class="kw">delay</span> &lt;expr&gt;)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="kw">lambda</span> () &lt;expr&gt;)</code></li>
-<li><code class="sourceCode scheme">(<span class="fu">force</span> p)</code> is <code>(p)</code></li>
+<li><code class="sourceCode scheme">(<span class="fu">force</span> p)</code> is <code class="sourceCode scheme">(p)</code></li>
 </ul></li>
-<li><code>delay</code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
+<li><code class="sourceCode scheme"><span class="kw">delay</span></code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
 <li>One little hack: to be efficient, <code class="sourceCode scheme">(<span class="kw">delay</span> &lt;expr&gt;)</code> is <code class="sourceCode scheme">(memo-proc (<span class="kw">lambda</span> () &lt;expr&gt;))</code>.</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (memo-proc proc)</span>

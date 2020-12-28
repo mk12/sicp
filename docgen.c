@@ -39,11 +39,17 @@ static char *concat(const char *s1, const char *s2) {
     return dest;
 }
 
-// A string that is not necessarily null terminated.
+// A pointer-and-length string. Not necessarily null terminated.
 struct Span {
     char *data;
     int len;
 };
+
+// An absent span (distinct from an empty span).
+#define NULL_SPAN ((struct Span){NULL, 0})
+
+// Creates a span from a string literal or array.
+#define SPAN(s) ((struct Span){s, sizeof s - 1})
 
 // Converts s to lowercase using the given buffer.
 static struct Span tolower_s(struct Span s, char *buf, int cap) {
@@ -134,8 +140,8 @@ static bool pandoc(const struct PandocOpts opts) {
 struct PandocProc {
     // PID of the child process.
     pid_t pid;
-    // File descriptor for writing to the child's stdin.
-    int in;
+    // Stream for writing to the child's stdin.
+    FILE *in;
 };
 
 // Runs pandoc with opts in a child process, storing its information in proc.
@@ -164,29 +170,34 @@ static bool fork_pandoc(struct PandocProc *proc, struct PandocOpts opts) {
     }
     // Close the pipe's read-side and store the write-side.
     close(fd[0]);
-    proc->in = fd[1];
+    proc->in = fdopen(fd[1], "w");
+    if (!proc->in) {
+        perror("fdopen");
+        close(fd[1]);
+        return false;
+    }
     return true;
 }
 
 // Closes proc's pipe and waits for it to finish. Returns true on success.
 static bool wait_pandoc(struct PandocProc *proc) {
-    close(proc->in);
+    fclose(proc->in);
     if (waitpid(proc->pid, NULL, 0) == -1) {
         perror("waitpid");
         return false;
     };
     proc->pid = -1;
-    proc->in = -1;
+    proc->in = NULL;
     return true;
 }
 
 // A Markdown section is represented by an integer s, where:
 //
-//     (s >> 0*MS_BITS) & MS_MASK  gives the h1 level,
-//     (s >> 1*MS_BITS) & MS_MASK  gives the h2 level,
+//     (s >> 0*MS_BITS) & MS_MASK  gives the h1 index,
+//     (s >> 1*MS_BITS) & MS_MASK  gives the h2 index,
 //     ...
 //
-// A level of 0 means that heading has not been encountered yet.
+// An index of 0 means that heading has not been encountered yet.
 //
 // Example:
 //
@@ -201,7 +212,7 @@ static bool wait_pandoc(struct PandocProc *proc) {
 typedef uint64_t MarkdownSection;
 #define MS_MASK UINT64_C(0xff)
 #define MS_BITS UINT64_C(8)
-#define MS_LEVEL(s, h) ((int)(((s) >> (h - 1)*MS_BITS) & MS_MASK))
+#define MS_INDEX(s, h) ((int)(((s) >> (h - 1)*MS_BITS) & MS_MASK))
 #define MS_MASK_UPTO(h) ((UINT64_C(1) << h*MS_BITS) - 1)
 #define MS_INCREMENT(h) (UINT64_C(1) << (h - 1)*MS_BITS)
 #define MS_NEXT(s, h) ((s & MS_MASK_UPTO(h)) + MS_INCREMENT(h))
@@ -244,7 +255,7 @@ static bool init_md(struct MarkdownState *state, const char *path) {
         return false;
     }
     state->file = file;
-    state->line = (struct Span){NULL, 0};
+    state->line = NULL_SPAN;
     state->code = false;
     state->section = 0;
     state->heading = 0;
@@ -280,6 +291,11 @@ static bool scan_md(struct MarkdownState *state) {
     return true;
 }
 
+// Copies the current line in state to out.
+static void copy_md(struct MarkdownState *state, FILE *out) {
+    fwrite(state->line.data, state->line.len, 1, out);
+}
+
 // A parsed Markdown heading.
 struct MarkdownHeading {
     // If the heading looks like, "# 1A: Foo bar", this is "1A". Otherwise NULL.
@@ -291,23 +307,25 @@ struct MarkdownHeading {
 
 // Parses a Markdown heading.
 static struct MarkdownHeading parse_md_heading(struct Span s) {
-    assert(s.len >= 2 && s.data[0] == '#'  && s.data[s.len-1] == '\n');
+    char *const p = s.data;
+    const int n = s.len;
+    assert(n >= 2 && p[0] == '#'  && p[n-1] == '\n');
     int i = 1;
-    while (i < s.len && s.data[i] == '#') i++;
-    assert(s.data[i++] == ' ' && i < s.len);
-    if (s.data[i] >= '1' && s.data[i] <= '9') {
+    while (i < n && p[i] == '#') i++;
+    assert(p[i++] == ' ' && i < n);
+    if (p[i] >= '1' && p[i] <= '9') {
         int j = i;
-        while (j < s.len && s.data[j] != ':') j++;
-        if (j + 2 < s.len && s.data[j+1] == ' ') {
+        while (j < n && p[j] != ':') j++;
+        if (j + 2 < n && p[j+1] == ' ') {
             return (struct MarkdownHeading){
-                .label = {s.data + i, j - i},
-                .title = {s.data + j + 2, s.len - j - 3},
+                .label = {p + i, j - i},
+                .title = {p + j + 2, n - j - 3},
             };
         }
     }
     return (struct MarkdownHeading){
-        .label = {NULL, 0},
-        .title = {s.data + i, s.len - i - 1},
+        .label = NULL_SPAN,
+        .title = {p + i, n - i - 1},
     };
 }
 
@@ -330,60 +348,109 @@ static MarkdownSection text_section(int chapter, int section) {
     return (MarkdownSection)chapter + 1 | ((MarkdownSection)section << MS_BITS);
 }
 
-// Writes a string literal to a file descriptor.
-#define dputs(fd, s) do { write(fd, "" s, sizeof s - 1); } while (0)
+// Buffer sizes for rendering various things.
+#define SZ_HREF 64
+#define SZ_HEADING 64
+#define SZ_LABEL 8
+
+// Renders a heading. Includes a "#" anchor link if id is present, and a .number
+// span if heading.label is present.
+static void render_heading(FILE *out, int level, struct Span id,
+        struct MarkdownHeading heading) {
+    if (id.data) {
+        fprintf(out,
+            "<h%d id=\"%.*s\" class=\"anchor\">"
+            "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>",
+            level, id.len, id.data, id.len, id.data);
+    } else {
+        fprintf(out, "<h%d>", level);
+    }
+    if (heading.label.data) {
+        fprintf(out, "<span class=\"number\">%.*s</span> ",
+            heading.label.len, heading.label.data);
+    }
+    fprintf(out, "%.*s</h%d>\n", heading.title.len, heading.title.data, level);
+}
+
+// Renders a linked heading for one of of the quote.html pages. The id must be
+// present. Includes a .number span if heading.label is present. The link's href
+// is given in printf style.
+static void render_quote_heading(FILE *out, int level, struct Span id,
+        struct MarkdownHeading heading, const char *href_fmt, ...) {
+    char href[SZ_HREF];
+    va_list args;
+    va_start(args, href_fmt);
+    vsnprintf(href, sizeof href, href_fmt, args);
+    va_end(args);
+    fprintf(out,
+        "<h%d id=\"%.*s\" class=\"anchor\">"
+        "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>",
+        level, id.len, id.data, id.len, id.data);
+    if (heading.label.data) {
+        fprintf(out, "<span class=\"number\">%.*s</span> ",
+            heading.label.len, heading.label.data);
+    }
+    fprintf(out,
+        "<a class=\"link\" href=\"%s\">%.*s</a>"
+        "</h%d>\n",
+        href, heading.title.len, heading.title.data, level);
+}
 
 // State to keep track of while rendering a table of contents.
 struct TocState {
-    // Output file descriptor.
-    int fd;
+    // Output stream.
+    FILE *out;
     // Nesting depth of <ul> tags.
     int depth;
 };
 
 // Renders the start of a table of contents.
-static struct TocState render_toc_start(int fd) {
-    dputs(fd, "\n## Contents\n\n");
-    return (struct TocState){.fd = fd, .depth = 0};
+static struct TocState render_toc_start(FILE *out) {
+    struct MarkdownHeading h = {.label = NULL_SPAN, .title = SPAN("Contents")};
+    render_heading(out, 2, SPAN("contents"), h);
+    return (struct TocState){.out = out, .depth = 0};
 }
 
 // Renders the end of a table of contents.
 static void render_toc_end(struct TocState *toc) {
     for (; toc->depth > 1; toc->depth--) {
-        dprintf(toc->fd, "</ul></li>");
+        fputs("</ul></li>", toc->out);
     }
     assert(--toc->depth == 0);
-    dprintf(toc->fd, "</ul>\n");
+    fputs("</ul>\n", toc->out);
 }
 
-// Renders an item in a table of contents.
+// Renders an item in a table of contents. The depth can be at most one greater
+// than the previous item. The link's href is given in printf style.
 static void render_toc_item(
         struct TocState *toc, int depth, struct MarkdownHeading heading,
         const char *href_fmt, ...) {
-    char href[64];
+    char href[SZ_HREF];
     va_list args;
     va_start(args, href_fmt);
     vsnprintf(href, sizeof href, href_fmt, args);
     va_end(args);
     switch (depth - toc->depth) {
     case 0:
-        dputs(toc->fd, "</li>");
+        fputs("</li>", toc->out);
         break;
     case 1:
         toc->depth++;
-        dputs(toc->fd, "<ul class=\"toc\">");
+        fputs("<ul class=\"toc\">", toc->out);
         break;
     default:
         assert(toc->depth > depth);
         for (; toc->depth > depth; toc->depth--) {
-            dputs(toc->fd, "</ul></li>");
+            fputs("</ul></li>", toc->out);
         }
         break;
     }
     assert(toc->depth == depth);
-    dprintf(toc->fd,
+    fprintf(toc->out,
         "<li class=\"toc__item\">"
-        "<span class=\"toc__label\">%.*s</span>"
+        // Put a space between <span> and <a> so that they don't run together
+        // in alternative stylesheets like Safari Reader.
+        "<span class=\"toc__label\">%.*s</span> "
         "<a href=\"%s\">%.*s</a>",
         heading.label.len, heading.label.data, href,
         heading.title.len, heading.title.data);
@@ -409,7 +476,8 @@ static bool gen_text_index(void) {
     if (!init_md(&state, MARKDOWN("text"))) {
         return false;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = HTML("text/index"),
         .title = "SICP Notes",
@@ -418,69 +486,37 @@ static bool gen_text_index(void) {
         .prev = NULL,
         .up = "../index.html",
         .next = "quote.html",
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
-    dprintf(proc.in, "# Textbook Notes\n\n");
+    fputs("# Textbook Notes\n\n", proc.in);
     while (scan_md(&state) && state.section == 0) {
-        write(proc.in, state.line.data, state.line.len);
+        copy_md(&state, proc.in);
     }
-    // dprintf(proc.in,
-    //     "\n## Contents\n\n"
-    //     "<ul class=\"toc\">"
-    //     "<li class=\"toc__item\">"
-    //     "<span class=\"toc__label\"></span>"
-    //     "<a href=\"quote.html\">Highlights</a>"
-    //     "</li>");
     struct TocState toc = render_toc_start(proc.in);
-    render_toc_item(&toc, 1,
-        (struct MarkdownHeading){.label = {NULL, 0}, .title = {"Highlights", 10}},
-        "quote.html");
-    // const char *close = "";
-    char id_buf[128];
-    struct MarkdownHeading h;
+    const struct MarkdownHeading highlights =
+        {.label = NULL_SPAN, .title = SPAN("Highlights")};
+    render_toc_item(&toc, 1, highlights, "quote.html");
     do {
-        if (state.heading == 1 && state.section != 1) {
-            render_toc_item(&toc, 1,
-                parse_md_heading(state.line),
-                "%d/index.html", MS_LEVEL(state.section, 1) - 1);
-            // dprintf(proc.in,
-            //     "%s<li class=\"toc__item\">"
-            //     "<span class=\"toc__label\">%.*s</span>"
-            //     "<a href=\"%d/index.html\">%.*s</a>"
-            //     "<ul class=\"toc\">",
-            //     close, h.label.len, h.label.data, MS_LEVEL(state.section, 1) - 1,
-            //     h.title.len, h.title.data);
-            // close = "</ul></li>";
-        } else if (state.heading == 2 && MS_LEVEL(state.section, 1) == 1) {
-            h = parse_md_heading(state.line);
+        if (state.heading == 2) {
+            struct MarkdownHeading h = parse_md_heading(state.line);
             assert(!h.label.data);
-            struct Span id = tolower_s(h.title, id_buf, sizeof id_buf);
-            // dprintf(proc.in,
-            //     "<li class=\"toc__item\">"
-            //     "<span class=\"toc__label\"></span>"
-            //     "<a href=\"front.html#%.*s\">%.*s</a>"
-            //     "</li>",
-            //     id.len, id.data, h.title.len, h.title.data);
-            render_toc_item(&toc, 1, h, "front.html#%.*s",
-                id.len, id.data);
+            char buf[SZ_HEADING];
+            struct Span id = tolower_s(h.title, buf, sizeof buf);
+            render_toc_item(&toc, 1, h, "front.html#%.*s", id.len, id.data);
+        }
+    } while (scan_md(&state) && MS_INDEX(state.section, 1) <= 1);
+    do {
+        if (state.heading == 1) {
+            render_toc_item(&toc, 1, parse_md_heading(state.line),
+                "%d/index.html", MS_INDEX(state.section, 1) - 1);
         } else if (state.heading == 2) {
-            h = parse_md_heading(state.line);
-            // dprintf(proc.in,
-            //     "<li class=\"toc__item\">"
-            //     "<span class=\"toc__label\">%.*s</span>"
-            //     "<a href=\"%d/%d.html\">%.*s</a>"
-            //     "</li>",
-            //     h.label.len, h.label.data, MS_LEVEL(state.section, 1) - 1,
-            //     MS_LEVEL(state.section, 2), h.title.len, h.title.data);
-            render_toc_item(&toc, 2, h, "%d/%d.html",
-                MS_LEVEL(state.section, 1) - 1,
-                MS_LEVEL(state.section, 2));
+            render_toc_item(&toc, 2, parse_md_heading(state.line),
+                "%d/%d.html",
+                MS_INDEX(state.section, 1) - 1,
+                MS_INDEX(state.section, 2));
         }
     } while (scan_md(&state));
-    // dprintf(proc.in, "%s</ul>\n", close);
     render_toc_end(&toc);
     return wait_pandoc(&proc);
 }
@@ -491,7 +527,8 @@ static bool gen_text_quote(void) {
     if (!init_md(&state, MARKDOWN("quote"))) {
         return false;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = HTML("text/quote"),
         .title = "SICP Highlights",
@@ -500,39 +537,25 @@ static bool gen_text_quote(void) {
         .prev = "index.html",
         .up = "index.html",
         .next = "front.html",
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
-    dprintf(proc.in, "# Highlights\n\n");
+    fprintf(proc.in, "# Highlights\n\n");
     while (scan_md(&state) && state.section != 1);
-    char id_buf[128];
     while (scan_md(&state) && state.heading != 1) {
-        if (state.heading > 1) {
+        if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             if (h.label.data) {
-                dprintf(proc.in,
-                    "<h%d id=\"%.*s\" class=\"anchor\">"
-                    "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                    "<small class=\"number\">%.*s</small>"
-                    "<a class=\"link\" href=\"%.*s/index.html\">%.*s</a>"
-                    "</h%d>\n",
-                    state.heading, h.label.len, h.label.data, h.label.len, h.label.data,
-                    h.label.len, h.label.data, h.label.len, h.label.data,
-                    h.title.len, h.title.data, state.heading);
+                render_quote_heading(proc.in, 2, h.label, h,
+                    "%.*s/index.html", h.label.len, h.label.data);
             } else {
-                struct Span id = tolower_s(h.title, id_buf, sizeof id_buf);
-                dprintf(proc.in,
-                    "<h%d id=\"%.*s\" class=\"anchor\">"
-                    "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                    "<a class=\"link\" href=\"front.html#%.*s\">%.*s</a>"
-                    "</h%d>\n",
-                    state.heading, id.len, id.data, id.len, id.data,
-                    id.len, id.data, h.title.len, h.title.data, state.heading);
+                char buf[SZ_HEADING];
+                struct Span id = tolower_s(h.title, buf, sizeof buf);
+                render_quote_heading(proc.in, 2, id, h,
+                    "front.html#%.*s", id.len, id.data);
             }
         } else {
-            write(proc.in, state.line.data, state.line.len);
+            copy_md(&state, proc.in);
         }
     }
     return wait_pandoc(&proc);
@@ -544,7 +567,8 @@ static bool gen_text_front(void) {
     if (!init_md(&state, MARKDOWN("text"))) {
         return false;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = HTML("text/front"),
         .title = "SICP Frontmatter Notes",
@@ -553,27 +577,19 @@ static bool gen_text_front(void) {
         .prev = "quote.html",
         .up = "index.html",
         .next = "1/index.html",
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
     while (scan_md(&state) && state.section != 1);
-    char id_buf[128];
     do {
         if (state.heading > 1) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             assert(!h.label.data);
-            struct Span id = tolower_s(h.title, id_buf, sizeof id_buf);
-            dprintf(proc.in,
-                "<h%d id=\"%.*s\" class=\"anchor\">"
-                "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                "%.*s"
-                "</h%d>\n",
-                state.heading, id.len, id.data, id.len, id.data,
-                h.title.len, h.title.data, state.heading);
+            char buf[SZ_HEADING];
+            struct Span id = tolower_s(h.title, buf, sizeof buf);
+            render_heading(proc.in, state.heading, id, h);
         } else {
-            write(proc.in, state.line.data, state.line.len);
+            copy_md(&state, proc.in);
         }
     } while (scan_md(&state) && state.heading != 1);
     return wait_pandoc(&proc);
@@ -604,7 +620,8 @@ static bool gen_text_chapter(const char *output) {
         prev_buf[5] = '0' + num_sections(chapter - 1);
         prev = prev_buf;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = output,
         .title = title,
@@ -613,9 +630,7 @@ static bool gen_text_chapter(const char *output) {
         .prev = prev,
         .up = "../index.html",
         .next = "1.html",
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
     const MarkdownSection target_section = text_section(chapter, 0);
@@ -623,40 +638,24 @@ static bool gen_text_chapter(const char *output) {
     assert(state.section == target_section);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    dprintf(proc.in, "<h1><small class=\"number\">%.*s</small>%.*s</h1>\n",
-        h.label.len, h.label.data, h.title.len, h.title.data);
+    render_heading(proc.in, 1, NULL_SPAN, h);
     while (scan_md(&state) && state.heading == 0) {
-        write(proc.in, state.line.data, state.line.len);
+        copy_md(&state, proc.in);
     }
-    dprintf(proc.in,
-        "\n## Contents\n\n"
-        "<ul class=\"toc\">");
-    const char *close = "";
+    struct TocState toc = render_toc_start(proc.in);
     do {
         if (state.heading == 2) {
-            h = parse_md_heading(state.line);
-            const int section = MS_LEVEL(state.section, 2);
-            dprintf(proc.in,
-                "%s<li class=\"toc__item\">"
-                "<span class=\"toc__label\">%.*s</span>"
-                "<a href=\"%d.html\">%.*s</a>"
-                "<ul class=\"toc\">",
-                close, h.label.len, h.label.data, section, h.title.len, h.title.data);
-            close = "</ul></li>";
+            int section = MS_INDEX(state.section, 2);
+            render_toc_item(&toc, 1, parse_md_heading(state.line),
+                "%d.html", section);
         } else if (state.heading == 3) {
-            h = parse_md_heading(state.line);
-            const int section = MS_LEVEL(state.section, 2);
-            const int subsection = MS_LEVEL(state.section, 3);
-            dprintf(proc.in,
-                "<li class=\"toc__item\">"
-                "<span class=\"toc__label\">%.*s</span>"
-                "<a href=\"%d.html#%d.%d.%d\">%.*s</a>"
-                "</li>",
-                h.label.len, h.label.data, section, chapter, section, subsection,
-                h.title.len, h.title.data);
+            int section = MS_INDEX(state.section, 2);
+            int subsection = MS_INDEX(state.section, 3);
+            render_toc_item(&toc, 2, parse_md_heading(state.line),
+                "%d.html#%d.%d.%d", section, chapter, section, subsection);
         }
     } while (scan_md(&state) && state.heading != 1);
-    dprintf(proc.in, "%s</ul>\n", close);
+    render_toc_end(&toc);
     return wait_pandoc(&proc);
 invalid:
     fprintf(stderr, "%s: invalid text chapter\n", output);
@@ -702,7 +701,8 @@ static bool gen_text_section(const char *output) {
         snprintf(next_buf, sizeof next_buf, "%d.html", section + 1);
         next = next_buf;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = output,
         .title = title,
@@ -711,9 +711,7 @@ static bool gen_text_section(const char *output) {
         .prev = prev,
         .up = "index.html",
         .next = next,
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
     const MarkdownSection target_section = text_section(chapter, section);
@@ -721,37 +719,22 @@ static bool gen_text_section(const char *output) {
     assert(state.section == target_section);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    dprintf(proc.in, "<h1><small class=\"number\">%.*s</small>%.*s</h1>\n",
-        h.label.len, h.label.data, h.title.len, h.title.data);
+    render_heading(proc.in, 1, NULL_SPAN, h);
     while (scan_md(&state) && state.heading != 1 && state.heading != 2) {
         if (state.heading >= 3) {
             h = parse_md_heading(state.line);
             if (h.label.data) {
                 assert(state.heading == 3);
-                dprintf(proc.in,
-                    "<h%d id=\"%.*s\" class=\"anchor\">"
-                    "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                    "<small class=\"number\">%.*s</small>"
-                    "%.*s"
-                    "</h%d>\n",
-                    state.heading - 1, h.label.len, h.label.data,
-                    h.label.len, h.label.data, h.label.len, h.label.data,
-                    h.title.len, h.title.data, state.heading);
+                render_heading(proc.in, 2, h.label, h);
             } else {
                 assert(state.heading == 4);
-                char id[] = "_._._._";
+                char id[SZ_LABEL];
                 snprintf(id, sizeof id, "%d.%d.%d.%d", chapter, section,
-                    MS_LEVEL(state.section, 3), MS_LEVEL(state.section, 4));
-                dprintf(proc.in,
-                    "<h%d id=\"%s\" class=\"anchor\">"
-                    "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
-                    "%.*s"
-                    "</h%d>\n",
-                    state.heading - 1, id, id, h.title.len, h.title.data,
-                    state.heading - 1);
+                    MS_INDEX(state.section, 3), MS_INDEX(state.section, 4));
+                render_heading(proc.in, 3, SPAN(id), h);
             }
         } else {
-            write(proc.in, state.line.data, state.line.len);
+            copy_md(&state, proc.in);
         }
     }
     return wait_pandoc(&proc);
@@ -766,7 +749,8 @@ static bool gen_lecture_index(void) {
     if (!init_md(&state, MARKDOWN("lecture"))) {
         return false;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = HTML("lecture/index"),
         .title = "SICP Lecture Notes",
@@ -775,37 +759,26 @@ static bool gen_lecture_index(void) {
         .prev = NULL,
         .up = "../index.html",
         .next = "quote.html",
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
-    dprintf(proc.in, "# Lecture Notes\n\n");
+    fprintf(proc.in, "# Lecture Notes\n\n");
     while (scan_md(&state) && state.section == 0) {
-        write(proc.in, state.line.data, state.line.len);
+        copy_md(&state, proc.in);
     }
-    dprintf(proc.in,
-        "\n## Contents\n\n"
-        "<ul class=\"toc\">"
-        "<li class=\"toc__item\">"
-        "<span class=\"toc__label\"></span>"
-        "<a href=\"quote.html\">Highlights</a>"
-        "</li>");
-    char id_buf[16];
+    struct TocState toc = render_toc_start(proc.in);
+    struct MarkdownHeading h =
+        {.label = NULL_SPAN, .title = SPAN("Highlights")};
+    render_toc_item(&toc, 1, h, "quote.html");
     do {
         if (state.heading == 1) {
-            struct MarkdownHeading h = parse_md_heading(state.line);
-            struct Span href = tolower_s(h.label, id_buf, sizeof id_buf);
-            dprintf(proc.in,
-                "<li class=\"toc__item\">"
-                "<span class=\"toc__label\">%.*s</span>"
-                "<a href=\"%.*s.html\">%.*s</a>"
-                "</li>",
-                h.label.len, h.label.data, href.len, href.data,
-                h.title.len, h.title.data);
+            h = parse_md_heading(state.line);
+            char buf[SZ_LABEL];
+            struct Span href = tolower_s(h.label, buf, sizeof buf);
+            render_toc_item(&toc, 1, h, "%.*s.html", href.len, href.data);
         }
     } while (scan_md(&state));
-    dprintf(proc.in, "</ul>\n");
+    render_toc_end(&toc);
     return wait_pandoc(&proc);
 }
 
@@ -829,25 +802,18 @@ static bool gen_lecture_quote(void) {
     if (!fork_pandoc(&proc, opts)) {
         return false;
     }
-    dprintf(proc.in, "# Highlights\n\n");
+    fprintf(proc.in, "# Highlights\n\n");
     while (scan_md(&state) && state.section != 2);
-    char id_buf[16];
     while (scan_md(&state)) {
-        if (state.heading > 1) {
+        if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             assert(h.label.data);
-            struct Span id = tolower_s(h.label, id_buf, sizeof id_buf);
-            dprintf(proc.in,
-                "<h%d id=\"%.*s\" class=\"anchor\">"
-                "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>"
-                "<small class=\"number\">%.*s</small>"
-                "<a class=\"link\" href=\"%.*s.html\">%.*s</a>"
-                "</h%d>\n",
-                state.heading, id.len, id.data, id.len, id.data,
-                h.label.len, h.label.data, id.len, id.data,
-                h.title.len, h.title.data, state.heading);
+            char buf[SZ_LABEL];
+            struct Span id = tolower_s(h.label, buf, sizeof buf);
+            render_quote_heading(proc.in, 2, id, h,
+                "%.*s.html", id.len, id.data);
         } else {
-            write(proc.in, state.line.data, state.line.len);
+            copy_md(&state, proc.in);
         }
     }
     return wait_pandoc(&proc);
@@ -872,11 +838,11 @@ static bool gen_lecture_page(const char *output) {
     if (!init_md(&state, MARKDOWN("lecture"))) {
         return false;
     }
-    char title[] = "SICP Lecture ___ Notes";
+    char title[SZ_HEADING];
     snprintf(title, sizeof title, "SICP Lecture %d%c Notes",
         number, toupper(a_or_b));
     const char *prev;
-    char prev_buf[] = "___.html";
+    char prev_buf[SZ_HREF];
     if (number == 1 && a_or_b == 'a') {
         prev = "quote.html";
     } else {
@@ -886,7 +852,7 @@ static bool gen_lecture_page(const char *output) {
         prev = prev_buf;
     }
     const char *next;
-    char next_buf[] = "___.html";
+    char next_buf[SZ_HREF];
     if (number == 10 && a_or_b == 'b') {
         next = NULL;
     } else {
@@ -895,7 +861,8 @@ static bool gen_lecture_page(const char *output) {
             number + ab, 'b' - ab);
         next = next_buf;
     }
-    const struct PandocOpts opts = {
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts ){
         .input = "/dev/stdin",
         .output = output,
         .title = title,
@@ -904,9 +871,7 @@ static bool gen_lecture_page(const char *output) {
         .prev = prev,
         .up = "index.html",
         .next = next,
-    };
-    struct PandocProc proc;
-    if (!fork_pandoc(&proc, opts)) {
+    })) {
         return false;
     }
     const MarkdownSection target_section = 1 + (number - 1) * 2 + a_or_b - 'a';
@@ -914,22 +879,16 @@ static bool gen_lecture_page(const char *output) {
     assert(state.section == target_section);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    dprintf(proc.in, "<h1><small class=\"number\">%.*s</small>%.*s</h1>\n",
-        h.label.len, h.label.data, h.title.len, h.title.data);
-    char id[10];
+    render_heading(proc.in, 1, NULL_SPAN, h);
     while (scan_md(&state) && state.heading != 1) {
         if (state.heading > 1) {
             h = parse_md_heading(state.line);
             assert(!h.label.data);
+            char id[SZ_LABEL];
             write_dotted_section(id, sizeof id, state.section >> MS_BITS);
-            dprintf(proc.in,
-                "<h%d id=\"%s\" class=\"anchor\">"
-                "<a class=\"anchor__link link\" href=\"#%s\">#</a>"
-                "%.*s"
-                "</h%d>\n",
-                state.heading, id, id, h.title.len, h.title.data, state.heading);
+            render_heading(proc.in, state.heading, SPAN(id), h);
         } else {
-            write(proc.in, state.line.data, state.line.len);
+            copy_md(&state, proc.in);
         }
     }
     return wait_pandoc(&proc);

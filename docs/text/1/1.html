@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">1.1</small>The Elements of Programming
+<span class="number">1.1</span> The Elements of Programming
 </h1>
 <p>There are three mechanisms for combining simple ideas to form more complex ideas in every powerful programming language:</p>
 <ul>
@@ -75,8 +75,8 @@
 </ul>
 <p>Programming deals with <em>procedures</em> and <em>data</em> (which are almost the same thing in Lisp). Procedures manipulate data.</p>
 <h2 id="1.1.1" class="anchor">
-<a class="anchor__link link" href="#1.1.1">#</a><small class="number">1.1.1</small>Expressions
-</h3>
+<a class="anchor__link link" href="#1.1.1">#</a><span class="number">1.1.1</span> Expressions
+</h2>
 <ul>
 <li>The REPL reads an expression, evaluates it, prints the result, and repeats.</li>
 <li>A number is one kind of primitive expression.</li>
@@ -88,15 +88,15 @@
 <li>Combinations can be nested: an operator or operand can itself be another combination.</li>
 </ul>
 <h2 id="1.1.2" class="anchor">
-<a class="anchor__link link" href="#1.1.2">#</a><small class="number">1.1.2</small>Naming and the Environment
-</h3>
+<a class="anchor__link link" href="#1.1.2">#</a><span class="number">1.1.2</span> Naming and the Environment
+</h2>
 <ul>
-<li>Scheme names things with the <code>define</code>. This is the simplest means of abstraction.</li>
+<li>Scheme names things with the <code class="sourceCode scheme"><span class="kw">define</span></code>. This is the simplest means of abstraction.</li>
 <li>The name-value pairs are stored in an <em>environment</em>.</li>
 </ul>
 <h2 id="1.1.3" class="anchor">
-<a class="anchor__link link" href="#1.1.3">#</a><small class="number">1.1.3</small>Evaluating Combinations
-</h3>
+<a class="anchor__link link" href="#1.1.3">#</a><span class="number">1.1.3</span> Evaluating Combinations
+</h2>
 <ul>
 <li>To evaluate a combination, do the following:
 <ol type="1">
@@ -114,15 +114,15 @@
 <li>Names evaluate to the values associated with them in the environment.</li>
 </ol></li>
 <li>Rule 2 is a special case of rule 3 if we consider the arithmetic operators to be names in the environment.</li>
-<li>Evaluating <code class="sourceCode scheme">(<span class="kw">define</span> x <span class="cn">3</span>)</code> does not apply <code>define</code> to two arguments; this is not a combination.</li>
+<li>Evaluating <code class="sourceCode scheme">(<span class="kw">define</span> x <span class="cn">3</span>)</code> does not apply <code class="sourceCode scheme"><span class="kw">define</span></code> to two arguments; this is not a combination.</li>
 <li>Exceptions such as these are <em>special forms</em>. Each one has its own evaluation rule.</li>
 </ul>
 <blockquote>
 <p>Syntactic sugar causes cancer of the semicolon. (Alan Perlis)</p>
 </blockquote>
 <h2 id="1.1.4" class="anchor">
-<a class="anchor__link link" href="#1.1.4">#</a><small class="number">1.1.4</small>Compound Procedures
-</h3>
+<a class="anchor__link link" href="#1.1.4">#</a><span class="number">1.1.4</span> Compound Procedures
+</h2>
 <ul>
 <li>Procedure definitions are very powerful for abstraction.</li>
 <li>A squaring procedure: <code class="sourceCode scheme">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code>.</li>
@@ -131,8 +131,8 @@
 <li>If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.</li>
 </ul>
 <h2 id="1.1.5" class="anchor">
-<a class="anchor__link link" href="#1.1.5">#</a><small class="number">1.1.5</small>The Substitution Model for Procedure Application
-</h3>
+<a class="anchor__link link" href="#1.1.5">#</a><span class="number">1.1.5</span> The Substitution Model for Procedure Application
+</h2>
 <p>This is the substation model:</p>
 <blockquote>
 <p>To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.</p>
@@ -165,22 +165,22 @@
 <li>Normal: fully expand and then reduce.</li>
 </ul>
 <h2 id="1.1.6" class="anchor">
-<a class="anchor__link link" href="#1.1.6">#</a><small class="number">1.1.6</small>Conditional Expressions and Predicates
-</h3>
+<a class="anchor__link link" href="#1.1.6">#</a><span class="number">1.1.6</span> Conditional Expressions and Predicates
+</h2>
 <ul>
 <li>To make more useful procedures, we need to be able to make tests and perform different operations accordingly.</li>
-<li>We do <em>case analysis</em> in Scheme using <code>cond</code>.</li>
+<li>We do <em>case analysis</em> in Scheme using <code class="sourceCode scheme"><span class="kw">cond</span></code>.</li>
 <li>Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.</li>
 <li>A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.</li>
-<li>The symbol <code>else</code> can be used as the last clause—it will always evaluate to true.</li>
-<li>The <code>if</code> conditional can be used when there are two cases.</li>
-<li>Logical values can be combined with <code>and</code>, <code>or</code>, and <code>not</code>. The first two are special forms, not procedures.</li>
+<li>The symbol <code class="sourceCode scheme"><span class="kw">else</span></code> can be used as the last clause—it will always evaluate to true.</li>
+<li>The <code class="sourceCode scheme"><span class="kw">if</span></code> conditional can be used when there are two cases.</li>
+<li>Logical values can be combined with <code class="sourceCode scheme"><span class="kw">and</span></code>, <code class="sourceCode scheme"><span class="kw">or</span></code>, and <code class="sourceCode scheme"><span class="fu">not</span></code>. The first two are special forms, not procedures.</li>
 </ul>
 <h2 id="1.1.7" class="anchor">
-<a class="anchor__link link" href="#1.1.7">#</a><small class="number">1.1.7</small>Example: Square Roots by Newton’s Method
-</h3>
+<a class="anchor__link link" href="#1.1.7">#</a><span class="number">1.1.7</span> Example: Square Roots by Newton’s Method
+</h2>
 <blockquote>
-<p>But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. (28) FOO</p>
+<p>But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. (28)</p>
 </blockquote>
 <ul>
 <li>In mathematics, you can say “the square root of <span class="math inline">x</span> is the nonnegative <span class="math inline">y</span> such that <span class="math inline">y^2 = x</span>.” This is not a procedure.</li>
@@ -188,15 +188,15 @@
 <li>Declarative is <em>what is</em>, imperative is <em>how to</em>.</li>
 </ul>
 <h2 id="1.1.8" class="anchor">
-<a class="anchor__link link" href="#1.1.8">#</a><small class="number">1.1.8</small>Procedures as Black-Box Abstractions
-</h3>
+<a class="anchor__link link" href="#1.1.8">#</a><span class="number">1.1.8</span> Procedures as Black-Box Abstractions
+</h2>
 <ul>
 <li>Each procedure in a program should accomplish and identifiable task that can be used as a module in defining other procedures.</li>
 <li>When we use a procedure as a “black box,” we are concerned with <em>what</em> it is doing but not <em>how</em> it is doing it.</li>
 <li>This is called procedural abstraction. Its purpose is to suppress detail.</li>
 </ul>
 <blockquote>
-<p>A user should not need to know how the procedure is implemented in order to use it. (35) FOO</p>
+<p>A user should not need to know how the procedure is implemented in order to use it. (35)</p>
 </blockquote>
 <h3 id="1.1.8.1" class="anchor">
 <a class="anchor__link link" href="#1.1.8.1">#</a>Local names

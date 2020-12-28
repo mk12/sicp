@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">3.3</small>Modeling with Mutable Data
+<span class="number">3.3</span> Modeling with Mutable Data
 </h1>
 <ul>
 <li>We previously looked at compound data and data abstraction.</li>
@@ -73,13 +73,13 @@
 <li>A mutator is a procedure that modifies the data object.</li>
 </ul>
 <h2 id="3.3.1" class="anchor">
-<a class="anchor__link link" href="#3.3.1">#</a><small class="number">3.3.1</small>Mutable List Structure
-</h3>
+<a class="anchor__link link" href="#3.3.1">#</a><span class="number">3.3.1</span> Mutable List Structure
+</h2>
 <ul>
-<li>The primitive mutators for pairs are <code>set-car!</code> and <code>set-cdr!</code>.</li>
-<li><code class="sourceCode scheme">(set-car p x)</code> changes the <code>car</code> of the pair <code>p</code>, making it point to <code>x</code> instead.</li>
-<li>The old <code>car</code> is unreachable garbage. We will see later how Lisp recycles this memory.</li>
-<li>We could implement <code>cons</code> in terms of these two procedures in addition to a <code>get-new-part</code> procedure.</li>
+<li>The primitive mutators for pairs are <code class="sourceCode scheme"><span class="fu">set-car!</span></code> and <code class="sourceCode scheme"><span class="fu">set-cdr!</span></code>.</li>
+<li><code class="sourceCode scheme">(set-car p x)</code> changes the <code class="sourceCode scheme"><span class="fu">car</span></code> of the pair <code class="sourceCode scheme">p</code>, making it point to <code class="sourceCode scheme">x</code> instead.</li>
+<li>The old <code class="sourceCode scheme"><span class="fu">car</span></code> is unreachable garbage. We will see later how Lisp recycles this memory.</li>
+<li>We could implement <code class="sourceCode scheme"><span class="fu">cons</span></code> in terms of these two procedures in addition to a <code class="sourceCode scheme">get-new-part</code> procedure.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cons</span> x y)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((new (get-new-pair)))</span>
@@ -91,15 +91,15 @@
 </h3>
 <ul>
 <li>Consider <code class="sourceCode scheme">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code> and <code class="sourceCode scheme">(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
-<li><code>z1</code> is a pair whose <code>car</code> and <code>cdr</code> both point to the same <code>x</code>.</li>
+<li><code class="sourceCode scheme">z1</code> is a pair whose <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code> both point to the same <code class="sourceCode scheme">x</code>.</li>
 <li>In contrast: <code class="sourceCode scheme">(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code>.</li>
-<li>In <code>z2</code>, the two <code class="sourceCode scheme">(a b)</code> lists are distinct, although the actual symbols are shared.</li>
-<li>Before assignment, we would think <code>z1</code> and <code>z2</code> were “the same.”</li>
+<li>In <code class="sourceCode scheme">z2</code>, the two <code class="sourceCode scheme">(a b)</code> lists are distinct, although the actual symbols are shared.</li>
+<li>Before assignment, we would think <code class="sourceCode scheme">z1</code> and <code class="sourceCode scheme">z2</code> were “the same.”</li>
 <li>The sharing is undetectable without mutators on list structure.</li>
 <li>It <em>is</em> detectable in our environmental model.</li>
-<li>If we <code>set-car!</code> on the <code>car</code>, this will change both <code>a</code> symbols in <code>z1</code> but only the first in <code>z2</code>.</li>
-<li>We can use the predicate <code>eq?</code> to test for sameness in the sense of identity.</li>
-<li><code class="sourceCode scheme">(<span class="fu">eq?</span> x y)</code> tests whether <code>x</code> and <code>y</code> point to the same object.</li>
+<li>If we <code class="sourceCode scheme"><span class="fu">set-car!</span></code> on the <code class="sourceCode scheme"><span class="fu">car</span></code>, this will change both <code class="sourceCode scheme">a</code> symbols in <code class="sourceCode scheme">z1</code> but only the first in <code class="sourceCode scheme">z2</code>.</li>
+<li>We can use the predicate <code class="sourceCode scheme"><span class="fu">eq?</span></code> to test for sameness in the sense of identity.</li>
+<li><code class="sourceCode scheme">(<span class="fu">eq?</span> x y)</code> tests whether <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">y</code> point to the same object.</li>
 <li>We can exploit sharing for good, but it can be dangerous.</li>
 </ul>
 <h3 id="3.3.1.2" class="anchor">
@@ -126,21 +126,21 @@
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>          ((<span class="fu">eq?</span> m <span class="cn">&#39;cdr</span>) y)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          ((<span class="fu">eq?</span> m <span class="cn">&#39;set-car!</span>) set-x!)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>          ((<span class="fu">eq?</span> m <span class="cn">&#39;set-cdr!</span>) set-y!)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="fu">error</span> <span class="st">&quot;Undefined operation: CONS&quot;</span> m))))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Undefined operation: CONS&quot;</span> m))))</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
 <ul>
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
 </ul>
 <h2 id="3.3.2" class="anchor">
-<a class="anchor__link link" href="#3.3.2">#</a><small class="number">3.3.2</small>Representing Queues
-</h3>
+<a class="anchor__link link" href="#3.3.2">#</a><span class="number">3.3.2</span> Representing Queues
+</h2>
 <ul>
 <li>The mutators allow us to construct new data structures.</li>
 <li>A <em>queue</em> is a sequence in which items are inserted at one end (the rear) and deleted from the other end (the front).</li>
 <li>It is also called a FIFO buffer (first in, first out).</li>
 <li>We define the following operations for data abstraction:
 <ul>
-<li>a constructor <code>(make-queue)</code>,</li>
+<li>a constructor <code class="sourceCode scheme">(make-queue)</code>,</li>
 <li>a predicate <code class="sourceCode scheme">(empty-queue? q)</code>,</li>
 <li>a selector <code class="sourceCode scheme">(front-queue q)</code>,</li>
 <li>two mutators: <code class="sourceCode scheme">(insert-queue! q x)</code> and <code class="sourceCode scheme">(delete-queue! q)</code>.</li>
@@ -151,22 +151,22 @@
 <li>A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.</li>
 </ul>
 <h2 id="3.3.3" class="anchor">
-<a class="anchor__link link" href="#3.3.3">#</a><small class="number">3.3.3</small>Representing Tables
-</h3>
+<a class="anchor__link link" href="#3.3.3">#</a><span class="number">3.3.3</span> Representing Tables
+</h2>
 <ul>
 <li>In a one-dimensional table, each value is indexed by one key.</li>
 <li>We can implement it as a simple list of <em>records</em>.</li>
 <li>A record is a pair consisting of a key and an associated value.</li>
-<li>The first record in the table is a dummy, and it hold the arbitrarily chosen symbol <code>*table*</code>.
+<li>The first record in the table is a dummy, and it hold the arbitrarily chosen symbol <code class="sourceCode scheme">*table*</code>.
 <ul>
 <li>If a table was just a pointer to the first actual record, then when we wouldn’t be able to write a mutator to add a record to the front.</li>
-<li>We would need to change the table to point to the new front, but <code>set!</code> on a formal parameter doesn’t work as desired.</li>
+<li>We would need to change the table to point to the new front, but <code class="sourceCode scheme"><span class="kw">set!</span></code> on a formal parameter doesn’t work as desired.</li>
 <li>It would only change the parameter in <span class="math inline">E_1</span>, not the value in the calling environment.</li>
-<li>We didn’t need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the <code>car</code> and <code>cdr</code>—but we couldn’t change the set <em>itself</em>, since it was effectively a pointer to the pair, <em>copied</em> on application.</li>
-<li>We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide <code>box</code>, <code>unbox</code>, and <code>set-box!</code> for this purpose. In C, these are <code>&amp;x</code>, <code>*x</code>, and <code class="sourceCode scheme">*x <span class="fu">=</span> ...</code>.</li>
+<li>We didn’t need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code>—but we couldn’t change the set <em>itself</em>, since it was effectively a pointer to the pair, <em>copied</em> on application.</li>
+<li>We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide <code class="sourceCode scheme">box</code>, <code class="sourceCode scheme">unbox</code>, and <code class="sourceCode scheme">set-box!</code> for this purpose. In C, these are <code class="sourceCode c">&amp;x</code>, <code class="sourceCode c">*x</code>, and <code class="sourceCode c">*x = ...</code>.</li>
 </ul></li>
-<li>The <code>lookup</code> procedure returns the value associated with a key in a table, or <code>false</code> if it cannot be found.</li>
-<li>It uses <code>assoc</code>, which returns the whole record rather than just the associated value.</li>
+<li>The <code class="sourceCode scheme">lookup</code> procedure returns the value associated with a key in a table, or <code class="sourceCode scheme"><span class="cn">false</span></code> if it cannot be found.</li>
+<li>It uses <code class="sourceCode scheme"><span class="fu">assoc</span></code>, which returns the whole record rather than just the associated value.</li>
 </ul>
 <h3 id="3.3.3.1" class="anchor">
 <a class="anchor__link link" href="#3.3.3.1">#</a>Two-dimensional tables
@@ -176,15 +176,15 @@
 <li>In some cases, we could just use a one dimensional table whose keys are pairs of keys.</li>
 <li>We can implement a two-dimensional table as a one-dimensional table whose values are themselves one-dimensional tables.</li>
 <li>We could just use them like that without any specific procedures. However, insertion with two keys is complex enough to merit a convenient two-dimensional procedure.</li>
-<li>We don’t need to box the subtables. They key of the record serves the purpose of <code>'*table*</code>.</li>
+<li>We don’t need to box the subtables. They key of the record serves the purpose of <code class="sourceCode scheme"><span class="cn">&#39;*table*</span></code>.</li>
 </ul>
 <h3 id="3.3.3.2" class="anchor">
 <a class="anchor__link link" href="#3.3.3.2">#</a>Creating local tables
 </h3>
 <ul>
-<li>With our <code>lookup</code> and <code>insert!</code> procedures taking the table as an argument, we can manage multiple tables.</li>
+<li>With our <code class="sourceCode scheme">lookup</code> and <code class="sourceCode scheme">insert!</code> procedures taking the table as an argument, we can manage multiple tables.</li>
 <li>Another approach is to have separate procedures for each table.</li>
-<li>We could use the message-passing style with the <code>dispatch</code> procedure that we’ve seen a few times already.</li>
+<li>We could use the message-passing style with the <code class="sourceCode scheme">dispatch</code> procedure that we’ve seen a few times already.</li>
 <li>We could also take the λ-calculus approach:</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (make-table) (<span class="kw">lambda</span> (k) <span class="cn">false</span>))</span>
@@ -195,8 +195,8 @@
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        value</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        (table k))))</span></code></pre></div>
 <h2 id="3.3.4" class="anchor">
-<a class="anchor__link link" href="#3.3.4">#</a><small class="number">3.3.4</small>A Simulator for Digital Circuits
-</h3>
+<a class="anchor__link link" href="#3.3.4">#</a><span class="number">3.3.4</span> A Simulator for Digital Circuits
+</h2>
 <ul>
 <li>Digital circuits are made up of simple elements.</li>
 <li>Networks of these simple elements can have very complex behaviour.</li>
@@ -210,8 +210,8 @@
 <li>We construct complex functions by connecting primitives.</li>
 <li>Multiple outputs are not necessarily generated at the same time.</li>
 </ul></li>
-<li>We construct wires with <code>(make-wire)</code>.</li>
-<li>Evaluating <code class="sourceCode scheme">(<span class="kw">define</span> a (make-wire))</code> and <code class="sourceCode scheme">(<span class="kw">define</span> b (make-wire))</code> followed by <code class="sourceCode scheme">(inverter a b)</code> connects <code>a</code> and <code>b</code> with an inverter.</li>
+<li>We construct wires with <code class="sourceCode scheme">(make-wire)</code>.</li>
+<li>Evaluating <code class="sourceCode scheme">(<span class="kw">define</span> a (make-wire))</code> and <code class="sourceCode scheme">(<span class="kw">define</span> b (make-wire))</code> followed by <code class="sourceCode scheme">(inverter a b)</code> connects <code class="sourceCode scheme">a</code> and <code class="sourceCode scheme">b</code> with an inverter.</li>
 <li>The primitive functions are our primitive elements; wiring is the means of combination; specifying wiring patterns as procedures is the means of abstraction.</li>
 </ul>
 <h3 id="3.3.4.1" class="anchor">
@@ -225,13 +225,13 @@
 <li><code class="sourceCode scheme">(set-signal! <span class="sc">«</span><span class="ss">wire</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">value</span><span class="sc">»</span>)</code> changes the value of the signal.</li>
 <li><code class="sourceCode scheme">(add-action! <span class="sc">«</span><span class="ss">wire</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">procedure-of-no-arguments</span><span class="sc">»</span>)</code> asserts that the given procedure should be run whenever the signal on the wire changes value.</li>
 </ul></li>
-<li>The procedure <code>after-delay</code> executes a procedure after a given time delay.</li>
+<li>The procedure <code class="sourceCode scheme">after-delay</code> executes a procedure after a given time delay.</li>
 </ul>
 <h3 id="3.3.4.2" class="anchor">
 <a class="anchor__link link" href="#3.3.4.2">#</a>Representing wires
 </h3>
 <ul>
-<li>Our wires will be computational objects each having two local state variables: <code>signal-value</code> and <code>action-procedures</code>.</li>
+<li>Our wires will be computational objects each having two local state variables: <code class="sourceCode scheme">signal-value</code> and <code class="sourceCode scheme">action-procedures</code>.</li>
 <li>We use the message-passing style as before.</li>
 <li>Wires have time-varying signals and can be incrementally attached to devices. They are a good example of when you need to use a mutable object in the computational model.</li>
 <li>A wire is shared between the devices connected to it. If one changes it, the rest see the change.</li>
@@ -241,12 +241,12 @@
 <a class="anchor__link link" href="#3.3.4.3">#</a>The agenda
 </h3>
 <ul>
-<li>The only thing left is <code>after-delay</code>.</li>
+<li>The only thing left is <code class="sourceCode scheme">after-delay</code>.</li>
 <li>An <em>agenda</em> is a data structure that schedules things to do.</li>
 <li>For an agenda <code class="sourceCode scheme">(<span class="kw">define</span> a (make-agenda))</code>, the operations <code class="sourceCode scheme">(empty-agenda? a)</code>, <code class="sourceCode scheme">(first-agenda-item a)</code>, <code class="sourceCode scheme">(remove-first-agenda-item! a)</code>, and <code class="sourceCode scheme">(current-time a)</code> are self-explanatory.</li>
 <li>We schedule new items with <code class="sourceCode scheme">(add-to-agenda <span class="sc">«</span><span class="ss">time</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">action</span><span class="sc">»</span> a)</code>.</li>
-<li>We call the global agenda <code>the-agenda</code>.</li>
-<li>The simulation is driven by <code>propagate</code>, which executes each item on the agenda in sequence.</li>
+<li>We call the global agenda <code class="sourceCode scheme">the-agenda</code>.</li>
+<li>The simulation is driven by <code class="sourceCode scheme">propagate</code>, which executes each item on the agenda in sequence.</li>
 </ul>
 <h3 id="3.3.4.4" class="anchor">
 <a class="anchor__link link" href="#3.3.4.4">#</a>Implementing the agenda
@@ -256,11 +256,11 @@
 <li>A time segment is a pair: a number (the time) and a queue of procedures that are scheduled to run during that time segment.</li>
 <li>To add an action to the agenda, we scan its segments, examining their times. If we find the right time, we add the action to that segment’s queue. Otherwise, we create a new segment.</li>
 <li>To remove the first agenda item, we delete the first item in the first queue, and if this makes the queue empty, we delete the first time segment as well.</li>
-<li>Whenever we extract the first item with <code>first-agenda-item</code>, we also update the current time.</li>
+<li>Whenever we extract the first item with <code class="sourceCode scheme">first-agenda-item</code>, we also update the current time.</li>
 </ul>
 <h2 id="3.3.5" class="anchor">
-<a class="anchor__link link" href="#3.3.5">#</a><small class="number">3.3.5</small>Propagation of Constraints
-</h3>
+<a class="anchor__link link" href="#3.3.5">#</a><span class="number">3.3.5</span> Propagation of Constraints
+</h2>
 <ul>
 <li>We often organize computer programs in one direction: from input to output.</li>
 <li>On the other hand, we often model systems in terms of relations among quantities.</li>
@@ -270,7 +270,7 @@
 <ul>
 <li><code class="sourceCode scheme">(adder a b c)</code> specifies <span class="math inline">a + b = c</span>.</li>
 <li><code class="sourceCode scheme">(multiplier x y z)</code> specifies <span class="math inline">xy = z</span>.</li>
-<li><code class="sourceCode scheme">(constant <span class="cn">3.14</span> x)</code> says that the value of <code>x</code> must be 3.14.</li>
+<li><code class="sourceCode scheme">(constant <span class="cn">3.14</span> x)</code> says that the value of <code class="sourceCode scheme">x</code> must be 3.14.</li>
 </ul></li>
 <li>The means of combination are constructing <em>constraint networks</em> in which constraints are joined by <em>connectors</em>.</li>
 <li>The means of abstraction are procedures.</li>
@@ -279,8 +279,8 @@
 <a class="anchor__link link" href="#3.3.5.1">#</a>Using the constraint system
 </h3>
 <ul>
-<li>We create connectors with <code>(make-connector)</code>, just like wires.</li>
-<li>We use <code class="sourceCode scheme">(probe <span class="st">&quot;name&quot;</span> <span class="sc">«</span><span class="ss">connector</span><span class="sc">»</span>)</code>, again just like wires.</li>
+<li>We create connectors with <code class="sourceCode scheme">(make-connector)</code>, just like wires.</li>
+<li>We use <code class="sourceCode scheme">(probe <span class="cn">&quot;name&quot;</span> <span class="sc">«</span><span class="ss">connector</span><span class="sc">»</span>)</code>, again just like wires.</li>
 <li><code class="sourceCode scheme">(set-value! <span class="sc">«</span><span class="ss">connector</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">value</span><span class="sc">»</span> <span class="cn">&#39;user</span>)</code> assigns a value to the connector, and this information propagates through the network.</li>
 <li>This will give an error if the new value causes a contradiction.</li>
 <li><code class="sourceCode scheme">(forget-value! <span class="sc">«</span><span class="ss">connector</span><span class="sc">»</span> <span class="cn">&#39;user</span>)</code> undoes the assignment.</li>
@@ -290,8 +290,8 @@
 </h3>
 <ul>
 <li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
-<li>There are five basic operations on a connector <code>c</code>: <code class="sourceCode scheme">(has-value? c)</code>, <code class="sourceCode scheme">(get-value c)</code>, <code class="sourceCode scheme">(set-value! c <span class="sc">«</span><span class="ss">value</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">informant</span><span class="sc">»</span>)</code>, <code class="sourceCode scheme">(forget-value! c <span class="sc">«</span><span class="ss">retractor</span><span class="sc">»</span>)</code>, and <code class="sourceCode scheme">(connect c <span class="sc">«</span><span class="ss">constraint</span><span class="sc">»</span>)</code>.</li>
-<li>The procedures <code>inform-about-value</code> and <code>inform-about-no-value</code> tells the constraint that a connector has (lost) a value.</li>
+<li>There are five basic operations on a connector <code class="sourceCode scheme">c</code>: <code class="sourceCode scheme">(has-value? c)</code>, <code class="sourceCode scheme">(get-value c)</code>, <code class="sourceCode scheme">(set-value! c <span class="sc">«</span><span class="ss">value</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">informant</span><span class="sc">»</span>)</code>, <code class="sourceCode scheme">(forget-value! c <span class="sc">«</span><span class="ss">retractor</span><span class="sc">»</span>)</code>, and <code class="sourceCode scheme">(connect c <span class="sc">«</span><span class="ss">constraint</span><span class="sc">»</span>)</code>.</li>
+<li>The procedures <code class="sourceCode scheme">inform-about-value</code> and <code class="sourceCode scheme">inform-about-no-value</code> tells the constraint that a connector has (lost) a value.</li>
 <li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
 </ul>
 <h3 id="3.3.5.3" class="anchor">
@@ -299,8 +299,8 @@
 </h3>
 <ul>
 <li>A connector is a procedural object with local state variables—again, just like a wire.</li>
-<li>Each time the connector’s value is set, it remembers the informant. This could be a constraint, or a symbol like <code>'user</code>.</li>
-<li><code>for-each-except</code> is used to notify all <em>other</em> constraints.</li>
+<li>Each time the connector’s value is set, it remembers the informant. This could be a constraint, or a symbol like <code class="sourceCode scheme"><span class="cn">&#39;user</span></code>.</li>
+<li><code class="sourceCode scheme">for-each-except</code> is used to notify all <em>other</em> constraints.</li>
 </ul>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">

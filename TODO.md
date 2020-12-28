@@ -1,6 +1,5 @@
 # New to do
 
-- DRY up docgen.c templates
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - spell checker for Markdown, integrated in Makefile
@@ -8,6 +7,11 @@
 - extract favorite quotes from blockquotes annotated with {.favorite} or something
 - attribute lecture quotes to Hal/Gerald
 - do citations for inline quotes and block quotes, linking to SICP website
++ consistent char[] sizes
++ DRY up docgen.c templates
++ change small to span and add space for Safari Reader
++ userspace buffering to avoid so many write(2) calls
++ revamp colors AGAIN, and fix underlines for meta, and revisit 1-word highlight
 + fix contrast in code highlighting (revamp colors)
 + fix `<formal parameters>` etc.
 + use config.yml for pandoc and short options for better Make output

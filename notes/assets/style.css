@@ -28,7 +28,7 @@ html, body, blockquote, p, ul, ol, li {
         --subdued: #888;
         --fg: #ccc;
         --intense: #eee;
-        --link: #98c1d9;
+        --link: #61afef;
     }
 }
 
@@ -334,22 +334,20 @@ svg {
 /* Code highlighting */
 
 .kw { color: #a626a4; }
-.fu { color: #4078f2; }
-.cn { color: #C0392B; }
-.st { color: #50a14f; }
-.co { color: #8d8e92; font-style: italic; }
+.fu { color: #0060d5; }
+.cn { color: #307a06; }
+.co { color: #c0392b; }
 
 @media (prefers-color-scheme: dark) {
     .kw { color: #c678dd; }
     .fu { color: #61afef; }
-    .cn { color: #e06c75; }
-    .st { color: #98c379; }
-    .co { color: #7f848e; }
+    .cn { color: #98c379; }
+    .co { color: #e7727b; }
 }
 
 .sc { display: none; }
 .ss {
     font-style: italic;
     text-decoration: underline;
-    text-decoration-color: #8d8e92;
+    text-underline-offset: 2px;
 }

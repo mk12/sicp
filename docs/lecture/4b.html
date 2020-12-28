@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">4B</small>Generic Operators
+<span class="number">4B</span> Generic Operators
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1">#</a>Part 1
@@ -106,9 +106,9 @@
 <li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
 <li>What if we want <em>both</em> representations? Data abstraction allows us to postpone the representation decision, but we don’t want to make a decision at all!</li>
 <li>We need a vertical barrier between rectangular and polar forms.</li>
-<li>The selectors for complex numbers—<code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>—must be generic operators.</li>
+<li>The selectors for complex numbers—<code class="sourceCode scheme">real-part</code>, <code class="sourceCode scheme">imag-part</code>, <code class="sourceCode scheme"><span class="fu">magnitude</span></code>, and <code class="sourceCode scheme"><span class="fu">angle</span></code>—must be generic operators.</li>
 <li>For this to work, we need <em>typed data</em>. We need to tag our data objects with labels telling us the type of their contents.</li>
-<li>We can simply <code>cons</code> the symbol <code>'rectangular</code> or <code>'polar</code> to the complex number data.</li>
+<li>We can simply <code class="sourceCode scheme"><span class="fu">cons</span></code> the symbol <code class="sourceCode scheme"><span class="cn">&#39;rectangular</span></code> or <code class="sourceCode scheme"><span class="cn">&#39;polar</span></code> to the complex number data.</li>
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
 </ul>
 <h2 id="2" class="anchor">
@@ -135,15 +135,15 @@
 <li>Our system has a table with types on the horizontal axis and operators on the vertical axis.</li>
 <li>Instead of writing these generic procedures manually, we should just use a table directly.</li>
 <li>We introduce two new procedures: <code class="sourceCode scheme">(put key1 key2 value)</code> and <code class="sourceCode scheme">(get key1 key2)</code>. This is a map, or associative list.</li>
-<li>Now we just need to use <code>put</code> to insert our specific procedures into the table, and the rest will be automated.</li>
+<li>Now we just need to use <code class="sourceCode scheme">put</code> to insert our specific procedures into the table, and the rest will be automated.</li>
 <li>We wouldn’t even have to name our procedures—we could just pass a lambda expression as the last argument.</li>
 <li>It is the procedures that go in the table, not their names.</li>
-<li>The key procedure in this whole system is <code>operate</code>:</li>
+<li>The key procedure in this whole system is <code class="sourceCode scheme">operate</code>:</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (operate op obj)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((proc (get (type obj) op)))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">null?</span> proc)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">error</span> <span class="st">&quot;undefined OP&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">error</span> <span class="cn">&quot;undefined OP&quot;</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        (proc (contents obj)))))</span></code></pre></div>
 <ul>
 <li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
@@ -168,11 +168,11 @@
 <ul>
 <li>We just looked at data-directed programming for complex numbers.</li>
 <li>The power of the methodology only becomes apparent when you embed this in a more complex system.</li>
-<li>Let’s consider a generic arithmetic system with operations <code>add</code>, <code>sub</code>, <code>mil</code>, and <code>div</code>.</li>
+<li>Let’s consider a generic arithmetic system with operations <code class="sourceCode scheme">add</code>, <code class="sourceCode scheme">sub</code>, <code class="sourceCode scheme">mil</code>, and <code class="sourceCode scheme"><span class="fu">div</span></code>.</li>
 <li>This should sit on top of ordinary Lisp numbers, rationals, and complex numbers.</li>
-<li>We already made a rational number package; we just need to change the constructor <code>make-rat</code> so that it attaches the tag <code>'rational</code> to the data.</li>
-<li>We can’t use <code>operate</code> anymore because that was designed for a single argument. <code>apply-generic</code> from SICP is better.</li>
-<li>Now, our complex numbers will have two labels on them: <code>'complex</code> <em>and</em> either <code>'rectangular</code> or <code>'polar</code>.</li>
+<li>We already made a rational number package; we just need to change the constructor <code class="sourceCode scheme">make-rat</code> so that it attaches the tag <code class="sourceCode scheme"><span class="cn">&#39;rational</span></code> to the data.</li>
+<li>We can’t use <code class="sourceCode scheme">operate</code> anymore because that was designed for a single argument. <code class="sourceCode scheme">apply-generic</code> from SICP is better.</li>
+<li>Now, our complex numbers will have two labels on them: <code class="sourceCode scheme"><span class="cn">&#39;complex</span></code> <em>and</em> either <code class="sourceCode scheme"><span class="cn">&#39;rectangular</span></code> or <code class="sourceCode scheme"><span class="cn">&#39;polar</span></code>.</li>
 <li>At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.</li>
 </ul>
 <h3 id="3.2" class="anchor">
@@ -182,9 +182,9 @@
 <li>We could also add polynomials to the generic arithmetic system.</li>
 <li>Our polynomials will have a variable (symbol) and a term list (list of ordered pairs).</li>
 <li>We can add polynomials in the same variable by adding their term lists (collecting like terms).</li>
-<li>By using <code>add</code> when we add term lists, we can use <em>any</em> kind of numbers as a coefficients, for free!</li>
+<li>By using <code class="sourceCode scheme">add</code> when we add term lists, we can use <em>any</em> kind of numbers as a coefficients, for free!</li>
 <li>This includes polynomials whose coefficients are polynomials.</li>
-<li>All because we wrote <code>add</code> instead of <code>+</code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
+<li>All because we wrote <code class="sourceCode scheme">add</code> instead of <code class="sourceCode scheme"><span class="fu">+</span></code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
 <li>If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.</li>
 </ul>
 <h3 id="3.3" class="anchor">

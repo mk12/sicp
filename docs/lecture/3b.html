@@ -49,7 +49,7 @@
 <main>
 
 <h1>
-<small class="number">3B</small>Symbolic Differentiation; Quotation
+<span class="number">3B</span> Symbolic Differentiation; Quotation
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1">#</a>Part 1
@@ -83,7 +83,7 @@
 <li>The differentiation procedure that takes an <em>expression</em> as an argument is different from the one that takes a function.</li>
 <li>You can’t open up a function. You can only get answers from it.</li>
 <li>An expression is an object representing the algebraic expression that defines a function.</li>
-<li>We can write the procedure <code>deriv</code> using a lot of wishful thinking.</li>
+<li>We can write the procedure <code class="sourceCode scheme">deriv</code> using a lot of wishful thinking.</li>
 </ul>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4">#</a>Expression representation
@@ -91,7 +91,7 @@
 <ul>
 <li>To represent sums, products, quotients, etc., why not use the same language we’re writing the program in?</li>
 <li>We can just use list structure.</li>
-<li>There are more built-in predicates we haven’t seen yet: <code>atom?</code> and <code>eq?</code>.</li>
+<li>There are more built-in predicates we haven’t seen yet: <code class="sourceCode scheme">atom?</code> and <code class="sourceCode scheme"><span class="fu">eq?</span></code>.</li>
 </ul>
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5">#</a>Quotation
@@ -100,7 +100,7 @@
 <li>We are also introducing <em>quotation</em>. The words of English are ambiguous: <em>say your name</em> is different from <em>say “your name”</em>.</li>
 <li>The notation in Lisp is to precede the expression with a single quotation mark.</li>
 <li>Quotation makes a language more complex because we can no longer substitute equals for equals (see Bertrand Russell’s “On Denoting”).</li>
-<li>The names <code>car</code> and <code>cdr</code> have survived (originally the address register and the decrement register) because we can do things like <code>cadddr</code> and <code>cadar</code>.</li>
+<li>The names <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code> have survived (originally the address register and the decrement register) because we can do things like <code class="sourceCode scheme"><span class="fu">cadddr</span></code> and <code class="sourceCode scheme"><span class="fu">cadar</span></code>.</li>
 </ul>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2">#</a>Part 2
@@ -109,7 +109,7 @@
 <a class="anchor__link link" href="#2.1">#</a>Simplifying expressions
 </h3>
 <ul>
-<li>The expressions we get from the <code>deriv</code> procedure are ugly.</li>
+<li>The expressions we get from the <code class="sourceCode scheme">deriv</code> procedure are ugly.</li>
 <li>Nothing is simplified, and it is hard to read.</li>
 </ul>
 <blockquote>

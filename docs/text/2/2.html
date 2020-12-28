@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">2.2</small>Hierarchical Data and the Closure Property
+<span class="number">2.2</span> Hierarchical Data and the Closure Property
 </h1>
 <ul>
 <li>Pairs form a primitive “glue” for compound data objects.</li>
@@ -76,38 +76,38 @@
 <li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
 </ul>
 <h2 id="2.2.1" class="anchor">
-<a class="anchor__link link" href="#2.2.1">#</a><small class="number">2.2.1</small>Representing Sequences
-</h3>
+<a class="anchor__link link" href="#2.2.1">#</a><span class="number">2.2.1</span> Representing Sequences
+</h2>
 <ul>
 <li>Among the things we can build with pairs is a sequence.</li>
 <li>A sequence is an ordered collection of data objects.</li>
-<li>The <code>car</code> of each pair is the corresponding item in the chain, and the <code>cdr</code> of the pair is the next pair in the chain.</li>
-<li>The <code>cdr</code> of the final pair is a special value, nil.</li>
+<li>The <code class="sourceCode scheme"><span class="fu">car</span></code> of each pair is the corresponding item in the chain, and the <code class="sourceCode scheme"><span class="fu">cdr</span></code> of the pair is the next pair in the chain.</li>
+<li>The <code class="sourceCode scheme"><span class="fu">cdr</span></code> of the final pair is a special value, nil.</li>
 <li>This sequence of nested conses is called a <em>list</em>.</li>
 <li>We usually represent such lists by placing each element one after the other and enclosing the whole thing in parentheses.</li>
-<li>The procedure <code>car</code> gives us the first item; <code>cdr</code> gives us the sublist containing all items but the first; <code>cons</code> returns a list with an item added to the front.</li>
+<li>The procedure <code class="sourceCode scheme"><span class="fu">car</span></code> gives us the first item; <code class="sourceCode scheme"><span class="fu">cdr</span></code> gives us the sublist containing all items but the first; <code class="sourceCode scheme"><span class="fu">cons</span></code> returns a list with an item added to the front.</li>
 <li>The nil value can be thought of as an empty list.</li>
 </ul>
 <h3 id="2.2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1.1">#</a>List operations
 </h3>
 <ul>
-<li>We can get at the nth item of the list by <code>cdr</code> ing one less than <span class="math inline">n</span> times, and then taking the <code>car</code>.</li>
-<li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is the empty list.</li>
+<li>We can get at the nth item of the list by <code class="sourceCode scheme"><span class="fu">cdr</span></code> ing one less than <span class="math inline">n</span> times, and then taking the <code class="sourceCode scheme"><span class="fu">car</span></code>.</li>
+<li>Scheme includes a primitive predicate <code class="sourceCode scheme"><span class="fu">null?</span></code> which is true if its argument is the empty list.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">car</span> items)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">list-ref</span> (<span class="fu">cdr</span> items) (<span class="fu">-</span> n <span class="cn">1</span>))))</span></code></pre></div>
 <ul>
-<li>We often write recursive procedures that <code>cdr</code> all the way through the list.</li>
+<li>We often write recursive procedures that <code class="sourceCode scheme"><span class="fu">cdr</span></code> all the way through the list.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">length</span> items)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">null?</span> items)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="cn">0</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">length</span> (<span class="fu">cdr</span> items)))))</span></code></pre></div>
 <ul>
-<li>We can build up lists to return by <code>cons</code> ing them up.</li>
+<li>We can build up lists to return by <code class="sourceCode scheme"><span class="fu">cons</span></code> ing them up.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">null?</span> list1)</span>
@@ -118,7 +118,7 @@
 </h3>
 <ul>
 <li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
-<li>This is a higher-order procedure called <code>map</code>.</li>
+<li>This is a higher-order procedure called <code class="sourceCode scheme"><span class="fu">map</span></code>.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">map</span> f xs)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">null?</span> xs)</span>
@@ -131,15 +131,15 @@
 <li>We think about the process differently when we use map.</li>
 </ul>
 <blockquote>
-<p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144) FOO</p>
+<p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
 </blockquote>
 <h2 id="2.2.2" class="anchor">
-<a class="anchor__link link" href="#2.2.2">#</a><small class="number">2.2.2</small>Hierarchical Structures
-</h3>
+<a class="anchor__link link" href="#2.2.2">#</a><span class="number">2.2.2</span> Hierarchical Structures
+</h2>
 <ul>
 <li>We can represent lists whose elements themselves may also be lists. We can also think of them as <em>trees</em>.</li>
 <li>Recursion is a natural tool for dealing with trees.</li>
-<li>The primitive predicate <code>pair?</code> returns true if its argument is a pair (formed with cons).</li>
+<li>The primitive predicate <code class="sourceCode scheme"><span class="fu">pair?</span></code> returns true if its argument is a pair (formed with cons).</li>
 <li>We can count the number of leaves in a tree with this:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (count-leaves x)</span>
@@ -151,12 +151,12 @@
 <a class="anchor__link link" href="#2.2.2.1">#</a>Mapping over trees
 </h3>
 <ul>
-<li>We can deal with trees using <code>map</code> together with recursion.</li>
+<li>We can deal with trees using <code class="sourceCode scheme"><span class="fu">map</span></code> together with recursion.</li>
 <li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
 </ul>
 <h2 id="2.2.3" class="anchor">
-<a class="anchor__link link" href="#2.2.3">#</a><small class="number">2.2.3</small>Sequences as Conventional Interfaces
-</h3>
+<a class="anchor__link link" href="#2.2.3">#</a><span class="number">2.2.3</span> Sequences as Conventional Interfaces
+</h2>
 <ul>
 <li>Abstractions preserves the flexibility to experiment with alternative representations.</li>
 <li>Another powerful design principle for working with data structures is the use of conventional interfaces.</li>
@@ -167,7 +167,7 @@
 </h3>
 <ul>
 <li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
-<li>To help, we can implement <code>filter</code> and <code>accumulate</code>.</li>
+<li>To help, we can implement <code class="sourceCode scheme"><span class="fu">filter</span></code> and <code class="sourceCode scheme">accumulate</code>.</li>
 <li>Expressing programs as sequence operations helps us make program designs that are <em>modular</em>—made of relatively independent pieces that we can connect in flexible ways.</li>
 <li>This is a strategy for controlling complexity.</li>
 <li>A vast range of operations can be expressed as sequence operations, even if you don’t realize it at first.</li>
@@ -179,7 +179,7 @@
 <ul>
 <li>For many computations, the sequence paradigm can be used where loops would otherwise be needed.</li>
 <li>Sometimes we need to use <em>nested</em> mappings, where each mapping maps to a second set of mappings.</li>
-<li>We can use <code>mapcat</code> to flatten the nested mapping result into one list at the end.</li>
+<li>We can use <code class="sourceCode scheme">mapcat</code> to flatten the nested mapping result into one list at the end.</li>
 <li>The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (permutations s)</span>
@@ -190,8 +190,8 @@
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     (permutations (<span class="fu">remove</span> x s))))</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              s)))</span></code></pre></div>
 <h2 id="2.2.4" class="anchor">
-<a class="anchor__link link" href="#2.2.4">#</a><small class="number">2.2.4</small>Example: A Picture Language
-</h3>
+<a class="anchor__link link" href="#2.2.4">#</a><span class="number">2.2.4</span> Example: A Picture Language
+</h2>
 <ul>
 <li>We will use a simple language for drawing pictures.</li>
 <li>The data objects are represented as procedures rather than as list structure.</li>
@@ -202,8 +202,8 @@
 <ul>
 <li>There is only one kind of element, called a <em>painter</em>.</li>
 <li>The painter draws an image transformed into a parallelogram.</li>
-<li>We combine images with operations like <code>beside</code> and <code>below</code>.</li>
-<li>We transform single images with operations like <code>flip-vert</code> and <code>flip-horiz</code>.</li>
+<li>We combine images with operations like <code class="sourceCode scheme">beside</code> and <code class="sourceCode scheme">below</code>.</li>
+<li>We transform single images with operations like <code class="sourceCode scheme">flip-vert</code> and <code class="sourceCode scheme">flip-horiz</code>.</li>
 <li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
 </ul>
 <h3 id="2.2.4.2" class="anchor">
@@ -236,7 +236,7 @@
 </h3>
 <ul>
 <li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
-<li>They are all based on the procedure <code>transform-painter</code>.</li>
+<li>They are all based on the procedure <code class="sourceCode scheme">transform-painter</code>.</li>
 </ul>
 <h3 id="2.2.4.6" class="anchor">
 <a class="anchor__link link" href="#2.2.4.6">#</a>Levels of language for robust design

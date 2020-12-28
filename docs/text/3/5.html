@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">3.5</small>Streams
+<span class="number">3.5</span> Streams
 </h1>
 <ul>
 <li>We’ve used assignment as a powerful tool and dealt with some of the complex problems it raises.</li>
@@ -76,15 +76,15 @@
 <li>Stream processing allows us to model state without assignments.</li>
 </ul>
 <h2 id="3.5.1" class="anchor">
-<a class="anchor__link link" href="#3.5.1">#</a><small class="number">3.5.1</small>Streams Are Delayed Lists
-</h3>
+<a class="anchor__link link" href="#3.5.1">#</a><span class="number">3.5.1</span> Streams Are Delayed Lists
+</h2>
 <ul>
 <li>If we represent streams as lists, we get elegance at the price of severe inefficiency (time <em>and</em> space).</li>
-<li>Consider adding all the primes in an interval. Using <code>filter</code> and <code>reduce</code>, we waste a lot of space storing lists.</li>
+<li>Consider adding all the primes in an interval. Using <code class="sourceCode scheme"><span class="fu">filter</span></code> and <code class="sourceCode scheme">reduce</code>, we waste a lot of space storing lists.</li>
 <li>Streams are lazy lists. They are the clever idea of using sequence manipulations without incurring the cost.</li>
 <li>We only construct an item of the stream when it is needed.</li>
-<li>We have <code>cons-stream</code>, <code>stream-car</code>, <code>stream-cdr</code>, <code>the-empty-stream</code>, and <code>stream-null?</code>.</li>
-<li>The <code>cons-stream</code> procedure must not evaluate its second argument until it is accessed by <code>stream-cdr</code>.</li>
+<li>We have <code class="sourceCode scheme"><span class="kw">cons-stream</span></code>, <code class="sourceCode scheme">stream-car</code>, <code class="sourceCode scheme">stream-cdr</code>, <code class="sourceCode scheme">the-empty-stream</code>, and <code class="sourceCode scheme">stream-null?</code>.</li>
+<li>The <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> procedure must not evaluate its second argument until it is accessed by <code class="sourceCode scheme">stream-cdr</code>.</li>
 <li>To implement streams, we will use <em>promises</em>. <code class="sourceCode scheme">(<span class="kw">delay</span> <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code> does not evaluate the argument but returns a promise. <code class="sourceCode scheme">(<span class="fu">force</span> <span class="sc">«</span><span class="ss">promise</span><span class="sc">»</span>)</code> evaluates a promise and returns the value.</li>
 <li><code class="sourceCode scheme">(<span class="kw">cons-stream</span> a b)</code> is a special form equivalent to <code class="sourceCode scheme">(<span class="fu">cons</span> a (<span class="kw">delay</span> b))</code>.</li>
 </ul>
@@ -92,7 +92,7 @@
 <a class="anchor__link link" href="#3.5.1.1">#</a>The stream implementation in action
 </h3>
 <blockquote>
-<p>In general, we can think of delayed evaluation as “demand-driven” programming, we herby each stage in the stream process is activated only enough to satisfy the next stage. (438) FOO</p>
+<p>In general, we can think of delayed evaluation as “demand-driven” programming, we herby each stage in the stream process is activated only enough to satisfy the next stage. (438)</p>
 </blockquote>
 <h3 id="3.5.1.2" class="anchor">
 <a class="anchor__link link" href="#3.5.1.2">#</a>Implementing <code>delay</code> and <code>force</code>
@@ -100,12 +100,12 @@
 <ul>
 <li>Promises are quite straightforward to implement.</li>
 <li><code class="sourceCode scheme">(<span class="kw">delay</span> <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code> is syntactic sugar for <code class="sourceCode scheme">(<span class="kw">lambda</span> () <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code>.</li>
-<li><code>force</code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
-<li>The promise stored in the <code>cdr</code> of the stream is also known as a <em>thunk</em>.</li>
+<li><code class="sourceCode scheme"><span class="fu">force</span></code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
+<li>The promise stored in the <code class="sourceCode scheme"><span class="fu">cdr</span></code> of the stream is also known as a <em>thunk</em>.</li>
 </ul>
 <h2 id="3.5.2" class="anchor">
-<a class="anchor__link link" href="#3.5.2">#</a><small class="number">3.5.2</small>Infinite Streams
-</h3>
+<a class="anchor__link link" href="#3.5.2">#</a><span class="number">3.5.2</span> Infinite Streams
+</h2>
 <ul>
 <li>With lazy sequences, we can manipulate infinitely long streams!</li>
 <li>We can define Fibonacci sequence explicitly with a generator:</li>
@@ -132,8 +132,8 @@
 <li>This implicit technique is known as <em>corecursion</em>. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.</li>
 </ul>
 <h2 id="3.5.3" class="anchor">
-<a class="anchor__link link" href="#3.5.3">#</a><small class="number">3.5.3</small>Exploiting the Stream Paradigm
-</h3>
+<a class="anchor__link link" href="#3.5.3">#</a><span class="number">3.5.3</span> Exploiting the Stream Paradigm
+</h2>
 <ul>
 <li>Streams can provide many of the benefits of local state and assignment while avoiding some of the theoretical tangles.</li>
 <li>Using streams allows us to have different module boundaries.</li>
@@ -145,7 +145,7 @@
 <ul>
 <li>Before, we made iterative processes by updating state variables in recursive calls.</li>
 <li>To compute the square root, we improved a guess until the values didn’t change very much.</li>
-<li>We can make a stream that converges on the square root of <code>x</code>, and a stream to approximate <span class="math inline">π</span>.</li>
+<li>We can make a stream that converges on the square root of <code class="sourceCode scheme">x</code>, and a stream to approximate <span class="math inline">π</span>.</li>
 <li>One neat thing we can do with these streams is use sequence accelerators, such as Euler’s transform.</li>
 </ul>
 <h3 id="3.5.3.2" class="anchor">
@@ -161,7 +161,7 @@
 <ul>
 <li>We need some way of producing a stream of all integer pairs.</li>
 <li>More generally, we can combined two streams to get a two-dimensional grid of pairs, and we want to reduce this to a one-dimensional stream.</li>
-<li>One way to do this is to use <code>interleave</code> in the recursive definition, in order to handle infinite streams.</li>
+<li>One way to do this is to use <code class="sourceCode scheme">interleave</code> in the recursive definition, in order to handle infinite streams.</li>
 </ul>
 <h3 id="3.5.3.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3.3">#</a>Streams as signals
@@ -177,28 +177,28 @@
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                              int)))</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  int)</span></code></pre></div>
 <h2 id="3.5.4" class="anchor">
-<a class="anchor__link link" href="#3.5.4">#</a><small class="number">3.5.4</small>Streams and Delayed Evaluation
-</h3>
+<a class="anchor__link link" href="#3.5.4">#</a><span class="number">3.5.4</span> Streams and Delayed Evaluation
+</h2>
 <ul>
-<li>The use of <code>delay</code> in <code>cons-stream</code> is crucial to defining streams with feedback loops.</li>
-<li>However, there are cases where we need further, explicit uses of <code>delay</code>.</li>
+<li>The use of <code class="sourceCode scheme"><span class="kw">delay</span></code> in <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> is crucial to defining streams with feedback loops.</li>
+<li>However, there are cases where we need further, explicit uses of <code class="sourceCode scheme"><span class="kw">delay</span></code>.</li>
 <li>For example, solving the differential equation <span class="math inline">dy/dt = f(y)</span> where <span class="math inline">f</span> is a given function.</li>
-<li>The problem here is that <code>y</code> and <code>dy</code> will depend on each other.</li>
-<li>To solve this, we need to change <code>integral</code> to take a delayed integrand.</li>
+<li>The problem here is that <code class="sourceCode scheme">y</code> and <code class="sourceCode scheme">dy</code> will depend on each other.</li>
+<li>To solve this, we need to change <code class="sourceCode scheme">integral</code> to take a delayed integrand.</li>
 </ul>
 <h3 id="3.5.4.1" class="anchor">
 <a class="anchor__link link" href="#3.5.4.1">#</a>Normal-order evaluation
 </h3>
 <ul>
-<li>Explicit use of <code>delay</code> and <code>force</code> is powerful, but makes our programs more complex.</li>
+<li>Explicit use of <code class="sourceCode scheme"><span class="kw">delay</span></code> and <code class="sourceCode scheme"><span class="fu">force</span></code> is powerful, but makes our programs more complex.</li>
 <li>It creates two classes of procedures: normal, and ones that take delayed arguments.</li>
 <li>(This is similar to the sync vs. async divide in modern programming languages.)</li>
 <li>This forces us to define separate classes of higher-order procedures, unless we make everything delayed, equivalent to normal-order evaluation (like Haskell).</li>
 <li>Mutability and delayed evaluation do not mix well.</li>
 </ul>
 <h2 id="3.5.5" class="anchor">
-<a class="anchor__link link" href="#3.5.5">#</a><small class="number">3.5.5</small>Modularity of Functional Programs and Modularity of Objects
-</h3>
+<a class="anchor__link link" href="#3.5.5">#</a><span class="number">3.5.5</span> Modularity of Functional Programs and Modularity of Objects
+</h2>
 <ul>
 <li>Modularity through encapsulation is a major benefit of introducing assignment.</li>
 <li>Stream models can provide equivalent modularity without assignment.</li>
@@ -214,10 +214,10 @@
 <li>Immutability is a key pillar of <em>functional programming languages</em>.</li>
 </ul>
 <blockquote>
-<p>We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge. (486) FOO</p>
+<p>We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge. (486)</p>
 </blockquote>
 <blockquote>
-<p>The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the “objects” is much larger than the state that they share. (486) FOO</p>
+<p>The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the “objects” is much larger than the state that they share. (486)</p>
 </blockquote>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">

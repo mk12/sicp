@@ -1385,7 +1385,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
     - It would only change the parameter in $E_1$, not the value in the calling environment.
     - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
-    - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`, `*x`, and `*x = ...`.
+    - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`{.c}, `*x`{.c}, and `*x = ...`{.c}.
 - The `lookup` procedure returns the value associated with a key in a table, or `false` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
 

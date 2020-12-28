@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">2.1</small>Introduction to Data Abstraction
+<span class="number">2.1</span> Introduction to Data Abstraction
 </h1>
 <ul>
 <li>We already know about procedural abstraction: the procedure is a black box, and we don’t care how it is implemented internally.</li>
@@ -79,14 +79,14 @@
 <li>The interface between the two parts of the system is a set of procedures: selectors and constructors.</li>
 </ul>
 <h2 id="2.1.1" class="anchor">
-<a class="anchor__link link" href="#2.1.1">#</a><small class="number">2.1.1</small>Example: Arithmetic Operations for Rational Numbers
-</h3>
+<a class="anchor__link link" href="#2.1.1">#</a><span class="number">2.1.1</span> Example: Arithmetic Operations for Rational Numbers
+</h2>
 <ul>
 <li>We want to add, subtract, multiply, divide, and test equality with our rational numbers.</li>
 <li>We assume we have <code class="sourceCode scheme">(make-rat <span class="sc">«</span><span class="ss">n</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">d</span><span class="sc">»</span>)</code>, <code class="sourceCode scheme">(number <span class="sc">«</span><span class="ss">x</span><span class="sc">»</span>)</code>, and <code class="sourceCode scheme">(denom <span class="sc">«</span><span class="ss">x</span><span class="sc">»</span>)</code> available as the constructor and selectors.</li>
 <li>This is wishful thinking, and it is a good technique.</li>
-<li>A <em>pair</em> is a concrete structure that we create with <code>cons</code>.</li>
-<li>We extract the parts of the pair with <code>car</code> and <code>cdr</code>.</li>
+<li>A <em>pair</em> is a concrete structure that we create with <code class="sourceCode scheme"><span class="fu">cons</span></code>.</li>
+<li>We extract the parts of the pair with <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code>.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> <span class="cn">2</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">car</span> x)</span>
@@ -102,34 +102,34 @@
 <ul>
 <li>This is all the glue we need to implement all sorts of complex data structures.</li>
 <li>Data objects constructed from pairs are <em>list-structured</em> data.</li>
-<li>To ensure that our rational numbers are always in lowest terms, we need <code>make-rat</code> to divide the numerator and the denominator by their greatest common divisor (GCD).</li>
+<li>To ensure that our rational numbers are always in lowest terms, we need <code class="sourceCode scheme">make-rat</code> to divide the numerator and the denominator by their greatest common divisor (GCD).</li>
 </ul>
 <h2 id="2.1.2" class="anchor">
-<a class="anchor__link link" href="#2.1.2">#</a><small class="number">2.1.2</small>Abstractions Barriers
-</h3>
+<a class="anchor__link link" href="#2.1.2">#</a><span class="number">2.1.2</span> Abstractions Barriers
+</h2>
 <blockquote>
-<p>In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. (118) FOO</p>
+<p>In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. (118)</p>
 </blockquote>
 <ul>
 <li>The details on the other side of an abstraction barrier are irrelevant to the code on this side.</li>
 <li>This makes programs easier to maintain and modify.</li>
 </ul>
 <blockquote>
-<p>Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations. (121) FOO</p>
+<p>Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations. (121)</p>
 </blockquote>
 <h2 id="2.1.3" class="anchor">
-<a class="anchor__link link" href="#2.1.3">#</a><small class="number">2.1.3</small>What Is Meant by Data?
-</h3>
+<a class="anchor__link link" href="#2.1.3">#</a><span class="number">2.1.3</span> What Is Meant by Data?
+</h2>
 <ul>
 <li>Data is defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation.</li>
 <li>For rationals, we have the following definition:
 <ol type="1">
-<li>We can construct a rational <code>x</code> with <code class="sourceCode scheme">(make-rat n d)</code>.</li>
+<li>We can construct a rational <code class="sourceCode scheme">x</code> with <code class="sourceCode scheme">(make-rat n d)</code>.</li>
 <li>We can select the numerator with <code class="sourceCode scheme">(numer x)</code>.</li>
 <li>We can select the denominator with <code class="sourceCode scheme">(denom x)</code>.</li>
-<li>For all values of <code>x</code>, <code class="sourceCode scheme">(<span class="fu">/</span> (numer x) (denom x))</code> must equal <span class="math inline">n/d</span>.</li>
+<li>For all values of <code class="sourceCode scheme">x</code>, <code class="sourceCode scheme">(<span class="fu">/</span> (numer x) (denom x))</code> must equal <span class="math inline">n/d</span>.</li>
 </ol></li>
-<li>For pairs, it is even simpler: we need three operations, which we will call <code>cons</code>, <code>car</code>, and <code>cdr</code>, such that if <code>z</code> is <code class="sourceCode scheme">(<span class="fu">cons</span> x y)</code>, then <code class="sourceCode scheme">(<span class="fu">car</span> z)</code> is <code>x</code> and <code class="sourceCode scheme">(<span class="fu">cdr</span> z)</code> is <code>y</code>.</li>
+<li>For pairs, it is even simpler: we need three operations, which we will call <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme"><span class="fu">car</span></code>, and <code class="sourceCode scheme"><span class="fu">cdr</span></code>, such that if <code class="sourceCode scheme">z</code> is <code class="sourceCode scheme">(<span class="fu">cons</span> x y)</code>, then <code class="sourceCode scheme">(<span class="fu">car</span> z)</code> is <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">(<span class="fu">cdr</span> z)</code> is <code class="sourceCode scheme">y</code>.</li>
 <li>Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cons</span> x y)</span>
@@ -143,14 +143,14 @@
 <li>In real Lisp implementations, pairs are implemented directly, for reasons of efficiency—but they <em>could</em> be implemented this way and you wouldn’t be able to tell the difference.</li>
 </ul>
 <blockquote>
-<p>[…] the ability to manipulate procedures as objects automatically provides the ability to represent compound data. (125) FOO</p>
+<p>[…] the ability to manipulate procedures as objects automatically provides the ability to represent compound data. (125)</p>
 </blockquote>
 <ul>
 <li>This style of programming is often called <em>message passing</em>.</li>
 </ul>
 <h2 id="2.1.4" class="anchor">
-<a class="anchor__link link" href="#2.1.4">#</a><small class="number">2.1.4</small>Extended Exercise: Interval Arithmetic
-</h3>
+<a class="anchor__link link" href="#2.1.4">#</a><span class="number">2.1.4</span> Extended Exercise: Interval Arithmetic
+</h2>
 <ul>
 <li>We want to design a system that allows us to manipulate inexact quantities with known precision (uncertainty).</li>
 <li>To do this, we need arithmetic operations for combining intervals—ranges of possible values.</li>

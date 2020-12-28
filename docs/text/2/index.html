@@ -49,7 +49,7 @@
 <main>
 
 <h1>
-<small class="number">2</small>Building Abstractions with Data
+<span class="number">2</span> Building Abstractions with Data
 </h1>
 <ul>
 <li>Recap: we looked at computations processes and the role of procedures in program design.
@@ -62,7 +62,7 @@
 <li>Before we made compound procedures from other procedures; now we will make compound data from other, simpler data.</li>
 </ul>
 <blockquote>
-<p>[…] the ability to construct compound data objects enables us to deal with data at a higher conceptual level than that of the primitive data objects of the language. (108) FOO</p>
+<p>[…] the ability to construct compound data objects enables us to deal with data at a higher conceptual level than that of the primitive data objects of the language. (108)</p>
 </blockquote>
 <ul>
 <li>Consider functions dealing with rational numbers: this becomes awkward if they can return only one number.</li>
@@ -71,85 +71,82 @@
 <li>Data abstraction enables us to construct <em>abstraction barriers</em> between different parts of the program.</li>
 <li>We will look at closure, conventional interfaces, symbolic expressions, generic operations, and data-directed programming.</li>
 </ul>
-<h2 id="contents">Contents</h2>
+<h2 id="contents" class="anchor">
+<a class="anchor__link link" href="#contents">#</a>Contents
+</h2>
 <ul class="toc">
 <li class="toc__item">
-<span class="toc__label">2.1</span><a href="1.html">Introduction to Data Abstraction</a>
+<span class="toc__label">2.1</span> <a href="1.html">Introduction to Data Abstraction</a>
 <ul class="toc">
 <li class="toc__item">
-<span class="toc__label">2.1.1</span><a href="1.html#2.1.1">Example: Arithmetic Operations for Rational Numbers</a>
+<span class="toc__label">2.1.1</span> <a href="1.html#2.1.1">Example: Arithmetic Operations for Rational Numbers</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.1.2</span><a href="1.html#2.1.2">Abstractions Barriers</a>
+<span class="toc__label">2.1.2</span> <a href="1.html#2.1.2">Abstractions Barriers</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.1.3</span><a href="1.html#2.1.3">What Is Meant by Data?</a>
+<span class="toc__label">2.1.3</span> <a href="1.html#2.1.3">What Is Meant by Data?</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.1.4</span><a href="1.html#2.1.4">Extended Exercise: Interval Arithmetic</a>
-</li>
+<span class="toc__label">2.1.4</span> <a href="1.html#2.1.4">Extended Exercise: Interval Arithmetic</a>
 </ul>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.2</span><a href="2.html">Hierarchical Data and the Closure Property</a>
+<span class="toc__label">2.2</span> <a href="2.html">Hierarchical Data and the Closure Property</a>
 <ul class="toc">
 <li class="toc__item">
-<span class="toc__label">2.2.1</span><a href="2.html#2.2.1">Representing Sequences</a>
+<span class="toc__label">2.2.1</span> <a href="2.html#2.2.1">Representing Sequences</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.2.2</span><a href="2.html#2.2.2">Hierarchical Structures</a>
+<span class="toc__label">2.2.2</span> <a href="2.html#2.2.2">Hierarchical Structures</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.2.3</span><a href="2.html#2.2.3">Sequences as Conventional Interfaces</a>
+<span class="toc__label">2.2.3</span> <a href="2.html#2.2.3">Sequences as Conventional Interfaces</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.2.4</span><a href="2.html#2.2.4">Example: A Picture Language</a>
-</li>
+<span class="toc__label">2.2.4</span> <a href="2.html#2.2.4">Example: A Picture Language</a>
 </ul>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.3</span><a href="3.html">Symbolic Data</a>
+<span class="toc__label">2.3</span> <a href="3.html">Symbolic Data</a>
 <ul class="toc">
 <li class="toc__item">
-<span class="toc__label">2.3.1</span><a href="3.html#2.3.1">Quotation</a>
+<span class="toc__label">2.3.1</span> <a href="3.html#2.3.1">Quotation</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.3.2</span><a href="3.html#2.3.2">Example: Symbolic Differentiation</a>
+<span class="toc__label">2.3.2</span> <a href="3.html#2.3.2">Example: Symbolic Differentiation</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.3.3</span><a href="3.html#2.3.3">Example: Representing Sets</a>
+<span class="toc__label">2.3.3</span> <a href="3.html#2.3.3">Example: Representing Sets</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.3.4</span><a href="3.html#2.3.4">Example: Huffman Encoding Trees</a>
-</li>
+<span class="toc__label">2.3.4</span> <a href="3.html#2.3.4">Example: Huffman Encoding Trees</a>
 </ul>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.4</span><a href="4.html">Multiple Representations for Abstract Data</a>
+<span class="toc__label">2.4</span> <a href="4.html">Multiple Representations for Abstract Data</a>
 <ul class="toc">
 <li class="toc__item">
-<span class="toc__label">2.4.1</span><a href="4.html#2.4.1">Representations for Complex Numbers</a>
+<span class="toc__label">2.4.1</span> <a href="4.html#2.4.1">Representations for Complex Numbers</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.4.2</span><a href="4.html#2.4.2">Tagged Data</a>
+<span class="toc__label">2.4.2</span> <a href="4.html#2.4.2">Tagged Data</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.4.3</span><a href="4.html#2.4.3">Data-Directed Programming and Additivity</a>
-</li>
+<span class="toc__label">2.4.3</span> <a href="4.html#2.4.3">Data-Directed Programming and Additivity</a>
 </ul>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.5</span><a href="5.html">Systems with Generic Operations</a>
+<span class="toc__label">2.5</span> <a href="5.html">Systems with Generic Operations</a>
 <ul class="toc">
 <li class="toc__item">
-<span class="toc__label">2.5.1</span><a href="5.html#2.5.1">Generic Arithmetic Operations</a>
+<span class="toc__label">2.5.1</span> <a href="5.html#2.5.1">Generic Arithmetic Operations</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.5.2</span><a href="5.html#2.5.2">Combining Data of Different Types</a>
+<span class="toc__label">2.5.2</span> <a href="5.html#2.5.2">Combining Data of Different Types</a>
 </li>
 <li class="toc__item">
-<span class="toc__label">2.5.3</span><a href="5.html#2.5.3">Example: Symbolic Algebra</a>
-</li>
+<span class="toc__label">2.5.3</span> <a href="5.html#2.5.3">Example: Symbolic Algebra</a>
 </ul>
 </li>
 </ul>

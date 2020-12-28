@@ -65,19 +65,19 @@
 <main>
 
 <h1>
-<small class="number">2.3</small>Symbolic Data
+<span class="number">2.3</span> Symbolic Data
 </h1>
 <ul>
 <li>So far we have constructed compound data from numbers only.</li>
 <li>Now, we will work with arbitrary symbols.</li>
 </ul>
 <h2 id="2.3.1" class="anchor">
-<a class="anchor__link link" href="#2.3.1">#</a><small class="number">2.3.1</small>Quotation
-</h3>
+<a class="anchor__link link" href="#2.3.1">#</a><span class="number">2.3.1</span> Quotation
+</h2>
 <ul>
 <li>Lists containing symbols look just like expressions (code).</li>
 <li>We need to <em>quote</em> data objects to manipulate symbols.</li>
-<li>To make the list <code class="sourceCode scheme">(a b)</code>, we can’t just do <code class="sourceCode scheme">(<span class="fu">list</span> a b)</code> because this will evaluate <code>a</code> and <code>b</code>.</li>
+<li>To make the list <code class="sourceCode scheme">(a b)</code>, we can’t just do <code class="sourceCode scheme">(<span class="fu">list</span> a b)</code> because this will evaluate <code class="sourceCode scheme">a</code> and <code class="sourceCode scheme">b</code>.</li>
 <li>This is just like natural language. If I say, “Say your name,” you will say the <em>value</em> of “your name.” If I instead say, “Say ‘your name,’” you will literally say the words “your name.”</li>
 <li>To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.</li>
 <li>Here is the difference between symbols and their values:</li>
@@ -88,12 +88,12 @@
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="co">; =&gt; (a b)</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">list</span> <span class="cn">&#39;a</span> b)  <span class="co">; =&gt; (a 2)</span></span></code></pre></div>
 <ul>
-<li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>'()</code>.</li>
-<li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
+<li>We can write lists directly with quotation rather than using <code class="sourceCode scheme"><span class="fu">cons</span></code> or list, and we can represent the empty list with <code class="sourceCode scheme">&#39;()</code>.</li>
+<li>We need one more primitive now: <code class="sourceCode scheme"><span class="fu">eq?</span></code>. This tests to see if two symbols are the same.</li>
 </ul>
 <h2 id="2.3.2" class="anchor">
-<a class="anchor__link link" href="#2.3.2">#</a><small class="number">2.3.2</small>Example: Symbolic Differentiation
-</h3>
+<a class="anchor__link link" href="#2.3.2">#</a><span class="number">2.3.2</span> Example: Symbolic Differentiation
+</h2>
 <ul>
 <li>Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.</li>
 <li>We will worry about representation later (data abstraction).</li>
@@ -126,14 +126,14 @@
 <li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
 </ul>
 <h2 id="2.3.3" class="anchor">
-<a class="anchor__link link" href="#2.3.3">#</a><small class="number">2.3.3</small>Example: Representing Sets
-</h3>
+<a class="anchor__link link" href="#2.3.3">#</a><span class="number">2.3.3</span> Example: Representing Sets
+</h2>
 <p>There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:</p>
 <ul>
-<li><code>union-set</code>: new set containing all items of given sets</li>
-<li><code>intersection-set</code>: new set containing only the items that all given sets share</li>
-<li><code>element-of-set?</code>: predicate for an item’s presence in a set</li>
-<li><code>adjoin-set</code>: new set containing one new item</li>
+<li><code class="sourceCode scheme">union-set</code>: new set containing all items of given sets</li>
+<li><code class="sourceCode scheme">intersection-set</code>: new set containing only the items that all given sets share</li>
+<li><code class="sourceCode scheme">element-of-set?</code>: predicate for an item’s presence in a set</li>
+<li><code class="sourceCode scheme">adjoin-set</code>: new set containing one new item</li>
 </ul>
 <h3 id="2.3.3.1" class="anchor">
 <a class="anchor__link link" href="#2.3.3.1">#</a>Sets as unordered lists
@@ -141,7 +141,7 @@
 <ul>
 <li>One method is to just use lists. Each time we add a new element, we have to check to make sure it isn’t already in the set.</li>
 <li>This isn’t very efficient.</li>
-<li>The time complexity of <code>element-of-set?</code> (and therefore for <code>adjoin-set</code>) is <span class="math inline">Θ(n)</span>.</li>
+<li>The time complexity of <code class="sourceCode scheme">element-of-set?</code> (and therefore for <code class="sourceCode scheme">adjoin-set</code>) is <span class="math inline">Θ(n)</span>.</li>
 <li>For union and intersection, it’s <span class="math inline">Θ(n^2)</span>.</li>
 <li>If we don’t eliminate duplicates, most operations are faster.</li>
 <li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
@@ -152,7 +152,7 @@
 <ul>
 <li>A more efficient representation is a sorted list.</li>
 <li>We will only consider sets of numbers to keep things simple.</li>
-<li>Now, scanning the entire list in <code>element-of-set?</code> is a worst-case scenario. Most of the time we won’t have to.</li>
+<li>Now, scanning the entire list in <code class="sourceCode scheme">element-of-set?</code> is a worst-case scenario. Most of the time we won’t have to.</li>
 <li>On average we should expect to scan about half of the set.</li>
 <li>This is still <span class="math inline">Θ(n)</span>; however, intersection gets much faster. Instead of <span class="math inline">Θ(n^2)</span>, it is <span class="math inline">Θ(n)</span>.</li>
 </ul>
@@ -165,7 +165,7 @@
 <li>The left branch contains smaller numbers, and the right branch contains larger numbers.</li>
 <li>The same set can be represented by a tree in many ways.</li>
 <li>If the tree is balanced, each subtree is about half the size of the original tree.</li>
-<li>This allows us to do <code>element-of-set?</code> in <span class="math inline">Θ(\log(n))</span> time.</li>
+<li>This allows us to do <code class="sourceCode scheme">element-of-set?</code> in <span class="math inline">Θ(\log(n))</span> time.</li>
 <li>We will use the following list structure to represent trees: each node is the list <code class="sourceCode scheme">(number left-subtree right-subtree)</code>.</li>
 <li>Efficiency hinges on the tree being balanced.</li>
 <li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
@@ -182,8 +182,8 @@
 <li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
 </ul>
 <h2 id="2.3.4" class="anchor">
-<a class="anchor__link link" href="#2.3.4">#</a><small class="number">2.3.4</small>Example: Huffman Encoding Trees
-</h3>
+<a class="anchor__link link" href="#2.3.4">#</a><span class="number">2.3.4</span> Example: Huffman Encoding Trees
+</h2>
 <ul>
 <li>We can represent data as sequences of ones and zeros (bits).</li>
 <li>Codes like ASCII are fixed-length. Each symbol is represented by the same number of bits.</li>
@@ -206,8 +206,8 @@
 <a class="anchor__link link" href="#2.3.4.2">#</a>Representing Huffman trees
 </h3>
 <ul>
-<li>Leaves are represented by the list beginning with the symbol <code>leaf</code> and with two more elements: the symbol and the weight.</li>
-<li>Trees are represented by the list <code class="sourceCode scheme">(left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
+<li>Leaves are represented by the list beginning with the symbol <code class="sourceCode scheme">leaf</code> and with two more elements: the symbol and the weight.</li>
+<li>Trees are represented by the list <code class="sourceCode scheme">(left right symbols weight)</code>, where <code class="sourceCode scheme">left</code> and <code class="sourceCode scheme">right</code> are subtrees, <code class="sourceCode scheme">symbols</code> is a list of the symbols underneath the node, and <code class="sourceCode scheme">weight</code> is the sum of the weights of all the leaves beneath the node.</li>
 </ul>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">

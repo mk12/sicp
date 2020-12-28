@@ -74,6 +74,7 @@
       <item>acos</item>
       <item>angle</item>
       <item>append</item>
+      <item>apply</item>
       <item>asin</item>
       <item>assoc</item>
       <item>assp</item>
@@ -447,8 +448,8 @@
       <itemData name="Normal"      defStyleNum="dsNormal"/>
       <itemData name="Macro"       defStyleNum="dsKeyword"/>
       <itemData name="Function"    defStyleNum="dsFunction"/>
-      <itemData name="Constant"      defStyleNum="dsConstant"/>
-      <itemData name="String"      defStyleNum="dsString"/>
+      <itemData name="Constant"    defStyleNum="dsConstant"/>
+      <itemData name="String"      defStyleNum="dsConstant"/>
       <itemData name="Comment"     defStyleNum="dsComment"/>
       <itemData name="MetaBracket" defStyleNum="dsSpecialChar"/>
       <itemData name="Meta"        defStyleNum="dsSpecialString"/>

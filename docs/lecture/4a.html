@@ -49,7 +49,7 @@
 <main>
 
 <h1>
-<small class="number">4A</small>Pattern Matching and Rule-Based Substitution
+<span class="number">4A</span> Pattern Matching and Rule-Based Substitution
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1">#</a>Part 1
@@ -100,8 +100,8 @@
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        (dd (: x) (: v))))))</span></code></pre></div>
 <ul>
 <li>It could be prettier, but that doesn’t matter. What matters is that we are writing rules directly in our language.</li>
-<li><code>deriv-rules</code> is simply a list of rules.</li>
-<li>Each rule is of the form <code class="sourceCode scheme">(LHS RHS)</code>. <code>LHS</code> is a pattern; <code>RHS</code> is a skeleton.</li>
+<li><code class="sourceCode scheme">deriv-rules</code> is simply a list of rules.</li>
+<li>Each rule is of the form <code class="sourceCode scheme">(LHS RHS)</code>. <code class="sourceCode scheme">LHS</code> is a pattern; <code class="sourceCode scheme">RHS</code> is a skeleton.</li>
 <li>The forms beginning with question marks in the LHS are called <em>pattern variables</em>. We have invented them for our language.</li>
 <li>The forms beginning with colons in the RHS are called <em>substitution objects</em>. They are skeleton evaluations.</li>
 <li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>
@@ -121,19 +121,19 @@
 <a class="anchor__link link" href="#1.4.1">#</a>Patterns
 </h4>
 <ul>
-<li><code>foo</code> <em>matches</em> exactly <code>foo</code>.</li>
-<li><code class="sourceCode scheme">(f a b)</code> <em>matches</em> a list of three elements with first, second, and third elements being <code>f</code>, <code>a</code>, and <code>b</code>, respectively.</li>
-<li><code class="sourceCode scheme">(? x)</code> <em>matches</em> anything, and calls it <code>x</code>.</li>
-<li><code class="sourceCode scheme">(?c x)</code> <em>matches</em> a constant, and calls it <code>x</code>.</li>
-<li><code class="sourceCode scheme">(?v x)</code> <em>matches</em> a variable, and calls it <code>x</code>.</li>
+<li><code class="sourceCode scheme">foo</code> <em>matches</em> exactly <code class="sourceCode scheme">foo</code>.</li>
+<li><code class="sourceCode scheme">(f a b)</code> <em>matches</em> a list of three elements with first, second, and third elements being <code class="sourceCode scheme">f</code>, <code class="sourceCode scheme">a</code>, and <code class="sourceCode scheme">b</code>, respectively.</li>
+<li><code class="sourceCode scheme">(? x)</code> <em>matches</em> anything, and calls it <code class="sourceCode scheme">x</code>.</li>
+<li><code class="sourceCode scheme">(?c x)</code> <em>matches</em> a constant, and calls it <code class="sourceCode scheme">x</code>.</li>
+<li><code class="sourceCode scheme">(?v x)</code> <em>matches</em> a variable, and calls it <code class="sourceCode scheme">x</code>.</li>
 </ul>
 <h4 id="1.4.2" class="anchor">
 <a class="anchor__link link" href="#1.4.2">#</a>Skeletons
 </h4>
 <ul>
-<li><code>foo</code> <em>instantiates</em> to exactly <code>foo</code>.</li>
-<li><code class="sourceCode scheme">(f a b)</code> <em>instantiates</em> to a list of three elements, the results of instantiating each of <code>f</code>, <code>a</code>, and <code>b</code>.</li>
-<li><code class="sourceCode scheme">(: x)</code> <em>instantiates</em> to the value of <code>x</code> in the pattern matched.</li>
+<li><code class="sourceCode scheme">foo</code> <em>instantiates</em> to exactly <code class="sourceCode scheme">foo</code>.</li>
+<li><code class="sourceCode scheme">(f a b)</code> <em>instantiates</em> to a list of three elements, the results of instantiating each of <code class="sourceCode scheme">f</code>, <code class="sourceCode scheme">a</code>, and <code class="sourceCode scheme">b</code>.</li>
+<li><code class="sourceCode scheme">(: x)</code> <em>instantiates</em> to the value of <code class="sourceCode scheme">x</code> in the pattern matched.</li>
 </ul>
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5">#</a>Simplification process
@@ -179,7 +179,7 @@
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                       (<span class="fu">car</span> exp)</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                       dict)))))</span></code></pre></div>
 <ul>
-<li>The <code>else</code> clause recursion is very important.</li>
+<li>The <code class="sourceCode scheme"><span class="kw">else</span></code> clause recursion is very important.</li>
 <li>We examine two trees simultaneously: the tree of the expression, and that of the pattern.</li>
 <li>Consider this pattern: <code class="sourceCode scheme">(<span class="fu">+</span> (<span class="fu">*</span> (? x) (? y)) (? y))</code>. We could draw this as a tree.</li>
 <li>The expression matching it, <code class="sourceCode scheme">(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> x)) x)</code>, has a very similar tree structure.</li>
@@ -206,20 +206,20 @@
 <ul>
 <li>We do a recursive tree walk on the skeleton.</li>
 <li>It is simpler than the matcher because the parts of the tree can be instantiated independently (we don’t change the dictionary).</li>
-<li>The only reason we have the internal procedure is to avoid passing the same <code>dict</code> on every recursive call.</li>
-<li>The skeleton evaluation forms like <code class="sourceCode scheme">(: x)</code> use <code>evaluate</code>:</li>
+<li>The only reason we have the internal procedure is to avoid passing the same <code class="sourceCode scheme">dict</code> on every recursive call.</li>
+<li>The skeleton evaluation forms like <code class="sourceCode scheme">(: x)</code> use <code class="sourceCode scheme">evaluate</code>:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (evaluate form dict)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (atom? form)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      (lookup form dict)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (apply (<span class="fu">eval</span> (lookup (<span class="fu">car</span> form) dict)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">apply</span> (<span class="fu">eval</span> (lookup (<span class="fu">car</span> form) dict)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                   user-initial-environment)</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>             (mapcar (<span class="kw">lambda</span> (v) (lookup v dict))</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                     (<span class="fu">cdr</span> form)))))</span></code></pre></div>
 <ul>
 <li>Atoms (variable names) are simply looked up in the dictionary.</li>
-<li>For more complicated expressions, we lookup and evaluate the <code>car</code> of the form (the operator) and apply it to the result of looking up everything from the <code>cdr</code> (the operands).</li>
-<li>This is magic. We don’t know everything going on with <code>apply</code> and <code>eval</code> yet. We will later.</li>
+<li>For more complicated expressions, we lookup and evaluate the <code class="sourceCode scheme"><span class="fu">car</span></code> of the form (the operator) and apply it to the result of looking up everything from the <code class="sourceCode scheme"><span class="fu">cdr</span></code> (the operands).</li>
+<li>This is magic. We don’t know everything going on with <code class="sourceCode scheme"><span class="fu">apply</span></code> and <code class="sourceCode scheme"><span class="fu">eval</span></code> yet. We will later.</li>
 </ul>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3">#</a>Part 3
@@ -238,8 +238,8 @@
 </h3>
 <ul>
 <li>We want to be able to evaluate <code class="sourceCode scheme">(simplifier rules)</code> and get a procedure that simplifies expressions according to the rules:</li>
-<li>For <code>deriv-rules</code>, this would be <code class="sourceCode scheme">(<span class="kw">define</span> dsimp (simplifier deriv-rules))</code>.</li>
-<li>This is the <code>simplifier</code> procedure:</li>
+<li>For <code class="sourceCode scheme">deriv-rules</code>, this would be <code class="sourceCode scheme">(<span class="kw">define</span> dsimp (simplifier deriv-rules))</code>.</li>
+<li>This is the <code class="sourceCode scheme">simplifier</code> procedure:</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (simplifier the-rules)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (simplify-exp exp)</span>
@@ -266,9 +266,9 @@
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    (scan the-rules))</span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  simplify-exp)</span></code></pre></div>
 <ul>
-<li>The procedures <code>simplify-exp</code> and <code>simplify-parts</code> call each other recursively.</li>
-<li>Since the <code>exp</code> in <code>simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
-<li>We could have just used one procedure, using <code>map</code>:</li>
+<li>The procedures <code class="sourceCode scheme">simplify-exp</code> and <code class="sourceCode scheme">simplify-parts</code> call each other recursively.</li>
+<li>Since the <code class="sourceCode scheme">exp</code> in <code class="sourceCode scheme">simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
+<li>We could have just used one procedure, using <code class="sourceCode scheme"><span class="fu">map</span></code>:</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (simplify-exp exp)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (try-rules</span>
@@ -277,9 +277,9 @@
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>       exp)))</span></code></pre></div>
 <ul>
 <li>This is a different idiom; it works the same way, but you think about it a bit differently.</li>
-<li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code>map</code> in one of our procedures. It is best to extract those common patterns.</li>
-<li>The <code>try-rules</code> procedure scans the rules and tries each one. It returns the original expression if none matched.</li>
-<li>When a rule’s pattern matches, <code>try-rules</code> instantiates the skeleton and tries to simplify that further.</li>
+<li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code class="sourceCode scheme"><span class="fu">map</span></code> in one of our procedures. It is best to extract those common patterns.</li>
+<li>The <code class="sourceCode scheme">try-rules</code> procedure scans the rules and tries each one. It returns the original expression if none matched.</li>
+<li>When a rule’s pattern matches, <code class="sourceCode scheme">try-rules</code> instantiates the skeleton and tries to simplify that further.</li>
 </ul>
 <h3 id="3.3" class="anchor">
 <a class="anchor__link link" href="#3.3">#</a>Complexity

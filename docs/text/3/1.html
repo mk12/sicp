@@ -65,7 +65,7 @@
 <main>
 
 <h1>
-<small class="number">3.1</small>Assignment and Local State
+<span class="number">3.1</span> Assignment and Local State
 </h1>
 <ul>
 <li>The world is populated by independent objects possessing changing state.</li>
@@ -75,11 +75,11 @@
 <li>We need an <em>assignment operator</em> to change the value associated with a name representing a local variable of an object.</li>
 </ul>
 <h2 id="3.1.1" class="anchor">
-<a class="anchor__link link" href="#3.1.1">#</a><small class="number">3.1.1</small>Local State Variables
-</h3>
+<a class="anchor__link link" href="#3.1.1">#</a><span class="number">3.1.1</span> Local State Variables
+</h2>
 <ul>
 <li>Let’s model the situation of withdrawing from a bank account.</li>
-<li>The <code>withdraw</code> procedure should accept an amount of money as an argument and return the balance after the withdrawal.</li>
+<li>The <code class="sourceCode scheme">withdraw</code> procedure should accept an amount of money as an argument and return the balance after the withdrawal.</li>
 <li>If you try to withdraw too much, it should return the string “Insufficient funds”.</li>
 <li>Suppose we begin with $100:</li>
 </ul>
@@ -88,25 +88,25 @@
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">25</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cn">50</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">60</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Insufficient funds&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cn">&quot;Insufficient funds&quot;</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">15</span>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cn">35</span></span></code></pre></div>
 <ul>
 <li>Evaluating the same combination twice, <code class="sourceCode scheme">(withdraw <span class="cn">25</span>)</code>, returned different values.</li>
 <li>We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
-<li>To implement <code>withdraw</code>, we define a variable called <code>balance</code>:</li>
+<li>To implement <code class="sourceCode scheme">withdraw</code>, we define a variable called <code class="sourceCode scheme">balance</code>:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> balance <span class="cn">100</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (withdraw amount)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>             balance)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Insufficient funds&quot;</span>))</span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="cn">&quot;Insufficient funds&quot;</span>))</span></code></pre></div>
 <ul>
-<li>This uses the <code>set!</code> special form, whose syntax is <code class="sourceCode scheme">(<span class="kw">set!</span> <span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">new-value</span><span class="sc">»</span>)</code>.</li>
+<li>This uses the <code class="sourceCode scheme"><span class="kw">set!</span></code> special form, whose syntax is <code class="sourceCode scheme">(<span class="kw">set!</span> <span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">new-value</span><span class="sc">»</span>)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
 <li>The expression <code class="sourceCode scheme">(<span class="kw">begin</span> <span class="sc">«</span><span class="ss">exp1</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">exp2</span><span class="sc">»</span> ... <span class="sc">«</span><span class="ss">expk</span><span class="sc">»</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
-<li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
+<li>We made <code class="sourceCode scheme">balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code class="sourceCode scheme">withdraw</code>, like so:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> withdraw</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((balance <span class="cn">100</span>))</span>
@@ -114,7 +114,7 @@
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 balance)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;Insufficient funds&quot;</span>))))</span></code></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          <span class="cn">&quot;Insufficient funds&quot;</span>))))</span></code></pre></div>
 <ul>
 <li>Unfortunately, the substitution model of evaluation is no longer adequate once we have assignment in our procedures.</li>
 <li>For now, we technically have no way to understand how these procedures work. We will develop a new model soon.</li>
@@ -125,7 +125,7 @@
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Insufficient funds&quot;</span>)))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">&quot;Insufficient funds&quot;</span>)))</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>(W1 <span class="cn">50</span>)</span>
@@ -133,11 +133,11 @@
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>(W2 <span class="cn">70</span>)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cn">30</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>(W2 <span class="cn">40</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Insufficient funds&quot;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cn">&quot;Insufficient funds&quot;</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>(W1 <span class="cn">40</span>)</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="cn">10</span></span></code></pre></div>
 <ul>
-<li>Here, <code>W1</code> and <code>W2</code> are complement independent objects, each with its own local state variable.</li>
+<li>Here, <code class="sourceCode scheme">W1</code> and <code class="sourceCode scheme">W2</code> are complement independent objects, each with its own local state variable.</li>
 <li>We can create a “bank-account object” that responds to multiple messages, all operating on the same local state:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (make-account balance)</span>
@@ -145,30 +145,30 @@
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Insufficient funds&quot;</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">&quot;Insufficient funds&quot;</span>))</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (deposit amount)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    balance)</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (dispatch m)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="fu">error</span> <span class="st">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
 <h2 id="3.1.2" class="anchor">
-<a class="anchor__link link" href="#3.1.2">#</a><small class="number">3.1.2</small>The Benefits of Introducing Assignment
-</h3>
+<a class="anchor__link link" href="#3.1.2">#</a><span class="number">3.1.2</span> The Benefits of Introducing Assignment
+</h2>
 <ul>
 <li>Introducing assignment “leads us into a thicket of difficult conceptual issues” (305).</li>
 <li>Even so, it gives us a powerful technique for maintaining modular design.</li>
-<li>Consider the procedure <code>rand</code>. We want it to return an integer chosen at random each time we evaluate <code>(rand)</code>.</li>
-<li>Suppose we have the procedure <code>rand-update</code> that takes one argument.
+<li>Consider the procedure <code class="sourceCode scheme">rand</code>. We want it to return an integer chosen at random each time we evaluate <code class="sourceCode scheme">(rand)</code>.</li>
+<li>Suppose we have the procedure <code class="sourceCode scheme">rand-update</code> that takes one argument.
 <ul>
 <li>We first call it with an initial value <span class="math inline">x_1</span>, and it returns an integer <span class="math inline">x_2</span>.</li>
 <li>We call it with <span class="math inline">x_2</span>, and it gives us <span class="math inline">x_3</span>, and so on.</li>
 <li>The sequence of values <span class="math inline">x_1, x_2, \dots, x_n</span> will have the desired statistical properties (random uniform distribution).</li>
 <li>This is a <em>pseudorandom</em> sequence, since each number is a function of the previous one.</li>
 </ul></li>
-<li>We could implement <code>rand</code> like this:</li>
+<li>We could implement <code class="sourceCode scheme">rand</code> like this:</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> rand</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((x random-init))</span>
@@ -176,18 +176,18 @@
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">set!</span> x (rand-update x))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      x)))</span></code></pre></div>
 <blockquote>
-<p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306–307) FOO</p>
+<p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306–307)</p>
 </blockquote>
 <ul>
 <li>We can use the Monte Carlo method to approximate <span class="math inline">π</span>, knowing that the probability that two randomly chosen integers have 1 as their GCD is <span class="math inline">6/π^2</span>.</li>
-<li>If we had to use <code>rand-update</code> directly, our Monte Carlo program would “betray some painful breaches of modularity” (308).</li>
+<li>If we had to use <code class="sourceCode scheme">rand-update</code> directly, our Monte Carlo program would “betray some painful breaches of modularity” (308).</li>
 </ul>
 <blockquote>
-<p>The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behaviour changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. (309) FOO</p>
+<p>The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behaviour changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. (309)</p>
 </blockquote>
 <h2 id="3.1.3" class="anchor">
-<a class="anchor__link link" href="#3.1.3">#</a><small class="number">3.1.3</small>The Costs of Introducing Assignment
-</h3>
+<a class="anchor__link link" href="#3.1.3">#</a><span class="number">3.1.3</span> The Costs of Introducing Assignment
+</h2>
 <ul>
 <li>The advantages of local state and assignment come at a price.</li>
 <li>The substitution model of procedure application is no longer sufficient to properly interpret out programs.</li>
@@ -202,8 +202,8 @@
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)) <span class="cn">25</span></span></code></pre></div>
 <ul>
-<li>Adhering to the substation model, we set <code>balance</code> to 5 and then return 25 as the value of the expression.</li>
-<li>This is wrong. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>
+<li>Adhering to the substation model, we set <code class="sourceCode scheme">balance</code> to 5 and then return 25 as the value of the expression.</li>
+<li>This is wrong. We shouldn’t have substituted 25 for <code class="sourceCode scheme">balance</code> everywhere, because the assignment changed it.</li>
 <li>Before, a variable was simply a name for a value.</li>
 <li>Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.</li>
 </ul>
@@ -214,10 +214,10 @@
 <li>By introducing change into our computational models, many previously straightforward notions become problematic.</li>
 <li>Consider the concept of two things being “the same.”</li>
 <li>If we have <code class="sourceCode scheme">(make-withdraw <span class="cn">25</span>)</code> and <code class="sourceCode scheme">(make-withdraw <span class="cn">25</span>)</code>, are they the same? No, because they can have different local state.</li>
-<li>A language that supports “equals can be substituted for equals” is <em>referentially transparent</em>. <code>set!</code> violates this.</li>
+<li>A language that supports “equals can be substituted for equals” is <em>referentially transparent</em>. <code class="sourceCode scheme"><span class="kw">set!</span></code> violates this.</li>
 <li>Reasoning about programs that use assignment is much more difficult for this reason.</li>
 <li>The concepts of “sameness” and “change” chase each other around in circles; it is hard to formally define them.</li>
-<li>If we have <code class="sourceCode scheme">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))</code>, there is a big difference between defining <code>paul-acc</code> in the same way and defining it with <code class="sourceCode scheme">(<span class="kw">define</span> paul-acc peter-acc)</code>.</li>
+<li>If we have <code class="sourceCode scheme">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))</code>, there is a big difference between defining <code class="sourceCode scheme">paul-acc</code> in the same way and defining it with <code class="sourceCode scheme">(<span class="kw">define</span> paul-acc peter-acc)</code>.</li>
 <li>In the first case, they have distinct accounts. In the second, both refer to the same account—this is called <em>aliasing</em>.</li>
 <li>As long as we never modify objects, we can regard them to be precisely the totality of their pieces.</li>
 <li>This is no longer valid in the presence of change, because “identity” is something different from the pieces.</li>
@@ -233,7 +233,7 @@
 <li>Things get even worse when we throw concurrency into the mix.</li>
 </ul>
 <blockquote>
-<p>In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. (318–319) FOO</p>
+<p>In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. (318–319)</p>
 </blockquote>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
