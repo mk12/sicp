@@ -5,7 +5,9 @@
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - spell checker for Markdown, integrated in Makefile
 - have special callout thing at end of text sections with exercise links
+- extract favorite quotes from blockquotes annotated with {.favorite} or something
 - attribute lecture quotes to Hal/Gerald
+- do citations for inline quotes and block quotes, linking to SICP website
 + fix contrast in code highlighting (revamp colors)
 + fix `<formal parameters>` etc.
 + use config.yml for pandoc and short options for better Make output

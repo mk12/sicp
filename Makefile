@@ -61,7 +61,7 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
 
 $(doc_link_assets): docs/assets/%: | notes/assets/%
 	mkdir -p docs/assets
-	ln -s ../../$< $@
+	-ln -s ../../$| $@
 
 lint: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<

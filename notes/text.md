@@ -9,7 +9,8 @@ These notes are based on the second edition of [_Structure and Interpretation of
 
 ## Dedication
 
-> What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. (xii)
+> What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. [@sicp dedication]
+<!-- (xii) -->
 
 ## Foreword
 
