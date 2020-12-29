@@ -24,17 +24,23 @@
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
+<svg style="display: none;">
+  <symbol id="external">
+    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../../index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link  sitenav__item--active"
-      href="../../text/index.html">Text</a>
+      href="../../text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link "
-      href="../../lecture/index.html">Lecture</a>
+      href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link "
-      href="../../exercise/index.html">Exercise</a>
+      href="../../exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="GitHub Mark" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
         <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>
@@ -43,29 +49,32 @@
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="4.html">
+    <a class="pagenav__link link" href="4.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="../3/index.html">
+    <a class="pagenav__link link" href="../3/index.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
-<main>
+<main id="main">
 
 <h1>
-<span class="number">2.5</span> Systems with Generic Operations
+<span class="number">2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html">Systems with Generic Operations<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
 <li>The key idea in <a href="4.html#2.4.3">§ 2.4.3</a>: link specific data operations to multiple representations using generic procedures.</li>
@@ -76,7 +85,7 @@
 <li>The result will be additive (modular)—easy to add new types.</li>
 </ul>
 <h2 id="2.5.1" class="anchor">
-<a class="anchor__link link" href="#2.5.1">#</a><span class="number">2.5.1</span> Generic Arithmetic Operations
+<a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a><span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We want <code class="sourceCode scheme">add</code> to work for primitive numbers, rational numbers, and complex numbers.</li>
@@ -86,7 +95,7 @@
 <li>The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.</li>
 </ul>
 <h2 id="2.5.2" class="anchor">
-<a class="anchor__link link" href="#2.5.2">#</a><span class="number">2.5.2</span> Combining Data of Different Types
+<a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a><span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.2">Combining Data of Different Types<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>In our unified arithmetic system, we ignored an important issue.</li>
@@ -95,7 +104,7 @@
 <li>This is cumbersome, and it violates modularity.</li>
 </ul>
 <h3 id="2.5.2.1" class="anchor">
-<a class="anchor__link link" href="#2.5.2.1">#</a>Coercion
+<a class="anchor__link link" href="#2.5.2.1" aria-hidden="true">#</a>Coercion
 </h3>
 <ul>
 <li>Often the different data types are not completely independent.</li>
@@ -112,7 +121,7 @@
 <li>It gets more complicated: what if both types can be converted to a third type? What if A can be converted to B and then from B to C? We have a graph of relations among the types.</li>
 </ul>
 <h3 id="2.5.2.2" class="anchor">
-<a class="anchor__link link" href="#2.5.2.2">#</a>Hierarchies of types
+<a class="anchor__link link" href="#2.5.2.2" aria-hidden="true">#</a>Hierarchies of types
 </h3>
 <ul>
 <li>Integers are a subtype of rationals, which are a subtype of real numbers, and so on for complex numbers.</li>
@@ -123,7 +132,7 @@
 <li>In some cases we can also lower a value down the type tower.</li>
 </ul>
 <h3 id="2.5.2.3" class="anchor">
-<a class="anchor__link link" href="#2.5.2.3">#</a>Inadequacies of hierarchies
+<a class="anchor__link link" href="#2.5.2.3" aria-hidden="true">#</a>Inadequacies of hierarchies
 </h3>
 <ul>
 <li>In general, a type may have more than one subtype (not a tower).</li>
@@ -131,7 +140,7 @@
 <li>Large numbers of interrelated types conflicts with modularity.</li>
 </ul>
 <h2 id="2.5.3" class="anchor">
-<a class="anchor__link link" href="#2.5.3">#</a><span class="number">2.5.3</span> Example: Symbolic Algebra
+<a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a><span class="number">2.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The manipulation of symbolic algebraic expressions is hard.</li>
@@ -140,7 +149,7 @@
 <li>We will just look at the arithmetic of polynomials.</li>
 </ul>
 <h3 id="2.5.3.1" class="anchor">
-<a class="anchor__link link" href="#2.5.3.1">#</a>Arithmetic on polynomials
+<a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a>Arithmetic on polynomials
 </h3>
 <ul>
 <li>A polynomial is relative to certain variables, the <em>indeterminates</em>.</li>
@@ -155,7 +164,7 @@
 <li>Our system works with polynomials with polynomial coefficients “for free” because of data-directed recursion—because we are using generic procedures.</li>
 </ul>
 <h3 id="2.5.3.2" class="anchor">
-<a class="anchor__link link" href="#2.5.3.2">#</a>Representing term lists
+<a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a>Representing term lists
 </h3>
 <ul>
 <li>Our procedures <code class="sourceCode scheme">add-terms</code> and <code class="sourceCode scheme">mul-terms</code> always access term lists sequentially from highest to lowest order.</li>
@@ -165,7 +174,7 @@
 <li>Sparse term lists, where there are many zeros, are better represented by some kind of associative list or map.</li>
 </ul>
 <h3 id="2.5.3.3" class="anchor">
-<a class="anchor__link link" href="#2.5.3.3">#</a>Hierarchies of types in symbolic algebra
+<a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a>Hierarchies of types in symbolic algebra
 </h3>
 <ul>
 <li>Our polynomial system used complex objects that had objects of many different parts as types.</li>
@@ -174,7 +183,7 @@
 <li>Controlling coercion is a hard problem in these systems.</li>
 </ul>
 <h3 id="2.5.3.4" class="anchor">
-<a class="anchor__link link" href="#2.5.3.4">#</a>Extended exercise: Rational functions
+<a class="anchor__link link" href="#2.5.3.4" aria-hidden="true">#</a>Extended exercise: Rational functions
 </h3>
 <ul>
 <li>Rational functions are “fractions” with polynomial numerators and denominators.</li>
@@ -194,24 +203,27 @@
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="4.html">
+    <a class="pagenav__link link" href="4.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="../3/index.html">
+    <a class="pagenav__link link" href="../3/index.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>

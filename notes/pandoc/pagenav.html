@@ -1,13 +1,27 @@
+$if(prev)$
 <div class="pagenav__item pagenav__item--prev">
-  $if(prev)$<a class="pagenav__link link" href="$prev$">$endif$
+  <a class="pagenav__link link" href="$prev$" aria-label="Previous page">
     $../assets/left.svg()$ Prev
-  $if(prev)$</a>$endif$
+  </a>
 </div>
+$else$
+<div class="pagenav__item pagenav__item--prev" aria-hidden="true">
+  $../assets/left.svg()$ Prev
+</div>
+$endif$
 <div class="pagenav__item pagenav__item--up">
-  <a class="pagenav__link link" href="$up$">$../assets/up.svg()$ Up</a>
+  <a class="pagenav__link link" href="$up$" aria-label="Parent page">
+    $../assets/up.svg()$ Up
+  </a>
 </div>
+$if(next)$
 <div class="pagenav__item pagenav__item--next">
-  $if(next)$<a class="pagenav__link link" href="$next$">$endif$
+  <a class="pagenav__link link" href="$next$" aria-label="Next page">
     Next $../assets/right.svg()$
-  $if(next)$</a>$endif$
+  </a>
 </div>
+$else$
+<div class="pagenav__item pagenav__item--next" aria-hidden="true">
+  Next $../assets/right.svg()$
+</div>
+$endif$

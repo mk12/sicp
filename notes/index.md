@@ -1,4 +1,4 @@
-Welcome to my study website for [_Structure and Interpretation of Computer Programs_][sicp], also known as the Wizard Book. SICP is a [timeless classic][] and one of my favorite books.
+Welcome to my study website for <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>, also known as the Wizard Book. SICP is a [timeless classic][] and one of my favorite books.
 
 Here you will find my study notes and thoroughly tested exercise solutions written in portable [R6RS Scheme][r6rs].
 

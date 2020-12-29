@@ -16,7 +16,7 @@ doc_quote := docs/text/quote.html docs/lecture/quote.html
 doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_quote)
 
 doc_link_assets := docs/assets/style.css
-doc_embed_assets := $(patsubst %,notes/assets/%.svg,left right up)
+doc_embed_assets := $(patsubst %,notes/assets/%.svg,left right up external)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 	template.html filter.lua scheme.xml)
 

@@ -7,6 +7,15 @@
 - extract favorite quotes from blockquotes annotated with {.favorite} or something
 - attribute lecture quotes to Hal/Gerald
 - do citations for inline quotes and block quotes, linking to SICP website
++ add external link icon to indicate header link affordance (and not _blank, just to indicate; precedent here in Wikipedia)
++ linkify all headers
++ title on all `<a>` tags for accessibility
++ `<cite>` insitead of `<em>` for book title
++ test with VoiceOver
++ add skip to main content link
++ fix "#" links in light of media query/body padding
+x Note: no need to link between exercise/text other than just having lists of exercise links in text where they appear
++ nav element for ToCs
 + consistent char[] sizes
 + DRY up docgen.c templates
 + change small to span and add space for Safari Reader

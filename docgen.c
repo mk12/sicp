@@ -45,7 +45,7 @@ struct Span {
     int len;
 };
 
-// An absent span (distinct from an empty span).
+// An absent span. Distinct from SPAN("").
 #define NULL_SPAN ((struct Span){NULL, 0})
 
 // Creates a span from a string literal or array.
@@ -61,7 +61,7 @@ static struct Span tolower_s(struct Span s, char *buf, int cap) {
 }
 
 // Name of the pandoc executable.
-static const char *const PANDOC = "pandoc";
+static const char PANDOC[] = "pandoc";
 
 // Pandoc options that differ between invocations.
 struct PandocOpts {
@@ -191,7 +191,7 @@ static bool wait_pandoc(struct PandocProc *proc) {
     return true;
 }
 
-// A Markdown section is represented by an integer s, where:
+// A Markdown sector is represented by an integer s, where:
 //
 //     (s >> 0*MS_BITS) & MS_MASK  gives the h1 index,
 //     (s >> 1*MS_BITS) & MS_MASK  gives the h2 index,
@@ -209,7 +209,7 @@ static bool wait_pandoc(struct PandocProc *proc) {
 //     ## B            ms=0x0201
 //     # Second        ms=0x0002
 //
-typedef uint64_t MarkdownSection;
+typedef uint64_t MarkdownSector;
 #define MS_MASK UINT64_C(0xff)
 #define MS_BITS UINT64_C(8)
 #define MS_INDEX(s, h) ((int)(((s) >> (h - 1)*MS_BITS) & MS_MASK))
@@ -217,10 +217,10 @@ typedef uint64_t MarkdownSection;
 #define MS_INCREMENT(h) (UINT64_C(1) << (h - 1)*MS_BITS)
 #define MS_NEXT(s, h) ((s & MS_MASK_UPTO(h)) + MS_INCREMENT(h))
 
-// Writes a dotted string representation of the section in buf. Writes no more
-// than size characters (including the null terminator). For example, the
-// section 0x030201 becomes "1.2.3".
-static void write_dotted_section(char *buf, int size, MarkdownSection section) {
+// Writes a dotted string representation of sector in buf. Writes no more than
+// size characters (including the null terminator). For example, the sector
+// 0x030201 becomes "1.2.3".
+static void write_dotted_section(char *buf, int size, MarkdownSector section) {
     assert(size >= 2);
     assert(section != 0);
     int i = 0;
@@ -241,8 +241,8 @@ struct MarkdownState {
     size_t cap;
     // True if we are inside a fenced code block.
     bool code;
-    // Current section within the document.
-    MarkdownSection section;
+    // Current sector within the document.
+    MarkdownSector sector;
     // If this line is a heading, 1/2/... for h1/h2/..., otherwise 0.
     int heading;
 };
@@ -257,7 +257,7 @@ static bool init_md(struct MarkdownState *state, const char *path) {
     state->file = file;
     state->line = NULL_SPAN;
     state->code = false;
-    state->section = 0;
+    state->sector = 0;
     state->heading = 0;
     return true;
 }
@@ -284,7 +284,7 @@ static bool scan_md(struct MarkdownState *state) {
         int h = 0;
         while (h < state->line.len && state->line.data[h] == '#') h++;
         if (h > 0 && h < state->line.len && state->line.data[h] == ' ') {
-            state->section = MS_NEXT(state->section, h);
+            state->sector = MS_NEXT(state->sector, h);
             state->heading = h;
         }
     }
@@ -329,38 +329,23 @@ static struct MarkdownHeading parse_md_heading(struct Span s) {
     };
 }
 
-// Helpers to construct input/output paths.
-#define MARKDOWN(f) ("notes/" f ".md")
-#define HTML(f) ("docs/" f ".html")
-#define SUBDIR(d) ("docs/" d "/")
-
-// Number of chapters in the textbook.
-#define NUM_CHAPTERS 5
-
-// Returns the number of sections in the given 1-based chapter.
-static int num_sections(int chapter) {
-    return (int[]){3, 5, 5, 4, 5}[chapter-1];
-}
-
-// Returns the Markdown section for the given textbook chapter/section.
-static MarkdownSection text_section(int chapter, int section) {
-    // Add 1 since "# Frontmatter" is the first h1.
-    return (MarkdownSection)chapter + 1 | ((MarkdownSection)section << MS_BITS);
-}
-
 // Buffer sizes for rendering various things.
-#define SZ_HREF 64
+#define SZ_HREF 256
+#define SZ_RELATIVE 32
 #define SZ_HEADING 64
 #define SZ_LABEL 8
 
-// Renders a heading. Includes a "#" anchor link if id is present, and a .number
-// span if heading.label is present.
+// Renders a heading to out. The level determines h1/h2/etc. If id is present,
+// uses it and renders a "#" link. If heading.label is present, renders a
+// .number span. If href_fmt is present, renders heading.title as a link using
+// href_fmt and the printf-style arguments that follow.
 static void render_heading(FILE *out, int level, struct Span id,
-        struct MarkdownHeading heading) {
+        struct MarkdownHeading heading, const char *href_fmt, ...) {
     if (id.data) {
         fprintf(out,
             "<h%d id=\"%.*s\" class=\"anchor\">"
-            "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>",
+            "<a class=\"anchor__link link\" href=\"#%.*s\""
+            " aria-hidden=\"true\">#</a>",
             level, id.len, id.data, id.len, id.data);
     } else {
         fprintf(out, "<h%d>", level);
@@ -369,31 +354,26 @@ static void render_heading(FILE *out, int level, struct Span id,
         fprintf(out, "<span class=\"number\">%.*s</span> ",
             heading.label.len, heading.label.data);
     }
-    fprintf(out, "%.*s</h%d>\n", heading.title.len, heading.title.data, level);
-}
-
-// Renders a linked heading for one of of the quote.html pages. The id must be
-// present. Includes a .number span if heading.label is present. The link's href
-// is given in printf style.
-static void render_quote_heading(FILE *out, int level, struct Span id,
-        struct MarkdownHeading heading, const char *href_fmt, ...) {
-    char href[SZ_HREF];
-    va_list args;
-    va_start(args, href_fmt);
-    vsnprintf(href, sizeof href, href_fmt, args);
-    va_end(args);
-    fprintf(out,
-        "<h%d id=\"%.*s\" class=\"anchor\">"
-        "<a class=\"anchor__link link\" href=\"#%.*s\">#</a>",
-        level, id.len, id.data, id.len, id.data);
-    if (heading.label.data) {
-        fprintf(out, "<span class=\"number\">%.*s</span> ",
-            heading.label.len, heading.label.data);
+    if (href_fmt) {
+        char href[SZ_HREF];
+        va_list args;
+        va_start(args, href_fmt);
+        vsnprintf(href, sizeof href, href_fmt, args);
+        va_end(args);
+        fprintf(out,
+            "<a class=\"link\" href=\"%s\">%.*s"
+            // &#65279; is the "zero width no-break space" entity. We put this
+            // at the start of the span to prevent the external icon from
+            // wrapping onto the next line by itself.
+            "<span class=\"nowrap\">&#65279;"
+            "<svg class=\"external\" viewBox=\"0 0 24 24\">"
+            "<use xlink:href=\"#external\"/>"
+            "</svg></span></a>",
+            href, heading.title.len, heading.title.data); 
+    } else {
+        fwrite(heading.title.data, heading.title.len, 1, out);
     }
-    fprintf(out,
-        "<a class=\"link\" href=\"%s\">%.*s</a>"
-        "</h%d>\n",
-        href, heading.title.len, heading.title.data, level);
+    fprintf(out, "</h%d>\n", level);
 }
 
 // State to keep track of while rendering a table of contents.
@@ -407,7 +387,8 @@ struct TocState {
 // Renders the start of a table of contents.
 static struct TocState render_toc_start(FILE *out) {
     struct MarkdownHeading h = {.label = NULL_SPAN, .title = SPAN("Contents")};
-    render_heading(out, 2, SPAN("contents"), h);
+    render_heading(out, 2, SPAN("contents"), h, NULL);
+    fputs("<nav aria-labelledby=\"contents\">", out);
     return (struct TocState){.out = out, .depth = 0};
 }
 
@@ -417,7 +398,7 @@ static void render_toc_end(struct TocState *toc) {
         fputs("</ul></li>", toc->out);
     }
     assert(--toc->depth == 0);
-    fputs("</ul>\n", toc->out);
+    fputs("</ul></nav>\n", toc->out);
 }
 
 // Renders an item in a table of contents. The depth can be at most one greater
@@ -425,7 +406,7 @@ static void render_toc_end(struct TocState *toc) {
 static void render_toc_item(
         struct TocState *toc, int depth, struct MarkdownHeading heading,
         const char *href_fmt, ...) {
-    char href[SZ_HREF];
+    char href[SZ_RELATIVE];
     va_list args;
     va_start(args, href_fmt);
     vsnprintf(href, sizeof href, href_fmt, args);
@@ -455,6 +436,77 @@ static void render_toc_item(
         heading.label.len, heading.label.data, href,
         heading.title.len, heading.title.data);
 }
+
+// Returns the Markdown sector for the given textbook chapter/section.
+static MarkdownSector make_sector(int chapter, int section) {
+    // Add 1 since "# Frontmatter" is the first h1.
+    return (MarkdownSector)chapter + 1 | ((MarkdownSector)section << MS_BITS);
+}
+
+// Number of chapters in the textbook.
+#define NUM_CHAPTERS 5
+
+// Returns the number of sections in the given 1-based chapter.
+static int num_sections(int chapter) {
+    assert(chapter >= 1 && chapter <= 5);
+    return (int[]){3, 5, 5, 4, 5}[chapter-1];
+}
+
+// Base URL for the online SICP textbook.
+static const char TEXT_URL_BASE[] =
+    "https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H";
+
+// Base URL for the online SICP video lectures.
+static const char LECTURE_URL_BASE[] =
+    "https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures";
+
+// Returns the page number to use in the online SICP textbook URL for a given
+// sector in text.md. Only takes into account the chapter and section.
+static int text_page_num(MarkdownSector s) {
+    int h1 = MS_INDEX(s, 1);
+    int h2 = MS_INDEX(s, 2);
+    assert(h1 > 0);
+    if (h1 == 1) {
+        assert(h2 >= 1 && h2 <= 3);
+        return (int[]){3, 5, 7}[h2-1];
+    }
+    int chapter = h1 - 1;
+    int section = h2;
+    return 8 + chapter + (int[]){0, 3, 8, 13, 17}[chapter-1] + section;
+}
+
+// Writes into buf the page name to use in the online SICP video lecture URL for
+// a given lecture heading.
+static void lecture_page_name(
+        struct MarkdownHeading heading, char *buf, int size) {
+    assert(size > 0);
+    int i = 0;
+    for (int j = 0; j < heading.label.len; j++) {
+        char c = tolower(heading.label.data[i]);
+        buf[i++] = c;
+        if (i == size) goto overflow;
+    }
+    buf[i++] = '-';
+    if (i == size) goto overflow;
+    for (int j = 0; j < heading.title.len; j++) {
+        char c = tolower(heading.title.data[j]);
+        if (isalpha(c) || isdigit(c)) {
+            buf[i++] = c;
+        } else if (buf[i-1] != '-') {
+            buf[i++] = '-';
+        }
+        if (i == size) goto overflow;
+    }
+    buf[i++] = '\0';
+    return;
+overflow:
+    assert(false);
+}
+
+// Helpers to construct input/output paths.
+#define MARKDOWN(f) ("notes/" f ".md")
+#define HTML(f) ("docs/" f ".html")
+#define SUBDIR(d) ("docs/" d "/")
 
 // Generates docs/index.html.
 static bool gen_index(void) {
@@ -490,7 +542,7 @@ static bool gen_text_index(void) {
         return false;
     }
     fputs("# Textbook Notes\n\n", proc.in);
-    while (scan_md(&state) && state.section == 0) {
+    while (scan_md(&state) && state.sector == 0) {
         copy_md(&state, proc.in);
     }
     struct TocState toc = render_toc_start(proc.in);
@@ -505,16 +557,16 @@ static bool gen_text_index(void) {
             struct Span id = tolower_s(h.title, buf, sizeof buf);
             render_toc_item(&toc, 1, h, "front.html#%.*s", id.len, id.data);
         }
-    } while (scan_md(&state) && MS_INDEX(state.section, 1) <= 1);
+    } while (scan_md(&state) && MS_INDEX(state.sector, 1) <= 1);
     do {
         if (state.heading == 1) {
             render_toc_item(&toc, 1, parse_md_heading(state.line),
-                "%d/index.html", MS_INDEX(state.section, 1) - 1);
+                "%d/index.html", MS_INDEX(state.sector, 1) - 1);
         } else if (state.heading == 2) {
             render_toc_item(&toc, 2, parse_md_heading(state.line),
                 "%d/%d.html",
-                MS_INDEX(state.section, 1) - 1,
-                MS_INDEX(state.section, 2));
+                MS_INDEX(state.sector, 1) - 1,
+                MS_INDEX(state.sector, 2));
         }
     } while (scan_md(&state));
     render_toc_end(&toc);
@@ -541,17 +593,17 @@ static bool gen_text_quote(void) {
         return false;
     }
     fprintf(proc.in, "# Highlights\n\n");
-    while (scan_md(&state) && state.section != 1);
+    while (scan_md(&state) && state.sector != 1);
     while (scan_md(&state) && state.heading != 1) {
         if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             if (h.label.data) {
-                render_quote_heading(proc.in, 2, h.label, h,
+                render_heading(proc.in, 2, h.label, h,
                     "%.*s/index.html", h.label.len, h.label.data);
             } else {
                 char buf[SZ_HEADING];
                 struct Span id = tolower_s(h.title, buf, sizeof buf);
-                render_quote_heading(proc.in, 2, id, h,
+                render_heading(proc.in, 2, id, h,
                     "front.html#%.*s", id.len, id.data);
             }
         } else {
@@ -580,14 +632,15 @@ static bool gen_text_front(void) {
     })) {
         return false;
     }
-    while (scan_md(&state) && state.section != 1);
+    while (scan_md(&state) && state.sector != 1);
     do {
         if (state.heading > 1) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
-            render_heading(proc.in, state.heading, id, h);
+            render_heading(proc.in, state.heading, id, h,
+                "%s-%d.html", TEXT_URL_BASE, text_page_num(state.sector));
         } else {
             copy_md(&state, proc.in);
         }
@@ -633,24 +686,25 @@ static bool gen_text_chapter(const char *output) {
     })) {
         return false;
     }
-    const MarkdownSection target_section = text_section(chapter, 0);
-    while (scan_md(&state) && state.section != target_section);
-    assert(state.section == target_section);
+    const MarkdownSector target_sector = make_sector(chapter, 0);
+    while (scan_md(&state) && state.sector != target_sector);
+    assert(state.sector == target_sector);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    render_heading(proc.in, 1, NULL_SPAN, h);
+    render_heading(proc.in, 1, NULL_SPAN, h,
+        "%s-%d.html", TEXT_URL_BASE, text_page_num(target_sector));
     while (scan_md(&state) && state.heading == 0) {
         copy_md(&state, proc.in);
     }
     struct TocState toc = render_toc_start(proc.in);
     do {
         if (state.heading == 2) {
-            int section = MS_INDEX(state.section, 2);
+            int section = MS_INDEX(state.sector, 2);
             render_toc_item(&toc, 1, parse_md_heading(state.line),
                 "%d.html", section);
         } else if (state.heading == 3) {
-            int section = MS_INDEX(state.section, 2);
-            int subsection = MS_INDEX(state.section, 3);
+            int section = MS_INDEX(state.sector, 2);
+            int subsection = MS_INDEX(state.sector, 3);
             render_toc_item(&toc, 2, parse_md_heading(state.line),
                 "%d.html#%d.%d.%d", section, chapter, section, subsection);
         }
@@ -714,24 +768,28 @@ static bool gen_text_section(const char *output) {
     })) {
         return false;
     }
-    const MarkdownSection target_section = text_section(chapter, section);
-    while (scan_md(&state) && state.section != target_section);
-    assert(state.section == target_section);
+    const MarkdownSector target_sector = make_sector(chapter, section);
+    while (scan_md(&state) && state.sector != target_sector);
+    assert(state.sector == target_sector);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    render_heading(proc.in, 1, NULL_SPAN, h);
+    const int page_num = text_page_num(target_sector);
+    render_heading(proc.in, 1, NULL_SPAN, h,
+        "%s-%d.html", TEXT_URL_BASE, page_num);
     while (scan_md(&state) && state.heading != 1 && state.heading != 2) {
         if (state.heading >= 3) {
             h = parse_md_heading(state.line);
             if (h.label.data) {
                 assert(state.heading == 3);
-                render_heading(proc.in, 2, h.label, h);
+                render_heading(proc.in, 2, h.label, h,
+                    "%s-%d.html#%%_sec_%d.%d.%d", TEXT_URL_BASE, page_num,
+                    chapter, section, MS_INDEX(state.sector, 3));
             } else {
                 assert(state.heading == 4);
                 char id[SZ_LABEL];
                 snprintf(id, sizeof id, "%d.%d.%d.%d", chapter, section,
-                    MS_INDEX(state.section, 3), MS_INDEX(state.section, 4));
-                render_heading(proc.in, 3, SPAN(id), h);
+                    MS_INDEX(state.sector, 3), MS_INDEX(state.sector, 4));
+                render_heading(proc.in, 3, SPAN(id), h, NULL);
             }
         } else {
             copy_md(&state, proc.in);
@@ -763,7 +821,7 @@ static bool gen_lecture_index(void) {
         return false;
     }
     fprintf(proc.in, "# Lecture Notes\n\n");
-    while (scan_md(&state) && state.section == 0) {
+    while (scan_md(&state) && state.sector == 0) {
         copy_md(&state, proc.in);
     }
     struct TocState toc = render_toc_start(proc.in);
@@ -803,15 +861,14 @@ static bool gen_lecture_quote(void) {
         return false;
     }
     fprintf(proc.in, "# Highlights\n\n");
-    while (scan_md(&state) && state.section != 2);
+    while (scan_md(&state) && state.sector != 2);
     while (scan_md(&state)) {
         if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             assert(h.label.data);
             char buf[SZ_LABEL];
             struct Span id = tolower_s(h.label, buf, sizeof buf);
-            render_quote_heading(proc.in, 2, id, h,
-                "%.*s.html", id.len, id.data);
+            render_heading(proc.in, 2, id, h, "%.*s.html", id.len, id.data);
         } else {
             copy_md(&state, proc.in);
         }
@@ -842,7 +899,7 @@ static bool gen_lecture_page(const char *output) {
     snprintf(title, sizeof title, "SICP Lecture %d%c Notes",
         number, toupper(a_or_b));
     const char *prev;
-    char prev_buf[SZ_HREF];
+    char prev_buf[SZ_RELATIVE];
     if (number == 1 && a_or_b == 'a') {
         prev = "quote.html";
     } else {
@@ -852,7 +909,7 @@ static bool gen_lecture_page(const char *output) {
         prev = prev_buf;
     }
     const char *next;
-    char next_buf[SZ_HREF];
+    char next_buf[SZ_RELATIVE];
     if (number == 10 && a_or_b == 'b') {
         next = NULL;
     } else {
@@ -874,19 +931,22 @@ static bool gen_lecture_page(const char *output) {
     })) {
         return false;
     }
-    const MarkdownSection target_section = 1 + (number - 1) * 2 + a_or_b - 'a';
-    while (scan_md(&state) && state.section != target_section);
-    assert(state.section == target_section);
+    const MarkdownSector target_sector = 1 + (number - 1) * 2 + a_or_b - 'a';
+    while (scan_md(&state) && state.sector != target_sector);
+    assert(state.sector == target_sector);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    render_heading(proc.in, 1, NULL_SPAN, h);
+    char lecture_page[SZ_HEADING];
+    lecture_page_name(h, lecture_page, sizeof lecture_page);
+    render_heading(proc.in, 1, NULL_SPAN, h,
+        "%s/%s", LECTURE_URL_BASE, lecture_page);
     while (scan_md(&state) && state.heading != 1) {
         if (state.heading > 1) {
             h = parse_md_heading(state.line);
             assert(!h.label.data);
             char id[SZ_LABEL];
-            write_dotted_section(id, sizeof id, state.section >> MS_BITS);
-            render_heading(proc.in, state.heading, SPAN(id), h);
+            write_dotted_section(id, sizeof id, state.sector >> MS_BITS);
+            render_heading(proc.in, state.heading, SPAN(id), h, NULL);
         } else {
             copy_md(&state, proc.in);
         }

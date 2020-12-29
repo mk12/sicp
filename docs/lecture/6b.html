@@ -24,17 +24,23 @@
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
+<svg style="display: none;">
+  <symbol id="external">
+    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link "
-      href="../text/index.html">Text</a>
+      href="../text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link  sitenav__item--active"
-      href="../lecture/index.html">Lecture</a>
+      href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link "
-      href="../exercise/index.html">Exercise</a>
+      href="../exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="GitHub Mark" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
         <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>
@@ -43,35 +49,38 @@
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="6a.html">
+    <a class="pagenav__link link" href="6a.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="7a.html">
+    <a class="pagenav__link link" href="7a.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
-<main>
+<main id="main">
 
 <h1>
-<span class="number">6B</span> Streams, Part 2
+<span class="number">6B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6b-streams-part-2">Streams, Part 2<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1">#</a>Recap
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Recap
 </h3>
 <ul>
 <li>We’ve been looking at stream processing, an on-demand method of computation.</li>
@@ -83,7 +92,7 @@
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (head s)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (nth-stream (<span class="fu">-1+</span> n) (tail s))))</span></code></pre></div>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2">#</a>Infinite streams
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Infinite streams
 </h3>
 <ul>
 <li>How long can a stream be? It can be <em>infinite</em>!</li>
@@ -95,7 +104,7 @@
 <li>Is this really all the integers, or is it just cleverly arranged so that whenever you look for an integer you find it there? This is a sort of philosophical question.</li>
 </ul>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3">#</a>Sieve of Eratosthenes
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Sieve of Eratosthenes
 </h3>
 <ul>
 <li>Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you’re left with is all the primes.</li>
@@ -109,10 +118,10 @@
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(nth-stream <span class="cn">20</span> primes)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">73</span></span></code></pre></div>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1">#</a>Defining streams implicitly
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Defining streams implicitly
 </h3>
 <ul>
 <li>We’ve so far seen procedures that recursively create streams.</li>
@@ -131,7 +140,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> integers (add-streams integers ones))</span></code></pre></div>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2">#</a>More examples
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>More examples
 </h3>
 <ul>
 <li>We can calculate the integral <span class="math inline">\int s\,dt</span> the same way you would in signal processing:</li>
@@ -149,7 +158,7 @@
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">cons-stream</span> <span class="cn">1</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                            (add-streams fibs (tail fibs)))))</span></code></pre></div>
 <h3 id="2.3" class="anchor">
-<a class="anchor__link link" href="#2.3">#</a>Explicit <code>delay</code>
+<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a>Explicit <code>delay</code>
 </h3>
 <ul>
 <li>Let’s say we want to solve <span class="math inline">y&#39;=y^2,\;y(0)=1</span> using the step <span class="math inline">dt=0.001</span>.</li>
@@ -170,10 +179,10 @@
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) <span class="cn">1</span> <span class="cn">0.001</span>))</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> dy (map-stream square y))</span></code></pre></div>
 <h2 id="3" class="anchor">
-<a class="anchor__link link" href="#3">#</a>Part 3
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a>Part 3
 </h2>
 <h3 id="3.1" class="anchor">
-<a class="anchor__link link" href="#3.1">#</a>Normal-order evaluation
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a>Normal-order evaluation
 </h3>
 <ul>
 <li>We’ve been divorcing time in the program from time in the computer.</li>
@@ -188,7 +197,7 @@
 <li><em>Functional</em> programming languages avoid this issue by disallowing side effects.</li>
 </ul>
 <h3 id="3.2" class="anchor">
-<a class="anchor__link link" href="#3.2">#</a>Avoiding mutable state
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a>Avoiding mutable state
 </h3>
 <ul>
 <li>What about generating random numbers? We wanted modularity, so we encapsulated the random number generation with local state.</li>
@@ -201,24 +210,27 @@
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="6a.html">
+    <a class="pagenav__link link" href="6a.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="7a.html">
+    <a class="pagenav__link link" href="7a.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>

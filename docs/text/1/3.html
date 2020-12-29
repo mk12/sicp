@@ -24,17 +24,23 @@
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
+<svg style="display: none;">
+  <symbol id="external">
+    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../../index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link  sitenav__item--active"
-      href="../../text/index.html">Text</a>
+      href="../../text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link "
-      href="../../lecture/index.html">Lecture</a>
+      href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link "
-      href="../../exercise/index.html">Exercise</a>
+      href="../../exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="GitHub Mark" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
         <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>
@@ -43,29 +49,32 @@
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="2.html">
+    <a class="pagenav__link link" href="2.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="../2/index.html">
+    <a class="pagenav__link link" href="../2/index.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
-<main>
+<main id="main">
 
 <h1>
-<span class="number">1.3</span> Formulating Abstractions with Higher-Order Procedures
+<span class="number">1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html">Formulating Abstractions with Higher-Order Procedures<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <blockquote>
 <p>We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers. (74)</p>
@@ -82,7 +91,7 @@
 <li>These are called <em>higher-order</em> procedures.</li>
 </ul>
 <h2 id="1.3.1" class="anchor">
-<a class="anchor__link link" href="#1.3.1">#</a><span class="number">1.3.1</span> Procedures as Arguments
+<a class="anchor__link link" href="#1.3.1" aria-hidden="true">#</a><span class="number">1.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.1">Procedures as Arguments<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Procedures that compute a sum are all similar. They are all based on the following template:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> a b)</span>
@@ -95,12 +104,12 @@
 <p>The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. (77)</p>
 </blockquote>
 <h2 id="1.3.2" class="anchor">
-<a class="anchor__link link" href="#1.3.2">#</a><span class="number">1.3.2</span> Constructing Procedures Using <code>Lambda</code>
+<a class="anchor__link link" href="#1.3.2" aria-hidden="true">#</a><span class="number">1.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.2">Constructing Procedures Using <code>Lambda</code><span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p><code class="sourceCode scheme"><span class="kw">lambda</span></code> creates anonymous procedures. They are just like the procedures created by <code class="sourceCode scheme"><span class="kw">define</span></code>, but without a name: <code class="sourceCode scheme">(<span class="kw">lambda</span> (<span class="sc">«</span><span class="ss">formal-parameters</span><span class="sc">»</span>) <span class="sc">«</span><span class="ss">body</span><span class="sc">»</span>)</code>.</p>
 <p>A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.</p>
 <h3 id="1.3.2.1" class="anchor">
-<a class="anchor__link link" href="#1.3.2.1">#</a>Using <code>let</code> to create local variables
+<a class="anchor__link link" href="#1.3.2.1" aria-hidden="true">#</a>Using <code>let</code> to create local variables
 </h3>
 <ul>
 <li>We often need local variables other than the ones that have been bound as formal parameters.</li>
@@ -126,7 +135,7 @@
 <li>You can use let-expressions (<code class="sourceCode scheme"><span class="kw">let</span></code>, <code class="sourceCode scheme"><span class="kw">let*</span></code>, and <code class="sourceCode scheme"><span class="kw">letrec</span></code>) instead of internal definitions (block structure).</li>
 </ul>
 <h2 id="1.3.3" class="anchor">
-<a class="anchor__link link" href="#1.3.3">#</a><span class="number">1.3.3</span> Procedures as General Methods
+<a class="anchor__link link" href="#1.3.3" aria-hidden="true">#</a><span class="number">1.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.3">Procedures as General Methods<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>So far, we have seen</p>
 <ul>
@@ -135,7 +144,7 @@
 </ul>
 <p>Now we will take it a bit further.</p>
 <h3 id="1.3.3.1" class="anchor">
-<a class="anchor__link link" href="#1.3.3.1">#</a>Finding roots of equations by the half-interval method
+<a class="anchor__link link" href="#1.3.3.1" aria-hidden="true">#</a>Finding roots of equations by the half-interval method
 </h3>
 <ul>
 <li>The <em>half-interval</em> method: a simple but powerful technique for finding the solutions to <span class="math inline">f(x) = 0</span>.</li>
@@ -143,7 +152,7 @@
 <li>To narrow it down, we let <span class="math inline">x</span> be the average of <span class="math inline">a</span> and <span class="math inline">b</span>, and then replace either the left bound or the right bound with it.</li>
 </ul>
 <h3 id="1.3.3.2" class="anchor">
-<a class="anchor__link link" href="#1.3.3.2">#</a>Finding fixed points of a function
+<a class="anchor__link link" href="#1.3.3.2" aria-hidden="true">#</a>Finding fixed points of a function
 </h3>
 <ul>
 <li>A number <span class="math inline">x</span> is a <em>fixed point</em> of a function if <span class="math inline">f(x) = x</span>.</li>
@@ -151,7 +160,7 @@
 <li>The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.</li>
 </ul>
 <h2 id="1.3.4" class="anchor">
-<a class="anchor__link link" href="#1.3.4">#</a><span class="number">1.3.4</span> Procedures as Returned Values
+<a class="anchor__link link" href="#1.3.4" aria-hidden="true">#</a><span class="number">1.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.4">Procedures as Returned Values<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (average-damp f)</span>
@@ -165,7 +174,7 @@
 <p>In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.</p>
 </blockquote>
 <h3 id="1.3.4.1" class="anchor">
-<a class="anchor__link link" href="#1.3.4.1">#</a>Newton’s method
+<a class="anchor__link link" href="#1.3.4.1" aria-hidden="true">#</a>Newton’s method
 </h3>
 <p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function <span class="math inline">f(x)</span>, the solution to <span class="math inline">f(x) = 0</span> is given by the fixed point of</p>
 <p><span class="math display">x ↦ x - \frac{f(x)}{f&#39;(x)}.</span></p>
@@ -180,7 +189,7 @@
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>((deriv cube) <span class="cn">5</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cn">75.00014999664018</span></span></code></pre></div>
 <h3 id="1.3.4.2" class="anchor">
-<a class="anchor__link link" href="#1.3.4.2">#</a>Abstractions and first-class procedures
+<a class="anchor__link link" href="#1.3.4.2" aria-hidden="true">#</a>Abstractions and first-class procedures
 </h3>
 <ul>
 <li>Compound procedures permit us to express general methods of computing as explicit elements in our programming language.</li>
@@ -199,24 +208,27 @@
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="2.html">
+    <a class="pagenav__link link" href="2.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="../2/index.html">
+    <a class="pagenav__link link" href="../2/index.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>

@@ -24,17 +24,23 @@
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
+<svg style="display: none;">
+  <symbol id="external">
+    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../../index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link  sitenav__item--active"
-      href="../../text/index.html">Text</a>
+      href="../../text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link "
-      href="../../lecture/index.html">Lecture</a>
+      href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link "
-      href="../../exercise/index.html">Exercise</a>
+      href="../../exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="GitHub Mark" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
         <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>
@@ -43,29 +49,32 @@
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="1.html">
+    <a class="pagenav__link link" href="1.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="3.html">
+    <a class="pagenav__link link" href="3.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
-<main>
+<main id="main">
 
 <h1>
-<span class="number">2.2</span> Hierarchical Data and the Closure Property
+<span class="number">2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html">Hierarchical Data and the Closure Property<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
 <li>Pairs form a primitive “glue” for compound data objects.</li>
@@ -76,7 +85,7 @@
 <li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
 </ul>
 <h2 id="2.2.1" class="anchor">
-<a class="anchor__link link" href="#2.2.1">#</a><span class="number">2.2.1</span> Representing Sequences
+<a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a><span class="number">2.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.1">Representing Sequences<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Among the things we can build with pairs is a sequence.</li>
@@ -89,10 +98,10 @@
 <li>The nil value can be thought of as an empty list.</li>
 </ul>
 <h3 id="2.2.1.1" class="anchor">
-<a class="anchor__link link" href="#2.2.1.1">#</a>List operations
+<a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a>List operations
 </h3>
 <ul>
-<li>We can get at the nth item of the list by <code class="sourceCode scheme"><span class="fu">cdr</span></code> ing one less than <span class="math inline">n</span> times, and then taking the <code class="sourceCode scheme"><span class="fu">car</span></code>.</li>
+<li>We can get at the nth item of the list by <code class="sourceCode scheme"><span class="fu">cdr</span></code>ing one less than <span class="math inline">n</span> times, and then taking the <code class="sourceCode scheme"><span class="fu">car</span></code>.</li>
 <li>Scheme includes a primitive predicate <code class="sourceCode scheme"><span class="fu">null?</span></code> which is true if its argument is the empty list.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)</span>
@@ -114,7 +123,7 @@
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      list2</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">cons</span> (<span class="fu">car</span> list1 (<span class="fu">append</span> (<span class="fu">cdr</span> list1) list2)))))</span></code></pre></div>
 <h3 id="2.2.1.2" class="anchor">
-<a class="anchor__link link" href="#2.2.1.2">#</a>Mapping over lists
+<a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a>Mapping over lists
 </h3>
 <ul>
 <li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
@@ -134,7 +143,7 @@
 <p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
 </blockquote>
 <h2 id="2.2.2" class="anchor">
-<a class="anchor__link link" href="#2.2.2">#</a><span class="number">2.2.2</span> Hierarchical Structures
+<a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a><span class="number">2.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.2">Hierarchical Structures<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We can represent lists whose elements themselves may also be lists. We can also think of them as <em>trees</em>.</li>
@@ -148,14 +157,14 @@
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 (count-leaves (<span class="fu">cdr</span> x))))))</span></code></pre></div>
 <h3 id="2.2.2.1" class="anchor">
-<a class="anchor__link link" href="#2.2.2.1">#</a>Mapping over trees
+<a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a>Mapping over trees
 </h3>
 <ul>
 <li>We can deal with trees using <code class="sourceCode scheme"><span class="fu">map</span></code> together with recursion.</li>
 <li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
 </ul>
 <h2 id="2.2.3" class="anchor">
-<a class="anchor__link link" href="#2.2.3">#</a><span class="number">2.2.3</span> Sequences as Conventional Interfaces
+<a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a><span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Abstractions preserves the flexibility to experiment with alternative representations.</li>
@@ -163,7 +172,7 @@
 <li>To make abstract operations for things other than numbers, we need to have a conventional style in which we manipulate data.</li>
 </ul>
 <h3 id="2.2.3.1" class="anchor">
-<a class="anchor__link link" href="#2.2.3.1">#</a>Sequence operations
+<a class="anchor__link link" href="#2.2.3.1" aria-hidden="true">#</a>Sequence operations
 </h3>
 <ul>
 <li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
@@ -174,7 +183,7 @@
 <li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
 </ul>
 <h3 id="2.2.3.2" class="anchor">
-<a class="anchor__link link" href="#2.2.3.2">#</a>Nested mappings
+<a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a>Nested mappings
 </h3>
 <ul>
 <li>For many computations, the sequence paradigm can be used where loops would otherwise be needed.</li>
@@ -190,14 +199,14 @@
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     (permutations (<span class="fu">remove</span> x s))))</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              s)))</span></code></pre></div>
 <h2 id="2.2.4" class="anchor">
-<a class="anchor__link link" href="#2.2.4">#</a><span class="number">2.2.4</span> Example: A Picture Language
+<a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a><span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We will use a simple language for drawing pictures.</li>
 <li>The data objects are represented as procedures rather than as list structure.</li>
 </ul>
 <h3 id="2.2.4.1" class="anchor">
-<a class="anchor__link link" href="#2.2.4.1">#</a>The picture language
+<a class="anchor__link link" href="#2.2.4.1" aria-hidden="true">#</a>The picture language
 </h3>
 <ul>
 <li>There is only one kind of element, called a <em>painter</em>.</li>
@@ -207,14 +216,14 @@
 <li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
 </ul>
 <h3 id="2.2.4.2" class="anchor">
-<a class="anchor__link link" href="#2.2.4.2">#</a>Higher-order operations
+<a class="anchor__link link" href="#2.2.4.2" aria-hidden="true">#</a>Higher-order operations
 </h3>
 <ul>
 <li>Just as we have higher-order procedures, we can have higher-order painting operations.</li>
 <li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
 </ul>
 <h3 id="2.2.4.3" class="anchor">
-<a class="anchor__link link" href="#2.2.4.3">#</a>Frames
+<a class="anchor__link link" href="#2.2.4.3" aria-hidden="true">#</a>Frames
 </h3>
 <ul>
 <li>Painters paint their contents in frames.</li>
@@ -224,7 +233,7 @@
 <li>We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.</li>
 </ul>
 <h3 id="2.2.4.4" class="anchor">
-<a class="anchor__link link" href="#2.2.4.4">#</a>Painters
+<a class="anchor__link link" href="#2.2.4.4" aria-hidden="true">#</a>Painters
 </h3>
 <ul>
 <li>A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.</li>
@@ -232,14 +241,14 @@
 <li>Painters as procedures is a powerful abstraction barrier.</li>
 </ul>
 <h3 id="2.2.4.5" class="anchor">
-<a class="anchor__link link" href="#2.2.4.5">#</a>Transforming and combining painters
+<a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a>Transforming and combining painters
 </h3>
 <ul>
 <li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
 <li>They are all based on the procedure <code class="sourceCode scheme">transform-painter</code>.</li>
 </ul>
 <h3 id="2.2.4.6" class="anchor">
-<a class="anchor__link link" href="#2.2.4.6">#</a>Levels of language for robust design
+<a class="anchor__link link" href="#2.2.4.6" aria-hidden="true">#</a>Levels of language for robust design
 </h3>
 <ul>
 <li>The picture language uses abstraction with procedures and data.</li>
@@ -254,24 +263,27 @@
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="1.html">
+    <a class="pagenav__link link" href="1.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="3.html">
+    <a class="pagenav__link link" href="3.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>

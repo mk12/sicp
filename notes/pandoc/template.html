@@ -11,17 +11,19 @@ $endif$
   <link rel="stylesheet" href="$root$assets/style.css">
 </head>
 <body>
+$if(up)$$../assets/external.svg()$$endif$
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header $if(up)$$else$ header--lone$endif$">
   <a class="title link" href="$root$index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link $if(text)$ sitenav__item--active$endif$"
-      href="$root$text/index.html">Text</a>
+      href="$root$text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link $if(lecture)$ sitenav__item--active$endif$"
-      href="$root$lecture/index.html">Lecture</a>
+      href="$root$lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link $if(exercise)$ sitenav__item--active$endif$"
-      href="$root$exercise/index.html">Exercise</a>
+      href="$root$exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       $^$$../assets/github.svg()$
     </a>
   </nav>
@@ -31,7 +33,7 @@ $if(up)$
   $^$$pagenav()$
 </nav>
 $endif$
-<main>
+<main id="main">
 $if(index)$$../assets/wizard.svg()$$endif$
 $body$
 </main>

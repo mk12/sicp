@@ -1,15 +1,12 @@
-These notes are based on the second edition of [_Structure and Interpretation of Computer Programs_][sicp] by Hal Abelson, Jerry Sussman, and Julie Sussman. For the best reading experience I recommend [Andres Raba's version][ebook], available [online][] or as a [PDF][].
+These notes are based on the second edition of <cite>[Structure and Interpretation of Computer Programs][sicp]</cite> by Hal Abelson, Jerry Sussman, and Julie Sussman.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
-[ebook]: https://sicpebook.wordpress.com/ebook/
-[online]: http://sarabander.github.io/sicp/
-[pdf]: https://github.com/sarabander/sicp-pdf/raw/master/sicp.pdf
 
 # Frontmatter
 
 ## Dedication
 
-> What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. [@sicp dedication]
+> What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. [@sicp {dedication}]
 <!-- (xii) -->
 
 ## Foreword
@@ -95,7 +92,7 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
 
 ### 1.1.5: The Substitution Model for Procedure Application
 
-This is the substation model:
+This is the substitution model:
 
 > To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.
 
@@ -143,7 +140,8 @@ An example of normal order procedure application:
 
 ### 1.1.7: Example: Square Roots by Newton's Method
 
-> But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. (28)
+> But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. [@text 1.1.7]
+<!-- 28 -->
 
 - In mathematics, you can say "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$." This is not a procedure.
 - Mathematical functions describes things (declarative knowledge); procedures describe how to do things (imperative knowledge).
@@ -588,7 +586,7 @@ Now we can do things like this:
 
 #### List operations
 
-- We can get at the nth item of the list by `cdr`&thinsp;ing one less than $n$ times, and then taking the `car`.
+- We can get at the nth item of the list by `cdr`ing one less than $n$ times, and then taking the `car`.
 - Scheme includes a primitive predicate `null?` which is true if its argument is the empty list.
 
 ```
@@ -1031,7 +1029,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Done properly, this allows us to add new objects or new actions easily and locally, without changing the whole strategy.
 - Program organization depends on the system to be modelled.
 - Two "world views": concentrate on _objects_, or on _streams_.
-- Objects: Must allow change but preserve identity. Abandon the substation model for the environment model. Grapple with time in the computational model.
+- Objects: Must allow change but preserve identity. Abandon the substitution model for the environment model. Grapple with time in the computational model.
 - Streams: Decouple simulated time in the model from the order of events that take place in the computer. Delayed evaluation.
 
 ## 3.1: Assignment and Local State
@@ -1163,7 +1161,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The advantages of local state and assignment come at a price.
 - The substitution model of procedure application is no longer sufficient to properly interpret out programs.
 - Programming without the use of assignment, as we have done in the first two chapters, is called _functional programming_.
-- Observe what happens when we try using the substation model:
+- Observe what happens when we try using the substitution model:
 
 ```
 (define (make-simplified-withdraw balance)
@@ -1175,7 +1173,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 (set! balance (- 25 20)) 25
 ```
 
-- Adhering to the substation model, we set `balance` to 5 and then return 25 as the value of the expression.
+- Adhering to the substitution model, we set `balance` to 5 and then return 25 as the value of the expression.
 - This is wrong. We shouldn't have substituted 25 for `balance` everywhere, because the assignment changed it.
 - Before, a variable was simply a name for a value.
 - Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.

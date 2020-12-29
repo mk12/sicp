@@ -17,6 +17,7 @@ html, body, blockquote, p, ul, ol, li {
     --fg: #333;
     --intense: #000;
     --link: #4973c1;
+    --link-faded: #a4ccff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,6 +30,7 @@ html, body, blockquote, p, ul, ol, li {
         --fg: #ccc;
         --intense: #eee;
         --link: #61afef;
+        --link-faded: #006ca7;
     }
 }
 
@@ -71,6 +73,10 @@ h2::after {
     display: block;
     margin-top: 0.1667em;
     border-bottom: 1px solid var(--border);
+}
+
+em, cite {
+    font-style: italic;
 }
 
 a {
@@ -148,6 +154,10 @@ blockquote {
     margin-left: 0.5em;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 .toc {
     display: table;
     margin: 0;
@@ -171,7 +181,8 @@ blockquote {
 body {
     max-width: 800px;
     margin: 0 auto;
-    padding: 50px 25px;
+    /* 26px is just enough room for .anchor__link. */
+    padding: 50px 26px;
 }
 
 .header {
@@ -180,6 +191,20 @@ body {
     align-items: baseline;
     padding-bottom: 5px;
     border-bottom: 3px solid var(--border);
+}
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 10px;
+    width: 1px;
+    height: 1px;
+}
+
+.skip-link:focus {
+    left: 10px;
+    width: auto;
+    height: auto;
 }
 
 .title {
@@ -277,6 +302,9 @@ body {
     .sitenav__item--last {
         padding-right: 14px;
     }
+    .anchor__link {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 410px) {
@@ -304,6 +332,20 @@ svg {
     stroke-width: 2px;
     fill: none;
     vertical-align: -3px;
+}
+
+.external {
+    stroke: var(--border);
+    stroke-width: 2px;
+    fill: none;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    padding-left: 0.1em;
+}
+
+a:hover .external {
+    stroke: var(--link-faded);
 }
 
 .wizard {

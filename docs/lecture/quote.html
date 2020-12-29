@@ -8,17 +8,23 @@
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
+<svg style="display: none;">
+  <symbol id="external">
+    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link "
-      href="../text/index.html">Text</a>
+      href="../text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link  sitenav__item--active"
-      href="../lecture/index.html">Lecture</a>
+      href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link "
-      href="../exercise/index.html">Exercise</a>
+      href="../exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="GitHub Mark" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
         <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>
@@ -27,43 +33,46 @@
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="index.html">
+    <a class="pagenav__link link" href="index.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="1a.html">
+    <a class="pagenav__link link" href="1a.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
-<main>
+<main id="main">
 
 <h1 id="highlights">Highlights</h1>
 <p>These are my favorite quotes from each lecture.</p>
 <h2 id="1a" class="anchor">
-<a class="anchor__link link" href="#1a">#</a><span class="number">1A</span> <a class="link" href="1a.html">Overview and Introduction to Lisp</a>
+<a class="anchor__link link" href="#1a" aria-hidden="true">#</a><span class="number">1A</span> <a class="link" href="1a.html">Overview and Introduction to Lisp<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>Computer scientists are in the business of controlling complexity.</p>
 </blockquote>
 <h2 id="1b" class="anchor">
-<a class="anchor__link link" href="#1b">#</a><span class="number">1B</span> <a class="link" href="1b.html">Procedures and Processes; Substitution Model</a>
+<a class="anchor__link link" href="#1b" aria-hidden="true">#</a><span class="number">1B</span> <a class="link" href="1b.html">Procedures and Processes; Substitution Model<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think.</p>
 </blockquote>
 <h2 id="2b" class="anchor">
-<a class="anchor__link link" href="#2b">#</a><span class="number">2B</span> <a class="link" href="2b.html">Compound Data</a>
+<a class="anchor__link link" href="#2b" aria-hidden="true">#</a><span class="number">2B</span> <a class="link" href="2b.html">Compound Data<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>See, in general, as systems designers, you’re forced with the necessity to make decisions about how you’re going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you’re forced to do it. The problem is, there’s a very, very narrow line between deferring decisions and outright procrastination. So you’d like to make progress, but also at the same time never be bound by the consequences of your decisions.</p>
@@ -72,7 +81,7 @@
 <p>I said that computer science is a lot like magic, and it’s sort of good that it’s like magic. There’s a bad part of computer that’s a lot like religion.</p>
 </blockquote>
 <h2 id="3a" class="anchor">
-<a class="anchor__link link" href="#3a">#</a><span class="number">3A</span> <a class="link" href="3a.html">Henderson Escher Example</a>
+<a class="anchor__link link" href="#3a" aria-hidden="true">#</a><span class="number">3A</span> <a class="link" href="3a.html">Henderson Escher Example<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>Lisp is a lousy language for any particular problem. But it’s good for figuring out the right language and embedding that in Lisp. That’s the real power of this approach to design.</p>
@@ -81,31 +90,31 @@
 <p>The design process is not so much implementing programs as implementing languages. That’s the powerful idea of Lisp.</p>
 </blockquote>
 <h2 id="3b" class="anchor">
-<a class="anchor__link link" href="#3b">#</a><span class="number">3B</span> <a class="link" href="3b.html">Symbolic Differentiation; Quotation</a>
+<a class="anchor__link link" href="#3b" aria-hidden="true">#</a><span class="number">3B</span> <a class="link" href="3b.html">Symbolic Differentiation; Quotation<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>In order to make a robust system, it needs to be insensitive to small changes. A small change in the problem leads to a small change in the solution. Don’t solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.</p>
 </blockquote>
 <h2 id="4a" class="anchor">
-<a class="anchor__link link" href="#4a">#</a><span class="number">4A</span> <a class="link" href="4a.html">Pattern Matching and Rule-Based Substitution</a>
+<a class="anchor__link link" href="#4a" aria-hidden="true">#</a><span class="number">4A</span> <a class="link" href="4a.html">Pattern Matching and Rule-Based Substitution<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>The key to very good programming, and very good design, is to know what not to think about.</p>
 </blockquote>
 <h2 id="5a" class="anchor">
-<a class="anchor__link link" href="#5a">#</a><span class="number">5A</span> <a class="link" href="5a.html">Assignment, State, and Side-Effects</a>
+<a class="anchor__link link" href="#5a" aria-hidden="true">#</a><span class="number">5A</span> <a class="link" href="5a.html">Assignment, State, and Side-Effects<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>We like to think about the world as being made up of independent objects, each having their own state. The idea of objects, changed, and sameness raises deep problems. If you cut off your fingernail, the “before” and “after” of you is enormously different in terms of atoms. You have changed and feel that you are the “same” person, but how do you know that? By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.</p>
 </blockquote>
 <h2 id="5b" class="anchor">
-<a class="anchor__link link" href="#5b">#</a><span class="number">5B</span> <a class="link" href="5b.html">Computational Objects</a>
+<a class="anchor__link link" href="#5b" aria-hidden="true">#</a><span class="number">5B</span> <a class="link" href="5b.html">Computational Objects<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>When we have multiple names for the same object, they are called aliases. Changing one changes them all. Sometimes sharing is what we want. But inadvertent sharing is a great source of bugs in complicated programs.</p>
 </blockquote>
 <h2 id="6a" class="anchor">
-<a class="anchor__link link" href="#6a">#</a><span class="number">6A</span> <a class="link" href="6a.html">Streams, Part 1</a>
+<a class="anchor__link link" href="#6a" aria-hidden="true">#</a><span class="number">6A</span> <a class="link" href="6a.html">Streams, Part 1<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <blockquote>
 <p>Going back to this fundamental principle of computer science that in order to control something you need the name of it.</p>
@@ -113,24 +122,27 @@
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="index.html">
+    <a class="pagenav__link link" href="index.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="1a.html">
+    <a class="pagenav__link link" href="1a.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>

@@ -24,17 +24,23 @@
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
+<svg style="display: none;">
+  <symbol id="external">
+    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../../index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link  sitenav__item--active"
-      href="../../text/index.html">Text</a>
+      href="../../text/index.html" aria-label="textbook notes">Text</a>
     <a class="sitenav__item link "
-      href="../../lecture/index.html">Lecture</a>
+      href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
     <a class="sitenav__item link "
-      href="../../exercise/index.html">Exercise</a>
+      href="../../exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
-      href="https://github.com/mk12/sicp">Source
+      href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="GitHub Mark" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
         <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>
@@ -43,29 +49,32 @@
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="2.html">
+    <a class="pagenav__link link" href="2.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="4.html">
+    <a class="pagenav__link link" href="4.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
-<main>
+<main id="main">
 
 <h1>
-<span class="number">3.3</span> Modeling with Mutable Data
+<span class="number">3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html">Modeling with Mutable Data<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
 <li>We previously looked at compound data and data abstraction.</li>
@@ -73,7 +82,7 @@
 <li>A mutator is a procedure that modifies the data object.</li>
 </ul>
 <h2 id="3.3.1" class="anchor">
-<a class="anchor__link link" href="#3.3.1">#</a><span class="number">3.3.1</span> Mutable List Structure
+<a class="anchor__link link" href="#3.3.1" aria-hidden="true">#</a><span class="number">3.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.1">Mutable List Structure<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The primitive mutators for pairs are <code class="sourceCode scheme"><span class="fu">set-car!</span></code> and <code class="sourceCode scheme"><span class="fu">set-cdr!</span></code>.</li>
@@ -87,7 +96,7 @@
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">set-cdr!</span> new y)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    new))</span></code></pre></div>
 <h3 id="3.3.1.1" class="anchor">
-<a class="anchor__link link" href="#3.3.1.1">#</a>Sharing and identity
+<a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a>Sharing and identity
 </h3>
 <ul>
 <li>Consider <code class="sourceCode scheme">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code> and <code class="sourceCode scheme">(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
@@ -103,7 +112,7 @@
 <li>We can exploit sharing for good, but it can be dangerous.</li>
 </ul>
 <h3 id="3.3.1.2" class="anchor">
-<a class="anchor__link link" href="#3.3.1.2">#</a>Mutation is just assignment
+<a class="anchor__link link" href="#3.3.1.2" aria-hidden="true">#</a>Mutation is just assignment
 </h3>
 <ul>
 <li>Earlier we said we can represent pairs purely in terms of procedures:</li>
@@ -132,7 +141,7 @@
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
 </ul>
 <h2 id="3.3.2" class="anchor">
-<a class="anchor__link link" href="#3.3.2">#</a><span class="number">3.3.2</span> Representing Queues
+<a class="anchor__link link" href="#3.3.2" aria-hidden="true">#</a><span class="number">3.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.2">Representing Queues<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The mutators allow us to construct new data structures.</li>
@@ -151,7 +160,7 @@
 <li>A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.</li>
 </ul>
 <h2 id="3.3.3" class="anchor">
-<a class="anchor__link link" href="#3.3.3">#</a><span class="number">3.3.3</span> Representing Tables
+<a class="anchor__link link" href="#3.3.3" aria-hidden="true">#</a><span class="number">3.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.3">Representing Tables<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>In a one-dimensional table, each value is indexed by one key.</li>
@@ -169,7 +178,7 @@
 <li>It uses <code class="sourceCode scheme"><span class="fu">assoc</span></code>, which returns the whole record rather than just the associated value.</li>
 </ul>
 <h3 id="3.3.3.1" class="anchor">
-<a class="anchor__link link" href="#3.3.3.1">#</a>Two-dimensional tables
+<a class="anchor__link link" href="#3.3.3.1" aria-hidden="true">#</a>Two-dimensional tables
 </h3>
 <ul>
 <li>Two-dimensional tables are indexed by two keys.</li>
@@ -179,7 +188,7 @@
 <li>We don’t need to box the subtables. They key of the record serves the purpose of <code class="sourceCode scheme"><span class="cn">&#39;*table*</span></code>.</li>
 </ul>
 <h3 id="3.3.3.2" class="anchor">
-<a class="anchor__link link" href="#3.3.3.2">#</a>Creating local tables
+<a class="anchor__link link" href="#3.3.3.2" aria-hidden="true">#</a>Creating local tables
 </h3>
 <ul>
 <li>With our <code class="sourceCode scheme">lookup</code> and <code class="sourceCode scheme">insert!</code> procedures taking the table as an argument, we can manage multiple tables.</li>
@@ -195,7 +204,7 @@
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        value</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        (table k))))</span></code></pre></div>
 <h2 id="3.3.4" class="anchor">
-<a class="anchor__link link" href="#3.3.4">#</a><span class="number">3.3.4</span> A Simulator for Digital Circuits
+<a class="anchor__link link" href="#3.3.4" aria-hidden="true">#</a><span class="number">3.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.4">A Simulator for Digital Circuits<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Digital circuits are made up of simple elements.</li>
@@ -215,7 +224,7 @@
 <li>The primitive functions are our primitive elements; wiring is the means of combination; specifying wiring patterns as procedures is the means of abstraction.</li>
 </ul>
 <h3 id="3.3.4.1" class="anchor">
-<a class="anchor__link link" href="#3.3.4.1">#</a>Primitive function boxes
+<a class="anchor__link link" href="#3.3.4.1" aria-hidden="true">#</a>Primitive function boxes
 </h3>
 <ul>
 <li>The primitives boxes implement “forces” by which changes in the signal of one wire influence the signal of another.</li>
@@ -228,7 +237,7 @@
 <li>The procedure <code class="sourceCode scheme">after-delay</code> executes a procedure after a given time delay.</li>
 </ul>
 <h3 id="3.3.4.2" class="anchor">
-<a class="anchor__link link" href="#3.3.4.2">#</a>Representing wires
+<a class="anchor__link link" href="#3.3.4.2" aria-hidden="true">#</a>Representing wires
 </h3>
 <ul>
 <li>Our wires will be computational objects each having two local state variables: <code class="sourceCode scheme">signal-value</code> and <code class="sourceCode scheme">action-procedures</code>.</li>
@@ -238,7 +247,7 @@
 <li>This would be impossible if you didn’t model the wire as an identity, separate from its signal value.</li>
 </ul>
 <h3 id="3.3.4.3" class="anchor">
-<a class="anchor__link link" href="#3.3.4.3">#</a>The agenda
+<a class="anchor__link link" href="#3.3.4.3" aria-hidden="true">#</a>The agenda
 </h3>
 <ul>
 <li>The only thing left is <code class="sourceCode scheme">after-delay</code>.</li>
@@ -249,7 +258,7 @@
 <li>The simulation is driven by <code class="sourceCode scheme">propagate</code>, which executes each item on the agenda in sequence.</li>
 </ul>
 <h3 id="3.3.4.4" class="anchor">
-<a class="anchor__link link" href="#3.3.4.4">#</a>Implementing the agenda
+<a class="anchor__link link" href="#3.3.4.4" aria-hidden="true">#</a>Implementing the agenda
 </h3>
 <ul>
 <li>The agenda is a pair: the current time, and a list of <em>time segments</em> sorted in increasing order of time.</li>
@@ -259,7 +268,7 @@
 <li>Whenever we extract the first item with <code class="sourceCode scheme">first-agenda-item</code>, we also update the current time.</li>
 </ul>
 <h2 id="3.3.5" class="anchor">
-<a class="anchor__link link" href="#3.3.5">#</a><span class="number">3.3.5</span> Propagation of Constraints
+<a class="anchor__link link" href="#3.3.5" aria-hidden="true">#</a><span class="number">3.3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">Propagation of Constraints<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We often organize computer programs in one direction: from input to output.</li>
@@ -276,7 +285,7 @@
 <li>The means of abstraction are procedures.</li>
 </ul>
 <h3 id="3.3.5.1" class="anchor">
-<a class="anchor__link link" href="#3.3.5.1">#</a>Using the constraint system
+<a class="anchor__link link" href="#3.3.5.1" aria-hidden="true">#</a>Using the constraint system
 </h3>
 <ul>
 <li>We create connectors with <code class="sourceCode scheme">(make-connector)</code>, just like wires.</li>
@@ -286,7 +295,7 @@
 <li><code class="sourceCode scheme">(forget-value! <span class="sc">«</span><span class="ss">connector</span><span class="sc">»</span> <span class="cn">&#39;user</span>)</code> undoes the assignment.</li>
 </ul>
 <h3 id="3.3.5.2" class="anchor">
-<a class="anchor__link link" href="#3.3.5.2">#</a>Implementing the constraint system
+<a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a>Implementing the constraint system
 </h3>
 <ul>
 <li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
@@ -295,7 +304,7 @@
 <li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
 </ul>
 <h3 id="3.3.5.3" class="anchor">
-<a class="anchor__link link" href="#3.3.5.3">#</a>Representing connectors
+<a class="anchor__link link" href="#3.3.5.3" aria-hidden="true">#</a>Representing connectors
 </h3>
 <ul>
 <li>A connector is a procedural object with local state variables—again, just like a wire.</li>
@@ -305,24 +314,27 @@
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
-    <a class="pagenav__link link" href="2.html">
+    <a class="pagenav__link link" href="2.html" aria-label="Previous page">
       <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
   </svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
-    <a class="pagenav__link link" href="index.html"><svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
+    <a class="pagenav__link link" href="index.html" aria-label="Parent page">
+      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up</a>
+  </svg> Up
+    </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
-    <a class="pagenav__link link" href="4.html">
+    <a class="pagenav__link link" href="4.html" aria-label="Next page">
       Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
     <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
   </svg>
     </a>
   </div>
+
   </nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>
