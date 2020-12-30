@@ -339,29 +339,12 @@ static struct MarkdownHeading parse_md_heading(struct Span s) {
 #define SZ_HEADING 64
 #define SZ_LABEL 8
 
-// State to keep track of while rendering headings.
-struct HeadingRenderer {
-    // True if external.svg has already been embedded, meaning headings can now
-    // embed the smaller external-use.svg instead.
-    bool use_svg;
-};
-
-//
-extern const char *const external_svg;
-extern const char *const external_use_svg;
-
-// Creates a new heading renderer.
-static struct HeadingRenderer new_heading_renderer(void) {
-    return (struct HeadingRenderer){.use_svg = false};
-}
-
 // Renders a heading to out. The level determines h1/h2/etc. If id is present,
 // uses it and renders a "#" link. If heading.label is present, renders a
 // .number span. If href_fmt is present, renders heading.title as a link using
 // href_fmt and the printf-style arguments that follow.
-static void render_heading(struct HeadingRenderer *hr, FILE *out, int level,
-        struct Span id, struct MarkdownHeading heading,
-        const char *href_fmt, ...) {
+static void render_heading(FILE *out, int level, struct Span id,
+        struct MarkdownHeading heading, const char *href_fmt, ...) {
     if (id.data) {
         fprintf(out,
             "<h%d id=\"%.*s\" class=\"anchor\">"
@@ -382,12 +365,11 @@ static void render_heading(struct HeadingRenderer *hr, FILE *out, int level,
         vsnprintf(href, sizeof href, href_fmt, args);
         va_end(args);
         fprintf(out,
-            "<a class=\"link\" href=\"%s\">%.*s"
             // &#65279; is the "zero width no-break space" entity. We put this
             // at the start of the span to prevent the external icon from
             // wrapping onto the next line by itself.
-            "<span class=\"nowrap\">&#65279;"
-            "<svg class=\"external\" viewBox=\"0 0 24 24\">"
+            "<a class=\"link\" href=\"%s\">%.*s<span class=\"nowrap\">&#65279;"
+            "<svg alt=\"\" class=\"external\" width=\"24\" height=\"24\">"
             "<use xlink:href=\"#external\"/>"
             "</svg></span></a>",
             href, heading.title.len, heading.title.data); 
@@ -399,21 +381,19 @@ static void render_heading(struct HeadingRenderer *hr, FILE *out, int level,
 
 // State to keep track of while rendering a table of contents.
 struct TocRenderer {
-    // Used to render the heading above the table of contents.
-    struct HeadingRenderer *hr;
     // Nesting depth of <ul> tags.
     int depth;
 };
 
 // Creates a new table-of-contents renderer.
-static struct TocRenderer new_toc_renderer(struct HeadingRenderer *hr) {
-    return (struct TocRenderer){.hr = hr, .depth = 0};
+static struct TocRenderer new_toc_renderer(void) {
+    return (struct TocRenderer){.depth = 0};
 }
 
 // Renders the start of a table of contents to out.
 static void render_toc_start(struct TocRenderer *tr, FILE *out) {
-    render_heading(tr->hr, out, 2,
-        SPAN("contents"), TITLE_HEADING("Contents"), NULL);
+    assert(tr->depth == 0);
+    render_heading(out, 2, SPAN("contents"), TITLE_HEADING("Contents"), NULL);
     fputs("<nav aria-labelledby=\"contents\">", out);
 }
 
@@ -442,7 +422,7 @@ static void render_toc_item(
         break;
     case 1:
         tr->depth++;
-        fputs("<ul class=\"tr\">", out);
+        fputs("<ul class=\"toc\">", out);
         break;
     default:
         assert(tr->depth > depth);
@@ -578,17 +558,15 @@ static bool gen_text_index(void) {
     })) {
         return false;
     }
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1,
-        NULL_SPAN, TITLE_HEADING("Textbook Notes"), NULL);
-    fputs("# Textbook Notes\n\n", proc.in);
+    render_heading(proc.in,
+        1, NULL_SPAN, TITLE_HEADING("Textbook Notes"), NULL);
     while (scan_md(&state) && state.sector == 0) {
         copy_md(&state, proc.in);
     }
-    struct TocRenderer tr = new_toc_renderer(&hr);
+    struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
-    render_toc_item(&tr, proc.in, 1,
-        TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
+    render_toc_item(&tr, proc.in,
+        1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
     do {
         if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
@@ -633,20 +611,18 @@ static bool gen_text_highlight(void) {
     })) {
         return false;
     }
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1,
-        NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
+    render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
     while (scan_md(&state) && state.sector != 1);
     while (scan_md(&state) && state.heading != 1) {
         if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             if (h.label.data) {
-                render_heading(&hr, proc.in, 2, h.label, h,
+                render_heading(proc.in, 2, h.label, h,
                     "%.*s/" INDEX ".html", h.label.len, h.label.data);
             } else {
                 char buf[SZ_HEADING];
                 struct Span id = tolower_s(h.title, buf, sizeof buf);
-                render_heading(&hr, proc.in, 2, id, h,
+                render_heading(proc.in, 2, id, h,
                     FRONT ".html#%.*s", id.len, id.data);
             }
         } else {
@@ -675,7 +651,6 @@ static bool gen_text_front(void) {
     })) {
         return false;
     }
-    struct HeadingRenderer hr = new_heading_renderer();
     while (scan_md(&state) && state.sector != 1);
     do {
         if (state.heading > 1) {
@@ -683,7 +658,7 @@ static bool gen_text_front(void) {
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
-            render_heading(&hr, proc.in, state.heading, id, h,
+            render_heading(proc.in, state.heading, id, h,
                 "%s-%d.html", TEXT_URL_BASE, text_page_num(state.sector));
         } else {
             copy_md(&state, proc.in);
@@ -735,13 +710,12 @@ static bool gen_text_chapter(const char *output) {
     assert(state.sector == target_sector);
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1, NULL_SPAN, h,
+    render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, text_page_num(target_sector));
     while (scan_md(&state) && state.heading == 0) {
         copy_md(&state, proc.in);
     }
-    struct TocRenderer tr = new_toc_renderer(&hr);
+    struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
     do {
         if (state.heading == 2) {
@@ -820,15 +794,14 @@ static bool gen_text_section(const char *output) {
     struct MarkdownHeading h = parse_md_heading(state.line);
     assert(h.label.data);
     const int page_num = text_page_num(target_sector);
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1, NULL_SPAN, h,
+    render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, page_num);
     while (scan_md(&state) && state.heading != 1 && state.heading != 2) {
         if (state.heading >= 3) {
             h = parse_md_heading(state.line);
             if (h.label.data) {
                 assert(state.heading == 3);
-                render_heading(&hr, proc.in, 2, h.label, h,
+                render_heading(proc.in, 2, h.label, h,
                     "%s-%d.html#%%_sec_%d.%d.%d", TEXT_URL_BASE, page_num,
                     chapter, section, MS_INDEX(state.sector, 3));
             } else {
@@ -836,7 +809,7 @@ static bool gen_text_section(const char *output) {
                 char id[SZ_LABEL];
                 snprintf(id, sizeof id, "%d.%d.%d.%d", chapter, section,
                     MS_INDEX(state.sector, 3), MS_INDEX(state.sector, 4));
-                render_heading(&hr, proc.in, 3, SPAN(id), h, NULL);
+                render_heading(proc.in, 3, SPAN(id), h, NULL);
             }
         } else {
             copy_md(&state, proc.in);
@@ -867,16 +840,14 @@ static bool gen_lecture_index(void) {
     })) {
         return false;
     }
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1,
-        NULL_SPAN, TITLE_HEADING("Lecture Notes"), NULL);
+    render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Lecture Notes"), NULL);
     while (scan_md(&state) && state.sector == 0) {
         copy_md(&state, proc.in);
     }
-    struct TocRenderer tr = new_toc_renderer(&hr);
+    struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
-    render_toc_item(&tr, proc.in, 1,    
-        TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
+    render_toc_item(&tr, proc.in,
+        1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
     do {
         if (state.heading == 1) {
             struct MarkdownHeading h = parse_md_heading(state.line);
@@ -910,9 +881,7 @@ static bool gen_lecture_highlight(void) {
     if (!fork_pandoc(&proc, opts)) {
         return false;
     }
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1,
-        NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
+    render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
     while (scan_md(&state) && state.sector != 2);
     while (scan_md(&state)) {
         if (state.heading == 2) {
@@ -920,8 +889,7 @@ static bool gen_lecture_highlight(void) {
             assert(h.label.data);
             char buf[SZ_LABEL];
             struct Span id = tolower_s(h.label, buf, sizeof buf);
-            render_heading(&hr, proc.in, 2, id, h,
-                "%.*s.html", id.len, id.data);
+            render_heading(proc.in, 2, id, h, "%.*s.html", id.len, id.data);
         } else {
             copy_md(&state, proc.in);
         }
@@ -991,8 +959,7 @@ static bool gen_lecture_page(const char *output) {
     assert(h.label.data);
     char lecture_page[SZ_HEADING];
     lecture_page_name(h, lecture_page, sizeof lecture_page);
-    struct HeadingRenderer hr = new_heading_renderer();
-    render_heading(&hr, proc.in, 1, NULL_SPAN, h,
+    render_heading(proc.in, 1, NULL_SPAN, h,
         "%s/%s", LECTURE_URL_BASE, lecture_page);
     while (scan_md(&state) && state.heading != 1) {
         if (state.heading > 1) {
@@ -1000,7 +967,7 @@ static bool gen_lecture_page(const char *output) {
             assert(!h.label.data);
             char id[SZ_LABEL];
             write_dotted_section(id, sizeof id, state.sector >> MS_BITS);
-            render_heading(&hr, proc.in, state.heading, SPAN(id), h, NULL);
+            render_heading(proc.in, state.heading, SPAN(id), h, NULL);
         } else {
             copy_md(&state, proc.in);
         }

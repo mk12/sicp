@@ -8,10 +8,21 @@
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
-<svg style="display: none;">
-  <symbol id="external">
-    <path d="M11 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-5M10 14L20 4M15 4h5v5"/>
-  </symbol></svg>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.257.8v10.4m4.457-5.943L5.257.8.8 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.257h10.4M5.257 9.714L.8 5.257 5.257.8"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M11.2 5.257H.8m5.943 4.457L11.2 5.257 6.743.8"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>  </svg>
+</div>
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
   <a class="title link" href="../../index.html">SICP Study</a>
@@ -25,39 +36,30 @@
     <a class="sitenav__item sitenav__item--last link"
       href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
       <svg alt="" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
-        <path d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
-      </svg>
-    </a>
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>    </a>
   </nav>
 </header>
 <nav class="pagenav pagenav--top" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
     <a class="pagenav__link link" href="../4/4.html" aria-label="Previous page">
-      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
-  </svg> Prev
+      <svg alt="" width="12" height="11"><use xlink:href="#left"/></svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
     <a class="pagenav__link link" href="../index.html" aria-label="Parent page">
-      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up
+      <svg alt="" width="11" height="12"><use xlink:href="#up"/></svg> Up
     </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
     <a class="pagenav__link link" href="1.html" aria-label="Next page">
-      Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
-  </svg>
+      Next <svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
     </a>
   </div>
-
-  </nav>
+</nav>
 <main id="main">
-
 <h1>
-<span class="number">5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-30.html">Computing with Register Machines<span class="nowrap">﻿<svg class="external" viewBox="0 0 24 24"><use xlink:href="#external"/></svg></span></a>
+<span class="number">5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-30.html">Computing with Register Machines<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="contents" class="anchor">
 <a class="anchor__link link" href="#contents" aria-hidden="true">#</a>Contents
@@ -84,27 +86,20 @@
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   <div class="pagenav__item pagenav__item--prev">
     <a class="pagenav__link link" href="../4/4.html" aria-label="Previous page">
-      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M5 12h14M5 12l6 6M5 12l6-6"/>
-  </svg> Prev
+      <svg alt="" width="12" height="11"><use xlink:href="#left"/></svg> Prev
     </a>
   </div>
   <div class="pagenav__item pagenav__item--up">
     <a class="pagenav__link link" href="../index.html" aria-label="Parent page">
-      <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M12 5v14M18 11l-6-6M6 11l6-6"/>
-  </svg> Up
+      <svg alt="" width="11" height="12"><use xlink:href="#up"/></svg> Up
     </a>
   </div>
   <div class="pagenav__item pagenav__item--next">
     <a class="pagenav__link link" href="1.html" aria-label="Next page">
-      Next <svg alt="" class="arrow" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M5 12h14M13 18l6-6M13 6l6 6"/>
-  </svg>
+      Next <svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
     </a>
   </div>
-
-  </nav>
+</nav>
 <footer class="footer">
   <p>© 2020 Mitchell Kember</p>
 </footer>

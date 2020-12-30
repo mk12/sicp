@@ -16,10 +16,9 @@ doc_hi := docs/text/highlight.html docs/lecture/highlight.html
 doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_hi)
 
 doc_assets_link := docs/assets/style.css
-doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
-	left right up external bookmark)
+doc_assets_embed := $(patsubst %,notes/assets/%,arrows.svg bookmark.svg)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
-	template.html filter.lua scheme.xml)
+	template.html pagenav.html filter.lua scheme.xml)
 
 .PHONY: all help test docs lint spell check clean vscode
 

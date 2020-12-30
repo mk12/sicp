@@ -166,11 +166,19 @@ blockquote {
     position: relative;
 }
 
+.highlight blockquote {
+    border-left-color: var(--important);
+}
+
 .highlight__link {
     position: absolute;
-    top: -5px;
-    left: -30px;
-    color: var(--border);
+    top: 15px;
+    left: -25px;
+    color: var(--important);
+}
+
+.highlight__link:hover {
+    color: var(--important-active);
 }
 
 .toc {
@@ -336,18 +344,12 @@ body {
     vertical-align: -5px;
 }
 
-.arrow {
-    stroke: currentColor;
-    fill: none;
-    vertical-align: -3px;
-}
-
 .external {
     color: var(--border);
     width: 0.8em;
-    height: 0.8m;
-    padding-left: 0.2em;
-    vertical-align: -1px;
+    height: 0.8em;
+    padding-left: 0.22em;
+    vertical-align: -1.5px;
 }
 
 a:hover .external {

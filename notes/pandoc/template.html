@@ -15,10 +15,10 @@ $if(up_or_highlight)$
 <div hidden>
   <svg>
 $if(up)$
-    $^$$../assets/external.svg()$
+    $../assets/arrows.svg()$
 $endif$
 $if(highlight)$
-    $^$$../assets/bookmark.svg()$
+    $../assets/bookmark.svg()$
 $endif$
   </svg>
 </div>
@@ -35,22 +35,24 @@ $endif$
       href="$root$exercise/index.html" aria-label="exercises">Exercise</a>
     <a class="sitenav__item sitenav__item--last link"
       href="https://github.com/mk12/sicp" aria-label="GitHub repository">Source
-      $^$$../assets/github.svg()$
+      $../assets/github.svg()$
     </a>
   </nav>
 </header>
 $if(up)$
 <nav class="pagenav pagenav--top" aria-label="secondary">
-  $^$$pagenav()$
+  $pagenav()$
 </nav>
 $endif$
 <main id="main">
-$if(index)$$../assets/wizard.svg()$$endif$
+$if(index)$
+$../assets/wizard.svg()$
+$endif$
 $body$
 </main>
 $if(up)$
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
-  $^$$pagenav()$
+  $pagenav()$
 </nav>
 $endif$
 <footer class="footer$if(up)$$else$ footer--lone$endif$">
