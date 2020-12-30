@@ -203,7 +203,10 @@ Let's evaluate the sum of the square of 3 and the square of 4:
 
 This is not a perfect description of what the computer does. But it is a good enough model for now.
 
-> But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think.
+::: highlight
+> But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think. [@lecture 1b]
+:::
+<!-- SUSSMAN https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=3 -->
 
 ### Evaluating conditionals
 
@@ -486,9 +489,17 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Designing systems
 
-> See, in general, as systems designers, you're forced with the necessity to make decisions about how you're going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you're forced to do it. The problem is, there's a very, very narrow line between deferring decisions and outright procrastination. So you'd like to make progress, but also at the same time never be bound by the consequences of your decisions.
+::: highlight
+> See, in general, as systems designers, you're forced with the necessity to make decisions about how you're going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you're forced to do it. The problem is, there's a very, very narrow line between deferring decisions and outright procrastination. So you'd like to make progress, but also at the same time never be bound by the consequences of your decisions. [@lecture 2b]
+:::
+<!-- ABELSON https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=10 -->
 
-> I said that computer science is a lot like magic, and it's sort of good that it's like magic. There's a bad part of computer that's a lot like religion.
+::: highlight
+> I said that computer science is a lot like magic, and it's sort of good that it's like magic. There's a bad part of computer science that's a lot like religion. And in general, I think people who really believe that you design everything before you implement it basically are people who haven't designed very many things.
+>
+> The real power is that you can pretend that you've made the decision and then later on figure out which one is right, which decision you ought to have made. And when you can do that, you have the best of both worlds. [@lecture 2b]
+:::
+<!-- ABELSON https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=11 -->
 
 ## Part 3
 

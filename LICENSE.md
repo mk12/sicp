@@ -18,7 +18,7 @@ This section applies to the following files ("derivative works"):
 
 - [notes/text.md](notes/text.md)
 - [notes/lecture.md](notes/lecture.md)
-- [notes/quote.md](notes/quote.md)
+- [notes/highlight.md](notes/highlight.md)
 - [notes/assets/wizard.afdesign](notes/assets/wizard.afdesign)
 - [notes/assets/wizard.svg](notes/assets/wizard.svg)
 - [docs/assets/wizard.svg](docs/assets/wizard.svg)
@@ -50,6 +50,7 @@ This section applies to the following files:
 - [notes/assets/right.svg](notes/assets/right.svg)
 - [notes/assets/up.svg](notes/assets/up.svg)
 - [notes/assets/external.svg](notes/assets/external.svg)
+- [notes/assets/bookmark.svg](notes/assets/bookmark.svg)
 
 I adapted them from icons in [tabler/tabler-icons](https://github.com/tabler/tabler-icons).
 

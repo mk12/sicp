@@ -88,8 +88,8 @@ static bool pandoc(const struct PandocOpts opts) {
     const int LEN =
         1     // pandoc
         + 3   // -o output -dconfig
-        + 6   // -M title -V active -V root
-        + 6   // -V prev -V up -V next
+        + 6   // -M title -M active -M root
+        + 6   // -M prev -M up -M next
         + 1   // input
         + 1;  // NULL
     const char *argv[LEN];
@@ -103,19 +103,19 @@ static bool pandoc(const struct PandocOpts opts) {
     argv[i++] = "-M";
     const int title_idx = i;
     argv[i++] = concat("title=", opts.title);
-    argv[i++] = "-V";
+    argv[i++] = "-M";
     argv[i++] = opts.active;
-    argv[i++] = "-V";
+    argv[i++] = "-M";
     argv[i++] = concat("root=", opts.root);
     if (opts.up) {
-        argv[i++] = "-V";
+        argv[i++] = "-M";
         argv[i++] = concat("up=", opts.up);
         if (opts.prev) {
-            argv[i++] = "-V";
+            argv[i++] = "-M";
             argv[i++] = concat("prev=", opts.prev);
         }
         if (opts.next) {
-            argv[i++] = "-V";
+            argv[i++] = "-M";
             argv[i++] = concat("next=", opts.next);
         }
     }
@@ -503,18 +503,30 @@ overflow:
     assert(false);
 }
 
+// String constants, used to guard against misspellings.
+#define INDEX "index"
+#define TEXT "text"
+#define LECTURE "lecture"
+#define EXERCISE "exercise"
+#define HIGHLIGHT "highlight"
+#define FRONT "front"
+
 // Helpers to construct input/output paths.
-#define MARKDOWN(f) ("notes/" f ".md")
-#define HTML(f) ("docs/" f ".html")
-#define SUBDIR(d) ("docs/" d "/")
+#define INPUT(f) ("notes/" f ".md")
+#define OUTPUT(f) ("docs/" f ".html")
+#define OUTPUT_DIR(d) ("docs/" d "/")
+
+// Helpers to construct link targets.
+#define PARENT "../"
+#define HREF(p) (p ".html")
 
 // Generates docs/index.html.
 static bool gen_index(void) {
     return pandoc((struct PandocOpts){
-        .input = MARKDOWN("index"),
-        .output = HTML("index"),
+        .input = INPUT(INDEX),
+        .output = OUTPUT(INDEX),
         .title = "SICP Study",
-        .active = "index",
+        .active = INDEX,
         .root = "",
         .prev = NULL,
         .up = NULL,
@@ -525,19 +537,19 @@ static bool gen_index(void) {
 // Generates docs/text/index.html.
 static bool gen_text_index(void) {
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("text"))) {
+    if (!init_md(&state, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
-        .output = HTML("text/index"),
+        .output = OUTPUT(TEXT "/" INDEX),
         .title = "SICP Notes",
-        .active = "text",
-        .root = "../",
+        .active = TEXT,
+        .root = PARENT,
         .prev = NULL,
-        .up = "../index.html",
-        .next = "quote.html",
+        .up = HREF(PARENT INDEX),
+        .next = HREF(HIGHLIGHT),
     })) {
         return false;
     }
@@ -548,20 +560,20 @@ static bool gen_text_index(void) {
     struct TocState toc = render_toc_start(proc.in);
     const struct MarkdownHeading highlights =
         {.label = NULL_SPAN, .title = SPAN("Highlights")};
-    render_toc_item(&toc, 1, highlights, "quote.html");
+    render_toc_item(&toc, 1, highlights, HREF(HIGHLIGHT));
     do {
         if (state.heading == 2) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
-            render_toc_item(&toc, 1, h, "front.html#%.*s", id.len, id.data);
+            render_toc_item(&toc, 1, h, FRONT ".html#%.*s", id.len, id.data);
         }
     } while (scan_md(&state) && MS_INDEX(state.sector, 1) <= 1);
     do {
         if (state.heading == 1) {
             render_toc_item(&toc, 1, parse_md_heading(state.line),
-                "%d/index.html", MS_INDEX(state.sector, 1) - 1);
+                "%d/" INDEX ".html", MS_INDEX(state.sector, 1) - 1);
         } else if (state.heading == 2) {
             render_toc_item(&toc, 2, parse_md_heading(state.line),
                 "%d/%d.html",
@@ -573,22 +585,22 @@ static bool gen_text_index(void) {
     return wait_pandoc(&proc);
 }
 
-// Generates docs/text/quote.html.
-static bool gen_text_quote(void) {
+// Generates docs/text/highlight.html.
+static bool gen_text_highlight(void) {
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("quote"))) {
+    if (!init_md(&state, INPUT(HIGHLIGHT))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
-        .output = HTML("text/quote"),
+        .output = OUTPUT(TEXT "/" HIGHLIGHT),
         .title = "SICP Highlights",
-        .active = "text",
-        .root = "../",
-        .prev = "index.html",
-        .up = "index.html",
-        .next = "front.html",
+        .active = TEXT,
+        .root = PARENT,
+        .prev = HREF(INDEX),
+        .up = HREF(INDEX),
+        .next = HREF(FRONT),
     })) {
         return false;
     }
@@ -599,12 +611,12 @@ static bool gen_text_quote(void) {
             struct MarkdownHeading h = parse_md_heading(state.line);
             if (h.label.data) {
                 render_heading(proc.in, 2, h.label, h,
-                    "%.*s/index.html", h.label.len, h.label.data);
+                    "%.*s/" INDEX ".html", h.label.len, h.label.data);
             } else {
                 char buf[SZ_HEADING];
                 struct Span id = tolower_s(h.title, buf, sizeof buf);
                 render_heading(proc.in, 2, id, h,
-                    "front.html#%.*s", id.len, id.data);
+                    FRONT ".html#%.*s", id.len, id.data);
             }
         } else {
             copy_md(&state, proc.in);
@@ -616,19 +628,19 @@ static bool gen_text_quote(void) {
 // Generates docs/text/front.html.
 static bool gen_text_front(void) {
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("text"))) {
+    if (!init_md(&state, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
-        .output = HTML("text/front"),
+        .output = OUTPUT(TEXT "/" FRONT),
         .title = "SICP Frontmatter Notes",
-        .active = "text",
-        .root = "../",
-        .prev = "quote.html",
-        .up = "index.html",
-        .next = "1/index.html",
+        .active = TEXT,
+        .root = PARENT,
+        .prev = HREF(HIGHLIGHT),
+        .up = HREF(INDEX),
+        .next = HREF("1/" INDEX),
     })) {
         return false;
     }
@@ -651,7 +663,7 @@ static bool gen_text_front(void) {
 // Generates docs/text/*/index.html.
 static bool gen_text_chapter(const char *output) {
     const char *slash = strrchr(output, '/');
-    if (!(slash && slash > output && strcmp(slash, "/index.html") == 0)) {
+    if (!(slash && slash > output && strcmp(slash, "/" INDEX ".html") == 0)) {
         goto invalid;
     }
     const int chapter = slash[-1] - '0';
@@ -659,7 +671,7 @@ static bool gen_text_chapter(const char *output) {
         goto invalid;
     }
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("text"))) {
+    if (!init_md(&state, INPUT(TEXT))) {
         return false;
     }
     char title[] = "SICP Chapter _ Notes";
@@ -667,7 +679,7 @@ static bool gen_text_chapter(const char *output) {
     const char *prev;
     char prev_buf[] = "../_/_.html";
     if (chapter == 1) {
-        prev = "../front.html";
+        prev = "../" FRONT ".html";
     } else {
         prev_buf[3] = '0' + chapter - 1;
         prev_buf[5] = '0' + num_sections(chapter - 1);
@@ -678,11 +690,11 @@ static bool gen_text_chapter(const char *output) {
         .input = "/dev/stdin",
         .output = output,
         .title = title,
-        .active = "text",
-        .root = "../../",
+        .active = TEXT,
+        .root = PARENT PARENT,
         .prev = prev,
-        .up = "../index.html",
-        .next = "1.html",
+        .up = HREF(PARENT INDEX),
+        .next = HREF("1"),
     })) {
         return false;
     }
@@ -730,7 +742,7 @@ static bool gen_text_section(const char *output) {
         goto invalid;
     }
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("text"))) {
+    if (!init_md(&state, INPUT(TEXT))) {
         return false;
     }
     char title[] = "SICP Section _._ Notes";
@@ -739,13 +751,13 @@ static bool gen_text_section(const char *output) {
     const char *prev;
     char prev_buf[] = "_.html";
     if (section == 1) {
-        prev = "index.html";
+        prev = HREF(INDEX);
     } else {
         prev_buf[0] = '0' + section - 1;
         prev = prev_buf;
     }
     char *next;
-    char next_buf[] = "../_/index.html";
+    char next_buf[] = "../_/" INDEX ".html";
     if (chapter == NUM_CHAPTERS && section == last_section) {
         next = NULL;
     } else if (section == last_section) {
@@ -760,10 +772,10 @@ static bool gen_text_section(const char *output) {
         .input = "/dev/stdin",
         .output = output,
         .title = title,
-        .active = "text",
-        .root = "../../",
+        .active = TEXT,
+        .root = PARENT PARENT,
         .prev = prev,
-        .up = "index.html",
+        .up = HREF(INDEX),
         .next = next,
     })) {
         return false;
@@ -804,19 +816,19 @@ invalid:
 // Generates docs/lecture/index.html.
 static bool gen_lecture_index(void) {
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("lecture"))) {
+    if (!init_md(&state, INPUT(LECTURE))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
-        .output = HTML("lecture/index"),
+        .output = OUTPUT(LECTURE "/" INDEX),
         .title = "SICP Lecture Notes",
-        .active = "lecture",
-        .root = "../",
+        .active = LECTURE,
+        .root = PARENT,
         .prev = NULL,
-        .up = "../index.html",
-        .next = "quote.html",
+        .up = HREF(PARENT INDEX),
+        .next = HREF(HIGHLIGHT),
     })) {
         return false;
     }
@@ -827,7 +839,7 @@ static bool gen_lecture_index(void) {
     struct TocState toc = render_toc_start(proc.in);
     struct MarkdownHeading h =
         {.label = NULL_SPAN, .title = SPAN("Highlights")};
-    render_toc_item(&toc, 1, h, "quote.html");
+    render_toc_item(&toc, 1, h, HREF(HIGHLIGHT));
     do {
         if (state.heading == 1) {
             h = parse_md_heading(state.line);
@@ -840,21 +852,21 @@ static bool gen_lecture_index(void) {
     return wait_pandoc(&proc);
 }
 
-// Generates docs/lecture/quote.html.
-static bool gen_lecture_quote(void) {
+// Generates docs/lecture/highlight.html.
+static bool gen_lecture_highlight(void) {
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("quote"))) {
+    if (!init_md(&state, INPUT(HIGHLIGHT))) {
         return false;
     }
     const struct PandocOpts opts = {
         .input = "/dev/stdin",
-        .output = HTML("lecture/quote"),
+        .output = OUTPUT(LECTURE "/" HIGHLIGHT),
         .title = "SICP Lecture Highlights",
-        .active = "lecture",
-        .root = "../",
-        .prev = "index.html",
-        .up = "index.html",
-        .next = "1a.html",
+        .active = LECTURE,
+        .root = PARENT,
+        .prev = HREF(INDEX),
+        .up = HREF(INDEX),
+        .next = HREF("1a"),
     };
     struct PandocProc proc;
     if (!fork_pandoc(&proc, opts)) {
@@ -892,7 +904,7 @@ static bool gen_lecture_page(const char *output) {
         goto invalid;
     }
     struct MarkdownState state;
-    if (!init_md(&state, MARKDOWN("lecture"))) {
+    if (!init_md(&state, INPUT(LECTURE))) {
         return false;
     }
     char title[SZ_HEADING];
@@ -901,7 +913,7 @@ static bool gen_lecture_page(const char *output) {
     const char *prev;
     char prev_buf[SZ_RELATIVE];
     if (number == 1 && a_or_b == 'a') {
-        prev = "quote.html";
+        prev = HREF(HIGHLIGHT);
     } else {
         int ab = a_or_b - 'a';
         snprintf(prev_buf, sizeof prev_buf, "%d%c.html",
@@ -919,14 +931,14 @@ static bool gen_lecture_page(const char *output) {
         next = next_buf;
     }
     struct PandocProc proc;
-    if (!fork_pandoc(&proc, (struct PandocOpts ){
+    if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = "/dev/stdin",
         .output = output,
         .title = title,
-        .active = "lecture",
-        .root = "../",
+        .active = LECTURE,
+        .root = PARENT,
         .prev = prev,
-        .up = "index.html",
+        .up = HREF(INDEX),
         .next = next,
     })) {
         return false;
@@ -974,38 +986,38 @@ static bool gen_exercise_section(const char *output) {
 
 // Generates the given output file.
 static bool gen(const char *output) {
-    if (strcmp(output, HTML("index")) == 0) {
+    if (strcmp(output, OUTPUT(INDEX)) == 0) {
         return gen_index();
     }
-    if (startswith(output, SUBDIR("text"))) {
-        if (strcmp(output, HTML("text/index")) == 0) {
+    if (startswith(output, OUTPUT_DIR(TEXT))) {
+        if (strcmp(output, OUTPUT(TEXT "/" INDEX)) == 0) {
             return gen_text_index();
         }
-        if (strcmp(output, HTML("text/quote")) == 0) {
-            return gen_text_quote();
+        if (strcmp(output, OUTPUT(TEXT "/" HIGHLIGHT)) == 0) {
+            return gen_text_highlight();
         }
-        if (strcmp(output, HTML("text/front")) == 0) {
+        if (strcmp(output, OUTPUT(TEXT "/" FRONT)) == 0) {
             return gen_text_front();
         }
-        if (endswith(output, "/index.html")) {
+        if (endswith(output, "/" INDEX ".html")) {
             return gen_text_chapter(output);
         }
         return gen_text_section(output);
     }
-    if (startswith(output, SUBDIR("lecture"))) {
-        if (strcmp(output, HTML("lecture/index")) == 0) {
+    if (startswith(output, OUTPUT_DIR(LECTURE))) {
+        if (strcmp(output, OUTPUT(LECTURE "/" INDEX)) == 0) {
             return gen_lecture_index();
         }
-        if (strcmp(output, HTML("lecture/quote")) == 0) {
-            return gen_lecture_quote();
+        if (strcmp(output, OUTPUT(LECTURE "/" HIGHLIGHT)) == 0) {
+            return gen_lecture_highlight();
         }
         return gen_lecture_page(output);
     }
-    if (startswith(output, SUBDIR("exercise"))) {
-        if (strcmp(output, HTML("exercise/index")) == 0) {
+    if (startswith(output, OUTPUT_DIR(EXERCISE))) {
+        if (strcmp(output, OUTPUT(EXERCISE "/" INDEX)) == 0) {
             return gen_exercise_index();
         }
-        if (endswith(output, "/index.html")) {
+        if (endswith(output, "/" INDEX ".html")) {
             return gen_exercise_chapter(output);
         }
         return gen_exercise_section(output);

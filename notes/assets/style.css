@@ -11,26 +11,30 @@ html, body, blockquote, p, ul, ol, li {
     color-scheme: light dark;
     --bg: #fafafa;
     --block: #f0f0f0;
-    --highlight: #e8e8e8;
+    --active: #e8e8e8;
     --border: #ccc;
     --subdued: #888;
     --fg: #333;
     --intense: #000;
     --link: #4973c1;
     --link-faded: #a4ccff;
+    --important: #fbb5b1;
+    --important-active: #db5461;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --bg: #202020;
         --block: #2e2e2e;
-        --highlight: #444;
+        --active: #444;
         --border: #666;
         --subdued: #888;
         --fg: #ccc;
         --intense: #eee;
         --link: #61afef;
         --link-faded: #006ca7;
+        --important: #db5461;
+        --important-active: #fbb5b1;
     }
 }
 
@@ -158,6 +162,17 @@ blockquote {
     white-space: nowrap;
 }
 
+.highlight {
+    position: relative;
+}
+
+.highlight__link {
+    position: absolute;
+    top: -5px;
+    left: -30px;
+    color: var(--border);
+}
+
 .toc {
     display: table;
     margin: 0;
@@ -181,8 +196,8 @@ blockquote {
 body {
     max-width: 800px;
     margin: 0 auto;
-    /* 26px is just enough room for .anchor__link. */
-    padding: 50px 26px;
+    /* 28px is just for .anchor__link and .highlight__link. */
+    padding: 50px 28px;
 }
 
 .header {
@@ -223,7 +238,7 @@ body {
 }
 
 .sitenav__item--active {
-    background: var(--highlight);
+    background: var(--active);
     border-radius: 6px;
 }
 
@@ -261,7 +276,7 @@ body {
 
 .pagenav__link:hover {
     color: var(--intense);
-    background: var(--highlight);
+    background: var(--active);
 }
 
 .footer {
@@ -302,7 +317,7 @@ body {
     .sitenav__item--last {
         padding-right: 14px;
     }
-    .anchor__link {
+    .anchor__link, .highlight__link {
         display: none;
     }
 }
@@ -327,25 +342,31 @@ svg {
     vertical-align: -5px;
 }
 
+.arrow, .external, .bookmark {
+    stroke-width: 2px;
+}
+
 .arrow {
     stroke: currentColor;
-    stroke-width: 2px;
     fill: none;
     vertical-align: -3px;
 }
 
 .external {
     stroke: var(--border);
-    stroke-width: 2px;
-    fill: none;
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    padding-left: 0.1em;
+    width: 0.8em;
+    height: 0.8m;
+    padding-left: 0.2em;
+    vertical-align: -1px;
 }
 
 a:hover .external {
     stroke: var(--link-faded);
+}
+
+.bookmark {
+    stroke: currentColor;
+    fill: currentColor;
 }
 
 .wizard {

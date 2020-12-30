@@ -12,11 +12,12 @@ doc_index := docs/index.html
 doc_text := $(patsubst %,docs/text/%.html,index front $(doc_sections))
 doc_lecture := $(patsubst %,docs/lecture/%.html,index $(doc_lecture_no))
 doc_exercise := $(patsubst %,docs/exercise/%.html,index $(doc_sections))
-doc_quote := docs/text/quote.html docs/lecture/quote.html
-doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_quote)
+doc_hi := docs/text/highlight.html docs/lecture/highlight.html
+doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_hi)
 
 doc_link_assets := docs/assets/style.css
-doc_embed_assets := $(patsubst %,notes/assets/%.svg,left right up external)
+doc_embed_assets := $(patsubst %,notes/assets/%.svg,\
+	left right up external bookmark)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 	template.html filter.lua scheme.xml)
 
@@ -51,7 +52,7 @@ $(doc_html): docgen $(doc_embed_assets) $(doc_pandoc_aux)
 $(doc_index): notes/index.md notes/assets/wizard.svg
 $(doc_text): notes/text.md
 $(doc_lecture): notes/lecture.md
-$(doc_quote): notes/quote.md
+$(doc_hi): notes/highlight.md
 docs/exercise/index.html: src/sicp/*.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_1)): src/sicp/chapter-1.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_2)): src/sicp/chapter-2.ss

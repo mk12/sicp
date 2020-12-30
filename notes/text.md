@@ -1,4 +1,4 @@
-These notes are based on the second edition of <cite>[Structure and Interpretation of Computer Programs][sicp]</cite> by Hal Abelson, Jerry Sussman, and Julie Sussman.
+These notes are based on the second edition of <cite>[Structure and Interpretation of Computer Programs][sicp]</cite> by Hal Abelson and Gerald Jay Sussman with Julie Sussman.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 
@@ -6,28 +6,41 @@ These notes are based on the second edition of <cite>[Structure and Interpretati
 
 ## Dedication
 
-> What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. [@sicp {dedication}]
-<!-- (xii) -->
+> This book is dedicated, in respect and admiration, to the spirit that lives in the computer. [@sicp dedication]
+
+> I think that it's extraordinarily important that we in computer science keep fun in computing. [@sicp dedication]
+
+> Don't feel as if the key to successful computing is only in your hands. What's in your hands, I think and hope, is intelligence: the ability to see the machine as more than when you were first led up to it, that you can make it more. [@sicp dedication]
 
 ## Foreword
 
-- Three foci: the human mind, collections of computer programs, and the computer.
-- Idioms form "an arsenal of standard program structures of whose correctness we have become sure" (xiv).
-- Algorithms are programs that perform a precise mathematical function (optimized for execution time and data storage).
+> To appreciate programming as an intellectual activity in its own right you must turn to computer programming; you must read and write computer programs---many of them. [@sicp foreword]
 
-> Lisp is for building organisms---imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place. (xvii)
+::: highlight
+> Every computer program is a model, hatched in the mind, of a real or mental process. These processes, arising from human experience and thought, are huge in number, intricate in detail, and at any time only partially understood. They are modeled to our permanent satisfaction rarely by our computer programs. Thus even though our programs are carefully handcrafted discrete collections of symbols, mosaics of interlocking functions, they continually evolve: we change them as our perception of the model deepens, enlarges, generalizes until the model ultimately attains a metastable place within still another model with which we struggle. The source of the exhilaration associated with computer programming is the continual unfolding within the mind and on the computer of mechanisms expressed as programs and the explosion of perception they generate. [@sicp foreword]
+:::
 
-> It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures. (xvii)
+> Since large programs grow from small ones, it is crucial that we develop an arsenal of standard program structures of whose correctness we have become sure---we call them idioms---and learn to combine them into larger structures using organizational techniques of proven value. [@sicp foreword]
+
+> The computers are never large enough or fast enough. Each breakthrough in hardware technology leads to more massive programming enterprises, new organizational principles, and an enrichment of abstract models. Every reader should ask himself periodically "Toward what end, toward what end?"---but do not ask it too often lest you pass up the fun of programming for the constipation of bittersweet philosophy. [@sicp foreword]
+
+> Lisp is for building organisms---imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place. [@sicp foreword]
+
+> It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures. [@sicp foreword]
 
 ## Preface
 
-- Computer language: a novel formal medium for expressing ideas about methodology.
+::: highlight
+> [A] computer language is not just a way of getting a computer to perform operations but rather [...] it is a novel formal medium for expressing ideas about methodology. Thus, programs must be written for people to read, and only incidentally for machines to execute.  [@sicp preface]
+:::
 
-> Thus, programs must be written for people to read, and only incidentally for machines to execute. (xxii)
+> [T]he essential material [...] is not the syntax of particular programming-language constructs, nor clever algorithms for computing particular functions efficiently, nor even the mathematical analysis of algorithms and the foundations of computing, but rather the techniques used to control the intellectual complexity of large software systems. [@sicp preface]
 
-> Underlying our approach to this subject is our conviction that "computer science" is not a science and that its significance has little to do with computers. (xxiii)
+::: highlight
+> Underlying our approach to this subject is our conviction that "computer science" is not a science and that its significance has little to do with computers. [@sicp preface]
+:::
 
-> Mathematics provides a framework for dealing precisely with notions of "what is." Computation provides a framework for dealing precisely with notions of "how to." (xxiii)
+> Mathematics provides a framework for dealing precisely with notions of "what is." Computation provides a framework for dealing precisely with notions of "how to." [@sicp preface]
 
 # 1: Building Abstractions with Procedures
 
@@ -80,7 +93,12 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
 - Evaluating `(define x 3)` does not apply `define` to two arguments; this is not a combination.
 - Exceptions such as these are _special forms_. Each one has its own evaluation rule.
 
-> Syntactic sugar causes cancer of the semicolon. (Alan Perlis)
+::: highlight
+> Syntactic sugar causes cancer of the semicolon. [@sicp 1.1.3]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#footnote_Temp_17
+by Alan Perlis
+-->
 
 ### 1.1.4: Compound Procedures
 
@@ -323,7 +341,10 @@ The test works like this:
 - If $n$ passes the test for one random value of a, the chances are more than 50% that $n$ is prime.
 - Probabilistic algorithms: algorithms for which one can prove that the chance of error becomes arbitrarily small.
 
-> Numbers that fool the Fermat test are called Carmichael numbers, and little is known about them other than that they are extremely rare. There are 255 Carmichael numbers below 100,000,000. The smallest few are 561, 1105, 1729, 2465, 2821, and 6601. In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a "correct" algorithm. Considering an algorithm to be inadequate for the first reason but not for the second illustrates the difference between mathematics and engineering. (69)
+::: highlight
+> Numbers that fool the Fermat test are called Carmichael numbers, and little is known about them other than that they are extremely rare. [...] In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a "correct" algorithm. Considering an algorithm to be inadequate for the first reason but not for the second illustrates the difference between mathematics and engineering. [@sicp 1.2.6]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#footnote_Temp_80 -->
 
 ## 1.3: Formulating Abstractions with Higher-Order Procedures
 
@@ -969,6 +990,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Having multiple super types is tricky, since the type can be raised via multiple paths to search for a procedure.
 - Large numbers of interrelated types conflicts with modularity.
 
+::: highlight
+> Developing a useful, general framework for expressing the relations among different types of entities (what philosophers call "ontology") seems intractably difficult. The main difference between the confusion that existed ten years ago and the confusion that exists now is that now a variety of inadequate ontological theories have been embodied in a plethora of correspondingly inadequate programming languages. For example, much of the complexity of object-oriented programming languages---and the subtle and confusing differences among contemporary object-oriented languages---centers on the treatment of generic operations on interrelated types. [@sicp 2.5.2]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_289 -->
+
 ### 2.5.3: Example: Symbolic Algebra
 
 - The manipulation of symbolic algebraic expressions is hard.
@@ -1199,7 +1225,13 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Imperative programs are susceptible to bugs that cannot occur in functional programs.
 - Things get even worse when we throw concurrency into the mix.
 
-> In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. (318--319)
+::: highlight
+> In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs.
+>
+> In view of this, it is ironic that introductory programming is most often taught in a highly imperative style. This may be a vestige of a belief, common throughout the 1960s and 1970s, that programs that call procedures must inherently be less efficient than programs that perform assignments. [...] Alternatively it may reflect a view that step-by-step assignment is easier for beginners to visualize than procedure call. Whatever the reason, it often saddles beginning programmers with "should I set this variable before or after that one" concerns that can complicate programming and obscure the important ideas. [@sicp 3.1.3]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#footnote_Temp_339 -->
+<!-- footnote only for second; maybe two citations within quote, first one just @sicp 3.1.3, second the footnote? -->
 
 ## 3.2: The Environment Model of Evaluation
 
@@ -1445,6 +1477,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - A wire is shared between the devices connected to it. If one changes it, the rest see the change.
 - This would be impossible if you didn't model the wire as an identity, separate from its signal value.
 
+::: highlight
+> The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between "procedures" and "data," and we can choose our syntactic sugar to allow us to program in whatever style we choose. [@sicp 3.3.4]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#footnote_Temp_385 -->
+
 #### The agenda
 
 - The only thing left is `after-delay`.
@@ -1514,6 +1551,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Consider `(set! balance (- balance amount))`. There are three steps: accessing the value of `balance`, computing the new balance, and setting `balance` to this value.
 - Two such expressions executed concurrently on the same `balance` variable could have their three steps interleaved.
 - The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.
+
+::: highlight
+> To quote some graffiti seen on a Cambridge building wall: "Time is a device that was invented to keep everything from happening at once." [@sicp 3.4.1]
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#footnote_Temp_406 -->
+:::
 
 #### Correct behavior of concurrent programs
 
@@ -1726,21 +1768,29 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - However, the issues come back when we need to merge streams together.
 - Immutability is a key pillar of _functional programming languages_.
 
-> We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge. (486)
+::: highlight
+> We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge.
+>
+> The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the "objects" is much larger than the state that they share. [@sicp 3.5.5]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#footnote_Temp_507 -->
+<!-- Footnote is only 2nd paragraph. -->
 
-> The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the "objects" is much larger than the state that they share. (486)
-
-# 4: Metalinguistic Abstraction 
+# 4: Metalinguistic Abstraction
 
 - Expert programmers build up abstractions from simpler concepts to higher-level ones, and preserve modularity by adopting appropriate large-scale views of system structure.
 - However, with increasingly complex problems we will find that Lisp, or any programming language, is not sufficient.
 
-> We must constantly turn to new languages in order to express our ideas more effectively. Establishing new languages is a powerful strategy for controlling complexity in engineering design; we can often enhance our ability to deal with a complex problem by adopting a new language that enables us to describe (and hence to think about) the problem in a different way, using primitives, means of combination, and means of abstraction that are particularly well suited to the problem at hand. (488)
+::: highlight
+> We must constantly turn to new languages in order to express our ideas more effectively. Establishing new languages is a powerful strategy for controlling complexity in engineering design; we can often enhance our ability to deal with a complex problem by adopting a new language that enables us to describe (and hence to think about) the problem in a different way, using [terms] that are particularly well suited to the problem at hand. [@sicp 4]
+:::
 
 - _Metalinguistic abstraction_ means establishing new languages.
 - An _evaluator_ (or _interpreter_) is a procedure that implements a programming language.
 
-> It is no exaggeration to regard this as the most fundamental idea in programming: The evaluator, which determines the meaning of expressions in a programming language, is just another program. (489)
+::: highlight
+> It is no exaggeration to regard this as the most fundamental idea in programming: The evaluator, which determines the meaning of expressions in a programming language, is just another program. [@sicp 4]
+:::
 
 - Lisp is particularly well suited to metalinguistic abstraction.
 
@@ -1984,6 +2034,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The existence of a universal machine is a deep and wonderful property of computation.
 - The user's programs are the evaluator's data. Lisp takes advantage of this and provides a primitive `eval` procedure for evaluating data as programs.
 
+::: highlight
+> [W]e can regard the evaluator as a very special machine that takes as input a description of a machine. Given this input, the evaluator configures itself to emulate the machine described. [...]
+>
+> From this perspective, our evaluator is seen to be a _universal machine_. It mimics other machines when these are described as Lisp programs. This is striking. Try to imagine an analogous evaluator for electrical circuits. This would be a circuit that takes as input a signal encoding the plans for some other circuit, such as a filter. Given this input, the circuit evaluator would then behave like a filter with the same description. Such a universal electrical circuit is almost unimaginably complex. It is remarkable that the program evaluator is a rather simple program. [@sicp 4.1.5]
+:::
+
 ### 4.1.6: Internal Definitions
 
 - Global definitions have _sequential scoping_: they are defined one at a time.
@@ -2081,6 +2137,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - For efficiency, we'll make our interpreter _memoize_ thunks.
     - This is called _call-by-need_, as opposed to non-memoized _call-by-name_.
     - It raises subtle and confusing issues in the presence of assignments.
+
+::: highlight
+> The word thunk was invented by an informal working group that was discussing the implementation of call-by-name in Algol 60. They observed that most of the analysis of ("thinking about") the expression could be done at compile time; thus, at run time, the expression would already have been "thunk" about. [@sicp 4.2.2]
+:::
+<!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#footnote_Temp_580 -->
 
 #### Modifying the evaluator
 

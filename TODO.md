@@ -1,12 +1,21 @@
 # New to do
 
+- rewrite README, mentioning pandoc & BEM css
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - spell checker for Markdown, integrated in Makefile
 - have special callout thing at end of text sections with exercise links
-- extract favorite quotes from blockquotes annotated with {.favorite} or something
-- attribute lecture quotes to Hal/Gerald
-- do citations for inline quotes and block quotes, linking to SICP website
+- attribute lecture quotes to Abelson/Sussman
+- attribute some citations to Alan Perlis, etc.
+- do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
+- pandoc filter to allow #1, #1.1, #1.1.1, #1a, etc. and convert to 1/1.html#1.1.1 etc.
+- make highlights links go directly to textbook/lecture
+    - must do this because otherwise "external link" is a lie
+- extract favorite quotes from blockquotes annotated with ::: highlight
+- heart SVGs on highlights linked to quote.html
+- test site with stylesheet disabled
+- remove paddingin SVGs, make pixel perfect, attributes/css
++ rename quote.html to highlight.html
 + add external link icon to indicate header link affordance (and not _blank, just to indicate; precedent here in Wikipedia)
 + linkify all headers
 + title on all `<a>` tags for accessibility

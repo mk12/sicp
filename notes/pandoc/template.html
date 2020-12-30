@@ -11,7 +11,18 @@ $endif$
   <link rel="stylesheet" href="$root$assets/style.css">
 </head>
 <body>
-$if(up)$$../assets/external.svg()$$endif$
+$if(up_or_highlight)$
+<div hidden>
+  <svg>
+$if(up)$
+    $^$$../assets/external.svg()$
+$endif$
+$if(highlight)$
+    $^$$../assets/bookmark.svg()$
+$endif$
+  </svg>
+</div>
+$endif$
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="header $if(up)$$else$ header--lone$endif$">
   <a class="title link" href="$root$index.html">SICP Study</a>
