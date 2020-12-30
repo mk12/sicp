@@ -912,7 +912,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 2.4.3: Data-Directed Programming and Additivity
 
 - The strategy of checking the type and calling an appropriate procedure is called dispatching on type.
-- The implementation in [§ 2.4.2](#2.4.2) had two significant weaknesses:
+- The implementation in [](:2.4.2) had two significant weaknesses:
     1. The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.
     2. We must guarantee that no two procedures have the same name.
 - The underlying issue: the technique we used was not _additive_.
@@ -936,7 +936,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ## 2.5: Systems with Generic Operations
 
-- The key idea in [§ 2.4.3](4.html#2.4.3): link specific data operations to multiple representations using generic procedures.
+- The key idea in [](:2.4.3): link specific data operations to multiple representations using generic procedures.
 - We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.
 - We have seen several different arithmetic packages---primitive numbers, rational numbers, intervals, and complex numbers.
 - We will use data-directed techniques to write procedures that work on all of these data structures.
@@ -2080,7 +2080,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can arrange the evaluator to analyze syntax only once by splitting `eval` into two parts:
     - `(analyze exp)` performs syntactic analysis and returns an _execution procedure_.
     - `((analyze exp) env)` completes the evaluation.
-- `analyze` is similar to the [original](#4.1.1) `eval`, except it only performs analysis, not full evaluation:
+- `analyze` is similar to the [original](:4.1.1) `eval`, except it only performs analysis, not full evaluation:
 
 ```
 (define (analyze exp)
@@ -2113,7 +2113,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 4.2.1: Normal Order and Applicative Order
 
-- In [§ 1.1.5](../1/1.html#1.1.5), we noted that Scheme is an _applicative-order_ language.
+- In [](:1.1.5), we noted that Scheme is an _applicative-order_ language.
 - _Normal-order_ languages use _lazy evaluation_ to delay evaluation as long as possible.
 - Consider this procedure:
 
@@ -2133,7 +2133,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - when passed to a primitive procedure;
     - when it is the predicate of conditional;
     - when it is an operator about to be applied as a procedure.
-- This is similar to [streams](../3/5.html#3.5.1), but uniform and automatic throughout the language.
+- This is similar to [streams](:3.5.1), but uniform and automatic throughout the language.
 - For efficiency, we'll make our interpreter _memoize_ thunks.
     - This is called _call-by-need_, as opposed to non-memoized _call-by-name_.
     - It raises subtle and confusing issues in the presence of assignments.
@@ -2212,11 +2212,11 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 4.2.3: Streams as Lazy Lists
 
-- Before introducing lazy evaluation, we implemented [streams as delayed lists](../3/5.html#3.5.1).
+- Before introducing lazy evaluation, we implemented [streams as delayed lists](:3.5.1).
 - We can instead formulate streams as _lazy_ lists. There are two advantages:
     1. No need for special forms `delay` and `cons-stream`.
     2. No need for separate list and stream operations.
-- All we need to do is make `cons` lazy, either by introducing non-strict primitives or by defining `cons`, `car`, and `cdr` [as compound procedures](../2/1.html#2.1.3).
+- All we need to do is make `cons` lazy, either by introducing non-strict primitives or by defining `cons`, `car`, and `cdr` [as compound procedures](:2.1.3).
 - Now we can write code without distinguishing normal lists from infinite ones:
 
 ```
@@ -2225,7 +2225,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```
 
 - These lazy lists are even lazier than our original streams, since the `car` is delayed too.
-- This also eliminates [the problems we had earlier](../3/5.html#3.5.4) around having to explicitly delay and force some arguments when computing integrals.
+- This also eliminates [the problems we had earlier](:3.5.4) around having to explicitly delay and force some arguments when computing integrals.
 
 ## 4.3: Variations on a Scheme --- Nondeterministic Computing
 

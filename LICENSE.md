@@ -46,10 +46,7 @@ The GitHub Mark is a registered trademark of GitHub, Inc. and is used [with perm
 
 This section applies to the following files:
 
-- [notes/assets/left.svg](notes/assets/left.svg)
-- [notes/assets/right.svg](notes/assets/right.svg)
-- [notes/assets/up.svg](notes/assets/up.svg)
-- [notes/assets/external.svg](notes/assets/external.svg)
+- [notes/assets/arrows.svg](notes/assets/arrows.svg)
 - [notes/assets/bookmark.svg](notes/assets/bookmark.svg)
 
 I adapted them from icons in [tabler/tabler-icons](https://github.com/tabler/tabler-icons).

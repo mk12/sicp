@@ -163,22 +163,35 @@ blockquote {
 }
 
 .highlight {
-    position: relative;
+    /* position: relative; */
+    margin-top: 1em;
 }
 
 .highlight blockquote {
     border-left-color: var(--important);
+    margin-top: 0;
 }
 
 .highlight__link {
-    position: absolute;
-    top: 15px;
-    left: -25px;
-    color: var(--important);
+    /* position: absolute; */
+    /* top: 15px; */
+    /* left: -25px; */
+    /* top: -20px; */
+    display: inline-block;
+    color: var(--subdued);
+    /* color: var(--important-active); */
+    vertical-align: baseline;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.bookmark {
+    vertical-align: -2px;
 }
 
 .highlight__link:hover {
-    color: var(--important-active);
+    /* color: var(--important-active); */
 }
 
 .toc {
@@ -204,8 +217,8 @@ blockquote {
 body {
     max-width: 800px;
     margin: 0 auto;
-    /* 28px is just for .anchor__link and .highlight__link. */
-    padding: 50px 28px;
+    /* 27px is just enough for .anchor__link and .highlight__link. */
+    padding: 50px 27px;
 }
 
 .header {
@@ -326,7 +339,8 @@ body {
         padding-right: 14px;
     }
     .anchor__link, .highlight__link {
-        display: none;
+        /* FIXME */
+        /* display: none; */
     }
 }
 

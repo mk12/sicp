@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <libgen.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -179,16 +180,51 @@ static bool fork_pandoc(struct PandocProc *proc, struct PandocOpts opts) {
     return true;
 }
 
-// Closes proc's pipe and waits for it to finish. Returns true on success.
+// PID of the Pandoc process, stored so that signal_handler can kill it.
+static pid_t global_pandoc_pid;
+
+// Kills global_pandoc_pid and then runs the default signal handler.
+static void signal_handler(int signum) {
+    kill(global_pandoc_pid, SIGTERM);
+    signal(signum, SIG_DFL);
+    raise(signum);
+}
+
+// Closes proc's pipe and waits for it to finish. Returns true on success. Kills
+// proc if SIGHUP, SIGINT, SIGQUIT, or SIGTERM is received while waiting (this
+// is useful if filter.lua has an infinite loop bug, for example).
 static bool wait_pandoc(struct PandocProc *proc) {
     fclose(proc->in);
+    global_pandoc_pid = proc->pid;
+    struct sigaction action;
+    action.sa_handler = signal_handler;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    const int signums[] = {SIGHUP, SIGINT, SIGQUIT, SIGTERM};
+    const int n_signums = sizeof signums / sizeof signums[0];
+    bool set_handler[n_signums];
+    for (int i = 0; i < n_signums; i++) {
+        struct sigaction old;
+        sigaction(signums[i], NULL, &old);
+        if (old.sa_handler != SIG_IGN) {
+            sigaction(signums[i], &action, NULL);
+            set_handler[i] = true;
+        }
+    }
+    bool success = true;
     if (waitpid(proc->pid, NULL, 0) == -1) {
         perror("waitpid");
-        return false;
+        success = false;
     };
+    for (int i = 0; i < n_signums; i++) {
+        if (set_handler[i]) {
+            signal(signums[i], SIG_DFL);
+        }
+    }
+    global_pandoc_pid = -1;
     proc->pid = -1;
     proc->in = NULL;
-    return true;
+    return success;
 }
 
 // A Markdown sector is represented by an integer s, where:

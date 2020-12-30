@@ -11,20 +11,20 @@ $endif$
   <link rel="stylesheet" href="$root$assets/style.css">
 </head>
 <body>
-$if(up_or_highlight)$
+$if(svg_defs)$
 <div hidden>
   <svg>
-$if(up)$
+$if(use_arrows)$
     $../assets/arrows.svg()$
 $endif$
-$if(highlight)$
+$if(use_bookmark)$
     $../assets/bookmark.svg()$
 $endif$
   </svg>
 </div>
 $endif$
 <a class="skip-link" href="#main">Skip to main content</a>
-<header class="header $if(up)$$else$ header--lone$endif$">
+<header class="header $if(has_pagenav)$$else$ header--lone$endif$">
   <a class="title link" href="$root$index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link $if(text)$ sitenav__item--active$endif$"
@@ -39,7 +39,7 @@ $endif$
     </a>
   </nav>
 </header>
-$if(up)$
+$if(has_pagenav)$
 <nav class="pagenav pagenav--top" aria-label="secondary">
   $pagenav()$
 </nav>
@@ -50,12 +50,12 @@ $../assets/wizard.svg()$
 $endif$
 $body$
 </main>
-$if(up)$
+$if(has_pagenav)$
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   $pagenav()$
 </nav>
 $endif$
-<footer class="footer$if(up)$$else$ footer--lone$endif$">
+<footer class="footer$if(has_pagenav)$$else$ footer--lone$endif$">
   <p>© 2020 Mitchell Kember</p>
 </footer>
 </body>

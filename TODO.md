@@ -8,11 +8,12 @@
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
-- pandoc filter to allow #1, #1.1, #1.1.1, #1a, etc. and convert to 1/1.html#1.1.1 etc.
 - make highlights links go directly to textbook/lecture
     - must do this because otherwise "external link" is a lie
 - extract favorite quotes from blockquotes annotated with ::: highlight
 - heart SVGs on highlights linked to quote.html
++ make pandoc process die when docgen dies
++ pandoc filter to allow #1, #1.1, #1.1.1, #1a, etc. and convert to 1/1.html#1.1.1 etc.
 + test site with stylesheet disabled
 + remove padding in SVGs, make pixel perfect, attributes/css
 + decide on SVG attribute vs CSS
