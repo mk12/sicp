@@ -15,8 +15,8 @@ doc_exercise := $(patsubst %,docs/exercise/%.html,index $(doc_sections))
 doc_hi := docs/text/highlight.html docs/lecture/highlight.html
 doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_hi)
 
-doc_link_assets := docs/assets/style.css
-doc_embed_assets := $(patsubst %,notes/assets/%.svg,\
+doc_assets_link := docs/assets/style.css
+doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
 	left right up external bookmark)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 	template.html filter.lua scheme.xml)
@@ -44,9 +44,9 @@ test:
 docgen linter: %: %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-docs: $(doc_html) $(doc_link_assets)
+docs: $(doc_html) $(doc_assets_link)
 
-$(doc_html): docgen $(doc_embed_assets) $(doc_pandoc_aux)
+$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux)
 	./docgen $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -60,7 +60,7 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_4)): src/sicp/chapter-4.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
 
-$(doc_link_assets): docs/assets/%: | notes/assets/%
+$(doc_assets_link): docs/assets/%: | notes/assets/%
 	mkdir -p docs/assets
 	-ln -s ../../$| $@
 

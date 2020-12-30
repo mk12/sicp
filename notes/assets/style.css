@@ -332,18 +332,8 @@ body {
 
 /* SVGs */
 
-svg {
-    stroke-linejoin: round;
-    stroke-linecap: round;
-}
-
 .github-mark {
-    fill: currentColor;
     vertical-align: -5px;
-}
-
-.arrow, .external, .bookmark {
-    stroke-width: 2px;
 }
 
 .arrow {
@@ -353,7 +343,7 @@ svg {
 }
 
 .external {
-    stroke: var(--border);
+    color: var(--border);
     width: 0.8em;
     height: 0.8m;
     padding-left: 0.2em;
@@ -361,12 +351,7 @@ svg {
 }
 
 a:hover .external {
-    stroke: var(--link-faded);
-}
-
-.bookmark {
-    stroke: currentColor;
-    fill: currentColor;
+    color: var(--link-faded);
 }
 
 .wizard {

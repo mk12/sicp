@@ -1,3 +1,3 @@
-<svg alt="" class="external" width="24" height="24" viewBox="0 0 24 24">
-  <path id="external" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563" fill="none" stroke="currentColor" stroke-width="3"/>
-</svg>
+<symbol id="external" alt="" width="24" height="24" viewBox="0 0 24 24">
+  <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+</symbol>

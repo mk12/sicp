@@ -15,6 +15,9 @@
 - heart SVGs on highlights linked to quote.html
 - test site with stylesheet disabled
 - remove paddingin SVGs, make pixel perfect, attributes/css
+- decide on SVG attribute vs CSS
+    - definitely put width/height otherwise disabling CSS creates huge gaps
+    - pro of SVG: previewing SVG file is correct
 + rename quote.html to highlight.html
 + add external link icon to indicate header link affordance (and not _blank, just to indicate; precedent here in Wikipedia)
 + linkify all headers

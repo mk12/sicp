@@ -5,8 +5,8 @@
 *.dep
 *.zo
 
-# Pandoc output
-out.html
+# Generated code
+docgen_assets.c
 
 # Binaries
 /docgen
