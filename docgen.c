@@ -268,8 +268,8 @@ static void write_dotted_section(char *buf, int size, MarkdownSector section) {
     }
 }
 
-// Markdown line scanner state.
-struct MarkdownState {
+// Markdown line scanner.
+struct MarkdownScanner {
     // The Markdown file.
     FILE *file;
     // Current line and its capacity.
@@ -284,52 +284,52 @@ struct MarkdownState {
 };
 
 // Initializes a Markdown line scanner. Returns true on success.
-static bool init_md(struct MarkdownState *state, const char *path) {
+static bool init_md(struct MarkdownScanner *scan, const char *path) {
     FILE *file = fopen(path, "r");
     if (!file) {
         perror(path);
         return false;
     }
-    state->file = file;
-    state->line = NULL_SPAN;
-    state->code = false;
-    state->sector = 0;
-    state->heading = 0;
+    scan->file = file;
+    scan->line = NULL_SPAN;
+    scan->code = false;
+    scan->sector = 0;
+    scan->heading = 0;
     return true;
 }
 
 // Advances a Markdown line scanner to the next line. Returns true on successs,
 // and false on failure or EOF. Takes care of closing the file.
-static bool scan_md(struct MarkdownState *state) {
-    if (!state->file) {
+static bool scan_md(struct MarkdownScanner *scan) {
+    if (!scan->file) {
         return false;
     }
-    const bool prev_blank = state->line.len <= 1;
-    state->line.len = getline(&state->line.data, &state->cap, state->file);
-    state->heading = 0;
-    if (state->line.len == -1) {
-        fclose(state->file);
-        state->file = NULL;
+    const bool prev_blank = scan->line.len <= 1;
+    scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
+    scan->heading = 0;
+    if (scan->line.len == -1) {
+        fclose(scan->file);
+        scan->file = NULL;
         return false;
     }
-    if (startswith(state->line.data, "```")) {
-        state->code = !state->code;
+    if (startswith(scan->line.data, "```")) {
+        scan->code = !scan->code;
         return true;
     }
-    if (!state->code && prev_blank) {
+    if (!scan->code && prev_blank) {
         int h = 0;
-        while (h < state->line.len && state->line.data[h] == '#') h++;
-        if (h > 0 && h < state->line.len && state->line.data[h] == ' ') {
-            state->sector = MS_NEXT(state->sector, h);
-            state->heading = h;
+        while (h < scan->line.len && scan->line.data[h] == '#') h++;
+        if (h > 0 && h < scan->line.len && scan->line.data[h] == ' ') {
+            scan->sector = MS_NEXT(scan->sector, h);
+            scan->heading = h;
         }
     }
     return true;
 }
 
-// Copies the current line in state to out.
-static void copy_md(struct MarkdownState *state, FILE *out) {
-    fwrite(state->line.data, state->line.len, 1, out);
+// Copies the current line in the scanner to out.
+static void copy_md(struct MarkdownScanner *scan, FILE *out) {
+    fwrite(scan->line.data, scan->line.len, 1, out);
 }
 
 // A parsed Markdown heading.
@@ -374,6 +374,76 @@ static struct MarkdownHeading parse_md_heading(struct Span s) {
 #define SZ_RELATIVE 32
 #define SZ_HEADING 64
 #define SZ_LABEL 8
+
+// A Markdown line scanner that picks out "::: highlight" divs.
+struct HighlightScanner {
+    // The underlying Markdown scanner.
+    struct MarkdownScanner md;
+    // Current state: BEGIN for "::: highlight", END for ":::", INSIDE between
+    // the two, and NONE otherwise. BEGIN is divided into 1ST (the first
+    // highlight block for the current saved heading) and NTH (not the first).
+    enum {HL_NONE, HL_BEGIN_1ST, HL_BEGIN_NTH, HL_INSIDE, HL_END} state;
+    // A saved heading and its sector, used for organizing highlights.
+    struct MarkdownHeading heading;
+    MarkdownSector sector;
+    // Storage for the heading spans.
+    char line_buf[SZ_HEADING];
+    // The sector of the last emitted highlight.
+    MarkdownSector highlight_sector;
+};
+
+// Initializes a highlight scanner. Returns true on success. See also init_md.
+static bool init_hl(struct HighlightScanner *scan, const char *path) {
+    if (!init_md(&scan->md, path)) {
+        return false;
+    }
+    scan->state = HL_NONE;
+    scan->sector = 0;
+    scan->highlight_sector = 0;
+    return true;
+}
+
+// Advances a highlight scanner to the next line. See also scan_md.
+static bool scan_hl(struct HighlightScanner *scan) {
+    if (!scan_md(&scan->md)) {
+        return false;
+    }
+    const struct Span line = scan->md.line;
+    switch (scan->state) {
+    case HL_NONE:
+    case HL_END:
+        if (strncmp(line.data, "::: highlight\n", line.len) == 0) {
+            scan->state = HL_BEGIN_NTH;
+            if (scan->highlight_sector != scan->sector) {
+                scan->highlight_sector = scan->sector;
+                scan->state = HL_BEGIN_1ST;
+            }
+        } else {
+            scan->state = HL_NONE;
+        }
+        break;
+    case HL_BEGIN_1ST:
+    case HL_BEGIN_NTH:
+    case HL_INSIDE:
+        if (strncmp(line.data, ":::\n", line.len) == 0) {
+            scan->state = HL_END;
+        } else {
+            scan->state = HL_INSIDE;
+        }
+        break;
+    }
+    return true;
+}
+
+// Saves the heading in the current line. This creates the difference between
+// the HL_BEGIN_1ST and HL_BEGIN_NTH states.
+static void save_heading_hl(struct HighlightScanner *scan) {
+    strncpy(scan->line_buf, scan->md.line.data, scan->md.line.len);
+    struct Span line = scan->md.line;
+    line.data = scan->line_buf;
+    scan->heading = parse_md_heading(line);
+    scan->sector = scan->md.sector;
+}
 
 // Renders a heading to out. The level determines h1/h2/etc. If id is present,
 // uses it and renders a "#" link. If heading.label is present, renders a
@@ -521,6 +591,7 @@ static int text_page_num(MarkdownSector s) {
 static void lecture_page_name(
         struct MarkdownHeading heading, char *buf, int size) {
     assert(size > 0);
+    assert(heading.label.data);
     int i = 0;
     for (int j = 0; j < heading.label.len; j++) {
         char c = tolower(heading.label.data[i]);
@@ -577,8 +648,8 @@ static bool gen_index(void) {
 
 // Generates docs/text/index.html.
 static bool gen_text_index(void) {
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(TEXT))) {
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
@@ -596,42 +667,42 @@ static bool gen_text_index(void) {
     }
     render_heading(proc.in,
         1, NULL_SPAN, TITLE_HEADING("Textbook Notes"), NULL);
-    while (scan_md(&state) && state.sector == 0) {
-        copy_md(&state, proc.in);
+    while (scan_md(&scan) && scan.sector == 0) {
+        copy_md(&scan, proc.in);
     }
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
     render_toc_item(&tr, proc.in,
         1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
     do {
-        if (state.heading == 2) {
-            struct MarkdownHeading h = parse_md_heading(state.line);
+        if (scan.heading == 2) {
+            struct MarkdownHeading h = parse_md_heading(scan.line);
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
             render_toc_item(&tr, proc.in, 1, h,
                 FRONT ".html#%.*s", id.len, id.data);
         }
-    } while (scan_md(&state) && MS_INDEX(state.sector, 1) <= 1);
+    } while (scan_md(&scan) && MS_INDEX(scan.sector, 1) <= 1);
     do {
-        if (state.heading == 1) {
-            render_toc_item(&tr, proc.in, 1, parse_md_heading(state.line),
-                "%d/" INDEX ".html", MS_INDEX(state.sector, 1) - 1);
-        } else if (state.heading == 2) {
-            render_toc_item(&tr, proc.in, 2, parse_md_heading(state.line),
+        if (scan.heading == 1) {
+            render_toc_item(&tr, proc.in, 1, parse_md_heading(scan.line),
+                "%d/" INDEX ".html", MS_INDEX(scan.sector, 1) - 1);
+        } else if (scan.heading == 2) {
+            render_toc_item(&tr, proc.in, 2, parse_md_heading(scan.line),
                 "%d/%d.html",
-                MS_INDEX(state.sector, 1) - 1,
-                MS_INDEX(state.sector, 2));
+                MS_INDEX(scan.sector, 1) - 1,
+                MS_INDEX(scan.sector, 2));
         }
-    } while (scan_md(&state));
+    } while (scan_md(&scan));
     render_toc_end(&tr, proc.in);
     return wait_pandoc(&proc);
 }
 
 // Generates docs/text/highlight.html.
 static bool gen_text_highlight(void) {
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(TEXT))) {
+    struct HighlightScanner scan;
+    if (!init_hl(&scan, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
@@ -648,38 +719,31 @@ static bool gen_text_highlight(void) {
         return false;
     }
     render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
-    bool in_highlight = false;
-    MarkdownSector sector = 0, highlight_sector = 0;
-    struct MarkdownHeading h;
-    char line_buf[SZ_HEADING], id_buf[SZ_HEADING];
-    while (scan_md(&state)) {
-        if (in_highlight) {
-            if (strncmp(state.line.data, ":::\n", state.line.len) == 0) {
-                in_highlight = false;
-            } else {
-                copy_md(&state, proc.in);
+    while (scan_hl(&scan)) {
+        switch (scan.state) {
+        case HL_NONE:
+            if (scan.md.heading == 1 + (MS_INDEX(scan.md.sector, 1) == 1)) {
+                save_heading_hl(&scan);
             }
-        } else {
-            if (strncmp(state.line.data, "::: highlight\n", state.line.len) == 0) {
-                in_highlight = true;
-                putc('\n', proc.in);
-                assert(sector != 0);
-                if (highlight_sector != sector) {
-                    highlight_sector = sector;
-                    struct Span id = h.label;
-                    if (!id.data) {
-                        id = tolower_s(h.title, id_buf, sizeof id_buf);
-                    }
-                    render_heading(proc.in, 2, id, h,
-                        "%s-%d.html", TEXT_URL_BASE, text_page_num(sector));
-                }
-            } else if (state.heading == 1 + (MS_INDEX(state.sector, 1) == 1)) {
-                strncpy(line_buf, state.line.data, state.line.len);
-                struct Span line = state.line;
-                line.data = line_buf;
-                h = parse_md_heading(line);
-                sector = state.sector;
+            break;
+        case HL_BEGIN_1ST:
+            putc('\n', proc.in);
+            struct Span id = scan.heading.label;
+            char buf[SZ_HEADING];
+            if (!id.data) {
+                id = tolower_s(scan.heading.title, buf, sizeof buf);
             }
+            render_heading(proc.in, 2, id, scan.heading,
+                "%s-%d.html", TEXT_URL_BASE, text_page_num(scan.sector));
+            break;
+        case HL_BEGIN_NTH:
+            putc('\n', proc.in);
+            break;
+        case HL_INSIDE:
+            copy_md(&scan.md, proc.in);
+            break;
+        case HL_END:
+            break;
         }
     }
     return wait_pandoc(&proc);
@@ -687,8 +751,8 @@ static bool gen_text_highlight(void) {
 
 // Generates docs/text/front.html.
 static bool gen_text_front(void) {
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(TEXT))) {
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
@@ -704,19 +768,19 @@ static bool gen_text_front(void) {
     })) {
         return false;
     }
-    while (scan_md(&state) && state.sector != 1);
+    while (scan_md(&scan) && scan.sector != 1);
     do {
-        if (state.heading > 1) {
-            struct MarkdownHeading h = parse_md_heading(state.line);
+        if (scan.heading > 1) {
+            struct MarkdownHeading h = parse_md_heading(scan.line);
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
-            render_heading(proc.in, state.heading, id, h,
-                "%s-%d.html", TEXT_URL_BASE, text_page_num(state.sector));
+            render_heading(proc.in, scan.heading, id, h,
+                "%s-%d.html", TEXT_URL_BASE, text_page_num(scan.sector));
         } else {
-            copy_md(&state, proc.in);
+            copy_md(&scan, proc.in);
         }
-    } while (scan_md(&state) && state.heading != 1);
+    } while (scan_md(&scan) && scan.heading != 1);
     return wait_pandoc(&proc);
 }
 
@@ -730,8 +794,8 @@ static bool gen_text_chapter(const char *output) {
     if (!(chapter >= 1 && chapter <= NUM_CHAPTERS)) {
         goto invalid;
     }
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(TEXT))) {
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(TEXT))) {
         return false;
     }
     char title[] = "SICP Chapter _ Notes";
@@ -759,29 +823,29 @@ static bool gen_text_chapter(const char *output) {
         return false;
     }
     const MarkdownSector target_sector = make_sector(chapter, 0);
-    while (scan_md(&state) && state.sector != target_sector);
-    assert(state.sector == target_sector);
-    struct MarkdownHeading h = parse_md_heading(state.line);
+    while (scan_md(&scan) && scan.sector != target_sector);
+    assert(scan.sector == target_sector);
+    struct MarkdownHeading h = parse_md_heading(scan.line);
     assert(h.label.data);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, text_page_num(target_sector));
-    while (scan_md(&state) && state.heading == 0) {
-        copy_md(&state, proc.in);
+    while (scan_md(&scan) && scan.heading == 0) {
+        copy_md(&scan, proc.in);
     }
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
     do {
-        if (state.heading == 2) {
-            int section = MS_INDEX(state.sector, 2);
-            render_toc_item(&tr, proc.in, 1, parse_md_heading(state.line),
+        if (scan.heading == 2) {
+            int section = MS_INDEX(scan.sector, 2);
+            render_toc_item(&tr, proc.in, 1, parse_md_heading(scan.line),
                 "%d.html", section);
-        } else if (state.heading == 3) {
-            int section = MS_INDEX(state.sector, 2);
-            int subsection = MS_INDEX(state.sector, 3);
-            render_toc_item(&tr, proc.in, 2, parse_md_heading(state.line),
+        } else if (scan.heading == 3) {
+            int section = MS_INDEX(scan.sector, 2);
+            int subsection = MS_INDEX(scan.sector, 3);
+            render_toc_item(&tr, proc.in, 2, parse_md_heading(scan.line),
                 "%d.html#%d.%d.%d", section, chapter, section, subsection);
         }
-    } while (scan_md(&state) && state.heading != 1);
+    } while (scan_md(&scan) && scan.heading != 1);
     render_toc_end(&tr, proc.in);
     return wait_pandoc(&proc);
 invalid:
@@ -802,8 +866,8 @@ static bool gen_text_section(const char *output) {
             && section >= 1 && section <= last_section)) {
         goto invalid;
     }
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(TEXT))) {
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(TEXT))) {
         return false;
     }
     char title[] = "SICP Section _._ Notes";
@@ -842,30 +906,30 @@ static bool gen_text_section(const char *output) {
         return false;
     }
     const MarkdownSector target_sector = make_sector(chapter, section);
-    while (scan_md(&state) && state.sector != target_sector);
-    assert(state.sector == target_sector);
-    struct MarkdownHeading h = parse_md_heading(state.line);
+    while (scan_md(&scan) && scan.sector != target_sector);
+    assert(scan.sector == target_sector);
+    struct MarkdownHeading h = parse_md_heading(scan.line);
     assert(h.label.data);
     const int page_num = text_page_num(target_sector);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, page_num);
-    while (scan_md(&state) && state.heading != 1 && state.heading != 2) {
-        if (state.heading >= 3) {
-            h = parse_md_heading(state.line);
+    while (scan_md(&scan) && scan.heading != 1 && scan.heading != 2) {
+        if (scan.heading >= 3) {
+            h = parse_md_heading(scan.line);
             if (h.label.data) {
-                assert(state.heading == 3);
+                assert(scan.heading == 3);
                 render_heading(proc.in, 2, h.label, h,
                     "%s-%d.html#%%_sec_%d.%d.%d", TEXT_URL_BASE, page_num,
-                    chapter, section, MS_INDEX(state.sector, 3));
+                    chapter, section, MS_INDEX(scan.sector, 3));
             } else {
-                assert(state.heading == 4);
+                assert(scan.heading == 4);
                 char id[SZ_LABEL];
                 snprintf(id, sizeof id, "%d.%d.%d.%d", chapter, section,
-                    MS_INDEX(state.sector, 3), MS_INDEX(state.sector, 4));
+                    MS_INDEX(scan.sector, 3), MS_INDEX(scan.sector, 4));
                 render_heading(proc.in, 3, SPAN(id), h, NULL);
             }
         } else {
-            copy_md(&state, proc.in);
+            copy_md(&scan, proc.in);
         }
     }
     return wait_pandoc(&proc);
@@ -876,8 +940,8 @@ invalid:
 
 // Generates docs/lecture/index.html.
 static bool gen_lecture_index(void) {
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(LECTURE))) {
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(LECTURE))) {
         return false;
     }
     struct PandocProc proc;
@@ -894,30 +958,30 @@ static bool gen_lecture_index(void) {
         return false;
     }
     render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Lecture Notes"), NULL);
-    while (scan_md(&state) && state.sector == 0) {
-        copy_md(&state, proc.in);
+    while (scan_md(&scan) && scan.sector == 0) {
+        copy_md(&scan, proc.in);
     }
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
     render_toc_item(&tr, proc.in,
         1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
     do {
-        if (state.heading == 1) {
-            struct MarkdownHeading h = parse_md_heading(state.line);
+        if (scan.heading == 1) {
+            struct MarkdownHeading h = parse_md_heading(scan.line);
             char buf[SZ_LABEL];
             struct Span href = tolower_s(h.label, buf, sizeof buf);
             render_toc_item(&tr, proc.in, 1, h, 
                 "%.*s.html", href.len, href.data);
         }
-    } while (scan_md(&state));
+    } while (scan_md(&scan));
     render_toc_end(&tr, proc.in);
     return wait_pandoc(&proc);
 }
 
 // Generates docs/lecture/highlight.html.
 static bool gen_lecture_highlight(void) {
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(LECTURE))) {
+    struct HighlightScanner scan;
+    if (!init_hl(&scan, INPUT(LECTURE))) {
         return false;
     }
     const struct PandocOpts opts = {
@@ -935,36 +999,28 @@ static bool gen_lecture_highlight(void) {
         return false;
     }
     render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
-    bool in_highlight = false;
-    MarkdownSector sector = 0, highlight_sector = 0;
-    struct MarkdownHeading h;
-    char line_buf[SZ_HEADING], lecture_page[SZ_HEADING];
-    while (scan_md(&state)) {
-        if (in_highlight) {
-            if (strncmp(state.line.data, ":::\n", state.line.len) == 0) {
-                in_highlight = false;
-            } else {
-                copy_md(&state, proc.in);
+    while (scan_hl(&scan)) {
+        switch (scan.state) {
+        case HL_NONE:
+            if (scan.md.heading == 1) {
+                save_heading_hl(&scan);
             }
-        } else {
-            if (strncmp(state.line.data, "::: highlight\n", state.line.len) == 0) {
-                in_highlight = true;
-                putc('\n', proc.in);
-                assert(sector != 0);
-                if (highlight_sector != sector) {
-                    highlight_sector = sector;
-                    assert(h.label.data);
-                    lecture_page_name(h, lecture_page, sizeof lecture_page);
-                    render_heading(proc.in, 2, h.label, h,
-                        "%s/%s", LECTURE_URL_BASE, lecture_page);
-                }
-            } else if (state.heading == 1) {
-                strncpy(line_buf, state.line.data, state.line.len);
-                struct Span line = state.line;
-                line.data = line_buf;
-                h = parse_md_heading(line);
-                sector = state.sector;
-            }
+            break;
+        case HL_BEGIN_1ST:
+            putc('\n', proc.in);
+            char lecture_page[SZ_HEADING];
+            lecture_page_name(scan.heading, lecture_page, sizeof lecture_page);
+            render_heading(proc.in, 2, scan.heading.label, scan.heading,
+                "%s/%s", LECTURE_URL_BASE, lecture_page);
+            break;
+        case HL_BEGIN_NTH:
+            putc('\n', proc.in);
+            break;
+        case HL_INSIDE:
+            copy_md(&scan.md, proc.in);
+            break;
+        case HL_END:
+            break;
         }
     }
     return wait_pandoc(&proc);
@@ -985,8 +1041,8 @@ static bool gen_lecture_page(const char *output) {
     if (a_or_b != 'a' && a_or_b != 'b') {
         goto invalid;
     }
-    struct MarkdownState state;
-    if (!init_md(&state, INPUT(LECTURE))) {
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(LECTURE))) {
         return false;
     }
     char title[SZ_HEADING];
@@ -1026,23 +1082,22 @@ static bool gen_lecture_page(const char *output) {
         return false;
     }
     const MarkdownSector target_sector = 1 + (number - 1) * 2 + a_or_b - 'a';
-    while (scan_md(&state) && state.sector != target_sector);
-    assert(state.sector == target_sector);
-    struct MarkdownHeading h = parse_md_heading(state.line);
-    assert(h.label.data);
+    while (scan_md(&scan) && scan.sector != target_sector);
+    assert(scan.sector == target_sector);
+    struct MarkdownHeading h = parse_md_heading(scan.line);
     char lecture_page[SZ_HEADING];
     lecture_page_name(h, lecture_page, sizeof lecture_page);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s/%s", LECTURE_URL_BASE, lecture_page);
-    while (scan_md(&state) && state.heading != 1) {
-        if (state.heading > 1) {
-            h = parse_md_heading(state.line);
+    while (scan_md(&scan) && scan.heading != 1) {
+        if (scan.heading > 1) {
+            h = parse_md_heading(scan.line);
             assert(!h.label.data);
             char id[SZ_LABEL];
-            write_dotted_section(id, sizeof id, state.sector >> MS_BITS);
-            render_heading(proc.in, state.heading, SPAN(id), h, NULL);
+            write_dotted_section(id, sizeof id, scan.sector >> MS_BITS);
+            render_heading(proc.in, scan.heading, SPAN(id), h, NULL);
         } else {
-            copy_md(&state, proc.in);
+            copy_md(&scan, proc.in);
         }
     }
     return wait_pandoc(&proc);

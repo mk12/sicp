@@ -16,6 +16,8 @@
 - transform symbols in SVG!
 - decide on ID naming convention
     - in past I've done .class-name, #IdName, but heading IDs don't follow this
+- rename MarkdownScanner.heading
+- refactor docgen with HighlightScanner
 + more links in LICENSE.md
 + make pandoc process die when docgen dies
 + pandoc filter to allow #1, #1.1, #1.1.1, #1a, etc. and convert to 1/1.html#1.1.1 etc.
