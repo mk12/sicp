@@ -6,19 +6,19 @@ doc_sec_3 := 3/index 3/1 3/2 3/3 3/4 3/5
 doc_sec_4 := 4/index 4/1 4/2 4/3 4/4
 doc_sec_5 := 5/index 5/1 5/2 5/3 5/4 5/5
 doc_sections := $(doc_sec_1) $(doc_sec_2) $(doc_sec_3) $(doc_sec_4) $(doc_sec_5)
-doc_lecture_no := 1a 1b 2a 2b 3a 3b 4a 4b 5a 5b 6a 6b 7a 7b 8a 8b 9a 9b 10a 10b
+doc_lec_nums := 1a 1b 2a 2b 3a 3b 4a 4b 5a 5b 6a 6b 7a 7b 8a 8b 9a 9b 10a 10b
 
 doc_index := docs/index.html
-doc_text := $(patsubst %,docs/text/%.html,index front $(doc_sections))
-doc_lecture := $(patsubst %,docs/lecture/%.html,index $(doc_lecture_no))
+doc_text := $(patsubst %,docs/text/%.html,index front highlight $(doc_sections))
+doc_lecture := $(patsubst %,docs/lecture/%.html,index highlight $(doc_lec_nums))
 doc_exercise := $(patsubst %,docs/exercise/%.html,index $(doc_sections))
-doc_hi := docs/text/highlight.html docs/lecture/highlight.html
-doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise) $(doc_hi)
+doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise)
 
 doc_assets_link := docs/assets/style.css
-doc_assets_embed := $(patsubst %,notes/assets/%,arrows.svg bookmark.svg)
+doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
+	external github highlight pagenav)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
-	template.html pagenav.html filter.lua scheme.xml)
+	config.yml filter.lua pagenav.html scheme.xml template.html)
 
 .PHONY: all help test docs lint spell check clean vscode
 
@@ -51,7 +51,6 @@ $(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux)
 $(doc_index): notes/index.md notes/assets/wizard.svg
 $(doc_text): notes/text.md
 $(doc_lecture): notes/lecture.md
-$(doc_hi): notes/highlight.md
 docs/exercise/index.html: src/sicp/*.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_1)): src/sicp/chapter-1.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_2)): src/sicp/chapter-2.ss

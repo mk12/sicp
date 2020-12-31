@@ -1,5 +1,6 @@
 # New to do
 
+- test in all browsers, without JS, without CSS
 - rewrite README, mentioning pandoc & BEM css
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
@@ -12,6 +13,10 @@
     - must do this because otherwise "external link" is a lie
 - extract favorite quotes from blockquotes annotated with ::: highlight
 - heart SVGs on highlights linked to quote.html
+- transform symbols in SVG!
+- decide on ID naming convention
+    - in past I've done .class-name, #IdName, but heading IDs don't follow this
++ more links in LICENSE.md
 + make pandoc process die when docgen dies
 + pandoc filter to allow #1, #1.1, #1.1.1, #1a, etc. and convert to 1/1.html#1.1.1 etc.
 + test site with stylesheet disabled

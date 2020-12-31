@@ -17,9 +17,7 @@ html, body, blockquote, p, ul, ol, li {
     --fg: #333;
     --intense: #000;
     --link: #4973c1;
-    --link-faded: #a4ccff;
-    --important: #fbb5b1;
-    --important-active: #db5461;
+    --link-subdued: #a4ccff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,9 +30,7 @@ html, body, blockquote, p, ul, ol, li {
         --fg: #ccc;
         --intense: #eee;
         --link: #61afef;
-        --link-faded: #006ca7;
-        --important: #db5461;
-        --important-active: #fbb5b1;
+        --link-subdued: #006ca7;
     }
 }
 
@@ -163,35 +159,17 @@ blockquote {
 }
 
 .highlight {
-    /* position: relative; */
     margin-top: 1em;
 }
 
 .highlight blockquote {
-    border-left-color: var(--important);
+    border-left-color: var(--link-subdued);
     margin-top: 0;
 }
 
 .highlight__link {
-    /* position: absolute; */
-    /* top: 15px; */
-    /* left: -25px; */
-    /* top: -20px; */
-    display: inline-block;
     color: var(--subdued);
-    /* color: var(--important-active); */
-    vertical-align: baseline;
-    line-height: 1;
-    text-align: center;
-    margin-bottom: 2px;
-}
-
-.bookmark {
-    vertical-align: -2px;
-}
-
-.highlight__link:hover {
-    /* color: var(--important-active); */
+    font-size: 0.9em;
 }
 
 .toc {
@@ -366,8 +344,12 @@ body {
     vertical-align: -1.5px;
 }
 
+.up-left {
+    vertical-align: -2px;
+}
+
 a:hover .external {
-    color: var(--link-faded);
+    color: var(--link-subdued);
 }
 
 .wizard {

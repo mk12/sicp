@@ -17,12 +17,15 @@
       <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.257h10.4M5.257 9.714L.8 5.257 5.257.8"/>
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M11.2 5.257H.8m5.943 4.457L11.2 5.257 6.743.8"/>
-    </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>    <symbol id="bookmark" viewBox="0 0 16 24">
-               <path fill="currentColor" d="M12.174 0C14.274 0 16 1.702 16 3.771v19.2c0 .37-.202.714-.529.896a1.059 1.059 0 01-1.052-.014L8 20.057 1.58 23.853c-.322.19-.723.196-1.051.014A1.027 1.027 0 010 22.971v-19.2C0 1.702 1.727 0 3.826 0h8.348z"/>
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>    <symbol id="external" viewBox="0 0 24 24">
+               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+             </symbol>    <symbol id="up-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.917 -1.917)"/>
+               <path stroke-width="1.5" d="M6.083 6.083l5.334 5.334M11.417 6.083H6.083v5.334"/>
+             </svg>
+             <symbol id="down-right" viewBox="0 0 18 18">
+               <use xlink:href="#up-left" transform="matrix(-1 0 0 1 18 0)"/>
              </svg>  </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -101,7 +104,7 @@
 </ul></li>
 </ul>
 <div class="highlight">
-<a class="highlight__link link" href="../highlight.html"><svg alt="" class="bookmark" width="16" height="24"><use xlink:href="#bookmark"/></svg></a>
+<a class="highlight__link link" href="../highlight.html"><svg alt="" class="up-left" width="18" height="18"><use xlink:href="#up-left"/></svg> All highlights</a>
 <blockquote>
 <p>The word thunk was invented by an informal working group that was discussing the implementation of call-by-name in Algol 60. They observed that most of the analysis of (“thinking about”) the expression could be done at compile time; thus, at run time, the expression would already have been “thunk” about. <span class="citation" data-cites="sicp">[@sicp 4.2.2]</span></p>
 </blockquote>

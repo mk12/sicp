@@ -1,0 +1,7 @@
+<symbol id="up-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.917 -1.917)"/>
+  <path stroke-width="1.5" d="M6.083 6.083l5.334 5.334M11.417 6.083H6.083v5.334"/>
+</svg>
+<symbol id="down-right" viewBox="0 0 18 18">
+  <use xlink:href="#up-left" transform="matrix(-1 0 0 1 18 0)"/>
+</svg>

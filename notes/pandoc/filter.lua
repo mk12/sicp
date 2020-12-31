@@ -1,7 +1,7 @@
 -- Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
 local vars = {}
-local highlight = false
+local has_highlight = false
 
 -- Reads metatdata set on the command line by docgen.
 function read_meta(meta)
@@ -9,30 +9,29 @@ function read_meta(meta)
     vars.root = meta.root
 end
 
--- Adds the bookmark link to `::: highlight` divs surrounding blockquotes.
+-- Styles blockquotes marked with the `::: highlight` div.
 function highlight_div(el)
-    if #el.classes == 1 then
-        assert(el.classes[1] == "highlight",
-            "unexpected class: " .. el.classes[1])
-        highlight = true
-        local href = vars.root:sub(4) .. "highlight.html"
-        local bookmark = (
-            '<a class="highlight__link link" href="' .. href .. '">'
-            .. '<svg alt="" class="bookmark" width="20" height="20">'
-            .. '<use xlink:href="#bookmark"/>'
-            .. '</svg> See all highlights</a>'
-        )
-        table.insert(el.content, 1, pandoc.RawBlock("html", bookmark))
-        return el
-    end
+    assert(el.classes[1] == "highlight", "bad class: " .. el.classes[1])
+    assert(#el.content == 1, "bad div size: " .. #el.content)
+    assert(el.content[1].t == "BlockQuote", "bad tag: " .. el.content[1].t)
+    has_highlight = true
+    local href = vars.root:sub(4) .. "highlight.html"
+    local bookmark = (
+        '<a class="highlight__link link" href="' .. href .. '">'
+        .. '<svg alt="" class="up-left" width="18" height="18">'
+        .. '<use xlink:href="#up-left"/>'
+        .. '</svg> All highlights</a>'
+    )
+    table.insert(el.content, 1, pandoc.RawBlock("html", bookmark))
+    return el
 end
 
 -- Writes metadata variables used in template.html.
 function write_meta(meta)
     meta.has_pagenav = meta.up
-    meta.use_arrows = meta.up
-    meta.use_bookmark = highlight
-    meta.svg_defs = meta.use_arrows or meta.use_bookmark
+    meta.has_external = not PANDOC_STATE.output_file:find("^[%a/]+/index.html$")
+    meta.has_highlight = has_highlight
+    meta.svg_defs = meta.has_pagenav or meta.has_external or meta.has_highlight
     return meta
 end
 

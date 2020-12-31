@@ -18,7 +18,6 @@ This section applies to the following files ("derivative works"):
 
 - [notes/text.md](notes/text.md)
 - [notes/lecture.md](notes/lecture.md)
-- [notes/highlight.md](notes/highlight.md)
 - [notes/assets/wizard.afdesign](notes/assets/wizard.afdesign)
 - [notes/assets/wizard.svg](notes/assets/wizard.svg)
 - [docs/assets/wizard.svg](docs/assets/wizard.svg)
@@ -46,10 +45,14 @@ The GitHub Mark is a registered trademark of GitHub, Inc. and is used [with perm
 
 This section applies to the following files:
 
-- [notes/assets/arrows.svg](notes/assets/arrows.svg)
-- [notes/assets/bookmark.svg](notes/assets/bookmark.svg)
+- [notes/assets/pagenav.svg](notes/assets/pagenav.svg)
+    - Based on [arrow-up.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-up.svg) and [arrow-left.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-left.svg)
+- [notes/assets/external.svg](notes/assets/external.svg)
+    - Based on [external-link.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/external-link.svg)
+- [notes/assets/highlight.svg](notes/assets/highlight.svg)
+    - Based on [arrow-up-left-circle.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-up-left-circle.svg)
 
-I adapted them from icons in [tabler/tabler-icons](https://github.com/tabler/tabler-icons).
+This work is adapted from [tabler/tabler-icons](https://github.com/tabler/tabler-icons).
 
 ## The MIT License
 
@@ -66,8 +69,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 This section applies to the following file:
 
 - [notes/pandoc/scheme.xml](notes/pandoc/scheme.xml)
+    - Based on [scheme.xml](https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml).
 
-I adapted it from [KDE/syntax-highlighting](https://github.com/KDE/syntax-highlighting/blob/ba27b09aada5a7faf839f01b4d510a7ea97c7a0c/data/syntax/scheme.xml).
+This work is adapated from [KDE/syntax-highlighting](https://github.com/KDE/syntax-highlighting].
 
 ## The MIT License
 

@@ -14,11 +14,14 @@ $endif$
 $if(svg_defs)$
 <div hidden>
   <svg>
-$if(use_arrows)$
-    $../assets/arrows.svg()$
+$if(has_pagenav)$
+    $../assets/pagenav.svg()$
 $endif$
-$if(use_bookmark)$
-    $../assets/bookmark.svg()$
+$if(has_external)$
+    $../assets/external.svg()$
+$endif$
+$if(has_highlight)$
+    $../assets/highlight.svg()$
 $endif$
   </svg>
 </div>

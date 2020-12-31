@@ -192,7 +192,7 @@ static void signal_handler(int signum) {
 
 // Closes proc's pipe and waits for it to finish. Returns true on success. Kills
 // proc if SIGHUP, SIGINT, SIGQUIT, or SIGTERM is received while waiting (this
-// is useful if filter.lua has an infinite loop bug, for example).
+// is useful if the Lua filter has an infinite loop bug, for example).
 static bool wait_pandoc(struct PandocProc *proc) {
     fclose(proc->in);
     global_pandoc_pid = proc->pid;
@@ -631,7 +631,7 @@ static bool gen_text_index(void) {
 // Generates docs/text/highlight.html.
 static bool gen_text_highlight(void) {
     struct MarkdownState state;
-    if (!init_md(&state, INPUT(HIGHLIGHT))) {
+    if (!init_md(&state, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
@@ -648,21 +648,38 @@ static bool gen_text_highlight(void) {
         return false;
     }
     render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
-    while (scan_md(&state) && state.sector != 1);
-    while (scan_md(&state) && state.heading != 1) {
-        if (state.heading == 2) {
-            struct MarkdownHeading h = parse_md_heading(state.line);
-            if (h.label.data) {
-                render_heading(proc.in, 2, h.label, h,
-                    "%.*s/" INDEX ".html", h.label.len, h.label.data);
+    bool in_highlight = false;
+    MarkdownSector sector = 0, highlight_sector = 0;
+    struct MarkdownHeading h;
+    char line_buf[SZ_HEADING], id_buf[SZ_HEADING];
+    while (scan_md(&state)) {
+        if (in_highlight) {
+            if (strncmp(state.line.data, ":::\n", state.line.len) == 0) {
+                in_highlight = false;
             } else {
-                char buf[SZ_HEADING];
-                struct Span id = tolower_s(h.title, buf, sizeof buf);
-                render_heading(proc.in, 2, id, h,
-                    FRONT ".html#%.*s", id.len, id.data);
+                copy_md(&state, proc.in);
             }
         } else {
-            copy_md(&state, proc.in);
+            if (strncmp(state.line.data, "::: highlight\n", state.line.len) == 0) {
+                in_highlight = true;
+                putc('\n', proc.in);
+                assert(sector != 0);
+                if (highlight_sector != sector) {
+                    highlight_sector = sector;
+                    struct Span id = h.label;
+                    if (!id.data) {
+                        id = tolower_s(h.title, id_buf, sizeof id_buf);
+                    }
+                    render_heading(proc.in, 2, id, h,
+                        "%s-%d.html", TEXT_URL_BASE, text_page_num(sector));
+                }
+            } else if (state.heading == 1 + (MS_INDEX(state.sector, 1) == 1)) {
+                strncpy(line_buf, state.line.data, state.line.len);
+                struct Span line = state.line;
+                line.data = line_buf;
+                h = parse_md_heading(line);
+                sector = state.sector;
+            }
         }
     }
     return wait_pandoc(&proc);
@@ -900,7 +917,7 @@ static bool gen_lecture_index(void) {
 // Generates docs/lecture/highlight.html.
 static bool gen_lecture_highlight(void) {
     struct MarkdownState state;
-    if (!init_md(&state, INPUT(HIGHLIGHT))) {
+    if (!init_md(&state, INPUT(LECTURE))) {
         return false;
     }
     const struct PandocOpts opts = {
@@ -918,16 +935,36 @@ static bool gen_lecture_highlight(void) {
         return false;
     }
     render_heading(proc.in, 1, NULL_SPAN, TITLE_HEADING("Highlights"), NULL);
-    while (scan_md(&state) && state.sector != 2);
+    bool in_highlight = false;
+    MarkdownSector sector = 0, highlight_sector = 0;
+    struct MarkdownHeading h;
+    char line_buf[SZ_HEADING], lecture_page[SZ_HEADING];
     while (scan_md(&state)) {
-        if (state.heading == 2) {
-            struct MarkdownHeading h = parse_md_heading(state.line);
-            assert(h.label.data);
-            char buf[SZ_LABEL];
-            struct Span id = tolower_s(h.label, buf, sizeof buf);
-            render_heading(proc.in, 2, id, h, "%.*s.html", id.len, id.data);
+        if (in_highlight) {
+            if (strncmp(state.line.data, ":::\n", state.line.len) == 0) {
+                in_highlight = false;
+            } else {
+                copy_md(&state, proc.in);
+            }
         } else {
-            copy_md(&state, proc.in);
+            if (strncmp(state.line.data, "::: highlight\n", state.line.len) == 0) {
+                in_highlight = true;
+                putc('\n', proc.in);
+                assert(sector != 0);
+                if (highlight_sector != sector) {
+                    highlight_sector = sector;
+                    assert(h.label.data);
+                    lecture_page_name(h, lecture_page, sizeof lecture_page);
+                    render_heading(proc.in, 2, h.label, h,
+                        "%s/%s", LECTURE_URL_BASE, lecture_page);
+                }
+            } else if (state.heading == 1) {
+                strncpy(line_buf, state.line.data, state.line.len);
+                struct Span line = state.line;
+                line.data = line_buf;
+                h = parse_md_heading(line);
+                sector = state.sector;
+            }
         }
     }
     return wait_pandoc(&proc);
