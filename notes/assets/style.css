@@ -119,8 +119,8 @@ h1 code, h2 code, h3 code, h4 code, .toc__item code {
 }
 
 .math {
-    /* 20px is too large beside Helvetica. */
-    font-size: 18px;
+    /* 1em is too large beside Helvetica. */
+    font-size: 0.9em;
 }
 
 blockquote {
@@ -174,8 +174,8 @@ blockquote {
 }
 
 .highlight__link {
-    color: var(--subdued);
     font-size: 0.9em;
+    color: var(--subdued);
 }
 
 .toc {
@@ -228,7 +228,7 @@ body {
 }
 
 .title {
-    font-size: 30px;
+    font-size: 1.5em;
     color: var(--intense);
 }
 
@@ -254,9 +254,9 @@ body {
 .pagenav {
     display: flex;
     align-items: center;
-    text-transform: uppercase;
+    font-size: 0.8em;
     letter-spacing: 1px;
-    font-size: 16px;
+    text-transform: uppercase;
 }
 
 .pagenav--top { border-bottom: 1px solid var(--border); }
@@ -268,9 +268,14 @@ body {
     white-space: nowrap;
 }
 
-.pagenav__item--prev { text-align: left; }
-.pagenav__item--up { text-align: center; }
-.pagenav__item--next { text-align: right; }
+.pagenav__item--left { text-align: left; }
+.pagenav__item--center { text-align: center; }
+.pagenav__item--right { text-align: right; }
+
+/* Kerning with the arrows. */
+.pagenav__prev { margin-left: 0.45em; }
+.pagenav__up { margin-left: 0.35em; }
+.pagenav__next { margin-right: 0.3em; }
 
 .pagenav__link {
     display: block;
@@ -284,11 +289,11 @@ body {
 }
 
 .footer {
+    clear: both;
     padding-top: 5px;
     border-top: 3px solid var(--border);
-    font-size: 18px;
+    font-size: 0.9em;
     text-align: center;
-    clear: both;
 }
 
 .header--lone {
