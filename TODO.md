@@ -9,7 +9,20 @@
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
-- big numbers for chapters
++ decide whether to use article
++ figure out document outline, logo h1 etc.
++ big numbers for chapters
++ fix margins on .nubmer
++ ensure HTML formatting no space in inlines
+x use contextual class names instead of SVG file name based
+    x nah since the class="..." are in SVG files
++ use grid instead of flexbox for narrow sitenav, and add border-top
++ prettify html output (indentation of SVGs etc)
+x use ul in navs
+    x if I could use display:contents, ul would be a cinch
+    x it's 90%+ but with accessibility bugs ... the very reason to use it
+    x going to stick with plain <a>s for simplcity and less bloat
++ fixup lecture.md blurb wording
 + redo pixel-perfect vertical-align
 + make highlights links go directly to textbook/lecture
     + must do this because otherwise "external link" is a lie

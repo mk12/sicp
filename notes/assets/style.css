@@ -67,8 +67,8 @@ h1 { margin: 0.77em 0; }
 h2 { margin: 0.93em 0 0.835em; }
 h3 { margin: 1.1em 0; }
 
+/* Can't put the border on h2 because .anchor adds left padding. */
 h2::after {
-    /* Can't put the border on h2 because .anchor adds left padding. */
     content: "";
     display: block;
     margin-top: 0.1667em;
@@ -88,6 +88,7 @@ a:hover {
     color: var(--link);
 }
 
+/* The .link class indicates it's already styled as a link in some other way. */
 a:not(.link) {
     border-bottom: 1px dotted var(--subdued);
 }
@@ -129,6 +130,10 @@ blockquote {
     border-radius: 6px;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 /* Specific styles */
 
 .anchor {
@@ -150,19 +155,13 @@ blockquote {
 .number {
     color: var(--subdued);
     float: right;
-    margin-left: 0.5em;
-    min-height: 100%;
+    margin: 0 0 0.5em 0.5em;
 }
 
 .number--big {
     font-size: 2em;
     line-height: 1;
-    margin-top: -0.05em;
-    margin-bottom: 0.5em;
-}
-
-.nowrap {
-    white-space: nowrap;
+    margin-top: -0.03em;
 }
 
 .highlight {
@@ -202,16 +201,8 @@ blockquote {
 body {
     max-width: 800px;
     margin: 0 auto;
-    /* 27px is just enough for .anchor__link and .highlight__link. */
-    padding: 50px 27px;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding-bottom: 5px;
-    border-bottom: 3px solid var(--border);
+    /* 25px is just enough for .anchor__link. */
+    padding: 50px 25px;
 }
 
 .skip-link {
@@ -226,6 +217,14 @@ body {
     left: 10px;
     width: auto;
     height: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 5px;
+    border-bottom: 3px solid var(--border);
 }
 
 .title {
@@ -277,7 +276,6 @@ body {
     display: block;
     color: var(--intense);
     padding: 8px 0;
-    background-clip: padding-box;
 }
 
 .pagenav__link:hover {
@@ -315,6 +313,8 @@ body {
     .sitenav {
         align-self: stretch;
         flex-wrap: wrap;
+        padding-top: 5px;
+        border-top: 3px solid var(--border);
     }
     .sitenav__item {
         flex: 1;
@@ -323,17 +323,15 @@ body {
     .sitenav__item--last {
         padding-right: 14px;
     }
-    .anchor__link, .highlight__link {
-        /* FIXME */
-        /* display: none; */
+    .anchor__link {
+        display: none;
     }
 }
 
 @media screen and (max-width: 410px) {
-    .sitenav__item {
-        flex: 0 50%;
-        padding-left: 0;
-        padding-right: 0;
+    .sitenav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 }
 

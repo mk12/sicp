@@ -1,4 +1,4 @@
-These notes are based on the [MIT OpenCourseWare video lectures][ocw] given in July 1986 by Hal Abelson and Gerald Jay Sussman. They follow the first edition (1985) of <cite>Structure and Interpretation of Computer Programs</cite>, so there are some differences from the [textbook notes][text] which follow the second edition (1996).
+These notes are based on the [MIT OpenCourseWare video lectures][ocw] given in July 1986 by Hal Abelson and Gerald Jay Sussman. They follow the first edition of <cite>Structure and Interpretation of Computer Programs</cite>, not the second edition like the [textbook notes][text].
 
 [ocw]: https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
 [text]: ../text/index.html

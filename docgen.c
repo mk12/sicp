@@ -462,8 +462,9 @@ static void render_heading(FILE *out, int level, struct Span id,
         fprintf(out, "<h%d>", level);
     }
     if (heading.label.data) {
+        // Make chapter numbers big.
         const char *big = "";
-        if (heading.label.len == 1) {
+        if (level == 1 && heading.label.len == 1) {
             big = " number--big";
         }
         fprintf(out, "<span class=\"number%s\">%.*s</span> ",
@@ -591,7 +592,7 @@ static const char LECTURE_URL_BASE[] =
 
 // Returns the page number to use in the online SICP textbook URL for a given
 // sector in text.md. Only takes into account the chapter and section.
-static int text_page_num(MarkdownSector s) {
+static int text_url_num(MarkdownSector s) {
     int h1 = MS_INDEX(s, 1);
     int h2 = MS_INDEX(s, 2);
     assert(h1 > 0);
@@ -765,7 +766,7 @@ static bool gen_text_highlight(void) {
                 id = tolower_s(scan.heading.title, buf, sizeof buf);
             }
             render_heading(proc.in, 2, id, scan.heading,
-                "%s-%d.html", TEXT_URL_BASE, text_page_num(scan.sector));
+                "%s-%d.html", TEXT_URL_BASE, text_url_num(scan.sector));
             // fallthrough
         case HL_START_NTH:
             render_highlight_start(proc.in, label, index++);
@@ -808,7 +809,7 @@ static bool gen_text_front(void) {
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
             render_heading(proc.in, scan.level, id, h,
-                "%s-%d.html", TEXT_URL_BASE, text_page_num(scan.sector));
+                "%s-%d.html", TEXT_URL_BASE, text_url_num(scan.sector));
         } else {
             copy_md(&scan, proc.in);
         }
@@ -860,7 +861,7 @@ static bool gen_text_chapter(const char *output) {
     struct MarkdownHeading h = parse_md_heading(scan.line);
     assert(h.label.data);
     render_heading(proc.in, 1, NULL_SPAN, h,
-        "%s-%d.html", TEXT_URL_BASE, text_page_num(target_sector));
+        "%s-%d.html", TEXT_URL_BASE, text_url_num(target_sector));
     while (scan_md(&scan) && scan.level == 0) {
         copy_md(&scan, proc.in);
     }
@@ -942,7 +943,7 @@ static bool gen_text_section(const char *output) {
     assert(scan.sector == target_sector);
     struct MarkdownHeading h = parse_md_heading(scan.line);
     assert(h.label.data);
-    const int page_num = text_page_num(target_sector);
+    const int page_num = text_url_num(target_sector);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, page_num);
     while (scan_md(&scan) && scan.level != 1 && scan.level != 2) {
