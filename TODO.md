@@ -9,15 +9,19 @@
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
-- make highlights links go directly to textbook/lecture
-    - must do this because otherwise "external link" is a lie
-- extract favorite quotes from blockquotes annotated with ::: highlight
-- heart SVGs on highlights linked to quote.html
-- transform symbols in SVG!
-- decide on ID naming convention
-    - in past I've done .class-name, #IdName, but heading IDs don't follow this
-- rename MarkdownScanner.heading
-- refactor docgen with HighlightScanner
+- big numbers for chapters
++ redo pixel-perfect vertical-align
++ make highlights links go directly to textbook/lecture
+    + must do this because otherwise "external link" is a lie
++ extract favorite quotes from blockquotes annotated with ::: highlight
++ interlink all highlights
++ has_pagenav->pagenav? Also sort out svg names once and for all
++ transform symbols in SVG!
++ decide on ID naming convention
+    + in past I've done .class-name, #IdName, but heading IDs don't follow this
+    + stick with kebab-case
++ rename MarkdownScanner.heading
++ refactor docgen with HighlightScanner
 + more links in LICENSE.md
 + make pandoc process die when docgen dies
 + pandoc filter to allow #1, #1.1, #1.1.1, #1a, etc. and convert to 1/1.html#1.1.1 etc.

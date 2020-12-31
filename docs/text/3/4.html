@@ -27,22 +27,19 @@
 <div hidden>
   <svg>
     <symbol id="up" viewBox="0 0 11 12">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.257.8v10.4m4.457-5.943L5.257.8.8 5.257"/>
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
     </symbol>
     <symbol id="left" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.257h10.4M5.257 9.714L.8 5.257 5.257.8"/>
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>    <symbol id="external" viewBox="0 0 24 24">
                <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="up-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.917 -1.917)"/>
-               <path stroke-width="1.5" d="M6.083 6.083l5.334 5.334M11.417 6.083H6.083v5.334"/>
-             </svg>
-             <symbol id="down-right" viewBox="0 0 18 18">
-               <use xlink:href="#up-left" transform="matrix(-1 0 0 1 18 0)"/>
-             </svg>  </svg>
+             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+             </symbol>  </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="header ">
@@ -102,8 +99,8 @@
 <li>Two such expressions executed concurrently on the same <code class="sourceCode scheme">balance</code> variable could have their three steps interleaved.</li>
 <li>The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.</li>
 </ul>
-<div class="highlight">
-<a class="highlight__link link" href="../highlight.html"><svg alt="" class="up-left" width="18" height="18"><use xlink:href="#up-left"/></svg> All highlights</a>
+<div id="q1" class="highlight" aria-label="Highlighted ">
+<a class="highlight__link link" href="../highlight.html#3.4-q1" aria-label="View quote in highlights page"><svg alt="" class="circle-arrow" width="18" height="18"><use xlink:href="#circle-left"/></svg> Highlights</a>
 <blockquote>
 <p>To quote some graffiti seen on a Cambridge building wall: “Time is a device that was invented to keep everything from happening at once.” <span class="citation" data-cites="sicp">[@sicp 3.4.1]</span> <!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#footnote_Temp_406 --></p>
 </blockquote>

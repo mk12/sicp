@@ -16,7 +16,7 @@ doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise)
 
 doc_assets_link := docs/assets/style.css
 doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
-	external github highlight pagenav)
+	arrows circle-left circle-right external github)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 	config.yml filter.lua pagenav.html scheme.xml template.html)
 

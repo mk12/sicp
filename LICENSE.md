@@ -45,11 +45,11 @@ The GitHub Mark is a registered trademark of GitHub, Inc. and is used [with perm
 
 This section applies to the following files:
 
-- [notes/assets/pagenav.svg](notes/assets/pagenav.svg)
+- [notes/assets/arrows.svg](notes/assets/arrows.svg)
     - Based on [arrow-up.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-up.svg) and [arrow-left.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-left.svg)
 - [notes/assets/external.svg](notes/assets/external.svg)
     - Based on [external-link.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/external-link.svg)
-- [notes/assets/highlight.svg](notes/assets/highlight.svg)
+- [notes/assets/circle_left.svg](notes/assets/circle_left.svg) and [notes/assets/circle_right.svg](notes/assets/circle_right.svg)
     - Based on [arrow-up-left-circle.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-up-left-circle.svg)
 
 This work is adapted from [tabler/tabler-icons](https://github.com/tabler/tabler-icons).

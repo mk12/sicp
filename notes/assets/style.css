@@ -149,9 +149,16 @@ blockquote {
 
 .number {
     color: var(--subdued);
-    font-size: inherit;
     float: right;
     margin-left: 0.5em;
+    min-height: 100%;
+}
+
+.number--big {
+    font-size: 2em;
+    line-height: 1;
+    margin-top: -0.05em;
+    margin-bottom: 0.5em;
 }
 
 .nowrap {
@@ -344,12 +351,12 @@ body {
     vertical-align: -1.5px;
 }
 
-.up-left {
-    vertical-align: -2px;
-}
-
 a:hover .external {
     color: var(--link-subdued);
+}
+
+.circle-arrow {
+    vertical-align: -3.5px;
 }
 
 .wizard {

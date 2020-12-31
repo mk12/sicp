@@ -14,20 +14,23 @@ $endif$
 $if(svg_defs)$
 <div hidden>
   <svg>
-$if(has_pagenav)$
-    $../assets/pagenav.svg()$
+$if(arrows)$
+    $../assets/arrows.svg()$
 $endif$
-$if(has_external)$
+$if(external)$
     $../assets/external.svg()$
 $endif$
-$if(has_highlight)$
-    $../assets/highlight.svg()$
+$if(circle_left)$
+    $../assets/circle-left.svg()$
+$endif$
+$if(circle_right)$
+    $../assets/circle-right.svg()$
 $endif$
   </svg>
 </div>
 $endif$
 <a class="skip-link" href="#main">Skip to main content</a>
-<header class="header $if(has_pagenav)$$else$ header--lone$endif$">
+<header class="header $if(pagenav)$$else$ header--lone$endif$">
   <a class="title link" href="$root$index.html">SICP Study</a>
   <nav class="sitenav" aria-label="primary">
     <a class="sitenav__item link $if(text)$ sitenav__item--active$endif$"
@@ -42,7 +45,7 @@ $endif$
     </a>
   </nav>
 </header>
-$if(has_pagenav)$
+$if(pagenav)$
 <nav class="pagenav pagenav--top" aria-label="secondary">
   $pagenav()$
 </nav>
@@ -53,12 +56,12 @@ $../assets/wizard.svg()$
 $endif$
 $body$
 </main>
-$if(has_pagenav)$
+$if(pagenav)$
 <nav class="pagenav pagenav--bottom" aria-label="secondary">
   $pagenav()$
 </nav>
 $endif$
-<footer class="footer$if(has_pagenav)$$else$ footer--lone$endif$">
+<footer class="footer$if(pagenav)$$else$ footer--lone$endif$">
   <p>© 2020 Mitchell Kember</p>
 </footer>
 </body>

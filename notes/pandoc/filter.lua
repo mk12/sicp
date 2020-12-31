@@ -1,7 +1,9 @@
 -- Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
 local vars = {}
-local has_highlight = false
+local highlight_idx = 0
+local highlight_fwd = false
+local highlight_bwd = false
 
 -- Reads metatdata set on the command line by docgen.
 function read_meta(meta)
@@ -9,29 +11,56 @@ function read_meta(meta)
     vars.root = meta.root
 end
 
--- Styles blockquotes marked with the `::: highlight` div.
+-- Styles and links blockquotes marked with the "::: highlight" div.
 function highlight_div(el)
     assert(el.classes[1] == "highlight", "bad class: " .. el.classes[1])
     assert(#el.content == 1, "bad div size: " .. #el.content)
     assert(el.content[1].t == "BlockQuote", "bad tag: " .. el.content[1].t)
-    has_highlight = true
-    local href = vars.root:sub(4) .. "highlight.html"
-    local bookmark = (
-        '<a class="highlight__link link" href="' .. href .. '">'
-        .. '<svg alt="" class="up-left" width="18" height="18">'
-        .. '<use xlink:href="#up-left"/>'
-        .. '</svg> All highlights</a>'
+    local aria, href, content
+    if #el.identifier > 0 then
+        highlight_fwd = true
+        href = el.identifier
+            :gsub("^(%d)%-", "%1/index-", 1):gsub("%.", "/", 1)
+            :gsub("^(.*)-(q%d+)$", "%1.html#%2", 1)
+        content = (
+            'Notes <svg alt="" class="circle-arrow" width="18" height="18">'
+            .. '<use xlink:href="#circle-right"/></svg>'
+        )
+        aria = "View quote in notes"
+    else
+        highlight_bwd = true
+        highlight_idx = highlight_idx + 1
+        el.identifier = "q" .. tostring(highlight_idx)
+        el.attributes["aria-label"] = "Highlighted "
+        local frag = PANDOC_STATE.output_file
+            :gsub("^docs/", "", 1):gsub("^text/", "", 1):gsub("^lecture/", "", 1)
+            :gsub("%.html$", "", 1):gsub("/index", "", 1):gsub("/", ".", 1)
+            .. "-" .. el.identifier
+        href = vars.root:sub(4) .. "highlight.html#" .. frag
+        content = (
+            '<svg alt="" class="circle-arrow" width="18" height="18">'
+            .. '<use xlink:href="#circle-left"/></svg> Highlights'
+        )
+        aria = "View quote in highlights page"
+    end
+    local link = (
+        '<a class="highlight__link link" href="' .. href .. '"'
+        .. ' aria-label="' .. aria .. '">' .. content .. '</a>'
     )
-    table.insert(el.content, 1, pandoc.RawBlock("html", bookmark))
+    table.insert(el.content, 1, pandoc.RawBlock("html", link))
     return el
 end
 
 -- Writes metadata variables used in template.html.
 function write_meta(meta)
-    meta.has_pagenav = meta.up
-    meta.has_external = not PANDOC_STATE.output_file:find("^[%a/]+/index.html$")
-    meta.has_highlight = has_highlight
-    meta.svg_defs = meta.has_pagenav or meta.has_external or meta.has_highlight
+    meta.pagenav = meta.up
+    meta.arrows = meta.up
+    meta.external = not PANDOC_STATE.output_file:find("^[%a/]+/index.html$")
+    meta.circle_left = highlight_bwd
+    meta.circle_right = highlight_fwd
+    meta.svg_defs = (
+        meta.arrows or meta.external or meta.circle_left or meta.circle_right
+    )
     return meta
 end
 
