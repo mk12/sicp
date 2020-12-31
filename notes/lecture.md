@@ -204,7 +204,7 @@ Let's evaluate the sum of the square of 3 and the square of 4:
 This is not a perfect description of what the computer does. But it is a good enough model for now.
 
 ::: highlight
-> But one of the things he have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think. [@lecture 1b]
+> But one of the things you have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think. [@lecture 1b]
 :::
 <!-- SUSSMAN https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=3 -->
 

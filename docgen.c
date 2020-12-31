@@ -456,7 +456,7 @@ static void render_heading(FILE *out, int level, struct Span id,
         fprintf(out,
             "<h%d id=\"%.*s\" class=\"anchor\">"
             "<a class=\"anchor__link link\" href=\"#%.*s\""
-            " aria-hidden=\"true\">#</a>",
+            " aria-hidden=\"true\">#</a> ",
             level, id.len, id.data, id.len, id.data);
     } else {
         fprintf(out, "<h%d>", level);

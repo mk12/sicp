@@ -9,6 +9,7 @@
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
+- remove empty `<a>` tags in source listings (https://github.com/jgm/pandoc/issues/4386)
 x consider if any em should be rem
 + fix spacing between arrows and text
 + decide whether to use article
