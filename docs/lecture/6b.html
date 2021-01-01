@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -84,10 +85,10 @@
 <span class="number">6B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6b-streams-part-2">Streams, Part 2<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Recap
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
 <ul>
 <li>We’ve been looking at stream processing, an on-demand method of computation.</li>
@@ -99,7 +100,7 @@
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (head s)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (nth-stream (<span class="fu">-1+</span> n) (tail s))))</span></code></pre></div>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Infinite streams
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Infinite streams
 </h3>
 <ul>
 <li>How long can a stream be? It can be <em>infinite</em>!</li>
@@ -111,7 +112,7 @@
 <li>Is this really all the integers, or is it just cleverly arranged so that whenever you look for an integer you find it there? This is a sort of philosophical question.</li>
 </ul>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Sieve of Eratosthenes
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Sieve of Eratosthenes
 </h3>
 <ul>
 <li>Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you’re left with is all the primes.</li>
@@ -125,10 +126,10 @@
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(nth-stream <span class="cn">20</span> primes)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">73</span></span></code></pre></div>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Defining streams implicitly
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Defining streams implicitly
 </h3>
 <ul>
 <li>We’ve so far seen procedures that recursively create streams.</li>
@@ -147,7 +148,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> integers (add-streams integers ones))</span></code></pre></div>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>More examples
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> More examples
 </h3>
 <ul>
 <li>We can calculate the integral <span class="math inline">\int s\,dt</span> the same way you would in signal processing:</li>
@@ -165,7 +166,7 @@
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">cons-stream</span> <span class="cn">1</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                            (add-streams fibs (tail fibs)))))</span></code></pre></div>
 <h3 id="2.3" class="anchor">
-<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a>Explicit <code>delay</code>
+<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Explicit <code>delay</code>
 </h3>
 <ul>
 <li>Let’s say we want to solve <span class="math inline">y&#39;=y^2,\;y(0)=1</span> using the step <span class="math inline">dt=0.001</span>.</li>
@@ -186,10 +187,10 @@
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) <span class="cn">1</span> <span class="cn">0.001</span>))</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> dy (map-stream square y))</span></code></pre></div>
 <h2 id="3" class="anchor">
-<a class="anchor__link link" href="#3" aria-hidden="true">#</a>Part 3
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
 </h2>
 <h3 id="3.1" class="anchor">
-<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a>Normal-order evaluation
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Normal-order evaluation
 </h3>
 <ul>
 <li>We’ve been divorcing time in the program from time in the computer.</li>
@@ -204,7 +205,7 @@
 <li><em>Functional</em> programming languages avoid this issue by disallowing side effects.</li>
 </ul>
 <h3 id="3.2" class="anchor">
-<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a>Avoiding mutable state
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Avoiding mutable state
 </h3>
 <ul>
 <li>What about generating random numbers? We wanted modularity, so we encapsulated the random number generation with local state.</li>

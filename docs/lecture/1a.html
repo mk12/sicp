@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -84,10 +85,10 @@
 <span class="number">1A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp">Overview and Introduction to Lisp<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Computer science
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Computer science
 </h3>
 <ul>
 <li>It’s not a science, and it’s not <em>really</em> about computers.</li>
@@ -97,7 +98,7 @@
 <li>In a thousand years, they will look back on us in a similar way to how we look at the ancient Egyptians: “They were playing around with these digital computers, but that was only the beginning of the much broader ideas about computation.”</li>
 </ul>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Declarative vs. imperative
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Declarative vs. imperative
 </h3>
 <p>Mathematical declarative statement (what-is knowledge): The square root of <span class="math inline">x</span> is the <span class="math inline">y</span> such that <span class="math inline">y ≥ 0</span> and <span class="math inline">y^2 = x</span>.</p>
 <p>Imperative instructions (how-to knowledge): approximate the square root of <span class="math inline">x</span> with the following steps:</p>
@@ -107,7 +108,7 @@
 <li>Keep improving until the guess is good enough.</li>
 </ol>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Processes and Lisp
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Processes and Lisp
 </h3>
 <ul>
 <li>The above is an algorithm. More generally, it is a <em>process</em>.</li>
@@ -119,7 +120,7 @@
 <li>Much more difficult to become a master programmer: understanding all the implications, knowing how to approach problems.</li>
 </ul>
 <h3 id="1.4" class="anchor">
-<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a>Complexity and computer science
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Complexity and computer science
 </h3>
 <ul>
 <li>The real problems in CS come when developing huge software with so much code that you can’t hold it all in your head at once.</li>
@@ -133,10 +134,10 @@
 <li>CS is an abstract kind of engineering—ignore the constraints imposed by reality.</li>
 </ul>
 <h3 id="1.5" class="anchor">
-<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a>Techniques for managing complexity
+<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Techniques for managing complexity
 </h3>
 <h4 id="1.5.1" class="anchor">
-<a class="anchor__link link" href="#1.5.1" aria-hidden="true">#</a>Black box abstraction
+<a class="anchor__link link" href="#1.5.1" aria-hidden="true">#</a> Black box abstraction
 </h4>
 <p>Take something and build a box around it. The important thing is that you don’t care what is going on inside the box—it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and build bigger boxes.</p>
 <ul>
@@ -146,7 +147,7 @@
 <li>Capturing common patterns: higher-order procedures, data as procedures.</li>
 </ul>
 <h4 id="1.5.2" class="anchor">
-<a class="anchor__link link" href="#1.5.2" aria-hidden="true">#</a>Conventional interfaces
+<a class="anchor__link link" href="#1.5.2" aria-hidden="true">#</a> Conventional interfaces
 </h4>
 <p>Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.</p>
 <ul>
@@ -156,7 +157,7 @@
 <li>operations on aggregates</li>
 </ul>
 <h4 id="1.5.3" class="anchor">
-<a class="anchor__link link" href="#1.5.3" aria-hidden="true">#</a>Metalinguistic abstraction
+<a class="anchor__link link" href="#1.5.3" aria-hidden="true">#</a> Metalinguistic abstraction
 </h4>
 <p>Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.</p>
 <p>The process of interpreting Lisp in Lisp is like a giant wheel of two processes, <code class="sourceCode scheme"><span class="fu">apply</span></code> and <code class="sourceCode scheme"><span class="fu">eval</span></code>, which reduce expressions to each other. Very magical.</p>
@@ -166,17 +167,17 @@
 <li>register machines</li>
 </ul>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Three main features
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Three main features
 </h3>
 <h4 id="2.1.1" class="anchor">
-<a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a>Primitive elements
+<a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a> Primitive elements
 </h4>
 <p>Here are some primitive elements is Lisp: <code class="sourceCode scheme"><span class="cn">3</span></code>, <code class="sourceCode scheme"><span class="cn">14.4</span></code>, <code class="sourceCode scheme"><span class="cn">5</span></code>, <code class="sourceCode scheme"><span class="fu">+</span></code>. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.</p>
 <h4 id="2.1.2" class="anchor">
-<a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a>Means of combination
+<a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a> Means of combination
 </h4>
 <ul>
 <li>We can take the sum using a <em>combination</em>: <code class="sourceCode scheme">(<span class="fu">+</span> <span class="cn">3</span> <span class="cn">14.4</span> <span class="cn">5</span>)</code>.</li>
@@ -188,7 +189,7 @@
 <li>Parentheses are just a way to write trees as a linear sequence of characters.</li>
 </ul>
 <h4 id="2.1.3" class="anchor">
-<a class="anchor__link link" href="#2.1.3" aria-hidden="true">#</a>Means of abstraction
+<a class="anchor__link link" href="#2.1.3" aria-hidden="true">#</a> Means of abstraction
 </h4>
 <p>This is accomplished in Lisp with <code class="sourceCode scheme"><span class="kw">define</span></code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code class="sourceCode scheme"><span class="kw">define</span></code> is not a procedure—it is a <em>special form</em>. We can also define procedures this way:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</span></code></pre></div>
@@ -197,7 +198,7 @@
 <p>The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former <em>desugars</em> to the latter.</p>
 <p>In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in.</p>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>Case analysis
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Case analysis
 </h3>
 <p>We do case analysis in Lisp using <code class="sourceCode scheme"><span class="kw">cond</span></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">abs</span> x)</span>
@@ -211,14 +212,14 @@
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      x))</span></code></pre></div>
 <p>You can think of <code class="sourceCode scheme"><span class="kw">if</span></code> as syntactic sugar for <code class="sourceCode scheme"><span class="kw">cond</span></code> or vice versa.</p>
 <h3 id="2.3" class="anchor">
-<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a>Recursion
+<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Recursion
 </h3>
 <ul>
 <li>We now know enough to implement any numerical procedure that you could implement in other languages.</li>
 <li>We don’t need any looping constructs in Lisp. We can define things in terms of themselves using <em>recursion</em>.</li>
 </ul>
 <h3 id="2.4" class="anchor">
-<a class="anchor__link link" href="#2.4" aria-hidden="true">#</a>Block structure
+<a class="anchor__link link" href="#2.4" aria-hidden="true">#</a> Block structure
 </h3>
 <ul>
 <li>We can create a black box by packaging internals inside of a definition. This is called <em>block structure</em>.</li>

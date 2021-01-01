@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -84,10 +85,10 @@
 <span class="number">5A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5a-assignment-state-and-side-effects">Assignment, State, and Side-Effects<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Introducing assignment
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Introducing assignment
 </h3>
 <ul>
 <li>We’ve learned enough about programming in Lisp to do fairly complex things.</li>
@@ -98,7 +99,7 @@
 <li>We are adding assignment because it will allow us to break some problems up into certain sets of pieces, and this new means of decomposition would be impossible without assignment.</li>
 </ul>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Functional programming
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Functional programming
 </h3>
 <ul>
 <li>Functional programs encode mathematical truths.</li>
@@ -107,7 +108,7 @@
 <li>Although functional, Lisp is not quite the same as math. Math is declarative, but Lisp is imperative.</li>
 </ul>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Assignment and Time
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Assignment and Time
 </h3>
 <ul>
 <li>To do assignment, we use <code class="sourceCode scheme">(<span class="kw">set!</span> &lt;variable&gt; &lt;value&gt;)</code>.</li>
@@ -122,7 +123,7 @@
 <li>We need a new model of computation for this “bad thing.” We had better have a good reason for introducing assignment.</li>
 </ul>
 <h3 id="1.4" class="anchor">
-<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a>Identity
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Identity
 </h3>
 <ul>
 <li>Symbols for variables no longer refer directly to their values, but to some <em>place</em>.</li>
@@ -131,7 +132,7 @@
 <li>When we talk about <em>time</em>, we mean the before/after ordering of causal values.</li>
 </ul>
 <h3 id="1.5" class="anchor">
-<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a>Factorial example
+<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Factorial example
 </h3>
 <ul>
 <li>Here’s how we implemented factorial functionally:</li>
@@ -156,10 +157,10 @@
 <li>If we change the ordering of the assignments, the procedure calculates the wrong value.</li>
 </ul>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Environment model
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Environment model
 </h3>
 <ul>
 <li>We need a new model of computation that can allow us to understand programs that use assignment.</li>
@@ -167,7 +168,7 @@
 <li>Unfortunately, it is significantly more complicated than the substitution model.</li>
 </ul>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>Free and bound variables
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Free and bound variables
 </h3>
 <ul>
 <li>A variable <code class="sourceCode scheme">v</code> is <em>bound</em> in an expression <code class="sourceCode scheme">E</code> if the meaning of <code class="sourceCode scheme">E</code> is unchanged by the uniform replacement of a variable <code class="sourceCode scheme">w</code> not occurring in <code class="sourceCode scheme">E</code>, for every occurrence of <code class="sourceCode scheme">v</code> in <code class="sourceCode scheme">E</code>.</li>
@@ -179,7 +180,7 @@
 <li>The parts of the expression where a variable has a value defined by the λ-expression binding it is the <em>scope</em> of the variable.</li>
 </ul>
 <h3 id="2.3" class="anchor">
-<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a>Environments, frames, and bindings
+<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Environments, frames, and bindings
 </h3>
 <ul>
 <li>Environments are a way of doing substitutions virtually.</li>
@@ -190,7 +191,7 @@
 <li>If a variable is bound twice in an environment, the binding in the earlier (lower) frame <em>shadows</em> the other.</li>
 </ul>
 <h3 id="2.4" class="anchor">
-<a class="anchor__link link" href="#2.4" aria-hidden="true">#</a>Procedure creation and application
+<a class="anchor__link link" href="#2.4" aria-hidden="true">#</a> Procedure creation and application
 </h3>
 <ul>
 <li>A procedure is a pair: some code, and (a pointer to) an environment. Free variables are found in this environment.</li>
@@ -205,10 +206,10 @@
 <li>In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.</li>
 </ul>
 <h2 id="3" class="anchor">
-<a class="anchor__link link" href="#3" aria-hidden="true">#</a>Part 3
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
 </h2>
 <h3 id="3.1" class="anchor">
-<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a>Counter example
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Counter example
 </h3>
 <ul>
 <li>We’ve introduced a very complicated thing, assignment, which destroys most of the interesting mathematical properties of our programs.</li>
@@ -236,7 +237,7 @@
 <li>The <em>global environment</em> is the topmost environment. Its frame contains <code class="sourceCode scheme"><span class="fu">car</span></code>, <code class="sourceCode scheme"><span class="fu">+</span></code>, <code class="sourceCode scheme"><span class="fu">*</span></code>, etc., and all top-level definitions.</li>
 </ul>
 <h3 id="3.2" class="anchor">
-<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a>Objects
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Objects
 </h3>
 <ul>
 <li>We like to think about the world as being made up of independent objects, each having their own state.</li>
@@ -246,14 +247,14 @@
 <li>By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.</li>
 </ul>
 <h3 id="3.3" class="anchor">
-<a class="anchor__link link" href="#3.3" aria-hidden="true">#</a>Actions and identity
+<a class="anchor__link link" href="#3.3" aria-hidden="true">#</a> Actions and identity
 </h3>
 <ul>
 <li>An action <span class="math inline">A</span> had an effect on an object <span class="math inline">x</span> (or equivalently, that <span class="math inline">x</span> was changed by <span class="math inline">A</span>) if some property <span class="math inline">P</span> which was true of <span class="math inline">x</span> before <span class="math inline">A</span> became false of <span class="math inline">x</span> after <span class="math inline">A</span>.</li>
 <li>Two objects <span class="math inline">x</span> and <span class="math inline">y</span> are the same if any action which has an effect on <span class="math inline">x</span> has the same effect on <span class="math inline">y</span>.</li>
 </ul>
 <h3 id="3.4" class="anchor">
-<a class="anchor__link link" href="#3.4" aria-hidden="true">#</a>Uses of objection orientation
+<a class="anchor__link link" href="#3.4" aria-hidden="true">#</a> Uses of objection orientation
 </h3>
 <ul>
 <li>One of the nice things about objects is the way it lets us model the world. We like to think of the world as being made up of these independent objects.</li>

@@ -34,12 +34,14 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
-               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -95,7 +97,7 @@
 <li>Stream processing allows us to model state without assignments.</li>
 </ul>
 <h2 id="3.5.1" class="anchor">
-<a class="anchor__link link" href="#3.5.1" aria-hidden="true">#</a><span class="number">3.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.1">Streams Are Delayed Lists<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.1" aria-hidden="true">#</a> <span class="number">3.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.1">Streams Are Delayed Lists<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>If we represent streams as lists, we get elegance at the price of severe inefficiency (time <em>and</em> space).</li>
@@ -108,13 +110,13 @@
 <li><code class="sourceCode scheme">(<span class="kw">cons-stream</span> a b)</code> is a special form equivalent to <code class="sourceCode scheme">(<span class="fu">cons</span> a (<span class="kw">delay</span> b))</code>.</li>
 </ul>
 <h3 id="3.5.1.1" class="anchor">
-<a class="anchor__link link" href="#3.5.1.1" aria-hidden="true">#</a>The stream implementation in action
+<a class="anchor__link link" href="#3.5.1.1" aria-hidden="true">#</a> The stream implementation in action
 </h3>
 <blockquote>
 <p>In general, we can think of delayed evaluation as “demand-driven” programming, we herby each stage in the stream process is activated only enough to satisfy the next stage. (438)</p>
 </blockquote>
 <h3 id="3.5.1.2" class="anchor">
-<a class="anchor__link link" href="#3.5.1.2" aria-hidden="true">#</a>Implementing <code>delay</code> and <code>force</code>
+<a class="anchor__link link" href="#3.5.1.2" aria-hidden="true">#</a> Implementing <code>delay</code> and <code>force</code>
 </h3>
 <ul>
 <li>Promises are quite straightforward to implement.</li>
@@ -123,7 +125,7 @@
 <li>The promise stored in the <code class="sourceCode scheme"><span class="fu">cdr</span></code> of the stream is also known as a <em>thunk</em>.</li>
 </ul>
 <h2 id="3.5.2" class="anchor">
-<a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a><span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>With lazy sequences, we can manipulate infinitely long streams!</li>
@@ -136,7 +138,7 @@
 <li>We can also create an infinite stream of primes.</li>
 </ul>
 <h3 id="3.5.2.1" class="anchor">
-<a class="anchor__link link" href="#3.5.2.1" aria-hidden="true">#</a>Defining streams implicitly
+<a class="anchor__link link" href="#3.5.2.1" aria-hidden="true">#</a> Defining streams implicitly
 </h3>
 <ul>
 <li>Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.</li>
@@ -151,7 +153,7 @@
 <li>This implicit technique is known as <em>corecursion</em>. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.</li>
 </ul>
 <h2 id="3.5.3" class="anchor">
-<a class="anchor__link link" href="#3.5.3" aria-hidden="true">#</a><span class="number">3.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.3">Exploiting the Stream Paradigm<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.3" aria-hidden="true">#</a> <span class="number">3.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.3">Exploiting the Stream Paradigm<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Streams can provide many of the benefits of local state and assignment while avoiding some of the theoretical tangles.</li>
@@ -159,7 +161,7 @@
 <li>We can focus on the whole stream/series/signal rather than on individual values.</li>
 </ul>
 <h3 id="3.5.3.1" class="anchor">
-<a class="anchor__link link" href="#3.5.3.1" aria-hidden="true">#</a>Formulating iterations as stream processes
+<a class="anchor__link link" href="#3.5.3.1" aria-hidden="true">#</a> Formulating iterations as stream processes
 </h3>
 <ul>
 <li>Before, we made iterative processes by updating state variables in recursive calls.</li>
@@ -168,7 +170,7 @@
 <li>One neat thing we can do with these streams is use sequence accelerators, such as Euler’s transform.</li>
 </ul>
 <h3 id="3.5.3.2" class="anchor">
-<a class="anchor__link link" href="#3.5.3.2" aria-hidden="true">#</a>Infinite streams of pairs
+<a class="anchor__link link" href="#3.5.3.2" aria-hidden="true">#</a> Infinite streams of pairs
 </h3>
 <ul>
 <li>Previously, we handled traditional nested loops as processes defined on sequences of pairs.</li>
@@ -183,7 +185,7 @@
 <li>One way to do this is to use <code class="sourceCode scheme">interleave</code> in the recursive definition, in order to handle infinite streams.</li>
 </ul>
 <h3 id="3.5.3.3" class="anchor">
-<a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a>Streams as signals
+<a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> Streams as signals
 </h3>
 <ul>
 <li>We can use streams to model signal-processing systems.</li>
@@ -196,7 +198,7 @@
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                              int)))</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  int)</span></code></pre></div>
 <h2 id="3.5.4" class="anchor">
-<a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a><span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The use of <code class="sourceCode scheme"><span class="kw">delay</span></code> in <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> is crucial to defining streams with feedback loops.</li>
@@ -206,7 +208,7 @@
 <li>To solve this, we need to change <code class="sourceCode scheme">integral</code> to take a delayed integrand.</li>
 </ul>
 <h3 id="3.5.4.1" class="anchor">
-<a class="anchor__link link" href="#3.5.4.1" aria-hidden="true">#</a>Normal-order evaluation
+<a class="anchor__link link" href="#3.5.4.1" aria-hidden="true">#</a> Normal-order evaluation
 </h3>
 <ul>
 <li>Explicit use of <code class="sourceCode scheme"><span class="kw">delay</span></code> and <code class="sourceCode scheme"><span class="fu">force</span></code> is powerful, but makes our programs more complex.</li>
@@ -216,7 +218,7 @@
 <li>Mutability and delayed evaluation do not mix well.</li>
 </ul>
 <h2 id="3.5.5" class="anchor">
-<a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a><span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a> <span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Modularity through encapsulation is a major benefit of introducing assignment.</li>
@@ -224,7 +226,7 @@
 <li>For example, we can reimplement the Monte Carlo simulation with streams.</li>
 </ul>
 <h3 id="3.5.5.1" class="anchor">
-<a class="anchor__link link" href="#3.5.5.1" aria-hidden="true">#</a>A functional-programming view of time
+<a class="anchor__link link" href="#3.5.5.1" aria-hidden="true">#</a> A functional-programming view of time
 </h3>
 <ul>
 <li>Streams represent time explicitly, decoupling the simulated world from evaluation.</li>

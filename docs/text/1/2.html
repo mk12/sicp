@@ -34,12 +34,14 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
-               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -96,7 +98,7 @@
 <li>There are two important resources that computational processes consume: time and space.</li>
 </ul>
 <h2 id="1.2.1" class="anchor">
-<a class="anchor__link link" href="#1.2.1" aria-hidden="true">#</a><span class="number">1.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.1">Linear Recursion and Iteration<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.2.1" aria-hidden="true">#</a> <span class="number">1.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.1">Linear Recursion and Iteration<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The factorial of <span class="math inline">N</span> is defined as the product of the integers on the interval <span class="math inline">[1,N]</span>.</li>
@@ -141,7 +143,7 @@
 <li>A recursive procedure can generate an iterative process in Scheme thanks to tail-call optimization. In other languages, special-purpose looping constructs are needed for this.</li>
 </ul>
 <h2 id="1.2.2" class="anchor">
-<a class="anchor__link link" href="#1.2.2" aria-hidden="true">#</a><span class="number">1.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.2">Tree Recursion<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.2.2" aria-hidden="true">#</a> <span class="number">1.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.2">Tree Recursion<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>With tree recursion, the procedure invokes itself more than once, causing the process to evolve in the shape of a tree.</li>
@@ -154,7 +156,7 @@
 <li>The iterative implementation of the Fibonacci procedure is vastly more efficient in space and in time.</li>
 </ul>
 <h3 id="1.2.2.1" class="anchor">
-<a class="anchor__link link" href="#1.2.2.1" aria-hidden="true">#</a>Example: Counting change
+<a class="anchor__link link" href="#1.2.2.1" aria-hidden="true">#</a> Example: Counting change
 </h3>
 <p>Let <span class="math inline">f(A,N)</span> represent the number of ways of changing the amount A using <span class="math inline">N</span> kinds of coins. If the first kind of coin has denomination <span class="math inline">N</span>, then <span class="math inline">f(A,N) = f(A,N-1) + f(A-D,N)</span>. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of <span class="math inline">f(A,N-1)</span> assumes we don’t use the first kind at all; the value of <span class="math inline">f(A-D,N)</span> assumes we use one or more of the first kind.</p>
 <p>That rule and a few degenerate cases is sufficient to describe an algorithm for counting the number of ways of changing amounts of money. We can define it with the following piecewise function:</p>
@@ -167,7 +169,7 @@ f(A,N-1) + f(A-D,N), &amp; \text{if $A &gt; 0$ and $N &gt; 0$.}
 </span></p>
 <p>Like Fibonacci, the easy tree-recursive implementation involves a lot of redundancy. Unlike it, there is no obvious iterative solution (it is possible, just harder). One way to improve the performance of the tree-recursive process is to use <em>memoization</em> (maintaining a lookup table).</p>
 <h2 id="1.2.3" class="anchor">
-<a class="anchor__link link" href="#1.2.3" aria-hidden="true">#</a><span class="number">1.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.3">Orders of Growth<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.2.3" aria-hidden="true">#</a> <span class="number">1.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.3">Orders of Growth<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Some processes consume more or less computational resources than others.</li>
@@ -181,7 +183,7 @@ f(A,N-1) + f(A-D,N), &amp; \text{if $A &gt; 0$ and $N &gt; 0$.}
 <li>Its importance is allowing us to see the <em>change</em> in the amount of resources required when you, say, increment <span class="math inline">n</span> or double <span class="math inline">n</span>.</li>
 </ul>
 <h2 id="1.2.4" class="anchor">
-<a class="anchor__link link" href="#1.2.4" aria-hidden="true">#</a><span class="number">1.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.4">Exponentiation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.2.4" aria-hidden="true">#</a> <span class="number">1.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.4">Exponentiation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>One way to calculate b to the nth power is via the following recursive definition:</p>
 <p><span class="math display">b^0 = 1, \qquad b^n = b * b^{n-1}.</span></p>
@@ -193,7 +195,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 \end{cases}
 </span></p>
 <h2 id="1.2.5" class="anchor">
-<a class="anchor__link link" href="#1.2.5" aria-hidden="true">#</a><span class="number">1.2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.5">Greatest Common Divisors<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.2.5" aria-hidden="true">#</a> <span class="number">1.2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.5">Greatest Common Divisors<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The GCD of integers <span class="math inline">a</span> and <span class="math inline">b</span> is the largest integer that divides both <span class="math inline">a</span> and <span class="math inline">b</span> with no remainder. For example, <span class="math inline">\gcd(16,28) = 4</span>.</li>
@@ -212,17 +214,17 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Lamé’s Theorem: If Euclid’s Algorithm requires <span class="math inline">k</span> steps to compute the GCD of some pair <span class="math inline">(a,b)</span>, then <span class="math inline">\min\{a,b\} ≥ \text{Fib}(k)</span>.</li>
 </ul>
 <h2 id="1.2.6" class="anchor">
-<a class="anchor__link link" href="#1.2.6" aria-hidden="true">#</a><span class="number">1.2.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.6">Example: Testing for Primality<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.2.6" aria-hidden="true">#</a> <span class="number">1.2.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.6">Example: Testing for Primality<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="1.2.6.1" class="anchor">
-<a class="anchor__link link" href="#1.2.6.1" aria-hidden="true">#</a>Searching for divisors
+<a class="anchor__link link" href="#1.2.6.1" aria-hidden="true">#</a> Searching for divisors
 </h3>
 <ul>
 <li>One way to test for primality is to find the number’s divisors.</li>
 <li>A number is prime if and only if it is its own smallest divisor.</li>
 </ul>
 <h3 id="1.2.6.2" class="anchor">
-<a class="anchor__link link" href="#1.2.6.2" aria-hidden="true">#</a>The Fermat test
+<a class="anchor__link link" href="#1.2.6.2" aria-hidden="true">#</a> The Fermat test
 </h3>
 <p>The Fermat test is a <span class="math inline">Θ(log(n))</span> primality test based on Fermat’s Little Theorem:</p>
 <blockquote>
@@ -236,7 +238,7 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <li>Repeat. The more times the number passes the test, the more confident we are that <span class="math inline">n</span> is prime. If there is a single failure, <span class="math inline">n</span> is certainly not prime.</li>
 </ol>
 <h3 id="1.2.6.3" class="anchor">
-<a class="anchor__link link" href="#1.2.6.3" aria-hidden="true">#</a>Probabilistic methods
+<a class="anchor__link link" href="#1.2.6.3" aria-hidden="true">#</a> Probabilistic methods
 </h3>
 <ul>
 <li>Most familiar algorithms compute an answer that is guaranteed to be correct. Not so with the Fermat test.</li>

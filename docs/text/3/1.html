@@ -34,12 +34,14 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
-               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -94,7 +96,7 @@
 <li>We need an <em>assignment operator</em> to change the value associated with a name representing a local variable of an object.</li>
 </ul>
 <h2 id="3.1.1" class="anchor">
-<a class="anchor__link link" href="#3.1.1" aria-hidden="true">#</a><span class="number">3.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.1">Local State Variables<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.1.1" aria-hidden="true">#</a> <span class="number">3.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.1">Local State Variables<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Let’s model the situation of withdrawing from a bank account.</li>
@@ -174,7 +176,7 @@
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
 <h2 id="3.1.2" class="anchor">
-<a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a><span class="number">3.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a> <span class="number">3.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Introducing assignment “leads us into a thicket of difficult conceptual issues” (305).</li>
@@ -205,7 +207,7 @@
 <p>The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behaviour changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. (309)</p>
 </blockquote>
 <h2 id="3.1.3" class="anchor">
-<a class="anchor__link link" href="#3.1.3" aria-hidden="true">#</a><span class="number">3.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.3">The Costs of Introducing Assignment<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.1.3" aria-hidden="true">#</a> <span class="number">3.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.3">The Costs of Introducing Assignment<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The advantages of local state and assignment come at a price.</li>
@@ -227,7 +229,7 @@
 <li>Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.</li>
 </ul>
 <h3 id="3.1.3.1" class="anchor">
-<a class="anchor__link link" href="#3.1.3.1" aria-hidden="true">#</a>Sameness and change
+<a class="anchor__link link" href="#3.1.3.1" aria-hidden="true">#</a> Sameness and change
 </h3>
 <ul>
 <li>By introducing change into our computational models, many previously straightforward notions become problematic.</li>
@@ -244,7 +246,7 @@
 <li>The name is attached to an identity rather than the data itself.</li>
 </ul>
 <h3 id="3.1.3.2" class="anchor">
-<a class="anchor__link link" href="#3.1.3.2" aria-hidden="true">#</a>Pitfalls of imperative programming
+<a class="anchor__link link" href="#3.1.3.2" aria-hidden="true">#</a> Pitfalls of imperative programming
 </h3>
 <ul>
 <li>Programming that makes extensive use of assignment is called <em>imperative programming</em>.</li>

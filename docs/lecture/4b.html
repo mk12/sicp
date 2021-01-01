@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -84,10 +85,10 @@
 <span class="number">4B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/4b-generic-operators">Generic Operators<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Limits of data abstraction
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Limits of data abstraction
 </h3>
 <ul>
 <li>So far, we’ve talked a lot about data abstraction.</li>
@@ -99,7 +100,7 @@
 <li>It should be easy to add new data types to the system, so that the generic operators work on them, too, with minimal changes.</li>
 </ul>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Complex number arithmetic
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Complex number arithmetic
 </h3>
 <ul>
 <li>We can represent a complex number in two ways:
@@ -116,7 +117,7 @@
 <li>We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.</li>
 </ul>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Incompatible representations
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Incompatible representations
 </h3>
 <ul>
 <li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
@@ -128,10 +129,10 @@
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
 </ul>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Problems with the manager
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Problems with the manager
 </h3>
 <ul>
 <li>The strategy we just looked at is called <em>dispatch on type</em>.</li>
@@ -145,7 +146,7 @@
 </ul></li>
 </ul>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>Data-directed programming
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Data-directed programming
 </h3>
 <ul>
 <li>Our system has a table with types on the horizontal axis and operators on the vertical axis.</li>
@@ -176,10 +177,10 @@
 <li>The data objects themselves are carrying the information about how you should operate on them.</li>
 </ul>
 <h2 id="3" class="anchor">
-<a class="anchor__link link" href="#3" aria-hidden="true">#</a>Part 3
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
 </h2>
 <h3 id="3.1" class="anchor">
-<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a>Generic arithmetic system
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Generic arithmetic system
 </h3>
 <ul>
 <li>We just looked at data-directed programming for complex numbers.</li>
@@ -192,7 +193,7 @@
 <li>At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.</li>
 </ul>
 <h3 id="3.2" class="anchor">
-<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a>Polynomials
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Polynomials
 </h3>
 <ul>
 <li>We could also add polynomials to the generic arithmetic system.</li>
@@ -204,7 +205,7 @@
 <li>If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.</li>
 </ul>
 <h3 id="3.3" class="anchor">
-<a class="anchor__link link" href="#3.3" aria-hidden="true">#</a>Conclusion
+<a class="anchor__link link" href="#3.3" aria-hidden="true">#</a> Conclusion
 </h3>
 <ul>
 <li>We built a system that has decentralized control.</li>

@@ -18,9 +18,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -68,10 +69,10 @@
 <span class="number">3B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation">Symbolic Differentiation; Quotation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Recap
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
 <ul>
 <li>In order to make a robust system, it needs to be insensitive to small changes.</li>
@@ -81,7 +82,7 @@
 <li>We are going to confuse the distinction between procedures and data even more badly.</li>
 </ul>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Derivatives and integrals
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Derivatives and integrals
 </h3>
 <ul>
 <li>Instead of doing a numerical approximation of the derivative, we want to apply the rules of calculus to algebraic expressions.</li>
@@ -90,7 +91,7 @@
 <li>Big problems turn into multiple simpler problems.</li>
 </ul>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Differentiation procedure
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Differentiation procedure
 </h3>
 <ul>
 <li>The reduction rules of differentiation are appropriate for recursion.</li>
@@ -102,7 +103,7 @@
 <li>We can write the procedure <code class="sourceCode scheme">deriv</code> using a lot of wishful thinking.</li>
 </ul>
 <h3 id="1.4" class="anchor">
-<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a>Expression representation
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Expression representation
 </h3>
 <ul>
 <li>To represent sums, products, quotients, etc., why not use the same language we’re writing the program in?</li>
@@ -110,7 +111,7 @@
 <li>There are more built-in predicates we haven’t seen yet: <code class="sourceCode scheme">atom?</code> and <code class="sourceCode scheme"><span class="fu">eq?</span></code>.</li>
 </ul>
 <h3 id="1.5" class="anchor">
-<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a>Quotation
+<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Quotation
 </h3>
 <ul>
 <li>We are also introducing <em>quotation</em>. The words of English are ambiguous: <em>say your name</em> is different from <em>say “your name”</em>.</li>
@@ -119,10 +120,10 @@
 <li>The names <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code> have survived (originally the address register and the decrement register) because we can do things like <code class="sourceCode scheme"><span class="fu">cadddr</span></code> and <code class="sourceCode scheme"><span class="fu">cadar</span></code>.</li>
 </ul>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Simplifying expressions
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Simplifying expressions
 </h3>
 <ul>
 <li>The expressions we get from the <code class="sourceCode scheme">deriv</code> procedure are ugly.</li>
@@ -141,7 +142,7 @@
 <li>We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).</li>
 </ul>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>Conclusion
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Conclusion
 </h3>
 <ul>
 <li>Quotation stops and says, “I’m talking about this expression itself.”</li>

@@ -34,12 +34,14 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
-               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -92,7 +94,7 @@
 <li>A mutator is a procedure that modifies the data object.</li>
 </ul>
 <h2 id="3.3.1" class="anchor">
-<a class="anchor__link link" href="#3.3.1" aria-hidden="true">#</a><span class="number">3.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.1">Mutable List Structure<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.3.1" aria-hidden="true">#</a> <span class="number">3.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.1">Mutable List Structure<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The primitive mutators for pairs are <code class="sourceCode scheme"><span class="fu">set-car!</span></code> and <code class="sourceCode scheme"><span class="fu">set-cdr!</span></code>.</li>
@@ -106,7 +108,7 @@
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">set-cdr!</span> new y)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    new))</span></code></pre></div>
 <h3 id="3.3.1.1" class="anchor">
-<a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a>Sharing and identity
+<a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a> Sharing and identity
 </h3>
 <ul>
 <li>Consider <code class="sourceCode scheme">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code> and <code class="sourceCode scheme">(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
@@ -122,7 +124,7 @@
 <li>We can exploit sharing for good, but it can be dangerous.</li>
 </ul>
 <h3 id="3.3.1.2" class="anchor">
-<a class="anchor__link link" href="#3.3.1.2" aria-hidden="true">#</a>Mutation is just assignment
+<a class="anchor__link link" href="#3.3.1.2" aria-hidden="true">#</a> Mutation is just assignment
 </h3>
 <ul>
 <li>Earlier we said we can represent pairs purely in terms of procedures:</li>
@@ -151,7 +153,7 @@
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
 </ul>
 <h2 id="3.3.2" class="anchor">
-<a class="anchor__link link" href="#3.3.2" aria-hidden="true">#</a><span class="number">3.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.2">Representing Queues<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.3.2" aria-hidden="true">#</a> <span class="number">3.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.2">Representing Queues<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The mutators allow us to construct new data structures.</li>
@@ -170,7 +172,7 @@
 <li>A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.</li>
 </ul>
 <h2 id="3.3.3" class="anchor">
-<a class="anchor__link link" href="#3.3.3" aria-hidden="true">#</a><span class="number">3.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.3">Representing Tables<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.3.3" aria-hidden="true">#</a> <span class="number">3.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.3">Representing Tables<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>In a one-dimensional table, each value is indexed by one key.</li>
@@ -188,7 +190,7 @@
 <li>It uses <code class="sourceCode scheme"><span class="fu">assoc</span></code>, which returns the whole record rather than just the associated value.</li>
 </ul>
 <h3 id="3.3.3.1" class="anchor">
-<a class="anchor__link link" href="#3.3.3.1" aria-hidden="true">#</a>Two-dimensional tables
+<a class="anchor__link link" href="#3.3.3.1" aria-hidden="true">#</a> Two-dimensional tables
 </h3>
 <ul>
 <li>Two-dimensional tables are indexed by two keys.</li>
@@ -198,7 +200,7 @@
 <li>We don’t need to box the subtables. They key of the record serves the purpose of <code class="sourceCode scheme"><span class="cn">&#39;*table*</span></code>.</li>
 </ul>
 <h3 id="3.3.3.2" class="anchor">
-<a class="anchor__link link" href="#3.3.3.2" aria-hidden="true">#</a>Creating local tables
+<a class="anchor__link link" href="#3.3.3.2" aria-hidden="true">#</a> Creating local tables
 </h3>
 <ul>
 <li>With our <code class="sourceCode scheme">lookup</code> and <code class="sourceCode scheme">insert!</code> procedures taking the table as an argument, we can manage multiple tables.</li>
@@ -214,7 +216,7 @@
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        value</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        (table k))))</span></code></pre></div>
 <h2 id="3.3.4" class="anchor">
-<a class="anchor__link link" href="#3.3.4" aria-hidden="true">#</a><span class="number">3.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.4">A Simulator for Digital Circuits<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.3.4" aria-hidden="true">#</a> <span class="number">3.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.4">A Simulator for Digital Circuits<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Digital circuits are made up of simple elements.</li>
@@ -234,7 +236,7 @@
 <li>The primitive functions are our primitive elements; wiring is the means of combination; specifying wiring patterns as procedures is the means of abstraction.</li>
 </ul>
 <h3 id="3.3.4.1" class="anchor">
-<a class="anchor__link link" href="#3.3.4.1" aria-hidden="true">#</a>Primitive function boxes
+<a class="anchor__link link" href="#3.3.4.1" aria-hidden="true">#</a> Primitive function boxes
 </h3>
 <ul>
 <li>The primitives boxes implement “forces” by which changes in the signal of one wire influence the signal of another.</li>
@@ -247,7 +249,7 @@
 <li>The procedure <code class="sourceCode scheme">after-delay</code> executes a procedure after a given time delay.</li>
 </ul>
 <h3 id="3.3.4.2" class="anchor">
-<a class="anchor__link link" href="#3.3.4.2" aria-hidden="true">#</a>Representing wires
+<a class="anchor__link link" href="#3.3.4.2" aria-hidden="true">#</a> Representing wires
 </h3>
 <ul>
 <li>Our wires will be computational objects each having two local state variables: <code class="sourceCode scheme">signal-value</code> and <code class="sourceCode scheme">action-procedures</code>.</li>
@@ -264,7 +266,7 @@
 </div>
 <!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#footnote_Temp_385 -->
 <h3 id="3.3.4.3" class="anchor">
-<a class="anchor__link link" href="#3.3.4.3" aria-hidden="true">#</a>The agenda
+<a class="anchor__link link" href="#3.3.4.3" aria-hidden="true">#</a> The agenda
 </h3>
 <ul>
 <li>The only thing left is <code class="sourceCode scheme">after-delay</code>.</li>
@@ -275,7 +277,7 @@
 <li>The simulation is driven by <code class="sourceCode scheme">propagate</code>, which executes each item on the agenda in sequence.</li>
 </ul>
 <h3 id="3.3.4.4" class="anchor">
-<a class="anchor__link link" href="#3.3.4.4" aria-hidden="true">#</a>Implementing the agenda
+<a class="anchor__link link" href="#3.3.4.4" aria-hidden="true">#</a> Implementing the agenda
 </h3>
 <ul>
 <li>The agenda is a pair: the current time, and a list of <em>time segments</em> sorted in increasing order of time.</li>
@@ -285,7 +287,7 @@
 <li>Whenever we extract the first item with <code class="sourceCode scheme">first-agenda-item</code>, we also update the current time.</li>
 </ul>
 <h2 id="3.3.5" class="anchor">
-<a class="anchor__link link" href="#3.3.5" aria-hidden="true">#</a><span class="number">3.3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">Propagation of Constraints<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.3.5" aria-hidden="true">#</a> <span class="number">3.3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">Propagation of Constraints<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We often organize computer programs in one direction: from input to output.</li>
@@ -302,7 +304,7 @@
 <li>The means of abstraction are procedures.</li>
 </ul>
 <h3 id="3.3.5.1" class="anchor">
-<a class="anchor__link link" href="#3.3.5.1" aria-hidden="true">#</a>Using the constraint system
+<a class="anchor__link link" href="#3.3.5.1" aria-hidden="true">#</a> Using the constraint system
 </h3>
 <ul>
 <li>We create connectors with <code class="sourceCode scheme">(make-connector)</code>, just like wires.</li>
@@ -312,7 +314,7 @@
 <li><code class="sourceCode scheme">(forget-value! <span class="sc">«</span><span class="ss">connector</span><span class="sc">»</span> <span class="cn">&#39;user</span>)</code> undoes the assignment.</li>
 </ul>
 <h3 id="3.3.5.2" class="anchor">
-<a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a>Implementing the constraint system
+<a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a> Implementing the constraint system
 </h3>
 <ul>
 <li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
@@ -321,7 +323,7 @@
 <li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
 </ul>
 <h3 id="3.3.5.3" class="anchor">
-<a class="anchor__link link" href="#3.3.5.3" aria-hidden="true">#</a>Representing connectors
+<a class="anchor__link link" href="#3.3.5.3" aria-hidden="true">#</a> Representing connectors
 </h3>
 <ul>
 <li>A connector is a procedural object with local state variables—again, just like a wire.</li>

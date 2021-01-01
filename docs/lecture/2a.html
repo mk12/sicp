@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -84,10 +85,10 @@
 <span class="number">2A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2a-higher-order-procedures">Higher-Order Procedures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Don’t repeat yourself
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Don’t repeat yourself
 </h3>
 <ul>
 <li>So far Lisp might just seem like a different language with funny syntax. It’s time to shatter that illusion.</li>
@@ -105,7 +106,7 @@
 <li>There is nothing very special about numbers. Numbers are just one kind of data. Procedures are also data.</li>
 </ul>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Summation
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Summation
 </h3>
 <p>We can represent the sigma notation with a procedure that takes other procedures as arguments:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (sum term a next b)</span>
@@ -126,10 +127,10 @@
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>       b))</span></code></pre></div>
 <p>We are separating the things we are adding up from the method of doing the addition. Now, we can change the sum procedure so that it generates an iterative process, and all the specific procedures using sum will benefit.</p>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>Higher-order procedures
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Higher-order procedures
 </h3>
 <ul>
 <li>We use abstraction for the purpose of making programs easier to read and write.</li>
@@ -139,10 +140,10 @@
 <li>Higher-order procedures can take procedures as arguments and they can return new procedures.</li>
 </ul>
 <h2 id="3" class="anchor">
-<a class="anchor__link link" href="#3" aria-hidden="true">#</a>Part 3
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
 </h2>
 <h3 id="3.1" class="anchor">
-<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a>Newton’s method
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Newton’s method
 </h3>
 <ul>
 <li>Newton’s method: general method to find the zeros (an <span class="math inline">x</span> such that <span class="math inline">f(x) = 0</span>).</li>
@@ -155,7 +156,7 @@
 <li>We can use names of procedures that we haven’t defined yet while writing a program (top-down design).</li>
 </ul>
 <h3 id="3.2" class="anchor">
-<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a>The rights and privileges of first-class citizens
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> The rights and privileges of first-class citizens
 </h3>
 <ul>
 <li>To be named by variables.</li>

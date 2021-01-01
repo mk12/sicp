@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -84,10 +85,10 @@
 <span class="number">6A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6a-streams-part-1">Streams, Part 1<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
-<a class="anchor__link link" href="#1" aria-hidden="true">#</a>Part 1
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
 </h2>
 <h3 id="1.1" class="anchor">
-<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a>Recap
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
 <ul>
 <li>We’ve learned about assignment and its frightening implications.</li>
@@ -98,7 +99,7 @@
 <li>Maybe we have the wrong view of reality; maybe time is an illusion and nothing changes.</li>
 </ul>
 <h3 id="1.2" class="anchor">
-<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a>Motivation
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Motivation
 </h3>
 <ul>
 <li>We’re going to look at another way to decompose systems: <em>stream processing</em>.</li>
@@ -132,7 +133,7 @@
 <p>Going back to this fundamental principle of computer science that in order to control something you need the name of it.</p>
 </blockquote>
 <h3 id="1.3" class="anchor">
-<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a>Defining streams
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Defining streams
 </h3>
 <ul>
 <li>The arrows between the boxes represent data structures called <em>streams</em>.</li>
@@ -147,7 +148,7 @@
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cons-stream</span> (proc (head s))</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   (map-stream proc (tail se)))))</span></code></pre></div>
 <h3 id="1.4" class="anchor">
-<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a>Using the language
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Using the language
 </h3>
 <ul>
 <li>Now we can reimplement those problems with explicit stream processing:</li>
@@ -170,10 +171,10 @@
 <li>Conventional interfaces are powerful because we can easily glue things together.</li>
 </ul>
 <h2 id="2" class="anchor">
-<a class="anchor__link link" href="#2" aria-hidden="true">#</a>Part 2
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
 <h3 id="2.1" class="anchor">
-<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a>More complicated stream processing
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> More complicated stream processing
 </h3>
 <ul>
 <li>Suppose we have a stream of streams <span class="math inline">\{\{1,2,3,\dots\},\{10,20,30,\dots\},\dots\}</span>.</li>
@@ -204,7 +205,7 @@
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (j (enumerate-interval <span class="cn">1</span> (<span class="fu">-1+</span> i))))</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   (prime? (<span class="fu">+</span> i j))))</span></code></pre></div>
 <h3 id="2.2" class="anchor">
-<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a>Eight queens puzzle
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Eight queens puzzle
 </h3>
 <ul>
 <li>Solving this typically uses a <em>backtracking search</em>, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).</li>
@@ -225,10 +226,10 @@
 <li>We changed our view from things that evolve in time and have state to a global view where we’re not concerned with time.</li>
 </ul>
 <h2 id="3" class="anchor">
-<a class="anchor__link link" href="#3" aria-hidden="true">#</a>Part 3
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
 </h2>
 <h3 id="3.1" class="anchor">
-<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a>Streams are not lists
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Streams are not lists
 </h3>
 <ul>
 <li>By now you should be suspicious—what’s the catch?</li>
@@ -239,7 +240,7 @@
 <li>The key to this is that streams are <em>not</em> lists.</li>
 </ul>
 <h3 id="3.2" class="anchor">
-<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a>Implementing streams
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Implementing streams
 </h3>
 <ul>
 <li>We want the stream to compute itself incrementally, to be an “on demand” data structure.

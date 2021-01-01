@@ -18,12 +18,14 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
-               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -80,10 +82,10 @@
 <li>This embodies the interplay between two critical procedures, <code class="sourceCode scheme"><span class="fu">eval</span></code> and <code class="sourceCode scheme"><span class="fu">apply</span></code>.</li>
 </ul>
 <h2 id="4.1.1" class="anchor">
-<a class="anchor__link link" href="#4.1.1" aria-hidden="true">#</a><span class="number">4.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.1">The Core of the Evaluator<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.1" aria-hidden="true">#</a> <span class="number">4.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.1">The Core of the Evaluator<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="4.1.1.1" class="anchor">
-<a class="anchor__link link" href="#4.1.1.1" aria-hidden="true">#</a><code>Eval</code>
+<a class="anchor__link link" href="#4.1.1.1" aria-hidden="true">#</a> <code>Eval</code>
 </h3>
 <ul>
 <li><code class="sourceCode scheme"><span class="fu">eval</span></code> classifies an expression and directs its evaluation in an environment.</li>
@@ -106,7 +108,7 @@
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                (list-of-values (operands exp) env)))</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: EVAL&quot;</span> exp))))</span></code></pre></div>
 <h3 id="4.1.1.2" class="anchor">
-<a class="anchor__link link" href="#4.1.1.2" aria-hidden="true">#</a><code>Apply</code>
+<a class="anchor__link link" href="#4.1.1.2" aria-hidden="true">#</a> <code>Apply</code>
 </h3>
 <ul>
 <li><code class="sourceCode scheme"><span class="fu">apply</span></code> classifies a procedure and directs its application to a list of arguments.</li>
@@ -124,7 +126,7 @@
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
 <h2 id="4.1.2" class="anchor">
-<a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a><span class="number">4.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.2">Representing Expressions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a> <span class="number">4.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.2">Representing Expressions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
@@ -137,7 +139,7 @@
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">eq?</span> (<span class="fu">car</span> exp) tag)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="cn">false</span>))</span></code></pre></div>
 <h3 id="4.1.2.1" class="anchor">
-<a class="anchor__link link" href="#4.1.2.1" aria-hidden="true">#</a>Derived expressions
+<a class="anchor__link link" href="#4.1.2.1" aria-hidden="true">#</a> Derived expressions
 </h3>
 <ul>
 <li>Some special forms can be defined in terms of others.</li>
@@ -167,10 +169,10 @@
 <li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
 </ul>
 <h2 id="4.1.3" class="anchor">
-<a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a><span class="number">4.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.3">Evaluator Data Structures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.3">Evaluator Data Structures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="4.1.3.1" class="anchor">
-<a class="anchor__link link" href="#4.1.3.1" aria-hidden="true">#</a>Testing of predicates
+<a class="anchor__link link" href="#4.1.3.1" aria-hidden="true">#</a> Testing of predicates
 </h3>
 <ul>
 <li>Anything other than <code class="sourceCode scheme"><span class="cn">false</span></code> is considered “truthy.”</li>
@@ -178,7 +180,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (false? x) (<span class="fu">eq?</span> x <span class="cn">false</span>))</span></code></pre></div>
 <h3 id="4.1.3.2" class="anchor">
-<a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a>Representing procedures
+<a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a> Representing procedures
 </h3>
 <ul>
 <li><code class="sourceCode scheme">(apply-primitive-procedure <span class="sc">«</span><span class="ss">proc</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">args</span><span class="sc">»</span>)</code> applies a primitive procedure to <code class="sourceCode scheme"><span class="sc">«</span><span class="ss">args</span><span class="sc">»</span></code>.</li>
@@ -191,7 +193,7 @@
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (procedure-parameters p) (<span class="fu">cadr</span> p)) (<span class="kw">define</span> (procedure-body p) (<span class="fu">caddr</span> p))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (procedure-environment p) (<span class="fu">cadddr</span> p))</span></code></pre></div>
 <h3 id="4.1.3.3" class="anchor">
-<a class="anchor__link link" href="#4.1.3.3" aria-hidden="true">#</a>Operations on environments
+<a class="anchor__link link" href="#4.1.3.3" aria-hidden="true">#</a> Operations on environments
 </h3>
 <ul>
 <li><code class="sourceCode scheme">(lookup-variable-value <span class="sc">«</span><span class="ss">var</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">env</span><span class="sc">»</span>)</code> returns the value bound to a variable.</li>
@@ -230,7 +232,7 @@
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
 <h2 id="4.1.4" class="anchor">
-<a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a><span class="number">4.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We can run our evaluator as a program: Lisp within Lisp.</li>
@@ -293,7 +295,7 @@
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                     &#39;<span class="sc">«</span><span class="ss">procedure-env</span><span class="sc">»</span>))</span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">display</span> object)))</span></code></pre></div>
 <h2 id="4.1.5" class="anchor">
-<a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a><span class="number">4.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.5">Data as Programs<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.5">Data as Programs<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>A program can be viewed as a description of an abstract machine.</li>
@@ -311,7 +313,7 @@
 </blockquote>
 </div>
 <h2 id="4.1.6" class="anchor">
-<a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a><span class="number">4.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.6">Internal Definitions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.6">Internal Definitions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Global definitions have <em>sequential scoping</em>: they are defined one at a time.</li>
@@ -335,7 +337,7 @@
 <li>Here, <code class="sourceCode scheme">*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
 <h2 id="4.1.7" class="anchor">
-<a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a><span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Our evaluator is inefficient because it interleaves syntactic analysis with execution.</li>

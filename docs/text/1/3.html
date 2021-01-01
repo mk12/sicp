@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -98,7 +99,7 @@
 <li>These are called <em>higher-order</em> procedures.</li>
 </ul>
 <h2 id="1.3.1" class="anchor">
-<a class="anchor__link link" href="#1.3.1" aria-hidden="true">#</a><span class="number">1.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.1">Procedures as Arguments<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.3.1" aria-hidden="true">#</a> <span class="number">1.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.1">Procedures as Arguments<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Procedures that compute a sum are all similar. They are all based on the following template:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> a b)</span>
@@ -111,12 +112,12 @@
 <p>The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. (77)</p>
 </blockquote>
 <h2 id="1.3.2" class="anchor">
-<a class="anchor__link link" href="#1.3.2" aria-hidden="true">#</a><span class="number">1.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.2">Constructing Procedures Using <code>Lambda</code><span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.3.2" aria-hidden="true">#</a> <span class="number">1.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.2">Constructing Procedures Using <code>Lambda</code><span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p><code class="sourceCode scheme"><span class="kw">lambda</span></code> creates anonymous procedures. They are just like the procedures created by <code class="sourceCode scheme"><span class="kw">define</span></code>, but without a name: <code class="sourceCode scheme">(<span class="kw">lambda</span> (<span class="sc">«</span><span class="ss">formal-parameters</span><span class="sc">»</span>) <span class="sc">«</span><span class="ss">body</span><span class="sc">»</span>)</code>.</p>
 <p>A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.</p>
 <h3 id="1.3.2.1" class="anchor">
-<a class="anchor__link link" href="#1.3.2.1" aria-hidden="true">#</a>Using <code>let</code> to create local variables
+<a class="anchor__link link" href="#1.3.2.1" aria-hidden="true">#</a> Using <code>let</code> to create local variables
 </h3>
 <ul>
 <li>We often need local variables other than the ones that have been bound as formal parameters.</li>
@@ -142,7 +143,7 @@
 <li>You can use let-expressions (<code class="sourceCode scheme"><span class="kw">let</span></code>, <code class="sourceCode scheme"><span class="kw">let*</span></code>, and <code class="sourceCode scheme"><span class="kw">letrec</span></code>) instead of internal definitions (block structure).</li>
 </ul>
 <h2 id="1.3.3" class="anchor">
-<a class="anchor__link link" href="#1.3.3" aria-hidden="true">#</a><span class="number">1.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.3">Procedures as General Methods<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.3.3" aria-hidden="true">#</a> <span class="number">1.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.3">Procedures as General Methods<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>So far, we have seen</p>
 <ul>
@@ -151,7 +152,7 @@
 </ul>
 <p>Now we will take it a bit further.</p>
 <h3 id="1.3.3.1" class="anchor">
-<a class="anchor__link link" href="#1.3.3.1" aria-hidden="true">#</a>Finding roots of equations by the half-interval method
+<a class="anchor__link link" href="#1.3.3.1" aria-hidden="true">#</a> Finding roots of equations by the half-interval method
 </h3>
 <ul>
 <li>The <em>half-interval</em> method: a simple but powerful technique for finding the solutions to <span class="math inline">f(x) = 0</span>.</li>
@@ -159,7 +160,7 @@
 <li>To narrow it down, we let <span class="math inline">x</span> be the average of <span class="math inline">a</span> and <span class="math inline">b</span>, and then replace either the left bound or the right bound with it.</li>
 </ul>
 <h3 id="1.3.3.2" class="anchor">
-<a class="anchor__link link" href="#1.3.3.2" aria-hidden="true">#</a>Finding fixed points of a function
+<a class="anchor__link link" href="#1.3.3.2" aria-hidden="true">#</a> Finding fixed points of a function
 </h3>
 <ul>
 <li>A number <span class="math inline">x</span> is a <em>fixed point</em> of a function if <span class="math inline">f(x) = x</span>.</li>
@@ -167,7 +168,7 @@
 <li>The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.</li>
 </ul>
 <h2 id="1.3.4" class="anchor">
-<a class="anchor__link link" href="#1.3.4" aria-hidden="true">#</a><span class="number">1.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.4">Procedures as Returned Values<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#1.3.4" aria-hidden="true">#</a> <span class="number">1.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.4">Procedures as Returned Values<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (average-damp f)</span>
@@ -181,7 +182,7 @@
 <p>In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.</p>
 </blockquote>
 <h3 id="1.3.4.1" class="anchor">
-<a class="anchor__link link" href="#1.3.4.1" aria-hidden="true">#</a>Newton’s method
+<a class="anchor__link link" href="#1.3.4.1" aria-hidden="true">#</a> Newton’s method
 </h3>
 <p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function <span class="math inline">f(x)</span>, the solution to <span class="math inline">f(x) = 0</span> is given by the fixed point of</p>
 <p><span class="math display">x ↦ x - \frac{f(x)}{f&#39;(x)}.</span></p>
@@ -196,7 +197,7 @@
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>((deriv cube) <span class="cn">5</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cn">75.00014999664018</span></span></code></pre></div>
 <h3 id="1.3.4.2" class="anchor">
-<a class="anchor__link link" href="#1.3.4.2" aria-hidden="true">#</a>Abstractions and first-class procedures
+<a class="anchor__link link" href="#1.3.4.2" aria-hidden="true">#</a> Abstractions and first-class procedures
 </h3>
 <ul>
 <li>Compound procedures permit us to express general methods of computing as explicit elements in our programming language.</li>

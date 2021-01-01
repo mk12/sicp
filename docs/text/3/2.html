@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -102,7 +103,7 @@
 <li>The global environment consists of a single frame, and it is implicitly used in interactions with the interpreter.</li>
 </ul>
 <h2 id="3.2.1" class="anchor">
-<a class="anchor__link link" href="#3.2.1" aria-hidden="true">#</a><span class="number">3.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.1">The Rules for Evaluation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.2.1" aria-hidden="true">#</a> <span class="number">3.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.1">The Rules for Evaluation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>To evaluate a combination:
@@ -122,7 +123,7 @@
 <li>We use <code class="sourceCode scheme"><span class="kw">define</span></code> for variables that are currently unbound, and <code class="sourceCode scheme"><span class="kw">set!</span></code> for variables that are already bound.</li>
 </ul>
 <h2 id="3.2.2" class="anchor">
-<a class="anchor__link link" href="#3.2.2" aria-hidden="true">#</a><span class="number">3.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.2">Applying Simple Procedures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.2.2" aria-hidden="true">#</a> <span class="number">3.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.2">Applying Simple Procedures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Let’s evaluate <code class="sourceCode scheme">(f <span class="cn">5</span>)</code>, given the following procedures:</li>
@@ -142,7 +143,7 @@
 <li>The process continues recursively. We end up with <code class="sourceCode scheme">(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)</code>, which evaluates to <code class="sourceCode scheme"><span class="cn">136</span></code>.</li>
 </ul>
 <h2 id="3.2.3" class="anchor">
-<a class="anchor__link link" href="#3.2.3" aria-hidden="true">#</a><span class="number">3.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.3">Frames as the Repository of Local State<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.2.3" aria-hidden="true">#</a> <span class="number">3.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.3">Frames as the Repository of Local State<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Now we can see how the environment model makes sense of assignment and local state.</li>
@@ -176,7 +177,7 @@
 </ul></li>
 </ul>
 <h2 id="3.2.4" class="anchor">
-<a class="anchor__link link" href="#3.2.4" aria-hidden="true">#</a><span class="number">3.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.4">Internal Definitions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.2.4" aria-hidden="true">#</a> <span class="number">3.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%_sec_3.2.4">Internal Definitions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>With block structure, we nested definitions using <code class="sourceCode scheme"><span class="kw">define</span></code> to avoid exposing helper procedures.</li>

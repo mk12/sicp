@@ -1,7 +1,7 @@
 # New to do
 
 - test in all browsers, without JS, without CSS
-- rewrite README, mentioning pandoc & BEM css
+- rewrite README, mentioning pandoc, katex, BEM css
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - spell checker for Markdown, integrated in Makefile
@@ -10,6 +10,10 @@
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
 - remove empty `<a>` tags in source listings (https://github.com/jgm/pandoc/issues/4386)
+- pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
+    - 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
+    - just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
+    - see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
 x consider if any em should be rem
 + fix spacing between arrows and text
 + decide whether to use article

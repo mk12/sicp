@@ -34,12 +34,14 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-               <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
-               <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -95,7 +97,7 @@
 <li>The result will be additive (modular)—easy to add new types.</li>
 </ul>
 <h2 id="2.5.1" class="anchor">
-<a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a><span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We want <code class="sourceCode scheme">add</code> to work for primitive numbers, rational numbers, and complex numbers.</li>
@@ -105,7 +107,7 @@
 <li>The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.</li>
 </ul>
 <h2 id="2.5.2" class="anchor">
-<a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a><span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.2">Combining Data of Different Types<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a> <span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.2">Combining Data of Different Types<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>In our unified arithmetic system, we ignored an important issue.</li>
@@ -114,7 +116,7 @@
 <li>This is cumbersome, and it violates modularity.</li>
 </ul>
 <h3 id="2.5.2.1" class="anchor">
-<a class="anchor__link link" href="#2.5.2.1" aria-hidden="true">#</a>Coercion
+<a class="anchor__link link" href="#2.5.2.1" aria-hidden="true">#</a> Coercion
 </h3>
 <ul>
 <li>Often the different data types are not completely independent.</li>
@@ -131,7 +133,7 @@
 <li>It gets more complicated: what if both types can be converted to a third type? What if A can be converted to B and then from B to C? We have a graph of relations among the types.</li>
 </ul>
 <h3 id="2.5.2.2" class="anchor">
-<a class="anchor__link link" href="#2.5.2.2" aria-hidden="true">#</a>Hierarchies of types
+<a class="anchor__link link" href="#2.5.2.2" aria-hidden="true">#</a> Hierarchies of types
 </h3>
 <ul>
 <li>Integers are a subtype of rationals, which are a subtype of real numbers, and so on for complex numbers.</li>
@@ -142,7 +144,7 @@
 <li>In some cases we can also lower a value down the type tower.</li>
 </ul>
 <h3 id="2.5.2.3" class="anchor">
-<a class="anchor__link link" href="#2.5.2.3" aria-hidden="true">#</a>Inadequacies of hierarchies
+<a class="anchor__link link" href="#2.5.2.3" aria-hidden="true">#</a> Inadequacies of hierarchies
 </h3>
 <ul>
 <li>In general, a type may have more than one subtype (not a tower).</li>
@@ -157,7 +159,7 @@
 </div>
 <!-- https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_289 -->
 <h2 id="2.5.3" class="anchor">
-<a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a><span class="number">2.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a> <span class="number">2.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The manipulation of symbolic algebraic expressions is hard.</li>
@@ -166,7 +168,7 @@
 <li>We will just look at the arithmetic of polynomials.</li>
 </ul>
 <h3 id="2.5.3.1" class="anchor">
-<a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a>Arithmetic on polynomials
+<a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a> Arithmetic on polynomials
 </h3>
 <ul>
 <li>A polynomial is relative to certain variables, the <em>indeterminates</em>.</li>
@@ -181,7 +183,7 @@
 <li>Our system works with polynomials with polynomial coefficients “for free” because of data-directed recursion—because we are using generic procedures.</li>
 </ul>
 <h3 id="2.5.3.2" class="anchor">
-<a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a>Representing term lists
+<a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a> Representing term lists
 </h3>
 <ul>
 <li>Our procedures <code class="sourceCode scheme">add-terms</code> and <code class="sourceCode scheme">mul-terms</code> always access term lists sequentially from highest to lowest order.</li>
@@ -191,7 +193,7 @@
 <li>Sparse term lists, where there are many zeros, are better represented by some kind of associative list or map.</li>
 </ul>
 <h3 id="2.5.3.3" class="anchor">
-<a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a>Hierarchies of types in symbolic algebra
+<a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a> Hierarchies of types in symbolic algebra
 </h3>
 <ul>
 <li>Our polynomial system used complex objects that had objects of many different parts as types.</li>
@@ -200,7 +202,7 @@
 <li>Controlling coercion is a hard problem in these systems.</li>
 </ul>
 <h3 id="2.5.3.4" class="anchor">
-<a class="anchor__link link" href="#2.5.3.4" aria-hidden="true">#</a>Extended exercise: Rational functions
+<a class="anchor__link link" href="#2.5.3.4" aria-hidden="true">#</a> Extended exercise: Rational functions
 </h3>
 <ul>
 <li>Rational functions are “fractions” with polynomial numerators and denominators.</li>

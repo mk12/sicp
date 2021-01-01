@@ -34,9 +34,10 @@
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
-    </symbol>    <symbol id="external" viewBox="0 0 24 24">
-               <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-             </symbol>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -92,7 +93,7 @@
 <li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
 </ul>
 <h2 id="2.2.1" class="anchor">
-<a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a><span class="number">2.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.1">Representing Sequences<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a> <span class="number">2.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.1">Representing Sequences<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Among the things we can build with pairs is a sequence.</li>
@@ -105,7 +106,7 @@
 <li>The nil value can be thought of as an empty list.</li>
 </ul>
 <h3 id="2.2.1.1" class="anchor">
-<a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a>List operations
+<a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a> List operations
 </h3>
 <ul>
 <li>We can get at the nth item of the list by <code class="sourceCode scheme"><span class="fu">cdr</span></code>ing one less than <span class="math inline">n</span> times, and then taking the <code class="sourceCode scheme"><span class="fu">car</span></code>.</li>
@@ -130,7 +131,7 @@
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      list2</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">cons</span> (<span class="fu">car</span> list1 (<span class="fu">append</span> (<span class="fu">cdr</span> list1) list2)))))</span></code></pre></div>
 <h3 id="2.2.1.2" class="anchor">
-<a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a>Mapping over lists
+<a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a> Mapping over lists
 </h3>
 <ul>
 <li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
@@ -150,7 +151,7 @@
 <p>[…] this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. (144)</p>
 </blockquote>
 <h2 id="2.2.2" class="anchor">
-<a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a><span class="number">2.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.2">Hierarchical Structures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a> <span class="number">2.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.2">Hierarchical Structures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We can represent lists whose elements themselves may also be lists. We can also think of them as <em>trees</em>.</li>
@@ -164,14 +165,14 @@
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 (count-leaves (<span class="fu">cdr</span> x))))))</span></code></pre></div>
 <h3 id="2.2.2.1" class="anchor">
-<a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a>Mapping over trees
+<a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a> Mapping over trees
 </h3>
 <ul>
 <li>We can deal with trees using <code class="sourceCode scheme"><span class="fu">map</span></code> together with recursion.</li>
 <li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
 </ul>
 <h2 id="2.2.3" class="anchor">
-<a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a><span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a> <span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Abstractions preserves the flexibility to experiment with alternative representations.</li>
@@ -179,7 +180,7 @@
 <li>To make abstract operations for things other than numbers, we need to have a conventional style in which we manipulate data.</li>
 </ul>
 <h3 id="2.2.3.1" class="anchor">
-<a class="anchor__link link" href="#2.2.3.1" aria-hidden="true">#</a>Sequence operations
+<a class="anchor__link link" href="#2.2.3.1" aria-hidden="true">#</a> Sequence operations
 </h3>
 <ul>
 <li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
@@ -190,7 +191,7 @@
 <li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
 </ul>
 <h3 id="2.2.3.2" class="anchor">
-<a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a>Nested mappings
+<a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a> Nested mappings
 </h3>
 <ul>
 <li>For many computations, the sequence paradigm can be used where loops would otherwise be needed.</li>
@@ -206,14 +207,14 @@
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                     (permutations (<span class="fu">remove</span> x s))))</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              s)))</span></code></pre></div>
 <h2 id="2.2.4" class="anchor">
-<a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a><span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a> <span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We will use a simple language for drawing pictures.</li>
 <li>The data objects are represented as procedures rather than as list structure.</li>
 </ul>
 <h3 id="2.2.4.1" class="anchor">
-<a class="anchor__link link" href="#2.2.4.1" aria-hidden="true">#</a>The picture language
+<a class="anchor__link link" href="#2.2.4.1" aria-hidden="true">#</a> The picture language
 </h3>
 <ul>
 <li>There is only one kind of element, called a <em>painter</em>.</li>
@@ -223,14 +224,14 @@
 <li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
 </ul>
 <h3 id="2.2.4.2" class="anchor">
-<a class="anchor__link link" href="#2.2.4.2" aria-hidden="true">#</a>Higher-order operations
+<a class="anchor__link link" href="#2.2.4.2" aria-hidden="true">#</a> Higher-order operations
 </h3>
 <ul>
 <li>Just as we have higher-order procedures, we can have higher-order painting operations.</li>
 <li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
 </ul>
 <h3 id="2.2.4.3" class="anchor">
-<a class="anchor__link link" href="#2.2.4.3" aria-hidden="true">#</a>Frames
+<a class="anchor__link link" href="#2.2.4.3" aria-hidden="true">#</a> Frames
 </h3>
 <ul>
 <li>Painters paint their contents in frames.</li>
@@ -240,7 +241,7 @@
 <li>We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.</li>
 </ul>
 <h3 id="2.2.4.4" class="anchor">
-<a class="anchor__link link" href="#2.2.4.4" aria-hidden="true">#</a>Painters
+<a class="anchor__link link" href="#2.2.4.4" aria-hidden="true">#</a> Painters
 </h3>
 <ul>
 <li>A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.</li>
@@ -248,14 +249,14 @@
 <li>Painters as procedures is a powerful abstraction barrier.</li>
 </ul>
 <h3 id="2.2.4.5" class="anchor">
-<a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a>Transforming and combining painters
+<a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a> Transforming and combining painters
 </h3>
 <ul>
 <li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
 <li>They are all based on the procedure <code class="sourceCode scheme">transform-painter</code>.</li>
 </ul>
 <h3 id="2.2.4.6" class="anchor">
-<a class="anchor__link link" href="#2.2.4.6" aria-hidden="true">#</a>Levels of language for robust design
+<a class="anchor__link link" href="#2.2.4.6" aria-hidden="true">#</a> Levels of language for robust design
 </h3>
 <ul>
 <li>The picture language uses abstraction with procedures and data.</li>
