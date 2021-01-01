@@ -8,12 +8,17 @@
 - have special callout thing at end of text sections with exercise links
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
-- do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
-- remove empty `<a>` tags in source listings (https://github.com/jgm/pandoc/issues/4386)
+- do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)(https://github.com/jgm/pandoc/issues/4386)
 - pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
     - 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
     - just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
     - see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
+- remove empty `<a>` tags in source listings 
+    - need to stream pandoc output and modify it in docgen
+    - in theory, could be most optimal to write pandoc input in 1 thread and transform its output in another
+    - in pratice, I suspect docgen is so fast that it finishes generation before pandoc even gets a chance to open the output file
+    - timing: docgen takes 10ms on docs/text/highlight.html (slowest as it scans all text.md)
+    - so not worth pipelining this as it will save a few ms at best -- and that's only in the ideal conditions where thread creation + pandoc latency to first byte of output is less than 10ms
 x consider if any em should be rem
 + fix spacing between arrows and text
 + decide whether to use article

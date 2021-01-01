@@ -72,7 +72,6 @@
       <item>-1+</item>
       <item>abs</item>
       <item>acos</item>
-      <item>angle</item>
       <item>append</item>
       <item>apply</item>
       <item>asin</item>
@@ -272,7 +271,6 @@
       <item>list?</item>
       <item>list</item>
       <item>log</item>
-      <item>magnitude</item>
       <item>make-assertion-violation</item>
       <item>make-eq-hashtable</item>
       <item>make-eqv-hashtable</item>

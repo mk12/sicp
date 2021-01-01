@@ -70,26 +70,24 @@ struct PandocOpts {
     const char *input;
     // Path to the output file.
     const char *output;
+    // Path to the ultimate destination file. Usually output is /dev/stdout
+    const char *final_output;
     // Contents of <title>...</title>.
     const char *title;
-    // String that identifies the active tab. Allowed values: "index", "text",
-    // "lecture", and "exercise".
-    const char *active;
-    // Relative path to the root of the website, e.g. "", "../", "../../", etc.
-    const char *root;
     // Links to up/prev/next page. If any are set, up must be set.
     const char *up;
     const char *prev;
     const char *next;
 };
 
-// Invokes pandoc, printing the command before executing it. Normally does not
-// return since it replaces the current process. Returns false on error.
+// Invokes pandoc, printing the command to stderr before executing it. Normally
+// does not return since it replaces the current process. If exec fails, returns
+// false (most likely because Pandoc is not installed or not in $PATH).
 static bool pandoc(const struct PandocOpts opts) {
     const int LEN =
         1     // pandoc
         + 3   // -o output -dconfig
-        + 6   // -M title -M active -M root
+        + 4   // -M id -M title
         + 6   // -M prev -M up -M next
         + 1   // input
         + 1;  // NULL
@@ -102,12 +100,10 @@ static bool pandoc(const struct PandocOpts opts) {
     // Note: We don't need to free memory allocated by concat because it will
     // all disappear when execvp replaces the process image.
     argv[i++] = "-M";
+    argv[i++] = concat("id=", opts.final_output);
+    argv[i++] = "-M";
     const int title_idx = i;
     argv[i++] = concat("title=", opts.title);
-    argv[i++] = "-M";
-    argv[i++] = opts.active;
-    argv[i++] = "-M";
-    argv[i++] = concat("root=", opts.root);
     if (opts.up) {
         argv[i++] = "-M";
         argv[i++] = concat("up=", opts.up);
@@ -127,14 +123,66 @@ static bool pandoc(const struct PandocOpts opts) {
         // Quote the title argument since it has spaces.
         const char *quote = j == title_idx ? "'" : "";
         const char *space = j == i - 2 ? "" : " ";
-        printf("%s%s%s%s", quote, argv[j], quote, space);
+        fprintf(stderr, "%s%s%s%s", quote, argv[j], quote, space);
     }
-    putchar('\n');
+    putc('\n', stderr);
     // It is safe to cast to (char **) because execvp will not modify argv
     // except as a consequence of replacing the process image.
     execvp(PANDOC, (char **)argv);
     perror(PANDOC);
     return false;
+}
+
+// PID of the Pandoc process, stored so that signal_handler can kill it.
+static volatile pid_t global_pandoc_pid = 0;
+// Flag indicating that global_pandoc_pid is set. We need this because pid_t is
+// not guaranteed to be written in a single instruction.
+static volatile sig_atomic_t global_pandoc_pid_set = 0;
+
+// Kills global_pandoc_pid (if set).
+static void kill_pandoc(void) {
+    if (global_pandoc_pid_set) {
+        kill(global_pandoc_pid, SIGTERM);
+    }
+}
+
+// Kills global_pandoc_pid (if set) and then runs the default signal handler.
+static void signal_handler(int signum) {
+    kill_pandoc();
+    signal(signum, SIG_DFL);
+    raise(signum);
+}
+
+// Termination signals that we want to handle.
+static const int SIGNUMS[] = {SIGHUP, SIGINT, SIGQUIT, SIGTERM};
+static const int N_SIGNUMS = sizeof SIGNUMS / sizeof SIGNUMS[0];
+
+// Ensures that global_pandoc_pid (if set) is killed when this process
+// terminates normally (returning from main or calling exit) or receives one of
+// the signals in SIGNUMS. It is still possible for the pandoc process to be
+// orphaned, for example if this process receives SIGQUIT or SIGKILL.
+static bool kill_pandoc_on_termination(void) {
+    if (atexit(kill_pandoc) == -1) {
+        perror("atexit");
+        return false;
+    }
+    struct sigaction action;
+    action.sa_handler = signal_handler;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    for (int i = 0; i < N_SIGNUMS; i++) {
+        struct sigaction old;
+        if (sigaction(SIGNUMS[i], NULL, &old) == -1) {
+            perror("sigaction");
+            return false;
+        }
+        if (old.sa_handler == SIG_IGN) continue;
+        if (sigaction(SIGNUMS[i], &action, NULL) == -1) {
+            perror("sigaction");
+            return false;
+        }
+    }
+    return true;
 }
 
 // Represents a child process executing pandoc.
@@ -143,88 +191,123 @@ struct PandocProc {
     pid_t pid;
     // Stream for writing to the child's stdin.
     FILE *in;
+    // Stream for reading from the child's stdout.
+    FILE *out;
 };
 
+// Helper that closes both ends of a pipe.
+#define CLOSE2(p) do { close(p[0]); close(p[1]); } while (0)
+
 // Runs pandoc with opts in a child process, storing its information in proc.
-// The caller should call wait_pandoc after. Returns true on success.
+// Also registers handlers to kill the child process if the parent terminates
+// (this is useful if the Lua filter has an infinite loop bug, for example).
+// Returns true on success. To take advantage of proc->in and proc->out, set
+// opts.input to "/dev/stdin" and opts.output to "/dev/stdout", respectively.
+// The caller should invoke wait_pandoc or finish_pandoc later.
 static bool fork_pandoc(struct PandocProc *proc, struct PandocOpts opts) {
-    // Fork the process, using a pipe for the child's stdin.
-    int fd[2];
-    if (pipe(fd) == -1) {
+    if (!kill_pandoc_on_termination()) {
+        return false;
+    }
+    enum { READ, WRITE, RW_N };
+    int in[RW_N], out[RW_N];
+    if (pipe(in) == -1) {
         perror("pipe");
+        return false;
+    }
+    if (pipe(out) == -1) {
+        perror("pipe");
+        CLOSE2(in);
         return false;
     }
     if ((proc->pid = fork()) == -1) {
         perror("fork");
-        close(fd[0]);
-        close(fd[1]);
+        CLOSE2(in);
+        CLOSE2(out);
         return false;
     }
     if (proc->pid == 0) {
-        // Close the pipe's write-side.
-        close(fd[1]);
-        // Move the pipe's read-side to file descriptor 0 (stdin).
-        dup2(fd[0], 0);
-        close(fd[0]);
+        // Move the input read-side to file descriptor 0 (stdin).
+        close(in[WRITE]);
+        dup2(in[READ], 0);
+        close(in[READ]);
+        // Move the output write-side to file descriptor 1 (stdout).
+        close(out[READ]);
+        dup2(out[WRITE], 1);
+        close(out[WRITE]);
         // Replace this process with pandoc.
         return pandoc(opts);
     }
-    // Close the pipe's read-side and store the write-side.
-    close(fd[0]);
-    proc->in = fdopen(fd[1], "w");
+    global_pandoc_pid = proc->pid;
+    global_pandoc_pid_set = 1;
+    close(in[READ]);
+    close(out[WRITE]);
+    proc->in = fdopen(in[WRITE], "w");
     if (!proc->in) {
         perror("fdopen");
-        close(fd[1]);
+        close(in[WRITE]);
+        close(out[READ]);
+        return false;
+    }
+    proc->out = fdopen(out[READ], "r");
+    if (!proc->out) {
+        perror("fdopen");
+        fclose(proc->in);
+        close(out[READ]);
         return false;
     }
     return true;
 }
 
-// PID of the Pandoc process, stored so that signal_handler can kill it.
-static pid_t global_pandoc_pid;
-
-// Kills global_pandoc_pid and then runs the default signal handler.
-static void signal_handler(int signum) {
-    kill(global_pandoc_pid, SIGTERM);
-    signal(signum, SIG_DFL);
-    raise(signum);
-}
-
-// Closes proc's pipe and waits for it to finish. Returns true on success. Kills
-// proc if SIGHUP, SIGINT, SIGQUIT, or SIGTERM is received while waiting (this
-// is useful if the Lua filter has an infinite loop bug, for example).
+// Closes streams and blocks until proc finishes. Then cleans up globals set by
+// fork_pandoc for signal handlers, and resets all of proc's fields to their
+// default values. Returns true on success.
 static bool wait_pandoc(struct PandocProc *proc) {
-    fclose(proc->in);
-    global_pandoc_pid = proc->pid;
-    struct sigaction action;
-    action.sa_handler = signal_handler;
-    sigemptyset(&action.sa_mask);
-    action.sa_flags = 0;
-    const int signums[] = {SIGHUP, SIGINT, SIGQUIT, SIGTERM};
-    const int n_signums = sizeof signums / sizeof signums[0];
-    bool set_handler[n_signums];
-    for (int i = 0; i < n_signums; i++) {
-        struct sigaction old;
-        sigaction(signums[i], NULL, &old);
-        if (old.sa_handler != SIG_IGN) {
-            sigaction(signums[i], &action, NULL);
-            set_handler[i] = true;
-        }
+    if (proc->in) {
+        fclose(proc->in);
+        proc->in = NULL;
+    }
+    if (proc->out) {
+        fclose(proc->out);
+        proc->out = NULL;
     }
     bool success = true;
+    assert(proc->pid != 0);
     if (waitpid(proc->pid, NULL, 0) == -1) {
         perror("waitpid");
         success = false;
     };
-    for (int i = 0; i < n_signums; i++) {
-        if (set_handler[i]) {
-            signal(signums[i], SIG_DFL);
-        }
-    }
-    global_pandoc_pid = -1;
-    proc->pid = -1;
+    global_pandoc_pid_set = 0;
+    global_pandoc_pid = 0;
+    proc->pid = 0;
     proc->in = NULL;
+    proc->out = NULL;
     return success;
+}
+
+// Post-processes HTML, removing unwanted tags in code blocks (there is no
+// option to prevent Pandoc from producing these).
+static void postprocess_html(FILE *in, FILE *out) {
+    char *line = NULL;
+    size_t cap = 0;
+    ssize_t len;
+    while ((len = getline(&line, &cap, in)) > 0) {
+        fwrite(line, len, 1, out);
+    }
+}
+
+// Post-processes the HTML from proc.out and writes it to the given file. Then
+// calls wait_pandoc. Returns true on success.
+static bool finish_pandoc(struct PandocProc *proc, const char *output) {
+    fclose(proc->in);
+    proc->in = NULL;
+    FILE *out = fopen(output, "w");
+    if (!out) {
+        perror("fopen");
+        return false;
+    }
+    postprocess_html(proc->out, out);
+    fclose(out);
+    return wait_pandoc(proc);
 }
 
 // A Markdown sector is represented by an integer s, where:
@@ -634,6 +717,9 @@ overflow:
     assert(false);
 }
 
+//
+// static 
+
 // String constants, used to guard against misspellings.
 #define INDEX "index"
 #define TEXT "text"
@@ -643,6 +729,8 @@ overflow:
 #define FRONT "front"
 
 // Helpers to construct input/output paths.
+#define STDIN "/dev/stdin"
+#define STDOUT "/dev/stdout"
 #define INPUT(f) ("notes/" f ".md")
 #define OUTPUT(f) ("docs/" f ".html")
 #define OUTPUT_DIR(d) ("docs/" d "/")
@@ -652,13 +740,12 @@ overflow:
 #define HREF(p) (p ".html")
 
 // Generates docs/index.html.
-static bool gen_index(void) {
+static bool gen_index(const char *output) {
     return pandoc((struct PandocOpts){
         .input = INPUT(INDEX),
-        .output = OUTPUT(INDEX),
+        .output = output,
+        .final_output = output,
         .title = "SICP Study",
-        .active = INDEX,
-        .root = "",
         .prev = NULL,
         .up = NULL,
         .next = NULL,
@@ -666,18 +753,17 @@ static bool gen_index(void) {
 }
 
 // Generates docs/text/index.html.
-static bool gen_text_index(void) {
+static bool gen_text_index(const char *output) {
     struct MarkdownScanner scan;
     if (!init_md(&scan, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = OUTPUT(TEXT "/" INDEX),
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = "SICP Notes",
-        .active = TEXT,
-        .root = PARENT,
         .prev = NULL,
         .up = HREF(PARENT INDEX),
         .next = HREF(HIGHLIGHT),
@@ -715,22 +801,21 @@ static bool gen_text_index(void) {
         }
     } while (scan_md(&scan));
     render_toc_end(&tr, proc.in);
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 }
 
 // Generates docs/text/highlight.html.
-static bool gen_text_highlight(void) {
+static bool gen_text_highlight(const char *output) {
     struct HighlightScanner scan;
     if (!init_hl(&scan, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = OUTPUT(TEXT "/" HIGHLIGHT),
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = "SICP Highlights",
-        .active = TEXT,
-        .root = PARENT,
         .prev = HREF(INDEX),
         .up = HREF(INDEX),
         .next = HREF(FRONT),
@@ -779,22 +864,21 @@ static bool gen_text_highlight(void) {
             break;
         }
     }
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 }
 
 // Generates docs/text/front.html.
-static bool gen_text_front(void) {
+static bool gen_text_front(const char *output) {
     struct MarkdownScanner scan;
     if (!init_md(&scan, INPUT(TEXT))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = OUTPUT(TEXT "/" FRONT),
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = "SICP Frontmatter Notes",
-        .active = TEXT,
-        .root = PARENT,
         .prev = HREF(HIGHLIGHT),
         .up = HREF(INDEX),
         .next = HREF("1/" INDEX),
@@ -814,7 +898,7 @@ static bool gen_text_front(void) {
             copy_md(&scan, proc.in);
         }
     } while (scan_md(&scan) && scan.level != 1);
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 }
 
 // Generates docs/text/*/index.html.
@@ -844,11 +928,10 @@ static bool gen_text_chapter(const char *output) {
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = output,
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = title,
-        .active = TEXT,
-        .root = PARENT PARENT,
         .prev = prev,
         .up = HREF(PARENT INDEX),
         .next = HREF("1"),
@@ -880,7 +963,7 @@ static bool gen_text_chapter(const char *output) {
         }
     } while (scan_md(&scan) && scan.level != 1);
     render_toc_end(&tr, proc.in);
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 invalid:
     fprintf(stderr, "%s: invalid text chapter\n", output);
     return false;
@@ -927,11 +1010,10 @@ static bool gen_text_section(const char *output) {
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = output,
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = title,
-        .active = TEXT,
-        .root = PARENT PARENT,
         .prev = prev,
         .up = HREF(INDEX),
         .next = next,
@@ -965,25 +1047,24 @@ static bool gen_text_section(const char *output) {
             copy_md(&scan, proc.in);
         }
     }
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 invalid:
     fprintf(stderr, "%s: invalid text section\n", output);
     return false;
 }
 
 // Generates docs/lecture/index.html.
-static bool gen_lecture_index(void) {
+static bool gen_lecture_index(const char *output) {
     struct MarkdownScanner scan;
     if (!init_md(&scan, INPUT(LECTURE))) {
         return false;
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = OUTPUT(LECTURE "/" INDEX),
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = "SICP Lecture Notes",
-        .active = LECTURE,
-        .root = PARENT,
         .prev = NULL,
         .up = HREF(PARENT INDEX),
         .next = HREF(HIGHLIGHT),
@@ -1008,21 +1089,20 @@ static bool gen_lecture_index(void) {
         }
     } while (scan_md(&scan));
     render_toc_end(&tr, proc.in);
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 }
 
 // Generates docs/lecture/highlight.html.
-static bool gen_lecture_highlight(void) {
+static bool gen_lecture_highlight(const char *output) {
     struct HighlightScanner scan;
     if (!init_hl(&scan, INPUT(LECTURE))) {
         return false;
     }
     const struct PandocOpts opts = {
-        .input = "/dev/stdin",
-        .output = OUTPUT(LECTURE "/" HIGHLIGHT),
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = "SICP Lecture Highlights",
-        .active = LECTURE,
-        .root = PARENT,
         .prev = HREF(INDEX),
         .up = HREF(INDEX),
         .next = HREF("1a"),
@@ -1060,7 +1140,7 @@ static bool gen_lecture_highlight(void) {
             break;
         }
     }
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 }
 
 // Generates docs/lecture/*.html.
@@ -1107,11 +1187,10 @@ static bool gen_lecture_page(const char *output) {
     }
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
-        .input = "/dev/stdin",
-        .output = output,
+        .input = STDIN,
+        .output = STDOUT,
+        .final_output = output,
         .title = title,
-        .active = LECTURE,
-        .root = PARENT,
         .prev = prev,
         .up = HREF(INDEX),
         .next = next,
@@ -1137,14 +1216,14 @@ static bool gen_lecture_page(const char *output) {
             copy_md(&scan, proc.in);
         }
     }
-    return wait_pandoc(&proc);
+    return finish_pandoc(&proc, output);
 invalid:
     fprintf(stderr, "%s: invalid lecture\n", output);
     return false;
 }
 
 // Generates docs/exercise/index.html.
-static bool gen_exercise_index(void) {
+static bool gen_exercise_index(const char *output) {
     return true;
 }
 
@@ -1161,17 +1240,17 @@ static bool gen_exercise_section(const char *output) {
 // Generates the given output file.
 static bool gen(const char *output) {
     if (strcmp(output, OUTPUT(INDEX)) == 0) {
-        return gen_index();
+        return gen_index(output);
     }
     if (startswith(output, OUTPUT_DIR(TEXT))) {
         if (strcmp(output, OUTPUT(TEXT "/" INDEX)) == 0) {
-            return gen_text_index();
+            return gen_text_index(output);
         }
         if (strcmp(output, OUTPUT(TEXT "/" HIGHLIGHT)) == 0) {
-            return gen_text_highlight();
+            return gen_text_highlight(output);
         }
         if (strcmp(output, OUTPUT(TEXT "/" FRONT)) == 0) {
-            return gen_text_front();
+            return gen_text_front(output);
         }
         if (endswith(output, "/" INDEX ".html")) {
             return gen_text_chapter(output);
@@ -1180,16 +1259,16 @@ static bool gen(const char *output) {
     }
     if (startswith(output, OUTPUT_DIR(LECTURE))) {
         if (strcmp(output, OUTPUT(LECTURE "/" INDEX)) == 0) {
-            return gen_lecture_index();
+            return gen_lecture_index(output);
         }
         if (strcmp(output, OUTPUT(LECTURE "/" HIGHLIGHT)) == 0) {
-            return gen_lecture_highlight();
+            return gen_lecture_highlight(output);
         }
         return gen_lecture_page(output);
     }
     if (startswith(output, OUTPUT_DIR(EXERCISE))) {
         if (strcmp(output, OUTPUT(EXERCISE "/" INDEX)) == 0) {
-            return gen_exercise_index();
+            return gen_exercise_index(output);
         }
         if (endswith(output, "/" INDEX ".html")) {
             return gen_exercise_chapter(output);

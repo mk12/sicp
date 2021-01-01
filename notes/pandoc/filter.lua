@@ -7,8 +7,8 @@ local highlight_bwd = false
 
 -- Reads metatdata set on the command line by docgen.
 function read_meta(meta)
-    vars.active = meta.active
-    vars.root = meta.root
+    vars.id = meta.id:gsub("^docs/", "", 1):gsub("%.html$", "", 1)
+    vars.root = vars.id:gsub("[^/]+", ".."):gsub("..$", "", 1):gsub("^/$", "", 1)
 end
 
 -- Styles and links blockquotes marked with the "::: highlight" div.
@@ -26,22 +26,20 @@ function highlight_div(el)
             'Notes <svg alt="" class="circle-arrow" width="18" height="18">'
             .. '<use xlink:href="#circle-right"/></svg>'
         )
-        aria = "View quote in notes"
+        aria = "view quote in notes"
     else
         highlight_bwd = true
         highlight_idx = highlight_idx + 1
         el.identifier = "q" .. tostring(highlight_idx)
-        el.attributes["aria-label"] = "Highlighted "
-        local frag = PANDOC_STATE.output_file
-            :gsub("^docs/", "", 1):gsub("^text/", "", 1):gsub("^lecture/", "", 1)
-            :gsub("%.html$", "", 1):gsub("/index", "", 1):gsub("/", ".", 1)
+        local frag = vars.id
+            :gsub("^.-/", "", 1):gsub("/index$", "", 1):gsub("/", ".", 1)
             .. "-" .. el.identifier
         href = vars.root:sub(4) .. "highlight.html#" .. frag
         content = (
             '<svg alt="" class="circle-arrow" width="18" height="18">'
             .. '<use xlink:href="#circle-left"/></svg> Highlights'
         )
-        aria = "View quote in highlights page"
+        aria = "view quote in highlights page"
     end
     local link = (
         '<a class="highlight__link link" href="' .. href .. '"'
@@ -53,9 +51,12 @@ end
 
 -- Writes metadata variables used in template.html.
 function write_meta(meta)
+    meta.id = vars.id
+    meta[meta.id:gsub("/.*$", "")] = true
+    meta.root = vars.root
     meta.pagenav = meta.up
     meta.arrows = meta.up
-    meta.external = not PANDOC_STATE.output_file:find("^[%a/]+/index.html$")
+    meta.external = not vars.id:find("^[%a/]*index$")
     meta.circle_left = highlight_bwd
     meta.circle_right = highlight_fwd
     meta.svg_defs = (
@@ -98,7 +99,7 @@ function internal_link(el)
         return
     end
     -- Compute the relative path from src to dest.
-    local src = PANDOC_STATE.output_file:match("^docs/(.*)$")
+    local src = vars.id .. ".html"
     local rel
     if src == dest then
         rel = frag or "#"

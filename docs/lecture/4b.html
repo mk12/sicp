@@ -123,7 +123,7 @@
 <li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
 <li>What if we want <em>both</em> representations? Data abstraction allows us to postpone the representation decision, but we don’t want to make a decision at all!</li>
 <li>We need a vertical barrier between rectangular and polar forms.</li>
-<li>The selectors for complex numbers—<code class="sourceCode scheme">real-part</code>, <code class="sourceCode scheme">imag-part</code>, <code class="sourceCode scheme"><span class="fu">magnitude</span></code>, and <code class="sourceCode scheme"><span class="fu">angle</span></code>—must be generic operators.</li>
+<li>The selectors for complex numbers—<code class="sourceCode scheme">real-part</code>, <code class="sourceCode scheme">imag-part</code>, <code class="sourceCode scheme">magnitude</code>, and <code class="sourceCode scheme">angle</code>—must be generic operators.</li>
 <li>For this to work, we need <em>typed data</em>. We need to tag our data objects with labels telling us the type of their contents.</li>
 <li>We can simply <code class="sourceCode scheme"><span class="fu">cons</span></code> the symbol <code class="sourceCode scheme"><span class="cn">&#39;rectangular</span></code> or <code class="sourceCode scheme"><span class="cn">&#39;polar</span></code> to the complex number data.</li>
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
