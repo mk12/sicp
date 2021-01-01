@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -88,7 +85,7 @@
 <p>We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers. (74)</p>
 </blockquote>
 <ul>
-<li>We could always use <code class="sourceCode scheme">(<span class="fu">*</span> x x x)</code> instead of using a cube procedure, but this would be a disadvantage.</li>
+<li>We could always use <code>(<span class="fu">*</span> x x x)</code> instead of using a cube procedure, but this would be a disadvantage.</li>
 </ul>
 <blockquote>
 <p>One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly. (75)</p>
@@ -102,11 +99,11 @@
 <a class="anchor__link link" href="#1.3.1" aria-hidden="true">#</a> <span class="number">1.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.1">Procedures as Arguments<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Procedures that compute a sum are all similar. They are all based on the following template:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> a b)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">&gt;</span> a b)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      <span class="cn">0</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">+</span> (<span class="sc">«</span><span class="ss">term</span><span class="sc">»</span> a)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>         (<span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> (<span class="sc">«</span><span class="ss">next</span><span class="sc">»</span> a) b))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (<span class="ss">name</span> a b)
+  (<span class="kw">if</span> (<span class="fu">&gt;</span> a b)
+      <span class="cn">0</span>
+      (<span class="fu">+</span> (<span class="ss">term</span> a)
+         (<span class="ss">name</span> (<span class="ss">next</span> a) b))))</code></pre>
 <p>This is a useful abstraction, just as sigma notation in math is useful because the summation of a series is so common.</p>
 <blockquote>
 <p>The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. (77)</p>
@@ -114,33 +111,33 @@
 <h2 id="1.3.2" class="anchor">
 <a class="anchor__link link" href="#1.3.2" aria-hidden="true">#</a> <span class="number">1.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.2">Constructing Procedures Using <code>Lambda</code><span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<p><code class="sourceCode scheme"><span class="kw">lambda</span></code> creates anonymous procedures. They are just like the procedures created by <code class="sourceCode scheme"><span class="kw">define</span></code>, but without a name: <code class="sourceCode scheme">(<span class="kw">lambda</span> (<span class="sc">«</span><span class="ss">formal-parameters</span><span class="sc">»</span>) <span class="sc">«</span><span class="ss">body</span><span class="sc">»</span>)</code>.</p>
+<p><code><span class="kw">lambda</span></code> creates anonymous procedures. They are just like the procedures created by <code><span class="kw">define</span></code>, but without a name: <code>(<span class="kw">lambda</span> (<span class="ss">formal-parameters</span>) <span class="ss">body</span>)</code>.</p>
 <p>A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.</p>
 <h3 id="1.3.2.1" class="anchor">
 <a class="anchor__link link" href="#1.3.2.1" aria-hidden="true">#</a> Using <code>let</code> to create local variables
 </h3>
 <ul>
 <li>We often need local variables other than the ones that have been bound as formal parameters.</li>
-<li>We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special <code class="sourceCode scheme"><span class="kw">let</span></code> form that does it.</li>
+<li>We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special <code><span class="kw">let</span></code> form that does it.</li>
 </ul>
 <p>The general form of a let-expression is</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> ((<span class="sc">«</span><span class="ss">var1</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">exp1</span><span class="sc">»</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      (<span class="sc">«</span><span class="ss">var2</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">exp2</span><span class="sc">»</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      ...</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="sc">«</span><span class="ss">varn</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">expn</span><span class="sc">»</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">«</span><span class="ss">body</span><span class="sc">»</span>)</span></code></pre></div>
+<pre><code>(<span class="kw">let</span> ((<span class="ss">var1</span> <span class="ss">exp1</span>)
+      (<span class="ss">var2</span> <span class="ss">exp2</span>)
+      ...
+      (<span class="ss">varn</span> <span class="ss">expn</span>))
+  <span class="ss">body</span>)</code></pre>
 <p>This is just syntactic sugar for</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">lambda</span> (<span class="sc">«</span><span class="ss">var1</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">var2</span><span class="sc">»</span> ... <span class="sc">«</span><span class="ss">varn</span><span class="sc">»</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="sc">«</span><span class="ss">body</span><span class="sc">»</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="sc">«</span><span class="ss">exp1</span><span class="sc">»</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> <span class="sc">«</span><span class="ss">exp2</span><span class="sc">»</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a> ...</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a> <span class="sc">«</span><span class="ss">expn</span><span class="sc">»</span>)</span></code></pre></div>
+<pre><code>((<span class="kw">lambda</span> (<span class="ss">var1</span> <span class="ss">var2</span> ... <span class="ss">varn</span>)
+   <span class="ss">body</span>)
+ <span class="ss">exp1</span>
+ <span class="ss">exp2</span>
+ ...
+ <span class="ss">expn</span>)</code></pre>
 <ul>
 <li>The scope of a variable in a let-expression is the body.</li>
 <li>This allows variables to be bound as locally as possible.</li>
 <li>The variables in the let-expression are parallel and independent. They cannot refer to each other, and their order does not matter.</li>
-<li>You can use let-expressions (<code class="sourceCode scheme"><span class="kw">let</span></code>, <code class="sourceCode scheme"><span class="kw">let*</span></code>, and <code class="sourceCode scheme"><span class="kw">letrec</span></code>) instead of internal definitions (block structure).</li>
+<li>You can use let-expressions (<code><span class="kw">let</span></code>, <code><span class="kw">let*</span></code>, and <code><span class="kw">letrec</span></code>) instead of internal definitions (block structure).</li>
 </ul>
 <h2 id="1.3.3" class="anchor">
 <a class="anchor__link link" href="#1.3.3" aria-hidden="true">#</a> <span class="number">1.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.3">Procedures as General Methods<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
@@ -171,13 +168,13 @@
 <a class="anchor__link link" href="#1.3.4" aria-hidden="true">#</a> <span class="number">1.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%_sec_1.3.4">Procedures as Returned Values<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (average-damp f)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (x) (average x (f x))))</span></code></pre></div>
-<p>If we use <code class="sourceCode scheme">average-damp</code> on <code class="sourceCode scheme">square</code>, we actually get a procedure that takes the sum of the numbers from 1 to n:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>((average-damp square) <span class="cn">10</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cn">55</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cn">55</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (average-damp f)
+  (<span class="kw">lambda</span> (x) (average x (f x))))</code></pre>
+<p>If we use <code>average-damp</code> on <code>square</code>, we actually get a procedure that takes the sum of the numbers from 1 to n:</p>
+<pre><code>((average-damp square) <span class="cn">10</span>)
+<span class="cn">55</span>
+(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span>)
+<span class="cn">55</span></code></pre>
 <blockquote>
 <p>In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.</p>
 </blockquote>
@@ -189,13 +186,13 @@
 <p>Newton’s method converges very quickly—much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:</p>
 <p><span class="math display">f&#39;(x) = \frac{f(x+dx) - f(x)}{dx}.</span></p>
 <p>This translates to the following procedure:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (deriv f)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (x) (<span class="fu">/</span> (<span class="fu">-</span> (f (<span class="fu">+</span> x dx)) (f x)) dx)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (deriv f)
+  (<span class="kw">lambda</span> (x) (<span class="fu">/</span> (<span class="fu">-</span> (f (<span class="fu">+</span> x dx)) (f x)) dx)))</code></pre>
 <p>Now we can do things like this:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> dx <span class="cn">0.00001</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>((deriv cube) <span class="cn">5</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cn">75.00014999664018</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
+(<span class="kw">define</span> dx <span class="cn">0.00001</span>)
+((deriv cube) <span class="cn">5</span>)
+<span class="cn">75.00014999664018</span></code></pre>
 <h3 id="1.3.4.2" class="anchor">
 <a class="anchor__link link" href="#1.3.4.2" aria-hidden="true">#</a> Abstractions and first-class procedures
 </h3>

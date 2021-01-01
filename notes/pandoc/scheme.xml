@@ -407,7 +407,7 @@
         <keyword attribute="Constant" context="#stay" String="booleans"/>
         <keyword attribute="Macro" context="#stay" String="macros"/>
         <keyword attribute="Function" context="#stay" String="functions"/>
-        <RegExpr attribute="Constant" context="#stay" String="[0-9]++|[0-9]*+\.[0-9]++(e[+-]?[0-9]++)?|[0-9]++e[+-]?[0-9]++"/>
+        <RegExpr attribute="Constant" context="#stay" String="-?+([0-9]++\.?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+|"/>
         <RegExpr attribute="Constant" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=>?^_~-]++"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">

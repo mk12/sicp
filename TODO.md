@@ -13,12 +13,18 @@
     - 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
     - just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
     - see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
-- remove empty `<a>` tags in source listings 
-    - need to stream pandoc output and modify it in docgen
-    - in theory, could be most optimal to write pandoc input in 1 thread and transform its output in another
-    - in pratice, I suspect docgen is so fast that it finishes generation before pandoc even gets a chance to open the output file
-    - timing: docgen takes 10ms on docs/text/highlight.html (slowest as it scans all text.md)
-    - so not worth pipelining this as it will save a few ms at best -- and that's only in the ideal conditions where thread creation + pandoc latency to first byte of output is less than 10ms
+    - then do if code, `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">`
+- reconsider inline code single-word highlighting
++ remove `<span class="sc">»</span>`
++ fix scheme.xml numbers
+    + `++` means this https://stackoverflow.com/a/4489585
++ remove empty `<a>` tags, classes, spans, etc. in source listings 
+    + need to stream pandoc output and modify it in docgen
+    + in theory, could be most optimal to write pandoc input in 1 thread and transform its output in another
+    + in pratice, I suspect docgen is so fast that it finishes generation before pandoc even gets a chance to open the output file
+    + timing: docgen takes 10ms on docs/text/highlight.html (slowest as it scans all text.md)
+    + so not worth pipelining this as it will save a few ms at best -- and that's only in the ideal conditions where thread creation + pandoc latency to first byte of output is less than 10ms
+    + brought 741450B -> 658270B html, 83KB saving!
 x consider if any em should be rem
 + fix spacing between arrows and text
 + decide whether to use article

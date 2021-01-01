@@ -19,9 +19,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -84,10 +81,10 @@
 <li><em>Normal-order</em> languages use <em>lazy evaluation</em> to delay evaluation as long as possible.</li>
 <li>Consider this procedure:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (try a b) (<span class="kw">if</span> <span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b)</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (try a b) (<span class="kw">if</span> <span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b)</code></pre>
 <ul>
-<li>In Scheme, <code class="sourceCode scheme">(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code class="sourceCode scheme">b</code> is never needed.</li>
-<li>In a lazy language, we can implement <code class="sourceCode scheme"><span class="kw">if</span></code> as an ordinary procedure.</li>
+<li>In Scheme, <code>(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
+<li>In a lazy language, we can implement <code><span class="kw">if</span></code> as an ordinary procedure.</li>
 </ul>
 <h2 id="4.2.2" class="anchor">
 <a class="anchor__link link" href="#4.2.2" aria-hidden="true">#</a> <span class="number">4.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%_sec_4.2.2">An Interpreter with Lazy Evaluation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
@@ -120,59 +117,59 @@
 <a class="anchor__link link" href="#4.2.2.1" aria-hidden="true">#</a> Modifying the evaluator
 </h3>
 <ul>
-<li>The main change required is the procedure application logic in <code class="sourceCode scheme"><span class="fu">eval</span></code> and <code class="sourceCode scheme"><span class="fu">apply</span></code>.</li>
-<li>The <code class="sourceCode scheme">application?</code> clause of <code class="sourceCode scheme"><span class="fu">eval</span></code> becomes:</li>
+<li>The main change required is the procedure application logic in <code><span class="fu">eval</span></code> and <code><span class="fu">apply</span></code>.</li>
+<li>The <code>application?</code> clause of <code><span class="fu">eval</span></code> becomes:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>((application? exp)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> (<span class="fu">apply</span> (actual-value (operator exp) env)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        (operands exp)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        env))</span></code></pre></div>
+<pre><code>((application? exp)
+ (<span class="fu">apply</span> (actual-value (operator exp) env)
+        (operands exp)
+        env))</code></pre>
 <ul>
 <li>Whenever we need the actual value of an expression, we force in addition to evaluating:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (actual-value exp env) (force-it (<span class="fu">eval</span> exp env)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (actual-value exp env) (force-it (<span class="fu">eval</span> exp env)))</code></pre>
 <ul>
-<li>We change <code class="sourceCode scheme"><span class="fu">apply</span></code> to take <code class="sourceCode scheme">env</code>, and use <code class="sourceCode scheme">list-of-arg-values</code> and <code class="sourceCode scheme">list-of-delayed-args</code>:</li>
+<li>We change <code><span class="fu">apply</span></code> to take <code>env</code>, and use <code>list-of-arg-values</code> and <code>list-of-delayed-args</code>:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments env)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((primitive-procedure? procedure)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         (apply-primitive-procedure</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>          procedure</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>          (list-of-arg-values arguments env)))  <span class="co">; changed</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        ((compound-procedure? procedure)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         (eval-sequence</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>          (procedure-body procedure)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>          (extend-environment</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>           (procedure-parameters procedure)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>           (list-of-delayed-args arguments env) <span class="co">; changed</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>           (procedure-environment procedure))))</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments env)
+  (<span class="kw">cond</span> ((primitive-procedure? procedure)
+         (apply-primitive-procedure
+          procedure
+          (list-of-arg-values arguments env)))  <span class="co">; changed</span>
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
+          (extend-environment
+           (procedure-parameters procedure)
+           (list-of-delayed-args arguments env) <span class="co">; changed</span>
+           (procedure-environment procedure))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</code></pre>
 <ul>
-<li>We also need to change <code class="sourceCode scheme">eval-if</code> to use <code class="sourceCode scheme">actual-value</code> on the predicate:</li>
+<li>We also need to change <code>eval-if</code> to use <code>actual-value</code> on the predicate:</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (eval-if exp env)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (true? (actual-value (if-predicate exp) env))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">eval</span> (if-consequent exp) env)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">eval</span> (if-alternative exp) env)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (eval-if exp env)
+  (<span class="kw">if</span> (true? (actual-value (if-predicate exp) env))
+      (<span class="fu">eval</span> (if-consequent exp) env)
+      (<span class="fu">eval</span> (if-alternative exp) env)))</code></pre>
 <h3 id="4.2.2.2" class="anchor">
 <a class="anchor__link link" href="#4.2.2.2" aria-hidden="true">#</a> Representing thunks
 </h3>
 <ul>
-<li>To force a thunk, we evaluate it in its environment. We use <code class="sourceCode scheme">actual-value</code> instead of <code class="sourceCode scheme"><span class="fu">eval</span></code> so that it recursively forces if the result is another thunk:</li>
+<li>To force a thunk, we evaluate it in its environment. We use <code>actual-value</code> instead of <code><span class="fu">eval</span></code> so that it recursively forces if the result is another thunk:</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (force-it obj)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (thunk? obj)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      (actual-value (thunk-exp obj) (thunk-env obj))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      obj))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (force-it obj)
+  (<span class="kw">if</span> (thunk? obj)
+      (actual-value (thunk-exp obj) (thunk-env obj))
+      obj))</code></pre>
 <ul>
 <li>We can represent thunks simply by a list containing the expression and environment:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="cn">&#39;thunk</span> exp env))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="cn">&#39;thunk</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (thunk-exp thunk) (<span class="fu">cadr</span> thunk))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (thunk-env thunk) (<span class="fu">caddr</span> thunk))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="cn">&#39;thunk</span> exp env))
+(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="cn">&#39;thunk</span>))
+(<span class="kw">define</span> (thunk-exp thunk) (<span class="fu">cadr</span> thunk))
+(<span class="kw">define</span> (thunk-env thunk) (<span class="fu">caddr</span> thunk))</code></pre>
 <ul>
-<li>To memoize thunks, <code class="sourceCode scheme">force-it</code> becomes a bit more complicated.</li>
+<li>To memoize thunks, <code>force-it</code> becomes a bit more complicated.</li>
 </ul>
 <h2 id="4.2.3" class="anchor">
 <a class="anchor__link link" href="#4.2.3" aria-hidden="true">#</a> <span class="number">4.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%_sec_4.2.3">Streams as Lazy Lists<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
@@ -181,16 +178,16 @@
 <li>Before introducing lazy evaluation, we implemented <a href="../3/5.html#3.5.1">streams as delayed lists</a>.</li>
 <li>We can instead formulate streams as <em>lazy</em> lists. There are two advantages:
 <ol type="1">
-<li>No need for special forms <code class="sourceCode scheme"><span class="kw">delay</span></code> and <code class="sourceCode scheme"><span class="kw">cons-stream</span></code>.</li>
+<li>No need for special forms <code><span class="kw">delay</span></code> and <code><span class="kw">cons-stream</span></code>.</li>
 <li>No need for separate list and stream operations.</li>
 </ol></li>
-<li>All we need to do is make <code class="sourceCode scheme"><span class="fu">cons</span></code> lazy, either by introducing non-strict primitives or by defining <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme"><span class="fu">car</span></code>, and <code class="sourceCode scheme"><span class="fu">cdr</span></code> <a href="../2/1.html#2.1.3">as compound procedures</a>.</li>
+<li>All we need to do is make <code><span class="fu">cons</span></code> lazy, either by introducing non-strict primitives or by defining <code><span class="fu">cons</span></code>, <code><span class="fu">car</span></code>, and <code><span class="fu">cdr</span></code> <a href="../2/1.html#2.1.3">as compound procedures</a>.</li>
 <li>Now we can write code without distinguishing normal lists from infinite ones:</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> ones (<span class="fu">cons</span> <span class="cn">1</span> ones))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (scale-list items factor) (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) items))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> ones (<span class="fu">cons</span> <span class="cn">1</span> ones))
+(<span class="kw">define</span> (scale-list items factor) (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) items))</code></pre>
 <ul>
-<li>These lazy lists are even lazier than our original streams, since the <code class="sourceCode scheme"><span class="fu">car</span></code> is delayed too.</li>
+<li>These lazy lists are even lazier than our original streams, since the <code><span class="fu">car</span></code> is delayed too.</li>
 <li>This also eliminates <a href="../3/5.html#3.5.4">the problems we had earlier</a> around having to explicitly delay and force some arguments when computing integrals.</li>
 </ul>
 </article>

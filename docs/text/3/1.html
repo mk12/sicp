@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -100,108 +97,108 @@
 </h2>
 <ul>
 <li>Let’s model the situation of withdrawing from a bank account.</li>
-<li>The <code class="sourceCode scheme">withdraw</code> procedure should accept an amount of money as an argument and return the balance after the withdrawal.</li>
+<li>The <code>withdraw</code> procedure should accept an amount of money as an argument and return the balance after the withdrawal.</li>
 <li>If you try to withdraw too much, it should return the string “Insufficient funds”.</li>
 <li>Suppose we begin with $100:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">25</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cn">75</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">25</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cn">50</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">60</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cn">&quot;Insufficient funds&quot;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>(withdraw <span class="cn">15</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cn">35</span></span></code></pre></div>
+<pre><code>(withdraw <span class="cn">25</span>)
+<span class="cn">75</span>
+(withdraw <span class="cn">25</span>)
+<span class="cn">50</span>
+(withdraw <span class="cn">60</span>)
+<span class="cn">&quot;Insufficient funds&quot;</span>
+(withdraw <span class="cn">15</span>)
+<span class="cn">35</span></code></pre>
 <ul>
-<li>Evaluating the same combination twice, <code class="sourceCode scheme">(withdraw <span class="cn">25</span>)</code>, returned different values.</li>
+<li>Evaluating the same combination twice, <code>(withdraw <span class="cn">25</span>)</code>, returned different values.</li>
 <li>We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
-<li>To implement <code class="sourceCode scheme">withdraw</code>, we define a variable called <code class="sourceCode scheme">balance</code>:</li>
+<li>To implement <code>withdraw</code>, we define a variable called <code>balance</code>:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> balance <span class="cn">100</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (withdraw amount)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>             balance)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="cn">&quot;Insufficient funds&quot;</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> balance <span class="cn">100</span>)
+(<span class="kw">define</span> (withdraw amount)
+  (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+      (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+             balance)
+      <span class="cn">&quot;Insufficient funds&quot;</span>))</code></pre>
 <ul>
-<li>This uses the <code class="sourceCode scheme"><span class="kw">set!</span></code> special form, whose syntax is <code class="sourceCode scheme">(<span class="kw">set!</span> <span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">new-value</span><span class="sc">»</span>)</code>.</li>
+<li>This uses the <code><span class="kw">set!</span></code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="ss">name</span> <span class="ss">new-value</span>)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
-<li>The expression <code class="sourceCode scheme">(<span class="kw">begin</span> <span class="sc">«</span><span class="ss">exp1</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">exp2</span><span class="sc">»</span> ... <span class="sc">«</span><span class="ss">expk</span><span class="sc">»</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
-<li>We made <code class="sourceCode scheme">balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code class="sourceCode scheme">withdraw</code>, like so:</li>
+<li>The expression <code>(<span class="kw">begin</span> <span class="ss">exp1</span> <span class="ss">exp2</span> ... <span class="ss">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
+<li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> withdraw</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((balance <span class="cn">100</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> (amount)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 balance)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          <span class="cn">&quot;Insufficient funds&quot;</span>))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> withdraw
+  (<span class="kw">let</span> ((balance <span class="cn">100</span>))
+    (<span class="kw">lambda</span> (amount)
+      (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+          (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+                 balance)
+          <span class="cn">&quot;Insufficient funds&quot;</span>))))</code></pre>
 <ul>
 <li>Unfortunately, the substitution model of evaluation is no longer adequate once we have assignment in our procedures.</li>
 <li>For now, we technically have no way to understand how these procedures work. We will develop a new model soon.</li>
 <li>The following procedure creates “withdraw processors”:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (make-withdraw balance)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">&quot;Insufficient funds&quot;</span>)))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>(W1 <span class="cn">50</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cn">50</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>(W2 <span class="cn">70</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cn">30</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>(W2 <span class="cn">40</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cn">&quot;Insufficient funds&quot;</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>(W1 <span class="cn">40</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="cn">10</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (make-withdraw balance)
+  (<span class="kw">lambda</span> (amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>)))
+(<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))
+(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))
+(W1 <span class="cn">50</span>)
+<span class="cn">50</span>
+(W2 <span class="cn">70</span>)
+<span class="cn">30</span>
+(W2 <span class="cn">40</span>)
+<span class="cn">&quot;Insufficient funds&quot;</span>
+(W1 <span class="cn">40</span>)
+<span class="cn">10</span></code></pre>
 <ul>
-<li>Here, <code class="sourceCode scheme">W1</code> and <code class="sourceCode scheme">W2</code> are complement independent objects, each with its own local state variable.</li>
+<li>Here, <code>W1</code> and <code>W2</code> are complement independent objects, each with its own local state variable.</li>
 <li>We can create a “bank-account object” that responds to multiple messages, all operating on the same local state:</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (make-account balance)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (withdraw amount)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>               balance)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">&quot;Insufficient funds&quot;</span>))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (deposit amount)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    balance)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (dispatch m)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  dispatch)</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (make-account balance)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
+    balance)
+  (<span class="kw">define</span> (dispatch m)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
+          ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))
+  dispatch)</code></pre>
 <h2 id="3.1.2" class="anchor">
 <a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a> <span class="number">3.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Introducing assignment “leads us into a thicket of difficult conceptual issues” (305).</li>
 <li>Even so, it gives us a powerful technique for maintaining modular design.</li>
-<li>Consider the procedure <code class="sourceCode scheme">rand</code>. We want it to return an integer chosen at random each time we evaluate <code class="sourceCode scheme">(rand)</code>.</li>
-<li>Suppose we have the procedure <code class="sourceCode scheme">rand-update</code> that takes one argument.
+<li>Consider the procedure <code>rand</code>. We want it to return an integer chosen at random each time we evaluate <code>(rand)</code>.</li>
+<li>Suppose we have the procedure <code>rand-update</code> that takes one argument.
 <ul>
 <li>We first call it with an initial value <span class="math inline">x_1</span>, and it returns an integer <span class="math inline">x_2</span>.</li>
 <li>We call it with <span class="math inline">x_2</span>, and it gives us <span class="math inline">x_3</span>, and so on.</li>
 <li>The sequence of values <span class="math inline">x_1, x_2, \dots, x_n</span> will have the desired statistical properties (random uniform distribution).</li>
 <li>This is a <em>pseudorandom</em> sequence, since each number is a function of the previous one.</li>
 </ul></li>
-<li>We could implement <code class="sourceCode scheme">rand</code> like this:</li>
+<li>We could implement <code>rand</code> like this:</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> rand</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((x random-init))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> ()</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">set!</span> x (rand-update x))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      x)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> rand
+  (<span class="kw">let</span> ((x random-init))
+    (<span class="kw">lambda</span> ()
+      (<span class="kw">set!</span> x (rand-update x))
+      x)))</code></pre>
 <blockquote>
 <p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306–307)</p>
 </blockquote>
 <ul>
 <li>We can use the Monte Carlo method to approximate <span class="math inline">π</span>, knowing that the probability that two randomly chosen integers have 1 as their GCD is <span class="math inline">6/π^2</span>.</li>
-<li>If we had to use <code class="sourceCode scheme">rand-update</code> directly, our Monte Carlo program would “betray some painful breaches of modularity” (308).</li>
+<li>If we had to use <code>rand-update</code> directly, our Monte Carlo program would “betray some painful breaches of modularity” (308).</li>
 </ul>
 <blockquote>
 <p>The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behaviour changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. (309)</p>
@@ -215,16 +212,16 @@
 <li>Programming without the use of assignment, as we have done in the first two chapters, is called <em>functional programming</em>.</li>
 <li>Observe what happens when we try using the substitution model:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (make-simplified-withdraw balance)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (amount)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    balance))</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)) <span class="cn">25</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (make-simplified-withdraw balance)
+  (<span class="kw">lambda</span> (amount)
+    (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+    balance))
+((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>)
+((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)
+(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)) <span class="cn">25</span></code></pre>
 <ul>
-<li>Adhering to the substitution model, we set <code class="sourceCode scheme">balance</code> to 5 and then return 25 as the value of the expression.</li>
-<li>This is wrong. We shouldn’t have substituted 25 for <code class="sourceCode scheme">balance</code> everywhere, because the assignment changed it.</li>
+<li>Adhering to the substitution model, we set <code>balance</code> to 5 and then return 25 as the value of the expression.</li>
+<li>This is wrong. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>
 <li>Before, a variable was simply a name for a value.</li>
 <li>Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.</li>
 </ul>
@@ -234,11 +231,11 @@
 <ul>
 <li>By introducing change into our computational models, many previously straightforward notions become problematic.</li>
 <li>Consider the concept of two things being “the same.”</li>
-<li>If we have <code class="sourceCode scheme">(make-withdraw <span class="cn">25</span>)</code> and <code class="sourceCode scheme">(make-withdraw <span class="cn">25</span>)</code>, are they the same? No, because they can have different local state.</li>
-<li>A language that supports “equals can be substituted for equals” is <em>referentially transparent</em>. <code class="sourceCode scheme"><span class="kw">set!</span></code> violates this.</li>
+<li>If we have <code>(make-withdraw <span class="cn">25</span>)</code> and <code>(make-withdraw <span class="cn">25</span>)</code>, are they the same? No, because they can have different local state.</li>
+<li>A language that supports “equals can be substituted for equals” is <em>referentially transparent</em>. <code><span class="kw">set!</span></code> violates this.</li>
 <li>Reasoning about programs that use assignment is much more difficult for this reason.</li>
 <li>The concepts of “sameness” and “change” chase each other around in circles; it is hard to formally define them.</li>
-<li>If we have <code class="sourceCode scheme">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))</code>, there is a big difference between defining <code class="sourceCode scheme">paul-acc</code> in the same way and defining it with <code class="sourceCode scheme">(<span class="kw">define</span> paul-acc peter-acc)</code>.</li>
+<li>If we have <code>(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))</code>, there is a big difference between defining <code>paul-acc</code> in the same way and defining it with <code>(<span class="kw">define</span> paul-acc peter-acc)</code>.</li>
 <li>In the first case, they have distinct accounts. In the second, both refer to the same account—this is called <em>aliasing</em>.</li>
 <li>As long as we never modify objects, we can regard them to be precisely the totality of their pieces.</li>
 <li>This is no longer valid in the presence of change, because “identity” is something different from the pieces.</li>

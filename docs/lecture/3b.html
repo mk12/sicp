@@ -19,9 +19,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -100,7 +97,7 @@
 <li>The differentiation procedure that takes an <em>expression</em> as an argument is different from the one that takes a function.</li>
 <li>You can’t open up a function. You can only get answers from it.</li>
 <li>An expression is an object representing the algebraic expression that defines a function.</li>
-<li>We can write the procedure <code class="sourceCode scheme">deriv</code> using a lot of wishful thinking.</li>
+<li>We can write the procedure <code>deriv</code> using a lot of wishful thinking.</li>
 </ul>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Expression representation
@@ -108,7 +105,7 @@
 <ul>
 <li>To represent sums, products, quotients, etc., why not use the same language we’re writing the program in?</li>
 <li>We can just use list structure.</li>
-<li>There are more built-in predicates we haven’t seen yet: <code class="sourceCode scheme">atom?</code> and <code class="sourceCode scheme"><span class="fu">eq?</span></code>.</li>
+<li>There are more built-in predicates we haven’t seen yet: <code>atom?</code> and <code><span class="fu">eq?</span></code>.</li>
 </ul>
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Quotation
@@ -117,7 +114,7 @@
 <li>We are also introducing <em>quotation</em>. The words of English are ambiguous: <em>say your name</em> is different from <em>say “your name”</em>.</li>
 <li>The notation in Lisp is to precede the expression with a single quotation mark.</li>
 <li>Quotation makes a language more complex because we can no longer substitute equals for equals (see Bertrand Russell’s “On Denoting”).</li>
-<li>The names <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code> have survived (originally the address register and the decrement register) because we can do things like <code class="sourceCode scheme"><span class="fu">cadddr</span></code> and <code class="sourceCode scheme"><span class="fu">cadar</span></code>.</li>
+<li>The names <code><span class="fu">car</span></code> and <code><span class="fu">cdr</span></code> have survived (originally the address register and the decrement register) because we can do things like <code><span class="fu">cadddr</span></code> and <code><span class="fu">cadar</span></code>.</li>
 </ul>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
@@ -126,7 +123,7 @@
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Simplifying expressions
 </h3>
 <ul>
-<li>The expressions we get from the <code class="sourceCode scheme">deriv</code> procedure are ugly.</li>
+<li>The expressions we get from the <code>deriv</code> procedure are ugly.</li>
 <li>Nothing is simplified, and it is hard to read.</li>
 </ul>
 <blockquote>

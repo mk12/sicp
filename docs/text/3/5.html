@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -101,13 +98,13 @@
 </h2>
 <ul>
 <li>If we represent streams as lists, we get elegance at the price of severe inefficiency (time <em>and</em> space).</li>
-<li>Consider adding all the primes in an interval. Using <code class="sourceCode scheme"><span class="fu">filter</span></code> and <code class="sourceCode scheme">reduce</code>, we waste a lot of space storing lists.</li>
+<li>Consider adding all the primes in an interval. Using <code><span class="fu">filter</span></code> and <code>reduce</code>, we waste a lot of space storing lists.</li>
 <li>Streams are lazy lists. They are the clever idea of using sequence manipulations without incurring the cost.</li>
 <li>We only construct an item of the stream when it is needed.</li>
-<li>We have <code class="sourceCode scheme"><span class="kw">cons-stream</span></code>, <code class="sourceCode scheme">stream-car</code>, <code class="sourceCode scheme">stream-cdr</code>, <code class="sourceCode scheme">the-empty-stream</code>, and <code class="sourceCode scheme">stream-null?</code>.</li>
-<li>The <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> procedure must not evaluate its second argument until it is accessed by <code class="sourceCode scheme">stream-cdr</code>.</li>
-<li>To implement streams, we will use <em>promises</em>. <code class="sourceCode scheme">(<span class="kw">delay</span> <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code> does not evaluate the argument but returns a promise. <code class="sourceCode scheme">(<span class="fu">force</span> <span class="sc">«</span><span class="ss">promise</span><span class="sc">»</span>)</code> evaluates a promise and returns the value.</li>
-<li><code class="sourceCode scheme">(<span class="kw">cons-stream</span> a b)</code> is a special form equivalent to <code class="sourceCode scheme">(<span class="fu">cons</span> a (<span class="kw">delay</span> b))</code>.</li>
+<li>We have <code><span class="kw">cons-stream</span></code>, <code>stream-car</code>, <code>stream-cdr</code>, <code>the-empty-stream</code>, and <code>stream-null?</code>.</li>
+<li>The <code><span class="kw">cons-stream</span></code> procedure must not evaluate its second argument until it is accessed by <code>stream-cdr</code>.</li>
+<li>To implement streams, we will use <em>promises</em>. <code>(<span class="kw">delay</span> <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code> does not evaluate the argument but returns a promise. <code>(<span class="fu">force</span> <span class="ss">promise</span>)</code> evaluates a promise and returns the value.</li>
+<li><code>(<span class="kw">cons-stream</span> a b)</code> is a special form equivalent to <code>(<span class="fu">cons</span> a (<span class="kw">delay</span> b))</code>.</li>
 </ul>
 <h3 id="3.5.1.1" class="anchor">
 <a class="anchor__link link" href="#3.5.1.1" aria-hidden="true">#</a> The stream implementation in action
@@ -120,9 +117,9 @@
 </h3>
 <ul>
 <li>Promises are quite straightforward to implement.</li>
-<li><code class="sourceCode scheme">(<span class="kw">delay</span> <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code> is syntactic sugar for <code class="sourceCode scheme">(<span class="kw">lambda</span> () <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code>.</li>
-<li><code class="sourceCode scheme"><span class="fu">force</span></code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
-<li>The promise stored in the <code class="sourceCode scheme"><span class="fu">cdr</span></code> of the stream is also known as a <em>thunk</em>.</li>
+<li><code>(<span class="kw">delay</span> <span class="sc">«</span><span class="ss">exp</span><span class="sc">»</span>)</code> is syntactic sugar for <code>(<span class="kw">lambda</span> () <span class="ss">exp</span>)</code>.</li>
+<li><code><span class="fu">force</span></code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
+<li>The promise stored in the <code><span class="fu">cdr</span></code> of the stream is also known as a <em>thunk</em>.</li>
 </ul>
 <h2 id="3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
@@ -131,8 +128,8 @@
 <li>With lazy sequences, we can manipulate infinitely long streams!</li>
 <li>We can define Fibonacci sequence explicitly with a generator:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> fibs (fibgen <span class="cn">0</span> <span class="cn">1</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
+(<span class="kw">define</span> fibs (fibgen <span class="cn">0</span> <span class="cn">1</span>))</code></pre>
 <ul>
 <li>As long as we don’t try to display the whole sequence, we will never get stuck in an infinite loop.</li>
 <li>We can also create an infinite stream of primes.</li>
@@ -143,12 +140,12 @@
 <ul>
 <li>Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> fibs</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cons-stream</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>   <span class="cn">0</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">cons-stream</span> <span class="cn">1</span> (stream-map <span class="fu">+</span> fibs (stream-cdr fibs)))))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> pot</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cons-stream</span> <span class="cn">1</span> (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x <span class="cn">2</span>)) pot)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> fibs
+  (<span class="kw">cons-stream</span>
+   <span class="cn">0</span>
+   (<span class="kw">cons-stream</span> <span class="cn">1</span> (stream-map <span class="fu">+</span> fibs (stream-cdr fibs)))))
+(<span class="kw">define</span> pot
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x <span class="cn">2</span>)) pot)))</code></pre>
 <ul>
 <li>This implicit technique is known as <em>corecursion</em>. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.</li>
 </ul>
@@ -166,7 +163,7 @@
 <ul>
 <li>Before, we made iterative processes by updating state variables in recursive calls.</li>
 <li>To compute the square root, we improved a guess until the values didn’t change very much.</li>
-<li>We can make a stream that converges on the square root of <code class="sourceCode scheme">x</code>, and a stream to approximate <span class="math inline">π</span>.</li>
+<li>We can make a stream that converges on the square root of <code>x</code>, and a stream to approximate <span class="math inline">π</span>.</li>
 <li>One neat thing we can do with these streams is use sequence accelerators, such as Euler’s transform.</li>
 </ul>
 <h3 id="3.5.3.2" class="anchor">
@@ -176,13 +173,13 @@
 <li>Previously, we handled traditional nested loops as processes defined on sequences of pairs.</li>
 <li>We can find all pairs <span class="math inline">(i,j)</span> with <span class="math inline">i ≤ j</span> such that <span class="math inline">i + j</span> is prime like this:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(stream-filter</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> (<span class="kw">lambda</span> (pair) (prime? (<span class="fu">+</span> (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> int-pairs)</span></code></pre></div>
+<pre><code>(stream-filter
+ (<span class="kw">lambda</span> (pair) (prime? (<span class="fu">+</span> (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))))
+ int-pairs)</code></pre>
 <ul>
 <li>We need some way of producing a stream of all integer pairs.</li>
 <li>More generally, we can combined two streams to get a two-dimensional grid of pairs, and we want to reduce this to a one-dimensional stream.</li>
-<li>One way to do this is to use <code class="sourceCode scheme">interleave</code> in the recursive definition, in order to handle infinite streams.</li>
+<li>One way to do this is to use <code>interleave</code> in the recursive definition, in order to handle infinite streams.</li>
 </ul>
 <h3 id="3.5.3.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> Streams as signals
@@ -191,27 +188,27 @@
 <li>We can use streams to model signal-processing systems.</li>
 <li>For example, taking the integral of a signal:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (integral integrand initial-value dt)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> int</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cons-stream</span> initial-value</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                 (add-streams (scale-stream integrand dt)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                              int)))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  int)</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (integral integrand initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span> initial-value
+                 (add-streams (scale-stream integrand dt)
+                              int)))
+  int)</code></pre>
 <h2 id="3.5.4" class="anchor">
 <a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>The use of <code class="sourceCode scheme"><span class="kw">delay</span></code> in <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> is crucial to defining streams with feedback loops.</li>
-<li>However, there are cases where we need further, explicit uses of <code class="sourceCode scheme"><span class="kw">delay</span></code>.</li>
+<li>The use of <code><span class="kw">delay</span></code> in <code><span class="kw">cons-stream</span></code> is crucial to defining streams with feedback loops.</li>
+<li>However, there are cases where we need further, explicit uses of <code><span class="kw">delay</span></code>.</li>
 <li>For example, solving the differential equation <span class="math inline">dy/dt = f(y)</span> where <span class="math inline">f</span> is a given function.</li>
-<li>The problem here is that <code class="sourceCode scheme">y</code> and <code class="sourceCode scheme">dy</code> will depend on each other.</li>
-<li>To solve this, we need to change <code class="sourceCode scheme">integral</code> to take a delayed integrand.</li>
+<li>The problem here is that <code>y</code> and <code>dy</code> will depend on each other.</li>
+<li>To solve this, we need to change <code>integral</code> to take a delayed integrand.</li>
 </ul>
 <h3 id="3.5.4.1" class="anchor">
 <a class="anchor__link link" href="#3.5.4.1" aria-hidden="true">#</a> Normal-order evaluation
 </h3>
 <ul>
-<li>Explicit use of <code class="sourceCode scheme"><span class="kw">delay</span></code> and <code class="sourceCode scheme"><span class="fu">force</span></code> is powerful, but makes our programs more complex.</li>
+<li>Explicit use of <code><span class="kw">delay</span></code> and <code><span class="fu">force</span></code> is powerful, but makes our programs more complex.</li>
 <li>It creates two classes of procedures: normal, and ones that take delayed arguments.</li>
 <li>(This is similar to the sync vs. async divide in modern programming languages.)</li>
 <li>This forces us to define separate classes of higher-order procedures, unless we make everything delayed, equivalent to normal-order evaluation (like Haskell).</li>

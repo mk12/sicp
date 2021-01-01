@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -100,10 +97,10 @@
 <a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>We want <code class="sourceCode scheme">add</code> to work for primitive numbers, rational numbers, and complex numbers.</li>
+<li>We want <code>add</code> to work for primitive numbers, rational numbers, and complex numbers.</li>
 <li>We will attach a type tag to each kind of number.</li>
 <li>Just as we did in our first data-directed example, we will install a “package” for each kind of data.</li>
-<li>For complex numbers we have two levels of tagging: a <code class="sourceCode scheme"><span class="cn">&#39;complex</span></code> tag on top of the <code class="sourceCode scheme"><span class="cn">&#39;rectangular</span></code> or <code class="sourceCode scheme"><span class="cn">&#39;polar</span></code> tag.</li>
+<li>For complex numbers we have two levels of tagging: a <code><span class="cn">&#39;complex</span></code> tag on top of the <code><span class="cn">&#39;rectangular</span></code> or <code><span class="cn">&#39;polar</span></code> tag.</li>
 <li>The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.</li>
 </ul>
 <h2 id="2.5.2" class="anchor">
@@ -124,11 +121,11 @@
 <li>We can make all operations work on combinations of Scheme numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.</li>
 <li>Here is a typical coercion procedure:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (scheme-number-&gt;complex n)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (make-complex-from-real-imag (contents n) <span class="cn">0</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (scheme-number-&gt;complex n)
+  (make-complex-from-real-imag (contents n) <span class="cn">0</span>))</code></pre>
 <ul>
 <li>In addition to the generic procedure table, we would need a special coercion table.</li>
-<li>We can modify <code class="sourceCode scheme">apply-generic</code> to try coercion if there is no specific procedure available for the given types.</li>
+<li>We can modify <code>apply-generic</code> to try coercion if there is no specific procedure available for the given types.</li>
 <li>The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to write specific operation procedures once per type.</li>
 <li>It gets more complicated: what if both types can be converted to a third type? What if A can be converted to B and then from B to C? We have a graph of relations among the types.</li>
 </ul>
@@ -186,7 +183,7 @@
 <a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a> Representing term lists
 </h3>
 <ul>
-<li>Our procedures <code class="sourceCode scheme">add-terms</code> and <code class="sourceCode scheme">mul-terms</code> always access term lists sequentially from highest to lowest order.</li>
+<li>Our procedures <code>add-terms</code> and <code>mul-terms</code> always access term lists sequentially from highest to lowest order.</li>
 <li>So, we need some kind of ordered list representation.</li>
 <li>We can choose between <em>dense</em> and <em>sparse</em> representations.</li>
 <li>Dense term lists, where most coefficients are nonzero, are best represented by simple lists.</li>
@@ -206,7 +203,7 @@
 </h3>
 <ul>
 <li>Rational functions are “fractions” with polynomial numerators and denominators.</li>
-<li>We can use our old rational package, but we need to change a few things (like using generic <code class="sourceCode scheme">add</code>, <code class="sourceCode scheme">mul</code>, etc.).</li>
+<li>We can use our old rational package, but we need to change a few things (like using generic <code>add</code>, <code>mul</code>, etc.).</li>
 <li>We can reduce rational functions as long as we can compute the GCD of two polynomials (which in turn uses the remainder operation on two polynomials).</li>
 <li>Problem: we end up with a GCD polynomial that has fractional coefficients. Solution: multiply the first argument by an <em>integerizing factor</em>.</li>
 <li>We can use our GCD procedure to reduce rational functions to lowest terms:

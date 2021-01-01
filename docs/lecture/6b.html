@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -93,21 +90,21 @@
 <ul>
 <li>We’ve been looking at stream processing, an on-demand method of computation.</li>
 <li>We don’t compute elements until we’ve asked for them. When do we “ask” for them?</li>
-<li>Example: <code class="sourceCode scheme">nth-stream</code> forces the first <code class="sourceCode scheme">n</code> elements of a stream.</li>
+<li>Example: <code>nth-stream</code> forces the first <code>n</code> elements of a stream.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (nth-stream n s)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      (head s)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (nth-stream (<span class="fu">-1+</span> n) (tail s))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (nth-stream n s)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      (head s)
+      (nth-stream (<span class="fu">-1+</span> n) (tail s))))</code></pre>
 <h3 id="1.2" class="anchor">
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Infinite streams
 </h3>
 <ul>
 <li>How long can a stream be? It can be <em>infinite</em>!</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (integers-from n)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cons-stream</span> n (integers-from (<span class="fu">1+</span> n))))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> integers (integers-from <span class="cn">1</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (integers-from n)
+  (<span class="kw">cons-stream</span> n (integers-from (<span class="fu">1+</span> n))))
+(<span class="kw">define</span> integers (integers-from <span class="cn">1</span>))</code></pre>
 <ul>
 <li>Is this really all the integers, or is it just cleverly arranged so that whenever you look for an integer you find it there? This is a sort of philosophical question.</li>
 </ul>
@@ -117,14 +114,14 @@
 <ul>
 <li>Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you’re left with is all the primes.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (sieve s)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cons-stream</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   (head s)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   (sieve (<span class="fu">filter</span> (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (divisible? x (head s))))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                  (tail s)))))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> primes (sieve (integers-from <span class="cn">2</span>)))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(nth-stream <span class="cn">20</span> primes)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">73</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (sieve s)
+  (<span class="kw">cons-stream</span>
+   (head s)
+   (sieve (<span class="fu">filter</span> (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (divisible? x (head s))))
+                  (tail s)))))
+(<span class="kw">define</span> primes (sieve (integers-from <span class="cn">2</span>)))
+(nth-stream <span class="cn">20</span> primes)
+<span class="cn">73</span></code></pre>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
@@ -135,36 +132,36 @@
 <li>We’ve so far seen procedures that recursively create streams.</li>
 <li>There’s another way. But first we need some additional procedures:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (add-streams s1 s2)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cond</span> ((empty-stream? s1) s2)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        ((empty-stream? s2) s1)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">else</span> (<span class="kw">cons-stream</span> (<span class="fu">+</span> (head s1) (head s2))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                           (add-streams (tail s1) (tail s2))))))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (scale-stream c s)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  (map-stream (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x c)) s))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (add-streams s1 s2)
+  (<span class="kw">cond</span> ((empty-stream? s1) s2)
+        ((empty-stream? s2) s1)
+        (<span class="kw">else</span> (<span class="kw">cons-stream</span> (<span class="fu">+</span> (head s1) (head s2))
+                           (add-streams (tail s1) (tail s2))))))
+(<span class="kw">define</span> (scale-stream c s)
+  (map-stream (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x c)) s))</code></pre>
 <ul>
 <li>Now, we can define streams all at once:</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> integers (add-streams integers ones))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
+(<span class="kw">define</span> integers (add-streams integers ones))</code></pre>
 <h3 id="2.2" class="anchor">
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> More examples
 </h3>
 <ul>
 <li>We can calculate the integral <span class="math inline">\int s\,dt</span> the same way you would in signal processing:</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (integral s initial-value dt)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> int</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cons-stream</span> initial-value</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                 (add-streams (scale-stream dt s) int)))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  int)</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (integral s initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span> initial-value
+                 (add-streams (scale-stream dt s) int)))
+  int)</code></pre>
 <ul>
 <li>Another example, the Fibonacci numbers:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> fibs</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">cons-stream</span> <span class="cn">0</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">cons-stream</span> <span class="cn">1</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                            (add-streams fibs (tail fibs)))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> fibs
+  (<span class="kw">cons-stream</span> <span class="cn">0</span>
+               (<span class="kw">cons-stream</span> <span class="cn">1</span>
+                            (add-streams fibs (tail fibs)))))</code></pre>
 <h3 id="2.3" class="anchor">
 <a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Explicit <code>delay</code>
 </h3>
@@ -172,20 +169,20 @@
 <li>Let’s say we want to solve <span class="math inline">y&#39;=y^2,\;y(0)=1</span> using the step <span class="math inline">dt=0.001</span>.</li>
 <li>We’d like to write a stream program to solve this:</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> y (integral dy <span class="cn">1</span> <span class="cn">0.001</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> dy (map-stream square y))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> y (integral dy <span class="cn">1</span> <span class="cn">0.001</span>))
+(<span class="kw">define</span> dy (map-stream square y))</code></pre>
 <ul>
-<li>This doesn’t work because <code class="sourceCode scheme">y</code> and <code class="sourceCode scheme">dy</code> each need the other defined first.</li>
-<li>We can fix it the same way <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> allows self-referencing definitions: by introducing another <code class="sourceCode scheme"><span class="kw">delay</span></code>, so that we can get the first value of the integral stream without knowing what stream it’s integrating.</li>
+<li>This doesn’t work because <code>y</code> and <code>dy</code> each need the other defined first.</li>
+<li>We can fix it the same way <code><span class="kw">cons-stream</span></code> allows self-referencing definitions: by introducing another <code><span class="kw">delay</span></code>, so that we can get the first value of the integral stream without knowing what stream it’s integrating.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (integral delayed-s initial-value dt)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> int</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cons-stream</span> initial-value</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">let</span> ((s (<span class="fu">force</span> delayed-s)))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                   (add-streams (scale-stream dt s) int))))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  int)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) <span class="cn">1</span> <span class="cn">0.001</span>))</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> dy (map-stream square y))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (integral delayed-s initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span> initial-value
+                 (<span class="kw">let</span> ((s (<span class="fu">force</span> delayed-s)))
+                   (add-streams (scale-stream dt s) int))))
+  int)
+(<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) <span class="cn">1</span> <span class="cn">0.001</span>))
+(<span class="kw">define</span> dy (map-stream square y))</code></pre>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
 </h2>
@@ -194,10 +191,10 @@
 </h3>
 <ul>
 <li>We’ve been divorcing time in the program from time in the computer.</li>
-<li>Sometimes, to really take advantage of this method, you have to write explicit <code class="sourceCode scheme"><span class="kw">delay</span></code> s. But in larger programs it can be very difficult to see where you need them.</li>
+<li>Sometimes, to really take advantage of this method, you have to write explicit <code><span class="kw">delay</span></code> s. But in larger programs it can be very difficult to see where you need them.</li>
 <li>Is there a way around this? Yes! By making <em>all</em> arguments to <em>every</em> procedure delayed.</li>
 <li>This is <em>normal-order</em> evaluation, as opposed to <em>applicative-order</em> which we’ve been using.</li>
-<li>We wouldn’t need <code class="sourceCode scheme"><span class="kw">cons-stream</span></code> because it would be the same as <code class="sourceCode scheme"><span class="fu">cons</span></code>.</li>
+<li>We wouldn’t need <code><span class="kw">cons-stream</span></code> because it would be the same as <code><span class="fu">cons</span></code>.</li>
 <li>But there’s a price. The language becomes more elegant, but less expressive. For example, we could no longer write iterative procedures.</li>
 <li>You get these “dragging tails” of thunks that haven’t been evaluated, taking up 3 MB (!).</li>
 <li>A more striking issue: normal-order evaluation and side effects just don’t mix.</li>
@@ -213,7 +210,7 @@
 <li>With bank accounts, instead of using local state and message passing, we can have the bank account process a stream of transaction requests, and emit a stream of balances.</li>
 <li>Can you do everything without assignment? No, there seem to be places where purely functional programming languages break down.</li>
 <li>For example, how do we model a joint bank account with multiple users? We’d have to merge the request streams somehow.</li>
-<li>The conflict between objects/state/time and <code class="sourceCode scheme"><span class="kw">delay</span></code>/streams/functional programming might have very little to do with CS, and be more about different ways of viewing the world.</li>
+<li>The conflict between objects/state/time and <code><span class="kw">delay</span></code>/streams/functional programming might have very little to do with CS, and be more about different ways of viewing the world.</li>
 </ul>
 </article>
 </main>

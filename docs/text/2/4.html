@@ -19,9 +19,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -87,8 +84,8 @@
 <ul>
 <li>This system will perform arithmetic operations on complex numbers represented in rectangular form <em>or</em> polar form.</li>
 <li>Different representations are appropriate for different operations.</li>
-<li>We have four selectors: <code class="sourceCode scheme">real-part</code>, <code class="sourceCode scheme">imag-part</code>, <code class="sourceCode scheme">magnitude</code>, and <code class="sourceCode scheme">angle</code>.</li>
-<li>We have two constructors: <code class="sourceCode scheme">make-from-real-img</code> and <code class="sourceCode scheme">make-from-mag-ang</code>.</li>
+<li>We have four selectors: <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>.</li>
+<li>We have two constructors: <code>make-from-real-img</code> and <code>make-from-mag-ang</code>.</li>
 </ul>
 <h2 id="2.4.2" class="anchor">
 <a class="anchor__link link" href="#2.4.2" aria-hidden="true">#</a> <span class="number">2.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%_sec_2.4.2">Tagged Data<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
@@ -118,9 +115,9 @@
 <li>We imagine a table with operations on one axis and possible types on the other axis.</li>
 <li>Before, we used case analysis to perform explicit dispatch.</li>
 <li>With DDP, we use a single procedure that looks up the operation name and the argument type in the table.</li>
-<li>We assume we have procedures <code class="sourceCode scheme">put</code> and <code class="sourceCode scheme">get</code>.</li>
-<li><code class="sourceCode scheme">(put op type item)</code> installs <code class="sourceCode scheme">item</code> in the table.</li>
-<li><code class="sourceCode scheme">(get op type)</code> retrieves the item.</li>
+<li>We assume we have procedures <code>put</code> and <code>get</code>.</li>
+<li><code>(put op type item)</code> installs <code>item</code> in the table.</li>
+<li><code>(get op type)</code> retrieves the item.</li>
 </ul>
 <h3 id="2.4.3.1" class="anchor">
 <a class="anchor__link link" href="#2.4.3.1" aria-hidden="true">#</a> Message passing

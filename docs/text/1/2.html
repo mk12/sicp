@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -104,25 +101,25 @@
 <li>The factorial of <span class="math inline">N</span> is defined as the product of the integers on the interval <span class="math inline">[1,N]</span>.</li>
 <li>The naive <em>recursive</em> implementation creates a curved shape:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(factorial <span class="cn">4</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">*</span> <span class="cn">4</span> (factorial <span class="cn">3</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (factorial <span class="cn">2</span>)))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (factorial <span class="cn">1</span>))))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>)))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>(<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cn">24</span></span></code></pre></div>
+<pre><code>(factorial <span class="cn">4</span>)
+(<span class="fu">*</span> <span class="cn">4</span> (factorial <span class="cn">3</span>))
+(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (factorial <span class="cn">2</span>)))
+(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (factorial <span class="cn">1</span>))))
+(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>)))
+(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>))
+(<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>)
+<span class="cn">24</span></code></pre>
 <ul>
 <li>The <em>iterative</em> implementation maintains a running product and multiplies the numbers from 1 to <span class="math inline">N</span> to it.</li>
 <li>This creates a shape with a straight edge:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(factorial <span class="cn">4</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(fact-iter <span class="cn">1</span> <span class="cn">1</span> <span class="cn">4</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(fact-iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(fact-iter <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(fact-iter <span class="cn">6</span> <span class="cn">4</span> <span class="cn">4</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(fact-iter <span class="cn">24</span> <span class="cn">5</span> <span class="cn">4</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cn">24</span></span></code></pre></div>
+<pre><code>(factorial <span class="cn">4</span>)
+(fact-iter <span class="cn">1</span> <span class="cn">1</span> <span class="cn">4</span>)
+(fact-iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span>)
+(fact-iter <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(fact-iter <span class="cn">6</span> <span class="cn">4</span> <span class="cn">4</span>)
+(fact-iter <span class="cn">24</span> <span class="cn">5</span> <span class="cn">4</span>)
+<span class="cn">24</span></code></pre>
 <ul>
 <li>Both compute the same mathematical function, but the computational processes evolve very differently.</li>
 <li>The first one is a <em>linear recursive process</em>. The chain of deferred operations causes an expansion (as more operations are added) and a contraction (as the operations are performed).
@@ -200,14 +197,14 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>The GCD of integers <span class="math inline">a</span> and <span class="math inline">b</span> is the largest integer that divides both <span class="math inline">a</span> and <span class="math inline">b</span> with no remainder. For example, <span class="math inline">\gcd(16,28) = 4</span>.</li>
 <li>An efficient algorithm uses <span class="math inline">\gcd(a,b) = \gcd(b,a\bmod b)</span>.</li>
-<li>For example, we can reduce <code class="sourceCode scheme">(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)</code> as follows:</li>
+<li>For example, we can reduce <code>(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)</code> as follows:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">gcd</span> <span class="cn">40</span> <span class="cn">6</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="fu">gcd</span> <span class="cn">6</span> <span class="cn">4</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">gcd</span> <span class="cn">4</span> <span class="cn">2</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">gcd</span> <span class="cn">2</span> <span class="cn">0</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cn">2</span></span></code></pre></div>
+<pre><code>(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)
+(<span class="fu">gcd</span> <span class="cn">40</span> <span class="cn">6</span>)
+(<span class="fu">gcd</span> <span class="cn">6</span> <span class="cn">4</span>)
+(<span class="fu">gcd</span> <span class="cn">4</span> <span class="cn">2</span>)
+(<span class="fu">gcd</span> <span class="cn">2</span> <span class="cn">0</span>)
+<span class="cn">2</span></code></pre>
 <ul>
 <li>This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.</li>
 <li>This is called <em>Euclid’s Algorithm</em>.</li>

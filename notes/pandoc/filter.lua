@@ -7,8 +7,9 @@ local highlight_bwd = false
 
 -- Reads metatdata set on the command line by docgen.
 function read_meta(meta)
-    vars.id = meta.id:gsub("^docs/", "", 1):gsub("%.html$", "", 1)
-    vars.root = vars.id:gsub("[^/]+", ".."):gsub("..$", "", 1):gsub("^/$", "", 1)
+    vars.id = meta.id
+    -- Relative path to the root of the website.
+    vars.root = meta.id:gsub("[^/]+", ".."):gsub("..$", "", 1)
 end
 
 -- Styles and links blockquotes marked with the "::: highlight" div.
@@ -19,6 +20,7 @@ function highlight_div(el)
     local aria, href, content
     if #el.identifier > 0 then
         highlight_fwd = true
+        aria = "view quote in notes"
         href = el.identifier
             :gsub("^(%d)%-", "%1/index-", 1):gsub("%.", "/", 1)
             :gsub("^(.*)-(q%d+)$", "%1.html#%2", 1)
@@ -26,11 +28,11 @@ function highlight_div(el)
             'Notes <svg alt="" class="circle-arrow" width="18" height="18">'
             .. '<use xlink:href="#circle-right"/></svg>'
         )
-        aria = "view quote in notes"
     else
         highlight_bwd = true
         highlight_idx = highlight_idx + 1
         el.identifier = "q" .. tostring(highlight_idx)
+        aria = "view quote in highlights page"
         local frag = vars.id
             :gsub("^.-/", "", 1):gsub("/index$", "", 1):gsub("/", ".", 1)
             .. "-" .. el.identifier
@@ -39,7 +41,6 @@ function highlight_div(el)
             '<svg alt="" class="circle-arrow" width="18" height="18">'
             .. '<use xlink:href="#circle-left"/></svg> Highlights'
         )
-        aria = "view quote in highlights page"
     end
     local link = (
         '<a class="highlight__link link" href="' .. href .. '"'
@@ -51,12 +52,11 @@ end
 
 -- Writes metadata variables used in template.html.
 function write_meta(meta)
-    meta.id = vars.id
     meta[meta.id:gsub("/.*$", "")] = true
     meta.root = vars.root
     meta.pagenav = meta.up
     meta.arrows = meta.up
-    meta.external = not vars.id:find("^[%a/]*index$")
+    meta.external = meta.up and meta.left
     meta.circle_left = highlight_bwd
     meta.circle_right = highlight_fwd
     meta.svg_defs = (
@@ -65,28 +65,57 @@ function write_meta(meta)
     return meta
 end
 
+-- Returns the relative path from src to dst.
+function relpath(src, dst)
+    if src == dst then
+        return ""
+    end
+    -- Find the longest common prefix ending in a slash.
+    local i = 1
+    local j = 0
+    while i < #src and i < #dst do
+        if src:sub(i, i) ~= dst:sub(i, i) then
+            break
+        end
+        if src:sub(i, i) == "/" then
+            j = i
+        end
+        i = i + 1
+    end
+    -- Take the differing suffix of dst, and prepend "../" once for every slash
+    -- in the differing suffix of src.
+    j = j + 1
+    local rel = dst:sub(j)
+    while j < #src do
+        if src:sub(j, j) == "/" then
+            rel = "../" .. rel
+        end
+        j = j + 1
+    end
+    return rel
+end
+
 -- Converts links like [](:1.2.3), [](1a), and [](?1.23) -- textbook sections,
 -- lectures, and exercises respectively. If the link content [] is empty, sets
--- it automatically.
+-- it automatically to § 1.2.3, Lecture 1A, Exercise 1.23, etc.
 function internal_link(el)
-    -- Determine the destination path.
     local sigil = el.target:sub(1, 1)
     local num = el.target:sub(2)
-    local title, dest
+    local title, target
     local frag = ""
     if sigil == ":" then
         local lecture, rest = num:match("^(%d+[ab])(.*)$")
         if lecture then
             title = "Lecture&nbps;" .. lecture:upper()
-            dest = "lecture/" .. lecture .. ".html"
+            target = "lecture/" .. lecture .. ".html"
             frag = rest:gsub("%.", "#", 1)
         else
             title = "§&nbsp;" .. num
             if #num == 1 then
-                dest = "text/" .. num .. "/index.html"
+                target = "text/" .. num .. "/index.html"
             else
                 chap, sec = num:match("^(%d)%.(%d)")
-                dest = "text/" .. chap .. "/" .. sec .. ".html"
+                target = "text/" .. chap .. "/" .. sec .. ".html"
                 if #num > 3 then
                     frag = "#" .. num
                 end
@@ -98,33 +127,10 @@ function internal_link(el)
     else
         return
     end
-    -- Compute the relative path from src to dest.
-    local src = vars.id .. ".html"
-    local rel
-    if src == dest then
-        rel = frag or "#"
-    else
-        local i = 1
-        local j = 0
-        while i < #src and i < #dest do
-            if src:sub(i, i) ~= dest:sub(i, i) then
-                break
-            end
-            if src:sub(i, i) == "/" then
-                j = i
-            end
-            i = i + 1
-        end
-        rel = dest:sub(j + 1) .. frag
-        while i < #src do
-            if src:sub(i, i) == "/" then
-                rel = "../" .. rel
-            end
-            i = i + 1
-        end
+    el.target = relpath(vars.id .. ".html", target) .. frag
+    if el.target == "" then
+        el.target = "#"
     end
-    -- Update the link.
-    el.target = rel
     if #el.content == 0 then
         el.content = {pandoc.RawInline("html", title)}
     end

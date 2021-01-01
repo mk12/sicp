@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -111,12 +108,12 @@
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Assignment and Time
 </h3>
 <ul>
-<li>To do assignment, we use <code class="sourceCode scheme">(<span class="kw">set!</span> &lt;variable&gt; &lt;value&gt;)</code>.</li>
+<li>To do assignment, we use <code>(<span class="kw">set!</span> &lt;variable&gt; &lt;value&gt;)</code>.</li>
 <li>By convention, we suffix a bang to the names of procedures that do assignment-like things.</li>
-<li><code class="sourceCode scheme"><span class="kw">set!</span></code> is like <code class="sourceCode scheme"><span class="kw">define</span></code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
+<li><code><span class="kw">set!</span></code> is like <code><span class="kw">define</span></code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
 <li>When we add assignment, we also have to consider <em>time</em>.</li>
 <li>The assignment produces a moment in time: a difference between a <em>before</em> and an <em>after</em> in time.</li>
-<li>After the moment, <code class="sourceCode scheme">&lt;variable&gt;</code> has the value <code class="sourceCode scheme">&lt;value&gt;</code>, independent of what value it had before.</li>
+<li>After the moment, <code>&lt;variable&gt;</code> has the value <code>&lt;value&gt;</code>, independent of what value it had before.</li>
 <li>So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.</li>
 <li>This isn’t the case when we have assignment. The same expression can lead to different answers because it depends on time.</li>
 <li>The substitution model completely breaks down. It is static.</li>
@@ -137,21 +134,21 @@
 <ul>
 <li>Here’s how we implemented factorial functionally:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (fact n)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">define</span> (iter p i)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">&gt;</span> i n) m (iter (<span class="fu">*</span> i p) (<span class="fu">+</span> i <span class="cn">1</span>))))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  (iter <span class="cn">1</span> <span class="cn">1</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (fact n)
+  (<span class="kw">define</span> (iter p i)
+    (<span class="kw">if</span> (<span class="fu">&gt;</span> i n) m (iter (<span class="fu">*</span> i p) (<span class="fu">+</span> i <span class="cn">1</span>))))
+  (iter <span class="cn">1</span> <span class="cn">1</span>))</code></pre>
 <ul>
 <li>We could instead write it with assignments:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (fact n)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((p <span class="cn">1</span>) (i <span class="cn">1</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">define</span> (loop)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">cond</span> ((<span class="fu">&gt;</span> i n) p)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>            (<span class="kw">else</span> (<span class="kw">set!</span> p (<span class="fu">*</span> i p))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                  (<span class="kw">set!</span> i (<span class="fu">+</span> i <span class="cn">1</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                  (loop))))</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    (loop)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (fact n)
+  (<span class="kw">let</span> ((p <span class="cn">1</span>) (i <span class="cn">1</span>))
+    (<span class="kw">define</span> (loop)
+      (<span class="kw">cond</span> ((<span class="fu">&gt;</span> i n) p)
+            (<span class="kw">else</span> (<span class="kw">set!</span> p (<span class="fu">*</span> i p))
+                  (<span class="kw">set!</span> i (<span class="fu">+</span> i <span class="cn">1</span>))
+                  (loop))))
+    (loop)))</code></pre>
 <ul>
 <li>There are ways of making errors in the second program that simply didn’t exist when we couldn’t do assignment.</li>
 <li>If we change the ordering of the assignments, the procedure calculates the wrong value.</li>
@@ -171,11 +168,11 @@
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Free and bound variables
 </h3>
 <ul>
-<li>A variable <code class="sourceCode scheme">v</code> is <em>bound</em> in an expression <code class="sourceCode scheme">E</code> if the meaning of <code class="sourceCode scheme">E</code> is unchanged by the uniform replacement of a variable <code class="sourceCode scheme">w</code> not occurring in <code class="sourceCode scheme">E</code>, for every occurrence of <code class="sourceCode scheme">v</code> in <code class="sourceCode scheme">E</code>.</li>
+<li>A variable <code>v</code> is <em>bound</em> in an expression <code>E</code> if the meaning of <code>E</code> is unchanged by the uniform replacement of a variable <code>w</code> not occurring in <code>E</code>, for every occurrence of <code>v</code> in <code>E</code>.</li>
 <li>We use bound variables all the time.</li>
-<li>The <code class="sourceCode scheme"><span class="kw">lambda</span></code> is the essential thing that binds variables.</li>
+<li>The <code><span class="kw">lambda</span></code> is the essential thing that binds variables.</li>
 <li>If a variable isn’t bound, we say it is a <em>free</em> variable.</li>
-<li>If <code class="sourceCode scheme">x</code> is a bound variable in <code class="sourceCode scheme">E</code> then there is λ-expression where it is bound.</li>
+<li>If <code>x</code> is a bound variable in <code>E</code> then there is λ-expression where it is bound.</li>
 <li>The list of formal parameters is called the <em>bound variable list</em>. The λ-expression <em>binds</em> the variables <em>declared</em> in its bound variable list.</li>
 <li>The parts of the expression where a variable has a value defined by the λ-expression binding it is the <em>scope</em> of the variable.</li>
 </ul>
@@ -216,25 +213,25 @@
 <li>We wouldn’t have done this if there wasn’t a good reason.</li>
 <li>Consider the following program:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> make-counter</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (n)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">lambda</span> ()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">set!</span> n (inc n))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      n)))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> c1 (make-counter <span class="cn">0</span>))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> c2 (make-counter <span class="cn">10</span>))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>(c1)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cn">1</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>(c1)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="cn">2</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>(c2)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="cn">11</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>(c2)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cn">12</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> make-counter
+  (<span class="kw">lambda</span> (n)
+    (<span class="kw">lambda</span> ()
+      (<span class="kw">set!</span> n (inc n))
+      n)))
+(<span class="kw">define</span> c1 (make-counter <span class="cn">0</span>))
+(<span class="kw">define</span> c2 (make-counter <span class="cn">10</span>))
+(c1)
+<span class="cn">1</span>
+(c1)
+<span class="cn">2</span>
+(c2)
+<span class="cn">11</span>
+(c2)
+<span class="cn">12</span></code></pre>
 <ul>
 <li>These two counters are independent and have their own state.</li>
-<li>The environment of <code class="sourceCode scheme">c1</code> points to some frame with <code class="sourceCode scheme">n</code>. That of <code class="sourceCode scheme">c2</code> points to a different frame with a different <code class="sourceCode scheme">n</code>. The parent of both frames is the global environment.</li>
-<li>The <em>global environment</em> is the topmost environment. Its frame contains <code class="sourceCode scheme"><span class="fu">car</span></code>, <code class="sourceCode scheme"><span class="fu">+</span></code>, <code class="sourceCode scheme"><span class="fu">*</span></code>, etc., and all top-level definitions.</li>
+<li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
+<li>The <em>global environment</em> is the topmost environment. Its frame contains <code><span class="fu">car</span></code>, <code><span class="fu">+</span></code>, <code><span class="fu">*</span></code>, etc., and all top-level definitions.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Objects

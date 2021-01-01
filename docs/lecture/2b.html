@@ -19,9 +19,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -89,7 +86,7 @@
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Layered system
 </h3>
 <ul>
-<li>When we wrote the square root procedure, we used layers of abstraction. Someone else could have written <code class="sourceCode scheme">good-enough?</code>.</li>
+<li>When we wrote the square root procedure, we used layers of abstraction. Someone else could have written <code>good-enough?</code>.</li>
 </ul>
 <blockquote>
 <p>The crucial idea is that when we’re building things, we divorce the task of building things from the task implementing the parts.</p>
@@ -108,17 +105,17 @@
 <li>We already know how to express the arithmetic operators for fractions in math.</li>
 <li>Combining two fractions with addition, subtraction, multiplication, or division produces another fraction.</li>
 <li>The computations are easy—but how to we represent a rational number? They are not primitive numbers.</li>
-<li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code class="sourceCode scheme">make-rat</code>, <code class="sourceCode scheme">numer</code>, and <code class="sourceCode scheme">denom</code>.</li>
+<li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
 <li>We can implement a procedure for adding rationals like so:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (+rat x y)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (make-rat</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>   (<span class="fu">+</span> (<span class="fu">*</span> (numer x) (denom y))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">*</span> (numer y) (denom x)))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>   (<span class="fu">*</span> (denom x) (denom y))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (+rat x y)
+  (make-rat
+   (<span class="fu">+</span> (<span class="fu">*</span> (numer x) (denom y))
+      (<span class="fu">*</span> (numer y) (denom x)))
+   (<span class="fu">*</span> (denom x) (denom y))))</code></pre>
 <ul>
-<li>The procedure <code class="sourceCode scheme">make-rat</code> is called a <em>constructor</em>.</li>
-<li>The procedures <code class="sourceCode scheme">numer</code> and <code class="sourceCode scheme">denom</code> are called <em>selectors</em>.</li>
+<li>The procedure <code>make-rat</code> is called a <em>constructor</em>.</li>
+<li>The procedures <code>numer</code> and <code>denom</code> are called <em>selectors</em>.</li>
 </ul>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Why do we need compound data?
@@ -139,11 +136,11 @@
 <li>How do we actually make one of these “clouds”?</li>
 <li>We need a kind of glue to connect things.</li>
 <li>Lisp provides this: it is called <em>list structure</em>.</li>
-<li>The primitive <code class="sourceCode scheme"><span class="fu">cons</span></code> allows us to construct <em>pairs</em>.</li>
-<li><code class="sourceCode scheme"><span class="fu">cons</span></code> is obviously the <strong>cons</strong>tructor.</li>
-<li><code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code> are the selectors for pairs.</li>
-<li>For any <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">y</code>, <code class="sourceCode scheme">(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code class="sourceCode scheme">x</code>.</li>
-<li>For any <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">y</code>, <code class="sourceCode scheme">(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code class="sourceCode scheme">y</code>.</li>
+<li>The primitive <code><span class="fu">cons</span></code> allows us to construct <em>pairs</em>.</li>
+<li><code><span class="fu">cons</span></code> is obviously the <strong>cons</strong>tructor.</li>
+<li><code><span class="fu">car</span></code> and <code><span class="fu">cdr</span></code> are the selectors for pairs.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code>.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
 <li>We can represent conses with two boxes side by side with an arrow coming from each.</li>
 <li>This is called <em>box-and-pointer notation</em>.</li>
 </ul>
@@ -152,12 +149,12 @@
 </h3>
 <ul>
 <li>When we use the system to add a half and a quarter, it gives us six eights instead of three quarters. This isn’t what we want.</li>
-<li>This isn’t the problem of the addition procedure; the <code class="sourceCode scheme">make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
+<li>This isn’t the problem of the addition procedure; the <code>make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
 <li>We can use the greatest common divisor to fix this:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (make-rat n d)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">cons</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (make-rat n d)
+  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
+    (<span class="fu">cons</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))</code></pre>
 <ul>
 <li>Now our fractions will always be reduced to lowest terms.</li>
 </ul>
@@ -167,7 +164,7 @@
 <ul>
 <li>The important thing with our rational arithmetic system is the abstraction layer.</li>
 <li>We have the rational arithmetic operators on one side and the pair constructor and selectors on the other.</li>
-<li>The procedures <code class="sourceCode scheme">make-rat</code>, <code class="sourceCode scheme">numer</code>, and <code class="sourceCode scheme">denom</code> are an abstraction barrier between the two.</li>
+<li>The procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code> are an abstraction barrier between the two.</li>
 <li>We always want to separate <em>use</em> from <em>representation</em>.</li>
 <li>This methodology is called <em>data abstraction</em>.</li>
 </ul>
@@ -176,11 +173,11 @@
 </h3>
 <ul>
 <li>We didn’t have to do it this way.</li>
-<li>We could have used <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme"><span class="fu">car</span></code>, and <code class="sourceCode scheme"><span class="fu">cdr</span></code> directly in the rational arithmetic procedures.</li>
+<li>We could have used <code><span class="fu">cons</span></code>, <code><span class="fu">car</span></code>, and <code><span class="fu">cdr</span></code> directly in the rational arithmetic procedures.</li>
 <li>Is this talk of data abstraction just self-righteous BS?</li>
 <li>Maybe it would be marginally more efficient to skip the data abstraction!</li>
 <li>It goes back to naming. If you have the name of the spirit, you have control over it.</li>
-<li>One advantage: you might want to have alternative representations. If we use <code class="sourceCode scheme"><span class="fu">cons</span></code> directly, we would have to reduce to lowest terms every time we make a rational number.</li>
+<li>One advantage: you might want to have alternative representations. If we use <code><span class="fu">cons</span></code> directly, we would have to reduce to lowest terms every time we make a rational number.</li>
 <li>With the data abstraction, we could even move the lowest terms stuff to the selectors—no other change in the code required.</li>
 <li>Data abstraction lets us postpone decisions.</li>
 </ul>
@@ -217,11 +214,11 @@
 </h3>
 <ul>
 <li>We could also use pairs to represent points on a plane.</li>
-<li>The constructor and accessors could use <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme"><span class="fu">car</span></code>, and <code class="sourceCode scheme"><span class="fu">cdr</span></code>, just like in the rational number system.</li>
+<li>The constructor and accessors could use <code><span class="fu">cons</span></code>, <code><span class="fu">car</span></code>, and <code><span class="fu">cdr</span></code>, just like in the rational number system.</li>
 <li>We could use points (or vectors) as a building block to make line segments. This would be a multi-layered system.</li>
 <li>Segments, vectors, and pairs are all separated.</li>
 <li>Without data abstraction, the procedure for calculating the length of a line segment is very hard to read; worse, it locks you into decisions about representation.</li>
-<li><code class="sourceCode scheme"><span class="fu">cons</span></code> can combine anything, not just numbers. With line segments, we combine two pairs.</li>
+<li><code><span class="fu">cons</span></code> can combine anything, not just numbers. With line segments, we combine two pairs.</li>
 <li><em>Closure</em> means we can make pairs of pairs, not just pairs of numbers. We say that the means of combinations closes over the things that it makes.</li>
 </ul>
 <h2 id="4" class="anchor">
@@ -235,7 +232,7 @@
 <li>At the beginning, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).</li>
 <li>We had defined a rational number representation in terms of <em>abstract data</em>.</li>
 <li>There’s a way of saying whether three procedures are suitable as a basis for rational number representation.</li>
-<li>We had a contract that the procedures have to fulfill: given a rational number <code class="sourceCode scheme">x</code> created with <code class="sourceCode scheme">(make-rat n d)</code>, we must have <code class="sourceCode scheme">(<span class="fu">=</span> (<span class="fu">/</span> (numer x) (denom x)) (<span class="fu">/</span> n d))</code>.</li>
+<li>We had a contract that the procedures have to fulfill: given a rational number <code>x</code> created with <code>(make-rat n d)</code>, we must have <code>(<span class="fu">=</span> (<span class="fu">/</span> (numer x) (denom x)) (<span class="fu">/</span> n d))</code>.</li>
 </ul>
 <h3 id="4.2" class="anchor">
 <a class="anchor__link link" href="#4.2" aria-hidden="true">#</a> Implementation of pairs
@@ -243,19 +240,19 @@
 <ul>
 <li>Rational numbers <em>really</em> are just this contract, this axiom.</li>
 <li>They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.</li>
-<li>Pairs are the same: they happen to satisfy the contract that <code class="sourceCode scheme">(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code class="sourceCode scheme">y</code>.</li>
+<li>Pairs are the same: they happen to satisfy the contract that <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code> and <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
 <li>We can implement pairs with procedures. We don’t even need special primitives—all we need are lambdas:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cons</span> a b)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (pick)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">cond</span> ((<span class="fu">=</span> pick <span class="cn">1</span>) a)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>          ((<span class="fu">=</span> pick <span class="cn">2</span>) b))))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">car</span> x) (x <span class="cn">1</span>))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cdr</span> x) (x <span class="cn">2</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (<span class="fu">cons</span> a b)
+  (<span class="kw">lambda</span> (pick)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> pick <span class="cn">1</span>) a)
+          ((<span class="fu">=</span> pick <span class="cn">2</span>) b))))
+(<span class="kw">define</span> (<span class="fu">car</span> x) (x <span class="cn">1</span>))
+(<span class="kw">define</span> (<span class="fu">cdr</span> x) (x <span class="cn">2</span>))</code></pre>
 <ul>
 <li>All we need to do is show that this satisfies the axiom.</li>
 <li>We can do that with the substitution model. It works.</li>
-<li>You couldn’t tell if <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme"><span class="fu">car</span></code>, and <code class="sourceCode scheme"><span class="fu">cdr</span></code> were implemented in this way or not.</li>
+<li>You couldn’t tell if <code><span class="fu">cons</span></code>, <code><span class="fu">car</span></code>, and <code><span class="fu">cdr</span></code> were implemented in this way or not.</li>
 </ul>
 <h3 id="4.3" class="anchor">
 <a class="anchor__link link" href="#4.3" aria-hidden="true">#</a> Conclusion

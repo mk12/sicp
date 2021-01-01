@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -100,26 +97,26 @@
 </h2>
 <ul>
 <li>We want to add, subtract, multiply, divide, and test equality with our rational numbers.</li>
-<li>We assume we have <code class="sourceCode scheme">(make-rat <span class="sc">«</span><span class="ss">n</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">d</span><span class="sc">»</span>)</code>, <code class="sourceCode scheme">(number <span class="sc">«</span><span class="ss">x</span><span class="sc">»</span>)</code>, and <code class="sourceCode scheme">(denom <span class="sc">«</span><span class="ss">x</span><span class="sc">»</span>)</code> available as the constructor and selectors.</li>
+<li>We assume we have <code>(make-rat <span class="sc">«</span><span class="ss">n</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">d</span><span class="sc">»</span>)</code>, <code>(number <span class="sc">«</span><span class="ss">x</span><span class="sc">»</span>)</code>, and <code>(denom <span class="ss">x</span>)</code> available as the constructor and selectors.</li>
 <li>This is wishful thinking, and it is a good technique.</li>
-<li>A <em>pair</em> is a concrete structure that we create with <code class="sourceCode scheme"><span class="fu">cons</span></code>.</li>
-<li>We extract the parts of the pair with <code class="sourceCode scheme"><span class="fu">car</span></code> and <code class="sourceCode scheme"><span class="fu">cdr</span></code>.</li>
+<li>A <em>pair</em> is a concrete structure that we create with <code><span class="fu">cons</span></code>.</li>
+<li>We extract the parts of the pair with <code><span class="fu">car</span></code> and <code><span class="fu">cdr</span></code>.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> <span class="cn">2</span>))</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">car</span> x)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cn">1</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">cdr</span> x)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cn">2</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> y (<span class="fu">cons</span> <span class="cn">3</span> <span class="cn">4</span>))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> z (<span class="fu">cons</span> x y))</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>(<span class="fu">car</span> (<span class="fu">car</span> z))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cn">1</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>(<span class="fu">car</span> (<span class="fu">cdr</span> z))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cn">3</span></span></code></pre></div>
+<pre><code>(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> <span class="cn">2</span>))
+(<span class="fu">car</span> x)
+<span class="cn">1</span>
+(<span class="fu">cdr</span> x)
+<span class="cn">2</span>
+(<span class="kw">define</span> y (<span class="fu">cons</span> <span class="cn">3</span> <span class="cn">4</span>))
+(<span class="kw">define</span> z (<span class="fu">cons</span> x y))
+(<span class="fu">car</span> (<span class="fu">car</span> z))
+<span class="cn">1</span>
+(<span class="fu">car</span> (<span class="fu">cdr</span> z))
+<span class="cn">3</span></code></pre>
 <ul>
 <li>This is all the glue we need to implement all sorts of complex data structures.</li>
 <li>Data objects constructed from pairs are <em>list-structured</em> data.</li>
-<li>To ensure that our rational numbers are always in lowest terms, we need <code class="sourceCode scheme">make-rat</code> to divide the numerator and the denominator by their greatest common divisor (GCD).</li>
+<li>To ensure that our rational numbers are always in lowest terms, we need <code>make-rat</code> to divide the numerator and the denominator by their greatest common divisor (GCD).</li>
 </ul>
 <h2 id="2.1.2" class="anchor">
 <a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a> <span class="number">2.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%_sec_2.1.2">Abstractions Barriers<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
@@ -141,19 +138,19 @@
 <li>Data is defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation.</li>
 <li>For rationals, we have the following definition:
 <ol type="1">
-<li>We can construct a rational <code class="sourceCode scheme">x</code> with <code class="sourceCode scheme">(make-rat n d)</code>.</li>
-<li>We can select the numerator with <code class="sourceCode scheme">(numer x)</code>.</li>
-<li>We can select the denominator with <code class="sourceCode scheme">(denom x)</code>.</li>
-<li>For all values of <code class="sourceCode scheme">x</code>, <code class="sourceCode scheme">(<span class="fu">/</span> (numer x) (denom x))</code> must equal <span class="math inline">n/d</span>.</li>
+<li>We can construct a rational <code>x</code> with <code>(make-rat n d)</code>.</li>
+<li>We can select the numerator with <code>(numer x)</code>.</li>
+<li>We can select the denominator with <code>(denom x)</code>.</li>
+<li>For all values of <code>x</code>, <code>(<span class="fu">/</span> (numer x) (denom x))</code> must equal <span class="math inline">n/d</span>.</li>
 </ol></li>
-<li>For pairs, it is even simpler: we need three operations, which we will call <code class="sourceCode scheme"><span class="fu">cons</span></code>, <code class="sourceCode scheme"><span class="fu">car</span></code>, and <code class="sourceCode scheme"><span class="fu">cdr</span></code>, such that if <code class="sourceCode scheme">z</code> is <code class="sourceCode scheme">(<span class="fu">cons</span> x y)</code>, then <code class="sourceCode scheme">(<span class="fu">car</span> z)</code> is <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">(<span class="fu">cdr</span> z)</code> is <code class="sourceCode scheme">y</code>.</li>
+<li>For pairs, it is even simpler: we need three operations, which we will call <code><span class="fu">cons</span></code>, <code><span class="fu">car</span></code>, and <code><span class="fu">cdr</span></code>, such that if <code>z</code> is <code>(<span class="fu">cons</span> x y)</code>, then <code>(<span class="fu">car</span> z)</code> is <code>x</code> and <code>(<span class="fu">cdr</span> z)</code> is <code>y</code>.</li>
 <li>Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cons</span> x y)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (m)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="fu">=</span> m <span class="cn">0</span>) x y)))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">car</span> z) (z <span class="cn">0</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cdr</span> z) (z <span class="cn">1</span>))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">lambda</span> (m)
+    (<span class="kw">if</span> (<span class="fu">=</span> m <span class="cn">0</span>) x y)))
+(<span class="kw">define</span> (<span class="fu">car</span> z) (z <span class="cn">0</span>))
+(<span class="kw">define</span> (<span class="fu">cdr</span> z) (z <span class="cn">1</span>))</code></pre>
 <ul>
 <li>This doesn’t look like <em>data</em>, but it works.</li>
 <li>This is how you implement pairs in the λ-calculus.</li>

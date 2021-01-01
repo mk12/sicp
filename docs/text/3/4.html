@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -104,8 +101,8 @@
 <ul>
 <li>On the surface, time is straightforward: it is an ordering.</li>
 <li>Two events either occur in one order, or the other, or simultaneously.</li>
-<li>Consider <code class="sourceCode scheme">(<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</code>. There are three steps: accessing the value of <code class="sourceCode scheme">balance</code>, computing the new balance, and setting <code class="sourceCode scheme">balance</code> to this value.</li>
-<li>Two such expressions executed concurrently on the same <code class="sourceCode scheme">balance</code> variable could have their three steps interleaved.</li>
+<li>Consider <code>(<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))</code>. There are three steps: accessing the value of <code>balance</code>, computing the new balance, and setting <code>balance</code> to this value.</li>
+<li>Two such expressions executed concurrently on the same <code>balance</code> variable could have their three steps interleaved.</li>
 <li>The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.</li>
 </ul>
 <div id="q1" class="highlight">
@@ -118,7 +115,7 @@
 <a class="anchor__link link" href="#3.4.1.1" aria-hidden="true">#</a> Correct behavior of concurrent programs
 </h3>
 <ul>
-<li>We already know we have to be careful about order with <code class="sourceCode scheme"><span class="kw">set!</span></code>.</li>
+<li>We already know we have to be careful about order with <code><span class="kw">set!</span></code>.</li>
 <li>With concurrent programs we must be especially careful.</li>
 <li>A very stringent restriction to ensure correctness: disallow changing more than one state variable at a time.</li>
 <li>A less stringent restriction: to ensure that the system produces the same result as if the processes had run sequentially in some order (we don’t specify a particular order).</li>
@@ -138,16 +135,16 @@
 <ul>
 <li>Serialization groups procedures into sets such and prevents multiple procedures in the same set from executing concurrently.</li>
 <li>We can use this to control access to shared variables.</li>
-<li>Before, assignments based on a state variables current value were problematic. We could solve this with the set {<code class="sourceCode scheme">get-value</code>, <code class="sourceCode scheme">set-value!</code>, and <code class="sourceCode scheme">swap-value!</code>} where the latter is defined like so:</li>
+<li>Before, assignments based on a state variables current value were problematic. We could solve this with the set {<code>get-value</code>, <code>set-value!</code>, and <code>swap-value!</code>} where the latter is defined like so:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (swap-value! f)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (set-value! (f (get-value))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (swap-value! f)
+  (set-value! (f (get-value))))</code></pre>
 <h3 id="3.4.2.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2.2" aria-hidden="true">#</a> Serializers in Scheme
 </h3>
 <ul>
-<li>Suppose we have a procedure <code class="sourceCode scheme">parallel-execute</code> that takes a variable number of arguments that are procedures of no arguments, and executes them all concurrently.</li>
-<li>We construct <em>serializers</em> with <code class="sourceCode scheme">(make-serializer)</code>.</li>
+<li>Suppose we have a procedure <code>parallel-execute</code> that takes a variable number of arguments that are procedures of no arguments, and executes them all concurrently.</li>
+<li>We construct <em>serializers</em> with <code>(make-serializer)</code>.</li>
 <li>A serializer takes a procedure as its argument and returns a serialized procedure that behaves like the original.</li>
 <li>Calls to the same serializer return procedures in the same set.</li>
 </ul>
@@ -159,14 +156,14 @@
 <li>Things get much more difficult with multiple shared resources.</li>
 <li>Suppose we want to swap the balances in two bank accounts:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (exchange acc1 acc2)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="cn">&#39;balance</span>) (acc2 <span class="cn">&#39;balance</span>))))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    ((acc1 <span class="cn">&#39;withdraw</span>) diff)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ((acc2 <span class="cn">&#39;deposit</span>) diff)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (exchange acc1 acc2)
+  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="cn">&#39;balance</span>) (acc2 <span class="cn">&#39;balance</span>))))
+    ((acc1 <span class="cn">&#39;withdraw</span>) diff)
+    ((acc2 <span class="cn">&#39;deposit</span>) diff)))</code></pre>
 <ul>
 <li>Serializing deposits and withdrawals themselves is not enough to ensure correctness.</li>
 <li>The exchange comprises four individually serialized steps, and these may interleave with a concurrent process.</li>
-<li>One solution is to expose the serializer from <code class="sourceCode scheme">make-account</code>, and use that to serialize the entire exchanging procedure.</li>
+<li>One solution is to expose the serializer from <code>make-account</code>, and use that to serialize the entire exchanging procedure.</li>
 <li>We would have to manually serialize deposits, but this would give us the flexibility to serialize the exchanging procedure.</li>
 </ul>
 <h3 id="3.4.2.4" class="anchor">
@@ -177,10 +174,10 @@
 <li>A mutex can be <em>acquired</em> and it can be <em>released</em>.</li>
 <li>Once acquired, no other acquire operations can proceed until the mutex is released.</li>
 <li>Each serializer has an associated mutex.</li>
-<li>A serialized procedure (created with <code class="sourceCode scheme">(s proc)</code> where <code class="sourceCode scheme">s</code> is a serializer) does the following when it is run:
+<li>A serialized procedure (created with <code>(s proc)</code> where <code>s</code> is a serializer) does the following when it is run:
 <ul>
 <li>acquire the mutex,</li>
-<li>run the procedure <code class="sourceCode scheme">proc</code>,</li>
+<li>run the procedure <code>proc</code>,</li>
 <li>release the mutex.</li>
 </ul></li>
 <li>The mutex is a mutable object, represented by a <em>cell</em> (a one-element list). It holds a boolean value, indicating whether or not it is currently locked.</li>
@@ -194,7 +191,7 @@
 <li>Even with a proper implementation of mutexes and seralizers, we still have a problem with the account exchanging procedure.</li>
 <li>We serialize the whole procedure with both accounts so that an account may only participate in one exchange at a time.</li>
 <li>There are two mutexes, so it is possible for something to happen in between acquiring the first and the second.</li>
-<li>If we exchange <code class="sourceCode scheme">a1</code> with <code class="sourceCode scheme">a2</code> and concurrently do the reverse exchange, it is possible for the first process to lock <code class="sourceCode scheme">a1</code> and the second process to lock <code class="sourceCode scheme">a2</code>.</li>
+<li>If we exchange <code>a1</code> with <code>a2</code> and concurrently do the reverse exchange, it is possible for the first process to lock <code>a1</code> and the second process to lock <code>a2</code>.</li>
 <li>Now both need to lock the other, but they can’t. This situation is called <em>deadlock</em>.</li>
 <li>In this case, we can fix the problem by locking accounts in a particular order based on a unique identifier.</li>
 <li>In some cases, it is not possible to avoid deadlock, and we simply have to “back out” and try again.</li>

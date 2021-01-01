@@ -35,9 +35,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
       <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
@@ -112,7 +109,7 @@
 <a class="anchor__link link" href="#1.1.2" aria-hidden="true">#</a> <span class="number">1.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%_sec_1.1.2">Naming and the Environment<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>Scheme names things with the <code class="sourceCode scheme"><span class="kw">define</span></code>. This is the simplest means of abstraction.</li>
+<li>Scheme names things with the <code><span class="kw">define</span></code>. This is the simplest means of abstraction.</li>
 <li>The name-value pairs are stored in an <em>environment</em>.</li>
 </ul>
 <h2 id="1.1.3" class="anchor">
@@ -135,7 +132,7 @@
 <li>Names evaluate to the values associated with them in the environment.</li>
 </ol></li>
 <li>Rule 2 is a special case of rule 3 if we consider the arithmetic operators to be names in the environment.</li>
-<li>Evaluating <code class="sourceCode scheme">(<span class="kw">define</span> x <span class="cn">3</span>)</code> does not apply <code class="sourceCode scheme"><span class="kw">define</span></code> to two arguments; this is not a combination.</li>
+<li>Evaluating <code>(<span class="kw">define</span> x <span class="cn">3</span>)</code> does not apply <code><span class="kw">define</span></code> to two arguments; this is not a combination.</li>
 <li>Exceptions such as these are <em>special forms</em>. Each one has its own evaluation rule.</li>
 </ul>
 <div id="q1" class="highlight">
@@ -152,9 +149,9 @@ by Alan Perlis
 </h2>
 <ul>
 <li>Procedure definitions are very powerful for abstraction.</li>
-<li>A squaring procedure: <code class="sourceCode scheme">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code>.</li>
+<li>A squaring procedure: <code>(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code>.</li>
 <li>This is a compound procedure given the name <em>square</em>.</li>
-<li>The general form of a procedure definition is <code class="sourceCode scheme">(<span class="kw">define</span> (<span class="sc">«</span><span class="ss">name</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">formal-parameters</span><span class="sc">»</span>) <span class="sc">«</span><span class="ss">body</span><span class="sc">»</span>)</code>.</li>
+<li>The general form of a procedure definition is <code>(<span class="kw">define</span> (<span class="ss">name</span> <span class="ss">formal-parameters</span>) <span class="ss">body</span>)</code>.</li>
 <li>If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.</li>
 </ul>
 <h2 id="1.1.5" class="anchor">
@@ -165,12 +162,12 @@ by Alan Perlis
 <p>To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.</p>
 </blockquote>
 <p>An example of procedure application:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(f <span class="cn">5</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>(sum-of-squares <span class="cn">6</span> <span class="cn">10</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cn">136</span></span></code></pre></div>
+<pre><code>(f <span class="cn">5</span>)
+(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+(sum-of-squares <span class="cn">6</span> <span class="cn">10</span>)
+(<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
+(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="cn">136</span></code></pre>
 <h3 id="1.1.5.1" class="anchor">
 <a class="anchor__link link" href="#1.1.5.1" aria-hidden="true">#</a> Applicative order versus normal order
 </h3>
@@ -179,13 +176,13 @@ by Alan Perlis
 <li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
 </ul>
 <p>An example of normal order procedure application:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(f <span class="cn">5</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cn">136</span></span></code></pre></div>
+<pre><code>(f <span class="cn">5</span>)
+(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+(<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
+(<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
+(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="cn">136</span></code></pre>
 <ul>
 <li>In this example, normal order causes a few combinations to be evaluated multiple times.</li>
 <li>Applicative: evaluate the arguments and then apply.</li>
@@ -196,12 +193,12 @@ by Alan Perlis
 </h2>
 <ul>
 <li>To make more useful procedures, we need to be able to make tests and perform different operations accordingly.</li>
-<li>We do <em>case analysis</em> in Scheme using <code class="sourceCode scheme"><span class="kw">cond</span></code>.</li>
+<li>We do <em>case analysis</em> in Scheme using <code><span class="kw">cond</span></code>.</li>
 <li>Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.</li>
 <li>A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.</li>
-<li>The symbol <code class="sourceCode scheme"><span class="kw">else</span></code> can be used as the last clause—it will always evaluate to true.</li>
-<li>The <code class="sourceCode scheme"><span class="kw">if</span></code> conditional can be used when there are two cases.</li>
-<li>Logical values can be combined with <code class="sourceCode scheme"><span class="kw">and</span></code>, <code class="sourceCode scheme"><span class="kw">or</span></code>, and <code class="sourceCode scheme"><span class="fu">not</span></code>. The first two are special forms, not procedures.</li>
+<li>The symbol <code><span class="kw">else</span></code> can be used as the last clause—it will always evaluate to true.</li>
+<li>The <code><span class="kw">if</span></code> conditional can be used when there are two cases.</li>
+<li>Logical values can be combined with <code><span class="kw">and</span></code>, <code><span class="kw">or</span></code>, and <code><span class="fu">not</span></code>. The first two are special forms, not procedures.</li>
 </ul>
 <h2 id="1.1.7" class="anchor">
 <a class="anchor__link link" href="#1.1.7" aria-hidden="true">#</a> <span class="number">1.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%_sec_1.1.7">Example: Square Roots by Newton’s Method<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>

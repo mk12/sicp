@@ -70,8 +70,10 @@ struct PandocOpts {
     const char *input;
     // Path to the output file.
     const char *output;
-    // Path to the ultimate destination file. Usually output is /dev/stdout
-    const char *final_output;
+    // Destination path. Usually output is "/dev/stdout" so that docgen can do
+    // further post-processing, while dest is the actual HTML path. It is only
+    // used for construct the -M id=... parameter; the file is not opened.
+    const char *dest;
     // Contents of <title>...</title>.
     const char *title;
     // Links to up/prev/next page. If any are set, up must be set.
@@ -100,7 +102,9 @@ static bool pandoc(const struct PandocOpts opts) {
     // Note: We don't need to free memory allocated by concat because it will
     // all disappear when execvp replaces the process image.
     argv[i++] = "-M";
-    argv[i++] = concat("id=", opts.final_output);
+    const char *id_arg = concat("id=", strchr(opts.dest, '/') + 1);
+    *strrchr(id_arg, '.') = '\0';
+    argv[i++] = id_arg;
     argv[i++] = "-M";
     const int title_idx = i;
     argv[i++] = concat("title=", opts.title);
@@ -284,14 +288,46 @@ static bool wait_pandoc(struct PandocProc *proc) {
     return success;
 }
 
-// Post-processes HTML, removing unwanted tags in code blocks (there is no
-// option to prevent Pandoc from producing these).
+// Post-processes HTML, removing unwanted tags and classes in inline code and
+// code blocks (there is no option to prevent Pandoc from producing these).
 static void postprocess_html(FILE *in, FILE *out) {
     char *line = NULL;
     size_t cap = 0;
     ssize_t len;
     while ((len = getline(&line, &cap, in)) > 0) {
-        fwrite(line, len, 1, out);
+        const char *p = line;
+        const char *q = line + len - 1;
+        const char *suffix = "\n";
+        assert(*q == '\n');
+        if (startswith(p, "<div class=\"sourceCode\" id=\"cb")) {
+            fputs("<pre><code>", out);
+            for (int i = 0; i < 3; i++) p = strchr(p + 1, '<');
+        }
+        if (startswith(p, "<span id=\"cb")) {
+            for (int i = 0; i < 3; i++) p = strchr(p + 1, '>');
+            p++;
+            if (endswith(p, "</code></pre></div>\n")) {
+                q -= strlen("</span></code></pre></div>");
+                suffix = "</code></pre>\n";
+            } else {
+                q -= strlen("</span>");
+            }
+        }
+        const char *n, *needle;
+        needle = "<code class=\"sourceCode scheme\">";
+        while ((n = strstr(p, needle))) {
+            fwrite(p, n - p, 1, out);
+            fputs("<code>", out);
+            p = n + strlen(needle);
+        }
+        needle = "<span class=\"sc\">";
+        while ((n = strstr(p, needle))) {
+            fwrite(p, n - p, 1, out);
+            p = n + strlen("<span class=\"sc\">«</span>");
+        }
+        assert(p <= q);
+        fwrite(p, q - p, 1, out);
+        fputs(suffix, out);
     }
 }
 
@@ -717,9 +753,6 @@ overflow:
     assert(false);
 }
 
-//
-// static 
-
 // String constants, used to guard against misspellings.
 #define INDEX "index"
 #define TEXT "text"
@@ -744,7 +777,7 @@ static bool gen_index(const char *output) {
     return pandoc((struct PandocOpts){
         .input = INPUT(INDEX),
         .output = output,
-        .final_output = output,
+        .dest = output,
         .title = "SICP Study",
         .prev = NULL,
         .up = NULL,
@@ -762,7 +795,7 @@ static bool gen_text_index(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = "SICP Notes",
         .prev = NULL,
         .up = HREF(PARENT INDEX),
@@ -814,7 +847,7 @@ static bool gen_text_highlight(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = "SICP Highlights",
         .prev = HREF(INDEX),
         .up = HREF(INDEX),
@@ -877,7 +910,7 @@ static bool gen_text_front(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = "SICP Frontmatter Notes",
         .prev = HREF(HIGHLIGHT),
         .up = HREF(INDEX),
@@ -930,7 +963,7 @@ static bool gen_text_chapter(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = title,
         .prev = prev,
         .up = HREF(PARENT INDEX),
@@ -1012,7 +1045,7 @@ static bool gen_text_section(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = title,
         .prev = prev,
         .up = HREF(INDEX),
@@ -1063,7 +1096,7 @@ static bool gen_lecture_index(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = "SICP Lecture Notes",
         .prev = NULL,
         .up = HREF(PARENT INDEX),
@@ -1101,7 +1134,7 @@ static bool gen_lecture_highlight(const char *output) {
     const struct PandocOpts opts = {
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = "SICP Lecture Highlights",
         .prev = HREF(INDEX),
         .up = HREF(INDEX),
@@ -1189,7 +1222,7 @@ static bool gen_lecture_page(const char *output) {
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
-        .final_output = output,
+        .dest = output,
         .title = title,
         .prev = prev,
         .up = HREF(INDEX),

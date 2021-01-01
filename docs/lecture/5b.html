@@ -19,9 +19,6 @@
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
     </symbol>
-    <symbol id="external" viewBox="0 0 24 24">
-      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
-    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -86,8 +83,8 @@
 <li>We are going to model electrical systems.</li>
 <li>We can consider the things wires are connected to as objects.</li>
 <li>The connections can be made abstract. We use ideal wires.</li>
-<li>We create wires with <code class="sourceCode scheme">(make-wire)</code>, and we connect them with gates: <code class="sourceCode scheme">and-gate</code>, <code class="sourceCode scheme">or-gate</code>, and <code class="sourceCode scheme">inverter</code>.</li>
-<li><code class="sourceCode scheme">(inverter a b)</code> connects wires <code class="sourceCode scheme">a</code> and <code class="sourceCode scheme">b</code> with an inverter.</li>
+<li>We create wires with <code>(make-wire)</code>, and we connect them with gates: <code>and-gate</code>, <code>or-gate</code>, and <code>inverter</code>.</li>
+<li><code>(inverter a b)</code> connects wires <code>a</code> and <code>b</code> with an inverter.</li>
 <li>Our language will be embedded in Lisp, like the Henderson picture language.</li>
 <li>We can wire up half adders and full adders with these gates.</li>
 <li>We have primitives (wires), means of combination (gates), and means of abstraction (lambda). Lambda is the ultimate glue.</li>
@@ -101,16 +98,16 @@
 <li>And-gates and or-gates are implemented similarly. The action must be added to both input wires.</li>
 <li>Each wires must remember its signals and its list of actions.</li>
 <li>The actions procedures need to keep references to their wires. These are captured by the lambda inside the gate procedures.</li>
-<li>We implement wires with the message-passing style. It responds to <code class="sourceCode scheme">get-signal</code>, <code class="sourceCode scheme">set-signal!</code>, and <code class="sourceCode scheme">add-action!</code>.</li>
+<li>We implement wires with the message-passing style. It responds to <code>get-signal</code>, <code>set-signal!</code>, and <code>add-action!</code>.</li>
 <li>The wire executes all actions after its signal is set.</li>
 </ul>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Scheduling delayed tasks
 </h3>
 <ul>
-<li>The agenda is a schedule of actions to run. Whenever <code class="sourceCode scheme">after-delay</code> is used in an action, a task is added to the agenda.</li>
+<li>The agenda is a schedule of actions to run. Whenever <code>after-delay</code> is used in an action, a task is added to the agenda.</li>
 <li>These get executed in the proper order, with a time variable maintaining the correct time.</li>
-<li>The <code class="sourceCode scheme">propagate</code> procedure executers everything the agenda, emptying it as it goes.</li>
+<li>The <code>propagate</code> procedure executers everything the agenda, emptying it as it goes.</li>
 </ul>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
@@ -121,18 +118,18 @@
 <ul>
 <li>We’ve made a simulation where objects and state changed in the computer match the objects and state changes in the world.</li>
 <li>We’re going to use agendas (priority queues) to organize time.</li>
-<li>We have a constructor <code class="sourceCode scheme">make-agenda</code>; selector <code class="sourceCode scheme">current-time</code> and <code class="sourceCode scheme">first-item</code>; predicate <code class="sourceCode scheme">empty-agenda?</code>; and mutators <code class="sourceCode scheme">add-to-agenda!</code> and <code class="sourceCode scheme">remove-first-item!</code>.</li>
-<li>We will represent it as a list a segments. Each segment is a time <code class="sourceCode scheme"><span class="fu">cons</span></code> ed to a queue of tasks (procedures of no arguments).</li>
+<li>We have a constructor <code>make-agenda</code>; selector <code>current-time</code> and <code>first-item</code>; predicate <code>empty-agenda?</code>; and mutators <code>add-to-agenda!</code> and <code>remove-first-item!</code>.</li>
+<li>We will represent it as a list a segments. Each segment is a time <code><span class="fu">cons</span></code> ed to a queue of tasks (procedures of no arguments).</li>
 <li>To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.</li>
 </ul>
 <h4 id="2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a> Queues
 </h4>
 <ul>
-<li>We construct queues with <code class="sourceCode scheme">(make-queue)</code>.</li>
-<li>There are two mutators, <code class="sourceCode scheme">(insert-queue! q x)</code> and <code class="sourceCode scheme">(delete-queue! q)</code>; a selector, <code class="sourceCode scheme">(front-queue q)</code>; and a predicate, <code class="sourceCode scheme">(empty-queue? q)</code>.</li>
-<li>A queue is represented as a front pointer of a list <code class="sourceCode scheme"><span class="fu">cons</span></code> ed to the rear pointer of the same list.</li>
-<li>The mutators use <code class="sourceCode scheme"><span class="fu">set-car!</span></code> and <code class="sourceCode scheme"><span class="fu">set-cdr!</span></code>.</li>
+<li>We construct queues with <code>(make-queue)</code>.</li>
+<li>There are two mutators, <code>(insert-queue! q x)</code> and <code>(delete-queue! q)</code>; a selector, <code>(front-queue q)</code>; and a predicate, <code>(empty-queue? q)</code>.</li>
+<li>A queue is represented as a front pointer of a list <code><span class="fu">cons</span></code> ed to the rear pointer of the same list.</li>
+<li>The mutators use <code><span class="fu">set-car!</span></code> and <code><span class="fu">set-cdr!</span></code>.</li>
 </ul>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
@@ -141,9 +138,9 @@
 <a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Identity of pairs
 </h3>
 <ul>
-<li>Before, all we needed to know about <code class="sourceCode scheme"><span class="fu">cons</span></code> was that for all values of <code class="sourceCode scheme">x</code> and <code class="sourceCode scheme">y</code>, <code class="sourceCode scheme">(<span class="fu">=</span> x (<span class="fu">car</span> (<span class="fu">cons</span> x y)))</code> and <code class="sourceCode scheme">(<span class="fu">=</span> y (<span class="fu">cdr</span> (<span class="fu">cons</span> x y)))</code>. This says nothing about identity.</li>
+<li>Before, all we needed to know about <code><span class="fu">cons</span></code> was that for all values of <code>x</code> and <code>y</code>, <code>(<span class="fu">=</span> x (<span class="fu">car</span> (<span class="fu">cons</span> x y)))</code> and <code>(<span class="fu">=</span> y (<span class="fu">cdr</span> (<span class="fu">cons</span> x y)))</code>. This says nothing about identity.</li>
 <li>These no longer tell the whole story, now that we have mutators.</li>
-<li>This raises a question: if you change the <code class="sourceCode scheme"><span class="fu">car</span></code> of a pair, do all pairs that look the same also change?</li>
+<li>This raises a question: if you change the <code><span class="fu">car</span></code> of a pair, do all pairs that look the same also change?</li>
 <li>Cons pairs now have an identity.</li>
 <li>When we have multiple names for the same object, they are called <em>aliases</em>. Changing one changes them all.</li>
 <li>Sometimes sharing is what we want. But inadvertent sharing is a great source of bugs in complicated programs.</li>
@@ -152,31 +149,31 @@
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Lambda calculus
 </h3>
 <ul>
-<li>Assignment and mutators are equally powerful. We can implement the cons mutators in terms of <code class="sourceCode scheme"><span class="kw">set!</span></code>.</li>
+<li>Assignment and mutators are equally powerful. We can implement the cons mutators in terms of <code><span class="kw">set!</span></code>.</li>
 <li>We’ve already seen Alonzo Church’s way of creating pairs just with lambda expressions:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cons</span> x y)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (m)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    (m x y)))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">car</span> x) (x (<span class="kw">lambda</span> (a d) a)))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cdr</span> x) (x (<span class="kw">lambda</span> (a d) d)))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">lambda</span> (m)
+    (m x y)))
+(<span class="kw">define</span> (<span class="fu">car</span> x) (x (<span class="kw">lambda</span> (a d) a)))
+(<span class="kw">define</span> (<span class="fu">cdr</span> x) (x (<span class="kw">lambda</span> (a d) d)))</code></pre>
 <ul>
 <li>We can change it to allow mutation:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cons</span> x y)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">lambda</span> (m)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (m x</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>       y</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">lambda</span> (n) (<span class="kw">set!</span> x n))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">lambda</span> (n) (<span class="kw">set!</span> y n)))))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">car</span> x)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  (x (<span class="kw">lambda</span> (a d sa sd) a)))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">cdr</span> x)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  (x (<span class="kw">lambda</span> (a d sa sd) d)))</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">set-car!</span> x v)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  (x (<span class="kw">lambda</span> (a d sa sd) (sa v))))</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>(<span class="kw">define</span> (<span class="fu">set-cdr!</span> x v)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  (x (<span class="kw">lambda</span> (a d sa sd) (sd v))))</span></code></pre></div>
+<pre><code>(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">lambda</span> (m)
+    (m x
+       y
+       (<span class="kw">lambda</span> (n) (<span class="kw">set!</span> x n))
+       (<span class="kw">lambda</span> (n) (<span class="kw">set!</span> y n)))))
+(<span class="kw">define</span> (<span class="fu">car</span> x)
+  (x (<span class="kw">lambda</span> (a d sa sd) a)))
+(<span class="kw">define</span> (<span class="fu">cdr</span> x)
+  (x (<span class="kw">lambda</span> (a d sa sd) d)))
+(<span class="kw">define</span> (<span class="fu">set-car!</span> x v)
+  (x (<span class="kw">lambda</span> (a d sa sd) (sa v))))
+(<span class="kw">define</span> (<span class="fu">set-cdr!</span> x v)
+  (x (<span class="kw">lambda</span> (a d sa sd) (sd v))))</code></pre>
 <ul>
 <li>(I just realized that creating objects this way, where you apply the object to a procedure that is passed all the state variables, is just like pattern matching.)</li>
 </ul>
