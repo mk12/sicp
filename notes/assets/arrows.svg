@@ -2,7 +2,7 @@
   <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
 </symbol>
 <symbol id="left" viewBox="0 0 12 11">
-  <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
+  <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
 </symbol>
 <symbol id="right" viewBox="0 0 12 11">
   <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>

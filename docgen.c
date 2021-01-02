@@ -164,7 +164,7 @@ static const int N_SIGNUMS = sizeof SIGNUMS / sizeof SIGNUMS[0];
 // Ensures that global_pandoc_pid (if set) is killed when this process
 // terminates normally (returning from main or calling exit) or receives one of
 // the signals in SIGNUMS. It is still possible for the pandoc process to be
-// orphaned, for example if this process receives SIGQUIT or SIGKILL.
+// orphaned, for example if this process receives SIGKILL.
 static bool kill_pandoc_on_termination(void) {
     if (atexit(kill_pandoc) == -1) {
         perror("atexit");
@@ -300,7 +300,7 @@ static void postprocess_html(FILE *in, FILE *out) {
         const char *suffix = "\n";
         assert(*q == '\n');
         if (startswith(p, "<div class=\"sourceCode\" id=\"cb")) {
-            fputs("<pre><code>", out);
+            fputs("<pre><code class=\"blockcode\">", out);
             for (int i = 0; i < 3; i++) p = strchr(p + 1, '<');
         }
         if (startswith(p, "<span id=\"cb")) {
@@ -313,17 +313,23 @@ static void postprocess_html(FILE *in, FILE *out) {
                 q -= strlen("</span>");
             }
         }
-        const char *n, *needle;
-        needle = "<code class=\"sourceCode scheme\">";
-        while ((n = strstr(p, needle))) {
-            fwrite(p, n - p, 1, out);
-            fputs("<code>", out);
-            p = n + strlen(needle);
-        }
-        needle = "<span class=\"sc\">";
-        while ((n = strstr(p, needle))) {
-            fwrite(p, n - p, 1, out);
-            p = n + strlen("<span class=\"sc\">«</span>");
+        const char *n;
+        if (p == line) {
+            const char *needle = "<code class=\"sourceCode scheme\">";
+            while ((n = strstr(p, needle))) {
+                fwrite(p, n - p, 1, out);
+                fputs("<code>", out);
+                p = n + strlen(needle);
+                while ((n = strstr(p, "<span class=\"sc\">"))) {
+                    fwrite(p, n - p, 1, out);
+                    p = n + strlen("<span class=\"sc\">«</span>");
+                }
+            }
+        } else {
+            while ((n = strstr(p, "<span class=\"sc\">"))) {
+                fwrite(p, n - p, 1, out);
+                p = n + strlen("<span class=\"sc\">«</span>");
+            } 
         }
         assert(p <= q);
         fwrite(p, q - p, 1, out);
@@ -600,8 +606,8 @@ static void render_heading(FILE *out, int level, struct Span id,
             // at the start of the span to prevent the external icon from
             // wrapping onto the next line by itself.
             "<a class=\"link\" href=\"%s\">%.*s<span class=\"nowrap\">&#65279;"
-            "<svg alt=\"\" class=\"external\" width=\"24\" height=\"24\">"
-            "<use xlink:href=\"#external\"/>"
+            "<svg class=\"external\" width=\"24\" height=\"24\""
+            " aria-hidden=\"true\"><use xlink:href=\"#external\"/>"
             "</svg></span></a>",
             href, heading.title.len, heading.title.data); 
     } else {
@@ -1067,7 +1073,7 @@ static bool gen_text_section(const char *output) {
             if (h.label.data) {
                 assert(scan.level == 3);
                 render_heading(proc.in, 2, h.label, h,
-                    "%s-%d.html#%%_sec_%d.%d.%d", TEXT_URL_BASE, page_num,
+                    "%s-%d.html#%%25_sec_%d.%d.%d", TEXT_URL_BASE, page_num,
                     chapter, section, MS_INDEX(scan.sector, 3));
             } else {
                 assert(scan.level == 4);

@@ -30,10 +30,13 @@
       <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
     </symbol>
     <symbol id="left" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
   </svg>
 </div>
@@ -50,7 +53,7 @@
     <a class="sitenav__item sitenav__item--last link"
         href="https://github.com/mk12/sicp" aria-label="GitHub repository">
       Source
-      <svg alt="" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
         <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>      
     </a>
@@ -59,27 +62,28 @@
 <nav class="pagenav pagenav--top" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="4a.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="5a.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>
 <main id="main">
 <article>
 <h1>
-<span class="number">4B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/4b-generic-operators">Generic Operators<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<span class="number">4B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/4b-generic-operators">Generic Operators<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
@@ -122,7 +126,7 @@
 <li>We need a vertical barrier between rectangular and polar forms.</li>
 <li>The selectors for complex numbers—<code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>—must be generic operators.</li>
 <li>For this to work, we need <em>typed data</em>. We need to tag our data objects with labels telling us the type of their contents.</li>
-<li>We can simply <code><span class="fu">cons</span></code> the symbol <code><span class="cn">&#39;rectangular</span></code> or <code><span class="cn">&#39;polar</span></code> to the complex number data.</li>
+<li>We can simply <code>cons</code> the symbol <code>'rectangular</code> or <code>'polar</code> to the complex number data.</li>
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
 </ul>
 <h2 id="2" class="anchor">
@@ -154,7 +158,7 @@
 <li>It is the procedures that go in the table, not their names.</li>
 <li>The key procedure in this whole system is <code>operate</code>:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (operate op obj)
+<pre><code class="blockcode">(<span class="kw">define</span> (operate op obj)
   (<span class="kw">let</span> ((proc (get (type obj) op)))
     (<span class="kw">if</span> (<span class="fu">null?</span> proc)
         (<span class="fu">error</span> <span class="cn">&quot;undefined OP&quot;</span>)
@@ -163,7 +167,7 @@
 <li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
 <li>This is what happens when we try to extract the real part of a complex number in polar form:</li>
 </ul>
-<pre><code>(real-part z)
+<pre><code class="blockcode">(real-part z)
 (operate <span class="cn">&#39;real-part</span> z)
 ((get <span class="cn">&#39;polar</span> <span class="cn">&#39;real-part</span>) (contents z))
 (real-part-polar &#39;(<span class="cn">1</span> . <span class="cn">2</span>))
@@ -182,11 +186,11 @@
 <ul>
 <li>We just looked at data-directed programming for complex numbers.</li>
 <li>The power of the methodology only becomes apparent when you embed this in a more complex system.</li>
-<li>Let’s consider a generic arithmetic system with operations <code>add</code>, <code>sub</code>, <code>mil</code>, and <code><span class="fu">div</span></code>.</li>
+<li>Let’s consider a generic arithmetic system with operations <code>add</code>, <code>sub</code>, <code>mil</code>, and <code>div</code>.</li>
 <li>This should sit on top of ordinary Lisp numbers, rationals, and complex numbers.</li>
-<li>We already made a rational number package; we just need to change the constructor <code>make-rat</code> so that it attaches the tag <code><span class="cn">&#39;rational</span></code> to the data.</li>
+<li>We already made a rational number package; we just need to change the constructor <code>make-rat</code> so that it attaches the tag <code>'rational</code> to the data.</li>
 <li>We can’t use <code>operate</code> anymore because that was designed for a single argument. <code>apply-generic</code> from SICP is better.</li>
-<li>Now, our complex numbers will have two labels on them: <code><span class="cn">&#39;complex</span></code> <em>and</em> either <code><span class="cn">&#39;rectangular</span></code> or <code><span class="cn">&#39;polar</span></code>.</li>
+<li>Now, our complex numbers will have two labels on them: <code>'complex</code> <em>and</em> either <code>'rectangular</code> or <code>'polar</code>.</li>
 <li>At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.</li>
 </ul>
 <h3 id="3.2" class="anchor">
@@ -198,7 +202,7 @@
 <li>We can add polynomials in the same variable by adding their term lists (collecting like terms).</li>
 <li>By using <code>add</code> when we add term lists, we can use <em>any</em> kind of numbers as a coefficients, for free!</li>
 <li>This includes polynomials whose coefficients are polynomials.</li>
-<li>All because we wrote <code>add</code> instead of <code><span class="fu">+</span></code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
+<li>All because we wrote <code>add</code> instead of <code>+</code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
 <li>If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.</li>
 </ul>
 <h3 id="3.3" class="anchor">
@@ -215,20 +219,21 @@
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="4a.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="5a.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>

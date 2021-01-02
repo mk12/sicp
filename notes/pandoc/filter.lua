@@ -1,5 +1,7 @@
 -- Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
+local socket = require("socket.unix")
+
 local vars = {}
 local highlight_idx = 0
 local highlight_fwd = false
@@ -25,8 +27,8 @@ function highlight_div(el)
             :gsub("^(%d)%-", "%1/index-", 1):gsub("%.", "/", 1)
             :gsub("^(.*)-(q%d+)$", "%1.html#%2", 1)
         content = (
-            'Notes <svg alt="" class="circle-arrow" width="18" height="18">'
-            .. '<use xlink:href="#circle-right"/></svg>'
+            'Notes <svg class="circle-arrow" width="18" height="18"'
+            .. ' aria-hidden="true"><use xlink:href="#circle-right"/></svg>'
         )
     else
         highlight_bwd = true
@@ -38,8 +40,9 @@ function highlight_div(el)
             .. "-" .. el.identifier
         href = vars.root:sub(4) .. "highlight.html#" .. frag
         content = (
-            '<svg alt="" class="circle-arrow" width="18" height="18">'
-            .. '<use xlink:href="#circle-left"/></svg> Highlights'
+            '<svg class="circle-arrow" width="18" height="18"'
+            .. ' aria-hidden="true"><use xlink:href="#circle-left"/></svg>'
+            .. ' Highlights'
         )
     end
     local link = (
@@ -56,7 +59,7 @@ function write_meta(meta)
     meta.root = vars.root
     meta.pagenav = meta.up
     meta.arrows = meta.up
-    meta.external = meta.up and meta.left
+    meta.external = meta.up and meta.prev
     meta.circle_left = highlight_bwd
     meta.circle_right = highlight_fwd
     meta.svg_defs = (
@@ -137,15 +140,24 @@ function internal_link(el)
     return el
 end
 
-function scheme_code(el)
+function code_block(el)
     if #el.classes == 0 then
         el.classes = {"scheme"}
         return el
     end
 end
 
-function scheme_code_inside(el)
-    return pandoc.walk_block(el, {Code = scheme_code})
+function walk_inline_code(el)
+    return pandoc.walk_block(el, {Code = function(el)
+        -- Only highlight inline code if it has a parenthesis (procedure
+        -- application) or guillemet for meta-variables. Otherwise notes with
+        -- lots of bits of code is too noisy, and also blue functions by
+        -- themselves end up looking like links.
+        if #el.classes == 0 and el.text:find("%(") or el.text:find("«") then
+            el.classes = {"scheme"}
+            return el
+        end     
+    end })
 end
 
 -- function format_citation(el)
@@ -158,9 +170,9 @@ return {
     {Div = highlight_div},
     {Meta = write_meta},
     {Link = internal_link},
-    {CodeBlock = scheme_code},
-    {Para = scheme_code_inside},
-    {BulletList = scheme_code_inside},
-    {OrderedList = scheme_code_inside},
+    {CodeBlock = code_block},
+    {Para = walk_inline_code},
+    {BulletList = walk_inline_code},
+    {OrderedList = walk_inline_code},
     -- {Cite = format_citation}
 }

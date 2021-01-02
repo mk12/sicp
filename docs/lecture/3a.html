@@ -14,10 +14,13 @@
       <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
     </symbol>
     <symbol id="left" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
   </svg>
 </div>
@@ -34,7 +37,7 @@
     <a class="sitenav__item sitenav__item--last link"
         href="https://github.com/mk12/sicp" aria-label="GitHub repository">
       Source
-      <svg alt="" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
         <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>      
     </a>
@@ -43,27 +46,28 @@
 <nav class="pagenav pagenav--top" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="2b.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="3b.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>
 <main id="main">
 <article>
 <h1>
-<span class="number">3A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example">Henderson Escher Example<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<span class="number">3A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example">Henderson Escher Example<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
@@ -74,9 +78,9 @@
 <ul>
 <li>Now we know about procedural abstract and data abstraction.</li>
 <li>We can isolate the way data objects are <em>used</em> from the way that they are <em>represented</em>.</li>
-<li>We learned how to make pairs with <code><span class="fu">cons</span></code>, <code><span class="fu">car</span></code>, and <code><span class="fu">cdr</span></code>.</li>
+<li>We learned how to make pairs with <code>cons</code>, <code>car</code>, and <code>cdr</code>.</li>
 <li>We looked at examples: interval arithmetic and vectors.</li>
-<li>We can glue together arbitrary things with <code><span class="fu">cons</span></code>, not just numbers.</li>
+<li>We can glue together arbitrary things with <code>cons</code>, not just numbers.</li>
 <li>We learned about closure: the things that we combine can themselves be combined. This allows us to build complexity.</li>
 </ul>
 <h3 id="1.2" class="anchor">
@@ -85,10 +89,10 @@
 <ul>
 <li>Their are a lot of different ways of building list structure.</li>
 <li>Lisp has a particular convention for representing a sequence as chained pairs: a list.</li>
-<li>The car of the pair is the first item. The <code><span class="fu">cdr</span></code> of the pair is the rest of the sequence.</li>
-<li>The <code><span class="fu">cdr</span></code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>.</li>
-<li>The predicate <code><span class="fu">null?</span></code> checks if a list is empty (is nil).</li>
-<li>Lisp has a procedure called <code><span class="fu">list</span></code>, which is just an abbreviation for the nested conses.</li>
+<li>The car of the pair is the first item. The <code>cdr</code> of the pair is the rest of the sequence.</li>
+<li>The <code>cdr</code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>.</li>
+<li>The predicate <code>null?</code> checks if a list is empty (is nil).</li>
+<li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested conses.</li>
 </ul>
 <h3 id="1.3" class="anchor">
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Mapping lists
@@ -96,9 +100,9 @@
 <ul>
 <li>It is common to write a procedure that does the same thing to each item in a list and returns a new list.</li>
 <li>The recursive strategy is to apply the operation to the car of the list, and then cons that onto the rest of the list which has already been mapped (wishful thinking).</li>
-<li>Rather than doing the recursive strategy manually each time, we use the higher-order procedure <code><span class="fu">map</span></code>.</li>
+<li>Rather than doing the recursive strategy manually each time, we use the higher-order procedure <code>map</code>.</li>
 <li>Thinking in terms of operations on aggregates is a powerful idea. We don’t worry about recursion or other details.</li>
-<li><code><span class="fu">for-each</span></code> is like map, but it doesn’t build up a new list. It is just for side-effects.</li>
+<li><code>for-each</code> is like map, but it doesn’t build up a new list. It is just for side-effects.</li>
 </ul>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
@@ -165,20 +169,21 @@
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="2b.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="3b.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>

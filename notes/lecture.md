@@ -210,7 +210,7 @@ This is not a perfect description of what the computer does. But it is a good en
 
 ### Evaluating conditionals
 
-To evaluate `(if <predicate> <consequent> <alternative>)`, follow these steps:
+To evaluate `(if «predicate» «consequent» «alternative»)`, follow these steps:
 
 1. Evaluate the predicate expression.
     1. If it yields true, evaluate the consequent expression.
@@ -1079,12 +1079,12 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Assignment and Time
 
-- To do assignment, we use `(set! <variable> <value>)`.
+- To do assignment, we use `(set! «variable» «value»)`.
 - By convention, we suffix a bang to the names of procedures that do assignment-like things.
 - `set!` is like `define`, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.
 - When we add assignment, we also have to consider _time_.
 - The assignment produces a moment in time: a difference between a _before_ and an _after_ in time.
-- After the moment, `<variable>` has the value `<value>`, independent of what value it had before.
+- After the moment, `«variable»` has the value `«value»`, independent of what value it had before.
 - So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.
 - This isn't the case when we have assignment. The same expression can lead to different answers because it depends on time.
 - The substitution model completely breaks down. It is static.
@@ -1179,13 +1179,13 @@ Then, we learned how to use higher-order procedures to represent general methods
 (define c1 (make-counter 0))
 (define c2 (make-counter 10))
 (c1)
-1
+=> 1
 (c1)
-2
+=> 2
 (c2)
-11
+=> 11
 (c2)
-12
+=> 12
 ```
 
 - These two counters are independent and have their own state.
@@ -1474,10 +1474,10 @@ Then, we learned how to use higher-order procedures to represent general methods
     - `(head s)` is `(car s)`
     - `(tail s)` is `(force (cdr s))`
 - `delay` creates a promise to compute something when `force`&thinsp;d.
-    - `(delay <expr>)` is an abbreviation for `(lambda () <expr>)`
+    - `(delay «expr»)` is an abbreviation for `(lambda () «expr»)`
     - `(force p)` is `(p)`
 - `delay` decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.
-- One little hack: to be efficient, `(delay <expr>)` is `(memo-proc (lambda () <expr>))`.
+- One little hack: to be efficient, `(delay «expr»)` is `(memo-proc (lambda () «expr»))`.
 
 ```
 (define (memo-proc proc)
@@ -1533,7 +1533,7 @@ Then, we learned how to use higher-order procedures to represent general methods
                   (tail s)))))
 (define primes (sieve (integers-from 2)))
 (nth-stream 20 primes)
-73
+=> 73
 ```
 
 ## Part 2

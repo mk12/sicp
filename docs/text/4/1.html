@@ -14,10 +14,13 @@
       <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
     </symbol>
     <symbol id="left" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
     <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
@@ -38,7 +41,7 @@
     <a class="sitenav__item sitenav__item--last link"
         href="https://github.com/mk12/sicp" aria-label="GitHub repository">
       Source
-      <svg alt="" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
         <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>      
     </a>
@@ -47,27 +50,28 @@
 <nav class="pagenav pagenav--top" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="index.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="2.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>
 <main id="main">
 <article>
 <h1>
-<span class="number">4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html">The Metacircular Evaluator<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<span class="number">4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html">The Metacircular Evaluator<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
 <li>We will implement a Lisp evaluator as a Lisp program.</li>
@@ -76,19 +80,19 @@
 <li>To evaluate a combination, evaluate subexpressions and then apply the operator subexpression to the operand subexpressions.</li>
 <li>To apply a procedure to arguments, evaluate the body of the procedure in a new environment. To construct the new environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied.</li>
 </ol></li>
-<li>This embodies the interplay between two critical procedures, <code><span class="fu">eval</span></code> and <code><span class="fu">apply</span></code>.</li>
+<li>This embodies the interplay between two critical procedures, <code>eval</code> and <code>apply</code>.</li>
 </ul>
 <h2 id="4.1.1" class="anchor">
-<a class="anchor__link link" href="#4.1.1" aria-hidden="true">#</a> <span class="number">4.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.1">The Core of the Evaluator<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.1" aria-hidden="true">#</a> <span class="number">4.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.1">The Core of the Evaluator<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="4.1.1.1" class="anchor">
 <a class="anchor__link link" href="#4.1.1.1" aria-hidden="true">#</a> <code>Eval</code>
 </h3>
 <ul>
-<li><code><span class="fu">eval</span></code> classifies an expression and directs its evaluation in an environment.</li>
+<li><code>eval</code> classifies an expression and directs its evaluation in an environment.</li>
 <li>We use <em>abstract syntax</em> to avoid committing to a particular syntax in the evaluator.</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
   (<span class="kw">cond</span> ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (text-of-quotation exp))
@@ -108,10 +112,10 @@
 <a class="anchor__link link" href="#4.1.1.2" aria-hidden="true">#</a> <code>Apply</code>
 </h3>
 <ul>
-<li><code><span class="fu">apply</span></code> classifies a procedure and directs its application to a list of arguments.</li>
+<li><code>apply</code> classifies a procedure and directs its application to a list of arguments.</li>
 <li>If compound, it evaluates the procedure body in an extended environment.</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments)
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments)
   (<span class="kw">cond</span> ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
         ((compound-procedure? procedure)
@@ -123,13 +127,13 @@
            (procedure-environment procedure))))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</code></pre>
 <h2 id="4.1.2" class="anchor">
-<a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a> <span class="number">4.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.2">Representing Expressions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a> <span class="number">4.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.2">Representing Expressions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
 <li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="cn">&#39;quote</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="cn">&#39;quote</span>))
 (<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (tagged-list? exp tag)
   (<span class="kw">if</span> (<span class="fu">pair?</span> exp)
@@ -140,9 +144,9 @@
 </h3>
 <ul>
 <li>Some special forms can be defined in terms of others.</li>
-<li>For example, we can reduce <code><span class="kw">cond</span></code> to an <code><span class="kw">if</span></code> expression:</li>
+<li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="cn">&#39;cond</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="cn">&#39;cond</span>))
 (<span class="kw">define</span> (cond-clauses exp) (<span class="fu">cdr</span> exp))
 (<span class="kw">define</span> (cond-else-clause? clause) (<span class="fu">eq?</span> (cond-predicate clause) <span class="cn">&#39;else</span>))
 (<span class="kw">define</span> (cond-predicate clause) (<span class="fu">car</span> clause))
@@ -166,25 +170,25 @@
 <li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
 </ul>
 <h2 id="4.1.3" class="anchor">
-<a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.3">Evaluator Data Structures<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.3">Evaluator Data Structures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="4.1.3.1" class="anchor">
 <a class="anchor__link link" href="#4.1.3.1" aria-hidden="true">#</a> Testing of predicates
 </h3>
 <ul>
-<li>Anything other than <code><span class="cn">false</span></code> is considered “truthy.”</li>
+<li>Anything other than <code>false</code> is considered “truthy.”</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))
+<pre><code class="blockcode">(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))
 (<span class="kw">define</span> (false? x) (<span class="fu">eq?</span> x <span class="cn">false</span>))</code></pre>
 <h3 id="4.1.3.2" class="anchor">
 <a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a> Representing procedures
 </h3>
 <ul>
-<li><code>(apply-primitive-procedure <span class="sc">«</span><span class="ss">proc</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">args</span><span class="sc">»</span>)</code> applies a primitive procedure to <code><span class="ss">args</span></code>.</li>
-<li><code>(primitive-procedure? <span class="sc">«</span><span class="ss">proc</span><span class="sc">»</span>)</code> tests whether <code><span class="ss">proc</span></code> is a primitive procedure.</li>
+<li><code>(apply-primitive-procedure <span class="ss">proc</span> <span class="ss">args</span>)</code> applies a primitive procedure to <code class="sourceCode scheme"><span class="ss">args</span></code>.</li>
+<li><code>(primitive-procedure? <span class="ss">proc</span>)</code> tests whether <code class="sourceCode scheme"><span class="ss">proc</span></code> is a primitive procedure.</li>
 <li>Compound procedures are represented by the following data structure:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (make-procedure parameters body env)
+<pre><code class="blockcode">(<span class="kw">define</span> (make-procedure parameters body env)
   (<span class="fu">list</span> <span class="cn">&#39;procedure</span> parameters body env))
 (<span class="kw">define</span> (compound-procedure? p) (tagged-list? p <span class="cn">&#39;procedure</span>))
 (<span class="kw">define</span> (procedure-parameters p) (<span class="fu">cadr</span> p)) (<span class="kw">define</span> (procedure-body p) (<span class="fu">caddr</span> p))
@@ -195,11 +199,11 @@
 <ul>
 <li><code>(lookup-variable-value <span class="ss">var</span> <span class="ss">env</span>)</code> returns the value bound to a variable.</li>
 <li><code>(extend-environment <span class="ss">variables</span> <span class="ss">values</span> <span class="ss">base-env</span>)</code> returns a new environment extended with a frame containing the given bindings.</li>
-<li><code>(define-variable! <span class="sc">«</span><span class="ss">var</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">value</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">env</span><span class="sc">»</span>)</code> adds a binding to the first frame of <code><span class="ss">env</span></code>.</li>
-<li><code>(set-variable-value! <span class="sc">«</span><span class="ss">var</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">value</span><span class="sc">»</span> <span class="sc">«</span><span class="ss">env</span><span class="sc">»</span>)</code> changes a binding in <code><span class="ss">env</span></code>.</li>
+<li><code>(define-variable! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> adds a binding to the first frame of <code class="sourceCode scheme"><span class="ss">env</span></code>.</li>
+<li><code>(set-variable-value! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> changes a binding in <code class="sourceCode scheme"><span class="ss">env</span></code>.</li>
 <li>Here is a partial implementation:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
+<pre><code class="blockcode">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
 (<span class="kw">define</span> (first-frame env) (<span class="fu">car</span> env))
 (<span class="kw">define</span> the-empty-environment &#39;())
 
@@ -229,14 +233,14 @@
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
 <h2 id="4.1.4" class="anchor">
-<a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>We can run our evaluator as a program: Lisp within Lisp.</li>
 <li>The evaluator ultimately reduces expressions to applications of primitive procedures, so we need the evaluator to map these to the underlying Lisp’s primitive procedures.</li>
-<li>We set up a global environment mapping primitive procedures, <code><span class="cn">true</span></code>, and <code><span class="cn">false</span></code>:</li>
+<li>We set up a global environment mapping primitive procedures, <code>true</code>, and <code>false</code>:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (setup-environment)
+<pre><code class="blockcode">(<span class="kw">define</span> (setup-environment)
   (<span class="kw">let</span> ((initial-env
          (extend-environment (primitive-procedure-names)
                              (primitive-procedure-objects)
@@ -246,9 +250,9 @@
     initial-env))
 (<span class="kw">define</span> the-global-environment (setup-environment))</code></pre>
 <ul>
-<li>We define a list of primitive procedures <code><span class="fu">car</span></code>, <code><span class="fu">cdr</span></code>, <code><span class="fu">cons</span></code>, and <code><span class="fu">null?</span></code>:</li>
+<li>We define a list of primitive procedures <code>car</code>, <code>cdr</code>, <code>cons</code>, and <code>null?</code>:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="cn">&#39;primitive</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="cn">&#39;primitive</span>))
 (<span class="kw">define</span> (primitive-implementation proc) (<span class="fu">cadr</span> proc))
 
 (<span class="kw">define</span> primitive-procedures
@@ -263,14 +267,14 @@
   (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="cn">&#39;primitive</span> (<span class="fu">cadr</span> proc)))
        primitive-procedures))</code></pre>
 <ul>
-<li>Here, <code>apply-in-underlying-scheme</code> refers to the built-in <code><span class="fu">apply</span></code>, not the one we defined:</li>
+<li>Here, <code>apply-in-underlying-scheme</code> refers to the built-in <code>apply</code>, not the one we defined:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (apply-primitive-procedure proc args)
+<pre><code class="blockcode">(<span class="kw">define</span> (apply-primitive-procedure proc args)
   (apply-in-underlying-scheme (primitive-implementation proc) args))</code></pre>
 <ul>
 <li>Finally, we make a simple <em>driver loop</em>, or REPL:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> input-prompt <span class="cn">&quot;;;; M-Eval input:&quot;</span>)
+<pre><code class="blockcode">(<span class="kw">define</span> input-prompt <span class="cn">&quot;;;; M-Eval input:&quot;</span>)
 (<span class="kw">define</span> output-prompt <span class="cn">&quot;;;; M-Eval value:&quot;</span>)
 (<span class="kw">define</span> (driver-loop)
   (prompt-for-input input-prompt)
@@ -292,7 +296,7 @@
                      &#39;<span class="ss">procedure-env</span>))
       (<span class="fu">display</span> object)))</code></pre>
 <h2 id="4.1.5" class="anchor">
-<a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.5">Data as Programs<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.5">Data as Programs<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>A program can be viewed as a description of an abstract machine.</li>
@@ -300,17 +304,17 @@
 <li>Deep idea: any evaluator can emulate any other. This gets to the heart of <em>computability</em>.</li>
 <li>Just as the evaluator can emulate any Lisp-described machine, a <em>universal Turing machine</em> can emulate any other Turing machine.</li>
 <li>The existence of a universal machine is a deep and wonderful property of computation.</li>
-<li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code><span class="fu">eval</span></code> procedure for evaluating data as programs.</li>
+<li>The user’s programs are the evaluator’s data. Lisp takes advantage of this and provides a primitive <code>eval</code> procedure for evaluating data as programs.</li>
 </ul>
 <div id="q1" class="highlight">
-<a class="highlight__link link" href="../highlight.html#4.1-q1" aria-label="view quote in highlights page"><svg alt="" class="circle-arrow" width="18" height="18"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<a class="highlight__link link" href="../highlight.html#4.1-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
 <blockquote>
 <p>[W]e can regard the evaluator as a very special machine that takes as input a description of a machine. Given this input, the evaluator configures itself to emulate the machine described. […]</p>
 <p>From this perspective, our evaluator is seen to be a <em>universal machine</em>. It mimics other machines when these are described as Lisp programs. This is striking. Try to imagine an analogous evaluator for electrical circuits. This would be a circuit that takes as input a signal encoding the plans for some other circuit, such as a filter. Given this input, the circuit evaluator would then behave like a filter with the same description. Such a universal electrical circuit is almost unimaginably complex. It is remarkable that the program evaluator is a rather simple program. <span class="citation" data-cites="sicp">[@sicp 4.1.5]</span></p>
 </blockquote>
 </div>
 <h2 id="4.1.6" class="anchor">
-<a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.6">Internal Definitions<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.6">Internal Definitions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Global definitions have <em>sequential scoping</em>: they are defined one at a time.</li>
@@ -318,40 +322,40 @@
 <li>The Scheme standard requires internal definitions to come first in the body and not use each other during evaluation. Although this restriction makes sequential and simultaneous scoping equivalent, simultaneous scoping makes compiler optimization easier.</li>
 <li>To achieve simultaneous scoping, we “scan out” internal definitions:</li>
 </ul>
-<pre><code>(<span class="kw">lambda</span> <span class="ss">vars</span>
+<pre><code class="blockcode">(<span class="kw">lambda</span> <span class="ss">vars</span>
   (<span class="kw">define</span> u <span class="ss">e1</span>)
   (<span class="kw">define</span> v <span class="ss">e2</span>)
   <span class="ss">e3</span>)</code></pre>
 <ul>
-<li>Transforming them into a <code><span class="kw">let</span></code> with assignments:</li>
+<li>Transforming them into a <code>let</code> with assignments:</li>
 </ul>
-<pre><code>(<span class="kw">lambda</span> <span class="ss">vars</span>
+<pre><code class="blockcode">(<span class="kw">lambda</span> <span class="ss">vars</span>
   (<span class="kw">let</span> ((u <span class="cn">&#39;*unassigned*</span>)
         (v <span class="cn">&#39;*unassigned*</span>))
     (<span class="kw">set!</span> u <span class="ss">e1</span>)
     (<span class="kw">set!</span> v <span class="ss">e2</span>) <span class="ss">e3</span>))</code></pre>
 <ul>
-<li>Here, <code>*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
+<li>Here, <code>'*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
 <h2 id="4.1.7" class="anchor">
-<a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Our evaluator is inefficient because it interleaves syntactic analysis with execution.</li>
 <li>For example, given a recursive procedure:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (factorial n)
+<pre><code class="blockcode">(<span class="kw">define</span> (factorial n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">1</span>) <span class="cn">1</span> (<span class="fu">*</span> (factorial (<span class="fu">-</span> n <span class="cn">1</span>)) n)))</code></pre>
 <ul>
-<li>When evaluating <code>(factorial <span class="cn">4</span>)</code>, on all four recursive calls the evaluator must determine anew that the body is an <code><span class="kw">if</span></code> expression by reaching the <code>if?</code> test.</li>
-<li>We can arrange the evaluator to analyze syntax only once by splitting <code><span class="fu">eval</span></code> into two parts:
+<li>When evaluating <code>(factorial <span class="cn">4</span>)</code>, on all four recursive calls the evaluator must determine anew that the body is an <code>if</code> expression by reaching the <code>if?</code> test.</li>
+<li>We can arrange the evaluator to analyze syntax only once by splitting <code>eval</code> into two parts:
 <ul>
 <li><code>(analyze exp)</code> performs syntactic analysis and returns an <em>execution procedure</em>.</li>
 <li><code>((analyze exp) env)</code> completes the evaluation.</li>
 </ul></li>
-<li><code>analyze</code> is similar to the <a href="#4.1.1">original</a> <code><span class="fu">eval</span></code>, except it only performs analysis, not full evaluation:</li>
+<li><code>analyze</code> is similar to the <a href="#4.1.1">original</a> <code>eval</code>, except it only performs analysis, not full evaluation:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (analyze exp)
+<pre><code class="blockcode">(<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
         ((quoted? exp) (analyze-quoted exp))
         ((variable? exp) (analyze-variable exp))
@@ -366,7 +370,7 @@
 <ul>
 <li>Here is one of the helper procedures, <code>analyze-lambda</code>. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (analyze-lambda exp)
+<pre><code class="blockcode">(<span class="kw">define</span> (analyze-lambda exp)
   (<span class="kw">let</span> ((vars (lambda-parameters exp))
         (bproc (analyze-sequence (lambda-body exp))))
     (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))</code></pre>
@@ -375,20 +379,21 @@
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="index.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="2.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>

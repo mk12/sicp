@@ -40,13 +40,14 @@ help:
 test:
 	./run.sh all
 
-docgen linter: %: %.c
-	$(CC) $(CFLAGS) -o $@ $<
-
 docs: $(doc_html) $(doc_assets_link)
 
-$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux)
+$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux) katex.pid
 	./docgen $@
+
+.INTERMEDIATE: katex.pid
+katex.pid:
+	touch $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
 $(doc_text): notes/text.md

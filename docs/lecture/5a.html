@@ -30,10 +30,13 @@
       <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
     </symbol>
     <symbol id="left" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
   </svg>
 </div>
@@ -50,7 +53,7 @@
     <a class="sitenav__item sitenav__item--last link"
         href="https://github.com/mk12/sicp" aria-label="GitHub repository">
       Source
-      <svg alt="" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
         <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>      
     </a>
@@ -59,27 +62,28 @@
 <nav class="pagenav pagenav--top" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="4b.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="5b.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>
 <main id="main">
 <article>
 <h1>
-<span class="number">5A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5a-assignment-state-and-side-effects">Assignment, State, and Side-Effects<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<span class="number">5A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5a-assignment-state-and-side-effects">Assignment, State, and Side-Effects<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
@@ -108,12 +112,12 @@
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Assignment and Time
 </h3>
 <ul>
-<li>To do assignment, we use <code>(<span class="kw">set!</span> &lt;variable&gt; &lt;value&gt;)</code>.</li>
+<li>To do assignment, we use <code>(<span class="kw">set!</span> <span class="ss">variable</span> <span class="ss">value</span>)</code>.</li>
 <li>By convention, we suffix a bang to the names of procedures that do assignment-like things.</li>
-<li><code><span class="kw">set!</span></code> is like <code><span class="kw">define</span></code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
+<li><code>set!</code> is like <code>define</code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
 <li>When we add assignment, we also have to consider <em>time</em>.</li>
 <li>The assignment produces a moment in time: a difference between a <em>before</em> and an <em>after</em> in time.</li>
-<li>After the moment, <code>&lt;variable&gt;</code> has the value <code>&lt;value&gt;</code>, independent of what value it had before.</li>
+<li>After the moment, <code><span class="ss">variable</span></code> has the value <code class="sourceCode scheme"><span class="ss">value</span></code>, independent of what value it had before.</li>
 <li>So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.</li>
 <li>This isn’t the case when we have assignment. The same expression can lead to different answers because it depends on time.</li>
 <li>The substitution model completely breaks down. It is static.</li>
@@ -134,14 +138,14 @@
 <ul>
 <li>Here’s how we implemented factorial functionally:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (fact n)
+<pre><code class="blockcode">(<span class="kw">define</span> (fact n)
   (<span class="kw">define</span> (iter p i)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> i n) m (iter (<span class="fu">*</span> i p) (<span class="fu">+</span> i <span class="cn">1</span>))))
   (iter <span class="cn">1</span> <span class="cn">1</span>))</code></pre>
 <ul>
 <li>We could instead write it with assignments:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (fact n)
+<pre><code class="blockcode">(<span class="kw">define</span> (fact n)
   (<span class="kw">let</span> ((p <span class="cn">1</span>) (i <span class="cn">1</span>))
     (<span class="kw">define</span> (loop)
       (<span class="kw">cond</span> ((<span class="fu">&gt;</span> i n) p)
@@ -170,7 +174,7 @@
 <ul>
 <li>A variable <code>v</code> is <em>bound</em> in an expression <code>E</code> if the meaning of <code>E</code> is unchanged by the uniform replacement of a variable <code>w</code> not occurring in <code>E</code>, for every occurrence of <code>v</code> in <code>E</code>.</li>
 <li>We use bound variables all the time.</li>
-<li>The <code><span class="kw">lambda</span></code> is the essential thing that binds variables.</li>
+<li>The <code>lambda</code> is the essential thing that binds variables.</li>
 <li>If a variable isn’t bound, we say it is a <em>free</em> variable.</li>
 <li>If <code>x</code> is a bound variable in <code>E</code> then there is λ-expression where it is bound.</li>
 <li>The list of formal parameters is called the <em>bound variable list</em>. The λ-expression <em>binds</em> the variables <em>declared</em> in its bound variable list.</li>
@@ -213,7 +217,7 @@
 <li>We wouldn’t have done this if there wasn’t a good reason.</li>
 <li>Consider the following program:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> make-counter
+<pre><code class="blockcode">(<span class="kw">define</span> make-counter
   (<span class="kw">lambda</span> (n)
     (<span class="kw">lambda</span> ()
       (<span class="kw">set!</span> n (inc n))
@@ -221,17 +225,17 @@
 (<span class="kw">define</span> c1 (make-counter <span class="cn">0</span>))
 (<span class="kw">define</span> c2 (make-counter <span class="cn">10</span>))
 (c1)
-<span class="cn">1</span>
+<span class="op">=&gt;</span> <span class="cn">1</span>
 (c1)
-<span class="cn">2</span>
+<span class="op">=&gt;</span> <span class="cn">2</span>
 (c2)
-<span class="cn">11</span>
+<span class="op">=&gt;</span> <span class="cn">11</span>
 (c2)
-<span class="cn">12</span></code></pre>
+<span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
 <ul>
 <li>These two counters are independent and have their own state.</li>
 <li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
-<li>The <em>global environment</em> is the topmost environment. Its frame contains <code><span class="fu">car</span></code>, <code><span class="fu">+</span></code>, <code><span class="fu">*</span></code>, etc., and all top-level definitions.</li>
+<li>The <em>global environment</em> is the topmost environment. Its frame contains <code>car</code>, <code>+</code>, <code>*</code>, etc., and all top-level definitions.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Objects
@@ -265,20 +269,21 @@
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="4b.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="5b.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>

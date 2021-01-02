@@ -14,10 +14,13 @@
       <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
     </symbol>
     <symbol id="left" viewBox="0 0 12 11">
-      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
     </symbol>
     <symbol id="right" viewBox="0 0 12 11">
       <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
   </svg>
 </div>
@@ -34,7 +37,7 @@
     <a class="sitenav__item sitenav__item--last link"
         href="https://github.com/mk12/sicp" aria-label="GitHub repository">
       Source
-      <svg alt="" class="github-mark" width="25" height="25" viewBox="0 0 136 133">
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
         <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
       </svg>      
     </a>
@@ -43,27 +46,28 @@
 <nav class="pagenav pagenav--top" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="3b.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="4b.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>
 <main id="main">
 <article>
 <h1>
-<span class="number">4A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/4a-pattern-matching-and-rule-based-substitution">Pattern Matching and Rule-Based Substitution<span class="nowrap">﻿<svg alt="" class="external" width="24" height="24"><use xlink:href="#external"/></svg></span></a>
+<span class="number">4A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/4a-pattern-matching-and-rule-based-substitution">Pattern Matching and Rule-Based Substitution<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1" class="anchor">
 <a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
@@ -98,7 +102,7 @@
 <ul>
 <li>We can represent the differentiation rules like this:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> deriv-rules
+<pre><code class="blockcode">(<span class="kw">define</span> deriv-rules
   &#39;(((dd (?c c) (? v)) <span class="cn">0</span>)
     ((dd (?v v) (? v)) <span class="cn">1</span>)
     ((dd (?v u) (? v)) <span class="cn">0</span>)
@@ -120,7 +124,7 @@
 <li>The forms beginning with colons in the RHS are called <em>substitution objects</em>. They are skeleton evaluations.</li>
 <li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> algebra-rules
+<pre><code class="blockcode">(<span class="kw">define</span> algebra-rules
   &#39;((((? op) (?c e1) (?c e2))
      (: (op e1 e2)))
     (((? op) (? e1) (?c e2))
@@ -169,7 +173,7 @@
 <ul>
 <li>The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (match pat exp dict)
+<pre><code class="blockcode">(<span class="kw">define</span> (match pat exp dict)
   (<span class="kw">cond</span> ((<span class="fu">eq?</span> dict <span class="cn">&#39;failed</span>) <span class="cn">&#39;failed</span>)
         ((atom? pat)
          (<span class="kw">if</span> (<span class="kw">and</span> (atom? exp) (<span class="fu">eq?</span> pat exp))
@@ -193,7 +197,7 @@
                        (<span class="fu">car</span> exp)
                        dict)))))</code></pre>
 <ul>
-<li>The <code><span class="kw">else</span></code> clause recursion is very important.</li>
+<li>The <code>else</code> clause recursion is very important.</li>
 <li>We examine two trees simultaneously: the tree of the expression, and that of the pattern.</li>
 <li>Consider this pattern: <code>(<span class="fu">+</span> (<span class="fu">*</span> (? x) (? y)) (? y))</code>. We could draw this as a tree.</li>
 <li>The expression matching it, <code>(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> x)) x)</code>, has a very similar tree structure.</li>
@@ -209,7 +213,7 @@
 <ul>
 <li>The instantiator takes a dictionary and a skeleton as input and outputs an expression.</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (instantiate skeleton dict)
+<pre><code class="blockcode">(<span class="kw">define</span> (instantiate skeleton dict)
   (<span class="kw">define</span> (loop s)
     (<span class="kw">cond</span> ((atom? s) s)
           ((skeleton-evaluation? s)
@@ -223,7 +227,7 @@
 <li>The only reason we have the internal procedure is to avoid passing the same <code>dict</code> on every recursive call.</li>
 <li>The skeleton evaluation forms like <code>(: x)</code> use <code>evaluate</code>:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (evaluate form dict)
+<pre><code class="blockcode">(<span class="kw">define</span> (evaluate form dict)
   (<span class="kw">if</span> (atom? form)
       (lookup form dict)
       (<span class="fu">apply</span> (<span class="fu">eval</span> (lookup (<span class="fu">car</span> form) dict)
@@ -232,8 +236,8 @@
                      (<span class="fu">cdr</span> form)))))</code></pre>
 <ul>
 <li>Atoms (variable names) are simply looked up in the dictionary.</li>
-<li>For more complicated expressions, we lookup and evaluate the <code><span class="fu">car</span></code> of the form (the operator) and apply it to the result of looking up everything from the <code><span class="fu">cdr</span></code> (the operands).</li>
-<li>This is magic. We don’t know everything going on with <code><span class="fu">apply</span></code> and <code><span class="fu">eval</span></code> yet. We will later.</li>
+<li>For more complicated expressions, we lookup and evaluate the <code>car</code> of the form (the operator) and apply it to the result of looking up everything from the <code>cdr</code> (the operands).</li>
+<li>This is magic. We don’t know everything going on with <code>apply</code> and <code>eval</code> yet. We will later.</li>
 </ul>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
@@ -255,7 +259,7 @@
 <li>For <code>deriv-rules</code>, this would be <code>(<span class="kw">define</span> dsimp (simplifier deriv-rules))</code>.</li>
 <li>This is the <code>simplifier</code> procedure:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (simplifier the-rules)
+<pre><code class="blockcode">(<span class="kw">define</span> (simplifier the-rules)
   (<span class="kw">define</span> (simplify-exp exp)
     (try-rules (<span class="kw">if</span> (compound? exp)
                    (simplify-parts exp)
@@ -282,16 +286,16 @@
 <ul>
 <li>The procedures <code>simplify-exp</code> and <code>simplify-parts</code> call each other recursively.</li>
 <li>Since the <code>exp</code> in <code>simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
-<li>We could have just used one procedure, using <code><span class="fu">map</span></code>:</li>
+<li>We could have just used one procedure, using <code>map</code>:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (simplify-exp exp)
+<pre><code class="blockcode">(<span class="kw">define</span> (simplify-exp exp)
   (try-rules
    (<span class="kw">if</span> (compound? exp)
        (<span class="fu">map</span> simplify-exp exp)
        exp)))</code></pre>
 <ul>
 <li>This is a different idiom; it works the same way, but you think about it a bit differently.</li>
-<li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code><span class="fu">map</span></code> in one of our procedures. It is best to extract those common patterns.</li>
+<li>It is better because otherwise we are basically reinventing the wheel by hiding a definition of <code>map</code> in one of our procedures. It is best to extract those common patterns.</li>
 <li>The <code>try-rules</code> procedure scans the rules and tries each one. It returns the original expression if none matched.</li>
 <li>When a rule’s pattern matches, <code>try-rules</code> instantiates the skeleton and tries to simplify that further.</li>
 </ul>
@@ -312,7 +316,7 @@
 <ul>
 <li>The implementation of the dictionary is pretty simple:</li>
 </ul>
-<pre><code>(<span class="kw">define</span> (empty-dictionary) &#39;())
+<pre><code class="blockcode">(<span class="kw">define</span> (empty-dictionary) &#39;())
 (<span class="kw">define</span> (extend-dictionary pat dat dict)
   (<span class="kw">let</span> ((name (variable-name pat)))
     (<span class="kw">let</span> ((v ((<span class="fu">assq</span> name dict))))
@@ -333,20 +337,21 @@
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
     <a class="pagenav__link link" href="3b.html" aria-label="previous page">
-      <svg alt="" width="12" height="11"><use xlink:href="#left"/>
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
       </svg><span class="pagenav__prev">Prev</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--center">
     <a class="pagenav__link link" href="index.html" aria-label="parent page">
-      <svg alt="" width="11" height="12"><use xlink:href="#up"/>
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
       </svg><span class="pagenav__up">Up</span>
     </a>
   </div>
   <div class="pagenav__item pagenav__item--right">
     <a class="pagenav__link link" href="4b.html" aria-label="next page">
       <span class="pagenav__next">Next</span
-        ><svg alt="" width="12" height="11"><use xlink:href="#right"/></svg>
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
     </a>
   </div>
 </nav>

@@ -1,10 +1,15 @@
 # New to do
 
+- rewrite README
+    - mention pandoc, katex, BEM css
+    - installation of pandoc, deno, luarocks
+- deno fmt the ts. consider clang-format for C, and a lua formatter.
+- spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
-- rewrite README, mentioning pandoc, katex, BEM css
+- test in html5 validator https://html5.validator.nu/
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
-- spell checker for Markdown, integrated in Makefile
+- reconsider → in lecture 6a
 - have special callout thing at end of text sections with exercise links
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
@@ -14,7 +19,45 @@
     - just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
     - see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
     - then do if code, `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">`
-- reconsider inline code single-word highlighting
+    - can use .INTERMEDIATE in make to start/stop js server (to avoid spawning node on EVERY math)
+    - try https://deno.land instead of node! (so cool! so fast!)
+    - `brew install luarocks`, `luarocks install luasocket`
+    - pretty sure unix sockets are what I want https://stackoverflow.com/a/9476248
+    - learning difference between stream/datagram unix sockets
+    - https://stackoverflow.com/questions/9644251/how-do-unix-domain-sockets-differentiate-between-multiple-clients
++ italicize output or just use ; => comments
+    + e.g. lecure 5a pt3, text 2.1.1
+    + decided to use `=> 123` like in exercises BUT: always at start of line, never inlined into previous, AND not in cases where each line of the code block is showing a reduction
++ fix soureCode C thing (just removed C code since it was inaccurate; &x is not box since it does not allocate)
++ reconsider inline code single-word highlighting
+    + nice for parity, but:
+        + blue functions look like links. and even if I changed color...
+        + too distracting in paragraphs with lots of little `things`
+            + e.g. text 3.3.1
+        + does not help parsing the way code blocks do -- nothing to parse!
+        + single word IS nice for the ss underline
+        + problem: "the old `car` is unreachable". blue is bad here
++ add guillements in lecture.md
++ with scrolling code, full 80 chars scrolls tiny bit. fix.
+x indication that code/math scroll
+    x considered gradient fade-out on right. looks bad.
+    x StackOverflow keeps scrollback with ::webkit-scrollbar. too hard
++ consistent CSS property ordering https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/
++ fix responsiveness (broken; resizing overflows right edge)
+    + bisected by deleting nodes in inspector; culprit is site header
+    + with only header, isn't even centred on wide page!
+    + ... removed *everything* in body, still weird size
+    + OK, reproduced on text/1/2.html
+    + dumb! it was just the display math! same with code
+    + but before header numbers were overflowing too. Can't reproduce that.
+    + make math and code scroll after all.
+    + code definitely scroll (and now way to prevent Safari from hiding scroll bars, oh well)
+    + math tried before, had vertical scroll bar issue https://stackoverflow.com/q/6421966, https://talk.observablehq.com/t/vertical-scroll-bars-on-display-katex/2304/4, https://github.com/KaTeX/KaTeX/issues/327
+    + can fix by adding a tiny bit of padding
+    + (would prefer scaling down the math but there's no CSS way to scale text to fit a container)
++ more indentation for nested lists (look at github's indentation)
++ replace % in sicp URLs with %25
++ aria-hidden instead of alt="" for SVGs
 + remove `<span class="sc">»</span>`
 + fix scheme.xml numbers
     + `++` means this https://stackoverflow.com/a/4489585

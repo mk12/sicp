@@ -27,7 +27,9 @@
       <item>define</item>
       <item>delay</item>
       <item>else</item>
+      <item>export</item>
       <item>if</item>
+      <item>import</item>
       <item>lambda</item>
       <item>let-syntax</item>
       <item>let-values</item>
@@ -37,6 +39,8 @@
       <item>letrec-syntax</item>
       <item>letrec*</item>
       <item>letrec</item>
+      <item>library</item>
+      <item>paste</item>
       <item>or</item>
       <item>quasiquote</item>
       <item>quasisyntax</item>
@@ -51,13 +55,13 @@
       <item>unquote</item>
       <item>unsyntax-splicing</item>
       <item>unsyntax</item>
+      <item>use</item>
       <item>with-eval</item>
     </list>
     <list name="functions">
       <item>&lt;=</item>
       <item>&lt;</item>
       <item>=</item>
-      <item>=&gt;</item>
       <item>&gt;=</item>
       <item>&gt;</item>
       <item>-</item>
@@ -397,6 +401,12 @@
       <item>true</item>
       <item>false</item>
     </list>
+    <list name="asserts">
+      <item>=&gt;</item>
+      <item>~&gt;</item>
+      <item>=$&gt;</item>
+      <item>=!&gt;</item>
+    </list>
     <contexts>
       <context name="Default" attribute="Normal" lineEndContext="#stay">
         <DetectSpaces/>
@@ -404,38 +414,39 @@
         <DetectChar attribute="Comment" context="Comment" char=";"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
         <DetectChar attribute="MetaBracket" context="Meta" char="«"/>
-        <keyword attribute="Constant" context="#stay" String="booleans"/>
+        <keyword attribute="Boolean" context="#stay" String="booleans"/>
+        <keyword attribute="Assert" context="#stay" String="asserts"/>
         <keyword attribute="Macro" context="#stay" String="macros"/>
         <keyword attribute="Function" context="#stay" String="functions"/>
-        <RegExpr attribute="Constant" context="#stay" String="-?+([0-9]++\.?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+|"/>
-        <RegExpr attribute="Constant" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=>?^_~-]++"/>
+        <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++\.?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+|"/>
+        <RegExpr attribute="Symbol" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=>?^_~-]++"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">
       </context>
       <context name="hash" attribute="Normal" lineEndContext="#stay">
-        <Detect2Chars attribute="Constant" context="#pop" char="#" char1="t"/>
-        <Detect2Chars attribute="Constant" context="#pop" char="#" char1="T"/>
-        <Detect2Chars attribute="Constant" context="#pop" char="#" char1="f"/>
-        <Detect2Chars attribute="Constant" context="#pop" char="#" char1="F"/>
-        <Detect2Chars attribute="Constant" context="#pop!Char" char="#" char1="\"/>
+        <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="t"/>
+        <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="T"/>
+        <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="f"/>
+        <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="F"/>
+        <Detect2Chars attribute="Character" context="#pop!Char" char="#" char1="\"/>
         <DetectChar attribute="Normal" context="#pop" char="#"/>
       </context>
-      <context name="Char" attribute="Constant" lineEndContext="#pop">
-        <DetectChar attribute="Constant" context="HexChar" char="x"/>
-        <keyword attribute="Constant" context="#pop" String="characters" insensitive="1"/>
-        <RegExpr attribute="Constant" context="#pop" String=".(?!\w)"/>
+      <context name="Char" attribute="Character" lineEndContext="#pop">
+        <DetectChar attribute="Character" context="HexChar" char="x"/>
+        <keyword attribute="Character" context="#pop" String="characters" insensitive="1"/>
+        <RegExpr attribute="Character" context="#pop" String=".(?!\w)"/>
         <RegExpr attribute="Error" context="#pop" String="\w+|."/>
       </context>
-      <context name="HexChar" attribute="Constant" lineEndContext="#pop#pop">
-        <RegExpr attribute="Constant" context="#pop#pop" String="[0-9a-fA-F]+"/>
+      <context name="HexChar" attribute="Character" lineEndContext="#pop#pop">
+        <RegExpr attribute="Character" context="#pop#pop" String="[0-9a-fA-F]+"/>
       </context>
       <context name="String" attribute="String" lineEndContext="#stay">
         <DetectChar attribute="String" context="#pop" char="&quot;"/>
-        <DetectChar attribute="Constant" context="EscapeString" char="\"/>
+        <DetectChar attribute="Escape" context="EscapeString" char="\"/>
       </context>
-      <context name="EscapeString" attribute="Constant" lineEndContext="#pop" fallthroughContext="#pop">
-        <AnyChar attribute="Constant" context="#pop" String="abfnrtv&quot;\"/>
-        <RegExpr attribute="Constant" context="#pop" String="[xXu][0-9a-fA-F]+;|\\[0-7]{3}|(?:[MC]-|\^)?."/>
+      <context name="EscapeString" attribute="Escape" lineEndContext="#pop" fallthroughContext="#pop">
+        <AnyChar attribute="Escape" context="#pop" String="abfnrtv&quot;\"/>
+        <RegExpr attribute="Escape" context="#pop" String="[xXu][0-9a-fA-F]+;|\\[0-7]{3}|(?:[MC]-|\^)?."/>
       </context>
       <!-- Used for meta-variables, e.g. (lamdbda («name») «body») -->
       <context name="Meta" attribute="Meta" lineEndContext="#stay">
@@ -444,10 +455,15 @@
     </contexts>
     <itemDatas>
       <itemData name="Normal"      defStyleNum="dsNormal"/>
+      <itemData name="Assert"      defStyleNum="dsOperator"/>
       <itemData name="Macro"       defStyleNum="dsKeyword"/>
       <itemData name="Function"    defStyleNum="dsFunction"/>
-      <itemData name="Constant"    defStyleNum="dsConstant"/>
+      <itemData name="Boolean"     defStyleNum="dsConstant"/>
+      <itemData name="Number"      defStyleNum="dsConstant"/>
+      <itemData name="Character"   defStyleNum="dsConstant"/>
       <itemData name="String"      defStyleNum="dsConstant"/>
+      <itemData name="Symbol"      defStyleNum="dsConstant"/>
+      <itemData name="Escape"      defStyleNum="dsComment"/>
       <itemData name="Comment"     defStyleNum="dsComment"/>
       <itemData name="MetaBracket" defStyleNum="dsSpecialChar"/>
       <itemData name="Meta"        defStyleNum="dsSpecialString"/>

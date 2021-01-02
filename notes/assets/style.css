@@ -1,6 +1,6 @@
 /* Reset */
 
-html, body, blockquote, p, ul, ol, li {
+html, body, blockquote, pre, p, ul, ol, li {
     padding: 0;
     margin: 0;
 }
@@ -11,6 +11,7 @@ html, body, blockquote, p, ul, ol, li {
     color-scheme: light dark;
     --bg: #fafafa;
     --block: #f0f0f0;
+    --block-00: #f0f0f000;
     --active: #e8e8e8;
     --border: #ccc;
     --subdued: #888;
@@ -24,6 +25,7 @@ html, body, blockquote, p, ul, ol, li {
     :root {
         --bg: #202020;
         --block: #2e2e2e;
+        --block-00: #2e2e2e00;
         --active: #444;
         --border: #666;
         --subdued: #888;
@@ -43,16 +45,12 @@ body {
     line-height: 1.4;
 }
 
-p, ul, ol, blockquote, pre {
-    margin-top: 1em;
-}
-
-p:first-child, ul ul, ol ul, ol ol, ul ol {
-    margin-top: 0;
-}
+p, ul, ol, blockquote, pre { margin-top: 1em; }
+p:first-child, li ul, li ol { margin-top: 0; }
 
 ul { margin-left: 1.05em; }
 ol { margin-left: 1.45em; }
+li ul, li ol { margin-left: 2em; }
 
 h1, h2, h3 {
     font-weight: bold;
@@ -80,8 +78,8 @@ em, cite {
 }
 
 a {
-    text-decoration: none;
     color: var(--fg);
+    text-decoration: none;
 }
 
 a:hover {
@@ -89,33 +87,38 @@ a:hover {
 }
 
 /* The .link class indicates it's already styled as a link in some other way. */
-a:not(.link) {
-    border-bottom: 1px dotted var(--subdued);
-}
+a:not(.link) { border-bottom: 1px dotted var(--subdued); }
+a:not(.link):hover { border-bottom: 1px solid var(--link); }
 
-a:not(.link):hover {
-    border-bottom: 1px solid var(--link);
+blockquote {
+    background: var(--block);
+    padding: 15px;
+    border-left: 10px solid var(--border);
+    border-radius: 6px;
 }
 
 code {
+    background: var(--block);
+    padding: 2px 5px;
+    border-radius: 6px;
     /* Fits 80 columns at max-width. */
     font: 16px Menlo, Consolas, monospace;
-    background: var(--block);
-    border-radius: 6px;
-    padding: 2px 5px;
 }
 
-pre code {
+.blockcode {
     display: block;
+    overflow-x: auto;
     padding: 15px;
+    /* Shave off a half pixel so that 80 chars Menlo has no scrollbar. */
+    padding-right: 14.5px;
     line-height: 1.25;
 }
 
-h1 code, h2 code, h3 code, h4 code, .toc__item code {
+h1 code, h2 code, h3 code, .toc__item code {
+    padding: 0;
+    background: inherit;
     font-size: inherit;
     font-weight: inherit;
-    background: inherit;
-    padding: 0;
 }
 
 .math {
@@ -123,11 +126,13 @@ h1 code, h2 code, h3 code, h4 code, .toc__item code {
     font-size: 0.9em;
 }
 
-blockquote {
-    border-left: 10px solid var(--border);
-    padding: 15px;
-    background: var(--block);
-    border-radius: 6px;
+.katex-display {
+    position: relative;
+    overflow-x: auto;
+    /* Use padding to prevent vertical scrollbars, due to weird overflow-x/y
+    behavior. This also controls the position of the horizontal scrollbar. */
+    padding-bottom: 15px;
+    margin-bottom: -15px;
 }
 
 .nowrap {
@@ -142,9 +147,9 @@ blockquote {
 }
 
 .anchor__link {
-    margin-left: -0.82em;
-    visibility: hidden;
     position: absolute;
+    visibility: hidden;
+    margin-left: -0.82em;
     color: var(--subdued);
 }
 
@@ -153,15 +158,15 @@ blockquote {
 }
 
 .number {
-    color: var(--subdued);
     float: right;
     margin: 0 0 0.5em 0.5em;
+    color: var(--subdued);
 }
 
 .number--big {
+    margin-top: -0.03em;
     font-size: 2em;
     line-height: 1;
-    margin-top: -0.03em;
 }
 
 .highlight {
@@ -169,13 +174,13 @@ blockquote {
 }
 
 .highlight blockquote {
-    border-left-color: var(--link-subdued);
     margin-top: 0;
+    border-left-color: var(--link-subdued);
 }
 
 .highlight__link {
-    font-size: 0.9em;
     color: var(--subdued);
+    font-size: 0.9em;
 }
 
 .toc {
@@ -184,16 +189,15 @@ blockquote {
 }
 
 .toc__item {
-    list-style: none;
     display: table-row;
 }
 
 .toc__label {
     display: table-cell;
-    text-align: right;
     padding-right: 15px;
     color: var(--subdued);
     font-weight: bold;
+    text-align: right;
 }
 
 /* Page layout */
@@ -207,8 +211,8 @@ body {
 
 .skip-link {
     position: absolute;
-    left: -999px;
     top: 10px;
+    left: -999px;
     width: 1px;
     height: 1px;
 }
@@ -221,15 +225,15 @@ body {
 
 .header {
     display: flex;
-    justify-content: space-between;
     align-items: baseline;
+    justify-content: space-between;
     padding-bottom: 5px;
     border-bottom: 3px solid var(--border);
 }
 
 .title {
-    font-size: 1.5em;
     color: var(--intense);
+    font-size: 1.5em;
 }
 
 .sitenav {
@@ -237,14 +241,14 @@ body {
 }
 
 .sitenav__item {
-    color: var(--intense);
     padding: 6px 14px;
+    color: var(--intense);
     white-space: nowrap;
 }
 
 .sitenav__item--active {
-    background: var(--active);
     border-radius: 6px;
+    background: var(--active);
 }
 
 .sitenav__item--last {
@@ -279,8 +283,8 @@ body {
 
 .pagenav__link {
     display: block;
-    color: var(--intense);
     padding: 8px 0;
+    color: var(--intense);
 }
 
 .pagenav__link:hover {
@@ -309,8 +313,8 @@ body {
         padding: 20px 10px;
     }
     .header {
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
     }
     .title {
         margin-bottom: 10px;
@@ -347,14 +351,14 @@ body {
 }
 
 .external {
-    color: var(--border);
     width: 0.8em;
     height: 0.8em;
     padding-left: 0.22em;
+    color: var(--border);
     vertical-align: -1.5px;
 }
 
-a:hover .external {
+.link:hover .external {
     color: var(--link-subdued);
 }
 
@@ -371,8 +375,8 @@ a:hover .external {
 
 @media screen and (max-width: 915px) {
     .wizard {
-        float: none;
         display: block;
+        float: none;
         margin: -10px auto 1em;
     }
 }
@@ -399,6 +403,11 @@ a:hover .external {
     .fu { color: #61afef; }
     .cn { color: #98c379; }
     .co { color: #e7727b; }
+}
+
+.op {
+    color: var(--subdued);
+    font-weight: bold;
 }
 
 .ss {

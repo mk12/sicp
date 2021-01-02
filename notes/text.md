@@ -445,9 +445,9 @@ If we use `average-damp` on `square`, we actually get a procedure that takes the
 
 ```
 ((average-damp square) 10)
-55
+=> 55
 (+ 1 2 3 4 5 6 7 8 9 10)
-55
+=> 55
 ```
 
 > In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.
@@ -475,7 +475,7 @@ Now we can do things like this:
 (define (cube x) (* x x x))
 (define dx 0.00001)
 ((deriv cube) 5)
-75.00014999664018
+=> 75.00014999664018
 ```
 
 #### Abstractions and first-class procedures
@@ -529,15 +529,15 @@ Now we can do things like this:
 ```
 (define x (cons 1 2))
 (car x)
-1
+=> 1
 (cdr x)
-2
+=> 2
 (define y (cons 3 4))
 (define z (cons x y))
 (car (car z))
-1
+=> 1
 (car (cdr z))
-3
+=> 3
 ```
 
 - This is all the glue we need to implement all sorts of complex data structures.
@@ -1075,13 +1075,13 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ```
 (withdraw 25)
-75
+=> 75
 (withdraw 25)
-50
+=> 50
 (withdraw 60)
-"Insufficient funds"
+=> "Insufficient funds"
 (withdraw 15)
-35
+=> 35
 ```
 
 - Evaluating the same combination twice, `(withdraw 25)`, returned different values.
@@ -1126,13 +1126,13 @@ There are a number of possible ways we could represent sets. A set is a collecti
 (define W1 (make-withdraw 100))
 (define W2 (make-withdraw 100))
 (W1 50)
-50
+=> 50
 (W2 70)
-30
+=> 30
 (W2 40)
-"Insufficient funds"
+=> "Insufficient funds"
 (W1 40)
-10
+=> 10
 ```
 
 - Here, `W1` and `W2` are complement independent objects, each with its own local state variable.
@@ -1252,6 +1252,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 3.2.1: The Rules for Evaluation
 
+- And some random stuff.
+    - Lorem dolar ipsum sit amet. Promum iqur.
+    - Unless the sheep of wool of gold of tyre.
 - To evaluate a combination:
     1. Evaluate the subexpressions of the combination.
     2. Apply the value of the operator subexpression to the values of the operand subexpressions.
@@ -1333,7 +1336,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 3.3.1: Mutable List Structure
 
 - The primitive mutators for pairs are `set-car!` and `set-cdr!`.
-- `(set-car p x)` changes the `car` of the pair `p`, making it point to `x` instead.
+- `(set-car! p x)` changes the `car` of the pair `p`, making it point to `x` instead.
 - The old `car` is unreachable garbage. We will see later how Lisp recycles this memory.
 - We could implement `cons` in terms of these two procedures in addition to a `get-new-part` procedure.
 
@@ -1410,12 +1413,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - In a one-dimensional table, each value is indexed by one key.
 - We can implement it as a simple list of _records_.
 - A record is a pair consisting of a key and an associated value.
-- The first record in the table is a dummy, and it hold the arbitrarily chosen symbol `*table*`.
+- The first record in the table is a dummy, and it hold the arbitrarily chosen symbol `'*table*`.
     - If a table was just a pointer to the first actual record, then when we wouldn't be able to write a mutator to add a record to the front.
     - We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
     - It would only change the parameter in $E_1$, not the value in the calling environment.
     - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
-    - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose. In C, these are `&x`{.c}, `*x`{.c}, and `*x = ...`{.c}.
+    - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose.
 - The `lookup` procedure returns the value associated with a key in a table, or `false` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
 
@@ -2064,7 +2067,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     (set! v «e2») «e3»))
 ```
 
-- Here, `*unassigned*` is a special symbol causing an error upon variable lookup.
+- Here, `'*unassigned*` is a special symbol causing an error upon variable lookup.
 
 ### 4.1.7: Separating Syntactic Analysis from Execution
 
