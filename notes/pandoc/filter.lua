@@ -1,11 +1,49 @@
 -- Copyright 2020 Mitchell Kember. Subject to the MIT License.
 
-local socket = require("socket.unix")
-
 local vars = {}
 local highlight_idx = 0
 local highlight_fwd = false
 local highlight_bwd = false
+
+-- Set up the connection to the katex.ts server.
+local socket = assert(require("socket.unix")())
+assert(socket:connect("katex.sock"))
+socket:settimeout(0)
+function close_socket()
+    socket:close()
+end
+
+-- Pre-renders math with KaTeX.
+local buffer = ""
+function render_math(el)
+    io.stderr:write("render math\n")
+    vars.math = true
+    local input = el.text .. "\x00"
+    if el.mathtype == "DisplayMath" then
+        input = "display:" .. input
+    end
+    local i = 1
+    local error
+    while i <= #input do
+        i = assert(socket:send(input, i))
+        i = i + 1
+    end
+    i = nil
+    local data = ""
+    while not i do
+        buffer = buffer .. data
+        data, error, partial = socket:receive(1024)
+        if not data and error == "timeout" then
+            data = partial
+        else
+            assert(data, error)
+        end
+        i = data:find("\x00")
+    end
+    io.stderr:write("got response\n")
+    buffer = data:sub(i + 1)
+    return pandoc.RawInline("html", data:sub(1, i - 1))
+end
 
 -- Reads metatdata set on the command line by docgen.
 function read_meta(meta)
@@ -51,12 +89,6 @@ function highlight_div(el)
     )
     table.insert(el.content, 1, pandoc.RawBlock("html", link))
     return el
-end
-
--- Pre-renders math with KaTeX. Assumes the katex.ts server is running.
-function render_math(el)
-    vars.math = true
-    return pandoc.RawInline("html", "HELLO")
 end
 
 -- Writes metadata variables used in template.html.
@@ -147,6 +179,7 @@ function internal_link(el)
     return el
 end
 
+-- Adds the scheme class to CodeBlock elements.
 function code_block(el)
     if #el.classes == 0 then
         el.classes = {"scheme"}
@@ -154,6 +187,8 @@ function code_block(el)
     end
 end
 
+-- Adds the scheme class to all Code elements within el. We do this, rather than
+-- transforming every Code in the document, to avoid applying it in headings.
 function walk_inline_code(el)
     return pandoc.walk_block(el, {Code = function(el)
         -- Only highlight inline code if it has a parenthesis (procedure
@@ -173,9 +208,10 @@ end
 -- end
 
 return {
+    {Math = render_math},
+    {Pandoc = close_socket},
     {Meta = read_meta},
     {Div = highlight_div},
-    {Math = render_math},
     {Meta = write_meta},
     {Link = internal_link},
     {CodeBlock = code_block},

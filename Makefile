@@ -32,7 +32,7 @@ help:
 	@echo "help      show this help message"
 	@echo "test      run tests in Chez, Guile, and Racket"
 	@echo "docs      build the website in docs/"
-	@echo "katex     run katex server in background"
+	@echo "katex     run the katex server"
 	@echo "fmt       format C and TypeScript code"
 	@echo "lint      lint Scheme and Markdown files"
 	@echo "check     run shellcheck on scripts"
@@ -63,13 +63,10 @@ $(doc_assets_link): docs/assets/%: | notes/assets/%
 	mkdir -p docs/assets
 	-ln -s ../../$| $@
 
-katex: katex.sock
-	@echo "NOTE: katex.ts is running in the background. Run 'rm $<' to stop it."
+katex:
+	deno run $(DENOFLAGS) katex.ts katex.sock
 
-ifneq ($(MAKECMDGOALS),katex)
 .INTERMEDIATE: katex.sock
-endif
-
 katex.sock:
 	deno run $(DENOFLAGS) katex.ts $@ &
 	deno run $(DENOFLAGS) katex.ts --wait $@

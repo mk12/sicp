@@ -84,12 +84,10 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
       for (const part of parts) {
         const displayMode = part.startsWith(DISPLAY_PREFIX);
         const tex = displayMode ? part.slice(DISPLAY_PREFIX.length) : part;
-        await Deno.writeAll(
-          conn,
-          encoder.encode(
-            katex.renderToString(tex, { displayMode, throwOnError: false }),
-          ),
-        );
+        const output =
+          katex.renderToString(tex, { displayMode, throwOnError: false }) +
+          "\x00";
+        await Deno.writeAll(conn, encoder.encode(output));
       }
     }
   }
@@ -129,13 +127,15 @@ async function startServer(socketFile: string): Promise<void> {
     throw new ExitError(1);
   }
   filesToRemove.push(socketFile);
-  // Create a regular file first so that --wait will see an event. Creation via
-  // the listen call does not cause an FS event, at least according to watchFS.
-  await Deno.create(socketFile);
-  await Deno.remove(socketFile);
-  // Call fsync on the directory to ensure the above actions are committed.
-  // Otherwise, whileFileExists will detect our own removal and exit.
+  // Create a regular file first so that --wait will see an event. (Creation via
+  // the listen call does not cause an FS event.) We call fsync to ensure each
+  // step is committed, otherwise it might not register at all, or watchFS might
+  // get an event for this very removal and exit the program.
   const parent = await Deno.open(dirname(socketFile));
+  const regularFile = await Deno.create(socketFile);
+  await Deno.fsync(regularFile.rid);
+  await Deno.fsync(parent.rid);
+  await Deno.remove(socketFile);
   await Deno.fsync(parent.rid);
   parent.close();
   const listener = Deno.listen({ transport: "unix", path: socketFile });
