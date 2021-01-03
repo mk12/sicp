@@ -64,8 +64,12 @@ $(doc_assets_link): docs/assets/%: | notes/assets/%
 	-ln -s ../../$| $@
 
 katex: katex.sock
+	@echo "NOTE: katex.ts is running in the background. Run 'rm $<' to stop it."
 
+ifneq ($(MAKECMDGOALS),katex)
 .INTERMEDIATE: katex.sock
+endif
+
 katex.sock:
 	deno run $(DENOFLAGS) katex.ts $@ &
 	deno run $(DENOFLAGS) katex.ts --wait $@

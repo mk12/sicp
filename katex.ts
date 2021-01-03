@@ -16,21 +16,22 @@ function usage(write: (s: string) => void) {
 usage: deno run --unstable --allow-read --allow-write
        ${SCRIPT_NAME} [--help | --wait] SOCKET_FILE
 
-Server that listens on the Unix domain socket SOCKET_FILE.
+Runs a server that renders TeX into KaTeX HTML.
 
-Responds to each null-terminated TeX string with a null-terminated KaTeX HTML
-string. Prefix the input with "display:" to enable display mode.
+The server listens on the Unix domain socket SOCKET_FILE (stream-oriented).
+Inputs and outputs are null terminated. The input prefix "display:" enables
+display mode. The server automatically exits if SOCKET_FILE is removed.
 
-Creates SOCKET_FILE.pid on startup, and exits the server if it is ever removed.
-When run with the --wait option, simply waits for that file to be created. This
-allows you to wait for a background server to start.
+When run with the --wait option, waits for a server to start.
 `.trim(),
   );
 }
 
 // Error that causes the program to clean up and exit.
 class ExitError extends Error {
-  constructor(readonly code: number) { super(); }
+  constructor(readonly code: number) {
+    super();
+  }
 }
 
 // Files to remove before exiting.
@@ -39,7 +40,7 @@ const filesToRemove: string[] = [];
 // Removes files in filesToRemove if they exist.
 async function cleanup(): Promise<void> {
   try {
-    await Promise.allSettled(filesToRemove.map(f => Deno.remove(f)));
+    await Promise.allSettled(filesToRemove.map((f) => Deno.remove(f)));
   } catch (ex) {
     if (!(ex instanceof Deno.errors.NotFound)) {
       throw ex;
@@ -101,7 +102,10 @@ async function waitForFile(path: string): Promise<void> {
   }
   const absolute = resolve(path);
   for await (const event of Deno.watchFs(dirname(path), { recursive: false })) {
-    if (event.kind === "create" && event.paths.includes(absolute)) {
+    // We don't check event.kind on purpose. It might be "remove" in the race
+    // condition where startServer creates the file in between the exists check
+    // above and this watchFS loop.
+    if (event.paths.includes(absolute)) {
       return;
     }
   }
@@ -117,24 +121,28 @@ async function whileFileExists(path: string): Promise<never> {
   throw Error("watchFS stopped!");
 }
 
-// Starts the server on socketFile. Also writes the PID of the current process
-// to pidFile. Throws ExitError if socketFile already exists, or if pidFile is
-// removed while the server is running.
-async function startServer(socketFile: string, pidFile: string): Promise<void> {
-  // Deno.listen seems to automatically remove the file if it exists. We don't
-  // want to do that because that likely means you're running two servers.
-  if (await exists(socketFile) || await exists(pidFile)) {
+// Starts the server on socketFile. Throws ExitError if socketFile already
+// exists, or if it is removed while the server is running.
+async function startServer(socketFile: string): Promise<void> {
+  if (await exists(socketFile)) {
     console.error(`error: ${socketFile} already exists`);
     throw new ExitError(1);
   }
   filesToRemove.push(socketFile);
+  // Create a regular file first so that --wait will see an event. Creation via
+  // the listen call does not cause an FS event, at least according to watchFS.
+  await Deno.create(socketFile);
+  await Deno.remove(socketFile);
+  // Call fsync on the directory to ensure the above actions are committed.
+  // Otherwise, whileFileExists will detect our own removal and exit.
+  const parent = await Deno.open(dirname(socketFile));
+  await Deno.fsync(parent.rid);
+  parent.close();
   const listener = Deno.listen({ transport: "unix", path: socketFile });
-  filesToRemove.push(pidFile);
-  await Deno.writeFile(pidFile, new TextEncoder().encode(Deno.pid.toString()));
   console.log(`${SCRIPT_NAME}: listening on ${socketFile}`);
   return Promise.race([
     serveKatex(listener),
-    whileFileExists(pidFile),
+    whileFileExists(socketFile),
   ]);
 }
 
@@ -153,15 +161,14 @@ async function main() {
     Deno.exit(1);
   }
   const socketFile = args[0];
-  const pidFile = `${socketFile}.pid`;
   if (waitIdx >= 0) {
-    return waitForFile(pidFile);
+    return waitForFile(socketFile);
   }
   let exitCode = 0;
   try {
     await Promise.race([
       handleSignals(),
-      startServer(socketFile, pidFile),
+      startServer(socketFile),
     ]);
   } catch (ex) {
     if (ex instanceof ExitError) {

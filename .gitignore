@@ -5,9 +5,9 @@
 *.dep
 *.zo
 
-# Generated code
-docgen_assets.c
-
 # Binaries
 /docgen
 /linter
+
+# Sockets
+katex.sock
