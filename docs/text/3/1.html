@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Section 3.1 Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -185,9 +171,9 @@
 <li>Consider the procedure <code>rand</code>. We want it to return an integer chosen at random each time we evaluate <code>(rand)</code>.</li>
 <li>Suppose we have the procedure <code>rand-update</code> that takes one argument.
 <ul>
-<li>We first call it with an initial value <span class="math inline">x_1</span>, and it returns an integer <span class="math inline">x_2</span>.</li>
-<li>We call it with <span class="math inline">x_2</span>, and it gives us <span class="math inline">x_3</span>, and so on.</li>
-<li>The sequence of values <span class="math inline">x_1, x_2, \dots, x_n</span> will have the desired statistical properties (random uniform distribution).</li>
+<li>We first call it with an initial value HELLO, and it returns an integer HELLO.</li>
+<li>We call it with HELLO, and it gives us HELLO, and so on.</li>
+<li>The sequence of values HELLO will have the desired statistical properties (random uniform distribution).</li>
 <li>This is a <em>pseudorandom</em> sequence, since each number is a function of the previous one.</li>
 </ul></li>
 <li>We could implement <code>rand</code> like this:</li>
@@ -201,7 +187,7 @@
 <p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. (306–307)</p>
 </blockquote>
 <ul>
-<li>We can use the Monte Carlo method to approximate <span class="math inline">π</span>, knowing that the probability that two randomly chosen integers have 1 as their GCD is <span class="math inline">6/π^2</span>.</li>
+<li>We can use the Monte Carlo method to approximate HELLO, knowing that the probability that two randomly chosen integers have 1 as their GCD is HELLO.</li>
 <li>If we had to use <code>rand-update</code> directly, our Monte Carlo program would “betray some painful breaches of modularity” (308).</li>
 </ul>
 <blockquote>

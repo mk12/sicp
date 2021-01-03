@@ -1,4 +1,5 @@
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
+DENOFLAGS := --unstable --allow-read --allow-write
 
 doc_sec_1 := 1/index 1/1 1/2 1/3
 doc_sec_2 := 2/index 2/1 2/2 2/3 2/4 2/5
@@ -20,34 +21,33 @@ doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 	config.yml filter.lua pagenav.html scheme.xml template.html)
 
-.PHONY: all help test docs lint spell check clean vscode
+.PHONY: all help test docs katex fmt lint spell check validate clean vscode
 
 # Ordered from fastest to slowest, for early feedback.
-all: lint check spell docs test
+all: lint check fmt spell docs validate test
 
 help:
 	@echo "Targets:"
-	@echo "all     build and test everything"
-	@echo "help    show this help message"
-	@echo "test    run tests in Chez, Guile, and Racket"
-	@echo "docs    build the website in docs/"
-	@echo "lint    lint Scheme and Markdown files"
-	@echo "spell   spellcheck Markdown files"
-	@echo "check   run shellcheck on scripts"
-	@echo "clean   remove compilation artifacts"
-	@echo "vscode  install vscode tasks"
+	@echo "all       build and test everything"
+	@echo "help      show this help message"
+	@echo "test      run tests in Chez, Guile, and Racket"
+	@echo "docs      build the website in docs/"
+	@echo "katex     run katex server in background"
+	@echo "fmt       format C and TypeScript code"
+	@echo "lint      lint Scheme and Markdown files"
+	@echo "check     run shellcheck on scripts"
+	@echo "spell     spellcheck Markdown files"
+	@echo "validate  validate generated HTML files"
+	@echo "clean     remove compilation artifacts"
+	@echo "vscode    install vscode tasks"
 
 test:
 	./run.sh all
 
 docs: $(doc_html) $(doc_assets_link)
 
-$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux) katex.pid
+$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux) | katex.sock
 	./docgen $@
-
-.INTERMEDIATE: katex.pid
-katex.pid:
-	touch $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
 $(doc_text): notes/text.md
@@ -63,6 +63,17 @@ $(doc_assets_link): docs/assets/%: | notes/assets/%
 	mkdir -p docs/assets
 	-ln -s ../../$| $@
 
+katex: katex.sock
+
+.INTERMEDIATE: katex.sock
+katex.sock:
+	deno run $(DENOFLAGS) katex.ts $@ &
+	deno run $(DENOFLAGS) katex.ts --wait $@
+
+fmt:
+	find . -type f -name "*.ts" | xargs deno fmt
+	@echo "TODO: clang-format"
+
 lint: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
 
@@ -71,6 +82,9 @@ spell:
 
 check:
 	find . -type f -name "*.sh" | xargs shellcheck 
+
+validate:
+	@echo "TODO"
 
 clean:
 	find src -type d -name compiled -exec rm -rf {} +

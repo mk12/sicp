@@ -7,6 +7,8 @@ readonly main="src/main.ss"
 usage() {
     cat <<EOS
 usage: $0 [--help] {all,chez,chezd,guile,racket} args ...
+
+Runs $main using the given Scheme implementation.
 EOS
 }
 
@@ -49,7 +51,7 @@ fi
 readonly arg=$1
 shift
 
-if ! [[ -t 1 ]]; then
+if ! [[ -t 1 ]] || [[ -n ${NO_COLOR+x} ]]; then
     set -- "--no-color" "$@"
 fi
 

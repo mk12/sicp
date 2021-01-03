@@ -13,7 +13,7 @@
 
 (SICP
 
-(Chapter :4 "Computing with Register Machines")
+(Chapter :5 "Computing with Register Machines")
 
 ) ; end of SICP
 ) ; end of library

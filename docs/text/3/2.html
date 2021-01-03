@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Section 3.2 Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -139,13 +125,13 @@
 (<span class="kw">define</span> (f a) (sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>)))</code></pre>
 <ul>
 <li>These definitions create bindings for <code>square</code>, <code>sum-of-squares</code>, and <code>f</code> in the global frame.</li>
-<li>To evaluate <code>(f <span class="cn">5</span>)</code>, we create an environment <span class="math inline">E_1</span> with a frame containing a single binding, associating <code>a</code> with <code>5</code>.</li>
-<li>In <span class="math inline">E_1</span>, we evaluate <code>(sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>))</code>.</li>
+<li>To evaluate <code>(f <span class="cn">5</span>)</code>, we create an environment HELLO with a frame containing a single binding, associating <code>a</code> with <code>5</code>.</li>
+<li>In HELLO, we evaluate <code>(sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>))</code>.</li>
 <li>We must evaluate the subexpressions of this combination.</li>
-<li>We find the value associated with <code>sum-of-squares</code> not in <span class="math inline">E_1</span> but in the global environment.</li>
+<li>We find the value associated with <code>sum-of-squares</code> not in HELLO but in the global environment.</li>
 <li>Evaluating the operand subexpressions yields <code>6</code> and <code>10</code>.</li>
-<li>Now we create <span class="math inline">E_2</span> with a frame containing two bindings: <code>x</code> is bound to <code>6</code>, and <code>y</code> is bound to <code>10</code>.</li>
-<li>In <span class="math inline">E_2</span>, we evaluate <code>(<span class="fu">+</span> (square x) (square y))</code>.</li>
+<li>Now we create HELLO with a frame containing two bindings: <code>x</code> is bound to <code>6</code>, and <code>y</code> is bound to <code>10</code>.</li>
+<li>In HELLO, we evaluate <code>(<span class="fu">+</span> (square x) (square y))</code>.</li>
 <li>The process continues recursively. We end up with <code>(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)</code>, which evaluates to <code>136</code>.</li>
 </ul>
 <h2 id="3.2.3" class="anchor">
@@ -165,20 +151,20 @@
 <li>This places a single binding in the global environment frame.</li>
 <li>Consider now <code>(<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))</code>.
 <ul>
-<li>We set up <span class="math inline">E_1</span> where <code>100</code> is bound to the formal parameter <code>balance</code>, and then we evaluate the body of <code>make-withdraw</code>.</li>
-<li>This returns a lambda procedure whose environment is <span class="math inline">E_1</span>, and this is then bound to <code>W1</code> in the global frame.</li>
+<li>We set up HELLO where <code>100</code> is bound to the formal parameter <code>balance</code>, and then we evaluate the body of <code>make-withdraw</code>.</li>
+<li>This returns a lambda procedure whose environment is HELLO, and this is then bound to <code>W1</code> in the global frame.</li>
 </ul></li>
 <li>Now, we apply this procedure: <code>(W1 <span class="cn">50</span>)</code>.
 <ul>
-<li>We construct a frame in <span class="math inline">E_2</span> that binds <code>amount</code> to <code>50</code>, and then we evaluate the body of <code>W1</code>.</li>
-<li>The enclosing environment of <span class="math inline">E_2</span> is <span class="math inline">E_1</span>, <em>not</em> the global environment.</li>
-<li>Evaluating the body results in the <code>set!</code> rebinding <code>balance</code> in <span class="math inline">E_1</span> to the value <code>(<span class="fu">-</span> <span class="cn">100</span> <span class="cn">50</span>)</code>, which is <code>50</code>.</li>
-<li>After calling <code>W1</code>, the environment <span class="math inline">E_2</span> is irrelevant because nothing points to it.</li>
-<li>Each call to <code>W1</code> creates a new environment to hold <code>amount</code>, but uses the same <span class="math inline">E_1</span> (which holds <code>balance</code>).</li>
+<li>We construct a frame in HELLO that binds <code>amount</code> to <code>50</code>, and then we evaluate the body of <code>W1</code>.</li>
+<li>The enclosing environment of HELLO is HELLO, <em>not</em> the global environment.</li>
+<li>Evaluating the body results in the <code>set!</code> rebinding <code>balance</code> in HELLO to the value <code>(<span class="fu">-</span> <span class="cn">100</span> <span class="cn">50</span>)</code>, which is <code>50</code>.</li>
+<li>After calling <code>W1</code>, the environment HELLO is irrelevant because nothing points to it.</li>
+<li>Each call to <code>W1</code> creates a new environment to hold <code>amount</code>, but uses the same HELLO (which holds <code>balance</code>).</li>
 </ul></li>
 <li><code>(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))</code> creates another environment with a <code>balance</code> binding.
 <ul>
-<li>This is independent from <span class="math inline">E_1</span>, which is why the <code>W2</code> object and its local state is independent from <code>W1</code>.</li>
+<li>This is independent from HELLO, which is why the <code>W2</code> object and its local state is independent from <code>W1</code>.</li>
 <li>On the other hand, <code>W1</code> and <code>W2</code> share the same code.</li>
 </ul></li>
 </ul>
@@ -189,10 +175,10 @@
 <li>With block structure, we nested definitions using <code>define</code> to avoid exposing helper procedures.</li>
 <li>Internal definitions work according to the environmental model.</li>
 <li>When we apply a procedure that has internal definitions, there are <code>define</code> forms at the beginning of the body.</li>
-<li>We are in <span class="math inline">E_1</span>, so evaluating these adds bindings to the first frame of <span class="math inline">E_1</span>, right after the arguments.</li>
-<li>When we apply the internal procedures, the formal parameter environment <span class="math inline">E_n</span> is created, and its enclosing environment is <span class="math inline">E_1</span> because that was where the procedure was defined.</li>
+<li>We are in HELLO, so evaluating these adds bindings to the first frame of HELLO, right after the arguments.</li>
+<li>When we apply the internal procedures, the formal parameter environment HELLO is created, and its enclosing environment is HELLO because that was where the procedure was defined.</li>
 <li>This means each internal procedure has access to the arguments of the procedure they are defined within.</li>
-<li>The names of local procedures don’t interfere with names external to the enclosing procedure, due to <span class="math inline">E_1</span>.</li>
+<li>The names of local procedures don’t interfere with names external to the enclosing procedure, due to HELLO.</li>
 </ul>
 </article>
 </main>

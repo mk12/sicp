@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Section 2.1 Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -145,7 +131,7 @@
 <li>We can construct a rational <code>x</code> with <code>(make-rat n d)</code>.</li>
 <li>We can select the numerator with <code>(numer x)</code>.</li>
 <li>We can select the denominator with <code>(denom x)</code>.</li>
-<li>For all values of <code>x</code>, <code>(<span class="fu">/</span> (numer x) (denom x))</code> must equal <span class="math inline">n/d</span>.</li>
+<li>For all values of <code>x</code>, <code>(<span class="fu">/</span> (numer x) (denom x))</code> must equal HELLO.</li>
 </ol></li>
 <li>For pairs, it is even simpler: we need three operations, which we will call <code>cons</code>, <code>car</code>, and <code>cdr</code>, such that if <code>z</code> is <code>(<span class="fu">cons</span> x y)</code>, then <code>(<span class="fu">car</span> z)</code> is <code>x</code> and <code>(<span class="fu">cdr</span> z)</code> is <code>y</code>.</li>
 <li>Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:</li>

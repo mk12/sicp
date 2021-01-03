@@ -1,9 +1,7 @@
 # New to do
 
 - rewrite README
-    - mention pandoc, katex, BEM css
-    - installation of pandoc, deno, luarocks
-- deno fmt the ts. consider clang-format for C, and a lua formatter.
+    - mention pandoc, katex, BEM css, deps.sh
 - spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
 - test in html5 validator https://html5.validator.nu/
@@ -25,6 +23,10 @@
     - pretty sure unix sockets are what I want https://stackoverflow.com/a/9476248
     - learning difference between stream/datagram unix sockets
     - https://stackoverflow.com/questions/9644251/how-do-unix-domain-sockets-differentiate-between-multiple-clients
+    - trouble with Lua in pandoc: https://stackoverflow.com/a/56087697
+    - `require "socket.unix"` failed. did `fenv (luarocks path)`, then got error about "Symbol not found: _lua_newuserdatauv"
+    - found pandoc's version, 5.3: `pandoc --lua-filter <(echo 'print(_VERSION)') <<< ''`
+    - `brew install luaver` and `luaver install 5.3.6` (latest 5.3 https://www.lua.org/versions.html)
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1
     + decided to use `=> 123` like in exercises BUT: always at start of line, never inlined into previous, AND not in cases where each line of the code block is showing a reduction

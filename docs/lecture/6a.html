@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Lecture 6A Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -178,9 +164,9 @@
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> More complicated stream processing
 </h3>
 <ul>
-<li>Suppose we have a stream of streams <span class="math inline">\{\{1,2,3,\dots\},\{10,20,30,\dots\},\dots\}</span>.</li>
+<li>Suppose we have a stream of streams HELLO.</li>
 <li>We can define a procedure <code>flatten</code> to accumulate them into a single flat stream.</li>
-<li>Problem: Given <span class="math inline">N</span>, find all pairs <span class="math inline">0&lt;j&lt;i≤N</span> such that <span class="math inline">i+j</span> is prime.</li>
+<li>Problem: Given HELLO, find all pairs HELLO such that HELLO is prime.</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (prime-sum-pairs n)
   (<span class="fu">map</span>
@@ -211,7 +197,7 @@
 <ul>
 <li>Solving this typically uses a <em>backtracking search</em>, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).</li>
 <li>This is unnecessary—it’s inordinately concerned with <em>time</em>.</li>
-<li>A simpler way is to employ <em>wishful thinking</em> and go from <span class="math inline">k</span> columns to <span class="math inline">k+1</span> columns.</li>
+<li>A simpler way is to employ <em>wishful thinking</em> and go from HELLO columns to HELLO columns.</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (queens size)
   (<span class="kw">define</span> (fill-cols k)
@@ -223,7 +209,7 @@
                  (safe? try-row k rest-queens))))
   (fill-cols size))</code></pre>
 <ul>
-<li>This gives us <em>all solutions</em> to the <span class="math inline">k</span>-queens puzzle.</li>
+<li>This gives us <em>all solutions</em> to the HELLO-queens puzzle.</li>
 <li>We changed our view from things that evolve in time and have state to a global view where we’re not concerned with time.</li>
 </ul>
 <h2 id="3" class="anchor">

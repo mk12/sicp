@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Section 1.3 Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -156,15 +142,15 @@
 <a class="anchor__link link" href="#1.3.3.1" aria-hidden="true">#</a> Finding roots of equations by the half-interval method
 </h3>
 <ul>
-<li>The <em>half-interval</em> method: a simple but powerful technique for finding the solutions to <span class="math inline">f(x) = 0</span>.</li>
-<li>Given <span class="math inline">f(a) &lt; 0 &lt; f(b)</span>, there must be at least one zero between <span class="math inline">a</span> and <span class="math inline">b</span>.</li>
-<li>To narrow it down, we let <span class="math inline">x</span> be the average of <span class="math inline">a</span> and <span class="math inline">b</span>, and then replace either the left bound or the right bound with it.</li>
+<li>The <em>half-interval</em> method: a simple but powerful technique for finding the solutions to HELLO.</li>
+<li>Given HELLO, there must be at least one zero between HELLO and HELLO.</li>
+<li>To narrow it down, we let HELLO be the average of HELLO and HELLO, and then replace either the left bound or the right bound with it.</li>
 </ul>
 <h3 id="1.3.3.2" class="anchor">
 <a class="anchor__link link" href="#1.3.3.2" aria-hidden="true">#</a> Finding fixed points of a function
 </h3>
 <ul>
-<li>A number <span class="math inline">x</span> is a <em>fixed point</em> of a function if <span class="math inline">f(x) = x</span>.</li>
+<li>A number HELLO is a <em>fixed point</em> of a function if HELLO.</li>
 <li>In some cases, repeatedly applying the function to an initial guess will converge on the fixed point.</li>
 <li>The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.</li>
 </ul>
@@ -185,10 +171,10 @@
 <h3 id="1.3.4.1" class="anchor">
 <a class="anchor__link link" href="#1.3.4.1" aria-hidden="true">#</a> Newton’s method
 </h3>
-<p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function <span class="math inline">f(x)</span>, the solution to <span class="math inline">f(x) = 0</span> is given by the fixed point of</p>
-<p><span class="math display">x ↦ x - \frac{f(x)}{f&#39;(x)}.</span></p>
+<p>The square-root procedure we did earlier was a special case of Newton’s method. Given a function HELLO, the solution to HELLO is given by the fixed point of</p>
+<p>HELLO</p>
 <p>Newton’s method converges very quickly—much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:</p>
-<p><span class="math display">f&#39;(x) = \frac{f(x+dx) - f(x)}{dx}.</span></p>
+<p>HELLO</p>
 <p>This translates to the following procedure:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (deriv f)
   (<span class="kw">lambda</span> (x) (<span class="fu">/</span> (<span class="fu">-</span> (f (<span class="fu">+</span> x dx)) (f x)) dx)))</code></pre>

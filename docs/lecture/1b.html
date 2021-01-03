@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Lecture 1B Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -211,7 +197,7 @@
   (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>)
       y
       (<span class="fu">1+</span> (<span class="fu">+</span> (<span class="fu">-1+</span> x) y))))</code></pre>
-<p>Both are written using recursion, but they are different: the first generates a <em>linear iterative</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(n)</span> space; the second generates a <em>linear recursive</em> process with <span class="math inline">Θ(n)</span> time and <span class="math inline">Θ(1)</span> space.</p>
+<p>Both are written using recursion, but they are different: the first generates a <em>linear iterative</em> process with HELLO time and HELLO space; the second generates a <em>linear recursive</em> process with HELLO time and HELLO space.</p>
 <p>The iteration has all of its state in explicit variables. The recursion does not.</p>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3

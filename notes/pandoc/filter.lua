@@ -53,10 +53,17 @@ function highlight_div(el)
     return el
 end
 
+-- Pre-renders math with KaTeX. Assumes the katex.ts server is running.
+function render_math(el)
+    vars.math = true
+    return pandoc.RawInline("html", "HELLO")
+end
+
 -- Writes metadata variables used in template.html.
 function write_meta(meta)
     meta[meta.id:gsub("/.*$", "")] = true
     meta.root = vars.root
+    meta.math = vars.math
     meta.pagenav = meta.up
     meta.arrows = meta.up
     meta.external = meta.up and meta.prev
@@ -168,6 +175,7 @@ end
 return {
     {Meta = read_meta},
     {Div = highlight_div},
+    {Math = render_math},
     {Meta = write_meta},
     {Link = internal_link},
     {CodeBlock = code_block},

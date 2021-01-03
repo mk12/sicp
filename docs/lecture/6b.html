@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Lecture 6B Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -152,7 +138,7 @@
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> More examples
 </h3>
 <ul>
-<li>We can calculate the integral <span class="math inline">\int s\,dt</span> the same way you would in signal processing:</li>
+<li>We can calculate the integral HELLO the same way you would in signal processing:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (integral s initial-value dt)
   (<span class="kw">define</span> int
@@ -170,7 +156,7 @@
 <a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Explicit <code>delay</code>
 </h3>
 <ul>
-<li>Let’s say we want to solve <span class="math inline">y&#39;=y^2,\;y(0)=1</span> using the step <span class="math inline">dt=0.001</span>.</li>
+<li>Let’s say we want to solve HELLO using the step HELLO.</li>
 <li>We’d like to write a stream program to solve this:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> y (integral dy <span class="cn">1</span> <span class="cn">0.001</span>))

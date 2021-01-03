@@ -56,13 +56,6 @@
                 "reveal": "never",
                 "revealProblems": "onProblem"
             }
-        },
-        {
-            "label": "docs",
-            "type": "shell",
-            "command": "make -C docs watch",
-            "group": "build",
-            "problemMatcher": []
         }
     ]
 }

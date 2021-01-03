@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Section 2.3 Notes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-   var mathElements = document.getElementsByClassName("math");
-   var macros = [];
-   for (var i = 0; i < mathElements.length; i++) {
-    var texText = mathElements[i].firstChild;
-    if (mathElements[i].tagName == "SPAN") {
-     katex.render(texText.data, mathElements[i], {
-      displayMode: mathElements[i].classList.contains('display'),
-      throwOnError: false,
-      macros: macros,
-      fleqn: false
-     });
-  }}});
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -159,8 +145,8 @@
 <ul>
 <li>One method is to just use lists. Each time we add a new element, we have to check to make sure it isn’t already in the set.</li>
 <li>This isn’t very efficient.</li>
-<li>The time complexity of <code>element-of-set?</code> (and therefore for <code>adjoin-set</code>) is <span class="math inline">Θ(n)</span>.</li>
-<li>For union and intersection, it’s <span class="math inline">Θ(n^2)</span>.</li>
+<li>The time complexity of <code>element-of-set?</code> (and therefore for <code>adjoin-set</code>) is HELLO.</li>
+<li>For union and intersection, it’s HELLO.</li>
 <li>If we don’t eliminate duplicates, most operations are faster.</li>
 <li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
 </ul>
@@ -172,7 +158,7 @@
 <li>We will only consider sets of numbers to keep things simple.</li>
 <li>Now, scanning the entire list in <code>element-of-set?</code> is a worst-case scenario. Most of the time we won’t have to.</li>
 <li>On average we should expect to scan about half of the set.</li>
-<li>This is still <span class="math inline">Θ(n)</span>; however, intersection gets much faster. Instead of <span class="math inline">Θ(n^2)</span>, it is <span class="math inline">Θ(n)</span>.</li>
+<li>This is still HELLO; however, intersection gets much faster. Instead of HELLO, it is HELLO.</li>
 </ul>
 <h3 id="2.3.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3.3" aria-hidden="true">#</a> Sets as binary trees
@@ -183,7 +169,7 @@
 <li>The left branch contains smaller numbers, and the right branch contains larger numbers.</li>
 <li>The same set can be represented by a tree in many ways.</li>
 <li>If the tree is balanced, each subtree is about half the size of the original tree.</li>
-<li>This allows us to do <code>element-of-set?</code> in <span class="math inline">Θ(\log(n))</span> time.</li>
+<li>This allows us to do <code>element-of-set?</code> in HELLO time.</li>
 <li>We will use the following list structure to represent trees: each node is the list <code>(number left-subtree right-subtree)</code>.</li>
 <li>Efficiency hinges on the tree being balanced.</li>
 <li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
@@ -195,8 +181,8 @@
 <li>The techniques discussed for sets show up again and again in information retrieval.</li>
 <li>In a data-management system, each record is identified by a key.</li>
 <li>The key must be unique.</li>
-<li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides <span class="math inline">Θ(n)</span> access.</li>
-<li>For “random access,” meaning <span class="math inline">Θ(1)</span> access time complexity, trees are usually used.</li>
+<li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides HELLO access.</li>
+<li>For “random access,” meaning HELLO access time complexity, trees are usually used.</li>
 <li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
 </ul>
 <h2 id="2.3.4" class="anchor">
