@@ -10,7 +10,7 @@ async function f() {
 }
 
 let promises = [];
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 40; i++) {
     promises.push(f());
 }
 await Promise.all(promises);

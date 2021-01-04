@@ -94,9 +94,8 @@ check() {
 
 check_macos() {
     say "checking lua libraries"
-    if ! "$(brew --prefix lua@5.3)/bin/lua" -l socket.unix <<< "" \
-            &> /dev/null; then
-        warn "luasocket not installed"
+    if ! "$(brew --prefix lua@5.3)/bin/lua" -l posix <<< "" &> /dev/null; then
+        warn "luaposix not installed"
     fi
 }
 
@@ -139,10 +138,10 @@ install_macos_docs() {
     lua="lua@$lua_version"
     lua_dir=$(brew --prefix $lua)
     install_macos_cmds pandoc "$lua:$lua_dir/bin/lua" luarocks deno
-    if "$lua_dir/bin/lua" -l socket.unix <<< "" &> /dev/null; then
-        say "luasocket is already installed"
+    if "$lua_dir/bin/lua" -l posix <<< "" &> /dev/null; then
+        say "luaposix is already installed"
     else
-        run luarocks --lua-dir="$lua_dir" install luasocket
+        run luarocks --lua-dir="$lua_dir" install luaposix
     fi
 }
 

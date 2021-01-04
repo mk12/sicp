@@ -36,6 +36,17 @@
             - made fire and forget (well, except catch)
     - working except OS error 22 when -j4 or higher
     - hammer.ts works so I suspect maybe luasocket is buggy
+    - nope: found culprit (maybe) https://github.com/denoland/deno/blob/master/cli/tests/unit/net_test.ts#L159
+    - confirmed on discord that you should `call conn.close()`
+    - found luasocket is 3.0-rc1 from 2013 despite many recent commits on GitHub
+    - never mind, GH tag is weird, `luarocks --lua-dir=/usr/local/opt/lua@5.3 show luasocket` shows 3.0rc1-2 (most recent non-dev release, from last year)
+    - discussion about pandoc and lua modules https://github.com/jgm/pandoc/issues/4230
+    - lua filters can't use modules with .so files!! https://github.com/jgm/pandoc/issues/3986
+    - the situation:
+        - luasocket.unix likely buggy
+        - pandoc can only use lua modules without .so (that's why cqueues doesn't work)
+    - luaposix works and is documented http://luaposix.github.io/luaposix/
+    - answered SO question: https://stackoverflow.com/a/65569899
 + docgen should have exit status 1 if pandoc fails
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1

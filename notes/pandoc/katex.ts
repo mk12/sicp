@@ -97,18 +97,13 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
     }
   }
 
-  try {
   for await (const conn of listener) {
-    console.log("got connection");
     handle(conn).catch(ex => {
-      conn.close();
       console.error(`${ERROR} ${ex}`);
+    }).finally(() => {
+      conn.close();
     });
   }
-} catch (e) {
-  console.error(e);
-  await new Promise((r, j) => setTimeout(() => r(1), 5000))
-}
 }
 
 // Renders a TeX string to KaTeX HTML.
@@ -129,10 +124,7 @@ async function waitForFile(path: string): Promise<void> {
   }
   const absolute = resolve(path);
   for await (const event of Deno.watchFs(dirname(path), { recursive: false })) {
-    // We don't check event.kind on purpose. It might be "remove" in the race
-    // condition where startServer creates the file in between the exists check
-    // above and this watchFS loop.
-    if (event.paths.includes(absolute)) {
+    if (event.kind === "modify" && event.paths.includes(absolute)) {
       return;
     }
   }
@@ -162,7 +154,6 @@ server, choose a different socket filename.
   }
   filesToRemove.push(socketFile);
   const listener = Deno.listen({ transport: "unix", path: socketFile });
-  // const listener = Deno.listen({ port: 8080 });
   // The listen call creates socketFile, but for some reason it does not cause a
   // watchFs event in waitForFile. To force one, we touch the file and commit
   // the change with fsync (also ensuring whileFileExists starts up-to-date).
@@ -174,7 +165,7 @@ server, choose a different socket filename.
   console.log(`${SCRIPT_NAME}: listening on ${socketFile}`);
   return Promise.race([
     serveKatex(listener),
-    // whileFileExists(socketFile),
+    whileFileExists(socketFile),
   ]);
 }
 

@@ -9,11 +9,19 @@ local highlight_bwd = false
 -- local socket = assert(require("socket").tcp())
 -- assert(socket:connect("localhost", 8080),
 --     "Failed to connect to katex.sock. Run 'make katex' and try again.")
-local socket = assert(require("socket.unix")())
-assert(socket:connect("katex.sock"),
-    "Failed to connect to katex.sock. Run 'make katex' and try again.")
+-- local socket = assert(require("socket.unix")())
+-- assert(socket:connect("katex.sock"),
+--     "Failed to connect to katex.sock. Run 'make katex' and try again.")
+-- local cq = require("cqueues")
+-- local cqs = require("cqueues.socket")
+-- local socket = cqs.socket({path = "katex.sock"})
+-- only require and connect on first math.
+local M = require("posix.sys.socket")
+local fd = assert(M.socket(M.AF_UNIX, M.SOCK_STREAM, 0))
+assert(M.connect(fd, {family = M.AF_UNIX, path = "katex.sock"}))
 function close_socket()
-    socket:close()
+    io.stderr:write("CLOSING SOCKET\n")
+    require("posix.unistd").close(fd)
 end
 
 -- Pre-renders math with KaTeX.
@@ -24,10 +32,21 @@ function render_math(el)
         request = "display:" .. request
     end
     local i = 1
-    while i <= #request do
-        i = assert(socket:send(request, i)) + 1
+    while i < #request do
+        i = assert(M.send(fd, request:sub(i)))
     end
-    local response = assert(socket:receive("*l"))
+    -- try table concat?
+    local response = assert(M.recv(fd, 1024))
+    while response:sub(#response) ~= "\n" do
+        response = response .. assert(M.recv(fd, 1024))
+    end
+    -- local response = "FOO"
+    -- local i = 1
+    -- while i <= #request do
+    --     i = assert(socket:send(request, i)) + 1
+    -- end
+    -- -- socket:write(request)
+    -- local response = assert(socket:receive("*l"))
     return pandoc.RawInline("html", response)
 end
 
