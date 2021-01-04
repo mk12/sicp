@@ -19,7 +19,10 @@ doc_assets_link := docs/assets/style.css
 doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
 	arrows circle-left circle-right external github)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
-	config.yml filter.lua pagenav.html scheme.xml template.html)
+	config.yml filter.lua katex.ts pagenav.html scheme.xml template.html)
+
+katex_src := notes/pandoc/katex.ts
+katex_sock := katex.sock
 
 .PHONY: all help test docs katex fmt lint spell check validate clean vscode
 
@@ -46,7 +49,7 @@ test:
 
 docs: $(doc_html) $(doc_assets_link)
 
-$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux) | katex.sock
+$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux) | $(katex_sock)
 	./docgen $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -64,12 +67,19 @@ $(doc_assets_link): docs/assets/%: | notes/assets/%
 	-ln -s ../../$| $@
 
 katex:
-	deno run $(DENOFLAGS) katex.ts katex.sock
+	deno run $(DENOFLAGS) $(katex_src) $(katex_sock)
 
-.INTERMEDIATE: katex.sock
-katex.sock:
-	deno run $(DENOFLAGS) katex.ts $@ &
-	deno run $(DENOFLAGS) katex.ts --wait $@
+ifneq (,$(wildcard ./katex.sock))
+$(katex_sock): $(katex_src)
+	$(error \
+A server is already running on $(katex_sock), but it is using outdated code.\
+Try again after terminating or restarting it)
+else
+.INTERMEDIATE: $(katex_sock)
+$(katex_sock):
+	deno run $(DENOFLAGS) $(katex_src) $@ &
+	deno run $(DENOFLAGS) $(katex_src) --wait $@
+endif
 
 fmt:
 	find . -type f -name "*.ts" | xargs deno fmt

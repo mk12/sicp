@@ -7,42 +7,41 @@ local highlight_bwd = false
 
 -- Set up the connection to the katex.ts server.
 local socket = assert(require("socket.unix")())
-assert(socket:connect("katex.sock"))
+assert(socket:connect("katex.sock"),
+    "Failed to connect to katex.sock. Run 'make katex' and try again.")
 socket:settimeout(0)
 function close_socket()
     socket:close()
 end
 
 -- Pre-renders math with KaTeX.
-local buffer = ""
 function render_math(el)
-    io.stderr:write("render math\n")
     vars.math = true
-    local input = el.text .. "\x00"
+    local request = el.text .. "\x00"
     if el.mathtype == "DisplayMath" then
-        input = "display:" .. input
+        request = "display:" .. request
     end
     local i = 1
     local error
-    while i <= #input do
-        i = assert(socket:send(input, i))
+    while i <= #request do
+        i = assert(socket:send(request, i))
         i = i + 1
     end
+    local response = ""
+    local chunk = ""
     i = nil
-    local data = ""
-    while not i do
-        buffer = buffer .. data
-        data, error, partial = socket:receive(1024)
-        if not data and error == "timeout" then
-            data = partial
+    while not chunk:find("\x00") do
+        response = response .. chunk
+        chunk, error, partial = socket:receive(1024)
+        if not chunk and error == "timeout" then
+            chunk = partial
         else
-            assert(data, error)
+            assert(chunk, error)
         end
-        i = data:find("\x00")
     end
-    io.stderr:write("got response\n")
-    buffer = data:sub(i + 1)
-    return pandoc.RawInline("html", data:sub(1, i - 1))
+    assert(chunk:sub(#chunk) == "\x00")
+    response = response .. chunk:sub(1, #chunk - 1)
+    return pandoc.RawInline("html", response)
 end
 
 -- Reads metatdata set on the command line by docgen.

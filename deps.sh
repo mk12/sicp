@@ -14,7 +14,7 @@ blue="\x1b[34m"
 magenta="\x1b[35;1m"
 reset="\x1b[0m"
 
-if ! [[ -t 1 ]] || [[ -n ${NO_COLOR+x} ]]; then
+if ! [[ -t 1 && -t 2 ]] || [[ -n ${NO_COLOR+x} ]]; then
     red=
     green=
     yellow=
@@ -147,7 +147,7 @@ install_macos_docs() {
 }
 
 case ${1:-} in
-    -h|--help) usage ;;
+    ""|-h|--help) usage ;;
     check|install) "$1" ;;
     *) die "$1: invalid command" ;;
 esac

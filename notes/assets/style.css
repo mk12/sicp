@@ -121,7 +121,7 @@ h1 code, h2 code, h3 code, .toc__item code {
     font-weight: inherit;
 }
 
-.math {
+.katex-asdf {
     /* 1em is too large beside Helvetica. */
     font-size: 0.9em;
 }

@@ -1,7 +1,8 @@
 # New to do
 
 - rewrite README
-    - mention pandoc, katex, BEM css, deps.sh
+    - mention pandoc, katex, BEM css, deps.sh, emphasize no JS
+- respond on https://github.com/jgm/pandoc/issues/6651 with my katex solution
 - spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
 - test in html5 validator https://html5.validator.nu/
@@ -27,6 +28,10 @@
     - `require "socket.unix"` failed. did `fenv (luarocks path)`, then got error about "Symbol not found: _lua_newuserdatauv"
     - found pandoc's version, 5.3: `pandoc --lua-filter <(echo 'print(_VERSION)') <<< ''`
     - `brew install luaver` and `luaver install 5.3.6` (latest 5.3 https://www.lua.org/versions.html)
+    - 2 problems:
+        - lua timeout 0 returns immediately if there is nothing ... what I want is blocking recv 1<=s<=1024
+            - can either prefix with sizes, or switch to newline endings
+        - await in the katex.ts loop prevents handling concurrently
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1
     + decided to use `=> 123` like in exercises BUT: always at start of line, never inlined into previous, AND not in cases where each line of the code block is showing a reduction

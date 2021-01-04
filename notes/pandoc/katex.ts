@@ -9,6 +9,11 @@ import katex from "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.mjs";
 // Name of this script, used in logs.
 const SCRIPT_NAME = "katex.ts";
 
+// ANSI color escape sequences.
+const COLOR = !Deno.noColor && Deno.isatty(1) && Deno.isatty(2);
+const RED = COLOR ? "\x1b[31;1m" : "";
+const RESET = COLOR ? "\x1b[0m" : "";
+
 // Prints the usage message using the given writing function.
 function usage(write: (s: string) => void) {
   write(
@@ -76,21 +81,32 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
   for await (const conn of listener) {
+    console.log("got connection");
     let buffer = "";
     for await (const chunk of Deno.iter(conn)) {
-      const parts = decoder.decode(chunk).split("\x00");
-      parts[0] = buffer + parts[0];
-      buffer = parts.pop()!;
-      for (const part of parts) {
-        const displayMode = part.startsWith(DISPLAY_PREFIX);
-        const tex = displayMode ? part.slice(DISPLAY_PREFIX.length) : part;
-        const output =
-          katex.renderToString(tex, { displayMode, throwOnError: false }) +
-          "\x00";
-        await Deno.writeAll(conn, encoder.encode(output));
+      console.log("got chunk");
+      const requests = decoder.decode(chunk).split("\x00");
+      requests[0] = buffer + requests[0];
+      buffer = requests.pop()!;
+      for (const req of requests) {
+        const displayMode = req.startsWith(DISPLAY_PREFIX);
+        const tex = displayMode ? req.slice(DISPLAY_PREFIX.length) : req;
+        const response = renderKatex(tex, displayMode) + "\x00";
+        await Deno.writeAll(conn, encoder.encode(response));
       }
     }
   }
+}
+
+// Renders a TeX string to KaTeX HTML.
+function renderKatex(tex: string, displayMode: boolean): string {
+  const html = katex.renderToString(tex, { displayMode, throwOnError: false });
+  // There is no need to include xmlns:
+  // https://www.w3.org/TR/MathML3/chapter6.html#interf.html
+  return html.replace(
+    '<math xmlns="http://www.w3.org/1998/Math/MathML">',
+    "<math>",
+  );
 }
 
 // Waits for the given file to be created (if it doesn't already exist).
@@ -123,7 +139,12 @@ async function whileFileExists(path: string): Promise<never> {
 // exists, or if it is removed while the server is running.
 async function startServer(socketFile: string): Promise<void> {
   if (await exists(socketFile)) {
-    console.error(`error: ${socketFile} already exists`);
+    console.error(`
+${RED}ERROR:${RESET} ${socketFile} already exists!
+There must be another server running. To terminate it, run 'rm ${socketFile}'.
+To find it, run 'pgrep -f ${socketFile}'. To leave it running and start a second
+server, choose a different socket filename.
+`.trim());
     throw new ExitError(1);
   }
   filesToRemove.push(socketFile);
