@@ -9,7 +9,6 @@ local highlight_bwd = false
 local socket = assert(require("socket.unix")())
 assert(socket:connect("katex.sock"),
     "Failed to connect to katex.sock. Run 'make katex' and try again.")
-socket:settimeout(0)
 function close_socket()
     socket:close()
 end
@@ -17,30 +16,15 @@ end
 -- Pre-renders math with KaTeX.
 function render_math(el)
     vars.math = true
-    local request = el.text .. "\x00"
+    local request = el.text:gsub("\n", " ") .. "\n"
     if el.mathtype == "DisplayMath" then
         request = "display:" .. request
     end
     local i = 1
-    local error
     while i <= #request do
-        i = assert(socket:send(request, i))
-        i = i + 1
+        i = assert(socket:send(request, i)) + 1
     end
-    local response = ""
-    local chunk = ""
-    i = nil
-    while not chunk:find("\x00") do
-        response = response .. chunk
-        chunk, error, partial = socket:receive(1024)
-        if not chunk and error == "timeout" then
-            chunk = partial
-        else
-            assert(chunk, error)
-        end
-    end
-    assert(chunk:sub(#chunk) == "\x00")
-    response = response .. chunk:sub(1, #chunk - 1)
+    local response = assert(socket:receive("*l"))
     return pandoc.RawInline("html", response)
 end
 

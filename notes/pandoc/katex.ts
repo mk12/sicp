@@ -24,10 +24,12 @@ usage: deno run --unstable --allow-read --allow-write
 Runs a server that renders TeX into KaTeX HTML.
 
 The server listens on the Unix domain socket SOCKET_FILE (stream-oriented).
-Inputs and outputs are null terminated. The input prefix "display:" enables
-display mode. The server automatically exits if SOCKET_FILE is removed.
+Requests and responses are terminated by newlines (0x0a).
+The request prefix "display:" enables display mode.
 
-When run with the --wait option, waits for a server to start.
+The server automatically exits if SOCKET_FILE is removed.
+
+When run with the --wait flag, blocks until a server is started on SOCKET_FILE.
 `.trim(),
   );
 }
@@ -76,7 +78,7 @@ async function handleSignals(): Promise<never> {
 // Prefix used to request display mode.
 const DISPLAY_PREFIX = "display:";
 
-// Responds to null-terminated TeX messages with null-terminated KaTeX HTML.
+// Responds to TeX requests with KaTeX HTML responses.
 async function serveKatex(listener: Deno.Listener): Promise<void> {
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
@@ -85,14 +87,17 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
     let buffer = "";
     for await (const chunk of Deno.iter(conn)) {
       console.log("got chunk");
-      const requests = decoder.decode(chunk).split("\x00");
+      const requests = decoder.decode(chunk).split("\n");
       requests[0] = buffer + requests[0];
       buffer = requests.pop()!;
       for (const req of requests) {
         const displayMode = req.startsWith(DISPLAY_PREFIX);
         const tex = displayMode ? req.slice(DISPLAY_PREFIX.length) : req;
-        const response = renderKatex(tex, displayMode) + "\x00";
-        await Deno.writeAll(conn, encoder.encode(response));
+        const response = renderKatex(tex, displayMode);
+        if (response.includes("\n")) {
+          throw Error("unexpected newline in html");
+        }
+        await Deno.writeAll(conn, encoder.encode(response + "\n"));
       }
     }
   }
