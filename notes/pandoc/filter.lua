@@ -6,6 +6,9 @@ local highlight_fwd = false
 local highlight_bwd = false
 
 -- Set up the connection to the katex.ts server.
+-- local socket = assert(require("socket").tcp())
+-- assert(socket:connect("localhost", 8080),
+--     "Failed to connect to katex.sock. Run 'make katex' and try again.")
 local socket = assert(require("socket.unix")())
 assert(socket:connect("katex.sock"),
     "Failed to connect to katex.sock. Run 'make katex' and try again.")

@@ -274,12 +274,15 @@ static bool wait_pandoc(struct PandocProc *proc) {
         fclose(proc->out);
         proc->out = NULL;
     }
-    bool success = true;
+    bool success;
     assert(proc->pid != 0);
-    if (waitpid(proc->pid, NULL, 0) == -1) {
+    int proc_status;
+    if (waitpid(proc->pid, &proc_status, 0) == -1) {
         perror("waitpid");
         success = false;
-    };
+    } else {
+        success = WIFEXITED(proc_status) && WEXITSTATUS(proc_status) == 0;
+    }
     global_pandoc_pid_set = 0;
     global_pandoc_pid = 0;
     proc->pid = 0;

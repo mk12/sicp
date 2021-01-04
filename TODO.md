@@ -31,7 +31,12 @@
     - 2 problems:
         - lua timeout 0 returns immediately if there is nothing ... what I want is blocking recv 1<=s<=1024
             - can either prefix with sizes, or switch to newline endings
+            - went with newlines
         - await in the katex.ts loop prevents handling concurrently
+            - made fire and forget (well, except catch)
+    - working except OS error 22 when -j4 or higher
+    - hammer.ts works so I suspect maybe luasocket is buggy
++ docgen should have exit status 1 if pandoc fails
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1
     + decided to use `=> 123` like in exercises BUT: always at start of line, never inlined into previous, AND not in cases where each line of the code block is showing a reduction
