@@ -23,7 +23,7 @@ usage: deno run --unstable --allow-read --allow-write
 Runs a server that renders TeX into KaTeX HTML.
 
 The server listens on the Unix domain socket SOCKET_FILE (stream-oriented).
-Requests and responses are terminated by newlines (0x0a).
+Requests and responses are null-terminated.
 The request prefix "display:" enables display mode.
 
 The server automatically exits if SOCKET_FILE is removed.
@@ -85,18 +85,19 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
   async function handle(conn: Deno.Conn): Promise<void> {
     let buffer = "";
     for await (const chunk of Deno.iter(conn)) {
-      const requests = decoder.decode(chunk).split("\n");
+      const requests = decoder.decode(chunk).split("\x00");
       requests[0] = buffer + requests[0];
       buffer = requests.pop()!;
       for (const req of requests) {
         const displayMode = req.startsWith(DISPLAY_PREFIX);
         const tex = displayMode ? req.slice(DISPLAY_PREFIX.length) : req;
-        const response = renderKatex(tex, displayMode).replaceAll("\n", " ");
-        await Deno.writeAll(conn, encoder.encode(response + "\n"));
+        const response = renderKatex(tex, displayMode);
+        await Deno.writeAll(conn, encoder.encode(response + "\x00"));
       }
     }
   }
 
+  // In order to serve clients concurrently, we do _not_ await handle(conn).
   for await (const conn of listener) {
     handle(conn).catch(ex => {
       console.error(`${ERROR} ${ex}`);

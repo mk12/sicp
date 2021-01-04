@@ -253,7 +253,7 @@ An example of normal order procedure application:
 
 #### Example: Counting change
 
-Let $f(A,N)$ represent the number of ways of changing the amount A using $N$ kinds of coins. If the first kind of coin has denomination $N$, then $f(A,N) = f(A,N-1) + f(A-D,N)$. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of $f(A,N-1)$ assumes we don't use the first kind at all; the value of $f(A-D,N)$ assumes we use one or more of the first kind.
+Let $f(A,N)$ represent the number of ways of changing the amount $A$ using $N$ kinds of coins. If the first kind of coin has denomination $N$, then $f(A,N) = f(A,N-1) + f(A-D,N)$. In words, there are two situations: where you do not use any of the first kind of coin, and when you do. The value of $f(A,N-1)$ assumes we don't use the first kind at all; the value of $f(A-D,N)$ assumes we use one or more of the first kind.
 
 That rule and a few degenerate cases is sufficient to describe an algorithm for counting the number of ways of changing amounts of money. We can define it with the following piecewise function:
 
@@ -282,7 +282,7 @@ if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) 
 
 ### 1.2.4: Exponentiation
 
-One way to calculate b to the nth power is via the following recursive definition:
+One way to calculate $b$ to the $n$th power is via the following recursive definition:
 
 $$b^0 = 1, \qquad b^n = b * b^{n-1}.$$
 

@@ -13,40 +13,42 @@
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)(https://github.com/jgm/pandoc/issues/4386)
-- pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
-    - 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
-    - just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
-    - see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
-    - then do if code, `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">`
-    - can use .INTERMEDIATE in make to start/stop js server (to avoid spawning node on EVERY math)
-    - try https://deno.land instead of node! (so cool! so fast!)
-    - `brew install luarocks`, `luarocks install luasocket`
-    - pretty sure unix sockets are what I want https://stackoverflow.com/a/9476248
-    - learning difference between stream/datagram unix sockets
-    - https://stackoverflow.com/questions/9644251/how-do-unix-domain-sockets-differentiate-between-multiple-clients
-    - trouble with Lua in pandoc: https://stackoverflow.com/a/56087697
-    - `require "socket.unix"` failed. did `fenv (luarocks path)`, then got error about "Symbol not found: _lua_newuserdatauv"
-    - found pandoc's version, 5.3: `pandoc --lua-filter <(echo 'print(_VERSION)') <<< ''`
-    - `brew install luaver` and `luaver install 5.3.6` (latest 5.3 https://www.lua.org/versions.html)
-    - 2 problems:
-        - lua timeout 0 returns immediately if there is nothing ... what I want is blocking recv 1<=s<=1024
-            - can either prefix with sizes, or switch to newline endings
-            - went with newlines
-        - await in the katex.ts loop prevents handling concurrently
-            - made fire and forget (well, except catch)
-    - working except OS error 22 when -j4 or higher
-    - hammer.ts works so I suspect maybe luasocket is buggy
-    - nope: found culprit (maybe) https://github.com/denoland/deno/blob/master/cli/tests/unit/net_test.ts#L159
-    - confirmed on discord that you should `call conn.close()`
-    - found luasocket is 3.0-rc1 from 2013 despite many recent commits on GitHub
-    - never mind, GH tag is weird, `luarocks --lua-dir=/usr/local/opt/lua@5.3 show luasocket` shows 3.0rc1-2 (most recent non-dev release, from last year)
-    - discussion about pandoc and lua modules https://github.com/jgm/pandoc/issues/4230
-    - lua filters can't use modules with .so files!! https://github.com/jgm/pandoc/issues/3986
-    - the situation:
-        - luasocket.unix likely buggy
-        - pandoc can only use lua modules without .so (that's why cqueues doesn't work)
-    - luaposix works and is documented http://luaposix.github.io/luaposix/
-    - answered SO question: https://stackoverflow.com/a/65569899
++ pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
+    + 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
+    + just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
+    + see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
+    + then do if code, `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">`
+    + can use .INTERMEDIATE in make to start/stop js server (to avoid spawning node on EVERY math)
+    + try https://deno.land instead of node! (so cool! so fast!)
+    + `brew install luarocks`, `luarocks install luasocket`
+    + pretty sure unix sockets are what I want https://stackoverflow.com/a/9476248
+    + learning difference between stream/datagram unix sockets
+    + https://stackoverflow.com/questions/9644251/how-do-unix-domain-sockets-differentiate-between-multiple-clients
+    + trouble with Lua in pandoc: https://stackoverflow.com/a/56087697
+    + `require "socket.unix"` failed. did `fenv (luarocks path)`, then got error about "Symbol not found: _lua_newuserdatauv"
+    + found pandoc's version, 5.3: `pandoc --lua-filter <(echo 'print(_VERSION)') <<< ''`
+    + `brew install luaver` and `luaver install 5.3.6` (latest 5.3 https://www.lua.org/versions.html)
+    + 2 problems:
+        + lua timeout 0 returns immediately if there is nothing ... what I want is blocking recv 1<=s<=1024
+            + can either prefix with sizes, or switch to newline endings
+            + went with newlines
+        + await in the katex.ts loop prevents handling concurrently
+            + made fire and forget (well, except catch)
+    + working except OS error 22 when -j4 or higher
+    + hammer.ts works so I suspect maybe luasocket is buggy
+    + nope: found culprit (maybe) https://github.com/denoland/deno/blob/master/cli/tests/unit/net_test.ts#L159
+    + confirmed on discord that you should `call conn.close()`
+    + found luasocket is 3.0-rc1 from 2013 despite many recent commits on GitHub
+    + never mind, GH tag is weird, `luarocks --lua-dir=/usr/local/opt/lua@5.3 show luasocket` shows 3.0rc1-2 (most recent non-dev release, from last year)
+    + discussion about pandoc and lua modules https://github.com/jgm/pandoc/issues/4230
+    + lua filters can't use modules with .so files!! https://github.com/jgm/pandoc/issues/3986
+    + the situation:
+        + luasocket.unix likely buggy
+        + pandoc can only use lua modules without .so (that's why cqueues doesn't work)
+    + luaposix works and is documented http://luaposix.github.io/luaposix/
+    + answered SO question: https://stackoverflow.com/a/65569899
+    + remember, can't host katex.min.css b/c it references fonts relatively
+    + font size issue: default 1.21em lines up x-height but capitals are really big
 + docgen should have exit status 1 if pandoc fails
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1

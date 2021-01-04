@@ -121,18 +121,19 @@ h1 code, h2 code, h3 code, .toc__item code {
     font-weight: inherit;
 }
 
-.katex-asdf {
-    /* 1em is too large beside Helvetica. */
-    font-size: 0.9em;
+.katex {
+    /* KaTeX CSS uses 1.21em, which is too big beside 1em Helvetica. */
+    font-size: 1.15em;
 }
 
 .katex-display {
     position: relative;
     overflow-x: auto;
-    /* Use padding to prevent vertical scrollbars, due to weird overflow-x/y
-    behavior. This also controls the position of the horizontal scrollbar. */
-    padding-bottom: 15px;
-    margin-bottom: -15px;
+    /* Use padding to prevent vertical clipping/scrollbars, due to weird
+    overflow-x/y interactions. This also controls the position of the horizontal
+    scrollbar along the bottom. */
+    padding: 15px 0;
+    margin: -15px 0;
 }
 
 .nowrap {
