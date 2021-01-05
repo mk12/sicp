@@ -131,13 +131,12 @@
 (<span class="fu">+</span> <span class="cn">9</span> <span class="cn">16</span>)
 <span class="cn">25</span></code></pre>
 <p>This is not a perfect description of what the computer does. But it is a good enough model for now.</p>
-<div id="q2" class="highlight">
-<a class="highlight__link link" href="highlight.html#1b-q2" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="highlight.html#1b-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
 <blockquote>
-<p>But one of the things you have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think. <span class="citation" data-cites="lecture">[@lecture 1b]</span></p>
+<p>But one of the things we have to learn how to do is ignore details. The key to understanding complicated things is to know what not to look at, and what not compute, and what not to think. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=3" title="SICP Lecture 1B transcript, page 3">Sussman</a></span></p>
 </blockquote>
 </div>
-<!-- SUSSMAN https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=3 -->
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Evaluating conditionals
 </h3>
@@ -217,15 +216,18 @@
          (fib (<span class="fu">-</span> n <span class="cn">2</span>)))))</code></pre>
 <p>This is a <em>tree-recursive</em> process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.</p>
 <blockquote>
-<p>The reason why people think programming is hard is because you’re writing down a general rule which is going to be used for lots of instances—it’s going to control all of those instances.</p>
+<p>And the reason why people think of programming as being hard, of course, is because you’re writing down a general rule, which is going to be used for lots of instances … You’ve got to write down something that’s a general in terms of variables, and you have to think of all the things that could possibly fit in those variables, and all those have to lead to the process you want to work. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=13" title="SICP Lecture 1B transcript, page 13">Sussman</a></span></p>
 </blockquote>
 <h3 id="3.3" class="anchor">
 <a class="anchor__link link" href="#3.3" aria-hidden="true">#</a> Tower of Hanoi
 </h3>
+<div id="q2" class="highlight">
+<a class="highlight__link link" href="highlight.html#1b-q2" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
 <blockquote>
-<p>The way in which you construct a recursive process is by wishful thinking. You have to believe.</p>
+<p>The way in which you would construct a recursive process is by wishful thinking. You have to believe. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=13" title="SICP Lecture 1B transcript, page 13">Sussman</a></span></p>
 </blockquote>
-<p>Move an n-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
+</div>
+<p>Move an <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span>-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (move n from to spare)
   (<span class="kw">cond</span>
     ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">&quot;DONE&quot;</span>)

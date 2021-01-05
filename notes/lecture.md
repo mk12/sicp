@@ -37,15 +37,20 @@ Imperative instructions (how-to knowledge): approximate the square root of $x$ w
 
 ### Complexity and computer science
 
-- The real problems in CS come when developing huge software with so much code that you can't hold it all in your head at once.
-- This is possible thanks to techniques for controlling the complexity of large systems.
+::: highlight
+> The real problems come when we try to build very, very large systems ... nobody can really hold them in their heads all at once ... the only reason that that's possible is because there are techniques for controlling the complexity of these large systems. And these techniques that are controlling complexity are what this course is really about. And in some sense, that's really what computer science is about. [@1a.p3]
+:::
+
 - Computer scientists are in the business of controlling complexity.
 - This is different from the complexity that others, for example aeronautical engineers, deal with, because the complexity in CS in a sense is not real.
 - Computer science deals with _idealized_ components.
 - We know as much as we want about the components; we don't need to worry about tolerance.
 - Not much difference between what I can _build_ and what I can _image_.
 - Other disciplines have physical constraints; in CS, the only constraint is your mind.
-- CS is an abstract kind of engineering---ignore the constraints imposed by reality.
+
+::: highlight
+> So in that sense, computer science is like an abstract form of engineering. It's the kind of engineering where you ignore the constraints that are imposed by reality. [@1a.p3]
+:::
 
 ### Techniques for managing complexity
 
@@ -204,9 +209,8 @@ Let's evaluate the sum of the square of 3 and the square of 4:
 This is not a perfect description of what the computer does. But it is a good enough model for now.
 
 ::: highlight
-> But one of the things you have to learn how to do is to ignore details. The key to understanding complex things is knowing what not to look at, and what not to compute, and what not to think. [@lecture 1b]
+> But one of the things we have to learn how to do is ignore details. The key to understanding complicated things is to know what not to look at, and what not compute, and what not to think. [@1b.p3]
 :::
-<!-- SUSSMAN https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=3 -->
 
 ### Evaluating conditionals
 
@@ -295,13 +299,15 @@ We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, ... in Lisp:
 
 This is a _tree-recursive_ process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.
 
-> The reason why people think programming is hard is because you're writing down a general rule which is going to be used for lots of instances---it's going to control all of those instances.
+>  And the reason why people think of programming as being hard, of course, is because you're writing down a general rule, which is going to be used for lots of instances ... You've got to write down something that's a general in terms of variables, and you have to think of all the things that could possibly fit in those variables, and all those have to lead to the process you want to work. [@1b.p13]
 
 ### Tower of Hanoi
 
-> The way in which you construct a recursive process is by wishful thinking. You have to believe.
+::: highlight
+> The way in which you would construct a recursive process is by wishful thinking. You have to believe. [@1b.p13]
+:::
 
-Move an n-high tower from spike `from` to spike `to` using spike `spare` as a spare:
+Move an $n$-high tower from spike `from` to spike `to` using spike `spare` as a spare:
 
 ```
 (define (move n from to spare)
@@ -322,9 +328,8 @@ Move an n-high tower from spike `from` to spike `to` using spike `spare` as a sp
 - We are already familiar with creating recursive procedures that, for example, calculate the sum of integers from $A$ to $B$.
 - What about the sum of the squares of the integers from $A$ to $B$? That's almost the same program! We don't like repetition.
 
-> Whenever you see yourself writing the same thing down more than once, there's something wrong and you shouldn't be doing it. And the reason is not because it's a waste of time to write something down more than once. It's because there's some idea here, a very simple idea....
+> Now, wherever you see yourself writing the same thing down more than once, there's something wrong, and you shouldn't be doing it. And the reason is not because it's a waste of time to write something down more than once. It's because there's some idea here ... whenever trying to make complicated systems and understand them, it's crucial to divide the things up into as many pieces as I can, each of which I understand separately. [@2a.p2]
 
-- It is crucial to divide problems up into as many pieces as is reasonable. We must be able to understand each in isolation.
 - No repetition means you only write it once, but also only understand and debug it once!
 - Any time you see things that are almost identical, think of an abstraction to cover them.
 - An _idiom_ is a common pattern in a language that is useful to know. In Lisp, we can give idioms names and abstract them.
@@ -376,7 +381,7 @@ We are separating the things we are adding up from the method of doing the addit
 - Newton's method: general method to find the zeros (an $x$ such that $f(x) = 0$).
 - We can use the fixed-point procedure to define a procedure for computing zeros using Newton's method.
 
-> Wishful thinking: essential to good engineering. And especially essential to good computer science.
+> Wishful thinking, essential to good engineering, and certainly essential to good computer science. [@2a.p11]
 
 - We can use names of procedures that we haven't defined yet while writing a program (top-down design).
 
@@ -405,9 +410,8 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - When we wrote the square root procedure, we used layers of abstraction. Someone else could have written `good-enough?`.
 
-> The crucial idea is that when we're building things, we divorce the task of building things from the task implementing the parts.
+> So the crucial idea is that when we're building things, we divorce the task of building things from the task of implementing the parts. And in a large system, of course, we have abstraction barriers like this at lots, and lots, and lots of levels. [@2b.p1]
 
-- In a large system, we have lots of _abstraction barriers_.
 - Now we will look at the same issues for data.
 - There are means of combination for data as well, allowing us to combine primitive data into compound data.
 - We will also see a methodology for abstraction with data.
@@ -490,16 +494,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Designing systems
 
 ::: highlight
-> See, in general, as systems designers, you're forced with the necessity to make decisions about how you're going to do things. And in general, the way to retain flexibility is to never make up your mind about anything until you're forced to do it. The problem is, there's a very, very narrow line between deferring decisions and outright procrastination. So you'd like to make progress, but also at the same time never be bound by the consequences of your decisions. [@lecture 2b]
+> See, in general, as systems designers, you're forced with the necessity to make decisions about how you're going to do things, and in general, the way you'd like to retain flexibility is to never make up your mind about anything until you're forced to do it. The problem is, there's a very, very narrow line between deferring decisions and outright procrastination. So you'd like to make progress, but also at the same time, never be bound by the consequences of your decisions. [@2b.p10]
 :::
-<!-- ABELSON https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=10 -->
 
 ::: highlight
 > I said that computer science is a lot like magic, and it's sort of good that it's like magic. There's a bad part of computer science that's a lot like religion. And in general, I think people who really believe that you design everything before you implement it basically are people who haven't designed very many things.
 >
-> The real power is that you can pretend that you've made the decision and then later on figure out which one is right, which decision you ought to have made. And when you can do that, you have the best of both worlds. [@lecture 2b]
+> The real power is that you can pretend that you've made the decision and then later on figure out which one is right, which decision you ought to have made. And when you can do that, you have the best of both worlds. [@2b.p11]
 :::
-<!-- ABELSON https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=11 -->
 
 ## Part 3
 
@@ -613,7 +615,11 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### The power of Lisp
 
 - The difference between merely implementing something in a language and embedding something in the language: you don't lost the original power of the language.
-- Lisp is a lousy language for any particular problem. But it's good for figuring out the right language and embedding that in Lisp. That's the real power of this approach to design.
+
+::: highlight
+> Lisp is a lousy language for doing any particular problem. What it's good for is figuring out the right language that you want and embedding that in Lisp. That's the real power of this approach to design. [@3a.p14]
+:::
+
 - There is no difference between procedures and data.
 
 ### Software engineering
@@ -624,14 +630,17 @@ Then, we learned how to use higher-order procedures to represent general methods
 - The Henderson example didn't work like that.
 - Instead, we had a sequence of layers of language. Each layer depends on the layers beneath it, but it can't see their details because there is an abstraction barrier in the way.
 
-> So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level.
+> So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level. [@3a.p16]
 
 - With the top-down tree, each part does a specific task.
 - In the Henderson example, we had a full range of linguistic power at each level. Each level does a whole range of things, not a single task.
 - This makes the system more robust, meaning that changes are easy to make and the system can adapt to them.
 - A small change in the top-down tree might cause the whole thing to fall down unless you reconstruct it.
 - We are talking about levels of language rather than a strict hierarchy. Each level has its own vocabulary.
-- The design process is not so much implementing programs as implementing languages. That's the powerful idea of Lisp.
+
+::: highlight
+> The design process is not so much implementing programs as implementing languages. And that's really the powerful idea of Lisp. [@3a.p17]
+:::
 
 # 3B: Symbolic Differentiation; Quotation
 
@@ -639,8 +648,10 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Recap
 
-- In order to make a robust system, it needs to be insensitive to small changes.
-- A small change in the problem leads to a small change in the solution.
+::: highlight
+>  In order to make a system that's robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. [@3b.p1]
+:::
+
 - Don't solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.
 - We've seen the power of embedding languages.
 - We are going to confuse the distinction between procedures and data even more badly.
@@ -681,12 +692,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The expressions we get from the `deriv` procedure are ugly.
 - Nothing is simplified, and it is hard to read.
-
-> The form of the process is expanded from the local rules that you see in the procedure.
-
 - There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.
 
-> This is one the pieces of artillery we have in our war against complexity.
+> So the way we might solve this problem is ... change the representation ... it's one of the pieces of artillery we have in our war against complexity. [@3b.p10]
 
 - We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).
 
@@ -923,7 +931,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We shouldn't try to think about it all at once. Instead, we make a modular system where we can focus on one part at a time.
 - As long as we know what a procedure application is supposed to do, we can use it without thinking how it will work.
 
-> The key to very good programming, and very good design, is to know what not to think about.
+> The key to this---very good programming and very good design---is to know what not to think about. [@4a.p16]
 
 ### Dictionaries
 
@@ -1197,8 +1205,10 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We like to think about the world as being made up of independent objects, each having their own state.
 - The only way to see if two objects are the same (not just associated with an equal value) is to change one and see if the other changes in the same way.
 - The idea of objects, changed, and sameness raises deep problems.
-- If you cut off your fingernail, the "before" and "after" of you is enormously different in terms of atoms. You have changed and feel that you are the "same" person, but how do you know that?
-- By introducing assignment and therefore objects, we open ourselves up to all of these philosophical questions.
+
+::: highlight
+> For example, here I am, I am a particular person, a particular object. Now, I can take out my knife, and cut my fingernail. A piece of my fingernail has fallen off onto the table. I believe I am the same person I was a second ago, but I'm not physically the same in the slightest. I have changed. Why am I the same? What is the identity of me? I don't know. Except for the fact that I have some sort of identity. And so, I think by introducing assignment and objects, we have opened ourselves up to all the horrible questions of philosophy that have been plaguing philosophers for some thousands of years about this sort of thing. It's why mathematics is a lot cleaner. [@5a.p14]
+:::
 
 ### Actions and identity
 
@@ -1275,8 +1285,11 @@ Then, we learned how to use higher-order procedures to represent general methods
 - These no longer tell the whole story, now that we have mutators.
 - This raises a question: if you change the `car` of a pair, do all pairs that look the same also change?
 - Cons pairs now have an identity.
-- When we have multiple names for the same object, they are called _aliases_. Changing one changes them all.
-- Sometimes sharing is what we want. But inadvertent sharing is a great source of bugs in complicated programs.
+- When we have multiple names for the same object, they are called _aliases_. Changing one changes them all. Sometimes sharing is what we want.
+
+::: highlight
+> But inadvertent sharing, unanticipated interactions between objects, is the source of most of the bugs that occur in complicated programs. So by introducing this possibility of things having identity and sharing and having multiple names for the same thing, we get a lot of power. But we're going to pay for it with lots of complexity and bugs. [@5b.p12]
+:::
 
 ### Lambda calculus
 
@@ -1358,7 +1371,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 - 2nd procedure: enumerate interval → map `fib` → filter `odd?` → accumulate `cons`, `'()`.
 - These are similar, but the commonality is obscured by how we wrote the procedures.
 
-> Going back to this fundamental principle of computer science that in order to control something you need the name of it.
+::: highlight
+> Going back to this fundamental principle of computer science that in order to control something, you need the name of it. [@6a.p4]
+:::
 
 ### Defining streams
 

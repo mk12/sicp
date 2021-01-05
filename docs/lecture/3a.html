@@ -22,6 +22,10 @@
     <symbol id="external" viewBox="0 0 24 24">
       <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -140,7 +144,14 @@
 </h3>
 <ul>
 <li>The difference between merely implementing something in a language and embedding something in the language: you don’t lost the original power of the language.</li>
-<li>Lisp is a lousy language for any particular problem. But it’s good for figuring out the right language and embedding that in Lisp. That’s the real power of this approach to design.</li>
+</ul>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="highlight.html#3a-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>Lisp is a lousy language for doing any particular problem. What it’s good for is figuring out the right language that you want and embedding that in Lisp. That’s the real power of this approach to design. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example/PEwZL3H2oKg.pdf#page=14" title="SICP Lecture 3A transcript, page 14">Abelson</a></span></p>
+</blockquote>
+</div>
+<ul>
 <li>There is no difference between procedures and data.</li>
 </ul>
 <h3 id="3.3" class="anchor">
@@ -154,7 +165,7 @@
 <li>Instead, we had a sequence of layers of language. Each layer depends on the layers beneath it, but it can’t see their details because there is an abstraction barrier in the way.</li>
 </ul>
 <blockquote>
-<p>So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level.</p>
+<p>So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example/PEwZL3H2oKg.pdf#page=16" title="SICP Lecture 3A transcript, page 16">Abelson</a></span></p>
 </blockquote>
 <ul>
 <li>With the top-down tree, each part does a specific task.</li>
@@ -162,8 +173,13 @@
 <li>This makes the system more robust, meaning that changes are easy to make and the system can adapt to them.</li>
 <li>A small change in the top-down tree might cause the whole thing to fall down unless you reconstruct it.</li>
 <li>We are talking about levels of language rather than a strict hierarchy. Each level has its own vocabulary.</li>
-<li>The design process is not so much implementing programs as implementing languages. That’s the powerful idea of Lisp.</li>
 </ul>
+<div id="q2" class="highlight">
+<a class="highlight__link link" href="highlight.html#3a-q2" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>The design process is not so much implementing programs as implementing languages. And that’s really the powerful idea of Lisp. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example/PEwZL3H2oKg.pdf#page=17" title="SICP Lecture 3A transcript, page 17">Abelson</a></span></p>
+</blockquote>
+</div>
 </article>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">

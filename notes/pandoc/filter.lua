@@ -7,15 +7,8 @@ local vars = {}
 local S = nil  -- posix.sys.socket
 local U = nil  -- posix.unistd
 
--- Connection to the katex server, used for rendering math.
+-- Connection to the katex server.
 local socket = nil
-
--- Number of "::: highlight" divs seen so far.
-local highlight_count = 1
--- True if the page has a forward reference from highlights to notes.
-local highlight_fwd = false
--- True if the page has a backward reference from notes to highlights.
-local highlight_bwd = false
 
 -- Pre-renders math with KaTeX.
 function render_math(el)
@@ -60,6 +53,13 @@ function read_meta(meta)
     -- Relative path to the root of the website.
     vars.root = meta.id:gsub("[^/]+", ".."):gsub("..$", "", 1)
 end
+
+-- Number of "::: highlight" divs seen so far.
+local highlight_count = 0
+-- True if the page has a forward reference from highlights to notes.
+local highlight_fwd = false
+-- True if the page has a backward reference from notes to highlights.
+local highlight_bwd = false
 
 -- Styles and links blockquotes marked with the "::: highlight" div.
 function highlight_div(el)
@@ -211,10 +211,62 @@ function walk_inline_code(el)
     end })
 end
 
--- function format_citation(el)
---     -- rPrint(el)
---     return pandoc.RawInline("html", "<cite>Nice</cite>")
--- end
+-- These correspdong to globals in docgen.c.
+local text_url_base =
+    "https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H"
+local lecture_url_base =
+    "https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures"
+
+-- For each lecture, the speaker (A for Abelson, B for Sussman) and the path to
+-- the transcript PDF relative to lecture_url_base.
+local lectures = {
+    ["1a"] = { speaker = "A", path = "1a-overview-and-introduction-to-lisp/-J_xL4IGhJA.pdf" },
+    ["1b"] = { speaker = "S", path = "1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf" },
+    ["2a"] = { speaker = "S", path = "2a-higher-order-procedures/eJeMOEiHv8c.pdf" },
+    ["2b"] = { speaker = "A", path = "2b-compound-data/DrFkf-T-6Co.pdf" },
+    ["3a"] = { speaker = "A", path = "3a-henderson-escher-example/PEwZL3H2oKg.pdf" },
+    ["3b"] = { speaker = "S", path = "3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf" },
+    ["4a"] = { speaker = "S", path = "4a-pattern-matching-and-rule-based-substitution/fXQ1SwKjDg.pdf" },
+    ["4b"] = { speaker = "A", path = "4b-generic-operators/OscT4N2qq7o.pdf" },
+    ["5a"] = { speaker = "S", path = "5a-assignment-state-and-side-effects/dO1aqPBJCPg.pdf" },
+    ["5b"] = { speaker = "S", path = "5b-computational-objects/yedzRWhi-9E.pdf" },
+    ["6a"] = { speaker = "A", path = "6a-streams-part-1/JkGKLILLy0I.pdf" },
+    ["6b"] = { speaker = "A", path = "6b-streams-part-2/qp05AtXbOP0.pdf" },
+    ["7a"] = { speaker = "S", path = "7a-metacircular-evaluator-part-1/aAlR3cezPJg.pdf" },
+    ["7b"] = { speaker = "S", path = "7b-metacircular-evaluator-part-2/QVEOq5k6Xi0.pdf" },
+    ["8a"] = { speaker = "A", path = "8a-logic-programming-part-1/rCqMiPk1BJE.pdf" },
+    ["8b"] = { speaker = "A", path = "8b-logic-programming-part-2/GReBwkGFZcs.pdf" },
+    ["9a"] = { speaker = "S", path = "9a-register-machines/cIc8ZBMcqAc.pdf" },
+    ["9b"] = { speaker = "A", path = "9b-explicit-control-evaluator/Z8-qWEEwTCk.pdf" },
+    ["10a"] = { speaker = "A", path = "10a-compilation/TqO6V3qR9Ws.pdf" },
+    ["10b"] = { speaker = "S", path = "10b-storage-allocation-and-garbage-collection/AbK4bZhUk48.pdf" },
+}
+
+-- Formats citations at the end of blockquotes.
+function format_citation(el)
+    assert(#el.citations == 1)
+    local id = el.citations[1].id
+    local text, title, href
+    if id == "dedication" then
+        text = "Alan J. Perlis"
+    elseif id == "foreword" then
+        text = "Alan J. Perlis"
+    elseif id == "preface" then
+        text = "Preface"
+    elseif id:find("^%d[%d%.]*$") then
+        text = id
+    else
+        num, page = id:match("^(%d+[ab])%.p(%d+)")
+        -- assert(num, "bad citation id: " .. id)
+        if not num then return end
+        info = assert(lectures[num])
+        text = ({A = "Abelson", S = "Sussman"})[info.speaker]
+        title = "SICP Lecture " .. num:upper() .. " transcript, page " .. page
+        href = lecture_url_base .. "/" .. info.path .. "#page=" .. page
+    end
+    return pandoc.RawInline("html",
+        '<span class="citation">—<a href="' .. href .. '" title="' .. title .. '">' .. text .. '</a></span>')
+end
 
 return {
     {Math = render_math},
@@ -227,5 +279,5 @@ return {
     {Para = walk_inline_code},
     {BulletList = walk_inline_code},
     {OrderedList = walk_inline_code},
-    -- {Cite = format_citation}
+    {Cite = format_citation}
 }

@@ -22,6 +22,10 @@
     <symbol id="external" viewBox="0 0 24 24">
       <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
     </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
   </svg>
 </div>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -75,9 +79,13 @@
 <h3 id="1.1" class="anchor">
 <a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="highlight.html#3b-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>In order to make a system that’s robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf#page=1" title="SICP Lecture 3B transcript, page 1">Sussman</a></span></p>
+</blockquote>
+</div>
 <ul>
-<li>In order to make a robust system, it needs to be insensitive to small changes.</li>
-<li>A small change in the problem leads to a small change in the solution.</li>
 <li>Don’t solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.</li>
 <li>We’ve seen the power of embedding languages.</li>
 <li>We are going to confuse the distinction between procedures and data even more badly.</li>
@@ -129,15 +137,10 @@
 <ul>
 <li>The expressions we get from the <code>deriv</code> procedure are ugly.</li>
 <li>Nothing is simplified, and it is hard to read.</li>
-</ul>
-<blockquote>
-<p>The form of the process is expanded from the local rules that you see in the procedure.</p>
-</blockquote>
-<ul>
 <li>There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.</li>
 </ul>
 <blockquote>
-<p>This is one the pieces of artillery we have in our war against complexity.</p>
+<p>So the way we might solve this problem is … change the representation … it’s one of the pieces of artillery we have in our war against complexity. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf#page=10" title="SICP Lecture 3B transcript, page 10">Sussman</a></span></p>
 </blockquote>
 <ul>
 <li>We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).</li>

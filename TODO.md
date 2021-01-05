@@ -13,6 +13,7 @@
 - attribute lecture quotes to Abelson/Sussman
 - attribute some citations to Alan Perlis, etc.
 - do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)(https://github.com/jgm/pandoc/issues/4386)
++ use ellipses without square brackets in quotes
 + pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
     + 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
     + just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)

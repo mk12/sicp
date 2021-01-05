@@ -78,7 +78,7 @@ em, cite {
 }
 
 a {
-    color: var(--fg);
+    color: inherit;
     text-decoration: none;
 }
 
@@ -95,6 +95,11 @@ blockquote {
     padding: 15px;
     border-left: 10px solid var(--border);
     border-radius: 6px;
+}
+
+.citation {
+    color: var(--subdued);
+    font-size: 0.9em;
 }
 
 code {
@@ -364,7 +369,7 @@ body {
 }
 
 .circle-arrow {
-    vertical-align: -3.5px;
+    vertical-align: -3px;
 }
 
 .wizard {
