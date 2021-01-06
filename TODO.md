@@ -10,9 +10,10 @@
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - reconsider → in lecture 6a
 - have special callout thing at end of text sections with exercise links
-- attribute lecture quotes to Abelson/Sussman
-- attribute some citations to Alan Perlis, etc.
-- do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)(https://github.com/jgm/pandoc/issues/4386)
++ attribute some citations to Alan Perlis, etc.
++ do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
++ section 1.2.6 prevent $n$th from breaking apart
++ attribute lecture quotes to Abelson/Sussman
 + use ellipses without square brackets in quotes
 + pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
     + 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
@@ -54,7 +55,7 @@
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1
     + decided to use `=> 123` like in exercises BUT: always at start of line, never inlined into previous, AND not in cases where each line of the code block is showing a reduction
-+ fix soureCode C thing (just removed C code since it was inaccurate; &x is not box since it does not allocate)
++ fix soureCode C thing (just removed C code since it was inaccurate; &x is not box since it does not allocate) (https://github.com/jgm/pandoc/issues/4386)
 + reconsider inline code single-word highlighting
     + nice for parity, but:
         + blue functions look like links. and even if I changed color...

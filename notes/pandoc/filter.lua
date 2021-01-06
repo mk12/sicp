@@ -3,7 +3,7 @@
 -- Used for reading and writing Pandoc metadata.
 local vars = {}
 
--- These luaposix modules are loaded only if needed.
+-- The luaposix modules are loaded only if needed.
 local S = nil  -- posix.sys.socket
 local U = nil  -- posix.unistd
 
@@ -207,15 +207,93 @@ function walk_inline_code(el)
         if #el.classes == 0 and el.text:find("%(") or el.text:find("«") then
             el.classes = {"scheme"}
             return el
-        end     
+        end
     end })
 end
 
--- These correspdong to globals in docgen.c.
+-- These correspond to definitions in docgen.c.
 local text_url_base =
     "https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H"
 local lecture_url_base =
     "https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures"
+
+-- Citation info for the frontmatter sections.
+local frontmatter_info = {
+    ["dedication"] = {
+        person = true,
+        text = "Alan J. Perlis",
+        title = "SICP Dedication",
+        page = 3,
+    },
+    ["foreword"] = {
+        person = true,
+        text = "Alan J. Perlis",
+        title = "SICP Foreword",
+        page = 5,
+    },
+    ["preface"] = {
+        person = false,
+        text = "Preface",
+        title = "SICP Preface",
+        page = 7,
+    },
+}
+
+-- The ID for chapter C, footnote N is "footnote_Temp_" .. footnote_nums[C][N].
+local footnote_nums = {
+    {
+        7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26,
+        32, 33, 34, 35, 36, 40, 42, 44, 45, 46, 47, 48, 51, 53, 54, 57, 59, 62,
+        63, 64, 68, 70, 71, 72, 75, 77, 78, 80, 81, 90, 91, 95, 96, 99, 101,
+        104, 105, 107, 108, 114, 115, 117, 118, 119, 121, 122, 123,
+    },
+    {
+        131, 133, 135, 136, 140, 154, 155, 156, 157, 158, 164, 166, 170, 182,
+        183, 186, 190, 194, 195, 196, 197, 202, 204, 207, 208, 211, 215, 216,
+        220, 221, 225, 227, 228, 229, 230, 233, 240, 248, 249, 250, 254, 258,
+        268, 269, 270, 271, 272, 276, 283, 285, 286, 289, 295, 298, 299, 300,
+        301, 303, 304, 314, 317, 320,
+    },
+    {
+        321, 322, 323, 324, 325, 330, 331, 333, 335, 337, 339, 342, 343, 345,
+        346, 349, 350, 351, 356, 357, 364, 366, 370, 371, 372, 379, 385, 390,
+        391, 392, 394, 398, 404, 405, 406, 407, 409, 410, 411, 415, 421, 422,
+        423, 428, 429, 430, 431, 435, 439, 440, 441, 442, 443, 444, 445, 446,
+        448, 450, 453, 455, 456, 458, 459, 465, 472, 477, 478, 479, 485, 487,
+        494, 500, 504, 505, 506, 507,
+    },
+    {
+        508, 509, 510, 511, 518, 520, 523, 524, 526, 527, 528, 530, 531, 544,
+        545, 549, 550, 551, 553, 554, 555, 556, 558, 559, 560, 565, 568, 569,
+        570, 571, 575, 576, 577, 580, 581, 582, 585, 587, 592, 593, 594, 598,
+        599, 600, 601, 602, 603, 609, 616, 619, 620, 621, 626, 628, 629, 632,
+        636, 645, 646, 647, 648, 651, 654, 655, 658, 659, 670, 672, 673, 674,
+        676, 677, 680, 682, 683, 684, 686, 688, 689, 700, 702,
+    },
+    {
+        715, 717, 718, 727, 744, 745, 747, 748, 749, 750, 752, 753, 758, 759,
+        760, 762, 763, 764, 765, 767, 770, 771, 772, 773, 776, 777, 778, 781,
+        784, 785, 786, 793, 794, 795, 797, 803, 806, 809, 812, 813, 814, 815,
+        822, 823, 824, 826, 830, 833, 834, 835, 837, 838, 839, 840,
+    },
+}
+
+-- Returns the URL to a specific part of the online SICP textbook.
+function text_url(chapter, section, subsection, footnote)
+    chapter = tonumber(chapter)
+    section = section and tonumber(section) or 0
+    subsection = subsection and tonumber(subsection)
+    footnote = footnote and tonumber(footnote)
+    assert(not (subsection and footnote))
+    local num = 8 + chapter + ({0, 3, 8, 13, 17})[chapter] + section
+    local frag = ""
+    if subsection then
+        frag = "#%25_sec_" .. chapter .. "." .. section .. "." .. subsection
+    elseif footnote then
+        frag = "#footnote_Temp_" .. footnote_nums[chapter][footnote]
+    end
+    return text_url_base .. "-" .. num .. ".html" .. frag
+end
 
 -- For each lecture, the speaker (A for Abelson, B for Sussman) and the path to
 -- the transcript PDF relative to lecture_url_base.
@@ -242,30 +320,67 @@ local lectures = {
     ["10b"] = { speaker = "S", path = "10b-storage-allocation-and-garbage-collection/AbK4bZhUk48.pdf" },
 }
 
+-- Returns citation information for a given [@id].
+function citation_info(id)
+    local info = frontmatter_info[id]
+    if info then
+        info.href = text_url_base .. "-" .. info.page .. ".html"
+        return info
+    end
+    info = {person = false}
+    if id:find("^%d$") then
+        info.text = "Chapter&nbsp;" .. id
+        info.title = "SICP Chapter " .. id
+        info.href = text_url(id)
+        return info
+    end
+    local chapter, section = id:match("^(%d).(%d)$")
+    local subsection
+    if not chapter then
+        chapter, section, subsection = id:match("^(%d).(%d).(%d)$")
+    end
+    if chapter then
+        info.text = "Section&nbsp;" .. id
+        info.title = "SICP Section " .. id
+        info.href = text_url(chapter, section, subsection)
+        return info
+    end
+    local chapter, footnote = id:match("^(%d).fn(%d+)$")
+    if not chapter then
+        chapter, section, footnote = id:match("^(%d).(%d).fn(%d+)$")
+    end
+    if chapter then
+        info.text = "Footnote&nbsp;" .. chapter .. "." .. footnote
+        info.title = "SICP Chapter " .. chapter .. ", Footnote " .. footnote
+        info.href = text_url(chapter, section, nil, footnote)
+        return info
+    end
+    local num, page = id:match("^(%d+[ab])%.p(%d+)")
+    if num then
+        lec = assert(lectures[num])
+        info.person = true
+        info.text = ({A = "Abelson", S = "Sussman"})[lec.speaker]
+        info.title =
+            "SICP Lecture " .. num:upper() .. " transcript, page " .. page
+        info.href = lecture_url_base .. "/" .. lec.path .. "#page=" .. page
+        return info
+    end
+    assert(num, "bad citation id: " .. id)
+end
+
 -- Formats citations at the end of blockquotes.
 function format_citation(el)
     assert(#el.citations == 1)
-    local id = el.citations[1].id
-    local text, title, href
-    if id == "dedication" then
-        text = "Alan J. Perlis"
-    elseif id == "foreword" then
-        text = "Alan J. Perlis"
-    elseif id == "preface" then
-        text = "Preface"
-    elseif id:find("^%d[%d%.]*$") then
-        text = id
+    local info = citation_info(el.citations[1].id)
+    local html
+    if info.person then
+        html = '<span class="citation">—<a href="' .. info.href
+            .. '" title="' .. info.title .. '">' .. info.text .. '</a></span>'
     else
-        num, page = id:match("^(%d+[ab])%.p(%d+)")
-        -- assert(num, "bad citation id: " .. id)
-        if not num then return end
-        info = assert(lectures[num])
-        text = ({A = "Abelson", S = "Sussman"})[info.speaker]
-        title = "SICP Lecture " .. num:upper() .. " transcript, page " .. page
-        href = lecture_url_base .. "/" .. info.path .. "#page=" .. page
+        html = '<a class="citation" href="' .. info.href
+            .. '" title="' .. info.title .. '">(' .. info.text .. ')</a>'
     end
-    return pandoc.RawInline("html",
-        '<span class="citation">—<a href="' .. href .. '" title="' .. title .. '">' .. text .. '</a></span>')
+    return pandoc.RawInline("html", html)
 end
 
 return {
