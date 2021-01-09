@@ -6,6 +6,7 @@
 - spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
 - test in html5 validator https://html5.validator.nu/
+- exercises appendix for core.ss etc.
 - figure out exercise chapter pages (there's never code between chapter & first section)
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - reconsider → in lecture 6a

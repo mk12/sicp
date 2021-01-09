@@ -574,6 +574,76 @@ static void save_heading_hl(struct HighlightScanner *scan) {
     scan->sector = scan->md.sector;
 }
 
+// A Scheme sector is represented by an integer. Some exmaples:
+//
+//     ; ...                   ss=0x0000000000
+//     (Chapter :1)            ss=0x0000000001
+//     ; ...                   ss=0x0000000001
+//     (Section :1.2)          ss=0x0000000201
+//     (Section :1.2.3)        ss=0x0000030201
+//     (Section :1.2.3.4)      ss=0x0004030201
+//     (Exercise ?3.5)         ss=0x0500000003
+//
+typedef uint64_t SchemeSector;
+#define SS_EXERCISE_LEVEL 5
+
+// A Scheme code line scanner.
+struct SchemeScanner {
+    // The Scheme file.
+    FILE *file;
+    // Current line and its capacity.
+    struct Span line;
+    size_t cap;
+    // Current sector within the file.
+    SchemeSector sector;
+    // If this line is in a heading block, 1 for :A , 2 for :A.B, 3 for :A.B.C,
+    // 4 for :A.B.C.D (chapters through subsubsections, respectively) and
+    // SS_EXERCISE_LEVEL for ?A.B (exercises).
+    int level;
+};
+
+// Initializes a Scheme line scanner. Returns true on success.
+static bool init_ss(struct SchemeScanner *scan, const char *path) {
+    FILE *file = fopen(path, "r");
+    if (!file) {
+        perror(path);
+        return false;
+    }
+    scan->file = file;
+    scan->line = NULL_SPAN;
+    scan->sector = 0;
+    scan->level = 0;
+    return true;
+}
+
+// Advances a Scheme line scanner to the next line. Returns true on successs,
+// and false on failure or EOF. Takes care of closing the file.
+static bool scan_ss(struct SchemeScanner *scan) {
+    if (!scan->file) {
+        return false;
+    }
+    scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
+    // scan->level = 0;
+    if (scan->line.len == -1) {
+        fclose(scan->file);
+        scan->file = NULL;
+        return false;
+    }
+    // if (startswith(scan->line.data, "```")) {
+    //     scan->code = !scan->code;
+    //     return true;
+    // }
+    // if (!scan->code && prev_blank) {
+    //     int h = 0;
+    //     while (h < scan->line.len && scan->line.data[h] == '#') h++;
+    //     if (h > 0 && h < scan->line.len && scan->line.data[h] == ' ') {
+    //         scan->sector = MS_NEXT(scan->sector, h);
+    //         scan->level = h;
+    //     }
+    // }
+    return true;
+}
+
 // Renders a heading to out. The level determines h1/h2/etc. If id is present,
 // uses it and renders a "#" link. If heading.label is present, renders a
 // .number span. If href_fmt is present, renders heading.title as a link using
@@ -1266,7 +1336,54 @@ invalid:
 
 // Generates docs/exercise/index.html.
 static bool gen_exercise_index(const char *output) {
-    return true;
+    struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(EXERCISE))) {
+        return false;
+    }
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
+        .input = STDIN,
+        .output = STDOUT,
+        .dest = output,
+        .title = "SICP Exercises",
+        .prev = NULL,
+        .up = HREF(PARENT INDEX),
+        .next = HREF("TODO"),
+    })) {
+        return false;
+    }
+    render_heading(proc.in,
+        1, NULL_SPAN, TITLE_HEADING("Textbook Notes"), NULL);
+    while (scan_md(&scan) && scan.sector == 0) {
+        copy_md(&scan, proc.in);
+    }
+    struct TocRenderer tr = new_toc_renderer();
+    render_toc_start(&tr, proc.in);
+    render_toc_item(&tr, proc.in,
+        1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
+    do {
+        if (scan.level == 2) {
+            struct MarkdownHeading h = parse_md_heading(scan.line);
+            assert(!h.label.data);
+            char buf[SZ_HEADING];
+            struct Span id = tolower_s(h.title, buf, sizeof buf);
+            render_toc_item(&tr, proc.in, 1, h,
+                FRONT ".html#%.*s", id.len, id.data);
+        }
+    } while (scan_md(&scan) && MS_INDEX(scan.sector, 1) <= 1);
+    do {
+        if (scan.level == 1) {
+            render_toc_item(&tr, proc.in, 1, parse_md_heading(scan.line),
+                "%d/" INDEX ".html", MS_INDEX(scan.sector, 1) - 1);
+        } else if (scan.level == 2) {
+            render_toc_item(&tr, proc.in, 2, parse_md_heading(scan.line),
+                "%d/%d.html",
+                MS_INDEX(scan.sector, 1) - 1,
+                MS_INDEX(scan.sector, 2));
+        }
+    } while (scan_md(&scan));
+    render_toc_end(&tr, proc.in);
+    return finish_pandoc(&proc, output);
 }
 
 // Generates docs/exercise/*/index.html.
