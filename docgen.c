@@ -794,7 +794,9 @@ static void render_toc_end(struct TocRenderer *tr, FILE *out) {
     for (; tr->depth > 1; tr->depth--) {
         fputs("</ul></li>", out);
     }
-    assert(--tr->depth == 0);
+    if (tr->depth > 0) {
+        assert(--tr->depth == 0);
+    }
     fputs("</ul></nav>\n", out);
 }
 
