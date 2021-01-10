@@ -2,8 +2,6 @@ These notes are based on the second edition of <cite>[Structure and Interpretati
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 
-# Frontmatter
-
 ## Dedication
 
 > This book is dedicated, in respect and admiration, to the spirit that lives in the computer. [@dedication]

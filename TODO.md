@@ -11,6 +11,8 @@
 - BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - reconsider → in lecture 6a
 - have special callout thing at end of text sections with exercise links
+- decide on styling for exercise headings (tabular numbers makes external link look bad)
+- fix exercise link for 1.7.1, 1.7.2
 + attribute some citations to Alan Perlis, etc.
 + do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
 + section 1.2.6 prevent $n$th from breaking apart
