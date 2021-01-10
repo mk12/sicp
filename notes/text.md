@@ -421,7 +421,7 @@ Now we will take it a bit further.
 - Given $f(a) < 0 < f(b)$, there must be at least one zero between $a$ and $b$.
 - To narrow it down, we let $x$ be the average of $a$ and $b$, and then replace either the left bound or the right bound with it.
 
-#### Finding fixed points of a function
+#### Finding fixed points of functions
 
 - A number $x$ is a _fixed point_ of a function if $f(x) = x$.
 - In some cases, repeatedly applying the function to an initial guess will converge on the fixed point.
@@ -540,7 +540,7 @@ Now we can do things like this:
 - Data objects constructed from pairs are _list-structured_ data.
 - To ensure that our rational numbers are always in lowest terms, we need `make-rat` to divide the numerator and the denominator by their greatest common divisor (GCD).
 
-### 2.1.2: Abstractions Barriers
+### 2.1.2: Abstraction Barriers
 
 > In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. [@2.1.2]
 

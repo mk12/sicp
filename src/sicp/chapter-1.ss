@@ -1226,7 +1226,7 @@ circumference ~> 62.8318
 
 (product-rel-prime 10) => (* 3 7 9)
 
-(Section :1.3.2 "Constructing Procedures Using Lambda"
+(Section :1.3.2 "Constructing Procedures Using `Lambda`"
   (use (:1.1.4 square)))
 
 ((lambda (x y z) (+ x y (square z))) 1 2 3) => 12

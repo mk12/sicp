@@ -1,9 +1,7 @@
 These exercise blah blah.
 
-# Language
+r6rs chez guile racket
+
+# Note on the Language
 
 => etc.
-
-# Compatiblility
-
-r6rs chez guile racket

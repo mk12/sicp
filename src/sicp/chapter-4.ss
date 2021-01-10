@@ -1428,7 +1428,7 @@
 ; new: 1.577433s
 ; estimated analysis time: 49.0%
 
-(Section :4.2 "Variations on a Scheme - Lazy Evaluation")
+(Section :4.2 "Variations on a Scheme --- Lazy Evaluation")
 
 (define (try a b) (if (= a 0) 1 b))
 
@@ -1917,7 +1917,7 @@
 (show (actual-value 'ones env)) =$> "(1 1 1 1 1 1 1 1 1 1 ...)"
 (show (actual-value 'one-two env)) =$> "(1 2 1 2 1 2 1 2 1 2 ...)"
 
-(Section :4.3 "Variations on a Scheme - Nondeterministic Computing")
+(Section :4.3 "Variations on a Scheme --- Nondeterministic Computing")
 
 ) ; end of SICP
 ) ; end of library

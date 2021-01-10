@@ -355,6 +355,73 @@ static bool finish_pandoc(struct PandocProc *proc, const char *output) {
     return wait_pandoc(proc);
 }
 
+// A parsed heading from Markdown or Scheme.
+struct Heading {
+    // Markdown: The "1A" in "# 1A: Foo bar", or NULL_SPAN if there is none.
+    // Scheme: The "1.2" in (Section :1.2 "Foo") or (Exercise ?1.2).
+    struct Span label;
+    // Markdown: The "Foo bar" in "# 1A: Foo bar" or "# Foo bar".
+    // Scheme: The "Foo" in (Section :1.2 "Foo"). NULL_SPAN for exercises.
+    struct Span title;
+};
+
+// Creates a heading with title only, from a string literal.
+#define TITLE_HEADING(t) \
+    ((struct Heading){.label = NULL_SPAN, .title = SPAN(t)})
+
+// Parses a heading from a line of Markdown.
+static struct Heading parse_md_heading(struct Span s) {
+    char *const p = s.data;
+    const int n = s.len;
+    assert(n >= 2 && p[0] == '#'  && p[n-1] == '\n');
+    int i = 1;
+    while (i < n && p[i] == '#') i++;
+    assert(p[i++] == ' ' && i < n);
+    if (p[i] >= '1' && p[i] <= '9') {
+        int j = i;
+        while (j < n && p[j] != ':') j++;
+        if (j + 2 < n && p[j+1] == ' ') {
+            return (struct Heading){
+                .label = {p + i, j - i},
+                .title = {p + j + 2, n - j - 3},
+            };
+        }
+    }
+    return (struct Heading){
+        .label = NULL_SPAN,
+        .title = {p + i, n - i - 1},
+    };
+}
+
+// Parses a heading from a line of Scheme.
+static struct Heading parse_ss_heading(struct Span s) {
+    char *const p = s.data;
+    const int n = s.len;
+    assert(p[0] == '(');
+    for (int i = 0; i < n; i++) {
+        if (p[i] == '?') {
+            int j = ++i;
+            while (j < n && p[j] != ')') j++;
+            return (struct Heading){
+                .label = {p + i, j - i},
+                .title = NULL_SPAN,
+            };
+        } else if (p[i] == ':') {
+            int j = ++i;
+            while (j < n && p[j] != ' ') j++;
+            int k = j;
+            while (k < n && p[k] != '"') k++;
+            int l = ++k;
+            while (l < n && p[l] != '"') l++;
+            return (struct Heading){
+                .label = {p + i, j - i},
+                .title = {p + k, l - k},
+            };
+        }
+    }
+    assert(false);
+}
+
 // A Markdown sector is represented by an integer s, where:
 //
 //     (s >> 0*MS_BITS) & MS_MASK  gives the h1 index,
@@ -426,6 +493,14 @@ static bool init_md(struct MarkdownScanner *scan, const char *path) {
     return true;
 }
 
+// Closes the file associated with the Markdown line scanner.
+static void close_md(struct MarkdownScanner *scan) {
+    if (scan->file) {
+        fclose(scan->file);
+        scan->file = NULL;
+    }
+}
+
 // Advances a Markdown line scanner to the next line. Returns true on successs,
 // and false on failure or EOF. Takes care of closing the file.
 static bool scan_md(struct MarkdownScanner *scan) {
@@ -436,8 +511,7 @@ static bool scan_md(struct MarkdownScanner *scan) {
     scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
     scan->level = 0;
     if (scan->line.len == -1) {
-        fclose(scan->file);
-        scan->file = NULL;
+        close_md(scan);
         return false;
     }
     if (startswith(scan->line.data, "```")) {
@@ -460,43 +534,6 @@ static void copy_md(struct MarkdownScanner *scan, FILE *out) {
     fwrite(scan->line.data, scan->line.len, 1, out);
 }
 
-// A parsed Markdown heading.
-struct MarkdownHeading {
-    // If the heading looks like, "# 1A: Foo bar", this is "1A". Otherwise NULL.
-    struct Span label;
-    // If the heading looks like "# 1A: Foo bar", this is "Foo bar". If there is
-    // no label, it is the whole heading with only the leading "# " removed.
-    struct Span title;
-};
-
-// Creates a Markdown heading with title only, from a string literal.
-#define TITLE_HEADING(t) \
-    ((struct MarkdownHeading){.label = NULL_SPAN, .title = SPAN(t)})
-
-// Parses a Markdown heading.
-static struct MarkdownHeading parse_md_heading(struct Span s) {
-    char *const p = s.data;
-    const int n = s.len;
-    assert(n >= 2 && p[0] == '#'  && p[n-1] == '\n');
-    int i = 1;
-    while (i < n && p[i] == '#') i++;
-    assert(p[i++] == ' ' && i < n);
-    if (p[i] >= '1' && p[i] <= '9') {
-        int j = i;
-        while (j < n && p[j] != ':') j++;
-        if (j + 2 < n && p[j+1] == ' ') {
-            return (struct MarkdownHeading){
-                .label = {p + i, j - i},
-                .title = {p + j + 2, n - j - 3},
-            };
-        }
-    }
-    return (struct MarkdownHeading){
-        .label = NULL_SPAN,
-        .title = {p + i, n - i - 1},
-    };
-}
-
 // Buffer sizes for rendering various things.
 #define SZ_HREF 256
 #define SZ_RELATIVE 32
@@ -512,7 +549,7 @@ struct HighlightScanner {
     // highlight block for the current saved heading) and NTH (not the first).
     enum {HL_NONE, HL_START_1ST, HL_START_NTH, HL_INSIDE, HL_END} state;
     // A saved heading and its sector, used for organizing highlights.
-    struct MarkdownHeading heading;
+    struct Heading heading;
     MarkdownSector sector;
     // Storage for the heading spans.
     char line_buf[SZ_HEADING];
@@ -585,6 +622,10 @@ static void save_heading_hl(struct HighlightScanner *scan) {
 //     (Exercise ?3.5)         ss=0x0500000003
 //
 typedef uint64_t SchemeSector;
+#define SS_MASK UINT64_C(0xff)
+#define SS_BITS UINT64_C(8)
+#define SS_INDEX(s, l) ((int)(((s) >> (l - 1)*SS_BITS) & SS_MASK))
+#define SS_VALUE(l, i) ((SchemeSector)(i) << ((SchemeSector)(l) - 1))
 #define SS_EXERCISE_LEVEL 5
 
 // A Scheme code line scanner.
@@ -616,31 +657,55 @@ static bool init_ss(struct SchemeScanner *scan, const char *path) {
     return true;
 }
 
+// Closes the file associated with the Scheme line scanner.
+static void close_ss(struct SchemeScanner *scan) {
+    if (scan->file) {
+        fclose(scan->file);
+        scan->file = NULL;
+    }
+}
+
 // Advances a Scheme line scanner to the next line. Returns true on successs,
 // and false on failure or EOF. Takes care of closing the file.
 static bool scan_ss(struct SchemeScanner *scan) {
     if (!scan->file) {
         return false;
     }
+    const bool prev_blank = scan->line.len <= 1;
     scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
-    // scan->level = 0;
+    const bool current_blank = scan->line.len <= 1;
     if (scan->line.len == -1) {
-        fclose(scan->file);
-        scan->file = NULL;
+        close_ss(scan);
         return false;
     }
-    // if (startswith(scan->line.data, "```")) {
-    //     scan->code = !scan->code;
-    //     return true;
-    // }
-    // if (!scan->code && prev_blank) {
-    //     int h = 0;
-    //     while (h < scan->line.len && scan->line.data[h] == '#') h++;
-    //     if (h > 0 && h < scan->line.len && scan->line.data[h] == ' ') {
-    //         scan->sector = MS_NEXT(scan->sector, h);
-    //         scan->level = h;
-    //     }
-    // }
+    if (scan->level == 0 && prev_blank) {
+        if (startswith(scan->line.data, "(Chapter :")) {
+            scan->level = 1;
+            scan->sector = SS_VALUE(1, scan->line.data[10] - '0');
+        } else if (startswith(scan->line.data, "(Section :")) {
+            int level = 0;
+            SchemeSector sector = 0;
+            for (int i = 10; i < scan->line.len; i++) {
+                level++;
+                sector |= SS_VALUE(level, scan->line.data[i] - '0');
+                if (scan->line.data[++i] != '.') break;
+            }
+            scan->level = level;
+            scan->sector = sector;
+        } else if (startswith(scan->line.data, "(Exercise ?")) {
+            scan->level = SS_EXERCISE_LEVEL;
+            int i = 11;
+            SchemeSector chapter = scan->line.data[i++] - '0';
+            assert(scan->line.data[i++] == '.');
+            const char *endptr;
+            SchemeSector ex = strtol(scan->line.data + i, (char **)&endptr, 10);
+            assert(ex > 0 && endptr);
+            scan->sector =
+                SS_VALUE(1, chapter) | SS_VALUE(SS_EXERCISE_LEVEL, ex);
+        }
+    } else if (scan->level != 0 && current_blank) {
+        scan->level = 0;
+    }
     return true;
 }
 
@@ -649,7 +714,7 @@ static bool scan_ss(struct SchemeScanner *scan) {
 // .number span. If href_fmt is present, renders heading.title as a link using
 // href_fmt and the printf-style arguments that follow.
 static void render_heading(FILE *out, int level, struct Span id,
-        struct MarkdownHeading heading, const char *href_fmt, ...) {
+        struct Heading heading, const char *href_fmt, ...) {
     if (id.data) {
         fprintf(out,
             "<h%d id=\"%.*s\" class=\"anchor\">"
@@ -732,8 +797,8 @@ static void render_toc_end(struct TocRenderer *tr, FILE *out) {
 // Renders an item in a table of contents to out. The depth can be at most one
 // greater than the previous item. The link's href is given in printf style.
 static void render_toc_item(
-        struct TocRenderer *tr, FILE *out, int depth,
-        struct MarkdownHeading heading, const char *href_fmt, ...) {
+        struct TocRenderer *tr, FILE *out, int depth, struct Heading heading,
+        const char *href_fmt, ...) {
     char href[SZ_RELATIVE];
     va_list args;
     va_start(args, href_fmt);
@@ -805,8 +870,7 @@ static int text_url_num(MarkdownSector s) {
 
 // Writes into buf the SICP video lecture URL suffix (after LECTURE_URL_BASE and
 // a slash) for a given lecture heading.
-static void level_url_suffix(
-        struct MarkdownHeading heading, char *buf, int size) {
+static void level_url_suffix(struct Heading heading, char *buf, int size) {
     assert(size > 0);
     assert(heading.label.data);
     int i = 0;
@@ -839,6 +903,7 @@ overflow:
 #define EXERCISE "exercise"
 #define HIGHLIGHT "highlight"
 #define FRONT "front"
+#define LANGUAGE "language"
 
 // Helpers to construct input/output paths.
 #define STDIN "/dev/stdin"
@@ -850,6 +915,15 @@ overflow:
 // Helpers to construct link targets.
 #define PARENT "../"
 #define HREF(p) (p ".html")
+
+// Paths to the Scheme source files for exercises.
+const char *const SCHEME_FILES[NUM_CHAPTERS] = {
+    "src/sicp/chapter-1.ss",
+    "src/sicp/chapter-2.ss",
+    "src/sicp/chapter-3.ss",
+    "src/sicp/chapter-4.ss",
+    "src/sicp/chapter-5.ss",
+};
 
 // Generates docs/index.html.
 static bool gen_index(const char *output) {
@@ -893,7 +967,7 @@ static bool gen_text_index(const char *output) {
         1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
     do {
         if (scan.level == 2) {
-            struct MarkdownHeading h = parse_md_heading(scan.line);
+            struct Heading h = parse_md_heading(scan.line);
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
@@ -1000,7 +1074,7 @@ static bool gen_text_front(const char *output) {
     while (scan_md(&scan) && scan.sector != 1);
     do {
         if (scan.level > 1) {
-            struct MarkdownHeading h = parse_md_heading(scan.line);
+            struct Heading h = parse_md_heading(scan.line);
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
@@ -1010,6 +1084,7 @@ static bool gen_text_front(const char *output) {
             copy_md(&scan, proc.in);
         }
     } while (scan_md(&scan) && scan.level != 1);
+    close_md(&scan);
     return finish_pandoc(&proc, output);
 }
 
@@ -1053,7 +1128,7 @@ static bool gen_text_chapter(const char *output) {
     const MarkdownSector target_sector = make_sector(chapter, 0);
     while (scan_md(&scan) && scan.sector != target_sector);
     assert(scan.sector == target_sector);
-    struct MarkdownHeading h = parse_md_heading(scan.line);
+    struct Heading h = parse_md_heading(scan.line);
     assert(h.label.data);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, text_url_num(target_sector));
@@ -1074,6 +1149,7 @@ static bool gen_text_chapter(const char *output) {
                 "%d.html#%d.%d.%d", section, chapter, section, subsection);
         }
     } while (scan_md(&scan) && scan.level != 1);
+    close_md(&scan);
     render_toc_end(&tr, proc.in);
     return finish_pandoc(&proc, output);
 invalid:
@@ -1135,7 +1211,7 @@ static bool gen_text_section(const char *output) {
     const MarkdownSector target_sector = make_sector(chapter, section);
     while (scan_md(&scan) && scan.sector != target_sector);
     assert(scan.sector == target_sector);
-    struct MarkdownHeading h = parse_md_heading(scan.line);
+    struct Heading h = parse_md_heading(scan.line);
     assert(h.label.data);
     const int page_num = text_url_num(target_sector);
     render_heading(proc.in, 1, NULL_SPAN, h,
@@ -1159,6 +1235,7 @@ static bool gen_text_section(const char *output) {
             copy_md(&scan, proc.in);
         }
     }
+    close_md(&scan);
     return finish_pandoc(&proc, output);
 invalid:
     fprintf(stderr, "%s: invalid text section\n", output);
@@ -1193,7 +1270,7 @@ static bool gen_lecture_index(const char *output) {
         1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
     do {
         if (scan.level == 1) {
-            struct MarkdownHeading h = parse_md_heading(scan.line);
+            struct Heading h = parse_md_heading(scan.line);
             char buf[SZ_LABEL];
             struct Span href = tolower_s(h.label, buf, sizeof buf);
             render_toc_item(&tr, proc.in, 1, h, 
@@ -1312,7 +1389,7 @@ static bool gen_lecture_page(const char *output) {
     const MarkdownSector target_sector = 1 + (number - 1) * 2 + a_or_b - 'a';
     while (scan_md(&scan) && scan.sector != target_sector);
     assert(scan.sector == target_sector);
-    struct MarkdownHeading h = parse_md_heading(scan.line);
+    struct Heading h = parse_md_heading(scan.line);
     char suffix[SZ_HEADING];
     level_url_suffix(h, suffix, sizeof suffix);
     render_heading(proc.in, 1, NULL_SPAN, h,
@@ -1328,6 +1405,7 @@ static bool gen_lecture_page(const char *output) {
             copy_md(&scan, proc.in);
         }
     }
+    close_md(&scan);
     return finish_pandoc(&proc, output);
 invalid:
     fprintf(stderr, "%s: invalid lecture\n", output);
@@ -1345,50 +1423,126 @@ static bool gen_exercise_index(const char *output) {
         .input = STDIN,
         .output = STDOUT,
         .dest = output,
-        .title = "SICP Exercises",
+        .title = "SICP Exercise Solutions",
         .prev = NULL,
         .up = HREF(PARENT INDEX),
-        .next = HREF("TODO"),
+        .next = HREF(LANGUAGE),
     })) {
         return false;
     }
     render_heading(proc.in,
-        1, NULL_SPAN, TITLE_HEADING("Textbook Notes"), NULL);
+        1, NULL_SPAN, TITLE_HEADING("Exercise Solutions"), NULL);
     while (scan_md(&scan) && scan.sector == 0) {
         copy_md(&scan, proc.in);
     }
+    close_md(&scan);
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
-    render_toc_item(&tr, proc.in,
-        1, TITLE_HEADING("Highlights"), HREF(HIGHLIGHT));
-    do {
-        if (scan.level == 2) {
-            struct MarkdownHeading h = parse_md_heading(scan.line);
-            assert(!h.label.data);
-            char buf[SZ_HEADING];
-            struct Span id = tolower_s(h.title, buf, sizeof buf);
-            render_toc_item(&tr, proc.in, 1, h,
-                FRONT ".html#%.*s", id.len, id.data);
+    struct Heading h = parse_md_heading(scan.line);
+    assert(!h.label.data);
+    render_toc_item(&tr, proc.in, 1, h, HREF(LANGUAGE));
+    for (int i = 0; i < NUM_CHAPTERS; i++) {
+        struct SchemeScanner scan;
+        if (!init_ss(&scan, SCHEME_FILES[i])) {
+            return false;
         }
-    } while (scan_md(&scan) && MS_INDEX(scan.sector, 1) <= 1);
+        while (scan_ss(&scan)) {
+            if (scan.level == 1) {
+                render_toc_item(&tr, proc.in, 1, parse_ss_heading(scan.line),
+                    "%d/" INDEX ".html", SS_INDEX(scan.sector, 1));
+            } else if (scan.level == 2) {
+                render_toc_item(&tr, proc.in, 2, parse_ss_heading(scan.line),
+                    "%d/%d.html",
+                    SS_INDEX(scan.sector, 1),
+                    SS_INDEX(scan.sector, 2));
+            }
+        }
+    }
+    render_toc_end(&tr, proc.in);
+    return finish_pandoc(&proc, output);
+}
+
+// Generates docs/exercise/language.html.
+static bool gen_exercise_language(const char *output) {
+   struct MarkdownScanner scan;
+    if (!init_md(&scan, INPUT(EXERCISE))) {
+        return false;
+    }
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
+        .input = STDIN,
+        .output = STDOUT,
+        .dest = output,
+        .title = "SICP Exercises Language",
+        .prev = HREF(INDEX),
+        .up = HREF(INDEX),
+        .next = HREF("1/" INDEX),
+    })) {
+        return false;
+    }
+    while (scan_md(&scan) && scan.sector != 1);
     do {
         if (scan.level == 1) {
-            render_toc_item(&tr, proc.in, 1, parse_md_heading(scan.line),
-                "%d/" INDEX ".html", MS_INDEX(scan.sector, 1) - 1);
-        } else if (scan.level == 2) {
-            render_toc_item(&tr, proc.in, 2, parse_md_heading(scan.line),
-                "%d/%d.html",
-                MS_INDEX(scan.sector, 1) - 1,
-                MS_INDEX(scan.sector, 2));
+            render_heading(proc.in,
+                1, NULL_SPAN, parse_md_heading(scan.line), NULL);
+        } else {
+            copy_md(&scan, proc.in);
         }
     } while (scan_md(&scan));
-    render_toc_end(&tr, proc.in);
     return finish_pandoc(&proc, output);
 }
 
 // Generates docs/exercise/*/index.html.
 static bool gen_exercise_chapter(const char *output) {
-    return true;
+    const char *slash = strrchr(output, '/');
+    if (!(slash && slash > output && strcmp(slash, "/" INDEX ".html") == 0)) {
+        goto invalid;
+    }
+    const int chapter = slash[-1] - '0';
+    if (!(chapter >= 1 && chapter <= NUM_CHAPTERS)) {
+        goto invalid;
+    }
+    struct SchemeScanner scan;
+    if (!init_ss(&scan, SCHEME_FILES[chapter-1])) {
+        return false;
+    }
+    char title[] = "SICP Chapter _ Exercises";
+    title[13] = '0' + chapter;
+    const char *prev;
+    char prev_buf[] = "../_/_.html";
+    if (chapter == 1) {
+        prev = "../" LANGUAGE ".html";
+    } else {
+        prev_buf[3] = '0' + chapter - 1;
+        prev_buf[5] = '0' + num_sections(chapter - 1);
+        prev = prev_buf;
+    }
+    struct PandocProc proc;
+    if (!fork_pandoc(&proc, (struct PandocOpts){
+        .input = STDIN,
+        .output = STDOUT,
+        .dest = output,
+        .title = title,
+        .prev = prev,
+        .up = HREF(PARENT INDEX),
+        .next = HREF("1"),
+    })) {
+        return false;
+    }
+    while (scan_ss(&scan) && scan.sector != 1);
+    do {
+        if (scan.level == 1) {
+            render_heading(proc.in, 1, NULL_SPAN, parse_ss_heading(scan.line),
+                "%s-%d.html", TEXT_URL_BASE, text_url_num()));
+                break;
+        } else {
+            // copy_md(&scan, proc.in);
+        }
+    } while (scan_md(&scan));
+    return finish_pandoc(&proc, output);
+invalid:
+    fprintf(stderr, "%s: invalid exercise chapter\n", output);
+    return false;
 }
 
 // Generates docs/exercise/*/*.html.
@@ -1428,6 +1582,9 @@ static bool gen(const char *output) {
     if (startswith(output, OUTPUT_DIR(EXERCISE))) {
         if (strcmp(output, OUTPUT(EXERCISE "/" INDEX)) == 0) {
             return gen_exercise_index(output);
+        }
+        if (strcmp(output, OUTPUT(EXERCISE "/" LANGUAGE)) == 0) {
+            return gen_exercise_language(output);
         }
         if (endswith(output, "/" INDEX ".html")) {
             return gen_exercise_chapter(output);

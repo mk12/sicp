@@ -1232,7 +1232,7 @@ one-through-four => '(1 2 3 4)
       (let ((smaller (up-split painter (- n 1))))
         (below painter (beside smaller smaller)))))
 
-(Section :2.2.4.2 "Higher order operations"
+(Section :2.2.4.2 "Higher-order operations"
   (use (:2.2.4.1 corner-split) (:2.2.4.5 beside flip-vert identity)
        (?2.50 flip-horiz rotate180) (?2.51 below)))
 

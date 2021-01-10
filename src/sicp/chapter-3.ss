@@ -2500,7 +2500,7 @@ x => 1000000
 => (a (cons 10009 (delay (f p? (cons 10010 (delay (i 10011 1000000)))))))
 => 10009
 
-(Section :3.5.1.2 "Implementing delay and force")
+(Section :3.5.1.2 "Implementing `delay` and `force`")
 
 ;; `delay` is a special form such that `(delay EXPR)` is syntactic sugar for
 ;; `(lambda () EXPR)`. `force` can be implemented as procedure, as done below.
