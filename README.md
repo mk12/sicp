@@ -115,15 +115,15 @@ To view the website, open [docs/index.html](docs/index.html) in your browser.
 
 ### Implementation
 
-The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter implements internal links, formats citations, adjusts code blocks, and renders math.
+The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, and math.
 
 The math is the most complicated, because [KaTeX][] is implemented in JavaScript, not Lua. Instead of invoking it directly, the Lua filter communicates over a Unix pipe with [katex.ts](notes/pandoc/katex.ts), a [Deno][] server that uses the KaTeX module.
 
-Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax format][] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml] in [KDE/syntax-highlighting][].
+Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml].
 
-Pandoc assembles the result using [template.html](notes/pandoc/template.html). The template embeds SVGs from [notes/assets](notes/assets) rather than linking to them. (And for SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
+Pandoc assembles the result using [template.html](notes/pandoc/template.html). The template embeds SVGs from [notes/assets](notes/assets) rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
 
-Finally, the HTML comes back to `docgen`, where it is post-processed and written as an HTML file in [docs/](docs).
+Finally, `docgen`, post-processes the HTML and writes it in [docs/](docs).
 
 The pages are styled by [style.css](docs/style.css). It follows the [BEM naming guide][bem].
 
@@ -218,6 +218,5 @@ See [LICENSE](LICENSE.md) for details.
 [vnu]: https://validator.github.io/validator/
 [skylighting]: https://github.com/jgm/skylighting
 [kate]: https://docs.kde.org/trunk5/en/applications/katepart/highlight.html
-[KDE/syntax-highlighting]: https://github.com/KDE/syntax-highlighting
 [scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml
 [bem]: http://getbem.com/naming/
