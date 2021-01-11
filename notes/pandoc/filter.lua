@@ -146,7 +146,7 @@ function relpath(src, dst)
     return rel
 end
 
--- Converts links like [](:1.2.3), [](1a), and [](?1.23) -- textbook sections,
+-- Converts links like [](:1.2.3), [](:1a), and [](?1.23) -- textbook sections,
 -- lectures, and exercises respectively. If the link content [] is empty, sets
 -- it automatically to § 1.2.3, Lecture 1A, Exercise 1.23, etc.
 function internal_link(el)

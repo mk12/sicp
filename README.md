@@ -1,12 +1,8 @@
 # SICP Study
 
-This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp]. It contains [study notes][pages] and solutions to the exercises. It uses portable [R6RS][] Scheme, tested with [Chez Scheme][], [Guile][], and [Racket][].
+This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp] and its [lectures][]. The code is written in [R6RS Scheme][], tested with [Chez Scheme][], [Guile][], and [Racket][].
 
-## Notes
-
-My notes are published at <https://mk12.github.io/sicp>, generated from Markdown files in [docs/](docs). They are based on the [2.andresraba5 PDF][pdf] and the [MIT OCW video lectures][lectures].
-
-To compile the notes, install [Pandoc][] and run `make -C docs`. To compile automatically on every save, install [entr][] and run `make -C docs watch`.
+For more information, see [the website][].
 
 ## Exercises
 
@@ -20,11 +16,7 @@ Racket produces artifacts in `compiled/` directories. To remove them, run `make 
 
 ### Structure
 
-The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/](src), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
-
-For exercises requiring proofs, there are ConTeXt documents in [proofs/](proofs).
-
-For exercises requiring diagrams, there is ASCII art in comments or photos in [whiteboard/](whiteboard).
+The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/sicp/](src/sicp), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
 
 ### Language
 
@@ -45,31 +37,31 @@ Tests use `=>`, `~>`, `=$>`, and `=!>`:
 Code fragments are isolated to their part of the book:
 
 ```scheme
-(Chapter :1 "chapter title")  ; The ":" sigil is for the text
+(Chapter :1 "chapter title") ; The ":" sigil is for the text
 
-(define a 1)  ; This belongs to Chapter 1
+(define a 1) ; This belongs to Chapter 1
 
 (Section :1.1 "section title")
 
-(define b 2)  ; This belongs to Section 1.1
+(define b 2) ; This belongs to Section 1.1
 
 (Section :1.1.1 "subsection title")
 
-(define c 3)  ; This belongs to Subsection 1.1.1
+(define c 3) ; This belongs to Subsection 1.1.1
 
-(Exercise ?1.1)  ; The "?" sigil is for exercises
+(Exercise ?1.1) ; The "?" sigil is for exercises
 
-(define d 4)  ; This belongs to Exercise 1.1
+(define d 4) ; This belongs to Exercise 1.1
 ```
 
 We can import definitions out of order:
 
 ```scheme
 (Section :1.1 "first section"
-  (use (:1.2 square)))    ; import square from Section 1.2
+  (use (:1.2 square)))   ; import square from Section 1.2
 
-(define nine (square 3))  ; ok
-(define eight (cube 2))   ; ERROR, 'cube' not defined
+(define nine (square 3)) ; ok
+(define eight (cube 2))  ; ERROR, 'cube' not defined
 
 (Section :1.2 "second section")
 
@@ -79,7 +71,7 @@ We can import definitions out of order:
 (Exercise ?1.15
   (use :1.2 square cube))
 
-(define a (+ (square 3) (cube 4)))  ; ok
+(define a (+ (square 3) (cube 4))) ; ok
 ```
 
 We can also unhygienically paste code, but only from earlier sections in the same file:
@@ -98,18 +90,66 @@ We can also unhygienically paste code, but only from earlier sections in the sam
 (inc 42) => 41
 ```
 
+## Notes
+
+Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](notes/lecture.md). They are written [Pandoc Markdown][], with some extras implemented by the [website generator](#website):
+
+- Heading labels: `# 1A: Foo`, `## 1.2: Bar`.
+- LaTeX math: inline `$...$`, display `$$...$$`.
+- Internal links: `[](:1.2.3)` (Section 1.2.3 of the textbook), `[previous lecture](:2b)` (Lecture 2B), `[](?1.23)` (Exercise 1.23).
+- Citations: `[@1.2.3]` (Section 1.2.3 of the textbook), `[@1.2.fn42]` (footnote 42 on the Section 1.2 page), `[@1a.p3]` (page 3 of the transcript for Lecture 1A).
+- Code blocks implicitly receive the `scheme` language class.
+- Quotes wrapped with `::: highlight`/`:::` go on the Highlights page.
+
+## Website
+
+In addition to the notes and exercises, this repository contains a custom static site generator. Its output is stored in [docs/](docs) and served on <https://mk12.github.io/sicp> by GitHub Pages.
+
+The website is pure HTML5 and CSS. It contains no JavaScript.
+
+### Usage
+
+To build the website, make sure you have all the [dependencies](#dependencies) and then run `make docs`. A separate process builds each HTML file, so you can significantly speed this up by parallelizing, for example `make docs -j10`.
+
+To view the website, open [docs/index.html](docs/index.html) in your browser.
+
+### Implementation
+
+The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter implements internal links, formats citations, adjusts code blocks, and renders math.
+
+The math is the most complicated, because [KaTeX][] is implemented in JavaScript, not Lua. Instead of invoking it directly, the Lua filter communicates over a Unix pipe with [katex.ts](notes/pandoc/katex.ts), a [Deno][] server that uses the KaTeX module.
+
+Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax format][] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml] in [KDE/syntax-highlighting][].
+
+Pandoc assembles the result using [template.html](notes/pandoc/template.html). The template embeds SVGs from [notes/assets](notes/assets) rather than linking to them. (And for SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
+
+Finally, the HTML comes back to `docgen`, where it is post-processed and written as an HTML file in [docs/](docs).
+
+The pages are styled by [style.css](docs/style.css). It follows the [BEM naming guide][bem].
+
+## Contributing
+
+Before submitting a PR, run `make`. This makes the following targets:
+
+- `make lint`: Lints Scheme, TypeScript, and Bash.
+- `make fmt`: Formats C and TypeScript.
+- `make spell`: Spellchecks Markdown and Scheme.
+- `make docs`: Builds the website.
+- `make validate`: Validates HTML.
+- `make test`: Tests with all Scheme implementations.
+
 ## Style
 
-This project follows <http://community.schemewiki.org/?scheme-style>, with the following amendments:
+This project follows <http://community.schemewiki.org/?scheme-style>, with some changes:
 
 - Disregard [Rule 3: Closing parens close the line](http://community.schemewiki.org/?scheme-style#H-vtpinr).
 - Limit all lines to 80 columns.
 - Insert one blank line between top-level definitions.
 - Use alignment spaces only at the beginning of lines, never within them.
 - Use `;;` for normal comments, and `;` for commented code/diagrams.
-- Use `;` for inline comments. Separate them from code by one space (or more for alignment).
+- Use `;` for inline comments. Separate from code by one space (or more for alignment).
 
-Run `make lint` to verify these rules.
+Run `make lintscheme` to verify these rules.
 
 ## Editor support
 
@@ -117,9 +157,8 @@ Run `make vscode` to set up tasks for VS Code:
 
 - `test`: Run all tests using Chez Scheme.
 - `lint`: Lint all Scheme and Markdown files.
-- `docs`: Start rebuilding docs on every save.
 
-The `test` and `lint` tasks parse results into the Problems view, which you can advance through with <kbd>F8</kbd>. The `docs` task requires [entr][], and it works well in combination with the [Live Server][] extension.
+The `test` and `lint` tasks parse results into the Problems view, which you can advance through with <kbd>F8</kbd>.
 
 ## Known issues
 
@@ -143,22 +182,42 @@ This works in Chez Scheme and Racket. It also works in Guile, but only the inter
 
 `run.sh guile` takes care of passing `--no-auto-compile` to ensure the interpreter is used.
 
+## Dependencies
+
+Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only) `./deps.sh install` to install them.
+
+- [Chez Scheme][], [Guile][], and [Racket][]: Scheme implementations.
+- [Pandoc][]: Used to build the website.
+- [Lua][] and [luaposix][]: Used in the Pandoc filter.
+- [Deno][]: Used to run a server that pre-renders math with [KaTeX][].
+- [vnu][]: Used to validate HTML files.
+
+You also need a C compiler to compile [linter.c](linter.c) and [docgen.c](docgen.c).
+
 ## License
 
 Most of the source code in this repository is available under the MIT License.
 
-The derivative works in [src/sicp/](src/sicp), [notes/](notes), and [docs/](docs) are available under the CC BY-SA 4.0 License.
+Some files in [src/sicp/](src/sicp), [notes/](notes), and [docs/](docs) are derivative works and are available under the CC BY-SA 4.0 License instead.
 
 See [LICENSE](LICENSE.md) for details.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
-[pages]: https://mk12.github.io/sicp
-[pdf]: https://github.com/sarabander/sicp-pdf
+[the website]: https://mk12.github.io/sicp
 [lectures]: https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
-[R6RS]: http://www.r6rs.org
+[R6RS Scheme]: http://www.r6rs.org
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
 [Guile]: https://www.gnu.org/software/guile/
 [Racket]: http://racket-lang.org
 [Pandoc]: https://pandoc.org
-[entr]: http://eradman.com/entrproject/
-[Live Server]: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+[Pandoc Markdown]: https://pandoc.org/MANUAL.html#pandocs-markdown
+[Lua]: https://www.lua.org
+[luaposix]: https://github.com/luaposix/luaposix
+[Deno]: https://deno.land
+[KaTeX]: https://katex.org
+[vnu]: https://validator.github.io/validator/
+[skylighting]: https://github.com/jgm/skylighting
+[kate]: https://docs.kde.org/trunk5/en/applications/katepart/highlight.html
+[KDE/syntax-highlighting]: https://github.com/KDE/syntax-highlighting
+[scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml
+[bem]: http://getbem.com/naming/

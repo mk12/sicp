@@ -1,7 +1,5 @@
 # New to do
 
-- rewrite README
-    - mention pandoc, katex, BEM css, deps.sh, emphasize no JS
 - respond on https://github.com/jgm/pandoc/issues/6651 with my katex solution
 - spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
@@ -14,6 +12,8 @@
 - fix exercise link for 1.7.1, 1.7.2
 - problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underline making number look weird.. maybe it's fine
 - implement (use) block styling
++ rewrite README
+    + mention pandoc, katex, BEM css, deps.sh, emphasize no JS
 + update index.md in light of CC license
 + test in html5 validator https://html5.validator.nu/
 + BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$

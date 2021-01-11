@@ -54,7 +54,7 @@ This section applies to the following files:
     - Based on [arrow-up.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-up.svg) and [arrow-left.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-left.svg)
 - [notes/assets/external.svg](notes/assets/external.svg)
     - Based on [external-link.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/external-link.svg)
-- [notes/assets/circle_left.svg](notes/assets/circle_left.svg) and [notes/assets/circle_right.svg](notes/assets/circle_right.svg)
+- [notes/assets/circle-left.svg](notes/assets/circle-left.svg) and [notes/assets/circle-right.svg](notes/assets/circle-right.svg)
     - Based on [arrow-up-left-circle.svg](https://github.com/tabler/tabler-icons/blob/0d0214694d56f3dfacbf04201a581b57759007b7/icons/arrow-up-left-circle.svg)
 
 This work is adapted from [tabler/tabler-icons](https://github.com/tabler/tabler-icons).
