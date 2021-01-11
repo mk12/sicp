@@ -1,4 +1,4 @@
-;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2021 Mitchell Kember. Subject to the CC BY-SA 4.0 License.
 
 #!r6rs
 
@@ -14,6 +14,16 @@
 (SICP
 
 (Chapter :5 "Computing with Register Machines")
+
+(Section :5.1 "Designing Register Machines")
+
+(Section :5.2 "A Register-Machine Simulator")
+
+(Section :5.3 "Storage Allocation and Garbage Collection")
+
+(Section :5.4 "The Explicit-Control Evaluator")
+
+(Section :5.5 "Compilation")
 
 ) ; end of SICP
 ) ; end of library

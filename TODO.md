@@ -5,15 +5,20 @@
 - respond on https://github.com/jgm/pandoc/issues/6651 with my katex solution
 - spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
-- test in html5 validator https://html5.validator.nu/
 - exercises appendix for core.ss etc.
-- figure out exercise chapter pages (there's never code between chapter & first section)
-- BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
 - reconsider → in lecture 6a
 - have special callout thing at end of text sections with exercise links
+- go over all exercises and fix up
 - decide on styling for exercise headings (tabular numbers makes external link look bad)
+- implement exercise intralinking in lua filter
 - fix exercise link for 1.7.1, 1.7.2
-- problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underlien making number look weird.. maybe it's fine
+- problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underline making number look weird.. maybe it's fine
+- implement (use) block styling
++ update index.md in light of CC license
++ test in html5 validator https://html5.validator.nu/
++ BUILD EXERCISES DOCS! Then put proofs inline in the Scheme comments, using $$
++ fix highlighting of ~>
++ CC license for sicp Scheme files
 + attribute some citations to Alan Perlis, etc.
 + do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
 + section 1.2.6 prevent $n$th from breaking apart

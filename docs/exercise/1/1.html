@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Mitchell Kember">
   <title>SICP Section 1.1 Exercises</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -65,62 +67,285 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 <span class="number">1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html">The Elements of Programming<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1.1.1" class="anchor">
 <a class="anchor__link link" href="#1.1.1" aria-hidden="true">#</a> <span class="number">1.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.1">Expressions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode"><span class="cn">486</span> <span class="op">=&gt;</span> <span class="cn">486</span>
+(<span class="fu">+</span> <span class="cn">137</span> <span class="cn">349</span>) <span class="op">=&gt;</span> <span class="cn">486</span>
+(<span class="fu">-</span> <span class="cn">1000</span> <span class="cn">334</span>) <span class="op">=&gt;</span> <span class="cn">666</span>
+(<span class="fu">*</span> <span class="cn">5</span> <span class="cn">99</span>) <span class="op">=&gt;</span> <span class="cn">495</span>
+(<span class="fu">/</span> <span class="cn">10</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">+</span> <span class="cn">2.7</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">12.7</span>
+(<span class="fu">+</span> <span class="cn">21</span> <span class="cn">35</span> <span class="cn">12</span> <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+(<span class="fu">*</span> <span class="cn">25</span> <span class="cn">4</span> <span class="cn">12</span>) <span class="op">=&gt;</span> <span class="cn">1200</span>
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">5</span>) (<span class="fu">-</span> <span class="cn">10</span> <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">19</span>
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">4</span>) (<span class="fu">+</span> <span class="cn">3</span> <span class="cn">5</span>))) (<span class="fu">+</span> (<span class="fu">-</span> <span class="cn">10</span> <span class="cn">7</span>) <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">57</span></code></pre>
 <h2 id="1.1.2" class="anchor">
 <a class="anchor__link link" href="#1.1.2" aria-hidden="true">#</a> <span class="number">1.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.2">Naming and the Environment<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> size <span class="cn">2</span>)
+size <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">*</span> <span class="cn">5</span> size) <span class="op">=&gt;</span> <span class="cn">10</span>
+
+(<span class="kw">define</span> pi <span class="cn">3.14159</span>)
+(<span class="kw">define</span> radius <span class="cn">10</span>)
+(<span class="fu">*</span> pi (<span class="fu">*</span> radius radius)) <span class="op">~&gt;</span> <span class="cn">314.159</span>
+
+(<span class="kw">define</span> circumference (<span class="fu">*</span> <span class="cn">2</span> pi radius))
+circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></code></pre>
 <h2 id="1.1.3" class="anchor">
 <a class="anchor__link link" href="#1.1.3" aria-hidden="true">#</a> <span class="number">1.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.3">Evaluating Combinations<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>))
+   (<span class="fu">+</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>))
+<span class="op">=&gt;</span> <span class="cn">390</span></code></pre>
 <h2 id="1.1.4" class="anchor">
 <a class="anchor__link link" href="#1.1.4" aria-hidden="true">#</a> <span class="number">1.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.4">Compound Procedures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+(square <span class="cn">21</span>) <span class="op">=&gt;</span> <span class="cn">441</span>
+(square (<span class="fu">+</span> <span class="cn">2</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> <span class="cn">49</span>
+(square (square <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">81</span>
+
+(<span class="kw">define</span> (sum-of-squares x y)
+  (<span class="fu">+</span> (square x) (square y)))
+(sum-of-squares <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">25</span>
+
+(<span class="kw">define</span> (f a)
+  (sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>)))
+(f <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
 <h2 id="1.1.5" class="anchor">
 <a class="anchor__link link" href="#1.1.5" aria-hidden="true">#</a> <span class="number">1.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.5">The Substitution Model for Procedure Application<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> f square sum-of-squares)))</code></pre>
+<p>Applicative-order evaluation:</p>
+<pre><code class="blockcode">(f <span class="cn">5</span>)
+<span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
+<p>Normal-order evaluation:</p>
+<pre><code class="blockcode">(f <span class="cn">5</span>)
+<span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
 <h2 id="1.1.6" class="anchor">
 <a class="anchor__link link" href="#1.1.6" aria-hidden="true">#</a> <span class="number">1.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.6">Conditional Expressions and Predicates<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">abs</span> x)
+  (<span class="kw">cond</span> ((<span class="fu">&gt;</span> x <span class="cn">0</span>) x)
+        ((<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span>)
+        ((<span class="fu">&lt;</span> x <span class="cn">0</span>) (<span class="fu">-</span> x))))
+
+(<span class="kw">define</span> (<span class="fu">abs</span> x)
+  (<span class="kw">cond</span> ((<span class="fu">&lt;</span> x <span class="cn">0</span>) (<span class="fu">-</span> x))
+        (<span class="kw">else</span> x)))
+
+(<span class="kw">define</span> (<span class="fu">abs</span> x)
+  (<span class="kw">if</span> (<span class="fu">&lt;</span> x <span class="cn">0</span>)
+      (<span class="fu">-</span> x)
+      x))
+
+(<span class="kw">define</span> (<span class="fu">&gt;=</span> x y) (<span class="kw">or</span> (<span class="fu">&gt;</span> x y) (<span class="fu">=</span> x y)))
+(<span class="kw">define</span> (<span class="fu">&gt;=</span> x y) (<span class="fu">not</span> (<span class="fu">&lt;</span> x y)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.1">Exercise 1.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode"><span class="cn">10</span> <span class="op">=&gt;</span> <span class="cn">10</span>
+(<span class="fu">+</span> <span class="cn">5</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">12</span>
+(<span class="fu">-</span> <span class="cn">9</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
+(<span class="fu">/</span> <span class="cn">6</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">4</span>) (<span class="fu">-</span> <span class="cn">4</span> <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">6</span>
+(<span class="kw">define</span> a <span class="cn">3</span>)
+(<span class="kw">define</span> b (<span class="fu">+</span> a <span class="cn">1</span>))
+(<span class="fu">+</span> a b (<span class="fu">*</span> a b)) <span class="op">=&gt;</span> <span class="cn">19</span>
+(<span class="fu">=</span> a b) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="kw">if</span> (<span class="kw">and</span> (<span class="fu">&gt;</span> b a) (<span class="fu">&lt;</span> b (<span class="fu">*</span> a b)))
+    b
+    a)
+<span class="op">=&gt;</span> <span class="cn">4</span>
+
+(<span class="kw">cond</span> ((<span class="fu">=</span> a <span class="cn">4</span>) <span class="cn">6</span>)
+      ((<span class="fu">=</span> b <span class="cn">4</span>) (<span class="fu">+</span> <span class="cn">6</span> <span class="cn">7</span> a))
+      (<span class="kw">else</span> <span class="cn">25</span>))
+<span class="op">=&gt;</span> <span class="cn">16</span>
+
+(<span class="fu">+</span> <span class="cn">2</span> (<span class="kw">if</span> (<span class="fu">&gt;</span> b a) b a)) <span class="op">=&gt;</span> <span class="cn">6</span>
+
+(<span class="fu">*</span> (<span class="kw">cond</span> ((<span class="fu">&gt;</span> a b) a)
+         ((<span class="fu">&lt;</span> a b) b)
+         (<span class="kw">else</span> <span class="cn">-1</span>))
+   (<span class="fu">+</span> a <span class="cn">1</span>))
+<span class="op">=&gt;</span> <span class="cn">16</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.2">Exercise 1.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">4</span> (<span class="fu">-</span> <span class="cn">2</span> (<span class="fu">-</span> <span class="cn">3</span> (<span class="fu">+</span> <span class="cn">6</span> <span class="cn">4</span>/<span class="cn">5</span>))))
+   (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">-</span> <span class="cn">6</span> <span class="cn">2</span>) (<span class="fu">-</span> <span class="cn">2</span> <span class="cn">7</span>)))
+<span class="op">=&gt;</span> <span class="cn">-37</span>/<span class="cn">150</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.3">Exercise 1.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (f a b c)
+  (<span class="kw">cond</span> ((<span class="kw">and</span> (<span class="fu">&lt;=</span> a b) (<span class="fu">&lt;=</span> a c))
+         (<span class="fu">+</span> (<span class="fu">*</span> b b) (<span class="fu">*</span> c c)))
+        ((<span class="kw">and</span> (<span class="fu">&lt;=</span> b a) (<span class="fu">&lt;=</span> b c))
+         (<span class="fu">+</span> (<span class="fu">*</span> a a) (<span class="fu">*</span> c c)))
+        ((<span class="kw">and</span> (<span class="fu">&lt;=</span> c a) (<span class="fu">&lt;=</span> c b))
+         (<span class="fu">+</span> (<span class="fu">*</span> a a) (<span class="fu">*</span> b b)))))
+
+(f <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">13</span>
+(f <span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">13</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.4">Exercise 1.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (a-plus-abs-b a b)
+  ((<span class="kw">if</span> (<span class="fu">&gt;</span> b <span class="cn">0</span>) <span class="fu">+</span> <span class="fu">-</span>) a b))</code></pre>
+<p>The operator evaluates to <code>+</code> (addition) when <code>b</code> is positive, and to <code>-</code> (subtraction) when <code>b</code> is negative. Subtracting a negative is equivalent to adding its absolute value, so this procedure performs <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mo stretchy="false">∣</mo><mi>b</mi><mo stretchy="false">∣</mo></mrow><annotation encoding="application/x-tex">a + \lvert b\rvert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∣</span><span class="mord mathnormal">b</span><span class="mclose">∣</span></span></span></span> in all cases.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.5">Exercise 1.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (p) (p))
+(<span class="kw">define</span> (test x y)
+  (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span> y))
+
+<span class="co">; (test 0 (p)) ; never terminates</span></code></pre>
+<p>With applicative-order evaluation, the expression will never return a value because the interpreter tries to evaluate <code>(p)</code> and enters endless recursion.</p>
+<p>With normal-order evaluation, the expression will evaluate to zero. The <code>(p)</code> expression is never evaluated because it is not necessary to do so.</p>
 <h2 id="1.1.7" class="anchor">
 <a class="anchor__link link" href="#1.1.7" aria-hidden="true">#</a> <span class="number">1.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.7">Example: Square Roots by Newton’s Method<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
+
+(<span class="kw">define</span> (sqrt-iter guess x)
+  (<span class="kw">if</span> (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(<span class="kw">define</span> (improve guess x)
+  (average guess (<span class="fu">/</span> x guess)))
+(<span class="kw">define</span> (average x y)
+  (<span class="fu">/</span> (<span class="fu">+</span> x y) <span class="cn">2</span>))
+(<span class="kw">define</span> (good-enough? guess x)
+  (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> (square guess) x)) <span class="cn">0.001</span>))
+(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
+  (sqrt-iter <span class="cn">1.0</span> x))
+
+(<span class="fu">sqrt</span> <span class="cn">9</span>)
+<span class="op">~&gt;</span> <span class="cn">3.00009155413138</span>
+(<span class="fu">sqrt</span> (<span class="fu">+</span> <span class="cn">100</span> <span class="cn">37</span>))
+<span class="op">~&gt;</span> <span class="cn">11.704699917758145</span>
+(<span class="fu">sqrt</span> (<span class="fu">+</span> (<span class="fu">sqrt</span> <span class="cn">2</span>) (<span class="fu">sqrt</span> <span class="cn">3</span>)))
+<span class="op">~&gt;</span> <span class="cn">1.7739279023207892</span>
+(square (<span class="fu">sqrt</span> <span class="cn">1000</span>))
+<span class="op">~&gt;</span> <span class="cn">1000.000369924366</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.6">Exercise 1.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> good-enough? improve)))
+
+(<span class="kw">define</span> (new-if predicate then-clause else-clause)
+  (<span class="kw">cond</span> (predicate then-clause)
+        (<span class="kw">else</span> else-clause)))
+
+(new-if (<span class="fu">=</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="cn">0</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(new-if (<span class="fu">=</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="cn">0</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+
+(<span class="kw">define</span> (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (sqrt-iter (improve guess x) x)))</code></pre>
+<p>When Alyssa attempts to use this to compute square roots, it will not work. The <code>sqrt</code> procedure will never return a value because it gets stuck in <code>sqrt-iter</code> due to infinite recursion. The <code>new-if</code> combination always evaluates the else-clause, which contains the recursive call, so the recursion will never end.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.1">Exercise 1.7.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> <span class="fu">sqrt</span>)))</code></pre>
+<p>The <code>good-enough?</code> predicate does not work well for small numbers because the tolerance is fixed. If the number is smaller than the tolerance, the result will be hopelessly inaccurate, like measuring an atom with a yard stick.</p>
+<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="co">; should be 0</span>
+(<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="co">; should be 1e-10</span></code></pre>
+<p>The test is inadequate for very large numbers. With limited precision, it is impossible to represent small differences between very large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
+<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
+<span class="co">; (sqrt 1e20) ; never terminates</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.2">Exercise 1.7.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> improve)))</code></pre>
+<p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (good-enough? g1 g2)
+  <span class="co">;; Note: unlike `infinite?`, the negation of `finite?` will catch NaN.</span>
+  (<span class="kw">or</span> (<span class="fu">not</span> (<span class="fu">finite?</span> g2))
+      (<span class="fu">&lt;</span> (<span class="fu">/</span> (<span class="fu">abs</span> (<span class="fu">-</span> g2 g1)) g1)
+         <span class="cn">0.001</span>)))
+(<span class="kw">define</span> (sqrt-iter guess x)
+  (<span class="kw">let</span> ((better (improve guess x)))
+    (<span class="kw">if</span> (good-enough? guess better)
+        guess
+        (sqrt-iter better x))))
+(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
+  (sqrt-iter <span class="cn">1.0</span> x))</code></pre>
+<p>It works much better for small numbers. For zero, it works because even though the <code>guess</code> change is always a 50% reduction, it eventually gets so small that it becomes NaN, and the algorithm terminates.</p>
+<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0</span>
+(<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">1e-10</span></code></pre>
+<p>For large numbers, it works better in that it always terminates. However, the results are less precise because “a small fraction” change in <code>guess</code> can be fairly large when the guesses themselves are very large.</p>
+<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1.0000029650278373e7</span>
+(<span class="fu">sqrt</span> <span class="cn">1e20</span>) <span class="op">~&gt;</span> <span class="cn">1.0000021484861237e10</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.8">Exercise 1.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
+
+(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
+(<span class="kw">define</span> (cbrt-iter guess x)
+  (<span class="kw">if</span> (good-enough? guess x)
+      guess
+      (cbrt-iter (improve guess x) x)))
+(<span class="kw">define</span> (improve guess x)
+  (<span class="fu">/</span> (<span class="fu">+</span> (<span class="fu">/</span> x (square guess))
+        (<span class="fu">*</span> <span class="cn">2</span> guess))
+     <span class="cn">3</span>))
+(<span class="kw">define</span> (good-enough? guess x)
+  (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> (cube guess) x)) <span class="cn">0.001</span>))
+(<span class="kw">define</span> (cbrt x)
+  (cbrt-iter <span class="cn">1.0</span> x))
+
+(cbrt <span class="cn">8</span>) <span class="op">~&gt;</span> <span class="cn">2.000004911675504</span></code></pre>
 <h2 id="1.1.8" class="anchor">
 <a class="anchor__link link" href="#1.1.8" aria-hidden="true">#</a> <span class="number">1.1.8</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.8">Procedures as Black-Box Abstractions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-</article>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average)))</code></pre>
+<p>The following two procedures should be indistinguishable:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+(<span class="kw">define</span> (square x) (exp (<span class="fu">+</span> (<span class="fu">log</span> x) (<span class="fu">log</span> x))))</code></pre>
+<p>These should be indistinguishable as well:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+(<span class="kw">define</span> (square y) (<span class="fu">*</span> y y))</code></pre>
+<p>Using block structure:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
+  (<span class="kw">define</span> (good-enough? guess x)
+    (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> (square guess) x)) <span class="cn">0.001</span>))
+  (<span class="kw">define</span> (improve guess x) (average guess (<span class="fu">/</span> x guess)))
+  (<span class="kw">define</span> (sqrt-iter guess x)
+    (<span class="kw">if</span> (good-enough? guess x)
+        guess
+        (sqrt-iter (improve guess x) x)))
+  (sqrt-iter <span class="cn">1.0</span> x))</code></pre>
+<p>Without passing <code>x</code> around:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
+  (<span class="kw">define</span> (good-enough? guess)
+    (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> (square guess) x)) <span class="cn">0.001</span>))
+  (<span class="kw">define</span> (improve guess)
+    (average guess (<span class="fu">/</span> x guess)))
+  (<span class="kw">define</span> (sqrt-iter guess)
+    (<span class="kw">if</span> (good-enough? guess)
+        guess
+        (sqrt-iter (improve guess))))
+  (sqrt-iter <span class="cn">1.0</span>))</code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

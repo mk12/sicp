@@ -65,161 +65,1053 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 <span class="number">2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html">Hierarchical Data and the Closure Property<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a> <span class="number">2.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.1">Representing Sequences<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> one-through-four (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>))
+
+one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(<span class="fu">car</span> one-through-four) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">cdr</span> one-through-four) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(<span class="fu">car</span> (<span class="fu">cdr</span> one-through-four)) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">cons</span> <span class="cn">10</span> one-through-four) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(<span class="fu">cons</span> <span class="cn">5</span> one-through-four) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)</code></pre>
 <h3 id="2.2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a> <span class="number">2.2.1.1</span> List operations
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      (<span class="fu">car</span> items)
+      (<span class="fu">list-ref</span> (<span class="fu">cdr</span> items) (<span class="fu">-</span> n <span class="cn">1</span>))))
+
+(<span class="kw">define</span> squares (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>))
+(<span class="fu">list-ref</span> squares <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">16</span></code></pre>
+<p>Recursive</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
+  (<span class="kw">if</span> (<span class="fu">null?</span> items)
+      <span class="cn">0</span>
+      (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">length</span> (<span class="fu">cdr</span> items)))))
+
+(<span class="kw">define</span> odds (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>))
+(<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
+<p>Iterative</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
+  (<span class="kw">define</span> (iter a count)
+    (<span class="kw">if</span> (<span class="fu">null?</span> a)
+        count
+        (iter (<span class="fu">cdr</span> a) (<span class="fu">+</span> <span class="cn">1</span> count))))
+  (iter items <span class="cn">0</span>))
+
+(<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span>
+
+(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
+  (<span class="kw">if</span> (<span class="fu">null?</span> list1)
+      list2
+      (<span class="fu">cons</span> (<span class="fu">car</span> list1)
+            (<span class="fu">append</span> (<span class="fu">cdr</span> list1) list2))))
+
+(<span class="fu">append</span> squares odds) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>)
+(<span class="fu">append</span> odds squares) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.17">Exercise 2.17<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (last-pair xs)
+  (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdr</span> xs))
+      xs
+      (last-pair (<span class="fu">cdr</span> xs))))
+
+(last-pair (<span class="fu">list</span> <span class="cn">23</span> <span class="cn">72</span> <span class="cn">149</span> <span class="cn">34</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">34</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.18">Exercise 2.18<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
+  (<span class="kw">define</span> (iter xs ys)
+    (<span class="kw">if</span> (<span class="fu">null?</span> xs)
+        ys
+        (iter (<span class="fu">cdr</span> xs)
+              (<span class="fu">cons</span> (<span class="fu">car</span> xs) ys))))
+  (iter xs &#39;()))
+
+(<span class="fu">reverse</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">25</span> <span class="cn">16</span> <span class="cn">9</span> <span class="cn">4</span> <span class="cn">1</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.19">Exercise 2.19<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> us-coins (<span class="fu">list</span> <span class="cn">50</span> <span class="cn">25</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">1</span>))
+(<span class="kw">define</span> uk-coins (<span class="fu">list</span> <span class="cn">100</span> <span class="cn">50</span> <span class="cn">20</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">2</span> <span class="cn">1</span> <span class="cn">1</span>/<span class="cn">2</span>))
+
+(<span class="kw">define</span> (cc amount coins)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> amount <span class="cn">0</span>) <span class="cn">1</span>)
+        ((<span class="fu">&lt;</span> amount <span class="cn">0</span>) <span class="cn">0</span>)
+        ((no-more? coins) <span class="cn">0</span>)
+        (<span class="kw">else</span>
+         (<span class="fu">+</span> (cc amount
+                (except-first-denom coins))
+            (cc (<span class="fu">-</span> amount (first-denom coins))
+                coins)))))
+
+(<span class="kw">define</span> first-denom <span class="fu">car</span>)
+(<span class="kw">define</span> except-first-denom <span class="fu">cdr</span>)
+(<span class="kw">define</span> no-more? <span class="fu">null?</span>)
+
+(cc <span class="cn">20</span> uk-coins) <span class="op">=&gt;</span> <span class="cn">293</span></code></pre>
+<p>The order of the coin value list does not affect the answer produced by <code>cc</code>:</p>
+<pre><code class="blockcode">(cc <span class="cn">100</span> us-coins) <span class="op">=&gt;</span> <span class="cn">292</span>
+(cc <span class="cn">100</span> (<span class="fu">reverse</span> us-coins)) <span class="op">=&gt;</span> <span class="cn">292</span>
+(cc <span class="cn">100</span> (<span class="fu">list</span> <span class="cn">5</span> <span class="cn">50</span> <span class="cn">1</span> <span class="cn">25</span> <span class="cn">10</span>)) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
+<p>This is because the cc algorithm does not assume the coin values are sorted in any particular order. It recurs on the <code>cdr</code> of the list, so it will always be able to reach the end of the list unless it reaches one of the other base cases first.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.20">Exercise 2.20<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (same-parity . xs)
+  (<span class="kw">define</span> (helper pred xs)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) xs)
+          ((pred (<span class="fu">car</span> xs))
+           (<span class="fu">cons</span> (<span class="fu">car</span> xs)
+                 (helper pred (<span class="fu">cdr</span> xs))))
+          (<span class="kw">else</span> (helper pred (<span class="fu">cdr</span> xs)))))
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) xs)
+        ((<span class="fu">even?</span> (<span class="fu">car</span> xs)) (helper <span class="fu">even?</span> xs))
+        (<span class="kw">else</span> (helper <span class="fu">odd?</span> xs))))
+
+(same-parity <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>)
+(same-parity <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">4</span> <span class="cn">6</span>)</code></pre>
 <h3 id="2.2.1.2" class="anchor">
 <a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a> <span class="number">2.2.1.2</span> Mapping over lists
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (scale-list items factor)
+  (<span class="kw">if</span> (<span class="fu">null?</span> items)
+      &#39;()
+      (<span class="fu">cons</span> (<span class="fu">*</span> (<span class="fu">car</span> items) factor)
+            (scale-list (<span class="fu">cdr</span> items) factor))))
+(scale-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">20</span> <span class="cn">30</span> <span class="cn">40</span> <span class="cn">50</span>)
+
+(<span class="kw">define</span> (<span class="fu">map</span> proc items)
+  (<span class="kw">if</span> (<span class="fu">null?</span> items)
+      &#39;()
+      (<span class="fu">cons</span> (proc (<span class="fu">car</span> items))
+            (<span class="fu">map</span> proc (<span class="fu">cdr</span> items)))))
+
+(<span class="kw">define</span> (scale-list items factor)
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) items))
+(scale-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">20</span> <span class="cn">30</span> <span class="cn">40</span> <span class="cn">50</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.21">Exercise 2.21<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
+
+(<span class="kw">define</span> (square-list xs)
+  (<span class="kw">if</span> (<span class="fu">null?</span> xs)
+      &#39;()
+      (<span class="fu">cons</span> (square (<span class="fu">car</span> xs))
+            (square-list (<span class="fu">cdr</span> xs)))))
+(square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span>)
+
+(<span class="kw">define</span> (square-list xs) (<span class="fu">map</span> square xs))
+(square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.22">Exercise 2.22<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))</code></pre>
+<p>Louis’s procedure reverses the order of the list because he is building up a new list in the reverse order that the original one was constructed. The first element to be consed onto the original list is its last element. Consing in reverse order produces a reversed list.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
+  (<span class="kw">define</span> (iter things answer)
+    (<span class="kw">if</span> (<span class="fu">null?</span> things)
+        answer
+        (iter (<span class="fu">cdr</span> things)
+              (<span class="fu">cons</span> (square (<span class="fu">car</span> things))
+                    answer))))
+  (iter items &#39;()))
+
+(square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">16</span> <span class="cn">9</span> <span class="cn">4</span> <span class="cn">1</span>)</code></pre>
+<p>When Louis interchanges the arguments to <code>cons</code>, it doesn’t work because he is trying to cons a list onto a single element. This creates a list structure (in that it is made up of pairs), but this is not a sequence. Louis is trying to use cons to add an element to the end a sequence, but this is not possible. To add something to the end of a sequence, you must walk all the way to its end. He could use <code>append</code> instead of <code>cons</code> to achieve this, but this would end up being much less efficient than the recursive map.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
+  (<span class="kw">define</span> (iter things answer)
+    (<span class="kw">if</span> (<span class="fu">null?</span> things)
+        answer
+        (iter (<span class="fu">cdr</span> things)
+              (<span class="fu">cons</span> answer
+                    (square (<span class="fu">car</span> things))))))
+  (iter items &#39;()))
+
+(square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(((((() . <span class="cn">1</span>) . <span class="cn">4</span>) . <span class="cn">9</span>) . <span class="cn">16</span>) . <span class="cn">25</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.23">Exercise 2.23<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">for-each</span> f xs)
+  (unless (<span class="fu">null?</span> xs)
+    (f (<span class="fu">car</span> xs))
+    (<span class="fu">for-each</span> f (<span class="fu">cdr</span> xs))))
+
+(<span class="fu">for-each</span>
+ (<span class="kw">lambda</span> (x)
+   (<span class="fu">newline</span>)
+   (<span class="fu">display</span> x))
+ (<span class="fu">list</span> <span class="cn">57</span> <span class="cn">321</span> <span class="cn">88</span>))
+<span class="op">=$&gt;</span> [<span class="cn">&quot;57&quot;</span> <span class="cn">&quot;321&quot;</span> <span class="cn">&quot;88&quot;</span>]</code></pre>
 <h2 id="2.2.2" class="anchor">
 <a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a> <span class="number">2.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.2">Hierarchical Structures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (count-leaves x)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> x) <span class="cn">0</span>)
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> x)) <span class="cn">1</span>)
+        (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))
+                 (count-leaves (<span class="fu">cdr</span> x))))))
+
+(<span class="kw">define</span> x (<span class="fu">cons</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span>) (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>)))
+(<span class="fu">length</span> x) <span class="op">=&gt;</span> <span class="cn">3</span>
+(count-leaves x) <span class="op">=&gt;</span> <span class="cn">4</span>
+
+(<span class="fu">list</span> x x) <span class="op">=&gt;</span> &#39;(((<span class="cn">1</span> <span class="cn">2</span>) <span class="cn">3</span> <span class="cn">4</span>) ((<span class="cn">1</span> <span class="cn">2</span>) <span class="cn">3</span> <span class="cn">4</span>))
+(<span class="fu">length</span> (<span class="fu">list</span> x x)) <span class="op">=&gt;</span> <span class="cn">2</span>
+(count-leaves (<span class="fu">list</span> x x)) <span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.24">Exercise 2.24<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>)))</code></pre>
+<p>Box-and-pointer structure:</p>
+<pre><code class="blockcode"><span class="co">; [*|*]---&gt;[*|X]</span>
+<span class="co">;  |        |</span>
+<span class="co">;  v        \-&gt;[*|*]---&gt;[*|X]</span>
+<span class="co">;  1            |        |</span>
+<span class="co">;               v        \-&gt;[*|*]---&gt;[4|X]</span>
+<span class="co">;               2            |</span>
+<span class="co">;                            v</span>
+<span class="co">;                            3</span></code></pre>
+<p>Tree interpretation:</p>
+<pre><code class="blockcode"><span class="co">;  /\</span>
+<span class="co">; 1 /\</span>
+<span class="co">;  2 /\</span>
+<span class="co">;   3 4</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.25">Exercise 2.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">cdr</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> (<span class="cn">5</span> <span class="cn">7</span>) <span class="cn">9</span>))))))
+<span class="op">=&gt;</span> <span class="cn">7</span>
+
+(<span class="fu">car</span> (<span class="fu">car</span> &#39;((<span class="cn">7</span>))))
+<span class="op">=&gt;</span> <span class="cn">7</span>
+
+(<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span>
+  &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> (<span class="cn">4</span> (<span class="cn">5</span> (<span class="cn">6</span> <span class="cn">7</span>)))))))))))))))))) <span class="co">; NOALIGN</span>
+<span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.26">Exercise 2.26<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>))
+(<span class="kw">define</span> y (<span class="fu">list</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>))
+
+(<span class="fu">append</span> x y) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>)
+(<span class="fu">cons</span> x y) <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>)
+(<span class="fu">list</span> x y) <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.27">Exercise 2.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (deep-reverse x)
+  (<span class="kw">if</span> (<span class="fu">pair?</span> x)
+      (<span class="fu">map</span> deep-reverse (<span class="fu">reverse</span> x))
+      x))
+
+(deep-reverse &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;((<span class="cn">4</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">1</span>))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.28">Exercise 2.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (fringe t)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> t) t)
+        ((<span class="fu">pair?</span> (<span class="fu">car</span> t))
+         (<span class="fu">append</span> (fringe (<span class="fu">car</span> t))
+                 (fringe (<span class="fu">cdr</span> t))))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (<span class="fu">car</span> t)
+                    (fringe (<span class="fu">cdr</span> t))))))
+
+(fringe &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(fringe &#39;((((<span class="cn">5</span>) <span class="cn">2</span>) ((<span class="cn">3</span> <span class="cn">2</span>) <span class="cn">9</span>)))) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">2</span> <span class="cn">9</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.29">Exercise 2.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-mobile left right) (<span class="fu">list</span> left right))
+(<span class="kw">define</span> (make-branch <span class="fu">length</span> structure) (<span class="fu">list</span> <span class="fu">length</span> structure))</code></pre>
+<ol type="a">
+<li>Selectors</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> left-branch <span class="fu">car</span>)
+(<span class="kw">define</span> right-branch <span class="fu">cadr</span>)
+(<span class="kw">define</span> branch-length <span class="fu">car</span>)
+(<span class="kw">define</span> branch-structure <span class="fu">cadr</span>)</code></pre>
+<ol start="2" type="a">
+<li>Total weight</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (mobile-weight mobile)
+  (<span class="fu">+</span> (branch-weight (left-branch mobile))
+     (branch-weight (right-branch mobile))))
+(<span class="kw">define</span> (branch-weight branch)
+  (<span class="kw">let</span> ((struct (branch-structure branch)))
+    (<span class="kw">if</span> (<span class="fu">number?</span> struct)
+        struct
+        (mobile-weight struct))))</code></pre>
+<ol start="3" type="a">
+<li>Balance</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (torque branch)
+  (<span class="fu">*</span> (branch-length branch)
+     (branch-weight branch)))
+(<span class="kw">define</span> (mobile-balanced? mobile)
+  (<span class="kw">and</span> (<span class="fu">=</span> (torque (left-branch mobile))
+          (torque (right-branch mobile)))
+       (branch-balanced? (left-branch mobile))
+       (branch-balanced? (right-branch mobile))))
+(<span class="kw">define</span> (branch-balanced? branch)
+  (<span class="kw">let</span> ((struct (branch-structure branch)))
+    (<span class="kw">or</span> (<span class="fu">number?</span> struct)
+        (mobile-balanced? struct))))</code></pre>
+<ol start="4" type="a">
+<li>If <code>make-mobile</code> and <code>make-branch</code> use <code>cons</code> instead of <code>list</code>, all we need to do is change the <code>right-branch</code> and <code>branch-structure</code> selectors:</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> make-mobile <span class="fu">cons</span>)
+(<span class="kw">define</span> make-branch <span class="fu">cons</span>)
+(<span class="kw">define</span> right-branch <span class="fu">cdr</span>)
+(<span class="kw">define</span> branch-structure <span class="fu">cdr</span>)</code></pre>
 <h3 id="2.2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a> <span class="number">2.2.2.1</span> Mapping over trees
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (scale-tree tree factor)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> tree) &#39;())
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> tree)) (<span class="fu">*</span> tree factor))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (scale-tree (<span class="fu">car</span> tree) factor)
+                    (scale-tree (<span class="fu">cdr</span> tree) factor)))))
+
+(scale-tree (<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="fu">list</span> <span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>)
+<span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))
+
+(<span class="kw">define</span> (scale-tree tree factor)
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (sub-tree)
+         (<span class="kw">if</span> (<span class="fu">pair?</span> sub-tree)
+             (scale-tree sub-tree factor)
+             (<span class="fu">*</span> sub-tree factor)))
+       tree))
+
+(scale-tree (<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="fu">list</span> <span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>)
+<span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.30">Exercise 2.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
+
+(<span class="kw">define</span> tree &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="cn">6</span> <span class="cn">7</span>)))
+(<span class="kw">define</span> squared-tree &#39;(<span class="cn">1</span> (<span class="cn">4</span> (<span class="cn">9</span> <span class="cn">16</span>) <span class="cn">25</span>) (<span class="cn">36</span> <span class="cn">49</span>)))</code></pre>
+<p>Without map</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square-tree t)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> t) &#39;())
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> t)) (square t))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (square-tree (<span class="fu">car</span> t))
+                    (square-tree (<span class="fu">cdr</span> t))))))
+
+(square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
+<p>With map</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square-tree t)
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (t)
+         (<span class="kw">if</span> (<span class="fu">pair?</span> t)
+             (square-tree t)
+             (square t)))
+       t))
+
+(square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.31">Exercise 2.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">2.30</span> squared-tree tree)))</code></pre>
+<p>Without map</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (tree-map f t)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> t) &#39;())
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> t)) (f t))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (tree-map f (<span class="fu">car</span> t))
+                    (tree-map f (<span class="fu">cdr</span> t))))))</code></pre>
+<p>With map</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (tree-map f t)
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (t)
+         (<span class="kw">if</span> (<span class="fu">pair?</span> t)
+             (tree-map f t)
+             (f t)))
+       t))
+
+(<span class="kw">define</span> (square-tree tree) (tree-map square tree))
+(square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.32">Exercise 2.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (subsets s)
+  (<span class="kw">if</span> (<span class="fu">null?</span> s)
+      (<span class="fu">list</span> &#39;())
+      (<span class="kw">let</span> ((first-item (<span class="fu">car</span> s))
+            (subsets-rest (subsets (<span class="fu">cdr</span> s))))
+        (<span class="fu">append</span> subsets-rest
+                (<span class="fu">map</span> (<span class="kw">lambda</span> (set) (<span class="fu">cons</span> first-item set))
+                     subsets-rest)))))
+
+(subsets &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(() (<span class="cn">3</span>) (<span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>))</code></pre>
+<p>This works because we can define the powerset recursively like this:</p>
+<ol type="1">
+<li>The powerset of an empty set is {{}}.</li>
+<li>Given a set S and its powerset P(S), the powerset of S’ (the set formed by adding the element x to S) is P(S’), and P(S’) is equal to the union of P(S) and {R union {x} | R in P(S)}.</li>
+</ol>
+<p>These form the base case and the natural recursion for the poweset procedure, and they are sufficient to construct the powerset of any set.</p>
 <h2 id="2.2.3" class="anchor">
 <a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a> <span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.19</span> fib)))
+
+(<span class="kw">define</span> (sum-odd-squares tree)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> tree) <span class="cn">0</span>)
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> tree))
+         (<span class="kw">if</span> (<span class="fu">odd?</span> tree) (square tree) <span class="cn">0</span>))
+        (<span class="kw">else</span> (<span class="fu">+</span> (sum-odd-squares (<span class="fu">car</span> tree))
+                 (sum-odd-squares (<span class="fu">cdr</span> tree))))))
+
+(sum-odd-squares &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> (<span class="cn">5</span> <span class="cn">6</span>)))) <span class="op">=&gt;</span> <span class="cn">35</span>
+
+(<span class="kw">define</span> (even-fibs n)
+  (<span class="kw">define</span> (next k)
+    (<span class="kw">if</span> (<span class="fu">&gt;</span> k n)
+        &#39;()
+        (<span class="kw">let</span> ((f (fib k)))
+          (<span class="kw">if</span> (<span class="fu">even?</span> f)
+              (<span class="fu">cons</span> f (next (<span class="fu">+</span> k <span class="cn">1</span>)))
+              (next (<span class="fu">+</span> k <span class="cn">1</span>))))))
+  (next <span class="cn">0</span>))
+
+(even-fibs <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">2</span> <span class="cn">8</span> <span class="cn">34</span>)</code></pre>
 <h3 id="2.2.3.1" class="anchor">
 <a class="anchor__link link" href="#2.2.3.1" aria-hidden="true">#</a> <span class="number">2.2.3.1</span> Sequence operations
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.19</span> fib)))
+
+(<span class="fu">map</span> square (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>)
+
+(<span class="kw">define</span> (<span class="fu">filter</span> pred xs)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) &#39;())
+        ((pred (<span class="fu">car</span> xs))
+         (<span class="fu">cons</span> (<span class="fu">car</span> xs) (<span class="fu">filter</span> pred (<span class="fu">cdr</span> xs))))
+        (<span class="kw">else</span> (<span class="fu">filter</span> pred (<span class="fu">cdr</span> xs)))))
+
+(<span class="fu">filter</span> <span class="fu">odd?</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span>)</code></pre>
+<p>Accumulate is like fold-right (not fold-left).</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (accumulate op initial xs)
+  (<span class="kw">if</span> (<span class="fu">null?</span> xs)
+      initial
+      (op (<span class="fu">car</span> xs)
+          (accumulate op initial (<span class="fu">cdr</span> xs)))))
+
+(accumulate <span class="fu">+</span> <span class="cn">0</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> <span class="cn">15</span>
+(accumulate <span class="fu">*</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> <span class="cn">120</span>
+(accumulate <span class="fu">cons</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)
+
+(<span class="kw">define</span> (enumerate-interval low high)
+  (<span class="kw">if</span> (<span class="fu">&gt;</span> low high)
+      &#39;()
+      (<span class="fu">cons</span> low (enumerate-interval (<span class="fu">+</span> low <span class="cn">1</span>) high))))
+
+(enumerate-interval <span class="cn">2</span> <span class="cn">7</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span>)
+
+(<span class="kw">define</span> (enumerate-tree tree)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> tree) &#39;())
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> tree)) (<span class="fu">list</span> tree))
+        (<span class="kw">else</span> (<span class="fu">append</span> (enumerate-tree (<span class="fu">car</span> tree))
+                      (enumerate-tree (<span class="fu">cdr</span> tree))))))
+
+(enumerate-tree (<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)
+
+(<span class="kw">define</span> (sum-odd-squares tree)
+  (accumulate <span class="fu">+</span> <span class="cn">0</span> (<span class="fu">map</span> square (<span class="fu">filter</span> <span class="fu">odd?</span> (enumerate-tree tree)))))
+
+(sum-odd-squares &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> (<span class="cn">5</span> <span class="cn">6</span>)))) <span class="op">=&gt;</span> <span class="cn">35</span>
+
+(<span class="kw">define</span> (even-fibs n)
+  (accumulate <span class="fu">cons</span> &#39;() (<span class="fu">filter</span> <span class="fu">even?</span> (<span class="fu">map</span> fib (enumerate-interval <span class="cn">0</span> n)))))
+
+(even-fibs <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">2</span> <span class="cn">8</span> <span class="cn">34</span>)
+
+(<span class="kw">define</span> (list-fib-squares n)
+  (accumulate <span class="fu">cons</span> &#39;() (<span class="fu">map</span> square (<span class="fu">map</span> fib (enumerate-interval <span class="cn">0</span> n)))))
+
+(list-fib-squares <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">25</span> <span class="cn">64</span> <span class="cn">169</span> <span class="cn">441</span> <span class="cn">1156</span> <span class="cn">3025</span>)
+
+(<span class="kw">define</span> (product-of-squares-of-odd-elements sequence)
+  (accumulate <span class="fu">*</span> <span class="cn">1</span> (<span class="fu">map</span> square (<span class="fu">filter</span> <span class="fu">odd?</span> sequence))))
+
+(product-of-squares-of-odd-elements (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> <span class="cn">225</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.33">Exercise 2.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
+
+(<span class="kw">define</span> (<span class="fu">map</span> f xs)
+  (accumulate (<span class="kw">lambda</span> (x y) (<span class="fu">cons</span> (f x) y)) &#39;() xs))
+(<span class="kw">define</span> (<span class="fu">append</span> xs ys)
+  (accumulate <span class="fu">cons</span> ys xs))
+(<span class="kw">define</span> (<span class="fu">length</span> xs)
+  (accumulate (<span class="kw">lambda</span> (x n) (<span class="fu">+</span> n <span class="cn">1</span>)) <span class="cn">0</span> xs))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.34">Exercise 2.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
+
+(<span class="kw">define</span> (horner-eval x coefs)
+  (accumulate (<span class="kw">lambda</span> (coef higher-terms)
+                (<span class="fu">+</span> (<span class="fu">*</span> higher-terms x) coef))
+              <span class="cn">0</span>
+              coefs))
+
+(horner-eval <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">0</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">79</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.35">Exercise 2.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate enumerate-tree)))
+
+(<span class="kw">define</span> (count-leaves t)
+  (accumulate <span class="fu">+</span> <span class="cn">0</span> (<span class="fu">map</span> (<span class="kw">lambda</span> (x) <span class="cn">1</span>)
+                       (enumerate-tree t))))
+
+(count-leaves &#39;(<span class="cn">1</span> <span class="cn">2</span> (<span class="cn">3</span> (<span class="cn">4</span>) <span class="cn">5</span>) (<span class="cn">6</span> <span class="cn">7</span>))) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.36">Exercise 2.36<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
+
+(<span class="kw">define</span> (accumulate-n op init seqs)
+  (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">car</span> seqs))
+      &#39;()
+      (<span class="fu">cons</span> (accumulate op init (<span class="fu">map</span> <span class="fu">car</span> seqs))
+            (accumulate-n op init (<span class="fu">map</span> <span class="fu">cdr</span> seqs)))))
+
+(accumulate-n <span class="fu">+</span> <span class="cn">0</span> &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>) (<span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span>) (<span class="cn">10</span> <span class="cn">11</span> <span class="cn">12</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">22</span> <span class="cn">26</span> <span class="cn">30</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.37">Exercise 2.37<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (?<span class="cn">2.36</span> accumulate-n)))
+
+(<span class="kw">define</span> (dot-product v w)
+  (accumulate <span class="fu">+</span> <span class="cn">0</span> (<span class="fu">map</span> <span class="fu">*</span> v w)))
+
+(<span class="kw">define</span> (matrix-*-vector m v)
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (u) (dot-product u v)) m))
+(<span class="kw">define</span> (transpose mat)
+  (accumulate-n <span class="fu">cons</span> &#39;() mat))
+(<span class="kw">define</span> (matrix-*-matrix m n)
+  (<span class="kw">let</span> ((cols (transpose n)))
+    (<span class="fu">map</span> (<span class="kw">lambda</span> (r)
+           (<span class="fu">map</span> (<span class="kw">lambda</span> (c)
+                  (dot-product r c))
+                cols))
+         m)))
+
+(<span class="kw">define</span> mat &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>) (<span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span>)))
+(<span class="kw">define</span> identity &#39;((<span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>) (<span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span>) (<span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span>)))
+(matrix-*-matrix mat identity) <span class="op">=&gt;</span> mat
+(matrix-*-matrix identity mat) <span class="op">=&gt;</span> mat</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.38">Exercise 2.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
+
+(<span class="kw">define</span> fold-right accumulate)
+
+(<span class="kw">define</span> (fold-left op init xs)
+  (<span class="kw">define</span> (iter result rest)
+    (<span class="kw">if</span> (<span class="fu">null?</span> rest)
+        result
+        (iter (op result (<span class="fu">car</span> rest))
+              (<span class="fu">cdr</span> rest))))
+  (iter init xs))
+
+(fold-right <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">3</span>/<span class="cn">2</span>
+(fold-left <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">1</span>/<span class="cn">6</span>
+(fold-right <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> ())))
+(fold-left <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(((() <span class="cn">1</span>) <span class="cn">2</span>) <span class="cn">3</span>)</code></pre>
+<p>If <code>op</code> satisfies the commutative property <code>(<span class="fu">=</span> (op x y) (op y x))</code>, then <code>fold-right</code> and <code>fold-left</code> will produce the same values for any sequence.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.39">Exercise 2.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.38</span> fold-left fold-right)))
+
+(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
+  (fold-right (<span class="kw">lambda</span> (x y) (<span class="fu">append</span> y (<span class="fu">list</span> x))) &#39;() xs))
+
+(<span class="fu">reverse</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">4</span> <span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>)
+
+(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
+  (fold-left (<span class="kw">lambda</span> (x y) (<span class="fu">cons</span> y x)) &#39;() xs))
+
+(<span class="fu">reverse</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">4</span> <span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>)</code></pre>
 <h3 id="2.2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a> <span class="number">2.2.3.2</span> Nested mappings
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate enumerate-interval <span class="fu">filter</span>) (?<span class="cn">1.23</span> prime?)))
+
+(<span class="kw">define</span> (flatmap proc seq)
+  (accumulate <span class="fu">append</span> &#39;() (<span class="fu">map</span> proc seq)))
+
+(<span class="kw">define</span> (prime-sum? pair)
+  (prime? (<span class="fu">+</span> (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))))
+
+(<span class="kw">define</span> (make-pair-sum pair)
+  (<span class="fu">list</span> (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair) (<span class="fu">+</span> (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))))
+
+(<span class="kw">define</span> (prime-sum-pairs n)
+  (<span class="fu">map</span> make-pair-sum
+       (<span class="fu">filter</span> prime-sum?
+               (flatmap (<span class="kw">lambda</span> (i)
+                          (<span class="fu">map</span> (<span class="kw">lambda</span> (j) (<span class="fu">list</span> i j))
+                               (enumerate-interval <span class="cn">1</span> (<span class="fu">-</span> i <span class="cn">1</span>))))
+                        (enumerate-interval <span class="cn">1</span> n)))))
+
+(prime-sum-pairs <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;((<span class="cn">2</span> <span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">3</span> <span class="cn">2</span> <span class="cn">5</span>) (<span class="cn">4</span> <span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">4</span> <span class="cn">3</span> <span class="cn">7</span>) (<span class="cn">5</span> <span class="cn">2</span> <span class="cn">7</span>))
+
+(<span class="kw">define</span> (permutations s)
+  (<span class="kw">if</span> (<span class="fu">null?</span> s)
+      (<span class="fu">list</span> &#39;())
+      (flatmap (<span class="kw">lambda</span> (x)
+                 (<span class="fu">map</span> (<span class="kw">lambda</span> (p) (<span class="fu">cons</span> x p))
+                      (permutations (<span class="fu">remove</span> x s))))
+               s)))
+
+(<span class="kw">define</span> (<span class="fu">remove</span> item sequence)
+  (<span class="fu">filter</span> (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (<span class="fu">equal?</span> x item))) sequence))
+
+(permutations &#39;(a b c)) <span class="op">=&gt;</span> &#39;((a b c) (a c b) (b a c) (b c a) (c a b) (c b a))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.40">Exercise 2.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval <span class="fu">filter</span>)
+       (:<span class="cn">2.2.3.2</span> flatmap make-pair-sum prime-sum?)))
+
+(<span class="kw">define</span> (unique-pairs n)
+  (flatmap (<span class="kw">lambda</span> (i)
+             (<span class="fu">map</span> (<span class="kw">lambda</span> (j) (<span class="fu">list</span> i j))
+                  (enumerate-interval <span class="cn">1</span> (<span class="fu">-</span> i <span class="cn">1</span>))))
+           (enumerate-interval <span class="cn">1</span> n)))
+
+(<span class="kw">define</span> (prime-sum-pairs n)
+  (<span class="fu">map</span> make-pair-sum (<span class="fu">filter</span> prime-sum? (unique-pairs n))))
+
+(prime-sum-pairs <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;((<span class="cn">2</span> <span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">3</span> <span class="cn">2</span> <span class="cn">5</span>) (<span class="cn">4</span> <span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">4</span> <span class="cn">3</span> <span class="cn">7</span>) (<span class="cn">5</span> <span class="cn">2</span> <span class="cn">7</span>))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.41">Exercise 2.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> flatmap)))
+
+(<span class="kw">define</span> (unique-triples n)
+  (flatmap (<span class="kw">lambda</span> (i)
+             (flatmap (<span class="kw">lambda</span> (j)
+                        (<span class="fu">map</span> (<span class="kw">lambda</span> (k) (<span class="fu">list</span> i j k))
+                             (enumerate-interval <span class="cn">1</span> (<span class="fu">-</span> j <span class="cn">1</span>))))
+                      (enumerate-interval <span class="cn">1</span> (<span class="fu">-</span> i <span class="cn">1</span>))))
+           (enumerate-interval <span class="cn">1</span> n)))
+
+(<span class="kw">define</span> (triple-sums n s)
+  (<span class="fu">filter</span> (<span class="kw">lambda</span> (t)
+            (<span class="fu">=</span> s (<span class="fu">+</span> (<span class="fu">car</span> t) (<span class="fu">cadr</span> t) (<span class="fu">caddr</span> t))))
+          (unique-triples n)))
+
+(triple-sums <span class="cn">8</span> <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;((<span class="cn">5</span> <span class="cn">3</span> <span class="cn">2</span>) (<span class="cn">5</span> <span class="cn">4</span> <span class="cn">1</span>) (<span class="cn">6</span> <span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">7</span> <span class="cn">2</span> <span class="cn">1</span>))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.42">Exercise 2.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> flatmap)))
+
+(<span class="kw">define</span> make-position <span class="fu">cons</span>)
+(<span class="kw">define</span> get-row <span class="fu">car</span>)
+(<span class="kw">define</span> get-col <span class="fu">cdr</span>)
+
+(<span class="kw">define</span> empty-board &#39;())
+(<span class="kw">define</span> (adjoin-position row col board)
+  (<span class="fu">cons</span> (make-position row col) board))
+
+(<span class="kw">define</span> (safe? positions)
+  (<span class="kw">let</span> ((row1 (get-row (<span class="fu">car</span> positions))))
+    (<span class="kw">define</span> (helper rest-of-queens cols-apart)
+      (<span class="kw">or</span> (<span class="fu">null?</span> rest-of-queens)
+          (<span class="kw">let</span> ((row2 (get-row (<span class="fu">car</span> rest-of-queens))))
+            (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">=</span> row1 row2))
+                 (<span class="fu">not</span> (<span class="fu">=</span> row1 (<span class="fu">-</span> row2 cols-apart)))
+                 (<span class="fu">not</span> (<span class="fu">=</span> row1 (<span class="fu">+</span> row2 cols-apart)))
+                 (helper (<span class="fu">cdr</span> rest-of-queens) (<span class="fu">+</span> cols-apart <span class="cn">1</span>))))))
+    (helper (<span class="fu">cdr</span> positions) <span class="cn">1</span>)))
+
+(<span class="kw">define</span> (queens board-size)
+  (<span class="kw">define</span> (queen-cols k)
+    (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">0</span>)
+        (<span class="fu">list</span> empty-board)
+        (<span class="fu">filter</span> safe?
+                (flatmap
+                 (<span class="kw">lambda</span> (rest-of-queens)
+                   (<span class="fu">map</span> (<span class="kw">lambda</span> (new-row)
+                          (adjoin-position new-row k rest-of-queens))
+                        (enumerate-interval <span class="cn">1</span> board-size)))
+                 (queen-cols (<span class="fu">-</span> k <span class="cn">1</span>))))))
+  (queen-cols board-size))
+
+(queens <span class="cn">1</span>) <span class="op">=&gt;</span> &#39;(((<span class="cn">1</span> . <span class="cn">1</span>)))
+(queens <span class="cn">2</span>) <span class="op">=&gt;</span> &#39;()
+(queens <span class="cn">3</span>) <span class="op">=&gt;</span> &#39;()
+(queens <span class="cn">4</span>) <span class="op">=&gt;</span> &#39;(((<span class="cn">3</span> . <span class="cn">4</span>) (<span class="cn">1</span> . <span class="cn">3</span>) (<span class="cn">4</span> . <span class="cn">2</span>) (<span class="cn">2</span> . <span class="cn">1</span>))
+                ((<span class="cn">2</span> . <span class="cn">4</span>) (<span class="cn">4</span> . <span class="cn">3</span>) (<span class="cn">1</span> . <span class="cn">2</span>) (<span class="cn">3</span> . <span class="cn">1</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.43">Exercise 2.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>The interchange makes the program run slowly because it evaluates the recursive call to queen-cols multiple times. Instead of doing the recursive call and then adjoining all possible new positions to each set of positions for the k-1 case, Louis Reasoner’s procedure enumerates the interval for the possible new positions once and then for each one does the same recursive call to get the set of positions for the k-1 case. The original procedure evaluates the enumeration multiple times, which does not significantly affect performance. Evaluating the recursive call multiple times is wasteful. Louis Reasoner could still use the interchanged version if he bound the value of the recursive call in a let-binding surrounding the <code>flatmap</code> application.</p>
+<p>Assuming the original solution solves the puzzle in time T, Louis’s program will take longer than T. Exactly how long is hard to say. If <code>queen-cols</code> did a constant amount of work outside the recursive call, it would be (8^8)T = 16,777,216T. But T includes more than just the tree of recursive calls, so it would be less than that.</p>
 <h2 id="2.2.4" class="anchor">
 <a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a> <span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="2.2.4.1" class="anchor">
 <a class="anchor__link link" href="#2.2.4.1" aria-hidden="true">#</a> <span class="number">2.2.4.1</span> The picture language
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside flip-vert) (?<span class="cn">2.44</span> up-split) (?<span class="cn">2.49</span> wave)
+       (?<span class="cn">2.50</span> flip-horiz) (?<span class="cn">2.51</span> below)))
+
+(<span class="kw">define</span> wave2 (beside wave (flip-vert wave)))
+(<span class="kw">define</span> wave4 (below wave2 wave2))
+
+(<span class="kw">define</span> (flipped-pairs painter)
+  (<span class="kw">let</span> ((painter2 (beside painter (flip-vert painter))))
+    (below painter2 painter2)))
+
+(<span class="kw">define</span> (right-split painter n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      painter
+      (<span class="kw">let</span> ((smaller (right-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
+        (beside painter (below smaller smaller)))))
+
+(<span class="kw">define</span> (corner-split painter n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      painter
+      (<span class="kw">let</span> ((up (up-split painter (<span class="fu">-</span> n <span class="cn">1</span>)))
+            (right (right-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
+        (<span class="kw">let</span> ((top-left (beside up up))
+              (bottom-right (below right right))
+              (corner (corner-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
+          (beside (below painter top-left)
+                  (below bottom-right corner))))))
+
+(<span class="kw">define</span> (square-limit painter n)
+  (<span class="kw">let</span> ((quarter (corner-split painter n)))
+    (<span class="kw">let</span> ((half (beside (flip-horiz quarter) quarter)))
+      (below (flip-vert half) half))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.44">Exercise 2.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside) (?<span class="cn">2.51</span> below)))
+
+(<span class="kw">define</span> (up-split painter n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      painter
+      (<span class="kw">let</span> ((smaller (up-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
+        (below painter (beside smaller smaller)))))</code></pre>
 <h3 id="2.2.4.2" class="anchor">
 <a class="anchor__link link" href="#2.2.4.2" aria-hidden="true">#</a> <span class="number">2.2.4.2</span> Higher-order operations
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.1</span> corner-split) (:<span class="cn">2.2.4.5</span> beside flip-vert identity)
+       (?<span class="cn">2.50</span> flip-horiz rotate180) (?<span class="cn">2.51</span> below)))
+
+(<span class="kw">define</span> (square-of-four tl tr bl br)
+  (<span class="kw">lambda</span> (painter)
+    (<span class="kw">let</span> ((top (beside (tl painter) (tr painter)))
+          (bottom (beside (bl painter)
+                          br painter)))
+      (below bottom top))))
+
+(<span class="kw">define</span> (flipped-pairs painter)
+  (<span class="kw">let</span> ((combine4 (square-of-four identity flip-vert
+                                  identity flip-vert)))
+    (combine4 painter)))
+
+(<span class="kw">define</span> (square-limit painter n)
+  (<span class="kw">let</span> ((combine4 (square-of-four flip-horiz identity
+                                  rotate180 flip-vert)))
+    (combine4 (corner-split painter n))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.45">Exercise 2.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside) (?<span class="cn">2.51</span> below)))
+
+(<span class="kw">define</span> (split comb split-comb)
+  (<span class="kw">define</span> (splitter painter n)
+    (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+        painter
+        (<span class="kw">let</span> ((smaller (splitter painter (<span class="fu">-</span> n <span class="cn">1</span>))))
+          (comb painter (split-comb smaller smaller)))))
+  splitter)
+
+(<span class="kw">define</span> right-split (split beside below))
+(<span class="kw">define</span> up-split (split below beside))</code></pre>
 <h3 id="2.2.4.3" class="anchor">
 <a class="anchor__link link" href="#2.2.4.3" aria-hidden="true">#</a> <span class="number">2.2.4.3</span> Frames
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.46</span> add-vect scale-vect xcor-vect ycor-vect)
+       (?<span class="cn">2.47</span> edge1-frame edge2-frame origin-frame)))</code></pre>
+<p>This is a curried procedure.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (frame-coord-map frame)
+  (<span class="kw">lambda</span> (v)
+    (add-vect
+     (origin-frame frame)
+     (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
+               (scale-vect (ycor-vect v) (edge2-frame frame))))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.46">Exercise 2.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> make-vect <span class="fu">cons</span>)
+(<span class="kw">define</span> xcor-vect <span class="fu">car</span>)
+(<span class="kw">define</span> ycor-vect <span class="fu">cdr</span>)
+
+(<span class="kw">define</span> (add-vect u v)
+  (make-vect (<span class="fu">+</span> (xcor-vect u) (xcor-vect v))
+             (<span class="fu">+</span> (ycor-vect u) (ycor-vect v))))
+(<span class="kw">define</span> (sub-vect u v)
+  (make-vect (<span class="fu">-</span> (xcor-vect u) (xcor-vect v))
+             (<span class="fu">-</span> (ycor-vect u) (ycor-vect v))))
+(<span class="kw">define</span> (scale-vect s v)
+  (make-vect (<span class="fu">*</span> s (xcor-vect v))
+             (<span class="fu">*</span> s (ycor-vect v))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.47">Exercise 2.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>First representation</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-frame origin edge1 edge2)
+  (<span class="fu">list</span> origin edge1 edge2))
+(<span class="kw">define</span> origin-frame <span class="fu">car</span>)
+(<span class="kw">define</span> edge1-frame <span class="fu">cadr</span>)
+(<span class="kw">define</span> edge2-frame <span class="fu">caddr</span>)</code></pre>
+<p>Second representation</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-frame origin edge1 edge2)
+  (<span class="fu">cons</span> origin (<span class="fu">cons</span> edge1 edge2)))
+(<span class="kw">define</span> origin-frame <span class="fu">car</span>)
+(<span class="kw">define</span> edge1-frame <span class="fu">cadr</span>)
+(<span class="kw">define</span> edge2-frame <span class="fu">cddr</span>)</code></pre>
 <h3 id="2.2.4.4" class="anchor">
 <a class="anchor__link link" href="#2.2.4.4" aria-hidden="true">#</a> <span class="number">2.2.4.4</span> Painters
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.3</span> frame-coord-map) (?<span class="cn">2.48</span> end-segment start-segment)))
+
+(<span class="kw">define</span> (draw-line p1 p2)
+  (<span class="fu">display</span> (format <span class="cn">&quot;Line from ~s to ~s</span><span class="co">\n</span><span class="cn">&quot;</span> p1 p2)))
+
+(<span class="kw">define</span> (segments-&gt;painter segment-list)
+  (<span class="kw">lambda</span> (frame)
+    (<span class="fu">for-each</span>
+     (<span class="kw">lambda</span> (segment)
+       (draw-line ((frame-coord-map frame)
+                   (start-segment segment))
+                  ((frame-coord-map frame)
+                   (end-segment segment))))
+     segment-list)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.48">Exercise 2.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> make-segment <span class="fu">cons</span>)
+(<span class="kw">define</span> start-segment <span class="fu">car</span>)
+(<span class="kw">define</span> end-segment <span class="fu">cdr</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.49">Exercise 2.49<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.4</span> segments-&gt;painter) (?<span class="cn">2.46</span> make-vect) (?<span class="cn">2.48</span> make-segment)))</code></pre>
+<ol type="a">
+<li>The painter that draws the outline of the designated frame</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> outline
+  (segments-&gt;painter
+   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">0</span>))
+         (make-segment (make-vect <span class="cn">0</span> <span class="cn">1</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>))
+         (make-segment (make-vect <span class="cn">0</span> <span class="cn">0</span>) (make-vect <span class="cn">0</span> <span class="cn">1</span>))
+         (make-segment (make-vect <span class="cn">1</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>)))))</code></pre>
+<ol start="2" type="a">
+<li>The painter that draws an “X” by connecting opposite corners of the frame</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> x
+  (segments-&gt;painter
+   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>))
+         (make-segment (make-vect <span class="cn">0</span> <span class="cn">1</span>) (make-vect <span class="cn">1</span> <span class="cn">0</span>)))))</code></pre>
+<ol start="3" type="a">
+<li>The painter that draws a diamond shape by connecting the midpoints of the sides of the frame</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> diamond
+  (segments-&gt;painter
+   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.5</span> <span class="cn">0.0</span>) (make-vect <span class="cn">1.0</span> <span class="cn">0.5</span>))
+         (make-segment (make-vect <span class="cn">0.0</span> <span class="cn">0.5</span>) (make-vect <span class="cn">0.5</span> <span class="cn">1.0</span>))
+         (make-segment (make-vect <span class="cn">0.0</span> <span class="cn">0.5</span>) (make-vect <span class="cn">0.5</span> <span class="cn">0.0</span>))
+         (make-segment (make-vect <span class="cn">0.5</span> <span class="cn">1.0</span>) (make-vect <span class="cn">1.0</span> <span class="cn">0.5</span>)))))</code></pre>
+<ol start="4" type="a">
+<li>The wave painter</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> wave-segments
+  (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.00</span>) (make-vect <span class="cn">0.37</span> <span class="cn">0.22</span>))
+        (make-segment (make-vect <span class="cn">0.37</span> <span class="cn">0.22</span>) (make-vect <span class="cn">0.46</span> <span class="cn">0.34</span>))
+        (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.34</span>) (make-vect <span class="cn">0.37</span> <span class="cn">0.33</span>))
+        (make-segment (make-vect <span class="cn">0.37</span> <span class="cn">0.33</span>) (make-vect <span class="cn">0.22</span> <span class="cn">0.45</span>))
+        (make-segment (make-vect <span class="cn">0.22</span> <span class="cn">0.45</span>) (make-vect <span class="cn">0.00</span> <span class="cn">0.28</span>))
+        (make-segment (make-vect <span class="cn">0.00</span> <span class="cn">0.33</span>) (make-vect <span class="cn">0.22</span> <span class="cn">0.55</span>))
+        (make-segment (make-vect <span class="cn">0.22</span> <span class="cn">0.55</span>) (make-vect <span class="cn">0.39</span> <span class="cn">0.42</span>))
+        (make-segment (make-vect <span class="cn">0.39</span> <span class="cn">0.42</span>) (make-vect <span class="cn">0.31</span> <span class="cn">1.00</span>))
+        (make-segment (make-vect <span class="cn">0.54</span> <span class="cn">0.00</span>) (make-vect <span class="cn">0.63</span> <span class="cn">0.22</span>))
+        (make-segment (make-vect <span class="cn">0.63</span> <span class="cn">0.22</span>) (make-vect <span class="cn">0.54</span> <span class="cn">0.34</span>))
+        (make-segment (make-vect <span class="cn">0.54</span> <span class="cn">0.34</span>) (make-vect <span class="cn">0.63</span> <span class="cn">0.33</span>))
+        (make-segment (make-vect <span class="cn">0.63</span> <span class="cn">0.33</span>) (make-vect <span class="cn">1.00</span> <span class="cn">0.67</span>))
+        (make-segment (make-vect <span class="cn">1.00</span> <span class="cn">0.72</span>) (make-vect <span class="cn">0.61</span> <span class="cn">0.42</span>))
+        (make-segment (make-vect <span class="cn">0.61</span> <span class="cn">0.42</span>) (make-vect <span class="cn">0.69</span> <span class="cn">1.00</span>))
+        (make-segment (make-vect <span class="cn">0.39</span> <span class="cn">1.00</span>) (make-vect <span class="cn">0.50</span> <span class="cn">0.68</span>))
+        (make-segment (make-vect <span class="cn">0.50</span> <span class="cn">0.68</span>) (make-vect <span class="cn">0.61</span> <span class="cn">1.00</span>))))
+(<span class="kw">define</span> wave
+  (segments-&gt;painter wave-segments))</code></pre>
 <h3 id="2.2.4.5" class="anchor">
 <a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a> <span class="number">2.2.4.5</span> Transforming and combining painters
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.3</span> frame-coord-map) (?<span class="cn">2.46</span> make-vect sub-vect)
+       (?<span class="cn">2.47</span> make-frame)))
+
+(<span class="kw">define</span> (transform-painter painter origin corner1 corner2)
+  (<span class="kw">lambda</span> (frame)
+    (<span class="kw">let</span> ((m (frame-coord-map frame)))
+      (<span class="kw">let</span> ((new-origin (m origin)))
+        (painter (make-frame new-origin
+                             (sub-vect (m corner1) new-origin)
+                             (sub-vect (m corner2) new-origin)))))))
+
+(<span class="kw">define</span> (identity painter) painter)
+
+(<span class="kw">define</span> (flip-vert painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">0</span> <span class="cn">1</span>)
+   (make-vect <span class="cn">1</span> <span class="cn">1</span>)
+   (make-vect <span class="cn">0</span> <span class="cn">0</span>)))
+
+(<span class="kw">define</span> (shrink-to-upper-right painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">0.5</span> <span class="cn">0.5</span>)
+   (make-vect <span class="cn">1</span> <span class="cn">0.5</span>)
+   (make-vect <span class="cn">0.5</span> <span class="cn">1</span>)))
+
+(<span class="kw">define</span> (rotate90 painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">1</span> <span class="cn">0</span>)
+   (make-vect <span class="cn">1</span> <span class="cn">1</span>)
+   (make-vect <span class="cn">0</span> <span class="cn">0</span>)))
+
+(<span class="kw">define</span> (squash-inwards painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">0</span> <span class="cn">0</span>)
+   (make-vect <span class="cn">0.65</span> <span class="cn">0.35</span>)
+   (make-vect <span class="cn">0.35</span> <span class="cn">0.65</span>)))
+
+(<span class="kw">define</span> (beside painter1 painter2)
+  (<span class="kw">let</span> ((split-point (make-vect <span class="cn">0.5</span> <span class="cn">0</span>)))
+    (<span class="kw">let</span> ((paint-left
+           (transform-painter
+            painter1
+            (make-vect <span class="cn">0</span> <span class="cn">0</span>)
+            split-point
+            (make-vect <span class="cn">0</span> <span class="cn">1</span>)))
+          (paint-right
+           (transform-painter
+            painter2
+            split-point
+            (make-vect <span class="cn">1</span> <span class="cn">0</span>)
+            (make-vect <span class="cn">0.5</span> <span class="cn">1</span>))))
+      (<span class="kw">lambda</span> (frame)
+        (paint-left frame)
+        (paint-right frame)))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.50">Exercise 2.50<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> transform-painter) (?<span class="cn">2.46</span> make-vect)))
+
+(<span class="kw">define</span> (flip-horiz painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">1</span> <span class="cn">0</span>)
+   (make-vect <span class="cn">0</span> <span class="cn">0</span>)
+   (make-vect <span class="cn">1</span> <span class="cn">1</span>)))
+
+(<span class="kw">define</span> (rotate180 painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">1</span> <span class="cn">1</span>)
+   (make-vect <span class="cn">0</span> <span class="cn">1</span>)
+   (make-vect <span class="cn">1</span> <span class="cn">0</span>)))
+
+(<span class="kw">define</span> (rotate270 painter)
+  (transform-painter
+   painter
+   (make-vect <span class="cn">0</span> <span class="cn">1</span>)
+   (make-vect <span class="cn">0</span> <span class="cn">0</span>)
+   (make-vect <span class="cn">1</span> <span class="cn">1</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.51">Exercise 2.51<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside rotate90 transform-painter) (?<span class="cn">2.46</span> make-vect)
+       (?<span class="cn">2.50</span> rotate270)))</code></pre>
+<p>Method 1: Analogous to the <code>beside</code> procedure</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (below painter1 painter2)
+  (<span class="kw">let</span> ((split-point (make-vect <span class="cn">0</span> <span class="cn">0.5</span>)))
+    (<span class="kw">let</span> ((paint-bottom
+           (transform-painter
+            painter1
+            (make-vect <span class="cn">0</span> <span class="cn">0</span>)
+            (make-vect <span class="cn">1</span> <span class="cn">0.5</span>)
+            split-point))
+          (paint-top
+           (transform-painter
+            painter2
+            split-point
+            (make-vect <span class="cn">1</span> <span class="cn">0.5</span>)
+            (make-vect <span class="cn">0</span> <span class="cn">1</span>))))
+      (<span class="kw">lambda</span> (frame)
+        (paint-bottom frame)
+        (paint-top frame)))))</code></pre>
+<p>Method 2: In terms of <code>beside</code> and rotations</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (below painter1 painter2)
+  (rotate90
+   (beside (rotate270 painter1)
+           (rotate270 painter2))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.52">Exercise 2.52<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-</article>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.1</span> right-split) (:<span class="cn">2.2.4.2</span> square-of-four)
+       (:<span class="cn">2.2.4.4</span> segments-&gt;painter) (:<span class="cn">2.2.4.5</span> beside) (?<span class="cn">2.44</span> up-split)
+       (?<span class="cn">2.46</span> make-vect) (?<span class="cn">2.48</span> make-segment) (?<span class="cn">2.49</span> wave-segments)
+       (?<span class="cn">2.50</span> flip-horiz) (?<span class="cn">2.51</span> below)))</code></pre>
+<ol type="a">
+<li>I changed <code>wave</code> to add a smile.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> smile-segments
+  (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.13</span>) (make-vect <span class="cn">0.46</span> <span class="cn">0.17</span>))
+        (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.24</span>) (make-vect <span class="cn">0.50</span> <span class="cn">0.27</span>))
+        (make-segment (make-vect <span class="cn">0.54</span> <span class="cn">0.13</span>) (make-vect <span class="cn">0.54</span> <span class="cn">0.17</span>))
+        (make-segment (make-vect <span class="cn">0.54</span> <span class="cn">0.24</span>) (make-vect <span class="cn">0.50</span> <span class="cn">0.27</span>))))
+(<span class="kw">define</span> wave
+  (segments-&gt;painter (<span class="fu">append</span> wave-segments smile-segments)))</code></pre>
+<ol start="2" type="a">
+<li>I changed <code>corner-split</code> to use only one copy of <code>up-split</code> and <code>right-split</code> images instead of two.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (corner-split painter n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      painter
+      (<span class="kw">let</span> ((up (up-split painter (<span class="fu">-</span> n <span class="cn">1</span>)))
+            (right (right-split painter (<span class="fu">-</span> n <span class="cn">1</span>)))
+            (corner (corner-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
+        (beside (below painter up)
+                (below right corner)))))</code></pre>
+<ol start="3" type="a">
+<li>I changed <code>square-limit</code> to orient the corners differently.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (square-limit painter n)
+  (<span class="kw">let</span> ((quarter (corner-split painter n)))
+    (<span class="kw">let</span> ((flipped (flip-horiz quarter)))
+      (square-of-four flipped quarter flipped quarter))))</code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

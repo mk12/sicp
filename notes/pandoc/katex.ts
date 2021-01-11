@@ -1,4 +1,4 @@
-// Copyright 2020 Mitchell Kember. Subject to the MIT License.
+// Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
 import { exists } from "https://deno.land/std/fs/mod.ts";
 import { dirname, resolve } from "https://deno.land/std/path/mod.ts";

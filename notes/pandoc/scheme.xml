@@ -59,19 +59,17 @@
       <item>with-eval</item>
     </list>
     <list name="functions">
-      <item>&lt;=</item>
-      <item>&lt;</item>
       <item>=</item>
-      <item>&gt;=</item>
-      <item>&gt;</item>
+      <item>&lt;</item>
+      <item>&lt;=</item>
+      <item>></item>
+      <item>>=</item>
       <item>-</item>
       <item>/</item>
       <item>+</item>
       <item>!</item>
       <item>*</item>
       <item>/</item>
-      <item>=</item>
-      <item>></item>
       <item>1+</item>
       <item>-1+</item>
       <item>abs</item>
@@ -402,10 +400,10 @@
       <item>false</item>
     </list>
     <list name="asserts">
-      <item>=&gt;</item>
-      <item>~&gt;</item>
-      <item>=$&gt;</item>
-      <item>=!&gt;</item>
+      <item>=></item>
+      <item>~></item>
+      <item>=$></item>
+      <item>=!></item>
     </list>
     <contexts>
       <context name="Default" attribute="Normal" lineEndContext="#stay">
@@ -419,7 +417,7 @@
         <keyword attribute="Macro" context="#stay" String="macros"/>
         <keyword attribute="Function" context="#stay" String="functions"/>
         <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++\.?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+|"/>
-        <RegExpr attribute="Symbol" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=>?^_~-]++"/>
+        <RegExpr attribute="Symbol" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~-]++"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">
       </context>
@@ -470,6 +468,6 @@
     </itemDatas>
   </highlighting>
   <general>
-    <keywords casesensitive="1" weakDeliminator="-+*?!&lt;&gt;=/:.,\&amp;" additionalDeliminator="&quot;;#"/>
+    <keywords casesensitive="1" weakDeliminator="-+*?!&lt;&gt;=/:.,\&amp;~" additionalDeliminator="&quot;;#"/>
   </general>
 </language>

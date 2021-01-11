@@ -1,4 +1,4 @@
-;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2021 Mitchell Kember. Subject to the CC BY-SA 4.0 License.
 
 #!r6rs
 

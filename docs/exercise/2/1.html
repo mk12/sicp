@@ -65,71 +65,393 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 <span class="number">2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html">Introduction to Data Abstraction<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a> <span class="number">2.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.1">Example: Arithmetic Operations for Rational Numbers<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-rat x y)
+  (make-rat (<span class="fu">+</span> (<span class="fu">*</span> (numer x) (denom y))
+               (<span class="fu">*</span> (numer y) (denom x)))
+            (<span class="fu">*</span> (denom x) (denom y))))
+(<span class="kw">define</span> (sub-rat x y)
+  (make-rat (<span class="fu">-</span> (<span class="fu">*</span> (numer x) (denom y))
+               (<span class="fu">*</span> (numer y) (denom x)))
+            (<span class="fu">*</span> (denom x) (denom y))))
+(<span class="kw">define</span> (mul-rat x y)
+  (make-rat (<span class="fu">*</span> (numer x) (numer y))
+            (<span class="fu">*</span> (denom x) (denom y))))
+(<span class="kw">define</span> (div-rat x y)
+  (make-rat (<span class="fu">*</span> (numer x) (denom y))
+            (<span class="fu">*</span> (denom x) (numer y))))
+(<span class="kw">define</span> (equal-rat? x y)
+  (<span class="fu">=</span> (<span class="fu">*</span> (numer x) (denom y))
+     (<span class="fu">*</span> (numer y) (denom x))))</code></pre>
+<p>Pairs</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> <span class="cn">2</span>))
+(<span class="fu">car</span> x) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">cdr</span> x) <span class="op">=&gt;</span> <span class="cn">2</span>
+
+(<span class="kw">define</span> y (<span class="fu">cons</span> <span class="cn">3</span> <span class="cn">4</span>))
+(<span class="kw">define</span> z (<span class="fu">cons</span> x y))
+(<span class="fu">car</span> (<span class="fu">car</span> z)) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">car</span> (<span class="fu">cdr</span> z)) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
+<p>Representing rational numbers</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
+(<span class="kw">define</span> (numer x) (<span class="fu">car</span> x))
+(<span class="kw">define</span> (denom x) (<span class="fu">cdr</span> x))
+
+(<span class="kw">define</span> (print-rat x)
+  (<span class="fu">newline</span>)
+  (<span class="fu">display</span> (numer x))
+  (<span class="fu">display</span> <span class="cn">&quot;/&quot;</span>)
+  (<span class="fu">display</span> (denom x)))
+
+(<span class="kw">define</span> one-half (make-rat <span class="cn">1</span> <span class="cn">2</span>))
+(print-rat one-half) <span class="op">=$&gt;</span> [<span class="cn">&quot;1/2&quot;</span>]
+
+(<span class="kw">define</span> one-third (make-rat <span class="cn">1</span> <span class="cn">3</span>))
+(add-rat one-half one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> . <span class="cn">6</span>)
+(mul-rat one-half one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> . <span class="cn">6</span>)
+(add-rat one-third one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">6</span> . <span class="cn">9</span>)
+
+(<span class="kw">define</span> (make-rat n d)
+  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
+    (<span class="fu">cons</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))
+
+(add-rat one-third one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> . <span class="cn">3</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.1">Exercise 2.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (sgn x)
+  (<span class="kw">cond</span> ((<span class="fu">positive?</span> x) <span class="cn">1</span>)
+        ((<span class="fu">zero?</span> x) <span class="cn">0</span>)
+        ((<span class="fu">negative?</span> x) <span class="cn">-1</span>)))
+
+(<span class="kw">define</span> (make-rat n d)
+  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d))
+        (s (<span class="fu">*</span> (sgn n) (sgn d))))
+    (<span class="fu">cons</span> (<span class="fu">*</span> s (<span class="fu">/</span> (<span class="fu">abs</span> n) g))
+          (<span class="fu">/</span> (<span class="fu">abs</span> d) g))))
+
+(make-rat <span class="cn">5</span> <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> . <span class="cn">2</span>)
+(make-rat <span class="cn">-5</span> <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">-1</span> . <span class="cn">2</span>)
+(make-rat <span class="cn">-5</span> <span class="cn">-10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> . <span class="cn">2</span>)
+(make-rat <span class="cn">5</span> <span class="cn">-10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">-1</span> . <span class="cn">2</span>)</code></pre>
 <h2 id="2.1.2" class="anchor">
 <a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a> <span class="number">2.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.2">Abstraction Barriers<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
+(<span class="kw">define</span> (numer x)
+  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> (<span class="fu">car</span> x) (<span class="fu">cdr</span> x))))
+    (<span class="fu">/</span> (<span class="fu">car</span> x) g)))
+(<span class="kw">define</span> (denom x)
+  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> (<span class="fu">car</span> x) (<span class="fu">cdr</span> x))))
+    (<span class="fu">/</span> (<span class="fu">cdr</span> x) g)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.2">Exercise 2.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> make-point <span class="fu">cons</span>)
+(<span class="kw">define</span> x-point <span class="fu">car</span>)
+(<span class="kw">define</span> y-point <span class="fu">cdr</span>)
+
+(<span class="kw">define</span> make-segment <span class="fu">cons</span>)
+(<span class="kw">define</span> start-segment <span class="fu">car</span>)
+(<span class="kw">define</span> end-segment <span class="fu">cdr</span>)
+
+(<span class="kw">define</span> (midpoint-segment seg)
+  (<span class="kw">let</span> ((a (start-segment seg))
+        (b (end-segment seg)))
+    (make-point
+     (<span class="fu">/</span> (<span class="fu">+</span> (x-point a) (x-point b)) <span class="cn">2</span>)
+     (<span class="fu">/</span> (<span class="fu">+</span> (y-point a) (y-point b)) <span class="cn">2</span>))))
+
+(midpoint-segment
+ (make-segment (make-point <span class="cn">6</span> <span class="cn">5</span>) (make-point <span class="cn">12</span> <span class="cn">13</span>)))
+<span class="op">=&gt;</span> &#39;(<span class="cn">9</span> . <span class="cn">9</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.3">Exercise 2.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.2</span> make-point x-point y-point)))
+
+(<span class="kw">define</span> (perimeter rect)
+  (<span class="fu">*</span> <span class="cn">2</span> (<span class="fu">+</span> (width-rect rect) (height-rect rect))))
+(<span class="kw">define</span> (area rect)
+  (<span class="fu">*</span> (width-rect rect) (height-rect rect)))</code></pre>
+<p>Representation 1: two corners</p>
+<pre><code class="blockcode">(<span class="kw">define</span> make-rect <span class="fu">cons</span>)
+(<span class="kw">define</span> p1-rect <span class="fu">car</span>)
+(<span class="kw">define</span> p2-rect <span class="fu">cdr</span>)
+(<span class="kw">define</span> (width-rect rect)
+  (<span class="fu">abs</span> (<span class="fu">-</span> (x-point (p1-rect rect))
+          (x-point (p2-rect rect)))))
+(<span class="kw">define</span> (height-rect rect)
+  (<span class="fu">abs</span> (<span class="fu">-</span> (y-point (p1-rect rect))
+          (y-point (p2-rect rect)))))
+
+(<span class="kw">define</span> rect (make-rect (make-point <span class="cn">1</span> <span class="cn">2</span>) (make-point <span class="cn">6</span> <span class="cn">5</span>)))
+(perimeter rect) <span class="op">=&gt;</span> <span class="cn">16</span>
+(area rect) <span class="op">=&gt;</span> <span class="cn">15</span></code></pre>
+<p>Representation 2: corner and dimensions</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-rect p w h) (<span class="fu">cons</span> p (<span class="fu">cons</span> w h)))
+(<span class="kw">define</span> point-rect <span class="fu">car</span>)
+(<span class="kw">define</span> width-rect <span class="fu">cadr</span>)
+(<span class="kw">define</span> height-rect <span class="fu">cddr</span>)
+
+(<span class="kw">define</span> rect (make-rect (make-point <span class="cn">1</span> <span class="cn">2</span>) <span class="cn">5</span> <span class="cn">3</span>))
+(perimeter rect) <span class="op">=&gt;</span> <span class="cn">16</span>
+(area rect) <span class="op">=&gt;</span> <span class="cn">15</span></code></pre>
 <h2 id="2.1.3" class="anchor">
 <a class="anchor__link link" href="#2.1.3" aria-hidden="true">#</a> <span class="number">2.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.3">What Is Meant by Data?<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">define</span> (dispatch m)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> m <span class="cn">0</span>) x)
+          ((<span class="fu">=</span> m <span class="cn">1</span>) y)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;cons</span> <span class="cn">&quot;argument not 0 or 1&quot;</span> m))))
+  dispatch)
+
+(<span class="kw">define</span> (<span class="fu">car</span> z) (z <span class="cn">0</span>))
+(<span class="kw">define</span> (<span class="fu">cdr</span> z) (z <span class="cn">1</span>))
+
+(<span class="fu">car</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
+(<span class="fu">cdr</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) <span class="op">=&gt;</span> <span class="cn">&#39;b</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.4">Exercise 2.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y) (<span class="kw">lambda</span> (m) (m x y)))
+(<span class="kw">define</span> (<span class="fu">car</span> z) (z (<span class="kw">lambda</span> (x y) x)))
+(<span class="kw">define</span> (<span class="fu">cdr</span> z) (z (<span class="kw">lambda</span> (x y) y)))
+
+(<span class="fu">car</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
+(<span class="fu">cdr</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) <span class="op">=&gt;</span> <span class="cn">&#39;b</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.5">Exercise 2.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Due to the Fundamental Theorem of Arithmetic, 2^a*3^b will always produce a unique product given a unique pair of integers a and b.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y) (<span class="fu">*</span> (<span class="fu">expt</span> <span class="cn">2</span> x) (<span class="fu">expt</span> <span class="cn">3</span> y)))
+(<span class="kw">define</span> (count-divides a b)
+  (<span class="kw">define</span> (count a n)
+    (<span class="kw">let</span> ((q (<span class="fu">/</span> a b)))
+      (<span class="kw">if</span> (<span class="fu">integer?</span> q)
+          (count q (<span class="fu">+</span> n <span class="cn">1</span>))
+          n)))
+  (count a <span class="cn">0</span>))
+(<span class="kw">define</span> (<span class="fu">car</span> z) (count-divides z <span class="cn">2</span>))
+(<span class="kw">define</span> (<span class="fu">cdr</span> z) (count-divides z <span class="cn">3</span>))
+
+(<span class="fu">car</span> (<span class="fu">cons</span> <span class="cn">7</span> <span class="cn">12</span>)) <span class="op">=&gt;</span> <span class="cn">7</span>
+(<span class="fu">cdr</span> (<span class="fu">cons</span> <span class="cn">7</span> <span class="cn">12</span>)) <span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.6">Exercise 2.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Church numerals</p>
+<pre><code class="blockcode">(<span class="kw">define</span> zero (<span class="kw">lambda</span> (f) (<span class="kw">lambda</span> (x) x)))
+(<span class="kw">define</span> (add1 n)
+  (<span class="kw">lambda</span> (f) (<span class="kw">lambda</span> (x) (f ((n f) x)))))
+
+(<span class="kw">define</span> one (<span class="kw">lambda</span> (f) (<span class="kw">lambda</span> (x) (f x))))
+(<span class="kw">define</span> two (<span class="kw">lambda</span> (f) (<span class="kw">lambda</span> (x) (f (f x)))))
+(<span class="kw">define</span> (add a b)
+  (<span class="kw">lambda</span> (f) (<span class="kw">lambda</span> (x) ((a f) ((b f) x)))))
+
+(<span class="kw">define</span> (church-&gt;number n)
+  ((n (<span class="kw">lambda</span> (x) (<span class="fu">+</span> x <span class="cn">1</span>))) <span class="cn">0</span>))
+
+(church-&gt;number zero) <span class="op">=&gt;</span> <span class="cn">0</span>
+(church-&gt;number one) <span class="op">=&gt;</span> <span class="cn">1</span>
+(church-&gt;number two) <span class="op">=&gt;</span> <span class="cn">2</span>
+(church-&gt;number (add1 two)) <span class="op">=&gt;</span> <span class="cn">3</span>
+(church-&gt;number (add one zero)) <span class="op">=&gt;</span> <span class="cn">1</span>
+(church-&gt;number (add zero two)) <span class="op">=&gt;</span> <span class="cn">2</span>
+(church-&gt;number (add one two)) <span class="op">=&gt;</span> <span class="cn">3</span>
+(church-&gt;number (add two two)) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <h2 id="2.1.4" class="anchor">
 <a class="anchor__link link" href="#2.1.4" aria-hidden="true">#</a> <span class="number">2.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.4">Extended Exercise: Interval Arithmetic<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
+
+(<span class="kw">define</span> (add-interval x y)
+  (make-interval (<span class="fu">+</span> (lower-bound x) (lower-bound y))
+                 (<span class="fu">+</span> (upper-bound x) (upper-bound y))))
+
+(<span class="kw">define</span> (mul-interval x y)
+  (<span class="kw">let</span> ((p1 (<span class="fu">*</span> (lower-bound x) (lower-bound y)))
+        (p2 (<span class="fu">*</span> (lower-bound x) (upper-bound y)))
+        (p3 (<span class="fu">*</span> (upper-bound x) (lower-bound y)))
+        (p4 (<span class="fu">*</span> (upper-bound x) (upper-bound y))))
+    (make-interval (<span class="fu">min</span> p1 p2 p3 p4)
+                   (<span class="fu">max</span> p1 p2 p3 p4))))
+
+(<span class="kw">define</span> (div-interval x y)
+  (mul-interval
+   x
+   (make-interval (<span class="fu">/</span> <span class="cn">1.0</span> (upper-bound y))
+                  (<span class="fu">/</span> <span class="cn">1.0</span> (lower-bound y)))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.7">Exercise 2.7<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-interval a b) (<span class="fu">cons</span> a b))
+(<span class="kw">define</span> (lower-bound x) (<span class="fu">car</span> x))
+(<span class="kw">define</span> (upper-bound x) (<span class="fu">cdr</span> x))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.8">Exercise 2.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))</code></pre>
+<p>The minimum value the difference could be is the difference of the lower bound of the minuend and the upper bound of the subtrahend. The maximum value would be the difference of the upper bound of the minuend and the lower bound of the subtrahend.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (sub-interval x y)
+  (make-interval (<span class="fu">-</span> (lower-bound x) (upper-bound y))
+                 (<span class="fu">-</span> (upper-bound x) (lower-bound y))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.9">Exercise 2.9<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> add-interval div-interval mul-interval)
+       (?<span class="cn">2.7</span> lower-bound make-interval upper-bound) (?<span class="cn">2.8</span> sub-interval)))
+
+(<span class="kw">define</span> (width x)
+  (<span class="fu">/</span> (<span class="fu">-</span> (upper-bound x) (lower-bound x)) <span class="cn">2</span>))</code></pre>
+<p>Consider arbitrary intervals <code>x</code> and <code>y</code>:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x1 (random <span class="cn">1000</span>))
+(<span class="kw">define</span> x2 (random <span class="cn">1000</span>))
+(<span class="kw">define</span> y1 (random <span class="cn">1000</span>))
+(<span class="kw">define</span> y2 (random <span class="cn">1000</span>))
+(<span class="kw">define</span> x (make-interval x1 x2))
+(<span class="kw">define</span> y (make-interval y1 y2))
+(width x) <span class="op">=&gt;</span> (<span class="fu">/</span> (<span class="fu">-</span> x2 x1) <span class="cn">2</span>)
+(width y) <span class="op">=&gt;</span> (<span class="fu">/</span> (<span class="fu">-</span> y2 y1) <span class="cn">2</span>)</code></pre>
+<p>The width of the sum is the sum of the widths:</p>
+<pre><code class="blockcode">(width (add-interval x y))
+<span class="op">=&gt;</span> (width (make-interval (<span class="fu">+</span> x1 y1) (<span class="fu">+</span> x2 y2)))
+<span class="op">=&gt;</span> (<span class="fu">/</span> (<span class="fu">-</span> (<span class="fu">+</span> x2 y2) (<span class="fu">+</span> x1 y1)) <span class="cn">2</span>)
+<span class="op">=&gt;</span> (<span class="fu">/</span> (<span class="fu">+</span> (<span class="fu">-</span> x2 x1) (<span class="fu">-</span> y2 y1)) <span class="cn">2</span>)
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">/</span> (<span class="fu">-</span> x2 x1) <span class="cn">2</span>) (<span class="fu">/</span> (<span class="fu">-</span> y2 y1) <span class="cn">2</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (width x) (width y))</code></pre>
+<p>The width of the difference is also the sum of the widths:</p>
+<pre><code class="blockcode">(width (sub-interval x y))
+<span class="op">=&gt;</span> (width (make-interval (<span class="fu">-</span> x1 y2) (<span class="fu">-</span> x2 y1)))
+<span class="op">=&gt;</span> (<span class="fu">/</span> (<span class="fu">-</span> (<span class="fu">-</span> x2 y1) (<span class="fu">-</span> x1 y2)) <span class="cn">2</span>)
+<span class="op">=&gt;</span> (<span class="fu">/</span> (<span class="fu">+</span> (<span class="fu">-</span> x2 x1) (<span class="fu">-</span> y2 y1)) <span class="cn">2</span>)
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">/</span> (<span class="fu">-</span> x2 x1) <span class="cn">2</span>) (<span class="fu">/</span> (<span class="fu">-</span> y2 y1) <span class="cn">2</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (width x) (width y))</code></pre>
+<p>The width of a product or quotient is not a function only of the widths of the intervals being multiplied or divided. A counterexample:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x (make-interval <span class="cn">0</span> <span class="cn">10</span>))
+(<span class="kw">define</span> y (make-interval <span class="cn">0</span> <span class="cn">2</span>))
+(width x) <span class="op">=&gt;</span> <span class="cn">5</span>
+(width y) <span class="op">=&gt;</span> <span class="cn">1</span>
+(width (mul-interval x y)) <span class="op">=&gt;</span> <span class="cn">10</span></code></pre>
+<p>The same input widths, 5 and 1, can produce a different product width, therefore the product width is not a function of only the input widths:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x (make-interval <span class="cn">-5</span> <span class="cn">5</span>))
+(<span class="kw">define</span> y (make-interval <span class="cn">-1</span> <span class="cn">1</span>))
+(width x) <span class="op">=&gt;</span> <span class="cn">5</span>
+(width y) <span class="op">=&gt;</span> <span class="cn">1</span>
+(width (mul-interval x y)) <span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
+<p>This also applies to divison since any division can be restated as a multiplication problem: (/ x y) becomes (* x (/ y)).</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.10">Exercise 2.10<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> mul-interval) (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
+
+(<span class="kw">define</span> (div-interval x y)
+  (<span class="kw">let</span> ((y1 (lower-bound y))
+        (y2 (upper-bound y)))
+    (<span class="kw">if</span> (<span class="fu">&lt;=</span> y1 <span class="cn">0</span> y2)
+        (<span class="fu">error</span> <span class="cn">&#39;div-interval</span> <span class="cn">&quot;can&#39;t divide by an interval spanning zero&quot;</span> y)
+        (mul-interval x (make-interval (<span class="fu">/</span> y2) (<span class="fu">/</span> y1))))))
+
+(div-interval (make-interval <span class="cn">1</span> <span class="cn">2</span>) (make-interval <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>/<span class="cn">4</span> . <span class="cn">2</span>/<span class="cn">3</span>)
+(div-interval (make-interval <span class="cn">1</span> <span class="cn">2</span>) (make-interval <span class="cn">-1</span> <span class="cn">1</span>)) <span class="op">=!&gt;</span> <span class="cn">&quot;can&#39;t divide&quot;</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.11">Exercise 2.11<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
+
+(<span class="kw">define</span> (mul-interval x y)
+  (<span class="kw">let</span> ((x1 (lower-bound x))
+        (x2 (upper-bound x))
+        (y1 (lower-bound y))
+        (y2 (upper-bound y)))
+    (<span class="kw">cond</span> ((<span class="fu">&gt;</span> x1 <span class="cn">0</span>)
+           (<span class="kw">cond</span> ((<span class="fu">&gt;</span> y1 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x1 y1) (<span class="fu">*</span> x2 y2)))
+                 ((<span class="fu">&lt;</span> y2 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x2 y1) (<span class="fu">*</span> x1 y2)))
+                 (<span class="kw">else</span> (make-interval (<span class="fu">*</span> x2 y1) (<span class="fu">*</span> x2 y2)))))
+          ((<span class="fu">&lt;</span> x2 <span class="cn">0</span>)
+           (<span class="kw">cond</span> ((<span class="fu">&gt;</span> y1 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x2 y1)))
+                 ((<span class="fu">&lt;</span> y2 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x2 y2) (x1 y1)))
+                 (<span class="kw">else</span> (make-interval (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x1 y1)))))
+          (<span class="kw">else</span>
+           (<span class="kw">cond</span> ((<span class="fu">&gt;</span> y1 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x2 y2)))
+                 ((<span class="fu">&lt;</span> y2 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x2 y1) (<span class="fu">*</span> x1 y1)))
+                 (<span class="kw">else</span> (make-interval (<span class="fu">min</span> (<span class="fu">*</span> x1 y2) (x2 y1))
+                                      (<span class="fu">max</span> (<span class="fu">*</span> x1 y1) (x2 y2)))))))))
+
+(mul-interval (make-interval <span class="cn">1</span> <span class="cn">2</span>) (make-interval <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> . <span class="cn">8</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.12">Exercise 2.12<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average) (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
+
+(<span class="kw">define</span> (make-center-width c w)
+  (make-interval (<span class="fu">-</span> c w) (<span class="fu">+</span> c w)))
+(<span class="kw">define</span> (center x)
+  (average (lower-bound x) (upper-bound x)))
+(<span class="kw">define</span> (width x)
+  (<span class="fu">/</span> (<span class="fu">-</span> (upper-bound x) (lower-bound x)) <span class="cn">2</span>))
+(<span class="kw">define</span> (make-center-percent c p)
+  (make-center-width c (<span class="fu">*</span> c (<span class="fu">/</span> p <span class="cn">100</span>))))
+(<span class="kw">define</span> (percent x)
+  (<span class="fu">*</span> <span class="cn">100</span> (<span class="fu">/</span> (width x) (center x))))
+
+(<span class="kw">define</span> x (make-interval <span class="cn">9</span> <span class="cn">11</span>))
+(width x) <span class="op">=&gt;</span> <span class="cn">1</span>
+(center x) <span class="op">=&gt;</span> <span class="cn">10</span>
+(percent x) <span class="op">=&gt;</span> <span class="cn">10</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.13">Exercise 2.13<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> mul-interval) (?<span class="cn">2.12</span> make-center-percent percent)))</code></pre>
+<p>Under the assumption of small percent tolerances, there is a simple formula for the approximate percent tolerance of the product of two intervals in terms of the tolerances of the factors: it is their sum. Assuming all numbers are positive, we have [a,b] * [c,d] = [ac,bd]. We can define a single interval in terms of its centre and percentage: i = [c-cp/100,c+cp/100]. Factoring out the centre gives us i = [c(1-p/100),c(1+p/100)], And multiplying two intervals can now be written as ij = [ci<em>cj(1-pi/100)(1-pj/100),ci</em>cj(1+pi/100)(1+pj/100)]. We can expand the bracketed factors: (1-pi/100)(1-pj/100) = 1 - pi/100 - pj/100 + pi<em>pj/10000 = 1 - (pi+pj)/100 + pi</em>pj/10000. (1+pi/100)(1+pj/100) = 1 + pi/100 + pj/100 + pi<em>pj/10000 = 1 + (pi+pj)/100 + pi</em>pj/10000. We can substitute this back into the interval multiplication: ij = [ci<em>cj(1-(pi+pj)/100+pi</em>pj/10000),ci<em>cj(1+(pi+pj)/100+pi</em>pj/10000)]. Since pi and pj are small, we can drop the pi<em>pj/10000 terms: ij = [ci<em>cj(1-(pi+pj)/100),ci</em>cj(1+(pi+pj)/100)]. This is back into centre &amp; percent form. The centre of the product interval is ci</em>cj, and its percentage uncertainty is pi + pj – the sum. We can try it out to make sure:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> i (make-center-percent <span class="cn">30</span> <span class="cn">1</span>))
+(<span class="kw">define</span> j (make-center-percent <span class="cn">25</span> <span class="cn">3</span>))
+(<span class="kw">define</span> i*j (mul-interval i j))
+(<span class="fu">+</span> (percent i) (percent j)) <span class="op">=&gt;</span> <span class="cn">4</span>
+(percent i*j) <span class="op">~&gt;</span> <span class="cn">3.9988003598920323</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.14">Exercise 2.14<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> add-interval div-interval mul-interval) (?<span class="cn">2.7</span> make-interval)
+       (?<span class="cn">2.12</span> center make-center-percent percent)))
+
+(<span class="kw">define</span> (par1 r1 r2)
+  (div-interval (mul-interval r1 r2)
+                (add-interval r1 r2)))
+
+(<span class="kw">define</span> (par2 r1 r2)
+  (<span class="kw">let</span> ((one (make-interval <span class="cn">1</span> <span class="cn">1</span>)))
+    (div-interval
+     one
+     (add-interval (div-interval one r1)
+                   (div-interval one r2)))))</code></pre>
+<p>Lem is right. The uncertainty of the result is different for mathematically equivalent expressions calculated by <code>par1</code> and <code>par2</code>:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> r1 (make-center-percent <span class="cn">10000</span> <span class="cn">5</span>))
+(<span class="kw">define</span> r2 (make-center-percent <span class="cn">330</span> <span class="cn">10</span>))
+(percent (par1 r1 r2)) <span class="op">~&gt;</span> <span class="cn">19.931607019958708</span>
+(percent (par2 r1 r2)) <span class="op">~&gt;</span> <span class="cn">9.841433938087881</span></code></pre>
+<p>When we divide an interval by itself, we should get exactly one. Instead, we get an interval whose center is an approximation of one, and it still has a fair amount of uncertainty.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> i (make-center-percent <span class="cn">5000</span> <span class="cn">2</span>))
+(<span class="kw">define</span> j (make-center-percent <span class="cn">2500</span> <span class="cn">1</span>))
+(center (div-interval i i)) <span class="op">~&gt;</span> <span class="cn">1.0008003201280510</span> <span class="co">; ideally should be 1</span>
+(percent (div-interval i i)) <span class="op">~&gt;</span> <span class="cn">3.998400639744109</span> <span class="co">; ideally should be 0%</span>
+(center (div-interval i j)) <span class="op">~&gt;</span> <span class="cn">2.0006000600060000</span> <span class="co">; correct</span>
+(percent (div-interval i j)) <span class="op">~&gt;</span> <span class="cn">2.999400119975999</span> <span class="co">; correct</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.15">Exercise 2.15<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Yes, Eva is right. The interval calculation system produces different intervals for mathematically equivalent expressions. When the expressions are written in such a form that no uncertain variable is repeated, the uncertainty of the result is smaller, and this is the more correct value. This is because, when an uncertain variable is repeated, the interval arithmetic procedures have no way of knowing that they are dealing with the same value twice. They introduce uncertainty in multiple places as if the repetitions were separate measurements. For example, If we manipulate an algebraic expression by dividing a value by itself, we introduce error because the interval arithmetic division does not produce exactly one.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.16">Exercise 2.16<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-</article>
+<p>In general, equivalent expressions may lead to different answers because identical intervals are treated indepedently even if they represent the same measurement. This is called the dependency problem. For complicated functions, it is not always possible to eliminate repetitions of an interval in the expression, so there is an unwanted expansion in the resulting intervals. It is not possible to write an interval arithmetic package that does not have this shortcoming. The best we can do is attempt to rewrite expressions so that intervals are not repeated (not always possible).</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

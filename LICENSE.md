@@ -4,7 +4,7 @@ This section applies to all files in this repository unless otherwise specified.
 
 ## The MIT License
 
-© 2020 Mitchell Kember
+© 2021 Mitchell Kember
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -16,13 +16,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 This section applies to the following files ("derivative works"):
 
-- [notes/text.md](notes/text.md)
-- [notes/lecture.md](notes/lecture.md)
-- [notes/assets/wizard.afdesign](notes/assets/wizard.afdesign)
-- [notes/assets/wizard.svg](notes/assets/wizard.svg)
-- [docs/assets/wizard.svg](docs/assets/wizard.svg)
-- all files under [docs/text/](docs/text/)
-- all files under [docs/lecture/](docs/lecture/)
+- Scheme code:
+    - all files under [src/sicp/](src/sicp)
+- Website source:
+    - [notes/text.md](notes/text.md)
+    - [notes/lecture.md](notes/lecture.md)
+    - [notes/assets/wizard.afdesign](notes/assets/wizard.afdesign)
+    - [notes/assets/wizard.svg](notes/assets/wizard.svg)
+- Website artifacts:
+    - all files under [docs/text/](docs/text)
+    - all files under [docs/lecture/](docs/lecture)
+    - all files under [docs/exercise/](docs/exercise)
+    - [docs/assets/wizard.svg](docs/assets/wizard.svg)
 
 ## CC BY-SA 4.0
 

@@ -1,4 +1,4 @@
-;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2021 Mitchell Kember. Subject to the CC BY-SA 4.0 License.
 
 #!r6rs
 
@@ -156,7 +156,8 @@ circumference ~> 62.8318
 
 ;; The operator evaluates to `+` (addition) when `b` is positive, and to `-`
 ;; (subtraction) when `b` is negative. Subtracting a negative is equivalent to
-;; adding its absolute value, so this procedure performs `a + |b|` in all cases.
+;; adding its absolute value, so this procedure performs $a + \lvert b\rvert$
+;; in all cases.
 
 (Exercise ?1.5)
 
@@ -621,7 +622,7 @@ circumference ~> 62.8318
 
 (fast-expt 2 5) => 32
 
-(Exercise ?1.1.6
+(Exercise ?1.16
   (use (:1.1.4 square)))
 
 ;; Iterative successive squaring: O(log(n)) time, O(1) space

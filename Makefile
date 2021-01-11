@@ -32,6 +32,10 @@ katex_sock := katex.sock
 heading_exceptions := \
 	A sample simulation\|One-dimensional tables\|Primitive procedures
 
+# HTML validation errors to ignore.
+validate_exceptions := \
+	'.*“mrow” not allowed as child of element “mo”.*'
+
 .PHONY: all help test docs katex fmt lint lintscheme spell validate clean vscode
 
 # Ordered from fastest to slowest, for early feedback.
@@ -63,6 +67,7 @@ $(doc_index): notes/index.md notes/assets/wizard.svg
 $(doc_text): notes/text.md
 $(doc_lecture): notes/lecture.md
 docs/exercise/index.html: notes/exercise.md $(sicp_src)
+docs/exercise/language.html: notes/exercise.md
 $(patsubst %,docs/exercise/%.html,$(doc_sec_1)): src/sicp/chapter-1.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_2)): src/sicp/chapter-2.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
@@ -97,11 +102,11 @@ lint: lintscheme
 	find . -type f -name "*.ts" | xargs deno lint --unstable
 	# Ensure all headings in the code appear in text.md.
 	! comm -13 \
-		<(grep '^#' notes/text.md \
-			| sed -E 's/^#+ ([0-9.]+: )?//' | sort | tee text) \
-		<(grep '^(\(Chapter\|Section\)' $(sicp_src) \
-			| sed 's/^.*"\(.*\)".*$$/\1/;' | sort | tee source) \
-		| grep -v '^$(heading_exceptions)$$' | grep '^'
+	<(grep '^#' notes/text.md \
+		| sed -E 's/^#+ ([0-9.]+: )?//' | sort) \
+	<(grep '^(\(Chapter\|Section\)' $(sicp_src) \
+		| sed 's/^.*"\(.*\)".*$$/\1/;' | sort) \
+	| grep -v '^$(heading_exceptions)$$' | grep '^'
 
 lintscheme: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
@@ -110,7 +115,8 @@ spell:
 	@echo TODO
 
 validate:
-	@echo "TODO"
+	find docs -type f -name "*.html" \
+	| xargs vnu --filterpattern $(validate_exceptions)
 
 clean:
 	find src -type d -name compiled -exec rm -rf {} +

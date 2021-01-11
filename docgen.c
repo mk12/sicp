@@ -1,4 +1,4 @@
-// Copyright 2020 Mitchell Kember. Subject to the MIT License.
+// Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
 #include <assert.h>
 #include <ctype.h>
@@ -642,6 +642,9 @@ struct SchemeScanner {
     bool use;
 };
 
+// Line at the end of chapter-*.ss files closing the SICP macro.
+const char END_SICP_LINE[] = ") ; end of SICP\n";
+
 // Initializes a Scheme line scanner. Returns true on success.
 static bool init_ss(struct SchemeScanner *scan, const char *path) {
     FILE *file = fopen(path, "r");
@@ -666,7 +669,7 @@ static void close_ss(struct SchemeScanner *scan) {
 }
 
 // Advances a Scheme line scanner to the next line. Returns true on successs,
-// and false on failure or EOF. Takes care of closing the file.
+// and false on failure, EOF, or END_SICP_LINE. Takes care of closing the file.
 static bool scan_ss(struct SchemeScanner *scan) {
     if (!scan->file) {
         return false;
@@ -674,7 +677,7 @@ static bool scan_ss(struct SchemeScanner *scan) {
     const bool prev_blank = scan->line.len <= 1;
     scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
     const bool current_blank = scan->line.len <= 1;
-    if (scan->line.len == -1) {
+    if (scan->line.len == -1 || strcmp(scan->line.data, END_SICP_LINE) == 0) {
         close_ss(scan);
         return false;
     }
@@ -836,6 +839,61 @@ static void render_toc_item(
         heading.title.len, heading.title.data);
 }
 
+// Renderer for literate code.
+struct LiterateRenderer {
+    // State for the current line.
+    enum LiterateState { LR_PROSE, LR_CODE } state;
+    // True if there is a pending blank line we haven't rendered yet.
+    bool pending_blank;
+};
+
+// Creates a new table-of-contents renderer.
+static struct LiterateRenderer new_literate_renderer(void) {
+    return (struct LiterateRenderer){
+        .state = LR_PROSE,
+        .pending_blank = false,
+    };
+}
+
+// Ends a section of literate output.
+static void end_literate_section(struct LiterateRenderer *lr, FILE *out) {
+    if (lr->state == LR_CODE) {
+        fputs("```\n", out);
+    }
+    putc('\n', out);
+    lr->state = LR_PROSE;
+    lr->pending_blank = false;
+}
+
+// Renders a line of prose or code.
+static void render_literate(
+        struct LiterateRenderer *lr, FILE *out, struct Span line) {
+    if (line.len <= 1 || strcmp(line.data, ";;\n") == 0) {
+        lr->pending_blank = true;
+        return;
+    }
+    enum LiterateState prev_state = lr->state;
+    lr->state = startswith(line.data, ";; ") ? LR_PROSE : LR_CODE;
+    if (lr->state == prev_state && lr->pending_blank) {
+        putc('\n', out);
+    }
+    lr->pending_blank = false;
+    switch (lr->state) {
+    case LR_PROSE:
+        if (prev_state == LR_CODE) {
+            fputs("```\n\n", out);
+        }
+        fwrite(line.data + 3, line.len - 3, 1, out);
+        break;
+    case LR_CODE:
+        if (prev_state == LR_PROSE) {
+            fputs("\n```\n", out);
+        }
+        fwrite(line.data, line.len, 1, out);
+        break;
+    }
+}
+
 // Returns the sector for the given textbook chapter/section.
 static Sector make_sector(int chapter, int section) {
     return (Sector)chapter | ((Sector)section << DS_BITS);
@@ -954,6 +1012,39 @@ static bool extract_chapter_section(
         return false;
     }
     return true;
+}
+
+// Returns the "prev" link for a chapter page, possibly using the given buffer.
+static const char *href_chapter_prev(int chapter, char *buf, int cap) {
+    if (chapter == 1) {
+        return "../" LANGUAGE ".html";
+    }
+    snprintf(buf, cap, "../%d/%d.html", chapter - 1, num_sections(chapter - 1));
+    return buf;
+}
+
+// Returns the "prev" link for a section page, possibly using the given buffer.
+static const char *href_section_prev(int section, char *buf, int cap) {
+    if (section == 1) {
+        return HREF(INDEX);
+    }
+    snprintf(buf, cap, "%d.html", section - 1);
+    return buf;
+}
+
+// Returns the "next" link for a section page, possibly using the given buffer.
+static const char *href_section_next(
+        int chapter, int section, char *buf, int cap) {
+    const int last_section = num_sections(chapter);
+    if (chapter == NUM_CHAPTERS && section == last_section) {
+        return NULL;
+    }
+    if (section == last_section) {
+        snprintf(buf, cap, "../%d/" INDEX ".html", chapter + 1);
+    } else {
+        snprintf(buf, cap, "%d.html", section + 1);
+    }
+    return buf;
 }
 
 // Generates docs/index.html.
@@ -1134,22 +1225,14 @@ static bool gen_text_chapter(const char *output) {
     }
     char title[] = "SICP Chapter _ Notes";
     title[13] = '0' + chapter;
-    const char *prev;
-    char prev_buf[] = "../_/_.html";
-    if (chapter == 1) {
-        prev = "../" FRONT ".html";
-    } else {
-        prev_buf[3] = '0' + chapter - 1;
-        prev_buf[5] = '0' + num_sections(chapter - 1);
-        prev = prev_buf;
-    }
+    char prev_buf[SZ_HREF];
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
         .dest = output,
         .title = title,
-        .prev = prev,
+        .prev = href_chapter_prev(chapter, prev_buf, sizeof prev_buf),
         .up = HREF(PARENT INDEX),
         .next = HREF("1"),
     })) {
@@ -1198,35 +1281,16 @@ static bool gen_text_section(const char *output) {
     char title[] = "SICP Section _._ Notes";
     title[13] = '0' + chapter;
     title[15] = '0' + section;
-    const char *prev;
-    char prev_buf[] = "_.html";
-    if (section == 1) {
-        prev = HREF(INDEX);
-    } else {
-        prev_buf[0] = '0' + section - 1;
-        prev = prev_buf;
-    }
-    char *next;
-    char next_buf[] = "../_/" INDEX ".html";
-    const int last_section = num_sections(chapter);
-    if (chapter == NUM_CHAPTERS && section == last_section) {
-        next = NULL;
-    } else if (section == last_section) {
-        next_buf[3] = '0' + chapter + 1;
-        next = next_buf;
-    } else {
-        snprintf(next_buf, sizeof next_buf, "%d.html", section + 1);
-        next = next_buf;
-    }
+    char prev_buf[SZ_HREF], next_buf[SZ_HREF];
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
         .dest = output,
         .title = title,
-        .prev = prev,
+        .prev = href_section_prev(section, prev_buf, sizeof prev_buf),
         .up = HREF(INDEX),
-        .next = next,
+        .next = href_section_next(chapter, section, next_buf, sizeof next_buf),
     })) {
         return false;
     }
@@ -1524,22 +1588,14 @@ static bool gen_exercise_chapter(const char *output) {
     }
     char title[] = "SICP Chapter _ Exercises";
     title[13] = '0' + chapter;
-    const char *prev;
-    char prev_buf[] = "../_/_.html";
-    if (chapter == 1) {
-        prev = "../" LANGUAGE ".html";
-    } else {
-        prev_buf[3] = '0' + chapter - 1;
-        prev_buf[5] = '0' + num_sections(chapter - 1);
-        prev = prev_buf;
-    }
+    char prev_buf[SZ_HREF];
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
         .dest = output,
         .title = title,
-        .prev = prev,
+        .prev = href_chapter_prev(chapter, prev_buf, sizeof prev_buf),
         .up = HREF(PARENT INDEX),
         .next = HREF("1"),
     })) {
@@ -1584,35 +1640,16 @@ static bool gen_exercise_section(const char *output) {
     char title[] = "SICP Section _._ Exercises";
     title[13] = '0' + chapter;
     title[15] = '0' + section;
-    const char *prev;
-    char prev_buf[] = "_.html";
-    if (section == 1) {
-        prev = HREF(INDEX);
-    } else {
-        prev_buf[0] = '0' + section - 1;
-        prev = prev_buf;
-    }
-    char *next;
-    char next_buf[] = "../_/" INDEX ".html";
-    const int last_section = num_sections(chapter);
-    if (chapter == NUM_CHAPTERS && section == last_section) {
-        next = NULL;
-    } else if (section == last_section) {
-        next_buf[3] = '0' + chapter + 1;
-        next = next_buf;
-    } else {
-        snprintf(next_buf, sizeof next_buf, "%d.html", section + 1);
-        next = next_buf;
-    }
+    char prev_buf[SZ_HREF], next_buf[SZ_HREF];
     struct PandocProc proc;
     if (!fork_pandoc(&proc, (struct PandocOpts){
         .input = STDIN,
         .output = STDOUT,
         .dest = output,
         .title = title,
-        .prev = prev,
+        .prev = href_section_prev(section, prev_buf, sizeof prev_buf),
         .up = HREF(INDEX),
-        .next = next,
+        .next = href_section_next(chapter, section, next_buf, sizeof next_buf),
     })) {
         return false;
     }
@@ -1624,8 +1661,10 @@ static bool gen_exercise_section(const char *output) {
     const int page_num = text_url_num(target_sector);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, page_num);
+    struct LiterateRenderer lr = new_literate_renderer();
     while (scan_ss(&scan) && scan.level != 1 && scan.level != 2) {
         if (scan.level >= 3) {
+            end_literate_section(&lr, proc.in);
             h = parse_ss_heading(scan.line);
             assert(h.label.data);
             if (scan.level == 3) {
@@ -1646,9 +1685,10 @@ static bool gen_exercise_section(const char *output) {
                     label.len, label.data);
             }
         } else {
-            // copy_md(&scan, proc.in);
+            render_literate(&lr, proc.in, scan.line);
         }
     }
+    end_literate_section(&lr, proc.in);
     close_ss(&scan);
     return finish_pandoc(&proc, output);
 }

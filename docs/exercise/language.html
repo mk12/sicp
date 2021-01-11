@@ -65,12 +65,63 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 Note on the Language
 </h1>
-<p>=&gt; etc.</p>
-</article>
+<p>Tests use <code>=&gt;</code>, <code>~&gt;</code>, <code>=$&gt;</code>, and <code>=!&gt;</code>:</p>
+<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">6</span>            <span class="co">; =&gt; asserts equality</span>
+
+(<span class="fu">+</span> <span class="cn">1.0</span> <span class="cn">0.1</span>) <span class="op">~&gt;</span> (<span class="fu">-</span> <span class="cn">1.2</span> <span class="cn">0.1</span>) <span class="op">~&gt;</span> <span class="cn">1.1</span>      <span class="co">; ~&gt; allows a small margin of error</span>
+
+(<span class="fu">display</span> <span class="cn">&quot;hi&quot;</span>) <span class="op">=$&gt;</span> <span class="cn">&quot;hi&quot;</span>                <span class="co">; =$&gt; &quot;...&quot; tests standard output</span>
+(<span class="fu">display</span> <span class="cn">&quot;hi</span><span class="co">\n</span><span class="cn">bye</span><span class="co">\n</span><span class="cn">&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;hi&quot;</span> <span class="cn">&quot;bye&quot;</span>] <span class="co">; =$&gt; [...] splits lines</span>
+
+(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;bad&quot;</span> <span class="cn">3</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;foo: bad: 3&quot;</span> <span class="co">; =!&gt; tests the error message</span>
+(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;bad&quot;</span> <span class="cn">3</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;bad&quot;</span>         <span class="co">; any substring will do</span></code></pre>
+<p>Code fragments are isolated to their part of the book:</p>
+<pre><code class="blockcode">(Chapter :<span class="cn">1</span> <span class="cn">&quot;chapter title&quot;</span>)  <span class="co">; The &quot;:&quot; sigil is for the text</span>
+
+(<span class="kw">define</span> a <span class="cn">1</span>)  <span class="co">; This belongs to Chapter 1</span>
+
+(Section :<span class="cn">1.1</span> <span class="cn">&quot;section title&quot;</span>)
+
+(<span class="kw">define</span> b <span class="cn">2</span>)  <span class="co">; This belongs to Section 1.1</span>
+
+(Section :<span class="cn">1.1.1</span> <span class="cn">&quot;subsection title&quot;</span>)
+
+(<span class="kw">define</span> c <span class="cn">3</span>)  <span class="co">; This belongs to Subsection 1.1.1</span>
+
+(Exercise ?<span class="cn">1.1</span>)  <span class="co">; The &quot;?&quot; sigil is for exercises</span>
+
+(<span class="kw">define</span> d <span class="cn">4</span>)  <span class="co">; This belongs to Exercise 1.1</span></code></pre>
+<p>We can import definitions out of order:</p>
+<pre><code class="blockcode">(Section :<span class="cn">1.1</span> <span class="cn">&quot;first section&quot;</span>
+  (<span class="kw">use</span> (:<span class="cn">1.2</span> square)))    <span class="co">; import square from Section 1.2</span>
+
+(<span class="kw">define</span> nine (square <span class="cn">3</span>))  <span class="co">; ok</span>
+(<span class="kw">define</span> eight (cube <span class="cn">2</span>))   <span class="co">; ERROR, &#39;cube&#39; not defined</span>
+
+(Section :<span class="cn">1.2</span> <span class="cn">&quot;second section&quot;</span>)
+
+(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
+
+(Exercise ?<span class="cn">1.15</span>
+  (<span class="kw">use</span> :<span class="cn">1.2</span> square cube))
+
+(<span class="kw">define</span> a (<span class="fu">+</span> (square <span class="cn">3</span>) (cube <span class="cn">4</span>)))  <span class="co">; ok</span></code></pre>
+<p>We can also unhygienically paste code, but only from earlier sections in the same file:</p>
+<pre><code class="blockcode">(Section :<span class="cn">1</span> <span class="cn">&quot;Original&quot;</span>)
+
+(<span class="kw">define</span> a <span class="cn">1</span>)
+(<span class="kw">define</span> (inc x) (<span class="fu">+</span> x a))
+(inc <span class="cn">42</span>) <span class="op">=&gt;</span> <span class="cn">43</span>
+
+(Section :<span class="cn">2</span> <span class="cn">&quot;Copy&quot;</span>)
+
+(<span class="kw">define</span> a <span class="cn">-1</span>)
+(<span class="kw">paste</span> (:<span class="cn">1</span> inc))
+(inc <span class="cn">42</span>) <span class="op">=&gt;</span> <span class="cn">41</span></code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
@@ -94,7 +145,7 @@ Note on the Language
   </div>
 </nav>
 <footer class="footer">
-  <p>© 2020 Mitchell Kember</p>
+  <p>© 2021 Mitchell Kember</p>
 </footer>
 </body>
 </html>

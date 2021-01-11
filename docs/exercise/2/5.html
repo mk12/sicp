@@ -65,95 +65,1300 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 <span class="number">2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html">Systems with Generic Operations<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="2.5.1" class="anchor">
 <a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> add-rat denom div-rat mul-rat numer sub-rat) (:<span class="cn">2.4.2</span> attach-tag)
+       (:<span class="cn">2.4.3</span> add-complex apply-generic apply-specific div-complex
+               make-from-mag-ang make-from-real-imag mul-complex polar-pkg
+               rectangular-pkg sub-complex using)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.1</span> make-rat)))
+
+(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
+(<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
+(<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
+(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+
+(<span class="kw">define</span> (scheme-number-pkg)
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;scheme-number</span> x))
+  (put <span class="cn">&#39;add</span> &#39;(scheme-number scheme-number) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="cn">&#39;sub</span> &#39;(scheme-number scheme-number) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="cn">&#39;mul</span> &#39;(scheme-number scheme-number) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="cn">&#39;div</span> &#39;(scheme-number scheme-number) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;scheme-number</span> tag))
+
+(<span class="kw">define</span> (make-scheme-number n)
+  (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;scheme-number</span> n))
+
+(<span class="kw">define</span> (rational-pkg)
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;rational</span> x))
+  (put <span class="cn">&#39;add</span> &#39;(rational rational) (<span class="kw">lambda</span> (x y) (tag (add-rat x y))))
+  (put <span class="cn">&#39;sub</span> &#39;(rational rational) (<span class="kw">lambda</span> (x y) (tag (sub-rat x y))))
+  (put <span class="cn">&#39;mul</span> &#39;(rational rational) (<span class="kw">lambda</span> (x y) (tag (mul-rat x y))))
+  (put <span class="cn">&#39;div</span> &#39;(rational rational) (<span class="kw">lambda</span> (x y) (tag (div-rat x y))))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;rational</span> (<span class="kw">lambda</span> (n d) (tag (make-rat n d)))))
+
+(<span class="kw">define</span> (make-rational n d)
+  (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;rational</span> n d))
+
+(<span class="kw">define</span> (complex-pkg)
+  (<span class="kw">define</span> (tag z) (attach-tag <span class="cn">&#39;complex</span> z))
+  (rectangular-pkg)
+  (polar-pkg)
+  (put <span class="cn">&#39;add</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (add-complex z1 z2))))
+  (put <span class="cn">&#39;sub</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (sub-complex z1 z2))))
+  (put <span class="cn">&#39;mul</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
+  (put <span class="cn">&#39;div</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
+  (put <span class="cn">&#39;make-from-real-imag</span> <span class="cn">&#39;complex</span>
+       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+  (put <span class="cn">&#39;make-from-mag-ang</span> <span class="cn">&#39;complex</span>
+       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
+
+(<span class="kw">define</span> (make-complex-from-real-imag a b)
+  (apply-specific <span class="cn">&#39;make-from-real-imag</span> <span class="cn">&#39;complex</span> a b))
+(<span class="kw">define</span> (make-complex-from-mag-ang r a)
+  (apply-specific <span class="cn">&#39;make-from-mag-ang</span> <span class="cn">&#39;complex</span> r a))
+
+(<span class="kw">define</span> (numeric-pkg)
+  (scheme-number-pkg)
+  (rational-pkg)
+  (complex-pkg))
+
+(using numeric-pkg)
+
+(add (make-scheme-number <span class="cn">1</span>) (make-scheme-number <span class="cn">2</span>))
+<span class="op">=&gt;</span> (make-scheme-number <span class="cn">3</span>)
+
+(mul (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-rational <span class="cn">3</span> <span class="cn">4</span>))
+<span class="op">=&gt;</span> (make-rational <span class="cn">3</span> <span class="cn">8</span>)
+
+(sub (make-complex-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>) (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>))
+<span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">-1</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.77">Exercise 2.77<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)
+       (:<span class="cn">2.4.3</span> angle apply-generic imag-part magnitude real-part using)
+       (:<span class="cn">2.5.1</span> complex-pkg make-complex-from-real-imag) (:<span class="cn">3.3.3.3</span> get put)))
+
+(<span class="kw">define</span> (complex-components-pkg)
+  (put <span class="cn">&#39;real-part</span> &#39;(complex) real-part)
+  (put <span class="cn">&#39;imag-part</span> &#39;(complex) imag-part)
+  (put <span class="cn">&#39;magnitude</span> &#39;(complex) magnitude)
+  (put <span class="cn">&#39;angle</span> &#39;(complex) angle))</code></pre>
+<p>This works because all four procedures were already defined in Section 2.4.3 to use <code>apply-generic</code>. This means (1) they will dispatch to the new procedures when given complex inputs, and (2) the new procedures will dispatch on the inner representation (rectangular or polar).</p>
+<pre><code class="blockcode">(using complex-pkg complex-components-pkg)</code></pre>
+<p>The object shown in Figure 2.24.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">3</span> <span class="cn">4</span>))
+
+(magnitude z)
+<span class="op">=&gt;</span> (magnitude &#39;(complex rectangular <span class="cn">3</span> . <span class="cn">4</span>))
+<span class="op">=&gt;</span> (apply-generic <span class="cn">&#39;magnitude</span> &#39;(complex rectangular <span class="cn">3</span> . <span class="cn">4</span>))
+<span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="cn">&#39;magnitude</span> &#39;(complex)) &#39;((rectangular <span class="cn">3</span> . <span class="cn">4</span>)))
+<span class="op">=&gt;</span> (magnitude &#39;(rectangular <span class="cn">3</span> . <span class="cn">4</span>))
+<span class="op">=&gt;</span> (apply-generic <span class="cn">&#39;magnitude</span> &#39;(rectangular <span class="cn">3</span> . <span class="cn">4</span>))
+<span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="cn">&#39;magnitude</span> &#39;(rectangular)) &#39;((<span class="cn">3</span> . <span class="cn">4</span>)))
+<span class="op">=&gt;</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square <span class="cn">3</span>) (square <span class="cn">4</span>)))
+<span class="op">=&gt;</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> <span class="cn">9</span> <span class="cn">16</span>))
+<span class="op">=&gt;</span> (<span class="fu">sqrt</span> <span class="cn">25</span>)
+<span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
+<p><code>apply-generic</code> is invoked twice: once on the ’complex object and once on the inner ’rectangular object. Each invocation strips off one type tag.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.78">Exercise 2.78<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">3.3.3.3</span> get put)))
+
+(<span class="kw">define</span> (attach-tag type-tag contents)
+  (<span class="kw">if</span> (<span class="fu">eq?</span> type-tag <span class="cn">&#39;scheme-number</span>)
+      contents
+      (<span class="fu">cons</span> type-tag contents)))
+(<span class="kw">define</span> (type-tag datum)
+  (<span class="kw">cond</span> ((<span class="fu">pair?</span> datum) (<span class="fu">car</span> datum))
+        ((<span class="fu">number?</span> datum) <span class="cn">&#39;scheme-number</span>)
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;type-tag</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum))))
+(<span class="kw">define</span> (contents datum)
+  (<span class="kw">cond</span> ((<span class="fu">pair?</span> datum) (<span class="fu">cdr</span> datum))
+        ((<span class="fu">number?</span> datum) datum)
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;contents</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum))))
+
+(attach-tag <span class="cn">&#39;foo</span> <span class="cn">&#39;a</span>) <span class="op">=&gt;</span> &#39;(foo . a)
+(attach-tag <span class="cn">&#39;scheme-number</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(type-tag &#39;(foo . a)) <span class="op">=&gt;</span> <span class="cn">&#39;foo</span>
+(type-tag <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">&#39;scheme-number</span>
+(contents &#39;(foo . a)) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
+(contents <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+
+(<span class="kw">paste</span> (:<span class="cn">2.4.3</span> apply-generic) (:<span class="cn">2.5.1</span> add <span class="fu">div</span> mul scheme-number-pkg sub))
+
+(using scheme-number-pkg)
+
+(add <span class="cn">1</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(mul <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.79">Exercise 2.79<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.3</span> apply-generic imag-part real-part using)
+       (:<span class="cn">2.5.1</span> make-complex-from-mag-ang make-complex-from-real-imag
+               make-rational make-scheme-number numeric-pkg)
+       (:<span class="cn">3.3.3.3</span> put)))
+
+(<span class="kw">define</span> (equ-pkg)
+  (put <span class="cn">&#39;equ?</span> &#39;(scheme-number scheme-number) <span class="fu">=</span>)
+  (put <span class="cn">&#39;equ?</span> &#39;(rational rational)
+       (<span class="kw">lambda</span> (x y)
+         (<span class="kw">and</span> (<span class="fu">=</span> (numer x) (numer y))
+              (<span class="fu">=</span> (denom x) (denom y)))))
+  (put <span class="cn">&#39;equ?</span> &#39;(complex complex)
+       (<span class="kw">lambda</span> (z1 z2)
+         (<span class="kw">and</span> (<span class="fu">=</span> (real-part z1) (real-part z2))
+              (<span class="fu">=</span> (imag-part z1) (imag-part z2)))))
+  <span class="co">;; These are used later in Exercise 2.85.</span>
+  (put <span class="cn">&#39;equ?</span> &#39;(integer integer) <span class="fu">=</span>)
+  (put <span class="cn">&#39;equ?</span> &#39;(real real) <span class="fu">=</span>))
+
+(<span class="kw">define</span> (equ? x y) (apply-generic <span class="cn">&#39;equ?</span> x y))
+
+(using numeric-pkg equ-pkg)
+
+(equ? (make-scheme-number <span class="cn">1</span>) (make-scheme-number <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(equ? (make-scheme-number <span class="cn">1</span>) (make-scheme-number <span class="cn">2</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(equ? (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-rational <span class="cn">2</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(equ? (make-rational <span class="cn">1</span> <span class="cn">3</span>) (make-rational <span class="cn">2</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(equ? (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">0</span>) (make-complex-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(equ? (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>) (make-complex-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.80">Exercise 2.80<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> numer) (:<span class="cn">2.4.3</span> apply-generic imag-part real-part using)
+       (:<span class="cn">2.5.1</span> make-complex-from-mag-ang make-complex-from-real-imag
+               make-rational make-scheme-number numeric-pkg)
+       (:<span class="cn">3.3.3.3</span> put)))
+
+(<span class="kw">define</span> (zero-pkg)
+  (put <span class="cn">&#39;=zero?</span> &#39;(scheme-number) <span class="fu">zero?</span>)
+  (put <span class="cn">&#39;=zero?</span> &#39;(rational)
+       (<span class="kw">lambda</span> (x) (<span class="fu">zero?</span> (numer x))))
+  (put <span class="cn">&#39;=zero?</span> &#39;(complex)
+       (<span class="kw">lambda</span> (x) (<span class="kw">and</span> (<span class="fu">zero?</span> (real-part x))
+                        (<span class="fu">zero?</span> (imag-part x))))))
+
+(<span class="kw">define</span> (=zero? n) (apply-generic <span class="cn">&#39;=zero?</span> n))
+
+(using numeric-pkg zero-pkg)
+
+(=zero? (make-scheme-number <span class="cn">0</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-scheme-number <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(=zero? (make-rational <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-rational <span class="cn">1</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(=zero? (make-complex-from-mag-ang <span class="cn">0</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h2 id="2.5.2" class="anchor">
 <a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a> <span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.2">Combining Data of Different Types<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> contents type-tag) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-scheme-number numeric-pkg)
+       (:<span class="cn">3.3.3.3</span> get put)))
+
+(<span class="kw">define</span> (get-coercion type1 type2)
+  (get <span class="cn">&#39;coerce</span> (<span class="fu">list</span> type1 type2)))
+(<span class="kw">define</span> (put-coercion type1 type2 coerce)
+  (put <span class="cn">&#39;coerce</span> (<span class="fu">list</span> type1 type2) coerce))
+
+(<span class="kw">define</span> (apply-generic op . args)
+  (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
+         (proc (get op type-tags)))
+    (<span class="kw">define</span> (err)
+      (<span class="fu">error</span> <span class="cn">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+    (<span class="kw">if</span> proc
+        (<span class="fu">apply</span> proc (<span class="fu">map</span> contents args))
+        (<span class="kw">if</span> (<span class="fu">=</span> (<span class="fu">length</span> args) <span class="cn">2</span>)
+            (<span class="kw">let*</span> ((type1 (<span class="fu">car</span> type-tags))
+                   (type2 (<span class="fu">cadr</span> type-tags))
+                   (a1 (<span class="fu">car</span> args))
+                   (a2 (<span class="fu">cadr</span> args))
+                   (t1-&gt;t2 (get-coercion type1 type2))
+                   (t2-&gt;t1 (get-coercion type2 type1)))
+              (<span class="kw">cond</span> (t1-&gt;t2 (apply-generic op (t1-&gt;t2 a1) a2))
+                    (t2-&gt;t1 (apply-generic op a1 (t2-&gt;t1 a2)))
+                    (<span class="kw">else</span> (err))))
+            (err)))))
+
+(<span class="kw">define</span> (install-scheme-number-&gt;complex-package)
+  (<span class="kw">define</span> (coerce n)
+    (make-complex-from-real-imag (contents n) <span class="cn">0</span>))
+  (put-coercion <span class="cn">&#39;scheme-number</span> <span class="cn">&#39;complex</span> coerce))
+
+(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
+(<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
+(<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
+(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+
+(using numeric-pkg install-scheme-number-&gt;complex-package)
+
+(add (make-scheme-number <span class="cn">1</span>) (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>))
+<span class="op">=&gt;</span> (add (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>) (make-scheme-number <span class="cn">1</span>))
+<span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.81">Exercise 2.81<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> attach-tag contents type-tag) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.1</span> complex-pkg make-complex-from-real-imag)
+       (:<span class="cn">2.5.2</span> apply-generic get-coercion put-coercion) (:<span class="cn">3.3.3.3</span> get put)))
+
+(<span class="kw">define</span> (identity-pkg)
+  (<span class="kw">define</span> (scheme-number-&gt;scheme-number n) n)
+  (<span class="kw">define</span> (complex-&gt;complex z) z)
+  (put-coercion <span class="cn">&#39;scheme-number</span> <span class="cn">&#39;scheme-number</span> scheme-number-&gt;scheme-number)
+  (put-coercion <span class="cn">&#39;complex</span> <span class="cn">&#39;complex</span> complex-&gt;complex))
+
+(<span class="kw">define</span> (exp-pkg)
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;scheme-number</span> x))
+  (put <span class="cn">&#39;exp</span> &#39;(scheme-number scheme-number) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">expt</span> x y)))))
+
+(<span class="kw">define</span> (exp x y) (apply-generic <span class="cn">&#39;exp</span> x y))</code></pre>
+<ol type="a">
+<li>If we call <code>exp</code> with two complex numbers as arguments, the process will be stuck in an infinite recursion because it keeps coercing the first argument to the type of the second, although this brings it no closer to being able to find a correct procedure.</li>
+</ol>
+<pre><code class="blockcode">(using complex-pkg identity-pkg exp-pkg)
+
+(<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">0</span>))
+<span class="co">; (exp z z) ; never terminates</span></code></pre>
+<ol start="2" type="a">
+<li><p>Louis is wrong. Nothing needs to be done to handle coercion with arguments of the same type, because if there is no procedure installed for that type then coercion doesn’t help. This is assuming that the package consists only of operations on two arguments of the same type. If an operation had two arguments of different types, there may be multiple possible coercions that would succeed in finding a specific procedure.</p></li>
+<li><p>This <code>apply-generic</code> doesn’t coerce two arguments of the same type:</p></li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (new-apply-generic op . args)
+  (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
+         (proc (get op type-tags)))
+    (<span class="kw">define</span> (err)
+      (<span class="fu">error</span> <span class="cn">&#39;new-apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+    (<span class="kw">if</span> proc
+        (<span class="fu">apply</span> proc (<span class="fu">map</span> contents args))
+        (<span class="kw">if</span> (<span class="fu">=</span> (<span class="fu">length</span> args) <span class="cn">2</span>)
+            (<span class="kw">let</span> ((type1 (<span class="fu">car</span> type-tags))
+                  (type2 (<span class="fu">cadr</span> type-tags)))
+              (<span class="kw">if</span> (<span class="fu">eq?</span> type1 type2)
+                  (err)
+                  (<span class="kw">let</span> ((a1 (<span class="fu">car</span> args))
+                        (a2 (<span class="fu">cadr</span> args))
+                        (t1-&gt;t2 (get-coercion type1 type2))
+                        (t2-&gt;t1 (get-coercion type2 type1)))
+                    (<span class="kw">cond</span> (t1-&gt;t2 (new-apply-generic op (t1-&gt;t2 a1) a2))
+                          (t2-&gt;t1 (new-apply-generic op a1 (t2-&gt;t1 a2)))
+                          (<span class="kw">else</span> (err))))))
+            (err)))))
+
+(<span class="kw">define</span> (exp x y) (new-apply-generic <span class="cn">&#39;exp</span> x y))
+<span class="co">; (exp z z) ; raises an error</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> attach-tag contents type-tag) (:<span class="cn">2.4.3</span> add-complex using)
+       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-scheme-number numeric-pkg)
+       (:<span class="cn">2.5.2</span> add get-coercion install-scheme-number-&gt;complex-package)
+       (:<span class="cn">3.3.3.3</span> get put)))
+
+(<span class="kw">define</span> (get-coercion-or-id from to)
+  (<span class="kw">if</span> (<span class="fu">eq?</span> from to)
+      (<span class="kw">lambda</span> (x) x)
+      (get-coercion from to)))
+(<span class="kw">define</span> (all-good? xs)
+  (<span class="kw">or</span> (<span class="fu">null?</span> xs)
+      (<span class="kw">and</span> (<span class="fu">car</span> xs)
+           (all-good? (<span class="fu">cdr</span> xs)))))
+(<span class="kw">define</span> (coerce-all vals types to)
+  (<span class="kw">let</span> ((cs (<span class="fu">map</span> (<span class="kw">lambda</span> (from) (get-coercion-or-id from to)) types)))
+    (<span class="kw">if</span> (all-good? cs)
+        (<span class="fu">map</span> (<span class="kw">lambda</span> (c v) (c v)) cs vals)
+        <span class="cn">#f</span>)))
+
+(<span class="kw">define</span> (apply-generic op . args)
+  (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
+         (proc (get op type-tags)))
+    (<span class="kw">define</span> (try tt)
+      (when (<span class="fu">null?</span> tt)
+        (<span class="fu">error</span> <span class="cn">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+      (<span class="kw">let*</span> ((try-type (<span class="fu">car</span> tt))
+             (coerced-args (coerce-all args type-tags try-type))
+             (new-type-tags (<span class="fu">map</span> (<span class="kw">lambda</span> (x) try-type) type-tags))
+             (proc (get op new-type-tags)))
+        (<span class="kw">if</span> proc
+            (<span class="fu">apply</span> proc (<span class="fu">map</span> contents coerced-args))
+            (try (<span class="fu">cdr</span> tt)))))
+    (<span class="kw">if</span> proc
+        (<span class="fu">apply</span> proc (<span class="fu">map</span> contents args))
+        (try type-tags))))
+
+(<span class="kw">define</span> (add3c-pkg)
+  (<span class="kw">define</span> (tag z) (attach-tag <span class="cn">&#39;complex</span> z))
+  (put <span class="cn">&#39;add3c</span> &#39;(complex complex complex)
+       (<span class="kw">lambda</span> (z1 z2 z3)
+         (tag (add-complex z1 (add-complex z2 z3))))))
+
+(<span class="kw">define</span> (add3c z1 z2 z3) (apply-generic <span class="cn">&#39;add3c</span> z1 z2 z3))
+
+(using numeric-pkg install-scheme-number-&gt;complex-package add3c-pkg)
+
+(add3c (make-scheme-number <span class="cn">1</span>)
+       (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>)
+       (make-scheme-number <span class="cn">1</span>))
+<span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">3</span> <span class="cn">1</span>)</code></pre>
+<p>This won’t work if two complex numbers are supplied and the operation takes one real number and one complex number. It only works for operations given the exact types they need, or for operations that take arguments that are all of the same type (assuming all necessary coercions are possible).</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.83">Exercise 2.83<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.2</span> attach-tag)
+       (:<span class="cn">2.4.3</span> apply-generic apply-specific using)
+       (:<span class="cn">2.5.1</span> add complex-pkg <span class="fu">div</span> make-complex-from-real-imag make-rational
+               rational-pkg)
+       (:<span class="cn">3.3.3.3</span> put)))
+
+(<span class="kw">define</span> (integer-pkg)
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;integer</span> x))
+  (put <span class="cn">&#39;add</span> &#39;(integer integer) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="cn">&#39;sub</span> &#39;(integer integer) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="cn">&#39;mul</span> &#39;(integer integer) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="cn">&#39;div</span> &#39;(integer integer)
+       (<span class="kw">lambda</span> (x y)
+         (<span class="kw">let</span> ((z (<span class="fu">/</span> x y)))
+           (<span class="kw">if</span> (<span class="fu">integer?</span> z) (tag z) (make-rational x y)))))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;integer</span> tag))
+
+(<span class="kw">define</span> (make-integer x) (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;integer</span> x))
+
+(<span class="kw">define</span> (real-pkg)
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;real</span> x))
+  (put <span class="cn">&#39;add</span> &#39;(real real) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="cn">&#39;sub</span> &#39;(real real) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="cn">&#39;mul</span> &#39;(real real) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="cn">&#39;div</span> &#39;(real real) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;real</span> tag))
+
+(<span class="kw">define</span> (make-real x) (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;real</span> x))</code></pre>
+<p>The extended numeric package splits ’scheme-number into ’integer and ’real.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (extended-numeric-pkg)
+  (integer-pkg)
+  (rational-pkg)
+  (real-pkg)
+  (complex-pkg))
+
+(<span class="kw">define</span> (raise-pkg)
+  (<span class="kw">define</span> (integer-&gt;rational n)
+    (make-rational n <span class="cn">1</span>))
+  (<span class="kw">define</span> (rational-&gt;real x)
+    (make-real (<span class="fu">inexact</span> (<span class="fu">/</span> (numer x) (denom x)))))
+  (<span class="kw">define</span> (real-&gt;complex n)
+    (make-complex-from-real-imag n <span class="cn">0</span>))
+  (put <span class="cn">&#39;raise</span> &#39;(integer) integer-&gt;rational)
+  (put <span class="cn">&#39;raise</span> &#39;(rational) rational-&gt;real)
+  (put <span class="cn">&#39;raise</span> &#39;(real) real-&gt;complex))
+
+(<span class="kw">define</span> (<span class="kw">raise</span> x) (apply-generic <span class="cn">&#39;raise</span> x))
+
+(using extended-numeric-pkg raise-pkg)
+
+(add (make-integer <span class="cn">1</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">3</span>)
+(<span class="fu">div</span> (make-integer <span class="cn">10</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">5</span>)
+(<span class="fu">div</span> (make-integer <span class="cn">1</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
+
+(<span class="kw">raise</span> (make-integer <span class="cn">1</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">1</span>)
+(<span class="kw">raise</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)
+(<span class="kw">raise</span> (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">0.5</span> <span class="cn">0</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.84">Exercise 2.84<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> contents type-tag) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-rational) (:<span class="cn">3.3.3.3</span> get)
+       (?<span class="cn">2.83</span> extended-numeric-pkg make-integer make-real <span class="kw">raise</span> raise-pkg)))
+
+(<span class="kw">define</span> numeric-tower
+  &#39;(integer rational real complex))
+
+(<span class="kw">define</span> (tower-bottom? type) (<span class="fu">eq?</span> type <span class="cn">&#39;integer</span>))
+(<span class="kw">define</span> (tower-top? type) (<span class="fu">eq?</span> type <span class="cn">&#39;complex</span>))
+
+(<span class="kw">define</span> (tower-position type)
+  (<span class="kw">define</span> (iter tower n)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> tower) <span class="cn">#f</span>)
+          ((<span class="fu">eq?</span> type (<span class="fu">car</span> tower)) n)
+          (<span class="kw">else</span> (iter (<span class="fu">cdr</span> tower) (<span class="fu">+</span> n <span class="cn">1</span>)))))
+  (iter numeric-tower <span class="cn">0</span>))
+
+(<span class="kw">define</span> (apply-generic op . args)
+  (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
+         (vals (<span class="fu">map</span> contents args))
+         (proc (get op type-tags)))
+    (<span class="kw">define</span> (err)
+      (<span class="fu">error</span> <span class="cn">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+    (<span class="kw">cond</span> (proc (<span class="fu">apply</span> proc vals))
+          ((<span class="fu">null?</span> args) (err))
+          ((<span class="fu">null?</span> (<span class="fu">cdr</span> args))
+           (<span class="kw">if</span> (tower-top? (<span class="fu">car</span> type-tags))
+               (err)
+               (apply-generic op (<span class="kw">raise</span> (<span class="fu">car</span> args)))))
+          ((<span class="fu">null?</span> (<span class="fu">cddr</span> args))
+           (<span class="kw">let</span> ((a1 (<span class="fu">car</span> args))
+                 (a2 (<span class="fu">cadr</span> args))
+                 (p1 (tower-position (<span class="fu">car</span> type-tags)))
+                 (p2 (tower-position (<span class="fu">cadr</span> type-tags))))
+             (<span class="kw">cond</span> ((<span class="kw">or</span> (<span class="fu">not</span> p1) (<span class="fu">not</span> p2) (<span class="fu">=</span> p1 p2)) (err))
+                   ((<span class="fu">&lt;</span> p1 p2) (apply-generic op (<span class="kw">raise</span> a1) a2))
+                   (<span class="kw">else</span> (apply-generic op a1 (<span class="kw">raise</span> a2))))))
+          (<span class="kw">else</span> (err)))))
+
+(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
+(<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
+(<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
+(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+
+(using extended-numeric-pkg raise-pkg)
+
+(add (make-integer <span class="cn">1</span>) (make-complex-from-real-imag <span class="cn">2.0</span> <span class="cn">3.0</span>))
+<span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">3.0</span> <span class="cn">3.0</span>)
+
+(add (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-real <span class="cn">0.5</span>))
+<span class="op">=&gt;</span> (make-real <span class="cn">1.0</span>)
+
+(<span class="fu">div</span> (make-real <span class="cn">1</span>) (make-integer <span class="cn">2</span>))
+<span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.85">Exercise 2.85<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.2</span> contents type-tag) (:<span class="cn">2.4.3</span> real-part using)
+       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-rational) (:<span class="cn">3.3.3.3</span> get put)
+       (?<span class="cn">2.79</span> equ-pkg equ?)
+       (?<span class="cn">2.83</span> extended-numeric-pkg make-integer make-real <span class="kw">raise</span> raise-pkg)
+       (?<span class="cn">2.84</span> tower-bottom? tower-position tower-top?)))
+
+(<span class="kw">define</span> (project-pkg)
+  (<span class="kw">define</span> (complex-&gt;real x)
+    (make-real (real-part x)))
+  (<span class="kw">define</span> (real-&gt;rational x)
+    <span class="co">;; Note: `exact`, `numerator`, and `denominator` are built-in procedures.</span>
+    (<span class="kw">let</span> ((y (<span class="fu">exact</span> x)))
+      (make-rational (<span class="fu">numerator</span> y) (<span class="fu">denominator</span> y))))
+  (<span class="kw">define</span> (rational-&gt;integer r)
+    (make-integer (<span class="fu">quotient</span> (numer r) (denom r))))
+  (put <span class="cn">&#39;project</span> &#39;(complex) complex-&gt;real)
+  (put <span class="cn">&#39;project</span> &#39;(real) real-&gt;rational)
+  (put <span class="cn">&#39;project</span> &#39;(rational) rational-&gt;integer))
+
+(<span class="kw">define</span> (project x) (apply-generic <span class="cn">&#39;project</span> x))
+
+(<span class="kw">define</span> (drop x)
+  (<span class="kw">let</span> ((type (type-tag x)))
+    (<span class="kw">if</span> (<span class="kw">or</span> (tower-bottom? type) (<span class="fu">not</span> (tower-position type)))
+        x
+        (<span class="kw">let*</span> ((down (project x))
+               (down-up (<span class="kw">raise</span> down)))
+          (<span class="kw">if</span> (equ? x down-up) (drop down) x)))))
+
+(<span class="kw">define</span> (apply-generic op . args)
+  (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
+         (vals (<span class="fu">map</span> contents args))
+         (proc (get op type-tags)))
+    (<span class="kw">define</span> (err)
+      (<span class="fu">error</span> <span class="cn">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+    (<span class="kw">cond</span> (proc
+           (<span class="kw">let</span> ((result (<span class="fu">apply</span> proc vals)))
+             (<span class="kw">if</span> (<span class="kw">and</span> (<span class="fu">pair?</span> result)
+                      (tower-position (type-tag result))
+                      (<span class="fu">not</span> (<span class="kw">or</span> (<span class="fu">eq?</span> op <span class="cn">&#39;raise</span>) (<span class="fu">eq?</span> op <span class="cn">&#39;project</span>))))
+                 (drop result)
+                 result)))
+          ((<span class="fu">null?</span> args) (err))
+          ((<span class="fu">null?</span> (<span class="fu">cdr</span> args))
+           (<span class="kw">if</span> (tower-top? (<span class="fu">car</span> type-tags))
+               (err)
+               (apply-generic op (<span class="kw">raise</span> (<span class="fu">car</span> args)))))
+          ((<span class="fu">null?</span> (<span class="fu">cddr</span> args))
+           (<span class="kw">let</span> ((a1 (<span class="fu">car</span> args))
+                 (a2 (<span class="fu">cadr</span> args))
+                 (p1 (tower-position (<span class="fu">car</span> type-tags)))
+                 (p2 (tower-position (<span class="fu">cadr</span> type-tags))))
+             (<span class="kw">cond</span> ((<span class="kw">or</span> (<span class="fu">not</span> p1) (<span class="fu">not</span> p2) (<span class="fu">=</span> p1 p2)) (err))
+                   ((<span class="fu">&lt;</span> p1 p2) (apply-generic op (<span class="kw">raise</span> a1) a2))
+                   (<span class="kw">else</span> (apply-generic op a1 (<span class="kw">raise</span> a2))))))
+          (<span class="kw">else</span> (err)))))
+
+(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
+(<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
+(<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
+(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+
+(using extended-numeric-pkg equ-pkg raise-pkg project-pkg)
+
+(<span class="fu">div</span> (make-real <span class="cn">1</span>) (make-complex-from-real-imag <span class="cn">2</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
+(add (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">0</span>) (make-integer <span class="cn">1</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">2</span>)
+(mul (make-rational <span class="cn">3</span> <span class="cn">2</span>) (make-real <span class="cn">8</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">12</span>)
+(sub (make-real <span class="cn">2</span>) (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">3</span> <span class="cn">2</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.86">Exercise 2.86<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.2</span> attach-tag contents type-tag)
+       (:<span class="cn">2.4.3</span> angle apply-specific imag-part magnitude make-from-mag-ang
+               make-from-real-imag real-part using)
+       (:<span class="cn">2.5.1</span> make-complex-from-mag-ang make-complex-from-real-imag
+               make-rational rational-pkg)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.79</span> equ-pkg equ?)
+       (?<span class="cn">2.83</span> integer-pkg make-integer make-real raise-pkg real-pkg)
+       (?<span class="cn">2.85</span> add apply-generic <span class="fu">div</span> mul project-pkg sub)))</code></pre>
+<p>This has to be built on top of the numeric tower, rather than just the types from Section 2.5.1 (scheme-number, rational, complex) because we need coercions between all the types. For example, internally complex numbers will take sines, cosines, square roots, etc. of their components, so if they are integers, they will need to be promoted to real numbers, and then be combined in other operations potentially using different data types.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square x) (mul x x))
+
+(<span class="kw">define</span> (trig-pkg)
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;real</span> x))
+  (<span class="kw">define</span> (id x) x)
+  (<span class="kw">define</span> (divide-rat x) (<span class="fu">/</span> (numer x) (denom x)))
+  (<span class="fu">for-each</span>
+   (<span class="kw">lambda</span> (type f)
+     (put <span class="cn">&#39;square-root</span> (<span class="fu">list</span> type) (<span class="kw">lambda</span> (x) (tag (<span class="fu">sqrt</span> (f x)))))
+     (put <span class="cn">&#39;sine</span> (<span class="fu">list</span> type) (<span class="kw">lambda</span> (x) (tag (<span class="fu">sin</span> (f x)))))
+     (put <span class="cn">&#39;cosine</span> (<span class="fu">list</span> type) (<span class="kw">lambda</span> (x) (tag (<span class="fu">cos</span> (f x)))))
+     (put <span class="cn">&#39;atan2</span> (<span class="fu">list</span> type type) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">atan</span> (f x) (f y))))))
+   &#39;(integer real rational)
+   (<span class="fu">list</span> id id divide-rat)))
+
+(<span class="kw">define</span> (square-root x) (apply-generic <span class="cn">&#39;square-root</span> x))
+(<span class="kw">define</span> (sine x) (apply-generic <span class="cn">&#39;sine</span> x))
+(<span class="kw">define</span> (cosine x) (apply-generic <span class="cn">&#39;cosine</span> x))
+(<span class="kw">define</span> (atan2 x y) (apply-generic <span class="cn">&#39;atan2</span> x y))
+
+(<span class="kw">define</span> (rectangular-pkg)
+  (<span class="kw">define</span> real-part <span class="fu">car</span>)
+  (<span class="kw">define</span> imag-part <span class="fu">cdr</span>)
+  (<span class="kw">define</span> make-from-real-imag <span class="fu">cons</span>)
+  (<span class="kw">define</span> (magnitude z)
+    (square-root (add (square (real-part z))
+                      (square (imag-part z)))))
+  (<span class="kw">define</span> (angle z)
+    (atan2 (imag-part z) (real-part z)))
+  (<span class="kw">define</span> (make-from-mag-ang r a)
+    (<span class="fu">cons</span> (mul r (cosine a)) (mul r (sine a))))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;rectangular</span> x))
+  (put <span class="cn">&#39;real-part</span> &#39;(rectangular) real-part)
+  (put <span class="cn">&#39;imag-part</span> &#39;(rectangular) imag-part)
+  (put <span class="cn">&#39;magnitude</span> &#39;(rectangular) magnitude)
+  (put <span class="cn">&#39;angle</span> &#39;(rectangular) angle)
+  (put <span class="cn">&#39;make-from-real-imag</span> <span class="cn">&#39;rectangular</span>
+       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+  (put <span class="cn">&#39;make-from-mag-ang</span> <span class="cn">&#39;rectangular</span>
+       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
+
+(<span class="kw">define</span> (polar-pkg)
+  (<span class="kw">define</span> magnitude <span class="fu">car</span>)
+  (<span class="kw">define</span> angle <span class="fu">cdr</span>)
+  (<span class="kw">define</span> make-from-mag-ang <span class="fu">cons</span>)
+  (<span class="kw">define</span> (real-part z)
+    (mul (magnitude z) (cosine (angle z))))
+  (<span class="kw">define</span> (imag-part z)
+    (mul (magnitude z) (sine (angle z))))
+  (<span class="kw">define</span> (make-from-real-imag a b)
+    (<span class="fu">cons</span> (square-root (add (square a) (square b)))
+          (atan2 b a)))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;polar</span> x))
+  (put <span class="cn">&#39;real-part</span> &#39;(polar) real-part)
+  (put <span class="cn">&#39;imag-part</span> &#39;(polar) imag-part)
+  (put <span class="cn">&#39;magnitude</span> &#39;(polar) magnitude)
+  (put <span class="cn">&#39;angle</span> &#39;(polar) angle)
+  (put <span class="cn">&#39;make-from-real-imag</span> <span class="cn">&#39;polar</span>
+       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+  (put <span class="cn">&#39;make-from-mag-ang</span> <span class="cn">&#39;polar</span>
+       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
+
+(<span class="kw">define</span> (complex-pkg)
+  (<span class="kw">define</span> (tag z) (attach-tag <span class="cn">&#39;complex</span> z))
+  (<span class="kw">define</span> (add-complex z1 z2)
+    (make-from-real-imag (add (real-part z1) (real-part z2))
+                         (add (imag-part z1) (imag-part z2))))
+  (<span class="kw">define</span> (sub-complex z1 z2)
+    (make-from-real-imag (sub (real-part z1) (real-part z2))
+                         (sub (imag-part z1) (imag-part z2))))
+  (<span class="kw">define</span> (mul-complex z1 z2)
+    (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
+                       (add (angle z1) (angle z2))))
+  (<span class="kw">define</span> (div-complex z1 z2)
+    (make-from-mag-ang (<span class="fu">div</span> (magnitude z1) (magnitude z2))
+                       (sub (angle z1) (angle z2))))
+  (rectangular-pkg)
+  (polar-pkg)
+  (put <span class="cn">&#39;add</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (add-complex z1 z2))))
+  (put <span class="cn">&#39;sub</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (sub-complex z1 z2))))
+  (put <span class="cn">&#39;mul</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
+  (put <span class="cn">&#39;div</span> &#39;(complex complex) (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
+  (put <span class="cn">&#39;make-from-real-imag</span> <span class="cn">&#39;complex</span>
+       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+  (put <span class="cn">&#39;make-from-mag-ang</span> <span class="cn">&#39;complex</span>
+       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
+<p>Note: The implementation of <code>drop</code> will still use the old implementation of <code>equ?</code>, which uses an older <code>apply-generic</code> without coercion.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (equ-generic? x y) (apply-generic <span class="cn">&#39;equ?</span> x y))</code></pre>
+<p>Fix complex procedures that previously assumed the complex number’s real part and imaginary part were plain Scheme numbers.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (complex-patch-pkg)
+  (put <span class="cn">&#39;equ?</span> &#39;(complex complex)
+       (<span class="kw">lambda</span> (z1 z2)
+         (<span class="kw">and</span> (equ-generic? (real-part z1) (real-part z2))
+              (equ-generic? (imag-part z1) (imag-part z2)))))
+  (put <span class="cn">&#39;raise</span> &#39;(real)
+       (<span class="kw">lambda</span> (x) (make-complex-from-real-imag (make-real x) (make-real <span class="cn">0</span>))))
+  (put <span class="cn">&#39;project</span> &#39;(complex)
+       (<span class="kw">lambda</span> (x)
+         (<span class="kw">let*</span> ((rp (real-part x))
+                (type (type-tag rp))
+                (value (contents rp)))
+           (<span class="kw">case</span> type
+             ((real) rp)
+             ((rational) (make-real (<span class="fu">inexact</span> (<span class="fu">/</span> (numer value) (denom value)))))
+             ((integer) (make-real value)))))))
+
+(<span class="kw">define</span> (final-numeric-pkg)
+  (integer-pkg)
+  (rational-pkg)
+  (real-pkg)
+  (complex-pkg)
+  <span class="co">;; Used by the new complex package.</span>
+  (trig-pkg)
+  <span class="co">;; Used by numeric tower coercion and simplifying.</span>
+  (equ-pkg)
+  (raise-pkg)
+  (project-pkg)
+  <span class="co">;; Fix up complex entries in the packages above.</span>
+  (complex-patch-pkg))
+
+(using final-numeric-pkg)
+
+(add (make-complex-from-mag-ang (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-integer <span class="cn">0</span>))
+     (make-complex-from-real-imag (make-rational <span class="cn">3</span> <span class="cn">4</span>) (make-real <span class="cn">2</span>)))
+<span class="op">=&gt;</span> (make-complex-from-real-imag (make-rational <span class="cn">5</span> <span class="cn">4</span>) (make-integer <span class="cn">2</span>))
+
+(<span class="fu">div</span> (make-complex-from-mag-ang (make-integer <span class="cn">3</span>) (make-real <span class="cn">1</span>))
+     (make-complex-from-mag-ang (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-real <span class="cn">1</span>)))
+<span class="op">=&gt;</span> (make-integer <span class="cn">6</span>)</code></pre>
 <h2 id="2.5.3" class="anchor">
 <a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a> <span class="number">2.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="2.5.3.1" class="anchor">
 <a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a> <span class="number">2.5.3.1</span> Arithmetic on polynomials
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable?)
+       (:<span class="cn">2.5.3.2</span> adjoin-term coeff empty-termlist? first-term make-term order
+                 rest-terms the-empty-termlist)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> add attach-tag mul)))</code></pre>
+<p>Note: We are following Footnote 58 and using the generic arithmetic system from Exercise 2.78, where Scheme numbers are not explicitly tagged.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (variable p) (<span class="fu">car</span> p))
+(<span class="kw">define</span> (term-list p) (<span class="fu">cdr</span> p))
+
+(<span class="kw">define</span> (polynomial-pkg)
+  (<span class="kw">define</span> (make-poly variable term-list) (<span class="fu">cons</span> variable term-list))
+  (<span class="kw">define</span> (add-poly p1 p2)
+    (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (add-terms (term-list p1) (term-list p2)))
+        (<span class="fu">error</span> <span class="cn">&#39;add-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
+  (<span class="kw">define</span> (mul-poly p1 p2)
+    (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (mul-terms (term-list p1) (term-list p2)))
+        (<span class="fu">error</span> <span class="cn">&#39;mul-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
+  (<span class="kw">define</span> (tag p) (attach-tag <span class="cn">&#39;polynomial</span> p))
+  (put <span class="cn">&#39;add</span> &#39;(polynomial polynomial) (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
+  (put <span class="cn">&#39;mul</span> &#39;(polynomial polynomial) (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms)))))
+
+(<span class="kw">define</span> (add-terms l1 l2)
+  (<span class="kw">cond</span> ((empty-termlist? l1) l2)
+        ((empty-termlist? l2) l1)
+        (<span class="kw">else</span>
+         (<span class="kw">let</span> ((t1 (first-term l1))
+               (t2 (first-term l2)))
+           (<span class="kw">cond</span> ((<span class="fu">&gt;</span> (order t1) (order t2))
+                  (adjoin-term t1
+                               (add-terms (rest-terms l1) l2)))
+                 ((<span class="fu">&lt;</span> (order t1) (order t2))
+                  (adjoin-term t2
+                               (add-terms l1 (rest-terms l2))))
+                 (<span class="kw">else</span>
+                  (adjoin-term (make-term (order t1)
+                                          (add (coeff t1) (coeff t2)))
+                               (add-terms (rest-terms l1)
+                                          (rest-terms l2)))))))))
+
+(<span class="kw">define</span> (mul-terms l1 l2)
+  (<span class="kw">if</span> (empty-termlist? l1)
+      (the-empty-termlist)
+      (add-terms (mul-term-by-all-terms (first-term l1) l2)
+                 (mul-terms (rest-terms l1) l2))))
+
+(<span class="kw">define</span> (mul-term-by-all-terms t1 l)
+  (<span class="kw">if</span> (empty-termlist? l)
+      (the-empty-termlist)
+      (<span class="kw">let</span> ((t2 (first-term l)))
+        (adjoin-term (make-term (<span class="fu">+</span> (order t1) (order t2))
+                                (mul (coeff t1) (coeff t2)))
+                     (mul-term-by-all-terms t1 (rest-terms l))))))</code></pre>
 <h3 id="2.5.3.2" class="anchor">
 <a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a> <span class="number">2.5.3.2</span> Representing term lists
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> apply-specific) (?<span class="cn">2.78</span> apply-generic)))
+
+(<span class="kw">define</span> (adjoin-term term term-list)
+  <span class="co">;; Can&#39;t use `=zero?` from Exercise 2.87 due to import cycle.</span>
+  (<span class="kw">if</span> (apply-generic <span class="cn">&#39;=zero?</span> (coeff term))
+      term-list
+      (<span class="fu">cons</span> term term-list)))
+
+(<span class="kw">define</span> (the-empty-termlist) &#39;())
+(<span class="kw">define</span> first-term <span class="fu">car</span>)
+(<span class="kw">define</span> rest-terms <span class="fu">cdr</span>)
+(<span class="kw">define</span> empty-termlist? <span class="fu">null?</span>)
+
+(<span class="kw">define</span> make-term <span class="fu">list</span>)
+(<span class="kw">define</span> order <span class="fu">car</span>)
+(<span class="kw">define</span> coeff <span class="fu">cadr</span>)
+
+(<span class="kw">define</span> (make-polynomial var terms)
+  (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;polynomial</span> var terms))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.87">Exercise 2.87<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.3.1</span> polynomial-pkg term-list)
+       (:<span class="cn">2.5.3.2</span> coeff empty-termlist? first-term make-polynomial rest-terms)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> add apply-generic mul scheme-number-pkg)))
+
+(<span class="kw">define</span> (zero-pkg)
+  (<span class="kw">define</span> (poly-zero? p)
+    (<span class="kw">define</span> (all-zero? terms)
+      (<span class="kw">or</span> (empty-termlist? terms)
+          (<span class="kw">and</span> (=zero? (coeff (first-term terms)))
+               (all-zero? (rest-terms terms)))))
+    (all-zero? (term-list p)))
+  (put <span class="cn">&#39;=zero?</span> &#39;(scheme-number) <span class="fu">zero?</span>)
+  (put <span class="cn">&#39;=zero?</span> &#39;(polynomial) poly-zero?))
+
+(<span class="kw">define</span> (=zero? n) (apply-generic <span class="cn">&#39;=zero?</span> n))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg)
+
+(=zero? (make-polynomial <span class="cn">&#39;x</span> &#39;())) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">0</span>)))) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">0</span>)))) <span class="op">=&gt;</span> <span class="cn">#f</span>
+
+(add (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">100</span> <span class="cn">1</span>) (<span class="cn">2</span> <span class="cn">3</span>)))
+     (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">0</span> <span class="cn">5</span>))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">100</span> <span class="cn">1</span>) (<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">2</span> <span class="cn">5</span>) (<span class="cn">0</span> <span class="cn">5</span>)))
+
+(mul (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>)))
+     (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">2</span>))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">2</span>)))
+
+(add (make-polynomial <span class="cn">&#39;x</span> &#39;()) (make-polynomial <span class="cn">&#39;y</span> &#39;()))
+<span class="op">=!&gt;</span> <span class="cn">&quot;polys not in same var&quot;</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.88">Exercise 2.88<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.3.1</span> polynomial-pkg term-list variable)
+       (:<span class="cn">2.5.3.2</span> adjoin-term coeff empty-termlist? first-term make-polynomial
+                 make-term order rest-terms the-empty-termlist)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> add apply-generic scheme-number-pkg)
+       (?<span class="cn">2.87</span> zero-pkg)))
+
+(<span class="kw">define</span> (negate-terms tl)
+  (<span class="kw">if</span> (empty-termlist? tl)
+      (the-empty-termlist)
+      (<span class="kw">let*</span> ((term (first-term tl))
+             (new-term (make-term (order term) (negate (coeff term)))))
+        (adjoin-term new-term
+                     (negate-terms (rest-terms tl))))))
+
+(<span class="kw">define</span> (negate-pkg)
+  (put <span class="cn">&#39;negate</span> &#39;(scheme-number) <span class="fu">-</span>)
+  (put <span class="cn">&#39;negate</span> &#39;(polynomial)
+       (<span class="kw">lambda</span> (p)
+         (make-polynomial (variable p) (negate-terms (term-list p))))))
+
+(<span class="kw">define</span> (negate x) (apply-generic <span class="cn">&#39;negate</span> x))
+(<span class="kw">define</span> (sub x y) (add x (negate y)))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg)
+
+(negate <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">-1</span>
+(sub <span class="cn">5</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+
+(negate (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>)))) <span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">-1</span>)))
+(sub (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>)))
+     (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">2</span> <span class="cn">-2</span>) (<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.89">Exercise 2.89<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.5.3.2</span> coeff make-term order the-empty-termlist) (?<span class="cn">2.87</span> =zero?)))
+
+(<span class="kw">define</span> (adjoin-term term term-list)
+  (<span class="kw">cond</span> ((=zero? (coeff term)) term-list)
+        ((<span class="fu">=</span> (order term) (<span class="fu">length</span> term-list))
+         (<span class="fu">cons</span> (coeff term) term-list))
+        (<span class="kw">else</span> (adjoin-term term (<span class="fu">cons</span> <span class="cn">0</span> term-list)))))
+
+(<span class="kw">define</span> (first-term term-list)
+  (make-term (<span class="fu">-</span> (<span class="fu">length</span> term-list) <span class="cn">1</span>)
+             (<span class="fu">car</span> term-list)))
+
+(adjoin-term (make-term <span class="cn">3</span> <span class="cn">1</span>) (the-empty-termlist)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)
+(first-term &#39;(<span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> (make-term <span class="cn">3</span> <span class="cn">1</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.90">Exercise 2.90<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.2</span> same-variable?)
+       (:<span class="cn">2.4.3</span> apply-specific using) (:<span class="cn">2.5.3.1</span> term-list variable)
+       (:<span class="cn">2.5.3.2</span> coeff make-term order) (:<span class="cn">3.3.3.3</span> put)
+       (?<span class="cn">2.78</span> add apply-generic attach-tag mul scheme-number-pkg)
+       (?<span class="cn">2.87</span> =zero?)))
+
+(<span class="kw">define</span> (sparse-termlist-pkg)
+  (<span class="kw">define</span> (the-empty-termlist) &#39;())
+  (<span class="kw">define</span> empty-termlist? <span class="fu">null?</span>)
+  (<span class="kw">define</span> first-term <span class="fu">car</span>)
+  (<span class="kw">define</span> rest-terms <span class="fu">cdr</span>)
+  (<span class="kw">define</span> (adjoin-term term tl) (<span class="kw">if</span> (=zero? (coeff term)) tl (<span class="fu">cons</span> term tl)))
+  (<span class="kw">define</span> (tag tl) (attach-tag <span class="cn">&#39;sparse-termlist</span> tl))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;sparse-termlist</span> (<span class="kw">lambda</span> (terms) (tag terms)))
+  (put <span class="cn">&#39;the-empty-termlist</span> <span class="cn">&#39;sparse-termlist</span>
+       (<span class="kw">lambda</span> () (tag (the-empty-termlist))))
+  (put <span class="cn">&#39;empty-termlist?</span> &#39;(sparse-termlist) empty-termlist?)
+  (put <span class="cn">&#39;first-term</span> &#39;(sparse-termlist) first-term)
+  (put <span class="cn">&#39;rest-terms</span> &#39;(sparse-termlist) (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
+  (put <span class="cn">&#39;adjoin-term</span> &#39;(sparse-termlist)
+       (<span class="kw">lambda</span> (tl) (<span class="kw">lambda</span> (t) (tag (adjoin-term t tl))))))
+
+(<span class="kw">define</span> (dense-termlist-pkg)
+  (<span class="kw">define</span> (the-empty-termlist) &#39;())
+  (<span class="kw">define</span> empty-termlist? <span class="fu">null?</span>)
+  (<span class="kw">define</span> (first-term tl) (make-term (<span class="fu">-</span> (<span class="fu">length</span> tl) <span class="cn">1</span>) (<span class="fu">car</span> tl)))
+  (<span class="kw">define</span> rest-terms <span class="fu">cdr</span>)
+  (<span class="kw">define</span> zero-coeff (<span class="fu">list</span> <span class="cn">&#39;scheme-number</span> <span class="cn">0</span>))
+  (<span class="kw">define</span> (adjoin-term term tl)
+    (<span class="kw">cond</span> ((=zero? (coeff term)) tl)
+          ((<span class="fu">=</span> (order term) (<span class="fu">length</span> tl))
+           (<span class="fu">cons</span> (coeff term) tl))
+          (<span class="kw">else</span> (adjoin-term term (<span class="fu">cons</span> zero-coeff tl)))))
+  (<span class="kw">define</span> (tag tl) (attach-tag <span class="cn">&#39;dense-termlist</span> tl))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;dense-termlist</span> (<span class="kw">lambda</span> (terms) (tag terms)))
+  (put <span class="cn">&#39;the-empty-termlist</span> <span class="cn">&#39;dense-termlist</span>
+       (<span class="kw">lambda</span> () (tag (the-empty-termlist))))
+  (put <span class="cn">&#39;empty-termlist?</span> &#39;(dense-termlist) empty-termlist?)
+  (put <span class="cn">&#39;first-term</span> &#39;(dense-termlist) first-term)
+  (put <span class="cn">&#39;rest-terms</span> &#39;(dense-termlist) (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
+  (put <span class="cn">&#39;adjoin-term</span> &#39;(dense-termlist)
+       (<span class="kw">lambda</span> (tl) (<span class="kw">lambda</span> (t) (tag (adjoin-term t tl))))))
+
+(<span class="kw">define</span> (empty-sparse-termlist)
+  (apply-specific <span class="cn">&#39;the-empty-termlist</span> <span class="cn">&#39;sparse-termlist</span>))
+(<span class="kw">define</span> (empty-dense-termlist)
+  (apply-specific <span class="cn">&#39;the-empty-termlist</span> <span class="cn">&#39;dense-termlist</span>))
+(<span class="kw">define</span> the-empty-termlist empty-sparse-termlist)
+(<span class="kw">define</span> (empty-termlist? tl) (apply-generic <span class="cn">&#39;empty-termlist?</span> tl))
+(<span class="kw">define</span> (first-term tl) (apply-generic <span class="cn">&#39;first-term</span> tl))
+(<span class="kw">define</span> (rest-terms tl) (apply-generic <span class="cn">&#39;rest-terms</span> tl))
+(<span class="kw">define</span> (adjoin-term term tl) ((apply-generic <span class="cn">&#39;adjoin-term</span> tl) term))
+
+(<span class="kw">define</span> (make-polynomial var terms)
+  (<span class="kw">define</span> (flat? ls)
+    (<span class="kw">or</span> (<span class="fu">null?</span> ls)
+        (<span class="kw">and</span> (<span class="fu">number?</span> (<span class="fu">car</span> ls)) (flat? (<span class="fu">cdr</span> ls)))))
+  (<span class="kw">let</span> ((new-terms
+         (<span class="kw">cond</span> ((<span class="fu">eq?</span> terms <span class="cn">&#39;sparse</span>) (empty-sparse-termlist))
+               ((<span class="fu">eq?</span> terms <span class="cn">&#39;dense</span>) (empty-dense-termlist))
+               ((flat? terms) (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;dense-termlist</span> terms))
+               (<span class="kw">else</span> (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;sparse-termlist</span> terms)))))
+    (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;polynomial</span> var new-terms)))
+
+(<span class="kw">paste</span> (:<span class="cn">2.5.3.1</span> add-terms mul-term-by-all-terms mul-terms polynomial-pkg)
+       (?<span class="cn">2.87</span> zero-pkg))
+
+(using sparse-termlist-pkg dense-termlist-pkg scheme-number-pkg polynomial-pkg
+       zero-pkg)</code></pre>
+<p>It works with both sparse and dense representations.</p>
+<pre><code class="blockcode">(add (make-polynomial <span class="cn">&#39;x</span> &#39;(<span class="cn">3</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span>)) (make-polynomial <span class="cn">&#39;x</span> &#39;(<span class="cn">0</span> <span class="cn">3</span> <span class="cn">3</span> <span class="cn">2</span>)))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;(<span class="cn">3</span> <span class="cn">3</span> <span class="cn">3</span> <span class="cn">3</span>))
+(mul (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>))) (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">2</span>))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">2</span>)))</code></pre>
+<p>The first argument determines the representation of the result.</p>
+<pre><code class="blockcode">(add (make-polynomial <span class="cn">&#39;x</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">9</span>))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;(<span class="cn">10</span> <span class="cn">2</span> <span class="cn">3</span>))
+(mul (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">2</span>))) (make-polynomial <span class="cn">&#39;x</span> &#39;(<span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">5</span> <span class="cn">2</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.91">Exercise 2.91<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable?) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.3.1</span> add-terms mul-term-by-all-terms polynomial-pkg term-list
+                 variable)
+       (:<span class="cn">2.5.3.2</span> adjoin-term make-polynomial make-term)
+       (:<span class="cn">2.5.3.2</span> coeff empty-termlist? first-term order the-empty-termlist)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> apply-generic <span class="fu">div</span> scheme-number-pkg)
+       (?<span class="cn">2.87</span> zero-pkg) (?<span class="cn">2.88</span> negate-pkg negate-terms sub)))
+
+(<span class="kw">define</span> (div-terms l1 l2)
+  (<span class="kw">if</span> (empty-termlist? l1)
+      (<span class="fu">list</span> (the-empty-termlist)
+            (the-empty-termlist))
+      (<span class="kw">let</span> ((t1 (first-term l1))
+            (t2 (first-term l2)))
+        (<span class="kw">if</span> (<span class="fu">&gt;</span> (order t2) (order t1))
+            (<span class="fu">list</span> (the-empty-termlist) l1)
+            (<span class="kw">let*</span> ((new-c (<span class="fu">div</span> (coeff t1) (coeff t2)))
+                   (new-o (sub (order t1) (order t2)))
+                   (new-term (make-term new-o new-c))
+                   (multiplied (mul-term-by-all-terms new-term l2))
+                   (new-l1 (add-terms l1 (negate-terms multiplied)))
+                   (rest-of-result (div-terms new-l1 l2)))
+              (<span class="fu">list</span> (adjoin-term new-term (<span class="fu">car</span> rest-of-result))
+                    (<span class="fu">cadr</span> rest-of-result)))))))
+
+(<span class="kw">define</span> (polynomial-div-pkg)
+  (<span class="kw">define</span> (div-poly p1 p2)
+    (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
+        (<span class="kw">let</span> ((var (variable p1))
+              (result (div-terms (term-list p1) (term-list p2))))
+          (<span class="fu">list</span> (make-polynomial var (<span class="fu">car</span> result))
+                (make-polynomial var (<span class="fu">cadr</span> result))))
+        (<span class="fu">error</span> <span class="cn">&#39;div-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
+  (put <span class="cn">&#39;div</span> &#39;(polynomial polynomial) div-poly))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg)</code></pre>
+<p>(x^5 - 1) / (x^2 - 1) = (x^3 + x), remainder (x - 1)</p>
+<pre><code class="blockcode">(<span class="fu">div</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">5</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))) (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))
+<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">1</span>)))
+         (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))</code></pre>
 <h3 id="2.5.3.3" class="anchor">
 <a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a> <span class="number">2.5.3.3</span> Hierarchies of types in symbolic algebra
 </h3>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.92">Exercise 2.92<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable? variable?) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.3.1</span> add-terms mul-term-by-all-terms mul-terms term-list variable)
+       (:<span class="cn">2.5.3.2</span> adjoin-term coeff empty-termlist? first-term make-polynomial
+                 make-term order rest-terms the-empty-termlist)
+       (:<span class="cn">3.3.3.3</span> put)
+       (?<span class="cn">2.78</span> add attach-tag contents mul scheme-number-pkg type-tag)
+       (?<span class="cn">2.87</span> zero-pkg)))
+
+(<span class="kw">define</span> (polynomial? x)
+  (<span class="fu">eq?</span> (type-tag x) <span class="cn">&#39;polynomial</span>))
+
+(<span class="kw">define</span> (variable&lt;? a b)
+  (<span class="fu">string&lt;?</span> (<span class="fu">symbol-&gt;string</span> a)
+            (<span class="fu">symbol-&gt;string</span> b)))
+
+(<span class="kw">define</span> (polynomial-pkg)
+  (<span class="kw">define</span> make-poly <span class="fu">cons</span>)
+  (<span class="kw">define</span> (singleton t)
+    (adjoin-term t (the-empty-termlist)))
+  (<span class="kw">define</span> (as-constant-term var term)
+    (make-term <span class="cn">0</span> (make-polynomial var (singleton term))))
+  (<span class="kw">define</span> (principal-variable p1 p2)
+    (<span class="kw">let</span> ((v1 (variable p1))
+          (v2 (variable p2)))
+      (<span class="kw">if</span> (variable&lt;? v1 v2) v1 v2)))
+  (<span class="kw">define</span> (coerce-termlist tl from to)
+    (<span class="kw">if</span> (empty-termlist? tl)
+        (the-empty-termlist)
+        (<span class="kw">let</span> ((ft (first-term tl)))
+          (add-terms
+           (<span class="kw">if</span> (polynomial? (coeff ft))
+               (mul-term-by-all-terms
+                (as-constant-term from (make-term (order ft) <span class="cn">1</span>))
+                (term-list (coerce-poly (contents (coeff ft)) to)))
+               (singleton (as-constant-term from ft)))
+           (coerce-termlist (rest-terms tl) from to)))))
+  (<span class="kw">define</span> (coerce-poly p var)
+    (<span class="kw">cond</span> ((same-variable? (variable p) var) p)
+          (<span class="kw">else</span> (make-poly var
+                           (coerce-termlist (term-list p) (variable p) var)))))
+  (<span class="kw">define</span> (binary-poly-op f)
+    (<span class="kw">lambda</span> (p1 p2)
+      (<span class="kw">let</span> ((var (principal-variable p1 p2)))
+        (f (coerce-poly p1 var)
+           (coerce-poly p2 var)))))
+  (<span class="kw">define</span> add-poly
+    (binary-poly-op
+     (<span class="kw">lambda</span> (p1 p2)
+       (make-poly (variable p1)
+                  (add-terms (term-list p1) (term-list p2))))))
+  (<span class="kw">define</span> mul-poly
+    (binary-poly-op
+     (<span class="kw">lambda</span> (p1 p2)
+       (make-poly (variable p1)
+                  (mul-terms (term-list p1) (term-list p2))))))
+  (<span class="kw">define</span> (scale-poly k p)
+    (make-poly (variable p)
+               (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (make-term (order t) (mul k (coeff t))))
+                    (term-list p))))
+  (<span class="kw">define</span> (tag p) (attach-tag <span class="cn">&#39;polynomial</span> p))
+  (put <span class="cn">&#39;add</span> &#39;(polynomial polynomial) (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
+  (put <span class="cn">&#39;mul</span> &#39;(polynomial polynomial) (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
+  <span class="co">;; Number-polynomial multiplications needed by `coerce-termlist` when calling</span>
+  <span class="co">;; `mul-term-by-all-terms`, since terms can have different coefficient types.</span>
+  (put <span class="cn">&#39;mul</span> &#39;(scheme-number polynomial) (<span class="kw">lambda</span> (x p) (tag (scale-poly x p))))
+  (put <span class="cn">&#39;mul</span> &#39;(polynomial scheme-number) (<span class="kw">lambda</span> (p x) (tag (scale-poly x p))))
+  (put <span class="cn">&#39;make</span> <span class="cn">&#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms)))))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg)</code></pre>
+<p>x + y = y + x = (1)x^1 + ((1)y<sup>1)x</sup>0</p>
+<pre><code class="blockcode">(add (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))) (make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))))
+<span class="op">=&gt;</span> (add (make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))) (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> `((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> ,(make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))))))</code></pre>
+<p>(yx^3 + 2)(y + x^2 + 1) = ((1)y<sup>1)x</sup>5 + ((1)y^2 + (1)y<sup>1)x</sup>3 + (2)x^2 + ((2)y^1 + (2)y<sup>0)x</sup>0</p>
+<pre><code class="blockcode">(mul (make-polynomial <span class="cn">&#39;x</span> `((<span class="cn">3</span> ,(make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>)))) (<span class="cn">0</span> <span class="cn">2</span>)))
+     (make-polynomial <span class="cn">&#39;y</span> `((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> ,(make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>)))))))
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> `((<span class="cn">5</span> ,(make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))))
+                         (<span class="cn">3</span> ,(make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">1</span>))))
+                         (<span class="cn">2</span> ,(make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">0</span> <span class="cn">2</span>))))
+                         (<span class="cn">0</span> ,(make-polynomial <span class="cn">&#39;y</span> &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">0</span> <span class="cn">2</span>))))))</code></pre>
 <h3 id="2.5.3.4" class="anchor">
 <a class="anchor__link link" href="#2.5.3.4" aria-hidden="true">#</a> <span class="number">2.5.3.4</span> Extended exercise: Rational functions
 </h3>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.93">Exercise 2.93<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.1</span> make-rational)
+       (:<span class="cn">2.5.3.1</span> polynomial-pkg) (:<span class="cn">2.5.3.2</span> make-polynomial) (:<span class="cn">3.3.3.3</span> put)
+       (?<span class="cn">2.78</span> add attach-tag <span class="fu">div</span> mul scheme-number-pkg sub) (?<span class="cn">2.87</span> zero-pkg)))
+
+(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
+
+(<span class="kw">define</span> (add-rat x y)
+  (make-rat (add (mul (numer x) (denom y))
+                 (mul (numer y) (denom x)))
+            (mul (denom x) (denom y))))
+(<span class="kw">define</span> (sub-rat x y)
+  (make-rat (sub (mul (numer x) (denom y))
+                 (mul (numer y) (denom x)))
+            (mul (denom x) (denom y))))
+(<span class="kw">define</span> (mul-rat x y)
+  (make-rat (mul (numer x) (numer y))
+            (mul (denom x) (denom y))))
+(<span class="kw">define</span> (div-rat x y)
+  (make-rat (mul (numer x) (denom y))
+            (mul (denom x) (numer y))))
+
+(<span class="kw">paste</span> (:<span class="cn">2.5.1</span> rational-pkg))
+
+(using scheme-number-pkg zero-pkg polynomial-pkg rational-pkg)
+
+(<span class="kw">define</span> p1 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>))))
+(<span class="kw">define</span> p2 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>))))
+(<span class="kw">define</span> rf (make-rational p2 p1))
+
+(add rf rf)
+<span class="op">=&gt;</span> (make-rational (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">5</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">0</span> <span class="cn">2</span>)))
+                  (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">4</span> <span class="cn">1</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">0</span> <span class="cn">1</span>))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.94">Exercise 2.94<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable?) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.3.1</span> polynomial-pkg term-list variable)
+       (:<span class="cn">2.5.3.2</span> empty-termlist? make-polynomial) (:<span class="cn">3.3.3.3</span> put)
+       (?<span class="cn">2.78</span> apply-generic scheme-number-pkg) (?<span class="cn">2.87</span> zero-pkg)
+       (?<span class="cn">2.88</span> negate-pkg) (?<span class="cn">2.91</span> div-terms)))
+
+(<span class="kw">define</span> (remainder-terms l1 l2)
+  (<span class="fu">cadr</span> (div-terms l1 l2)))
+
+(<span class="kw">define</span> (gcd-terms a b)
+  (<span class="kw">if</span> (empty-termlist? b)
+      a
+      (gcd-terms b (remainder-terms a b))))
+
+(<span class="kw">define</span> (greatest-common-divisor-pkg)
+  (<span class="kw">define</span> (gcd-poly p1 p2)
+    (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
+        (<span class="kw">let</span> ((tl (gcd-terms (term-list p1) (term-list p2))))
+          (make-polynomial (variable p1) tl))
+        (<span class="fu">error</span> <span class="cn">&#39;gcd-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
+  (put <span class="cn">&#39;greatest-common-divisor</span> &#39;(scheme-number scheme-number) <span class="fu">gcd</span>)
+  (put <span class="cn">&#39;greatest-common-divisor</span> &#39;(polynomial polynomial) gcd-poly))
+
+(<span class="kw">define</span> (greatest-common-divisor a b)
+  (apply-generic <span class="cn">&#39;greatest-common-divisor</span> a b))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg
+       greatest-common-divisor-pkg)
+
+(greatest-common-divisor <span class="cn">128</span> <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
+
+(<span class="kw">define</span> p1 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">4</span> <span class="cn">1</span>) (<span class="cn">3</span> <span class="cn">-1</span>) (<span class="cn">2</span> <span class="cn">-2</span>) (<span class="cn">1</span> <span class="cn">2</span>))))
+(<span class="kw">define</span> p2 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">-1</span>))))
+(greatest-common-divisor p1 p2)
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">-1</span>) (<span class="cn">1</span> <span class="cn">1</span>)))</code></pre>
+<p>This is correct according to WolframAlpha: http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.95">Exercise 2.95<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.3.1</span> polynomial-pkg) (:<span class="cn">2.5.3.2</span> make-polynomial)
+       (?<span class="cn">2.78</span> <span class="fu">div</span> mul scheme-number-pkg) (?<span class="cn">2.87</span> zero-pkg) (?<span class="cn">2.88</span> negate-pkg)
+       (?<span class="cn">2.91</span> polynomial-div-pkg)
+       (?<span class="cn">2.94</span> greatest-common-divisor greatest-common-divisor-pkg)))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
+
+(<span class="kw">define</span> p1 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">-2</span>) (<span class="cn">0</span> <span class="cn">1</span>))))
+(<span class="kw">define</span> p2 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">11</span>) (<span class="cn">0</span> <span class="cn">7</span>))))
+(<span class="kw">define</span> p3 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">13</span>) (<span class="cn">0</span> <span class="cn">5</span>))))
+(<span class="kw">define</span> q1 (mul p1 p2))
+(<span class="kw">define</span> q2 (mul p1 p3))
+
+(<span class="kw">define</span> (rem p q) (<span class="fu">cadr</span> (<span class="fu">div</span> p q)))</code></pre>
+<p>The GCD calculation makes two recursive calls:</p>
+<pre><code class="blockcode">(greatest-common-divisor q1 q2)
+<span class="op">=&gt;</span> (greatest-common-divisor q2 (rem q1 q2))                   <span class="co">; 1st recursion</span>
+<span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (rem q2 (rem q1 q2))) <span class="co">; 2nd recursion</span>
+<span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (make-polynomial <span class="cn">&#39;x</span> &#39;()))
+<span class="op">=&gt;</span> (rem q1 q2)
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1458</span>/<span class="cn">169</span>) (<span class="cn">1</span> <span class="cn">-2916</span>/<span class="cn">169</span>) (<span class="cn">0</span> <span class="cn">1458</span>/<span class="cn">169</span>)))</code></pre>
+<p>This remainder polynomial has noninteger coefficients, so the final GCD returned also has noninteger coefficients. However, if we look closely at the GCD of <code>q1</code> and <code>q2</code>, it is clear that we can factor out 1458/169:</p>
+<pre><code class="blockcode">(mul (greatest-common-divisor q1 q2)
+     (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">0</span> <span class="cn">169</span>/<span class="cn">1458</span>))))
+<span class="op">=&gt;</span> p1</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.96">Exercise 2.96<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.2</span> same-variable?) (:<span class="cn">2.4.3</span> using)
+       (:<span class="cn">2.5.3.1</span> mul-term-by-all-terms polynomial-pkg term-list variable)
+       (:<span class="cn">2.5.3.2</span> coeff empty-termlist? first-term make-polynomial make-term
+                 order rest-terms)
+       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> mul scheme-number-pkg) (?<span class="cn">2.87</span> zero-pkg)
+       (?<span class="cn">2.88</span> negate-pkg) (?<span class="cn">2.91</span> div-terms polynomial-div-pkg)
+       (?<span class="cn">2.94</span> greatest-common-divisor remainder-terms) (?<span class="cn">2.95</span> p1 q1 q2)))
+
+(<span class="kw">paste</span> (?<span class="cn">2.94</span> greatest-common-divisor-pkg))</code></pre>
+<ol type="a">
+<li>GCD with integer coefficients</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (pseudoremainder-terms l1 l2)
+  (<span class="kw">let*</span> ((o1 (order (first-term l1)))
+         (o2 (order (first-term l2)))
+         (c (coeff (first-term l2)))
+         (integerizing-factor (<span class="fu">expt</span> c (<span class="fu">+</span> <span class="cn">1</span> o1 (<span class="fu">-</span> o2))))
+         (term (make-term <span class="cn">0</span> integerizing-factor))
+         (ml1 (mul-term-by-all-terms term l1)))
+    (remainder-terms ml1 l2)))
+
+(<span class="kw">define</span> (gcd-terms a b)
+  (<span class="kw">if</span> (empty-termlist? b)
+      a
+      (gcd-terms b (pseudoremainder-terms a b))))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
+
+(greatest-common-divisor q1 q2)
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1458</span>) (<span class="cn">1</span> <span class="cn">-2916</span>) (<span class="cn">0</span> <span class="cn">1458</span>)))
+<span class="op">=&gt;</span> (mul p1 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">0</span> <span class="cn">1458</span>))))</code></pre>
+<ol start="2" type="a">
+<li>GCD with reduced integer coefficients</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (termlist-coeffs tl)
+  (<span class="kw">if</span> (empty-termlist? tl)
+      &#39;()
+      (<span class="fu">cons</span> (coeff (first-term tl))
+            (termlist-coeffs (rest-terms tl)))))
+
+(<span class="kw">define</span> (gcd-terms a b)
+  (<span class="kw">if</span> (empty-termlist? b)
+      (<span class="kw">let*</span> ((cs (termlist-coeffs a))
+             (coeff-gcd (accumulate <span class="fu">gcd</span> (<span class="fu">car</span> cs) (<span class="fu">cdr</span> cs))))
+        (mul-term-by-all-terms (make-term <span class="cn">0</span> (<span class="fu">/</span> coeff-gcd)) a))
+      (gcd-terms b (pseudoremainder-terms a b))))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
+
+(greatest-common-divisor q1 q2)
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">-2</span>) (<span class="cn">0</span> <span class="cn">1</span>)))
+<span class="op">=&gt;</span> p1</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.97">Exercise 2.97<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-</article>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.2</span> same-variable?)
+       (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.1</span> make-rational)
+       (:<span class="cn">2.5.3.1</span> mul-term-by-all-terms polynomial-pkg term-list variable)
+       (:<span class="cn">2.5.3.2</span> coeff first-term make-polynomial make-term order)
+       (:<span class="cn">3.3.3.3</span> put)
+       (?<span class="cn">2.78</span> add apply-generic attach-tag <span class="fu">div</span> mul scheme-number-pkg sub)
+       (?<span class="cn">2.87</span> zero-pkg) (?<span class="cn">2.88</span> negate-pkg) (?<span class="cn">2.91</span> div-terms polynomial-div-pkg)
+       (?<span class="cn">2.96</span> gcd-terms termlist-coeffs)))</code></pre>
+<ol type="a">
+<li>Reduce a rational function to lowest terms</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (termlist-order tl) (order (first-term tl)))
+(<span class="kw">define</span> (quotient-terms l1 l2) (<span class="fu">car</span> (div-terms l1 l2)))
+
+(<span class="kw">define</span> (reduce-terms n d)
+  (<span class="kw">let*</span> ((nd-gcd (gcd-terms n d))
+         (leading-coeff (coeff (first-term nd-gcd)))
+         (exponent (<span class="fu">+</span> <span class="cn">1</span>
+                      (<span class="fu">max</span> (termlist-order n) (termlist-order d))
+                      (<span class="fu">-</span> (termlist-order nd-gcd))))
+         (integerizing-factor (<span class="fu">expt</span> leading-coeff exponent))
+         (term1 (make-term <span class="cn">0</span> integerizing-factor))
+         (n/gcd (quotient-terms (mul-term-by-all-terms term1 n) nd-gcd))
+         (d/gcd (quotient-terms (mul-term-by-all-terms term1 d) nd-gcd))
+         (all-coeffs (<span class="fu">append</span> (termlist-coeffs n/gcd)
+                             (termlist-coeffs d/gcd)))
+         (coeff-gcd (accumulate <span class="fu">gcd</span> (<span class="fu">car</span> all-coeffs) (<span class="fu">cdr</span> all-coeffs)))
+         (term2 (make-term <span class="cn">0</span> (<span class="fu">/</span> coeff-gcd)))
+         (nn (mul-term-by-all-terms term2 n/gcd))
+         (dd (mul-term-by-all-terms term2 d/gcd)))
+    (<span class="fu">list</span> nn dd)))
+
+(<span class="kw">define</span> (reduce-poly n d)
+  (<span class="kw">if</span> (same-variable? (variable n) (variable d))
+      (<span class="kw">let</span> ((var (variable n))
+            (reduced (reduce-terms (term-list n) (term-list d))))
+        (<span class="fu">list</span> (make-polynomial var (<span class="fu">car</span> reduced))
+              (make-polynomial var (<span class="fu">cadr</span> reduced))))
+      (<span class="fu">error</span> <span class="cn">&#39;reduce-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> n d)))</code></pre>
+<ol start="2" type="a">
+<li>Generic reducing operation</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (reduce-integers n d)
+  (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
+    (<span class="fu">list</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))
+
+(<span class="kw">define</span> (reduce-pkg)
+  (put <span class="cn">&#39;reduce</span> &#39;(scheme-number scheme-number) reduce-integers)
+  (put <span class="cn">&#39;reduce</span> &#39;(polynomial polynomial) reduce-poly))
+
+(<span class="kw">define</span> (reduce n d) (apply-generic <span class="cn">&#39;reduce</span> n d))
+
+(<span class="kw">define</span> (make-rat n d)
+  (<span class="kw">let</span> ((reduced (reduce n d)))
+    (<span class="fu">cons</span> (<span class="fu">car</span> reduced) (<span class="fu">cadr</span> reduced))))
+
+(<span class="kw">paste</span> (?<span class="cn">2.93</span> add-rat div-rat mul-rat sub-rat)
+       (:<span class="cn">2.5.1</span> rational-pkg))
+
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       rational-pkg reduce-pkg)
+
+(add (make-rational <span class="cn">4</span> <span class="cn">7</span>) (make-rational <span class="cn">30</span> <span class="cn">33</span>)) <span class="op">=&gt;</span> &#39;(rational <span class="cn">114</span> . <span class="cn">77</span>)
+
+(<span class="kw">define</span> p1 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">1</span>))))
+(<span class="kw">define</span> p2 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))
+(<span class="kw">define</span> p3 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>))))
+(<span class="kw">define</span> p4 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))
+(<span class="kw">define</span> rf1 (make-rational p1 p2))
+(<span class="kw">define</span> rf2 (make-rational p3 p4))
+
+(add rf1 rf2)
+<span class="op">=&gt;</span> &#39;(rational (polynomial x . ((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">0</span> <span class="cn">1</span>)))
+              .
+              (polynomial x . ((<span class="cn">4</span> <span class="cn">1</span>) (<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">-1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))</code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

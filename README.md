@@ -145,9 +145,9 @@ This works in Chez Scheme and Racket. It also works in Guile, but only the inter
 
 ## License
 
-The source code in this repository is available under the MIT License.
+Most of the source code in this repository is available under the MIT License.
 
-The derivative works in [notes/](notes) and [docs/](docs) are available under the CC-BY-SA 4.0 License.
+The derivative works in [src/sicp/](src/sicp), [notes/](notes), and [docs/](docs) are available under the CC BY-SA 4.0 License.
 
 See [LICENSE](LICENSE.md) for details.
 

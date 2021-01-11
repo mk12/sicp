@@ -1,4 +1,4 @@
-;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2021 Mitchell Kember. Subject to the CC BY-SA 4.0 License.
 
 #!r6rs
 
@@ -1918,6 +1918,8 @@
 (show (actual-value 'one-two env)) =$> "(1 2 1 2 1 2 1 2 1 2 ...)"
 
 (Section :4.3 "Variations on a Scheme --- Nondeterministic Computing")
+
+(Section :4.4 "Logic Programming")
 
 ) ; end of SICP
 ) ; end of library

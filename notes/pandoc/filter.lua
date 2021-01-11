@@ -1,4 +1,4 @@
--- Copyright 2020 Mitchell Kember. Subject to the MIT License.
+-- Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
 -- Used for reading and writing Pandoc metadata.
 local vars = {}

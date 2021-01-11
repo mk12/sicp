@@ -1,4 +1,4 @@
-;;; Copyright 2020 Mitchell Kember. Subject to the MIT License.
+;;; Copyright 2021 Mitchell Kember. Subject to the CC BY-SA 4.0 License.
 
 #!r6rs
 
@@ -2043,9 +2043,9 @@ z2 => '((a b) a b)
 
 (define x 10)
 (parallel-execute
-;; process S:  3       1 2
+ ; process S: 3        1 2
  (lambda () (set! x (* x x)))
-;; process C:  7       4 5 6
+ ; process C: 7        4 5 6
  (lambda () (set! x (* x x x))))
 
 ;; There are five possible values:

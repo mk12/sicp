@@ -65,95 +65,727 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 <span class="number">2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html">Symbolic Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="2.3.1" class="anchor">
 <a class="anchor__link link" href="#2.3.1" aria-hidden="true">#</a> <span class="number">2.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.1">Quotation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> a <span class="cn">1</span>)
+(<span class="kw">define</span> b <span class="cn">2</span>)
+(<span class="fu">list</span> a b) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)
+(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="op">=&gt;</span> &#39;(a b)
+(<span class="fu">list</span> <span class="cn">&#39;a</span> b) <span class="op">=&gt;</span> &#39;(a <span class="cn">2</span>)
+
+(<span class="fu">car</span> &#39;(a b c)) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
+(<span class="fu">cdr</span> &#39;(a b c)) <span class="op">=&gt;</span> &#39;(b c)
+
+(<span class="kw">define</span> (<span class="fu">memq</span> item x)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> x) <span class="cn">#f</span>)
+        ((<span class="fu">eq?</span> item (<span class="fu">car</span> x)) x)
+        (<span class="kw">else</span> (<span class="fu">memq</span> item (<span class="fu">cdr</span> x)))))
+
+(<span class="fu">memq</span> <span class="cn">&#39;apple</span> &#39;(pear banana prune)) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">memq</span> <span class="cn">&#39;apple</span> &#39;(x (apple sauce) y apple pear)) <span class="op">=&gt;</span> &#39;(apple pear)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.53">Exercise 2.53<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.1</span> <span class="fu">memq</span>)))
+
+(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span> <span class="cn">&#39;c</span>) <span class="op">=&gt;</span> &#39;(a b c)
+(<span class="fu">list</span> (<span class="fu">list</span> <span class="cn">&#39;george</span>)) <span class="op">=&gt;</span> &#39;((george))
+(<span class="fu">cdr</span> &#39;((x1 x2) (y1 y2))) <span class="op">=&gt;</span> &#39;((y1 y2))
+(<span class="fu">cadr</span> &#39;((x1 x2) (y1 y2))) <span class="op">=&gt;</span> &#39;(y1 y2)
+(<span class="fu">pair?</span> (<span class="fu">car</span> &#39;(a short <span class="fu">list</span>))) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">memq</span> <span class="cn">&#39;red</span> &#39;((red shoes) (blue socks))) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">memq</span> <span class="cn">&#39;red</span> &#39;(red shoes blue socks)) <span class="op">=&gt;</span> &#39;(red shoes blue socks)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.54">Exercise 2.54<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">equal?</span> list1 list2)
+  (<span class="kw">let</span> ((null1 (<span class="fu">null?</span> list1))
+        (null2 (<span class="fu">null?</span> list2)))
+    (<span class="kw">or</span> (<span class="kw">and</span> null1 null2)
+        (<span class="kw">and</span> (<span class="fu">not</span> (<span class="kw">or</span> null1 null2))
+             (<span class="fu">eq?</span> (<span class="fu">car</span> list1) (<span class="fu">car</span> list2))
+             (<span class="fu">equal?</span> (<span class="fu">cdr</span> list1) (<span class="fu">cdr</span> list2))))))
+
+(<span class="fu">equal?</span> &#39;(this is a <span class="fu">list</span>) &#39;(this is a <span class="fu">list</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(<span class="fu">equal?</span> &#39;(this is a <span class="fu">list</span>) &#39;(this (is a) <span class="fu">list</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p><code>''abracadabra</code> is a shortant for <code>(<span class="kw">quote</span> (<span class="kw">quote</span> abracadabra))</code>. This is the same as <code>&#39;(<span class="kw">quote</span> abracadabra)</code>, and it evaluates to a list with two symbols: <code>(<span class="kw">quote</span> abracadabra)</code>. Taking the car of this gives you the first item, which is the symbol <code>quote</code>. This is what the interpreter prints.</p>
 <h2 id="2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
+  (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
+        ((variable? expr)
+         (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
+        ((sum? expr)
+         (make-sum (deriv (addend expr) var)
+                   (deriv (augend expr) var)))
+        ((product? expr)
+         (make-sum (make-product (multiplier expr)
+                                 (deriv (multiplicand expr) var))
+                   (make-product (deriv (multiplier expr) var)
+                                 (multiplicand expr))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;deriv</span> <span class="cn">&quot;unknown expr type&quot;</span> expr))))
+
+(<span class="kw">define</span> (variable? x) (<span class="fu">symbol?</span> x))
+(<span class="kw">define</span> (same-variable? v1 v2)
+  (<span class="kw">and</span> (variable? v1) (variable? v2) (<span class="fu">eq?</span> v1 v2)))
+
+(<span class="kw">define</span> (make-sum a1 a2) (<span class="fu">list</span> &#39;+ a1 a2))
+(<span class="kw">define</span> (make-product m1 m2) (<span class="fu">list</span> <span class="cn">&#39;*</span> m1 m2))
+
+(<span class="kw">define</span> (sum? expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">eq?</span> (<span class="fu">car</span> expr) &#39;+)))
+(<span class="kw">define</span> addend <span class="fu">cadr</span>)
+(<span class="kw">define</span> augend <span class="fu">caddr</span>)
+
+(<span class="kw">define</span> (product? expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">eq?</span> (<span class="fu">car</span> expr) <span class="cn">&#39;*</span>)))
+(<span class="kw">define</span> multiplier <span class="fu">cadr</span>)
+(<span class="kw">define</span> multiplicand <span class="fu">caddr</span>)
+
+(deriv &#39;(<span class="fu">+</span> x <span class="cn">3</span>) <span class="cn">&#39;x</span>)
+<span class="op">=&gt;</span> &#39;(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">0</span>)
+(deriv &#39;(<span class="fu">*</span> x y) <span class="cn">&#39;x</span>)
+<span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> x <span class="cn">0</span>) (<span class="fu">*</span> <span class="cn">1</span> y))
+(deriv &#39;(<span class="fu">*</span> (<span class="fu">*</span> x y) (<span class="fu">+</span> x <span class="cn">3</span>)) <span class="cn">&#39;x</span>)
+<span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">*</span> x y) (<span class="fu">+</span> <span class="cn">1</span> <span class="cn">0</span>))
+       (<span class="fu">*</span> (<span class="fu">+</span> (<span class="fu">*</span> x <span class="cn">0</span>) (<span class="fu">*</span> <span class="cn">1</span> y))
+          (<span class="fu">+</span> x <span class="cn">3</span>)))
+
+(<span class="kw">define</span> (=number? expr num)
+  (<span class="kw">and</span> (<span class="fu">number?</span> expr) (<span class="fu">=</span> expr num)))
+
+(<span class="kw">define</span> (make-sum a1 a2)
+  (<span class="kw">cond</span> ((=number? a1 <span class="cn">0</span>) a2)
+        ((=number? a2 <span class="cn">0</span>) a1)
+        ((<span class="kw">and</span> (<span class="fu">number?</span> a1) (<span class="fu">number?</span> a2)) (<span class="fu">+</span> a1 a2))
+        (<span class="kw">else</span> (<span class="fu">list</span> &#39;+ a1 a2))))
+
+(<span class="kw">define</span> (make-product m1 m2)
+  (<span class="kw">cond</span> ((<span class="kw">or</span> (=number? m1 <span class="cn">0</span>) (=number? m2 <span class="cn">0</span>)) <span class="cn">0</span>)
+        ((=number? m1 <span class="cn">1</span>) m2)
+        ((=number? m2 <span class="cn">1</span>) m1)
+        ((<span class="kw">and</span> (<span class="fu">number?</span> m1) (<span class="fu">number?</span> m2)) (<span class="fu">*</span> m1 m2))
+        (<span class="kw">else</span> (<span class="fu">list</span> <span class="cn">&#39;*</span> m1 m2))))
+
+(deriv &#39;(<span class="fu">+</span> x <span class="cn">3</span>) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(deriv &#39;(<span class="fu">*</span> x y) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">&#39;y</span>
+(deriv &#39;(<span class="fu">*</span> (<span class="fu">*</span> x y) (<span class="fu">+</span> x <span class="cn">3</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> x y) (<span class="fu">*</span> y (<span class="fu">+</span> x <span class="cn">3</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.56">Exercise 2.56<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> =number? addend augend make-product make-sum multiplicand
+               multiplier product? same-variable? sum? variable?)))
+
+(<span class="kw">define</span> (deriv expr var)
+  (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
+        ((variable? expr)
+         (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
+        ((sum? expr)
+         (make-sum (deriv (addend expr) var)
+                   (deriv (augend expr) var)))
+        ((product? expr)
+         (make-sum (make-product (multiplier expr)
+                                 (deriv (multiplicand expr) var))
+                   (make-product (deriv (multiplier expr) var)
+                                 (multiplicand expr))))
+        ((exponentiation? expr)
+         (make-product
+          (exponent expr)
+          (make-product (make-exponentiation (base expr) (<span class="fu">-</span> (exponent expr) <span class="cn">1</span>))
+                        (deriv (base expr) var))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;deriv</span> <span class="cn">&quot;unknown expr type&quot;</span> expr))))
+
+(<span class="kw">define</span> (make-exponentiation b e)
+  (<span class="kw">cond</span> ((=number? e <span class="cn">0</span>) <span class="cn">1</span>)
+        ((=number? e <span class="cn">1</span>) b)
+        ((=number? b <span class="cn">1</span>) <span class="cn">1</span>)
+        (<span class="kw">else</span> (<span class="fu">list</span> <span class="cn">&#39;**</span> b e))))
+
+(<span class="kw">define</span> (exponentiation? expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">eq?</span> (<span class="fu">car</span> expr) <span class="cn">&#39;**</span>)))
+(<span class="kw">define</span> base <span class="fu">cadr</span>)
+(<span class="kw">define</span> exponent <span class="fu">caddr</span>)
+
+(deriv &#39;(<span class="fu">*</span> <span class="cn">3</span> (** x <span class="cn">5</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">5</span> (** x <span class="cn">4</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.57">Exercise 2.57<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)
+       (:<span class="cn">2.3.2</span> make-product make-sum product? same-variable? sum? variable?)))
+
+(<span class="kw">paste</span> (:<span class="cn">2.3.2</span> deriv))
+
+(<span class="kw">define</span> addend <span class="fu">cadr</span>)
+(<span class="kw">define</span> (augend sum)
+  (accumulate make-sum <span class="cn">0</span> (<span class="fu">cddr</span> sum)))
+(<span class="kw">define</span> multiplier <span class="fu">cadr</span>)
+(<span class="kw">define</span> (multiplicand product)
+  (accumulate make-product <span class="cn">1</span> (<span class="fu">cddr</span> product)))
+
+(deriv &#39;(<span class="fu">*</span> x y (<span class="fu">+</span> x <span class="cn">3</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> x y) (<span class="fu">*</span> y (<span class="fu">+</span> x <span class="cn">3</span>)))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.58">Exercise 2.58<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.1</span> <span class="fu">memq</span>) (:<span class="cn">2.3.2</span> =number? same-variable? variable?)))
+
+(<span class="kw">paste</span> (:<span class="cn">2.3.2</span> deriv))</code></pre>
+<ol type="a">
+<li>Fully parenthesized binary infix form</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-sum a1 a2)
+  (<span class="kw">cond</span> ((=number? a1 <span class="cn">0</span>) a2)
+        ((=number? a2 <span class="cn">0</span>) a1)
+        ((<span class="kw">and</span> (<span class="fu">number?</span> a1) (<span class="fu">number?</span> a2)) (<span class="fu">+</span> a1 a2))
+        (<span class="kw">else</span> (<span class="fu">list</span> a1 &#39;+ a2))))
+
+(<span class="kw">define</span> (make-product m1 m2)
+  (<span class="kw">cond</span> ((<span class="kw">or</span> (=number? m1 <span class="cn">0</span>) (=number? m2 <span class="cn">0</span>)) <span class="cn">0</span>)
+        ((=number? m1 <span class="cn">1</span>) m2)
+        ((=number? m2 <span class="cn">1</span>) m1)
+        ((<span class="kw">and</span> (<span class="fu">number?</span> m1) (<span class="fu">number?</span> m2)) (<span class="fu">*</span> m1 m2))
+        (<span class="kw">else</span> (<span class="fu">list</span> m1 <span class="cn">&#39;*</span> m2))))
+
+(<span class="kw">define</span> (sum? expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">eq?</span> (<span class="fu">cadr</span> expr) &#39;+)))
+(<span class="kw">define</span> addend <span class="fu">car</span>)
+(<span class="kw">define</span> augend <span class="fu">caddr</span>)
+
+(<span class="kw">define</span> (product? expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">eq?</span> (<span class="fu">cadr</span> expr) <span class="cn">&#39;*</span>)))
+(<span class="kw">define</span> multiplier <span class="fu">car</span>)
+(<span class="kw">define</span> multiplicand <span class="fu">caddr</span>)
+
+(deriv &#39;(x <span class="fu">+</span> (<span class="cn">3</span> <span class="fu">*</span> (x <span class="fu">+</span> (y <span class="fu">+</span> <span class="cn">2</span>)))) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
+<ol start="2" type="a">
+<li>Standard algebraic notation</li>
+</ol>
+<p>This doesn’t always work, but it’s a start. Actually doing it properly is complicated – it would be much easier to implement it from scratch rather than just changing the constructors and selectors.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (sum? expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">memq</span> &#39;+ (<span class="fu">cdr</span> expr))))
+
+(<span class="kw">define</span> (addend expr)
+  (<span class="kw">define</span> (until-plus expr)
+    (<span class="kw">if</span> (<span class="fu">eq?</span> &#39;+ (<span class="fu">car</span> expr))
+        &#39;()
+        (<span class="fu">cons</span> (<span class="fu">car</span> expr) (until-plus (<span class="fu">cdr</span> expr)))))
+  (<span class="kw">if</span> (<span class="fu">eq?</span> &#39;+ (<span class="fu">cadr</span> expr))
+      (<span class="fu">car</span> expr)
+      (until-plus expr)))
+
+(<span class="kw">define</span> (augend expr)
+  (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdddr</span> expr))
+      (<span class="fu">caddr</span> expr)
+      (<span class="fu">cddr</span> expr)))
+
+(deriv &#39;(x <span class="fu">+</span> <span class="cn">3</span> <span class="fu">*</span> (x <span class="fu">+</span> y <span class="fu">+</span> <span class="cn">2</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <h2 id="2.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="2.3.3.1" class="anchor">
 <a class="anchor__link link" href="#2.3.3.1" aria-hidden="true">#</a> <span class="number">2.3.3.1</span> Sets as unordered lists
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (element-of-set? x set)
+  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> set))
+       (<span class="kw">or</span> (<span class="fu">equal?</span> x (<span class="fu">car</span> set))
+           (element-of-set? x (<span class="fu">cdr</span> set)))))
+
+(<span class="kw">define</span> (adjoin-set x set)
+  (<span class="kw">if</span> (element-of-set? x set)
+      set
+      (<span class="fu">cons</span> x set)))
+
+(<span class="kw">define</span> (intersection-set set1 set2)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set1) &#39;())
+        ((<span class="fu">null?</span> set2) &#39;())
+        ((element-of-set? (<span class="fu">car</span> set1) set2)
+         (<span class="fu">cons</span> (<span class="fu">car</span> set1)
+               (intersection-set (<span class="fu">cdr</span> set1) set2)))
+        (<span class="kw">else</span> (intersection-set (<span class="fu">cdr</span> set1) set2))))
+
+(adjoin-set <span class="cn">1</span> &#39;()) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(adjoin-set <span class="cn">1</span> &#39;(<span class="cn">1</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(adjoin-set <span class="cn">1</span> &#39;(<span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
+
+(element-of-set? <span class="cn">1</span> &#39;()) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(element-of-set? <span class="cn">1</span> &#39;(<span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(element-of-set? <span class="cn">1</span> &#39;(<span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+
+(intersection-set &#39;() &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;()
+(intersection-set &#39;(<span class="cn">1</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(intersection-set &#39;(<span class="cn">2</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span>)
+(intersection-set &#39;(<span class="cn">2</span> <span class="cn">1</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">1</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.59">Exercise 2.59<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.3.1</span> adjoin-set)))
+
+(<span class="kw">define</span> (union-set set1 set2)
+  (accumulate adjoin-set set2 set1))
+
+(union-set &#39;() &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
+(union-set &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) &#39;()) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
+(union-set &#39;(<span class="cn">1</span> <span class="cn">2</span>) &#39;(<span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.60">Exercise 2.60<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>If we allow duplicates, we only need to change <code>adjoin-set</code> and <code>union-set</code>. <code>element-of-set?</code> and <code>intersection-set</code> stay the same.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> adjoin-set <span class="fu">cons</span>)
+(<span class="kw">define</span> union-set <span class="fu">append</span>)</code></pre>
+<p>Efficiency:</p>
+<table style="width:57%;">
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function</td>
+<td>no dupes</td>
+<td>dupes</td>
+</tr>
+<tr class="even">
+<td>element-of-set adjoin-set union-set intersection-set</td>
+<td>O(n) O(n) O(n^2) O(n^2)</td>
+<td>O(n) O(1) O(n) O(n^2)</td>
+</tr>
+</tbody>
+</table>
+<p>It looks like it is always more efficient with duplicates. However, the <code>n</code> values become much larger with duplicates for obvious reasons. For small sets and many operator applications, keeping duplicates is better. For large sets and fewer operator applications, eliminating duplicates is better.</p>
 <h3 id="2.3.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.3.2" aria-hidden="true">#</a> <span class="number">2.3.3.2</span> Sets as ordered lists
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (element-of-set? x set)
+  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> set))
+       (<span class="fu">&lt;=</span> (<span class="fu">car</span> set) x)
+       (<span class="kw">or</span> (<span class="fu">=</span> (<span class="fu">car</span> set) x)
+           (element-of-set? x (<span class="fu">cdr</span> set)))))
+
+(<span class="kw">define</span> (intersection-set set1 set2)
+  (<span class="kw">if</span> (<span class="kw">or</span> (<span class="fu">null?</span> set1) (<span class="fu">null?</span> set2))
+      &#39;()
+      (<span class="kw">let</span> ((x1 (<span class="fu">car</span> set1))
+            (x2 (<span class="fu">car</span> set2)))
+        (<span class="kw">cond</span> ((<span class="fu">=</span> x1 x2) (<span class="fu">cons</span> x1 (intersection-set (<span class="fu">cdr</span> set1) (<span class="fu">cdr</span> set2))))
+              ((<span class="fu">&lt;</span> x1 x2) (intersection-set (<span class="fu">cdr</span> set1) set2))
+              (<span class="kw">else</span> (intersection-set set1 (<span class="fu">cdr</span> set2)))))))
+
+(element-of-set? <span class="cn">2</span> &#39;()) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(element-of-set? <span class="cn">2</span> &#39;(<span class="cn">2</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(element-of-set? <span class="cn">2</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+
+(intersection-set &#39;() &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;()
+(intersection-set &#39;(<span class="cn">1</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(intersection-set &#39;(<span class="cn">2</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span>)
+(intersection-set &#39;(<span class="cn">1</span> <span class="cn">2</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.61">Exercise 2.61<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-set x set)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (<span class="fu">list</span> x))
+        ((<span class="fu">=</span> x (<span class="fu">car</span> set)) set)
+        ((<span class="fu">&lt;</span> x (<span class="fu">car</span> set)) (<span class="fu">cons</span> x set))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (<span class="fu">car</span> set) (adjoin-set x (<span class="fu">cdr</span> set))))))
+
+(adjoin-set <span class="cn">1</span> &#39;()) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(adjoin-set <span class="cn">1</span> &#39;(<span class="cn">1</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(adjoin-set <span class="cn">2</span> &#39;(<span class="cn">1</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)
+(adjoin-set <span class="cn">2</span> &#39;(<span class="cn">1</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.62">Exercise 2.62<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set1) set2)
+        ((<span class="fu">null?</span> set2) set1)
+        (<span class="kw">else</span>
+         (<span class="kw">let</span> ((x1 (<span class="fu">car</span> set1))
+               (x2 (<span class="fu">car</span> set2)))
+           (<span class="kw">cond</span> ((<span class="fu">=</span> x1 x2) (<span class="fu">cons</span> x1 (union-set (<span class="fu">cdr</span> set1) (<span class="fu">cdr</span> set2))))
+                 ((<span class="fu">&lt;</span> x1 x2) (<span class="fu">cons</span> x1 (union-set (<span class="fu">cdr</span> set1) set2)))
+                 (<span class="kw">else</span> (<span class="fu">cons</span> x2 (union-set set1 (<span class="fu">cdr</span> set2)))))))))
+
+(union-set &#39;() &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
+(union-set &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) &#39;()) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
+(union-set &#39;(<span class="cn">1</span> <span class="cn">2</span>) &#39;(<span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)</code></pre>
 <h3 id="2.3.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3.3" aria-hidden="true">#</a> <span class="number">2.3.3.3</span> Sets as binary trees
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> make-tree <span class="fu">list</span>)
+(<span class="kw">define</span> entry <span class="fu">car</span>)
+(<span class="kw">define</span> left-branch <span class="fu">cadr</span>)
+(<span class="kw">define</span> right-branch <span class="fu">caddr</span>)
+
+(<span class="kw">define</span> (element-of-set? x set)
+  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> set))
+       (<span class="kw">or</span> (<span class="fu">=</span> x (entry set))
+           (<span class="kw">and</span> (<span class="fu">&lt;</span> x (entry set))
+                (element-of-set? x (left-branch set)))
+           (<span class="kw">and</span> (<span class="fu">&gt;</span> x (entry set))
+                (element-of-set? x (right-branch set))))))
+
+(<span class="kw">define</span> (adjoin-set x set)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (make-tree x &#39;() &#39;()))
+        ((<span class="fu">=</span> x (entry set)) set)
+        ((<span class="fu">&lt;</span> x (entry set))
+         (make-tree (entry set)
+                    (adjoin-set x (left-branch set))
+                    (right-branch set)))
+        ((<span class="fu">&gt;</span> x (entry set))
+         (make-tree (entry set)
+                    (left-branch set)
+                    (adjoin-set x (right-branch set))))))
+
+(adjoin-set <span class="cn">1</span> &#39;()) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> () ())
+(adjoin-set <span class="cn">1</span> &#39;(<span class="cn">1</span> () ())) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> () ())
+(adjoin-set <span class="cn">1</span> &#39;(<span class="cn">2</span> () (<span class="cn">3</span> () ()))) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> (<span class="cn">1</span> () ()) (<span class="cn">3</span> () ()))
+
+(element-of-set? <span class="cn">1</span> &#39;()) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(element-of-set? <span class="cn">1</span> &#39;(<span class="cn">1</span> () ())) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(element-of-set? <span class="cn">1</span> &#39;(<span class="cn">2</span> (<span class="cn">1</span> () ()) (<span class="cn">3</span> () ()))) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.63">Exercise 2.63<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.3.3</span> entry left-branch right-branch)))
+
+(<span class="kw">define</span> (tree-&gt;list<span class="cn">-1</span> tree)
+  (<span class="kw">if</span> (<span class="fu">null?</span> tree)
+      &#39;()
+      (<span class="fu">append</span> (tree-&gt;list<span class="cn">-1</span> (left-branch tree))
+              (<span class="fu">cons</span> (entry tree)
+                    (tree-&gt;list<span class="cn">-1</span> (right-branch tree))))))
+
+(<span class="kw">define</span> (tree-&gt;list<span class="cn">-2</span> tree)
+  (<span class="kw">define</span> (copy-to-list tree result-list)
+    (<span class="kw">if</span> (<span class="fu">null?</span> tree)
+        result-list
+        (copy-to-list (left-branch tree)
+                      (<span class="fu">cons</span> (entry tree)
+                            (copy-to-list (right-branch tree)
+                                          result-list)))))
+  (copy-to-list tree &#39;()))</code></pre>
+<p>Unbalanced (t1) and balanced (t2) trees representing the set {1,2,3,4,5,6}.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> t1 &#39;(<span class="cn">1</span> () (<span class="cn">2</span> () (<span class="cn">3</span> () (<span class="cn">4</span> () (<span class="cn">5</span> () (<span class="cn">6</span> () ())))))))
+(<span class="kw">define</span> t2 &#39;(<span class="cn">4</span> (<span class="cn">2</span> (<span class="cn">1</span> () ()) (<span class="cn">3</span> () ())) (<span class="cn">5</span> () (<span class="cn">6</span> () ()))))</code></pre>
+<p>Trees from Figure 2.16, representing the set {1,3,5,7,9,11}.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> t3 &#39;(<span class="cn">7</span> (<span class="cn">3</span> (<span class="cn">1</span> () ()) (<span class="cn">5</span> () ())) (<span class="cn">9</span> () (<span class="cn">11</span> () ()))))
+(<span class="kw">define</span> t4 &#39;(<span class="cn">3</span> (<span class="cn">1</span> () ()) (<span class="cn">7</span> (<span class="cn">5</span> () ()) (<span class="cn">9</span> () (<span class="cn">11</span> () ())))))
+(<span class="kw">define</span> t5 &#39;(<span class="cn">5</span> (<span class="cn">3</span> (<span class="cn">1</span> () ()) ()) (<span class="cn">9</span> (<span class="cn">7</span> () ()) (<span class="cn">11</span> () ()))))
+
+(tree-&gt;list<span class="cn">-1</span> t1)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t1)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-1</span> t2)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t2)
+<span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>)
+
+(tree-&gt;list<span class="cn">-1</span> t3)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t3)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-1</span> t4)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t4)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-1</span> t5)
+<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t5)
+<span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">9</span> <span class="cn">11</span>)</code></pre>
+<ol type="a">
+<li><p>Yes, the two procedures produce the same result for every tree. Also, from this sample input, it seems that they always produce a sorted list, which means that different trees (balanced or otherwise) representing the same set get transformed into the same list.</p></li>
+<li><p>The second procedure performs one cons operation for each node of the tree, so it has order of growth O(n). The first procedure uses <code>append</code>, which is O(n). In the worst case, we would have n <code>append</code> steps for each of the n nodes, meaning O(n^2). However, assuming the tree is balanced, the number of <code>append</code> steps is cut in half on each recursive application. We have that for each of the n steps, and so the order of growth is O(n*log(n)).</p></li>
+</ol>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.64">Exercise 2.64<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.3.3</span> make-tree)))
+
+(<span class="kw">define</span> (list-&gt;tree elements)
+  (<span class="fu">car</span> (partial-tree elements (<span class="fu">length</span> elements))))
+
+(<span class="kw">define</span> (partial-tree elts n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      (<span class="fu">cons</span> &#39;() elts)
+      (<span class="kw">let*</span> ((left-size (<span class="fu">quotient</span> (<span class="fu">-</span> n <span class="cn">1</span>) <span class="cn">2</span>))
+             (left-result (partial-tree elts left-size))
+             (left-tree (<span class="fu">car</span> left-result))
+             (non-left-elts (<span class="fu">cdr</span> left-result))
+             (this-entry (<span class="fu">car</span> non-left-elts))
+             (right-size (<span class="fu">-</span> n (<span class="fu">+</span> left-size <span class="cn">1</span>)))
+             (right-result (partial-tree (<span class="fu">cdr</span> non-left-elts) right-size))
+             (right-tree (<span class="fu">car</span> right-result))
+             (remaining-elts (<span class="fu">cdr</span> right-result)))
+        (<span class="fu">cons</span> (make-tree this-entry left-tree right-tree)
+              remaining-elts))))</code></pre>
+<ol type="a">
+<li>The procedure <code>partial-tree</code> accepts a list <code>elts</code> and a number <code>n</code> as arguments. It returns a new list which is like <code>elts</code> but has the first <code>n</code> elements replaced by a tree representing that sublist. It does this by recursively calling <code>partial-tree</code> on first and second half of the <code>n</code> elements, then creating a tree with those subtrees (the <code>car</code> of the recursive application) and with the middle value (the n/2th element of <code>elts</code>) as the node value.</li>
+</ol>
+<pre><code class="blockcode">(list-&gt;tree &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">9</span> <span class="cn">11</span>))
+<span class="op">=&gt;</span> &#39;(<span class="cn">5</span> (<span class="cn">1</span> () (<span class="cn">3</span> () ())) (<span class="cn">9</span> (<span class="cn">7</span> () ()) (<span class="cn">11</span> () ())))
+<span class="co">;   5</span>
+<span class="co">;  / \</span>
+<span class="co">; 1   9</span>
+<span class="co">; \  /\</span>
+<span class="co">; 3 7 11</span></code></pre>
+<ol start="2" type="a">
+<li>The procedure <code>list-&gt;tree</code> only needs to visit each element in the list once, and it applies cons for each one, so it has O(n) time complexity. Just because it is tree-recursive does not imply O(n^2) or O(log(n)) or any other specific order of growth.</li>
+</ol>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.65">Exercise 2.65<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.63</span> tree-&gt;list<span class="cn">-2</span>) (?<span class="cn">2.64</span> list-&gt;tree)))</code></pre>
+<p>The <code>tree-&gt;list-2</code> conversion, the union/intersection on ordered lists, and the <code>list-&gt;tree</code> conversion are all O(n), so combined they are still O(n).</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
+  (<span class="kw">define</span> (union-list l1 l2)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> l1) l2)
+          ((<span class="fu">null?</span> l2) l1)
+          ((<span class="fu">=</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
+           (<span class="fu">cons</span> (<span class="fu">car</span> l1) (union-list (<span class="fu">cdr</span> l1) (<span class="fu">cdr</span> l2))))
+          ((<span class="fu">&lt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
+           (<span class="fu">cons</span> (<span class="fu">car</span> l1) (union-list (<span class="fu">cdr</span> l1) l2)))
+          ((<span class="fu">&gt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
+           (<span class="fu">cons</span> (<span class="fu">car</span> l2) (union-list l1 (<span class="fu">cdr</span> l2))))))
+  (list-&gt;tree
+   (union-list (tree-&gt;list<span class="cn">-2</span> set1)
+               (tree-&gt;list<span class="cn">-2</span> set2))))
+
+(<span class="kw">define</span> (intersection-set set1 set2)
+  (<span class="kw">define</span> (intersection-list l1 l2)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> l1) &#39;())
+          ((<span class="fu">null?</span> l2) &#39;())
+          ((<span class="fu">=</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
+           (<span class="fu">cons</span> (<span class="fu">car</span> l1) (intersection-list (<span class="fu">cdr</span> l1) (<span class="fu">cdr</span> l2))))
+          ((<span class="fu">&lt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
+           (intersection-list (<span class="fu">cdr</span> l1) l2))
+          ((<span class="fu">&gt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
+           (intersection-list l1 (<span class="fu">cdr</span> l2)))))
+  (list-&gt;tree
+   (intersection-list (tree-&gt;list<span class="cn">-2</span> set1)
+                      (tree-&gt;list<span class="cn">-2</span> set2))))
+
+(<span class="kw">define</span> t1 &#39;(<span class="cn">1</span> () ()))
+(<span class="kw">define</span> t2 &#39;(<span class="cn">2</span> () ()))
+(<span class="kw">define</span> t23 &#39;(<span class="cn">2</span> () (<span class="cn">3</span> () ())))
+(<span class="kw">define</span> t123 &#39;(<span class="cn">2</span> (<span class="cn">1</span> () ()) (<span class="cn">3</span> () ())))
+
+(union-set &#39;() t123) <span class="op">=&gt;</span> t123
+(union-set t123 &#39;()) <span class="op">=&gt;</span> t123
+(union-set t123 t123) <span class="op">=&gt;</span> t123
+(union-set t1 t23) <span class="op">=&gt;</span> t123
+(union-set t2 t23) <span class="op">=&gt;</span> t23
+(union-set t23 t123) <span class="op">=&gt;</span> t123
+
+(intersection-set &#39;() t123) <span class="op">=&gt;</span> &#39;()
+(intersection-set t123 &#39;()) <span class="op">=&gt;</span> &#39;()
+(intersection-set t1 t123) <span class="op">=&gt;</span> t1
+(intersection-set t2 t123) <span class="op">=&gt;</span> t2
+(intersection-set t123 t123) <span class="op">=&gt;</span> t123
+(intersection-set t23 t123) <span class="op">=&gt;</span> t23</code></pre>
 <h3 id="2.3.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.3.4" aria-hidden="true">#</a> <span class="number">2.3.3.4</span> Sets and information retrieval
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (lookup given-key set-of-records)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set-of-records) <span class="cn">#f</span>)
+        ((<span class="fu">equal?</span> given-key (key (<span class="fu">car</span> set-of-records)))
+         (<span class="fu">car</span> set-of-records))
+        (<span class="kw">else</span> (lookup given-key (<span class="fu">cdr</span> set-of-records)))))
+
+(<span class="kw">define</span> key <span class="fu">car</span>)
+
+(lookup <span class="cn">&#39;c</span> &#39;((a flour) (b water) (c salt))) <span class="op">=&gt;</span> &#39;(c salt)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.66">Exercise 2.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.3.3</span> entry left-branch right-branch) (:<span class="cn">2.3.3.4</span> key)))
+
+(<span class="kw">define</span> (lookup given-key set-of-records)
+  (<span class="kw">if</span> (<span class="fu">null?</span> set-of-records)
+      <span class="cn">#f</span>
+      (<span class="kw">let*</span> ((record (entry set-of-records))
+             (rec-key (key record)))
+        (<span class="kw">cond</span> ((<span class="fu">=</span> given-key rec-key) record)
+              ((<span class="fu">&lt;</span> given-key rec-key)
+               (lookup given-key (left-branch set-of-records)))
+              ((<span class="fu">&gt;</span> given-key rec-key)
+               (lookup given-key (right-branch set-of-records)))))))
+
+(lookup <span class="cn">3</span> &#39;((<span class="cn">2</span> water) ((<span class="cn">1</span> flour) () ()) ((<span class="cn">3</span> salt) () ()))) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> salt)</code></pre>
 <h2 id="2.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<p>Representing Huffman trees</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-leaf symbol weight) (<span class="fu">list</span> <span class="cn">&#39;leaf</span> symbol weight))
+(<span class="kw">define</span> (leaf? object) (<span class="fu">eq?</span> (<span class="fu">car</span> object) <span class="cn">&#39;leaf</span>))
+(<span class="kw">define</span> symbol-leaf <span class="fu">cadr</span>)
+(<span class="kw">define</span> weight-leaf <span class="fu">caddr</span>)
+
+(<span class="kw">define</span> (make-code-tree left right)
+  (<span class="fu">list</span> left
+        right
+        (<span class="fu">append</span> (symbols left) (symbols right))
+        (<span class="fu">+</span> (weight left) (weight right))))
+(<span class="kw">define</span> left-branch <span class="fu">car</span>)
+(<span class="kw">define</span> right-branch <span class="fu">cadr</span>)
+
+(<span class="kw">define</span> (symbols tree)
+  (<span class="kw">if</span> (leaf? tree)
+      (<span class="fu">list</span> (symbol-leaf tree))
+      (<span class="fu">caddr</span> tree)))
+(<span class="kw">define</span> (weight tree)
+  (<span class="kw">if</span> (leaf? tree)
+      (weight-leaf tree)
+      (<span class="fu">cadddr</span> tree)))</code></pre>
+<p>The decoding procedure</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (decode bits tree)
+  (<span class="kw">define</span> (decode<span class="cn">-1</span> bits current-branch)
+    (<span class="kw">if</span> (<span class="fu">null?</span> bits)
+        &#39;()
+        (<span class="kw">let</span> ((next-branch (choose-branch (<span class="fu">car</span> bits) current-branch)))
+          (<span class="kw">if</span> (leaf? next-branch)
+              (<span class="fu">cons</span> (symbol-leaf next-branch)
+                    (decode<span class="cn">-1</span> (<span class="fu">cdr</span> bits) tree))
+              (decode<span class="cn">-1</span> (<span class="fu">cdr</span> bits) next-branch)))))
+  (decode<span class="cn">-1</span> bits tree))
+
+(<span class="kw">define</span> (choose-branch bit branch)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> bit <span class="cn">0</span>) (left-branch branch))
+        ((<span class="fu">=</span> bit <span class="cn">1</span>) (right-branch branch))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;choose-branch</span> <span class="cn">&quot;bit should be 0 or 1&quot;</span> bit))))</code></pre>
+<p>Sets of weighted elements</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-set x set)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (<span class="fu">list</span> x))
+        ((<span class="fu">&lt;</span> (weight x) (weight (<span class="fu">car</span> set)))
+         (<span class="fu">cons</span> x set))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (<span class="fu">car</span> set)
+                    (adjoin-set x (<span class="fu">cdr</span> set))))))
+
+(<span class="kw">define</span> (make-leaf-set pairs)
+  (<span class="kw">if</span> (<span class="fu">null?</span> pairs)
+      &#39;()
+      (<span class="kw">let</span> ((pair (<span class="fu">car</span> pairs)))
+        (adjoin-set (make-leaf (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))
+                    (make-leaf-set (<span class="fu">cdr</span> pairs))))))</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.67">Exercise 2.67<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.4</span> decode make-code-tree make-leaf)))
+
+(<span class="kw">define</span> sample-tree
+  (make-code-tree (make-leaf <span class="cn">&#39;A</span> <span class="cn">4</span>)
+                  (make-code-tree (make-leaf <span class="cn">&#39;B</span> <span class="cn">2</span>)
+                                  (make-code-tree (make-leaf <span class="cn">&#39;D</span> <span class="cn">1</span>)
+                                                  (make-leaf <span class="cn">&#39;C</span> <span class="cn">1</span>)))))
+(<span class="kw">define</span> sample-message &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">0</span>))
+
+(decode sample-message sample-tree) <span class="op">=&gt;</span> &#39;(A D A B B C A)
+(decode &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span>) sample-tree) <span class="op">=!&gt;</span> <span class="cn">&quot;bit should be 0 or 1: 2&quot;</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.68">Exercise 2.68<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.4</span> leaf? left-branch right-branch symbols)
+       (?<span class="cn">2.67</span> sample-message sample-tree)))
+
+(<span class="kw">define</span> (encode message tree)
+  (<span class="kw">if</span> (<span class="fu">null?</span> message)
+      &#39;()
+      (<span class="fu">append</span> (encode-symbol (<span class="fu">car</span> message) tree)
+              (encode (<span class="fu">cdr</span> message) tree))))
+
+(<span class="kw">define</span> (encode-symbol symbol tree)
+  (<span class="kw">cond</span> ((leaf? tree) &#39;())
+        ((element-of-set? symbol (symbols (left-branch tree)))
+         (<span class="fu">cons</span> <span class="cn">0</span> (encode-symbol symbol (left-branch tree))))
+        ((element-of-set? symbol (symbols (right-branch tree)))
+         (<span class="fu">cons</span> <span class="cn">1</span> (encode-symbol symbol (right-branch tree))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;encode-symbol</span> <span class="cn">&quot;symbol not in tree&quot;</span> symbol))))
+
+(<span class="kw">define</span> (element-of-set? x set)
+  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> set))
+       (<span class="kw">or</span> (<span class="fu">eq?</span> x (<span class="fu">car</span> set))
+           (element-of-set? x (<span class="fu">cdr</span> set)))))
+
+(encode &#39;(A D A B B C A) sample-tree) <span class="op">=&gt;</span> sample-message
+(encode &#39;(Z) sample-tree) <span class="op">=!&gt;</span> <span class="cn">&quot;symbol not in tree: Z&quot;</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.69">Exercise 2.69<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.4</span> make-code-tree make-leaf-set) (?<span class="cn">2.38</span> fold-left)
+       (?<span class="cn">2.68</span> encode-symbol)))
+
+(<span class="kw">define</span> (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(<span class="kw">define</span> (successive-merge set)
+  (fold-left make-code-tree (<span class="fu">car</span> set) (<span class="fu">cdr</span> set)))
+
+(<span class="kw">define</span> abcd-tree (generate-huffman-tree &#39;((A <span class="cn">5</span>) (B <span class="cn">10</span>) (C <span class="cn">2</span>) (D <span class="cn">1</span>))))
+(encode-symbol <span class="cn">&#39;A</span> abcd-tree) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">1</span>)
+(encode-symbol <span class="cn">&#39;B</span> abcd-tree) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span>)
+(encode-symbol <span class="cn">&#39;C</span> abcd-tree) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span>)
+(encode-symbol <span class="cn">&#39;D</span> abcd-tree) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.70">Exercise 2.70<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.68</span> encode) (?<span class="cn">2.69</span> generate-huffman-tree)))
+
+(<span class="kw">define</span> rock-tree
+  (generate-huffman-tree
+   &#39;((a <span class="cn">2</span>) (get <span class="cn">2</span>) (sha <span class="cn">3</span>) (wah <span class="cn">1</span>) (boom <span class="cn">1</span>) (job <span class="cn">2</span>) (na <span class="cn">16</span>) (yip <span class="cn">9</span>))))
+
+(<span class="kw">define</span> song
+  &#39;(get a job sha na na na na na na na na
+    get a job sha na na na na na na na na
+    wah yip yip yip yip yip yip yip yip yip
+    sha boom))
+
+(<span class="kw">define</span> encoded-song (encode song rock-tree))
+(<span class="fu">length</span> encoded-song) <span class="op">=&gt;</span> <span class="cn">87</span>
+encoded-song
+<span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>
+     <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span>
+     <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)</code></pre>
+<p>The encoding requires 87 bits. There are eight symbols, so a fixed-length code would require log(8)/log(2) = 3 bits per symbol. The song has a total of 36 symbols, so the fixed-length coded message would need at least 108 bits. The variable-length encoding saves about 19% storage.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.71">Exercise 2.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.68</span> encode-symbol) (?<span class="cn">2.69</span> generate-huffman-tree)))</code></pre>
+<p>We have a Huffman tree for an alphabet of n symbols. The relative frequency of the nth symbol is 2^(n-1). For n = 5, we have the following tree:</p>
+<pre><code class="blockcode"><span class="co">;         *</span>
+<span class="co">;        /\</span>
+<span class="co">;       * 16</span>
+<span class="co">;      /\</span>
+<span class="co">;     * 8</span>
+<span class="co">;    /\</span>
+<span class="co">;   * 4</span>
+<span class="co">;  /\</span>
+<span class="co">; 1 2</span></code></pre>
+<p>For n = 10, the tree looks like this (right is left; down is right):</p>
+<pre><code class="blockcode"><span class="co">;  *----*----*---*---*---*---*--*--*--1</span>
+<span class="co">;  |    |    |   |   |   |   |  |  |</span>
+<span class="co">; 512  256  128  64  32  16  8  4  2</span></code></pre>
+<p>In general, the most frequent symbol requires one bit and the least frequent symbol requires n-1 bits.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (alphabet-frequencies n)
+  (<span class="kw">define</span> (helper i)
+    (<span class="kw">if</span> (<span class="fu">&gt;</span> i n)
+        &#39;()
+        (<span class="fu">cons</span> (<span class="fu">list</span> i (<span class="fu">expt</span> <span class="cn">2</span> (<span class="fu">-</span> n i))) (helper (<span class="fu">+</span> i <span class="cn">1</span>)))))
+  (helper <span class="cn">1</span>))
+
+(alphabet-frequencies <span class="cn">5</span>)
+<span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">16</span>) (<span class="cn">2</span> <span class="cn">8</span>) (<span class="cn">3</span> <span class="cn">4</span>) (<span class="cn">4</span> <span class="cn">2</span>) (<span class="cn">5</span> <span class="cn">1</span>))
+
+(<span class="kw">define</span> n (<span class="fu">+</span> <span class="cn">2</span> (random <span class="cn">25</span>)))
+(<span class="kw">define</span> tree (generate-huffman-tree (alphabet-frequencies n)))
+(<span class="fu">length</span> (encode-symbol <span class="cn">1</span> tree)) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">length</span> (encode-symbol n tree)) <span class="op">=&gt;</span> (<span class="fu">-</span> n <span class="cn">1</span>)</code></pre>
+<p>Special case: when n = 1, it takes n - 1 = 0 bits, not 1 bit:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> tree (generate-huffman-tree (alphabet-frequencies <span class="cn">1</span>)))
+(encode-symbol <span class="cn">1</span> tree) <span class="op">=&gt;</span> &#39;()</code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.72">Exercise 2.72<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-</article>
+<p>The number of steps required to encode the most frequent symbol in the alphabet of n symbols with <code>encode-symbol</code> grows as O(n). The procedure only looks down one branch, and so it must apply the procedure <code>element-of-set?</code> once. This procedure has linear time complexity with respect to the number of elements in the set, since it is represented as an unordered list. For the least frequent symbol, the number of steps grows as O(n^2). At each of n nodes through the depth of the tree, we have at most n comparisons when checking if the symbol is in the set. (If the tree were balanced, it would be Θ(n*log(n)), but we didn’t talk about that at all for Huffman trees.)</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

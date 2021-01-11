@@ -65,98 +65,598 @@
   </div>
 </nav>
 <main id="main">
-<article>
 <h1>
 <span class="number">1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html">Procedures and the Processes They Generate<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="1.2.1" class="anchor">
 <a class="anchor__link link" href="#1.2.1" aria-hidden="true">#</a> <span class="number">1.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.1">Linear Recursion and Iteration<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (factorial n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">1</span>)
+      <span class="cn">1</span>
+      (<span class="fu">*</span> n (factorial (<span class="fu">-</span> n <span class="cn">1</span>)))))</code></pre>
+<p>Linear recursive process:</p>
+<pre><code class="blockcode">(factorial <span class="cn">6</span>)
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (factorial <span class="cn">5</span>))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (factorial <span class="cn">4</span>)))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (factorial <span class="cn">3</span>))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (factorial <span class="cn">2</span>)))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (factorial <span class="cn">1</span>))))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>)))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>)))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">24</span>))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">120</span>)
+<span class="op">=&gt;</span> <span class="cn">720</span>
+
+(<span class="kw">define</span> (factorial n)
+  (fact-iter <span class="cn">1</span> <span class="cn">1</span> n))
+(<span class="kw">define</span> (fact-iter product counter max-count)
+  (<span class="kw">if</span> (<span class="fu">&gt;</span> counter max-count)
+      product
+      (fact-iter (<span class="fu">*</span> counter product)
+                 (<span class="fu">+</span> counter <span class="cn">1</span>)
+                 max-count)))</code></pre>
+<p>Linear iterative process:</p>
+<pre><code class="blockcode">(factorial <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">1</span> <span class="cn">1</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">2</span> <span class="cn">3</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">6</span> <span class="cn">4</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">24</span> <span class="cn">5</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">120</span> <span class="cn">6</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">720</span> <span class="cn">7</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> <span class="cn">720</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.9">Exercise 1.9<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (inc x) (<span class="fu">+</span> x <span class="cn">1</span>))
+(<span class="kw">define</span> (dec x) (<span class="fu">-</span> x <span class="cn">1</span>))
+
+(<span class="kw">define</span> (r+ a b)
+  (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) b (inc (r+ (dec a) b))))
+
+(<span class="kw">define</span> (i+ a b)
+  (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) b (i+ (dec a) (inc b))))</code></pre>
+<p><code>r+</code> generates a recursive process:</p>
+<pre><code class="blockcode">(r+ <span class="cn">4</span> <span class="cn">5</span>)
+<span class="op">=&gt;</span> (inc (r+ <span class="cn">3</span> <span class="cn">5</span>))
+<span class="op">=&gt;</span> (inc (inc (r+ <span class="cn">2</span> <span class="cn">5</span>)))             <span class="co">; expanding</span>
+<span class="op">=&gt;</span> (inc (inc (inc (r+ <span class="cn">1</span> <span class="cn">5</span>))))
+<span class="op">=&gt;</span> (inc (inc (inc (inc (r+ <span class="cn">0</span> <span class="cn">5</span>))))) <span class="co">; 4 deferred operations</span>
+<span class="op">=&gt;</span> (inc (inc (inc (inc <span class="cn">5</span>))))
+<span class="op">=&gt;</span> (inc (inc (inc <span class="cn">6</span>)))              <span class="co">; contracting</span>
+<span class="op">=&gt;</span> (inc (inc <span class="cn">7</span>))
+<span class="op">=&gt;</span> (inc <span class="cn">8</span>)
+<span class="op">=&gt;</span> <span class="cn">9</span></code></pre>
+<p><code>i+</code> generates an iterative process:</p>
+<pre><code class="blockcode">(i+ <span class="cn">4</span> <span class="cn">5</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">3</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">2</span> <span class="cn">7</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">1</span> <span class="cn">8</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">0</span> <span class="cn">9</span>)
+<span class="op">=&gt;</span> <span class="cn">9</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.10">Exercise 1.10<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (A x y)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> y <span class="cn">0</span>) <span class="cn">0</span>)
+        ((<span class="fu">=</span> x <span class="cn">0</span>) (<span class="fu">*</span> <span class="cn">2</span> y))
+        ((<span class="fu">=</span> y <span class="cn">1</span>) <span class="cn">2</span>)
+        (<span class="kw">else</span> (A (<span class="fu">-</span> x <span class="cn">1</span>)
+                 (A x (<span class="fu">-</span> y <span class="cn">1</span>))))))
+
+(A <span class="cn">1</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1024</span>
+(A <span class="cn">2</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">65536</span>
+(A <span class="cn">3</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">65536</span>
+
+(<span class="kw">define</span> (f n) (A <span class="cn">0</span> n))</code></pre>
+<p>2n (f n) =&gt; (A 0 n) =&gt; (* 2 n)</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (g n) (A <span class="cn">1</span> n))</code></pre>
+<p>2^n (g n) =&gt; (A 1 n) =&gt; (A 0 (A 1 (- n 1))) =&gt; (f (g (- n 1))) =&gt; …</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (h n) (A <span class="cn">2</span> n))</code></pre>
+<p>2<sup>2</sup>2<sup>…</sup>2 (repeated n times) (h n) =&gt; (A 2 n) =&gt; (A 1 (A 2 (- n 1))) =&gt; (g (h (- n 1))) =&gt; …</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (k n) (<span class="fu">*</span> <span class="cn">5</span> n n))</code></pre>
+<p>5n^2</p>
 <h2 id="1.2.2" class="anchor">
 <a class="anchor__link link" href="#1.2.2" aria-hidden="true">#</a> <span class="number">1.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.2">Tree Recursion<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (fib n)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">0</span>)
+        ((<span class="fu">=</span> n <span class="cn">1</span>) <span class="cn">1</span>)
+        (<span class="kw">else</span> (<span class="fu">+</span> (fib (<span class="fu">-</span> n <span class="cn">1</span>))
+                 (fib (<span class="fu">-</span> n <span class="cn">2</span>))))))
+
+(fib <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
+
+(<span class="kw">define</span> (fib n)
+  (<span class="kw">define</span> (iter a b count)
+    (<span class="kw">if</span> (<span class="fu">=</span> count <span class="cn">0</span>)
+        b
+        (iter (<span class="fu">+</span> a b) a (<span class="fu">-</span> count <span class="cn">1</span>))))
+  (iter <span class="cn">1</span> <span class="cn">0</span> n))
+
+(fib <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
 <h3 id="1.2.2.1" class="anchor">
 <a class="anchor__link link" href="#1.2.2.1" aria-hidden="true">#</a> <span class="number">1.2.2.1</span> Example: Counting change
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (count-change amount)
+  (<span class="kw">define</span> (cc a n)
+    (<span class="kw">cond</span> ((<span class="fu">&lt;</span> a <span class="cn">0</span>) <span class="cn">0</span>)
+          ((<span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span>)
+          ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">0</span>)
+          (<span class="kw">else</span> (<span class="fu">+</span> (cc a (<span class="fu">-</span> n <span class="cn">1</span>))
+                   (cc (<span class="fu">-</span> a (first-denomination n)) n)))))
+  (cc amount <span class="cn">5</span>))
+
+(<span class="kw">define</span> (first-denomination kinds-of-coins)
+  (<span class="fu">vector-ref</span> &#39;#(<span class="cn">1</span> <span class="cn">5</span> <span class="cn">10</span> <span class="cn">25</span> <span class="cn">50</span>) (<span class="fu">-</span> kinds-of-coins <span class="cn">1</span>)))
+
+(count-change <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.11">Exercise 1.11<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Recursive process:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (f n)
+  (<span class="kw">if</span> (<span class="fu">&lt;</span> n <span class="cn">3</span>)
+      n
+      (<span class="fu">+</span> (f (<span class="fu">-</span> n <span class="cn">1</span>))
+         (<span class="fu">*</span> <span class="cn">2</span> (f (<span class="fu">-</span> n <span class="cn">2</span>)))
+         (<span class="fu">*</span> <span class="cn">3</span> (f (<span class="fu">-</span> n <span class="cn">3</span>))))))
+
+(f <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
+<p>Iterative process:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (f n)
+  (<span class="kw">define</span> (iter a b c counter)
+    (<span class="kw">if</span> (<span class="fu">=</span> counter <span class="cn">0</span>)
+        a
+        (iter b c (<span class="fu">+</span> c (<span class="fu">*</span> <span class="cn">2</span> b) (<span class="fu">*</span> <span class="cn">3</span> a)) (<span class="fu">-</span> counter <span class="cn">1</span>))))
+  (iter <span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span> n))
+
+(f <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.12">Exercise 1.12<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (pascal i j)
+  (<span class="kw">if</span> (<span class="kw">or</span> (<span class="fu">=</span> j <span class="cn">0</span>) (<span class="fu">=</span> j i))
+      <span class="cn">1</span>
+      (<span class="fu">+</span> (pascal (<span class="fu">-</span> i <span class="cn">1</span>) (<span class="fu">-</span> j <span class="cn">1</span>))
+         (pascal (<span class="fu">-</span> i <span class="cn">1</span>) j))))
+
+(pascal <span class="cn">3</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(pascal <span class="cn">3</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(pascal <span class="cn">3</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(pascal <span class="cn">3</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.13">Exercise 1.13<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>See proofs.pdf for the proof that Fib(n) is the closest integer to phi^n/sqrt(5), where phi = (1 + sqrt(5))/2 is the golden ratio.</p>
 <h2 id="1.2.3" class="anchor">
 <a class="anchor__link link" href="#1.2.3" aria-hidden="true">#</a> <span class="number">1.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.3">Orders of Growth<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.14">Exercise 1.14<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Process generated by <code>(count-change <span class="cn">11</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code>:</p>
+<p>(cc 11 5) (cc -39 5) =&gt; 0 (cc 11 4) (cc -14 4) =&gt; 0 (cc 11 3) (cc 1 3) (cc -9 3) =&gt; 0 (cc 1 2) (cc -4 2) =&gt; 0 (cc 1 1) (cc 0 1) =&gt; 1 (cc 1 0) =&gt; 0 (cc 11 2) (cc 6 2) (cc 1 2) (cc -4 2) =&gt; 0 (cc 1 1) (cc 0 1) =&gt; 1 (cc 1 0) =&gt; 0 (cc 6 1) (cc 5 1) (cc 4 1) (cc 3 1) (cc 2 1) (cc 1 1) (cc 0 1) =&gt; 1 (cc 1 0) =&gt; 0 (cc 2 0) =&gt; 0 (cc 3 0) =&gt; 0 (cc 4 0) =&gt; 0 (cc 5 0) =&gt; 0 (cc 6 0) =&gt; 0 (cc 11 1) (cc 10 1) (cc 9 1) (cc 8 1) (cc 7 1) (cc 6 1) (cc 5 1) (cc 4 1) (cc 3 1) (cc 2 1) (cc 1 1) (cc 0 1) =&gt; 1 (cc 1 0) =&gt; 0 (cc 2 0) =&gt; 0 (cc 3 0) =&gt; 0 (cc 4 0) =&gt; 0 (cc 5 0) =&gt; 0 (cc 6 0) =&gt; 0 (cc 7 0) =&gt; 0 (cc 8 0) =&gt; 0 (cc 9 0) =&gt; 0 (cc 10 0) =&gt; 0 (cc 11 0) =&gt; 0</p>
+<p>Orders of growth:</p>
+<p>steps: O(n^5) because there are 5 types of coins. space: O(n) because the max depth of the tree grows linearly.</p>
+<p>Remember: for a tree-recursive process, space is proportional to the maximum depth of the tree, and the number of steps is the number of leaves.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.15">Exercise 1.15<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
+(<span class="kw">define</span> (p x) (<span class="fu">-</span> (<span class="fu">*</span> <span class="cn">3</span> x) (<span class="fu">*</span> <span class="cn">4</span> (cube x))))
+(<span class="kw">define</span> (sine theta)
+  (<span class="kw">if</span> (<span class="fu">&lt;=</span> (<span class="fu">abs</span> theta) <span class="cn">0.1</span>)
+      theta
+      (p (sine (<span class="fu">/</span> theta <span class="cn">3.0</span>)))))</code></pre>
+<ol type="a">
+<li>The procedure <code>p</code> is evaluated five times for <code>(sine <span class="cn">12.15</span>)</code>.</li>
+</ol>
+<pre><code class="blockcode">(sine <span class="cn">12.15</span>)
+<span class="op">~&gt;</span> (p (sine <span class="cn">4.05</span>))
+<span class="op">~&gt;</span> (p (p (sine <span class="cn">1.35</span>)))
+<span class="op">~&gt;</span> (p (p (p (sine <span class="cn">0.45</span>))))
+<span class="op">~&gt;</span> (p (p (p (p (sine <span class="cn">0.15</span>)))))
+<span class="op">~&gt;</span> (p (p (p (p (p (sine <span class="cn">0.05</span>)))))) <span class="co">; five times until theta &lt;= 0.1</span></code></pre>
+<ol start="2" type="a">
+<li>During the process, <code>p</code> is evaluated n times such that theta/3^n &lt;= 0.1. Solving for n gives us n = log(10 theta)/log(3), thus the number of steps for <code>sine</code> grows as O(log(n)). The interpreter must maintain the stack for that number of calls to <code>p</code>, therfore the space complexity is also O(log(n)).</li>
+</ol>
 <h2 id="1.2.4" class="anchor">
 <a class="anchor__link link" href="#1.2.4" aria-hidden="true">#</a> <span class="number">1.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.4">Exponentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))</code></pre>
+<p>Recursive naive: O(n) time, O(n) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">expt</span> b n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      <span class="cn">1</span>
+      (<span class="fu">*</span> b (<span class="fu">expt</span> b (<span class="fu">-</span> n <span class="cn">1</span>)))))
+
+(<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
+<p>Iterative naive: O(n) time, O(1) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">expt</span> b n)
+  (<span class="kw">define</span> (iter counter prod)
+    (<span class="kw">if</span> (<span class="fu">=</span> counter <span class="cn">0</span>)
+        prod
+        (iter (<span class="fu">-</span> counter <span class="cn">1</span>) (<span class="fu">*</span> prod b))))
+  (iter n <span class="cn">1</span>))
+
+(<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
+<p>Recursive successive squaring: O(log(n)) time, O(log(n)) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (fast-expt b n)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">1</span>)
+        ((<span class="fu">even?</span> n) (square (fast-expt b (<span class="fu">/</span> n <span class="cn">2</span>))))
+        (<span class="kw">else</span> (<span class="fu">*</span> b (fast-expt b (<span class="fu">-</span> n <span class="cn">1</span>))))))
+
+(fast-expt <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
 <h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.1.6">Exercise 1.1.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.16">Exercise 1.16<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))</code></pre>
+<p>Iterative successive squaring: O(log(n)) time, O(1) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (fast-expt b n)
+  (<span class="kw">define</span> (iter a b n)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> n <span class="cn">0</span>) a)
+          ((<span class="fu">even?</span> n) (iter a (square b) (<span class="fu">/</span> n <span class="cn">2</span>)))
+          (<span class="kw">else</span> (iter (<span class="fu">*</span> a b) b (<span class="fu">-</span> n <span class="cn">1</span>)))))
+  (iter <span class="cn">1</span> b n))
+
+(fast-expt <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span>
+(fast-expt <span class="cn">2</span> <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">1267650600228229401496703205376</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.17">Exercise 1.17<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Recursive naive: O(n) time, O(n) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">*</span> a b)
+  (<span class="kw">if</span> (<span class="fu">=</span> b <span class="cn">0</span>)
+      <span class="cn">0</span>
+      (<span class="fu">+</span> a (<span class="fu">*</span> a (<span class="fu">-</span> b <span class="cn">1</span>)))))
+
+(<span class="fu">*</span> <span class="cn">5</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
+<p>These are taken as primitives.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (double x) (<span class="fu">+</span> x x))
+(<span class="kw">define</span> (halve x) (<span class="fu">/</span> x <span class="cn">2</span>))</code></pre>
+<p>Recursive successive doubling: O(log(n)) time, O(log(n)) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (fast-* a b)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> b <span class="cn">0</span>) <span class="cn">0</span>)
+        ((<span class="fu">even?</span> b) (double (fast-* a (halve b))))
+        (<span class="kw">else</span> (<span class="fu">+</span> a (fast-* a (<span class="fu">-</span> b <span class="cn">1</span>))))))
+
+(fast-* <span class="cn">5</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.18">Exercise 1.18<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">1.17</span> double halve)))</code></pre>
+<p>Iterative successive doubling: O(log(n)) time, O(1) space</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (fast-* a b)
+  (<span class="kw">define</span> (iter c a b)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> b <span class="cn">0</span>) c)
+          ((<span class="fu">even?</span> b) (iter c (double a) (halve b)))
+          (<span class="kw">else</span> (iter (<span class="fu">+</span> c a) a (<span class="fu">-</span> b <span class="cn">1</span>)))))
+  (iter <span class="cn">0</span> a b))
+
+(fast-* <span class="cn">5</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.19">Exercise 1.19<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Let Tpq tranform (a, b) to (bq + aq + ap, bp + aq). Then Tpq applied twice to (a, b) gives: Tpq(Tpq(a, b)) = Tpq(bq + aq + ap, bp + aq) = ((bp + aq)q + (bq + aq + ap)q + (bq + aq + ap)p, (bp + aq)p + (bq + aq + ap)q) = (bpq + aq^2 + bq(q + p) + aq(q + p) + ap(q + p), bp^2 + aqp + bq^2 + aq^2 + apq) = (bpq + aq^2 + bq^2 + bpq + aq^2 + apq + apq + ap^2, bp^2 + apq + bq^2 + aq^2 + apq) = (b(q^2 + 2pq) + a(q^2 + 2pq) + a(p^2 + q^2), b(p^2 + q^2) + a(q^2 + 2pq)) = Tp’q’(a, b) where p’ = p^2 + q^2 and q = q^2 + 2pq.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (fib n)
+  (<span class="kw">define</span> (iter a b p q count)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> count <span class="cn">0</span>) b)
+          ((<span class="fu">even?</span> count)
+           (iter a
+                 b
+                 (<span class="fu">+</span> (<span class="fu">*</span> p p) (<span class="fu">*</span> q q))
+                 (<span class="fu">+</span> (<span class="fu">*</span> q q) (<span class="fu">*</span> <span class="cn">2</span> p q))
+                 (<span class="fu">/</span> count <span class="cn">2</span>)))
+          (<span class="kw">else</span> (iter (<span class="fu">+</span> (<span class="fu">*</span> b q) (<span class="fu">*</span> a q) (<span class="fu">*</span> a p))
+                      (<span class="fu">+</span> (<span class="fu">*</span> b p) (<span class="fu">*</span> a q))
+                      p
+                      q
+                      (<span class="fu">-</span> count <span class="cn">1</span>)))))
+  (iter <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> n))
+
+(fib <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
+(fib <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">354224848179261915075</span></code></pre>
 <h2 id="1.2.5" class="anchor">
 <a class="anchor__link link" href="#1.2.5" aria-hidden="true">#</a> <span class="number">1.2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.5">Greatest Common Divisors<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
+<p>Euclid’s Algorithm: O(log(n)) time</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">gcd</span> a b)
+  (<span class="kw">if</span> (<span class="fu">=</span> b <span class="cn">0</span>)
+      a
+      (<span class="fu">gcd</span> b (<span class="fu">remainder</span> a b))))
+
+(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.20">Exercise 1.20<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Applicative order performs 4 remainder operations.</p>
+<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">6</span> (<span class="fu">remainder</span> <span class="cn">40</span> <span class="cn">6</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">6</span> <span class="cn">4</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">4</span> (<span class="fu">remainder</span> <span class="cn">6</span> <span class="cn">4</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">4</span> <span class="cn">2</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">2</span> (<span class="fu">remainder</span> <span class="cn">4</span> <span class="cn">2</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">2</span> <span class="cn">0</span>)
+<span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+<p>Normal order performs 18 remainder operations. Each <code>b</code> gets evaluated once in the <code>(<span class="fu">=</span> b <span class="cn">0</span>)</code> predicate (14 operations). The final <code>a</code> gets evaluated in the end (4 operations). Together, that makes 18.</p>
+<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
+        (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
+        (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
+                   (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
+                   (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))
+        (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
+                   (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
+                              (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))))
+<span class="op">=&gt;</span> (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
+              (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))</code></pre>
 <h2 id="1.2.6" class="anchor">
 <a class="anchor__link link" href="#1.2.6" aria-hidden="true">#</a> <span class="number">1.2.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.6">Example: Testing for Primality<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="1.2.6.1" class="anchor">
 <a class="anchor__link link" href="#1.2.6.1" aria-hidden="true">#</a> <span class="number">1.2.6.1</span> Searching for divisors
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
+
+(<span class="kw">define</span> (smallest-divisor n) (find-divisor n <span class="cn">2</span>))
+(<span class="kw">define</span> (find-divisor n test-divisor)
+  (<span class="kw">cond</span> ((<span class="fu">&gt;</span> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (<span class="kw">else</span> (find-divisor n (<span class="fu">+</span> test-divisor <span class="cn">1</span>)))))
+(<span class="kw">define</span> (divides? a b) (<span class="fu">=</span> (<span class="fu">remainder</span> b a) <span class="cn">0</span>))</code></pre>
+<p>Trial division: O(sqrt(n)) time</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (prime? n)
+  (<span class="fu">=</span> n (smallest-divisor n)))
+
+(prime? <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(prime? <span class="cn">13</span>) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h3 id="1.2.6.2" class="anchor">
 <a class="anchor__link link" href="#1.2.6.2" aria-hidden="true">#</a> <span class="number">1.2.6.2</span> The Fermat test
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.2.6.1</span> prime?)))
+
+(<span class="kw">define</span> (expmod base exp m)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> exp <span class="cn">0</span>) <span class="cn">1</span>)
+        ((<span class="fu">even?</span> exp)
+         (<span class="fu">remainder</span> (square (expmod base (<span class="fu">/</span> exp <span class="cn">2</span>) m))
+                    m))
+        (<span class="kw">else</span> (<span class="fu">remainder</span> (<span class="fu">*</span> base (expmod base (<span class="fu">-</span> exp <span class="cn">1</span>) m))
+                         m))))
+
+(<span class="kw">define</span> (fermat-test n)
+  (<span class="kw">define</span> (try-it a)
+    (<span class="fu">=</span> (expmod a n n) a))
+  (try-it (<span class="fu">+</span> <span class="cn">1</span> (random (<span class="fu">-</span> n <span class="cn">1</span>)))))</code></pre>
+<p>Fermat test: O(log(n)) time, probabilistic</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (fast-prime? n times)
+  (<span class="kw">or</span> (<span class="fu">=</span> times <span class="cn">0</span>)
+      (<span class="kw">and</span> (fermat-test n)
+           (fast-prime? n (<span class="fu">-</span> times <span class="cn">1</span>)))))
+
+(<span class="kw">define</span> many-times <span class="cn">10</span>)</code></pre>
+<p>The Fermat test only has false positives on composite numbers (incorrectly reported as prime), not prime numbers. So the test for 13 is deterministic. We leave the test for 10 commented out since it will fail at random.</p>
+<pre><code class="blockcode"><span class="co">; (fast-prime? 10 many-times) =&gt; #f</span>
+(fast-prime? <span class="cn">13</span> many-times) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>The first Carmichael number, 561, fools the Fermat test: no matter how many iterations we use, it will always think it’s prime.</p>
+<pre><code class="blockcode">(prime? <span class="cn">561</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(fast-prime? <span class="cn">561</span> many-times) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.21">Exercise 1.21<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.1</span> smallest-divisor)))
+
+(smallest-divisor <span class="cn">199</span>) <span class="op">=&gt;</span> <span class="cn">199</span>
+(smallest-divisor <span class="cn">1999</span>) <span class="op">=&gt;</span> <span class="cn">1999</span>
+(smallest-divisor <span class="cn">19999</span>) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.22">Exercise 1.22<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.1</span> prime?)))
+
+(<span class="kw">define</span> (timed-prime-test p? n)
+  (<span class="fu">newline</span>)
+  (<span class="fu">display</span> n)
+  (start-prime-test p? n (runtime)))
+(<span class="kw">define</span> (start-prime-test p? n start-time)
+  (when (p? n)
+    (report-prime (<span class="fu">-</span> (runtime) start-time))))
+(<span class="kw">define</span> (report-prime elapsed-time)
+  (<span class="fu">display</span> <span class="cn">&quot; *** &quot;</span>)
+  (<span class="fu">display</span> elapsed-time))
+
+(<span class="kw">define</span> (search-for-primes p? a b)
+  (<span class="kw">define</span> (iter a b)
+    (when (<span class="fu">&lt;=</span> a b)
+      (timed-prime-test p? a)
+      (iter (<span class="fu">+</span> a <span class="cn">2</span>) b)))
+  (iter (<span class="kw">if</span> (<span class="fu">odd?</span> a) a (<span class="fu">+</span> a <span class="cn">1</span>)) b))
+
+(string-contains?
+ (capture-output (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
+ <span class="cn">&quot;7 *** &quot;</span>)
+<span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>3 primes greater than 1,000 (A)</p>
+<pre><code class="blockcode"><span class="co">; 1009 *** 4.792213439941406e-5</span>
+<span class="co">; 1013 *** 4.291534423828125e-5</span>
+<span class="co">; 1019 *** 4.792213439941406e-5</span></code></pre>
+<p>3 primes greater than 10,000 (B) 2.3A &lt; B &lt; 2.8A, sqrt(10) = 3.16</p>
+<pre><code class="blockcode"><span class="co">; 10007 *** 1.1086463928222656e-4</span>
+<span class="co">; 10009 *** 1.1396408081054688e-4</span>
+<span class="co">; 10037 *** 1.2302398681640625e-4</span></code></pre>
+<p>3 primes greater than 100,000 (C) 3.3B &lt; C &lt; 4.1B, sqrt(10) = 3.16</p>
+<pre><code class="blockcode"><span class="co">; 100003 *** 4.010200500488281e-4</span>
+<span class="co">; 100019 *** 3.6597251892089844e-4</span>
+<span class="co">; 100043 *** 4.558563232421875e-4</span></code></pre>
+<p>3 primes greater than 1,000,000 (D) 2.8C &lt; D &lt; 3.4C, sqrt(10) = 3.16 23.7A &lt; D &lt; 31.9A, sqrt(1000) = 31.62</p>
+<pre><code class="blockcode"><span class="co">; 1000003 *** .0013530254364013672</span>
+<span class="co">; 1000033 *** .0011339187622070312</span>
+<span class="co">; 1000037 *** .0013699531555175781</span></code></pre>
+<p>The data seems to bear out the O(sqrt(n)) prediction. The larger the numbers, the closer the growth between powers of ten is to the square root of ten. This result is compatible with the notion that programs on the machine run in time proportional to the number of steps required for the computation.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.23">Exercise 1.23<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.22</span> search-for-primes)))</code></pre>
+<p>Trial division, but only testing odd divisors.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (prime? n)
+  (<span class="kw">define</span> (divides? a b)
+    (<span class="fu">=</span> (<span class="fu">remainder</span> b a) <span class="cn">0</span>))
+  (<span class="kw">define</span> (next n)
+    (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">2</span>) <span class="cn">3</span> (<span class="fu">+</span> n <span class="cn">2</span>)))
+  (<span class="kw">define</span> (find-divisor n test-divisor)
+    (<span class="kw">cond</span> ((<span class="fu">&gt;</span> (square test-divisor) n) n)
+          ((divides? test-divisor n) test-divisor)
+          (<span class="kw">else</span> (find-divisor n (next test-divisor)))))
+  (<span class="kw">define</span> (smallest-divisor n)
+    (find-divisor n <span class="cn">2</span>))
+  (<span class="fu">=</span> n (smallest-divisor n)))
+
+(string-contains?
+ (capture-output (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
+ <span class="cn">&quot;7 *** &quot;</span>)
+<span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>3 primes greater than 1,000</p>
+<pre><code class="blockcode"><span class="co">; 1009 *** 5.1975250244140625e-5   (1.085x)</span>
+<span class="co">; 1013 *** 5.1975250244140625e-5   (1.211x)</span>
+<span class="co">; 1019 *** 6.198883056640625e-5    (1.294x)</span></code></pre>
+<p>3 primes greater than 10,000</p>
+<pre><code class="blockcode"><span class="co">; 10007 *** 1.1491775512695312e-4  (1.037x)</span>
+<span class="co">; 10009 *** 1.1801719665527344e-4  (1.036x)</span>
+<span class="co">; 10037 *** 1.1897087097167969e-4  (0.967x)</span></code></pre>
+<p>3 primes greater than 100,000</p>
+<pre><code class="blockcode"><span class="co">; 100003 *** 3.540515899658203e-4  (0.883x)</span>
+<span class="co">; 100019 *** 3.490447998046875e-4  (0.954x)</span>
+<span class="co">; 100043 *** 3.590583801269531e-4  (0.788x)</span></code></pre>
+<p>3 primes greater than 1,000,000</p>
+<pre><code class="blockcode"><span class="co">; 1000003 *** .0010960102081298828 (0.810x)</span>
+<span class="co">; 1000033 *** .001055002212524414  (0.930x)</span>
+<span class="co">; 1000037 *** .0010900497436523438 (0.796x)</span></code></pre>
+<p>The expectation of half time was not confirmed. In fact, this method is actually slower for primes under 10,000. Even for seven-figure primes, this method only shaves off 20% of the time. There was probably some error in these measurements – the time measured is too small. Other processes on the computer and random factors might have played a role. I was surprised that the new method turned out this bad (for relatively small primes, anyway). By replacing the increment with a call to the next procedure, we add some overhead and a conditional (which implicates branch prediction), and maybe this outweighed the gain from skipping the even numbers past two.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.24">Exercise 1.24<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.2</span> fast-prime?) (?<span class="cn">1.22</span> search-for-primes)))
+
+(<span class="kw">define</span> (prime? n) (fast-prime? n <span class="cn">100</span>))
+
+(string-contains?
+ (capture-output (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
+ <span class="cn">&quot;7 *** &quot;</span>)
+<span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>3 primes greater than 1,000 (A)</p>
+<pre><code class="blockcode"><span class="co">; 1009 *** .003638029098510742</span>
+<span class="co">; 1013 *** .003793001174926758</span>
+<span class="co">; 1019 *** .003606081008911133</span></code></pre>
+<p>3 primes greater than 10,000 (B) 0.988A &lt; B &lt; 1.196A</p>
+<pre><code class="blockcode"><span class="co">; 10007 *** .004311084747314453</span>
+<span class="co">; 10009 *** .0039730072021484375</span>
+<span class="co">; 10037 *** .0037479400634765625</span></code></pre>
+<p>3 primes greater than 100,000 (C) 0.893B &lt; C &lt; 1.294B</p>
+<pre><code class="blockcode"><span class="co">; 100003 *** .004847049713134766</span>
+<span class="co">; 100019 *** .004848003387451172</span>
+<span class="co">; 100043 *** .003850221633911133</span></code></pre>
+<p>3 primes greater than 1,000,000 (D) 0.891C &lt; D &lt; 1.453C 1.138A &lt; D &lt; 1.551A</p>
+<pre><code class="blockcode"><span class="co">; 1000003 *** .005592823028564453</span>
+<span class="co">; 1000033 *** .004972934722900391</span>
+<span class="co">; 1000037 *** .0043179988861083984</span></code></pre>
+<p>Since the Fermat test has O(log(n)) growth, I expected the time to the primes near 1,000,000 to be only a bit greater than the time needed to test primes near 1,000. The data bears this out – for each additional order of magnitude of the primes, the time required increases by a small, constant amount. Specifically, primes that are 10 times larger take about 0.001 seconds longer to test using the Fermat method. It should be noted that these results may be dependent on the choice of 100 as the second argument to <code>fast-prime?</code> (the exercise did not specify what value to use).</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.25">Exercise 1.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.2.4</span> fast-expt) (:<span class="cn">1.2.6.2</span> expmod)))
+
+(<span class="kw">define</span> (alyssa-expmod base exp m)
+  (<span class="fu">remainder</span> (fast-expt base exp) m))</code></pre>
+<p>This procedure works, but it is not as efficient. The Fermat test takes much longer using this version of expmod – longer by three orders of magnitude. While <code>fast-expt</code> is reasonably fast, the original <code>expmod</code> procedure is much faster. The key to its implementation is not only successive squaring (which <code>fast-expt</code> does as well in Alyssa’s procedure), but that it calls remainder between each squaring. Alyssa’s procedure does not, so the value becomes enormous (requiring bignums, which is slow) by the time the remainder is finally taken. Suppose we test the primality of n = 9, choosing a = 5. Using the old definition of <code>expmod</code>, the process will evolve like so:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> r <span class="fu">remainder</span>)
+(<span class="kw">define</span> s square)
+(expmod <span class="cn">5</span> <span class="cn">9</span> <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (expmod <span class="cn">5</span> <span class="cn">8</span> <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (expmod <span class="cn">5</span> <span class="cn">4</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (expmod <span class="cn">5</span> <span class="cn">2</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (expmod <span class="cn">5</span> <span class="cn">1</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r (<span class="fu">*</span> <span class="cn">5</span> (expmod <span class="cn">5</span> <span class="cn">0</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">1</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r <span class="cn">5</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s <span class="cn">5</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r <span class="cn">25</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s <span class="cn">7</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r <span class="cn">49</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s <span class="cn">4</span>) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r <span class="cn">16</span> <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">7</span>) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r <span class="cn">35</span> <span class="cn">9</span>)
+<span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
+<p>Compare this to the evolution of the process using the Alyssa’s procedure:</p>
+<pre><code class="blockcode">(alyssa-expmod <span class="cn">5</span> <span class="cn">9</span> <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (fast-expt <span class="cn">5</span> <span class="cn">9</span>) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r <span class="cn">1953125</span> <span class="cn">9</span>)</code></pre>
+<p>The original <code>expmod</code> doesn’t need to deal with numbers anywhere near that size, so it is much more efficient. This number may seem okay, but it will grow exponentially with n (by definition), and will quickly require arbitrary precision integer math (bignum), which is much slower than fixnum arithmetic.</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.26">Exercise 1.26<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>When the <code>square</code> combination is evaluated, the <code>expmod</code> combination is evaluated once and then its value is substituted into the <code>square</code> compound procedure according to the substitution model. When the squaring is written as an explicit multiplication, the <code>expmod</code> combination is evaluated twice. The interpreter has no way of knowing that they will have the same value. This transforms a linear recursive process into a tree-recursive process. The time complexity of this tree-recursive process is O(log(2^n)), or O(n).</p>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.27">Exercise 1.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.1</span> prime?) (:<span class="cn">1.2.6.2</span> expmod)))
+
+(<span class="kw">define</span> (fermat-all? n)
+  (<span class="kw">define</span> (iter a)
+    (<span class="kw">or</span> (<span class="fu">&gt;=</span> a n)
+        (<span class="kw">and</span> (<span class="fu">=</span> (expmod a n n) a)
+             (iter (<span class="fu">+</span> a <span class="cn">1</span>)))))
+  (iter <span class="cn">1</span>))</code></pre>
+<p>These Carmichael numbers pass the Fermat tests for all values of a &lt; n:</p>
+<pre><code class="blockcode">(fermat-all? <span class="cn">561</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(fermat-all? <span class="cn">1105</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(fermat-all? <span class="cn">1729</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(fermat-all? <span class="cn">2465</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(fermat-all? <span class="cn">2821</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(fermat-all? <span class="cn">6601</span>) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>According to the trial division procedure, none of them are prime:</p>
+<pre><code class="blockcode">(prime? <span class="cn">561</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(prime? <span class="cn">1105</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(prime? <span class="cn">1729</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(prime? <span class="cn">2465</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(prime? <span class="cn">2821</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(prime? <span class="cn">6601</span>) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3>
 <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.28">Exercise 1.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-</article>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.2.6.2</span> many-times)))
+
+(<span class="kw">define</span> (square-check x m)
+  (<span class="kw">let</span> ((sqm (<span class="fu">remainder</span> (square x) m)))
+    (<span class="kw">if</span> (<span class="kw">and</span> (<span class="fu">not</span> (<span class="kw">or</span> (<span class="fu">=</span> x <span class="cn">1</span>) (<span class="fu">=</span> x (<span class="fu">-</span> m <span class="cn">1</span>))))
+             (<span class="fu">=</span> sqm <span class="cn">1</span>))
+        <span class="cn">0</span>
+        sqm)))
+(<span class="kw">define</span> (expmod base exp m)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> exp <span class="cn">0</span>) <span class="cn">1</span>)
+        ((<span class="fu">even?</span> exp)
+         (square-check (expmod base (<span class="fu">/</span> exp <span class="cn">2</span>) m) m))
+        (<span class="kw">else</span> (<span class="fu">remainder</span> (<span class="fu">*</span> base (expmod base (<span class="fu">-</span> exp <span class="cn">1</span>) m))
+                         m))))
+
+(<span class="kw">define</span> (miller-rabin-test n)
+  (<span class="kw">define</span> (try-it a)
+    (<span class="fu">=</span> (expmod a (<span class="fu">-</span> n <span class="cn">1</span>) n) <span class="cn">1</span>))
+  (try-it (<span class="fu">+</span> <span class="cn">2</span> (random (<span class="fu">-</span> n <span class="cn">2</span>)))))
+(<span class="kw">define</span> (fast-prime? n times)
+  (<span class="kw">or</span> (<span class="fu">=</span> times <span class="cn">0</span>)
+      (<span class="kw">and</span> (miller-rabin-test n)
+           (fast-prime? n (<span class="fu">-</span> times <span class="cn">1</span>)))))
+
+(fast-prime? <span class="cn">13</span> many-times) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>We cannot write a deterministic test for composite numbers (for the same reason as for the Fermat test in Section 1.2.6), nor for Carmichael numbers since we could get unlucky with the random integers. But I checked and the new <code>fast-prime?</code> procedure based on the Millner-Rabin test does indeed return #f most of the time for Carmichael numbers.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
