@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>$title$</title>
+$if(math)$
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+$endif$
+  <link rel="stylesheet" href="$root$assets/style.css">
+</head>
+<body>
+$if(svg_defs)$
+<div hidden>
+  <svg>
+$if(arrows)$
+    $../assets/arrows.svg()$
+
+$endif$
+$if(external)$
+    $../assets/external.svg()$
+
+$endif$
+$if(circle_left)$
+    $../assets/circle-left.svg()$
+
+$endif$
+$if(circle_right)$
+    $../assets/circle-right.svg()$
+
+$endif$
+  </svg>
+</div>
+$endif$
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header$if(pagenav)$$else$ header--lone$endif$">
+  <a class="title link" href="$root$index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item$if(text)$ sitenav__item--active$endif$ link"
+        href="$root$text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item$if(lecture)$ sitenav__item--active$endif$ link"
+        href="$root$lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item$if(exercise)$ sitenav__item--active$endif$ link"
+        href="$root$exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      $../assets/github.svg()$
+      $--
+    </a>
+  </nav>
+</header>
+$if(pagenav)$
+<nav class="pagenav pagenav--top" aria-label="page">
+  $pagenav()$
+</nav>
+$endif$
+<main id="main">
+$if(index)$
+$../assets/wizard.svg()$
+$endif$
+$body$
+</main>
+$if(pagenav)$
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  $pagenav()$
+</nav>
+$endif$
+<footer class="footer$if(pagenav)$$else$ footer--lone$endif$">
+  <p>© 2021 Mitchell Kember</p>
+</footer>
+</body>
+</html>

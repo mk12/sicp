@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Lecture 3B Notes</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="3a.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="4a.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">3B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation">Symbolic Differentiation; Quotation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="1" class="anchor">
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
+</h2>
+<h3 id="1.1" class="anchor">
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
+</h3>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="highlight.html#3b-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>In order to make a system that’s robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf#page=1" title="SICP Lecture 3B transcript, page 1">Sussman</a></span></p>
+</blockquote>
+</div>
+<ul>
+<li>Don’t solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.</li>
+<li>We’ve seen the power of embedding languages.</li>
+<li>We are going to confuse the distinction between procedures and data even more badly.</li>
+</ul>
+<h3 id="1.2" class="anchor">
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Derivatives and integrals
+</h3>
+<ul>
+<li>Instead of doing a numerical approximation of the derivative, we want to apply the rules of calculus to algebraic expressions.</li>
+<li>Producing derivatives of arbitrary expressions is easy; producing integrals, the inverse operation, is hard.</li>
+<li>Why is it easy to go one way but not the other? Because the rules for differentiation are reduction rules.</li>
+<li>Big problems turn into multiple simpler problems.</li>
+</ul>
+<h3 id="1.3" class="anchor">
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Differentiation procedure
+</h3>
+<ul>
+<li>The reduction rules of differentiation are appropriate for recursion.</li>
+<li>We can write the rules as a case analysis.</li>
+<li>But, we need to be able to <em>represent</em> the expressions.</li>
+<li>The differentiation procedure that takes an <em>expression</em> as an argument is different from the one that takes a function.</li>
+<li>You can’t open up a function. You can only get answers from it.</li>
+<li>An expression is an object representing the algebraic expression that defines a function.</li>
+<li>We can write the procedure <code>deriv</code> using a lot of wishful thinking.</li>
+</ul>
+<h3 id="1.4" class="anchor">
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Expression representation
+</h3>
+<ul>
+<li>To represent sums, products, quotients, etc., why not use the same language we’re writing the program in?</li>
+<li>We can just use list structure.</li>
+<li>There are more built-in predicates we haven’t seen yet: <code>atom?</code> and <code>eq?</code>.</li>
+</ul>
+<h3 id="1.5" class="anchor">
+<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Quotation
+</h3>
+<ul>
+<li>We are also introducing <em>quotation</em>. The words of English are ambiguous: <em>say your name</em> is different from <em>say “your name”</em>.</li>
+<li>The notation in Lisp is to precede the expression with a single quotation mark.</li>
+<li>Quotation makes a language more complex because we can no longer substitute equals for equals (see Bertrand Russell’s “On Denoting”).</li>
+<li>The names <code>car</code> and <code>cdr</code> have survived (originally the address register and the decrement register) because we can do things like <code>cadddr</code> and <code>cadar</code>.</li>
+</ul>
+<h2 id="2" class="anchor">
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
+</h2>
+<h3 id="2.1" class="anchor">
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Simplifying expressions
+</h3>
+<ul>
+<li>The expressions we get from the <code>deriv</code> procedure are ugly.</li>
+<li>Nothing is simplified, and it is hard to read.</li>
+<li>There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.</li>
+</ul>
+<blockquote>
+<p>So the way we might solve this problem is … change the representation … it’s one of the pieces of artillery we have in our war against complexity. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf#page=10" title="SICP Lecture 3B transcript, page 10">Sussman</a></span></p>
+</blockquote>
+<ul>
+<li>We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).</li>
+</ul>
+<h3 id="2.2" class="anchor">
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Conclusion
+</h3>
+<ul>
+<li>Quotation stops and says, “I’m talking about this expression itself.”</li>
+<li>We can write languages that are not only embedded in Lisp, that are completely different, using quotation.</li>
+<li>Quotation gives us tremendous power.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="3a.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="4a.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

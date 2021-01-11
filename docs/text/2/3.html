@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 2.3 Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="2.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="4.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html">Symbolic Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<ul>
+<li>So far we have constructed compound data from numbers only.</li>
+<li>Now, we will work with arbitrary symbols.</li>
+</ul>
+<h2 id="2.3.1" class="anchor">
+<a class="anchor__link link" href="#2.3.1" aria-hidden="true">#</a> <span class="number">2.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.1">Quotation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Lists containing symbols look just like expressions (code).</li>
+<li>We need to <em>quote</em> data objects to manipulate symbols.</li>
+<li>To make the list <code>(a b)</code>, we can’t just do <code>(<span class="fu">list</span> a b)</code> because this will evaluate <code>a</code> and <code>b</code>.</li>
+<li>This is just like natural language. If I say, “Say your name,” you will say the <em>value</em> of “your name.” If I instead say, “Say ‘your name,’” you will literally say the words “your name.”</li>
+<li>To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.</li>
+<li>Here is the difference between symbols and their values:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> a <span class="cn">1</span>)
+(<span class="kw">define</span> b <span class="cn">2</span>)
+(<span class="fu">list</span> a b)   <span class="co">; =&gt; (1 2)</span>
+(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="co">; =&gt; (a b)</span>
+(<span class="fu">list</span> <span class="cn">&#39;a</span> b)  <span class="co">; =&gt; (a 2)</span></code></pre>
+<ul>
+<li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>&#39;()</code>.</li>
+<li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
+</ul>
+<h2 id="2.3.2" class="anchor">
+<a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.</li>
+<li>We will worry about representation later (data abstraction).</li>
+</ul>
+<h3 id="2.3.2.1" class="anchor">
+<a class="anchor__link link" href="#2.3.2.1" aria-hidden="true">#</a> The differentiation program with abstract data
+</h3>
+<ul>
+<li>To start, we will only consider addition and multiplication.</li>
+<li>We need the constant rule, the sum rule, and the product rule.</li>
+<li>We will assume we already have these procedures:</li>
+</ul>
+<pre><code class="blockcode">(variable? e)
+(same-variable? v1 v2)
+(sum? e)
+(addend e)
+(augend e)
+(make-sum a1 a2)
+(product? e)
+(multiplier e)
+(multiplicand e)
+(make-product m1 m2)</code></pre>
+<h3 id="2.3.2.2" class="anchor">
+<a class="anchor__link link" href="#2.3.2.2" aria-hidden="true">#</a> Representing algebraic expressions
+</h3>
+<ul>
+<li>There are many ways we could represent algebraic expressions.</li>
+<li>The most straightforward is in parenthesized Polish notation: Lisp syntax.</li>
+<li>We can simplify the answers just like we did in the rational number example: by changing the constructors.</li>
+<li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
+</ul>
+<h2 id="2.3.3" class="anchor">
+<a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<p>There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:</p>
+<ul>
+<li><code>union-set</code>: new set containing all items of given sets</li>
+<li><code>intersection-set</code>: new set containing only the items that all given sets share</li>
+<li><code>element-of-set?</code>: predicate for an item’s presence in a set</li>
+<li><code>adjoin-set</code>: new set containing one new item</li>
+</ul>
+<h3 id="2.3.3.1" class="anchor">
+<a class="anchor__link link" href="#2.3.3.1" aria-hidden="true">#</a> Sets as unordered lists
+</h3>
+<ul>
+<li>One method is to just use lists. Each time we add a new element, we have to check to make sure it isn’t already in the set.</li>
+<li>This isn’t very efficient.</li>
+<li>The time complexity of <code>element-of-set?</code> (and therefore for <code>adjoin-set</code>) is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>.</li>
+<li>For union and intersection, it’s <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>.</li>
+<li>If we don’t eliminate duplicates, most operations are faster.</li>
+<li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
+</ul>
+<h3 id="2.3.3.2" class="anchor">
+<a class="anchor__link link" href="#2.3.3.2" aria-hidden="true">#</a> Sets as ordered lists
+</h3>
+<ul>
+<li>A more efficient representation is a sorted list.</li>
+<li>We will only consider sets of numbers to keep things simple.</li>
+<li>Now, scanning the entire list in <code>element-of-set?</code> is a worst-case scenario. Most of the time we won’t have to.</li>
+<li>On average we should expect to scan about half of the set.</li>
+<li>This is still <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>; however, intersection gets much faster. Instead of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>, it is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>.</li>
+</ul>
+<h3 id="2.3.3.3" class="anchor">
+<a class="anchor__link link" href="#2.3.3.3" aria-hidden="true">#</a> Sets as binary trees
+</h3>
+<ul>
+<li>An even more efficient representation: binary trees.</li>
+<li>Each node contains an element of the set.</li>
+<li>The left branch contains smaller numbers, and the right branch contains larger numbers.</li>
+<li>The same set can be represented by a tree in many ways.</li>
+<li>If the tree is balanced, each subtree is about half the size of the original tree.</li>
+<li>This allows us to do <code>element-of-set?</code> in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\log(n))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span> time.</li>
+<li>We will use the following list structure to represent trees: each node is the list <code>(number left-subtree right-subtree)</code>.</li>
+<li>Efficiency hinges on the tree being balanced.</li>
+<li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
+</ul>
+<h3 id="2.3.3.4" class="anchor">
+<a class="anchor__link link" href="#2.3.3.4" aria-hidden="true">#</a> Sets and information retrieval
+</h3>
+<ul>
+<li>The techniques discussed for sets show up again and again in information retrieval.</li>
+<li>In a data-management system, each record is identified by a key.</li>
+<li>The key must be unique.</li>
+<li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> access.</li>
+<li>For “random access,” meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
+<li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
+</ul>
+<h2 id="2.3.4" class="anchor">
+<a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>We can represent data as sequences of ones and zeros (bits).</li>
+<li>Codes like ASCII are fixed-length. Each symbol is represented by the same number of bits.</li>
+<li>On the other hand, Morse code is variable-length. Since <em>e</em> is the most common letter, it is represented by a single dot.</li>
+<li>The issue with variable-length is that you must have a way of knowing when you’ve reached the end of a symbol.</li>
+<li>Morse code uses a temporal pause. Prefix codes, like Huffman encoding, ensure that no code for a symbol is a prefix of the code for another symbol. This eliminates any ambiguity.</li>
+<li>A Huffman code can be represented as a binary tree with a symbol and its weight (relative frequency) at each leaf.</li>
+<li>Each non-leaf node has a weight (sum of all below) and the set of all the symbols below it. The root node has the set of all the symbols in the tree.</li>
+<li>Each left branch is a zero, and each right branch is a one.</li>
+</ul>
+<h3 id="2.3.4.1" class="anchor">
+<a class="anchor__link link" href="#2.3.4.1" aria-hidden="true">#</a> Generating Huffman trees
+</h3>
+<ul>
+<li>Huffman gave an algorithm for constructing the best code for a given set of symbols and their relative frequencies.</li>
+<li>Begin with all the nodes as leaves, then form a node branching off to the two least frequent symbols.</li>
+<li>Repeat until there is only one node left, the root node.</li>
+</ul>
+<h3 id="2.3.4.2" class="anchor">
+<a class="anchor__link link" href="#2.3.4.2" aria-hidden="true">#</a> Representing Huffman trees
+</h3>
+<ul>
+<li>Leaves are represented by the list beginning with the symbol <code>leaf</code> and with two more elements: the symbol and the weight.</li>
+<li>Trees are represented by the list <code>(left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="2.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="4.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

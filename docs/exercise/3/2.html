@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 3.2 Exercises</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="1.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="3.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html">The Environment Model of Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="3.2.1" class="anchor">
+<a class="anchor__link link" href="#3.2.1" aria-hidden="true">#</a> <span class="number">3.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_sec_3.2.1">The Rules for Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))
+(square <span class="cn">5</span>) <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
+<p>Environment diagram:</p>
+<pre><code class="blockcode"><span class="co">;                 _____________</span>
+<span class="co">; global env --&gt; | square: --+ |</span>
+<span class="co">;                |___________|_|&lt;-+</span>
+<span class="co">;                 ^          |    |</span>
+<span class="co">;                 |          V    |</span>
+<span class="co">;         E1 --&gt;[x: 5]     [*|*]--+</span>
+<span class="co">;                           V</span>
+<span class="co">;                  parameters: x</span>
+<span class="co">;                        body: (* x x)</span></code></pre>
+<h2 id="3.2.2" class="anchor">
+<a class="anchor__link link" href="#3.2.2" aria-hidden="true">#</a> <span class="number">3.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_sec_3.2.2">Applying Simple Procedures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.2.1</span> square)))
+
+(<span class="kw">define</span> (sum-of-squares x y) (<span class="fu">+</span> (square x) (square y)))
+(<span class="kw">define</span> (f a) (sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>)))
+(f <span class="cn">5</span>) <span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> (<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>)) <span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
+<p>Environment diagram:</p>
+<pre><code class="blockcode"><span class="co">;                 _____________________</span>
+<span class="co">; global env --&gt; | sum-of-squares: ... |</span>
+<span class="co">;                | square: ...         |</span>
+<span class="co">;                | f: ...              |&lt;------------+</span>
+<span class="co">;                |_____________________|&lt;+           |</span>
+<span class="co">;   (f 5)        ^           ^           |           |</span>
+<span class="co">;                |           |           |           |</span>
+<span class="co">;          E1-&gt;[a: 5]  E2-&gt;[x: 6]  E3-&gt;[x: 6]  E4-&gt;[x:10]</span>
+<span class="co">;                          [y: 7]</span>
+<span class="co">;   (sum-of-squares  (+ (square x)   (* x x)     (* x x)</span>
+<span class="co">;     (+ a 1)           (square y))</span>
+<span class="co">;     (* a 2)</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_thm_3.9">Exercise 3.9<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (factorial n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">1</span>) <span class="cn">1</span> (<span class="fu">*</span> n (factorial (<span class="fu">-</span> n <span class="cn">1</span>)))))</code></pre>
+<p>Six environments are created in the recursive version:</p>
+<pre><code class="blockcode">(factorial <span class="cn">6</span>)                                  <span class="co">; E1 -&gt; [n: 6]</span>
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (factorial <span class="cn">5</span>))                         <span class="co">; E2 -&gt; [n: 5]</span>
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (factorial <span class="cn">4</span>)))                   <span class="co">; E3 -&gt; [n: 4]</span>
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (factorial <span class="cn">3</span>))))             <span class="co">; E4 -&gt; [n: 3]</span>
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (factorial <span class="cn">2</span>)))))       <span class="co">; E5 -&gt; [n: 2]</span>
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (factorial <span class="cn">1</span>)))))) <span class="co">; E6 -&gt; [n: 1]</span>
+<span class="op">=&gt;</span> <span class="cn">720</span>
+
+(<span class="kw">define</span> (factorial n) (fact-iter <span class="cn">1</span> <span class="cn">1</span> n))
+(<span class="kw">define</span> (fact-iter product counter max-count)
+  (<span class="kw">if</span> (<span class="fu">&gt;</span> counter max-count)
+      product
+      (fact-iter (<span class="fu">*</span> counter product)
+                 (<span class="fu">+</span> counter <span class="cn">1</span>)
+                 max-count)))</code></pre>
+<p>Eight environments are created in the iterative version:</p>
+<pre><code class="blockcode">(factorial <span class="cn">6</span>)          <span class="co">; E1 -&gt; [n: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">1</span> <span class="cn">1</span> <span class="cn">6</span>)   <span class="co">; E2 -&gt; [p: 1,   c: 1, m: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span>)   <span class="co">; E3 -&gt; [p: 1,   c: 2, m: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">2</span> <span class="cn">3</span> <span class="cn">6</span>)   <span class="co">; E4 -&gt; [p: 2,   c: 3, m: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">6</span> <span class="cn">4</span> <span class="cn">6</span>)   <span class="co">; E5 -&gt; [p: 6,   c: 4, m: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">24</span> <span class="cn">5</span> <span class="cn">6</span>)  <span class="co">; E6 -&gt; [p: 24,  c: 5, m: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">120</span> <span class="cn">6</span> <span class="cn">6</span>) <span class="co">; E7 -&gt; [p: 120, c: 6, m: 6]</span>
+<span class="op">=&gt;</span> (fact-iter <span class="cn">720</span> <span class="cn">7</span> <span class="cn">6</span>) <span class="co">; E8 -&gt; [p: 720, c: 7, m: 6]</span>
+<span class="op">=&gt;</span> <span class="cn">720</span></code></pre>
+<h2 id="3.2.3" class="anchor">
+<a class="anchor__link link" href="#3.2.3" aria-hidden="true">#</a> <span class="number">3.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_sec_3.2.3">Frames as the Repository of Local State<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_thm_3.10">Exercise 3.10<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<p>With or without the explicit state variable, <code>make-withdraw</code> creates objects with the same behaviour. The only difference with the explicit variable in the let-form is that there is an extra environment. Applying <code>make-withdraw</code> creates E1 to bind 100 to <code>initial-amount</code>, and then the let-form desugars to a lambda application, creating a new environment E2. This environment holds <code>balance</code>, beginning with the same value as <code>initial amount</code>. When we evaluate <code>(W1 <span class="cn">20</span>)</code>, we create the environment E3 that binds <code>amount</code> to 20. The assignment in the code for W2 changes the value of <code>balance</code> from 100 to 80. The value of <code>initial-amount</code> remains the same, because it was never changed in a <code>set!</code> assignment. The behaviour is no different with the let-form because, although we are now saving the original balance, we aren’t doing anything with it. We can’t access it outside of the procedure.</p>
+<pre><code class="blockcode"><span class="co">;                ____________________</span>
+<span class="co">; global env --&gt;| make-withdraw: ... |</span>
+<span class="co">;               | W2: ---------+     |</span>
+<span class="co">;               | W1:          |     |&lt;--------------------+</span>
+<span class="co">;               |_|____________|_____|               E3    |</span>
+<span class="co">;                 |        ^   |                      [initial-amount: 100]</span>
+<span class="co">;                 |  E1    |   +---------------&gt;[*|*]      ^</span>
+<span class="co">;                 |   [initial-amount: 100]      | |   E4  |</span>
+<span class="co">;                 |        ^                     | +---&gt;[balance: 60]</span>
+<span class="co">;                 V    E2  |                     |         ^</span>
+<span class="co">;               [*|*]--&gt;[balance: 80]            |         |</span>
+<span class="co">;                V              ^                |         |</span>
+<span class="co">;       parameters: amount }&lt;---|----------------+         |</span>
+<span class="co">;             body: ...    }    |                          |</span>
+<span class="co">;                               |          (W2 40) [amount: 40]</span>
+<span class="co">;                               |</span>
+<span class="co">;      (W1 20) [amount: 20]-----+</span></code></pre>
+<h2 id="3.2.4" class="anchor">
+<a class="anchor__link link" href="#3.2.4" aria-hidden="true">#</a> <span class="number">3.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_sec_3.2.4">Internal Definitions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-21.html#%25_thm_3.11">Exercise 3.11<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.1</span> make-account)))</code></pre>
+<p>First, we just have a procedure bound in the global environment.</p>
+<pre><code class="blockcode"><span class="co">; global env --&gt; [make-account: ...]</span>
+
+(<span class="kw">define</span> acc (make-account <span class="cn">50</span>))</code></pre>
+<p>Now, we have <code>acc</code> in the global frame as well. It is bound to a procedure whose environment pointer points to E1, the environment created when we evaluated <code>(make-account <span class="cn">50</span>)</code>. It first bound the formal parameter <code>balance</code> to 50, and then three internal procedures were defined and bound in the same frame. One of them, <code>dispatch</code>, points to the same procedure as <code>acc</code>.</p>
+<pre><code class="blockcode"><span class="co">;                 __________________</span>
+<span class="co">; global env --&gt; | make-account: ...|</span>
+<span class="co">;                | acc:             |</span>
+<span class="co">;                |__|_______________|</span>
+<span class="co">;                   |           ^</span>
+<span class="co">;                   V      E1___|____________</span>
+<span class="co">;                 [*|*]----&gt;| balance: 50    |&lt;-----+</span>
+<span class="co">;                  V        | withdraw:------|--&gt;[*|*]</span>
+<span class="co">;         parameters: m     | deposit:-------|-+  +-----&gt; parameters: amount</span>
+<span class="co">;               body: ...   | dipspatch:-+   | |                body: ...</span>
+<span class="co">;            ~~~~~~~~~~~~&lt;---------------+   | +-&gt;[*|*]</span>
+<span class="co">;                           |________________|&lt;----|-+</span>
+<span class="co">;                                                  +----&gt; parameters: amount</span>
+<span class="co">;                                                               body: ...</span>
+
+((acc <span class="cn">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span></code></pre>
+<p>First we evaluate <code>(acc <span class="cn">&#39;deposit</span>)</code>. We create E2 to bind <code>m</code> to the symbol <code>deposit</code>, and then we evaluate the body of <code>acc</code>, which is the same as the body of <code>dispatch</code>. The enclosing environment of E2 is E1, because that is pointed to by the procedure. This application returns the value of <code>deposit</code> from E1. Now we evaluate <code>((#&lt;deposit&gt; <span class="cn">40</span>)</code>. We create E3 to bind <code>amount</code> to the value 40, and the enclosing environment is E1 (pointed to by the procedure <code>deposit</code>). This finally assigns 90 to <code>balance</code> in E1, and then returns that value.</p>
+<pre><code class="blockcode"><span class="co">; E2 [m: deposit]--+</span>
+<span class="co">;                  +----&gt; E1 [balance:90, ...]</span>
+<span class="co">; E3 [amount: 40]--+</span>
+
+((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span></code></pre>
+<p>This is almost the same, except the procedure returns the <code>withdraw</code> procedures instead. I am reusing the names E2 and E3 because they have been used and are no longer relevant, since nothing poitns to them.</p>
+<pre><code class="blockcode"><span class="co">; E2 [m: withdraw]--+</span>
+<span class="co">;                   +---&gt; E1 [balance: 30, ...]</span>
+<span class="co">; E3 [amount: 60]---+</span></code></pre>
+<p>All this time, the local state for <code>acc</code> is kept in E1, the environment originally created to apply the <code>make-account</code> procedure. If we define another account with <code>(<span class="kw">define</span> acc2 (make-account <span class="cn">100</span>))</code>, it will have its own environment containing <code>balance</code> and bindings for the internal procedures. The only thing shared between <code>acc</code> and <code>acc2</code> is (possibly) the code for the internal procedures, including <code>dispatch</code>, which the accounts really are. This sharing is an implementation detail, though.</p>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="1.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="3.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

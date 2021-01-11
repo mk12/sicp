@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Lecture 6B Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="6a.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="7a.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">6B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6b-streams-part-2">Streams, Part 2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="1" class="anchor">
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
+</h2>
+<h3 id="1.1" class="anchor">
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
+</h3>
+<ul>
+<li>We’ve been looking at stream processing, an on-demand method of computation.</li>
+<li>We don’t compute elements until we’ve asked for them. When do we “ask” for them?</li>
+<li>Example: <code>nth-stream</code> forces the first <code>n</code> elements of a stream.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (nth-stream n s)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      (head s)
+      (nth-stream (<span class="fu">-1+</span> n) (tail s))))</code></pre>
+<h3 id="1.2" class="anchor">
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Infinite streams
+</h3>
+<ul>
+<li>How long can a stream be? It can be <em>infinite</em>!</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (integers-from n)
+  (<span class="kw">cons-stream</span> n (integers-from (<span class="fu">1+</span> n))))
+(<span class="kw">define</span> integers (integers-from <span class="cn">1</span>))</code></pre>
+<ul>
+<li>Is this really all the integers, or is it just cleverly arranged so that whenever you look for an integer you find it there? This is a sort of philosophical question.</li>
+</ul>
+<h3 id="1.3" class="anchor">
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Sieve of Eratosthenes
+</h3>
+<ul>
+<li>Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you’re left with is all the primes.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (sieve s)
+  (<span class="kw">cons-stream</span>
+   (head s)
+   (sieve (<span class="fu">filter</span> (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (divisible? x (head s))))
+                  (tail s)))))
+(<span class="kw">define</span> primes (sieve (integers-from <span class="cn">2</span>)))
+(nth-stream <span class="cn">20</span> primes)
+<span class="op">=&gt;</span> <span class="cn">73</span></code></pre>
+<h2 id="2" class="anchor">
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
+</h2>
+<h3 id="2.1" class="anchor">
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Defining streams implicitly
+</h3>
+<ul>
+<li>We’ve so far seen procedures that recursively create streams.</li>
+<li>There’s another way. But first we need some additional procedures:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-streams s1 s2)
+  (<span class="kw">cond</span> ((empty-stream? s1) s2)
+        ((empty-stream? s2) s1)
+        (<span class="kw">else</span> (<span class="kw">cons-stream</span> (<span class="fu">+</span> (head s1) (head s2))
+                           (add-streams (tail s1) (tail s2))))))
+(<span class="kw">define</span> (scale-stream c s)
+  (map-stream (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x c)) s))</code></pre>
+<ul>
+<li>Now, we can define streams all at once:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
+(<span class="kw">define</span> integers (add-streams integers ones))</code></pre>
+<h3 id="2.2" class="anchor">
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> More examples
+</h3>
+<ul>
+<li>We can calculate the integral <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>∫</mo><mi>s</mi><mtext> </mtext><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\int s\,dt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.11112em;vertical-align:-0.30612em;"></span><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span></span> the same way you would in signal processing:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (integral s initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span> initial-value
+                 (add-streams (scale-stream dt s) int)))
+  int)</code></pre>
+<ul>
+<li>Another example, the Fibonacci numbers:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> fibs
+  (<span class="kw">cons-stream</span> <span class="cn">0</span>
+               (<span class="kw">cons-stream</span> <span class="cn">1</span>
+                            (add-streams fibs (tail fibs)))))</code></pre>
+<h3 id="2.3" class="anchor">
+<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Explicit <code>delay</code>
+</h3>
+<ul>
+<li>Let’s say we want to solve <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>y</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><msup><mi>y</mi><mn>2</mn></msup><mo separator="true">,</mo><mtext>  </mtext><mi>y</mi><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y&#x27;=y^2,\;y(0)=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.946332em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> using the step <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>t</mi><mo>=</mo><mn>0.001</mn></mrow><annotation encoding="application/x-tex">dt=0.001</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span></span></span></span>.</li>
+<li>We’d like to write a stream program to solve this:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> y (integral dy <span class="cn">1</span> <span class="cn">0.001</span>))
+(<span class="kw">define</span> dy (map-stream square y))</code></pre>
+<ul>
+<li>This doesn’t work because <code>y</code> and <code>dy</code> each need the other defined first.</li>
+<li>We can fix it the same way <code>cons-stream</code> allows self-referencing definitions: by introducing another <code>delay</code>, so that we can get the first value of the integral stream without knowing what stream it’s integrating.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (integral delayed-s initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span> initial-value
+                 (<span class="kw">let</span> ((s (<span class="fu">force</span> delayed-s)))
+                   (add-streams (scale-stream dt s) int))))
+  int)
+(<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) <span class="cn">1</span> <span class="cn">0.001</span>))
+(<span class="kw">define</span> dy (map-stream square y))</code></pre>
+<h2 id="3" class="anchor">
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
+</h2>
+<h3 id="3.1" class="anchor">
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Normal-order evaluation
+</h3>
+<ul>
+<li>We’ve been divorcing time in the program from time in the computer.</li>
+<li>Sometimes, to really take advantage of this method, you have to write explicit <code>delay</code> s. But in larger programs it can be very difficult to see where you need them.</li>
+<li>Is there a way around this? Yes! By making <em>all</em> arguments to <em>every</em> procedure delayed.</li>
+<li>This is <em>normal-order</em> evaluation, as opposed to <em>applicative-order</em> which we’ve been using.</li>
+<li>We wouldn’t need <code>cons-stream</code> because it would be the same as <code>cons</code>.</li>
+<li>But there’s a price. The language becomes more elegant, but less expressive. For example, we could no longer write iterative procedures.</li>
+<li>You get these “dragging tails” of thunks that haven’t been evaluated, taking up 3 MB (!).</li>
+<li>A more striking issue: normal-order evaluation and side effects just don’t mix.</li>
+<li>The whole idea with streams was to throw away time; but with side effects we want time!</li>
+<li><em>Functional</em> programming languages avoid this issue by disallowing side effects.</li>
+</ul>
+<h3 id="3.2" class="anchor">
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Avoiding mutable state
+</h3>
+<ul>
+<li>What about generating random numbers? We wanted modularity, so we encapsulated the random number generation with local state.</li>
+<li>Instead, we could create an infinite stream of random numbers.</li>
+<li>With bank accounts, instead of using local state and message passing, we can have the bank account process a stream of transaction requests, and emit a stream of balances.</li>
+<li>Can you do everything without assignment? No, there seem to be places where purely functional programming languages break down.</li>
+<li>For example, how do we model a joint bank account with multiple users? We’d have to merge the request streams somehow.</li>
+<li>The conflict between objects/state/time and <code>delay</code>/streams/functional programming might have very little to do with CS, and be more about different ways of viewing the world.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="6a.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="7a.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

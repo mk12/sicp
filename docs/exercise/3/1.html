@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 3.1 Exercises</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="2.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html">Assignment and Local State<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="3.1.1" class="anchor">
+<a class="anchor__link link" href="#3.1.1" aria-hidden="true">#</a> <span class="number">3.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.1">Local State Variables<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">(<span class="kw">define</span> balance <span class="cn">100</span>)
+(<span class="kw">define</span> (withdraw amount)
+  (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+      (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+             balance)
+      <span class="cn">&quot;Insufficient funds&quot;</span>))
+
+(withdraw <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+(withdraw <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">50</span>
+(withdraw <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Insufficient funds&quot;</span>
+(withdraw <span class="cn">15</span>) <span class="op">=&gt;</span> <span class="cn">35</span>
+
+(<span class="kw">define</span> new-withdraw
+  (<span class="kw">let</span> ((balance <span class="cn">100</span>))
+    (<span class="kw">lambda</span> (amount)
+      (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+          (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+                 balance)
+          <span class="cn">&quot;Insufficient funds&quot;</span>))))
+
+(new-withdraw <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+(new-withdraw <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">50</span>
+(new-withdraw <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Insufficient funds&quot;</span>
+(new-withdraw <span class="cn">15</span>) <span class="op">=&gt;</span> <span class="cn">35</span>
+
+(<span class="kw">define</span> (make-withdraw balance)
+  (<span class="kw">lambda</span> (amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>)))
+
+(<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))
+(<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))
+(W1 <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">50</span>
+(W2 <span class="cn">70</span>) <span class="op">=&gt;</span> <span class="cn">30</span>
+(W2 <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Insufficient funds&quot;</span>
+(W1 <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
+
+(<span class="kw">define</span> (make-account balance)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
+    balance)
+  (<span class="kw">define</span> (dispatch m)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
+          ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+  dispatch)
+
+(<span class="kw">define</span> acc (make-account <span class="cn">100</span>))
+((acc <span class="cn">&#39;withdraw</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">50</span>
+((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Insufficient funds&quot;</span>
+((acc <span class="cn">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
+((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span>
+((acc <span class="cn">&#39;floof</span>)) <span class="op">=!&gt;</span> <span class="cn">&quot;unknown request: floof&quot;</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.1">Exercise 3.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-accumulator amount)
+  (<span class="kw">lambda</span> (increment)
+    (<span class="kw">set!</span> amount (<span class="fu">+</span> amount increment))
+    amount))
+
+(<span class="kw">define</span> A (make-accumulator <span class="cn">5</span>))
+(A <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">15</span>
+(A <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.2">Exercise 3.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-monitored f)
+  (<span class="kw">let</span> ((n-calls <span class="cn">0</span>))
+    (<span class="kw">lambda</span> (x)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> x <span class="cn">&#39;how-many-calls?</span>) n-calls)
+            ((<span class="fu">eq?</span> x <span class="cn">&#39;reset-count</span>) (<span class="kw">set!</span> n-calls <span class="cn">0</span>))
+            (<span class="kw">else</span> (<span class="kw">set!</span> n-calls (<span class="fu">+</span> n-calls <span class="cn">1</span>))
+                  (f x))))))
+
+(<span class="kw">define</span> s (make-monitored <span class="fu">sqrt</span>))
+(s <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
+(s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(s <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
+(s <span class="cn">&#39;reset-count</span>)
+(s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">0</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.3">Exercise 3.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-account balance password)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
+    balance)
+  (<span class="kw">define</span> (dispatch p m)
+    (<span class="kw">if</span> (<span class="fu">eq?</span> p password)
+        (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
+              ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+              (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m)))
+        (<span class="kw">lambda</span> (x) <span class="cn">&quot;Incorrect password&quot;</span>)))
+  dispatch)
+
+(<span class="kw">define</span> acc (make-account <span class="cn">100</span> <span class="cn">&#39;secret-password</span>))
+((acc <span class="cn">&#39;secret-password</span> <span class="cn">&#39;withdraw</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">60</span>
+((acc <span class="cn">&#39;some-other-password</span> <span class="cn">&#39;deposit</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.4">Exercise 3.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-account balance password)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
+    balance)
+  (<span class="kw">let</span> ((consecutive-wrong <span class="cn">0</span>))
+    (<span class="kw">define</span> (dispatch p m)
+      (<span class="kw">if</span> (<span class="fu">eq?</span> p password)
+          (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
+                ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+                (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m)))
+          (<span class="kw">lambda</span> (x)
+            (<span class="kw">set!</span> consecutive-wrong (<span class="fu">+</span> consecutive-wrong <span class="cn">1</span>))
+            (<span class="kw">if</span> (<span class="fu">&gt;</span> consecutive-wrong <span class="cn">7</span>)
+                (call-the-cops)
+                <span class="cn">&quot;Incorrect password&quot;</span>))))
+    dispatch))
+
+(<span class="kw">define</span> (call-the-cops) <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span>)
+
+(<span class="kw">define</span> acc (make-account <span class="cn">&#39;right</span> <span class="cn">100</span>))
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span></code></pre>
+<h2 id="3.1.2" class="anchor">
+<a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a> <span class="number">3.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<p>Tausworthe PRNG: https://stackoverflow.com/a/23875298</p>
+<pre><code class="blockcode">(<span class="kw">define</span> random-init <span class="cn">1</span>)
+(<span class="kw">define</span> random-max #x7fffffff)
+(<span class="kw">define</span> (rand-update x0)
+  (<span class="kw">let*</span> ((x1 (<span class="fu">fxxor</span> x0 (<span class="fu">fxarithmetic-shift-right</span> x0 <span class="cn">13</span>)))
+         (x2 (<span class="fu">fxxor</span> x1 (<span class="fu">fxarithmetic-shift-left</span> x1 <span class="cn">18</span>))))
+    (<span class="fu">fxand</span> x2 random-max)))
+
+(<span class="kw">define</span> rand
+  (<span class="kw">let</span> ((x random-init))
+    (<span class="kw">lambda</span> ()
+      (<span class="kw">set!</span> x (rand-update x))
+      x)))
+
+(<span class="kw">define</span> (estimate-pi trials)
+  (<span class="fu">sqrt</span> (<span class="fu">/</span> <span class="cn">6</span> (monte-carlo trials cesaro-test))))
+(<span class="kw">define</span> (cesaro-test)
+  (<span class="fu">=</span> (<span class="fu">gcd</span> (rand) (rand)) <span class="cn">1</span>))
+
+(<span class="kw">define</span> (monte-carlo trials experiment)
+  (<span class="kw">define</span> (iter trials-remaining trials-passed)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> trials-remaining <span class="cn">0</span>)
+           (<span class="fu">/</span> trials-passed trials))
+          ((experiment)
+           (iter (<span class="fu">-</span> trials-remaining <span class="cn">1</span>)
+                 (<span class="fu">+</span> trials-passed <span class="cn">1</span>)))
+          (<span class="kw">else</span> (iter (<span class="fu">-</span> trials-remaining <span class="cn">1</span>)
+                      trials-passed))))
+  (iter trials <span class="cn">0</span>))</code></pre>
+<p>This is deterministic because the <code>random-init</code> seed is fixed.</p>
+<pre><code class="blockcode">(estimate-pi <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">3.149183286488868</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.5">Exercise 3.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.1.2</span> monte-carlo rand)))
+
+(<span class="kw">define</span> (random-in-range low high)
+  (<span class="kw">let</span> ((range (<span class="fu">-</span> high low)))
+    (<span class="fu">+</span> low (random range))))
+
+(<span class="kw">define</span> (estimate-integral pred x1 x2 y1 y2 trials)
+  (<span class="kw">let</span> ((test (<span class="kw">lambda</span> ()
+                (pred (random-in-range x1 x2)
+                      (random-in-range y1 y2)))))
+    (<span class="fu">*</span> (monte-carlo trials test)
+       (<span class="fu">-</span> x2 x1)
+       (<span class="fu">-</span> y2 y1))))
+
+(<span class="kw">define</span> (estimate-pi trials)
+  (<span class="kw">let</span> ((pred (<span class="kw">lambda</span> (x y)
+                (<span class="fu">&lt;=</span> (<span class="fu">+</span> (square x) (square y)) <span class="cn">1</span>))))
+    (estimate-integral pred <span class="cn">-1.0</span> <span class="cn">1.0</span> <span class="cn">-1.0</span> <span class="cn">1.0</span> trials)))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.6">Exercise 3.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)))
+
+(<span class="kw">define</span> rand
+  (<span class="kw">let</span> ((x random-init))
+    (<span class="kw">lambda</span> (message)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> message <span class="cn">&#39;generate</span>)
+             (<span class="kw">set!</span> x (rand-update x))
+             x)
+            ((<span class="fu">eq?</span> message <span class="cn">&#39;reset</span>)
+             (<span class="kw">lambda</span> (new-x)
+               (<span class="kw">set!</span> x new-x)))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;rand</span> <span class="cn">&quot;message not recognized&quot;</span> message))))))
+
+(<span class="fu">number?</span> (rand <span class="cn">&#39;generate</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(rand <span class="cn">&#39;reset</span>)
+(<span class="fu">number?</span> (rand <span class="cn">&#39;generate</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<h2 id="3.1.3" class="anchor">
+<a class="anchor__link link" href="#3.1.3" aria-hidden="true">#</a> <span class="number">3.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.3">The Costs of Introducing Assignment<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-simplified-withdraw balance)
+  (<span class="kw">lambda</span> (amount)
+    (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+    balance))
+(<span class="kw">define</span> W (make-simplified-withdraw <span class="cn">25</span>))
+(W <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(W <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">-5</span>
+
+(<span class="kw">define</span> (make-decrementer balance)
+  (<span class="kw">lambda</span> (amount)
+    (<span class="fu">-</span> balance amount)))
+(<span class="kw">define</span> D (make-decrementer <span class="cn">25</span>))
+(D <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(D <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">15</span></code></pre>
+<p>Substitution analysis of <code>make-decrementer</code>:</p>
+<pre><code class="blockcode">((make-decrementer <span class="cn">25</span>) <span class="cn">20</span>)
+<span class="op">=&gt;</span> ((<span class="kw">lambda</span> (amount) (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">20</span>)
+<span class="op">=&gt;</span> (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)
+<span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
+<p>Faulty substitution analysis of <code>make-simplified-withdraw</code>:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> balance)
+((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+<span class="co">; =&gt;</span>
+((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)
+<span class="op">=&gt;</span> (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)) <span class="cn">25</span>)
+<span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
+<h3 id="3.1.3.1" class="anchor">
+<a class="anchor__link link" href="#3.1.3.1" aria-hidden="true">#</a> <span class="number">3.1.3.1</span> Sameness and change
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.1</span> make-account)
+       (:<span class="cn">3.1.3</span> make-decrementer make-simplified-withdraw)))</code></pre>
+<p><code>D1</code> and <code>D2</code> are the same.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> D1 (make-decrementer <span class="cn">25</span>))
+(<span class="kw">define</span> D2 (make-decrementer <span class="cn">25</span>))
+(D1 <span class="cn">20</span>) <span class="op">=&gt;</span> (D2 <span class="cn">20</span>) <span class="op">=&gt;</span> (D1 <span class="cn">20</span>) <span class="op">=&gt;</span> (D2 <span class="cn">20</span>)</code></pre>
+<p><code>W1</code> and <code>W2</code> are surely not the same.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> W1 (make-simplified-withdraw <span class="cn">25</span>))
+(<span class="kw">define</span> W2 (make-simplified-withdraw <span class="cn">25</span>))
+(W1 <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(W1 <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">-15</span>
+(W2 <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
+<p>Distinct accounts:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))
+(<span class="kw">define</span> paul-acc (make-account <span class="cn">100</span>))
+((peter-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+((paul-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span></code></pre>
+<p>Joint account:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))
+(<span class="kw">define</span> paul-acc peter-acc)
+((peter-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+((paul-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">50</span></code></pre>
+<h3 id="3.1.3.2" class="anchor">
+<a class="anchor__link link" href="#3.1.3.2" aria-hidden="true">#</a> <span class="number">3.1.3.2</span> Pitfalls of imperative programming
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.1</span> factorial)))
+
+(<span class="kw">define</span> (imperative-factorial n)
+  (<span class="kw">let</span> ((product <span class="cn">1</span>)
+        (counter <span class="cn">1</span>))
+    (<span class="kw">define</span> (iter)
+      (<span class="kw">if</span> (<span class="fu">&gt;</span> counter n)
+          product
+          (<span class="kw">begin</span> (<span class="kw">set!</span> product (<span class="fu">*</span> counter product))
+                 (<span class="kw">set!</span> counter (<span class="fu">+</span> counter <span class="cn">1</span>))
+                 (iter))))
+    (iter)))
+
+(imperative-factorial <span class="cn">10</span>) <span class="op">=&gt;</span> (factorial <span class="cn">10</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.7">Exercise 3.7<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">3.3</span> make-account)))
+
+(<span class="kw">define</span> (make-joint pp-acc password new-password)
+  (<span class="kw">lambda</span> (p m)
+    (pp-acc (<span class="kw">if</span> (<span class="fu">eq?</span> p new-password) password <span class="cn">#f</span>) m)))
+
+(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span> <span class="cn">&#39;open-sesame</span>))
+(<span class="kw">define</span> paul-acc (make-joint peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;rosebud</span>))
+((peter-acc <span class="cn">&#39;rosebud</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((paul-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
+((paul-acc <span class="cn">&#39;rosebud</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">80</span>
+((peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">70</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.8">Exercise 3.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> f
+  (<span class="kw">let</span> ((x <span class="cn">0</span>))
+    (<span class="kw">lambda</span> (y)
+      (<span class="kw">let</span> ((old-x x))
+        (<span class="kw">set!</span> x y)
+        old-x))))
+
+(<span class="kw">let</span> ((result (<span class="fu">+</span> (f <span class="cn">0</span>) (f <span class="cn">1</span>))))
+  (<span class="kw">or</span> (<span class="fu">=</span> result <span class="cn">0</span>) (<span class="fu">=</span> result <span class="cn">1</span>)))
+<span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="2.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 3.4 Exercises</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="3.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="5.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html">Concurrency: Time Is of the Essence<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="3.4.1" class="anchor">
+<a class="anchor__link link" href="#3.4.1" aria-hidden="true">#</a> <span class="number">3.4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.1">The Nature of Time in Concurrent Systems<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.38">Exercise 3.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> balance <span class="cn">100</span>)
+(<span class="kw">define</span> (peter) (<span class="kw">set!</span> balance (<span class="fu">+</span> balance <span class="cn">10</span>)))
+(<span class="kw">define</span> (paul) (<span class="kw">set!</span> balance (<span class="fu">-</span> balance <span class="cn">20</span>)))
+(<span class="kw">define</span> (mary) (<span class="kw">set!</span> balance (<span class="fu">-</span> balance (<span class="fu">/</span> balance <span class="cn">2</span>))))</code></pre>
+<ol type="a">
+<li>Out of six permutations, there are four possible values: 35, 40, 45, 50.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (paul) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
+(<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (mary) (paul) balance <span class="op">=&gt;</span> <span class="cn">35</span>
+(<span class="kw">set!</span> balance <span class="cn">100</span>) (paul) (peter) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
+(<span class="kw">set!</span> balance <span class="cn">100</span>) (paul) (mary) (peter) balance <span class="op">=&gt;</span> <span class="cn">50</span>
+(<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (peter) (paul) balance <span class="op">=&gt;</span> <span class="cn">40</span>
+(<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (paul) (peter) balance <span class="op">=&gt;</span> <span class="cn">40</span></code></pre>
+<ol start="2" type="a">
+<li>If the system allows the processes to be interleaved, you could also get results equivalent to leaving out one or more of the assignments, where the new value is overwritten before being read. In <code>mary</code>, the value divided by 2 could also be different from the value being subtracted from.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (in? x xs)
+  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> xs))
+       (<span class="kw">or</span> (<span class="fu">=</span> (<span class="fu">car</span> xs) x) (in? x (<span class="fu">cdr</span> xs)))))
+
+(<span class="kw">set!</span> balance <span class="cn">100</span>)
+(parallel-execute peter paul mary)
+(in? balance &#39;(<span class="cn">25</span> <span class="cn">30</span> <span class="cn">35</span> <span class="cn">40</span> <span class="cn">45</span> <span class="cn">50</span> <span class="cn">55</span> <span class="cn">60</span> <span class="cn">80</span> <span class="cn">90</span> <span class="cn">110</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<h2 id="3.4.2" class="anchor">
+<a class="anchor__link link" href="#3.4.2" aria-hidden="true">#</a> <span class="number">3.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.2">Mechanisms for Controlling Concurrency<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<h3 id="3.4.2.1" class="anchor">
+<a class="anchor__link link" href="#3.4.2.1" aria-hidden="true">#</a> <span class="number">3.4.2.1</span> Serializing access to shared state
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer) (?<span class="cn">3.38</span> in?)))</code></pre>
+<p>Without serialization, there are five possible values:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+(parallel-execute
+ (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
+ (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))
+(in? x &#39;(<span class="cn">11</span> <span class="cn">100</span> <span class="cn">101</span> <span class="cn">110</span> <span class="cn">121</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>With serialization, it narrows to two possible values:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+(<span class="kw">let</span> ((s (make-serializer)))
+  (parallel-execute
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))))
+(in? x &#39;(<span class="cn">101</span> <span class="cn">121</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+
+(<span class="kw">define</span> (make-account balance)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
+    balance)
+  (<span class="kw">let</span> ((protected (make-serializer)))
+    (<span class="kw">define</span> (dispatch m)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) (protected withdraw))
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) (protected deposit))
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;balance</span>) balance)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+    dispatch))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.39">Exercise 3.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer) (?<span class="cn">3.38</span> in?)))
+
+(<span class="kw">define</span> x <span class="cn">10</span>)
+(<span class="kw">let</span> ((s (make-serializer)))
+  (parallel-execute
+   (<span class="kw">lambda</span> () (<span class="kw">set!</span> x ((s (<span class="kw">lambda</span> () (<span class="fu">*</span> x x))))))
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))))</code></pre>
+<p>Three of the five values are still possible:</p>
+<pre><code class="blockcode">(in? x &#39;(<span class="cn">101</span>   <span class="co">; squared, then incremented</span>
+         <span class="cn">121</span>   <span class="co">; incremented, then squared</span>
+         <span class="cn">100</span>)) <span class="co">; incremented between squarer read and write</span>
+<span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.40">Exercise 3.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> permutations)
+       (:<span class="cn">3.3.3.1</span> insert! lookup make-table) (:<span class="cn">3.4.2.3</span> make-serializer)
+       (?<span class="cn">3.38</span> in?)))
+
+(<span class="kw">define</span> x <span class="cn">10</span>)
+(parallel-execute
+ <span class="co">; process S: 3        1 2</span>
+ (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
+ <span class="co">; process C: 7        4 5 6</span>
+ (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x x))))</code></pre>
+<p>There are five possible values:</p>
+<pre><code class="blockcode">(in? x &#39;(<span class="cn">100</span> <span class="cn">1000</span> <span class="cn">10000</span> <span class="cn">100000</span> <span class="cn">1000000</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<p>We will now demonstrate how the steps can interleave to produce these values. There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and 6 are reads; steps 3 and 7 are writes.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> steps-s-read &#39;(<span class="cn">1</span> <span class="cn">2</span>))
+(<span class="kw">define</span> steps-s-write &#39;(<span class="cn">3</span>))
+(<span class="kw">define</span> steps-c-read &#39;(<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>))
+(<span class="kw">define</span> steps-c-write &#39;(<span class="cn">7</span>))
+(<span class="kw">define</span> steps-s (<span class="fu">append</span> steps-s-read steps-s-write))
+(<span class="kw">define</span> steps-c (<span class="fu">append</span> steps-c-read steps-c-write))
+(<span class="kw">define</span> steps (<span class="fu">append</span> steps-s steps-c))</code></pre>
+<p>Only certain permutations of steps are valid orderings:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (good-interleave? p)
+  (<span class="kw">define</span> (iter latest-s latest-c p)
+    (<span class="kw">or</span> (<span class="fu">null?</span> p)
+        (<span class="kw">and</span> (in? (<span class="fu">car</span> p) steps-s)
+             (<span class="fu">&gt;</span> (<span class="fu">car</span> p) latest-s)
+             (iter (<span class="fu">car</span> p) latest-c (<span class="fu">cdr</span> p)))
+        (<span class="kw">and</span> (in? (<span class="fu">car</span> p) steps-c)
+             (<span class="fu">&gt;</span> (<span class="fu">car</span> p) latest-c)
+             (iter latest-s (<span class="fu">car</span> p) (<span class="fu">cdr</span> p)))))
+  (iter <span class="cn">0</span> <span class="cn">0</span> p))
+
+(<span class="kw">define</span> possible-orders
+  (<span class="fu">filter</span> good-interleave? (permutations steps)))
+
+(<span class="fu">length</span> possible-orders) <span class="op">=&gt;</span> <span class="cn">35</span></code></pre>
+<p>For a given ordering of steps, we can simulate the execution:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (execute-steps steps x)
+  (<span class="kw">define</span> (iter s-reads c-reads steps x)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> steps) x)
+          ((in? (<span class="fu">car</span> steps) steps-s-read)
+           (iter (<span class="fu">cons</span> x s-reads) c-reads (<span class="fu">cdr</span> steps) x))
+          ((in? (<span class="fu">car</span> steps) steps-c-read)
+           (iter s-reads (<span class="fu">cons</span> x c-reads) (<span class="fu">cdr</span> steps) x))
+          ((in? (<span class="fu">car</span> steps) steps-s-write)
+           (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply</span> <span class="fu">*</span> s-reads)))
+          ((in? (<span class="fu">car</span> steps) steps-c-write)
+           (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply</span> <span class="fu">*</span> c-reads)))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;execute-steps</span> <span class="cn">&quot;unknown step number&quot;</span> (<span class="fu">car</span> steps)))))
+  (iter &#39;() &#39;() steps x))
+
+(<span class="kw">define</span> final-values
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (ss) (execute-steps ss <span class="cn">10</span>)) possible-orders))
+
+final-values
+<span class="op">=&gt;</span> &#39;(<span class="cn">1000000</span> <span class="cn">100000</span> <span class="cn">10000</span> <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">100000</span> <span class="cn">10000</span>
+     <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">10000</span> <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">1000</span> <span class="cn">100</span>
+     <span class="cn">10000</span> <span class="cn">100000</span> <span class="cn">10000</span> <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">10000</span> <span class="cn">1000</span>
+     <span class="cn">100</span> <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">10000</span> <span class="cn">10000</span> <span class="cn">1000</span> <span class="cn">100</span>
+     <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">10000</span> <span class="cn">1000</span> <span class="cn">100</span> <span class="cn">10000</span> <span class="cn">1000000</span>)</code></pre>
+<p>There are many duplicates, so let’s count the occurrences.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (group xs)
+  (<span class="kw">let</span> ((occurence-table (make-table)))
+    (<span class="kw">define</span> (iter xs)
+      (<span class="kw">if</span> (<span class="fu">null?</span> xs)
+          occurence-table
+          (<span class="kw">let</span> ((n (lookup (<span class="fu">car</span> xs) occurence-table)))
+            (insert! (<span class="fu">car</span> xs)
+                     (<span class="kw">if</span> n (<span class="fu">+</span> n <span class="cn">1</span>) <span class="cn">1</span>)
+                     occurence-table)
+            (iter (<span class="fu">cdr</span> xs)))))
+    (iter xs)))
+
+(group final-values)
+<span class="op">=&gt;</span> &#39;(*table* (<span class="cn">100</span> . <span class="cn">10</span>)
+             (<span class="cn">1000</span> . <span class="cn">10</span>)
+             (<span class="cn">10000</span> . <span class="cn">10</span>)
+             (<span class="cn">100000</span> . <span class="cn">3</span>)
+             (<span class="cn">1000000</span> . <span class="cn">2</span>))</code></pre>
+<p>The largest value, 1000000, can be obtained in two ways:</p>
+<pre><code class="blockcode">(execute-steps &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; squared, then cubed</span>
+(execute-steps &#39;(<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; cubed, then squared</span></code></pre>
+<p>If we serialize the procedures, we always get that value:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+(<span class="kw">let</span> ((s (make-serializer)))
+  (parallel-execute
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x x))))))
+x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.41">Exercise 3.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.1</span> make-account)))</code></pre>
+<p>Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank balance because it would make no difference. If we serialize it, then the value will be read either before or after (in sequence) it is written, assuming someone is withdrawing or depositing concurrently. However, if we don’t serialize it, we still get one value or the other. There is nothing that can be interleaved because reading the balance takes only one step, assuming the Scheme implementation considers this a thread-safe operation.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.42">Exercise 3.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<p>This is a safe change to make. Each bank account still has one serializer and the deposit and withdraw procedures returned from the dispatcher are always protected by it. It makes no difference in what concurrency is allowed. If it did, then the specification of <code>make-serializer</code> must be incorrect.</p>
+<h3 id="3.4.2.2" class="anchor">
+<a class="anchor__link link" href="#3.4.2.2" aria-hidden="true">#</a> <span class="number">3.4.2.2</span> Complexity of using multiple shared resources
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer)))
+
+(<span class="kw">define</span> (exchange account1 account2)
+  (<span class="kw">let</span> ((difference (<span class="fu">-</span> (account1 <span class="cn">&#39;balance</span>)
+                       (account2 <span class="cn">&#39;balance</span>))))
+    ((account1 <span class="cn">&#39;withdraw</span>) difference)
+    ((account2 <span class="cn">&#39;deposit</span>) difference)))
+
+(<span class="kw">define</span> (make-account-and-serializer balance)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount)) balance)
+  (<span class="kw">let</span> ((balance-serializer (make-serializer)))
+    (<span class="kw">define</span> (dispatch m)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;balance</span>) balance)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;serializer</span>) balance-serializer)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+    dispatch))
+
+(<span class="kw">define</span> (deposit account amount)
+  (<span class="kw">let</span> ((s (account <span class="cn">&#39;serializer</span>))
+        (d (account <span class="cn">&#39;deposit</span>)))
+    ((s d) amount)))
+
+(<span class="kw">define</span> (serialized-exchange account1 account2)
+  (<span class="kw">let</span> ((serializer1 (account1 <span class="cn">&#39;serializer</span>))
+        (serializer2 (account2 <span class="cn">&#39;serializer</span>)))
+    ((serializer1 (serializer2 exchange))
+     account1
+     account2)))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.43">Exercise 3.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<p>The balances in the accounts start out as $10, $20, and $30. Exchanging balances A and B works by taking D = A - B, and then withdrawing to get A’ = A - D = B and depositing to get B’ = B + D = A. Going from {A, B} to {B, A}, we can see that any sequence of exchanges preserves the set {A, B}, and in this particular case {10, 20, 30}.</p>
+<p>Using the first version of <code>exchange</code>, where only individual deposits and withdrawals are serialized (by account), the {10, 20, 30} set will not be preserved. For example, let us refer to concurrent processes P and Q:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (exchange acc1 acc2)
+  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="cn">&#39;balance</span>)    <span class="co">; (1)</span>
+                 (acc2 <span class="cn">&#39;balance</span>)))) <span class="co">; (2)</span>
+    ((acc1 <span class="cn">&#39;withdraw</span>) diff)         <span class="co">; (3)</span>
+    ((acc2 <span class="cn">&#39;deposit</span>) diff)))        <span class="co">; (4)</span></code></pre>
+<p>Suppose accounts A, B, C begin with $10, $20, $30. Process P exchanges A and B, process Q exchanges A and C. We interleave steps as P1, Q1, Q2, Q3, Q4, P2, P3, P4. P finds the balance of A to be $10. Then Q carries out all its steps: A and C are exchanged, and P’s read operation does not affect this. Therefore A, B, C now have balances $30, $20, $10. Now P carries out its three remaining steps. It finds B to have $20. It calculates 10 - 20 = -10. It withdraws -10 from A, leaving A with a balance of 30 - (-10) = 40. It deposits this in B, leaving B with a balance of 20 + (-10) = 10. Now the balances of A, B, C are $40, $10, $10. Thus {10, 20, 30} is not preserved. But it does preserve the sum 10 + 20 + 30 = 40 + 10 + 10 = 60. This would be the case even if <code>diff</code> was a random number, because deposits and withdrawals are serialized, and we deposit and withdraw the same <code>diff</code>.</p>
+<p>If we used the original implementation but changed <code>make-account</code> so that it did no serializing, the sum would not be preserved. This is because the steps of the deposits and withdrawals of concurrent processes will interleave, and we have already seen the issues this produces earlier.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.44">Exercise 3.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (transfer from-acc to-acc amount)
+  ((from-acc <span class="cn">&#39;withdraw</span>) amount) <span class="co">; (1)</span>
+  ((to-acc <span class="cn">&#39;deposit</span>) amount))   <span class="co">; (2)</span></code></pre>
+<p>Ben Bitdiddle is correct. This procedure will behave correctly, even with multiple concurrent transfers involving the same accounts. Suppose we transfer $10 between A and B (process P), and concurrently transfer $20 between A and C (process Q). P1 and Q1 will be in the same serialization set, because they both withdraw from A. P2 and Q2 will neither be in that set nor in each other’s set. One deposits to B, and the other deposits to C. They cannot interfere with each other.</p>
+<p>The essential difference between the transfer problem and the exchange problem is that the exchange amount depends on the current balances, and so it must include steps that read the balance, introducing a hole into which a concurrent step can be interleaved, unless the whole exchange is serialized.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.45">Exercise 3.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<p>Louis Reasoner is wrong. The problem with automatically serializing all deposits and withdrawals is that, when we create our own multi-step operations such as the exchange or the transfer, and we serialize them, we end up with nested serialization, i.e. deadlock.</p>
+<h3 id="3.4.2.3" class="anchor">
+<a class="anchor__link link" href="#3.4.2.3" aria-hidden="true">#</a> <span class="number">3.4.2.3</span> Implementing serializers
+</h3>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-serializer)
+  (<span class="kw">let</span> ((mutex (make-mutex)))
+    (<span class="kw">lambda</span> (p)
+      (<span class="kw">lambda</span> args
+        (mutex <span class="cn">&#39;acquire</span>)
+        (<span class="kw">let</span> ((val (<span class="fu">apply</span> p args)))
+          (mutex <span class="cn">&#39;release</span>)
+          val)))))</code></pre>
+<p>We cannot use this implementation because not all the Schemes we’re targeting support atomics for a proper implementation of <code>test-and-set!</code>. Instead, we define <code>make-mutex</code> in src/compat to use the Scheme’s own threading library.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-mutex-from-scratch)
+  (<span class="kw">let</span> ((cell (<span class="fu">list</span> <span class="cn">#f</span>)))
+    (<span class="kw">lambda</span> (m)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;acquire</span>)
+             (<span class="kw">let</span> retry () (when (test-and-set! cell) (retry))))
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;release</span>) (clear! cell))))))
+
+(<span class="kw">define</span> (clear! cell)
+  (<span class="fu">set-car!</span> cell <span class="cn">#f</span>))
+(<span class="kw">define</span> (test-and-set! cell)
+  (<span class="kw">if</span> (<span class="fu">car</span> cell)
+      <span class="cn">#t</span>
+      (<span class="kw">begin</span> (<span class="fu">set-car!</span> cell <span class="cn">#t</span>)
+             <span class="cn">#f</span>)))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.46">Exercise 3.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-mutex-from-scratch) (?<span class="cn">3.38</span> in?)))
+
+(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
+(<span class="kw">paste</span> (:<span class="cn">3.4.2.3</span> make-serializer))</code></pre>
+<p>Suppose we execute this using the non-atomic <code>test-and-set!</code>:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">100</span>)
+(<span class="kw">let</span> ((s (make-serializer)))
+  (parallel-execute
+   <span class="co">;;              2            1</span>
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> <span class="cn">100</span> x)))) <span class="co">; process P</span>
+   <span class="co">;;              2        1</span>
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">/</span> x <span class="cn">2</span>)))))) <span class="co">; process Q</span></code></pre>
+<p>There are four possible values:</p>
+<pre><code class="blockcode">(in? x &#39;(<span class="cn">100</span>  <span class="co">; P1, P2, Q1, Q2 (serial)</span>
+         <span class="cn">150</span>  <span class="co">; Q1, Q2, P1, P2 (serial)</span>
+         <span class="cn">200</span>  <span class="co">; P1, Q1, Q2, P2 (interleaved)</span>
+         <span class="cn">50</span>)) <span class="co">; Q1, P1, P2, Q2 (interleaved)</span></code></pre>
+<p>The interleaved results can happen since with the non-atomic <code>test-and-set!</code>, both processes can acquire the mutex at the same time. Both check if the cell is set, find it is #f, and then both set it to #t.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.47">Exercise 3.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> clear! test-and-set!) (?<span class="cn">3.38</span> in?)))</code></pre>
+<ol type="a">
+<li>Sempahore in terms of mutexes</li>
+</ol>
+<p>Note: This assumes that any thread can acquire/release the mutex. It does not work with mutex implementations that only allow the owner to release it.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-semaphore n)
+  (<span class="kw">let</span> ((count n)
+        (count-mutex (make-mutex))
+        (queue-mutex (make-mutex)))
+    (queue-mutex <span class="cn">&#39;acquire</span>) <span class="co">; starts out locked</span>
+    (<span class="kw">lambda</span> (m)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;acquire</span>)
+             (count-mutex <span class="cn">&#39;acquire</span>)
+             (<span class="kw">set!</span> count (<span class="fu">-</span> count <span class="cn">1</span>))
+             (when (<span class="fu">&lt;</span> count <span class="cn">0</span>)
+               (count-mutex <span class="cn">&#39;release</span>)
+               (queue-mutex <span class="cn">&#39;acquire</span>))
+             (count-mutex <span class="cn">&#39;release</span>))
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;release</span>)
+             (count-mutex <span class="cn">&#39;acquire</span>)
+             (<span class="kw">set!</span> count (<span class="fu">+</span> count <span class="cn">1</span>))
+             (<span class="kw">if</span> (<span class="fu">&lt;=</span> count <span class="cn">0</span>)
+                 (queue-mutex <span class="cn">&#39;release</span>)
+                 (count-mutex <span class="cn">&#39;release</span>)))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-semaphore</span> <span class="cn">&quot;unexpected message&quot;</span> m))))))</code></pre>
+<p>We can’t test this because not all Schemes we support have the required property of allowing any thread to release another’s mutex.</p>
+<ol start="2" type="a">
+<li>Semaphore in terms of atomic <code>test-and-set!</code> operations</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-semaphore-from-scratch n)
+  (<span class="kw">let</span> ((count n)
+        (cell (<span class="fu">list</span> <span class="cn">#f</span>)))
+    (<span class="kw">define</span> (the-semaphore m)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;acquire</span>)
+             (<span class="kw">let</span> retry () (when (test-and-set! cell) (retry)))
+             (<span class="kw">cond</span> ((<span class="fu">&gt;</span> count <span class="cn">0</span>)
+                    (<span class="kw">set!</span> count (<span class="fu">-</span> count <span class="cn">1</span>))
+                    (clear! cell))
+                   (<span class="kw">else</span> (clear! cell)
+                         (the-semaphore <span class="cn">&#39;acquire</span>)))) <span class="co">; busy wait</span>
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;release</span>)
+             (<span class="kw">let</span> retry () (when (test-and-set! cell) (retry)))
+             (<span class="kw">set!</span> count (<span class="fu">+</span> <span class="cn">1</span> count))
+             (clear! cell))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-semaphore-from-scratch</span> <span class="cn">&quot;unexpected message&quot;</span> m))))
+    the-semaphore))</code></pre>
+<p>We can’t test this because our <code>test-and-set!</code> is not actually atomic.</p>
+<h3 id="3.4.2.4" class="anchor">
+<a class="anchor__link link" href="#3.4.2.4" aria-hidden="true">#</a> <span class="number">3.4.2.4</span> Deadlock
+</h3>
+<p>One way to avoid deadlock is to give each account a unique identification number, and write procedures like <code>exchange</code> so that they always try to acquire the mutex for the lower-numbered account first.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.48">Exercise 3.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.2</span> exchange) (:<span class="cn">3.4.2.3</span> make-serializer)))</code></pre>
+<p>Before we locked the <code>exchange</code> operation using the serializers of both accounts. This can lead to deadlock if lock sequences A, B and B, A are interleaved such that both processes are trying to acquire the mutex that the other has already acquired. They wait forever, and neither is released. This problem is solved when we lock accounts in a particular order because that interleaving wouldn’t work. Both processes would have the lock sequence A, B, and the second process cannot acquire A after the first already has. The first is then free to acquire B, perform its operations, and release both.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> *uuid* <span class="cn">0</span>)
+(<span class="kw">define</span> (gen-uuid)
+  (<span class="kw">set!</span> *uuid* (<span class="fu">+</span> *uuid* <span class="cn">1</span>))
+  *uuid*)
+
+(<span class="kw">define</span> (make-account balance)
+  (<span class="kw">define</span> (withdraw amount)
+    (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
+        (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
+               balance)
+        <span class="cn">&quot;Insufficient funds&quot;</span>))
+  (<span class="kw">define</span> (deposit amount)
+    (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount)) balance)
+  (<span class="kw">let</span> ((id (gen-uuid))
+        (s (make-serializer)))
+    (<span class="kw">define</span> (dispatch m)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;balance</span>) balance)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;serializer</span>) s)
+            ((<span class="fu">eq?</span> m <span class="cn">&#39;identifier</span>) id)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+    dispatch))
+
+(<span class="kw">define</span> (serialized-exchange a1 a2)
+  (<span class="kw">let</span> ((s1 (a1 <span class="cn">&#39;serializer</span>))
+        (s2 (a2 <span class="cn">&#39;serializer</span>)))
+    ((<span class="kw">if</span> (<span class="fu">&lt;</span> (a1 <span class="cn">&#39;identifier</span>) (a2 <span class="cn">&#39;identifier</span>))
+         (s1 (s2 exchange))
+         (s2 (s1 exchange)))
+     a1
+     a2)))</code></pre>
+<p>This is safe from deadlocks:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> a1 (make-account <span class="cn">10</span>))
+(<span class="kw">define</span> a2 (make-account <span class="cn">20</span>))
+(parallel-execute
+ (<span class="kw">lambda</span> () (serialized-exchange a1 a2))
+ (<span class="kw">lambda</span> () (serialized-exchange a2 a1)))
+(a1 <span class="cn">&#39;balance</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
+(a2 <span class="cn">&#39;balance</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.49">Exercise 3.49<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<p>The deadlock avoidance mechanism used in Exercise 3.48 would not work with <code>(contrived-exchange acc)</code>, which exchanges the balance of <code>acc</code> with that of the account whose balance is closest to the balance of <code>acc</code>. We must either always lock <code>acc</code> first (without the ordering mechanism of 3.48, allowing deadlocks), or we must lock after accessing <code>acc</code>, creating a hole into which other operations can be interleaved.</p>
+<h3 id="3.4.2.5" class="anchor">
+<a class="anchor__link link" href="#3.4.2.5" aria-hidden="true">#</a> <span class="number">3.4.2.5</span> Concurrency, time, and communication
+</h3>
+<p>Concurrency is hard. It is intimately tied to communication. There may be cases where the “real” value (e.g. account balance) are irrelevant or meaningless except at special synchronization points.</p>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="3.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="5.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

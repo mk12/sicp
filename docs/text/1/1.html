@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 1.1 Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="2.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html">The Elements of Programming<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<p>There are three mechanisms for combining simple ideas to form more complex ideas in every powerful programming language:</p>
+<ul>
+<li>primitive expressions,</li>
+<li>means of combination,</li>
+<li>means of abstraction.</li>
+</ul>
+<p>Programming deals with <em>procedures</em> and <em>data</em> (which are almost the same thing in Lisp). Procedures manipulate data.</p>
+<h2 id="1.1.1" class="anchor">
+<a class="anchor__link link" href="#1.1.1" aria-hidden="true">#</a> <span class="number">1.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.1">Expressions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>The REPL reads an expression, evaluates it, prints the result, and repeats.</li>
+<li>A number is one kind of primitive expression.</li>
+<li>An application of a primitive procedure is a compound expression.</li>
+<li>Combination: list of expressions inside parentheses to denote procedure application.</li>
+<li>The first element is the operator; the rest are the operands.</li>
+<li>The value of the combination is the result of applying the value of the operator to the value of the operands.</li>
+<li>Lisp combinations use prefix notation.</li>
+<li>Combinations can be nested: an operator or operand can itself be another combination.</li>
+</ul>
+<h2 id="1.1.2" class="anchor">
+<a class="anchor__link link" href="#1.1.2" aria-hidden="true">#</a> <span class="number">1.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.2">Naming and the Environment<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Scheme names things with the <code>define</code>. This is the simplest means of abstraction.</li>
+<li>The name-value pairs are stored in an <em>environment</em>.</li>
+</ul>
+<h2 id="1.1.3" class="anchor">
+<a class="anchor__link link" href="#1.1.3" aria-hidden="true">#</a> <span class="number">1.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.3">Evaluating Combinations<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>To evaluate a combination, do the following:
+<ol type="1">
+<li>Evaluate the subexpressions of the combination.</li>
+<li>Apply the procedure (value of left more subexpression, the operator) to the arguments (values of other subexpressions, the operands).</li>
+</ol></li>
+<li>Before evaluating a combination, we must first evaluate each element inside it.</li>
+<li>Evaluation is recursive in nature—one of its steps is invoking itself.</li>
+<li>The evaluation of a combination can be represents with a tree.</li>
+<li>Recursion is a powerful technique for dealing with hierarchical, tree-like objects.</li>
+<li>To end the recursion, we stipulate the following:
+<ol type="1">
+<li>Numbers evaluate to themselves.</li>
+<li>Built-in operators evaluate to machine instruction sequences.</li>
+<li>Names evaluate to the values associated with them in the environment.</li>
+</ol></li>
+<li>Rule 2 is a special case of rule 3 if we consider the arithmetic operators to be names in the environment.</li>
+<li>Evaluating <code>(<span class="kw">define</span> x <span class="cn">3</span>)</code> does not apply <code>define</code> to two arguments; this is not a combination.</li>
+<li>Exceptions such as these are <em>special forms</em>. Each one has its own evaluation rule.</li>
+</ul>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="../highlight.html#1.1-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>In the words of Alan Perlis, “Syntactic sugar causes cancer of the semicolon.” <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#footnote_Temp_17" title="SICP Chapter 1, Footnote 11">(Footnote&nbsp;1.11)</a></p>
+</blockquote>
+</div>
+<h2 id="1.1.4" class="anchor">
+<a class="anchor__link link" href="#1.1.4" aria-hidden="true">#</a> <span class="number">1.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.4">Compound Procedures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Procedure definitions are very powerful for abstraction.</li>
+<li>A squaring procedure: <code>(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code>.</li>
+<li>This is a compound procedure given the name <em>square</em>.</li>
+<li>The general form of a procedure definition is <code>(<span class="kw">define</span> (<span class="ss">name</span> <span class="ss">formal-parameters</span>) <span class="ss">body</span>)</code>.</li>
+<li>If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.</li>
+</ul>
+<h2 id="1.1.5" class="anchor">
+<a class="anchor__link link" href="#1.1.5" aria-hidden="true">#</a> <span class="number">1.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.5">The Substitution Model for Procedure Application<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<p>This is the substitution model:</p>
+<blockquote>
+<p>To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.</p>
+</blockquote>
+<p>An example of procedure application:</p>
+<pre><code class="blockcode">(f <span class="cn">5</span>)
+(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+(sum-of-squares <span class="cn">6</span> <span class="cn">10</span>)
+(<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
+(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="cn">136</span></code></pre>
+<h3 id="1.1.5.1" class="anchor">
+<a class="anchor__link link" href="#1.1.5.1" aria-hidden="true">#</a> Applicative order versus normal order
+</h3>
+<ul>
+<li>That example used <em>applicative order</em> : evaluate everything first, then apply the procedure to the arguments.</li>
+<li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
+</ul>
+<p>An example of normal order procedure application:</p>
+<pre><code class="blockcode">(f <span class="cn">5</span>)
+(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+(<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
+(<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
+(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="cn">136</span></code></pre>
+<ul>
+<li>In this example, normal order causes a few combinations to be evaluated multiple times.</li>
+<li>Applicative: evaluate the arguments and then apply.</li>
+<li>Normal: fully expand and then reduce.</li>
+</ul>
+<h2 id="1.1.6" class="anchor">
+<a class="anchor__link link" href="#1.1.6" aria-hidden="true">#</a> <span class="number">1.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.6">Conditional Expressions and Predicates<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>To make more useful procedures, we need to be able to make tests and perform different operations accordingly.</li>
+<li>We do <em>case analysis</em> in Scheme using <code>cond</code>.</li>
+<li>Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.</li>
+<li>A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.</li>
+<li>The symbol <code>else</code> can be used as the last clause—it will always evaluate to true.</li>
+<li>The <code>if</code> conditional can be used when there are two cases.</li>
+<li>Logical values can be combined with <code>and</code>, <code>or</code>, and <code>not</code>. The first two are special forms, not procedures.</li>
+</ul>
+<h2 id="1.1.7" class="anchor">
+<a class="anchor__link link" href="#1.1.7" aria-hidden="true">#</a> <span class="number">1.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.7">Example: Square Roots by Newton’s Method<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<blockquote>
+<p>But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.7" title="SICP Section 1.1.7">(Section&nbsp;1.1.7)</a></p>
+</blockquote>
+<ul>
+<li>In mathematics, you can say “the square root of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> is the nonnegative <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y^2 = x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>.” This is not a procedure.</li>
+<li>Mathematical functions describes things (declarative knowledge); procedures describe how to do things (imperative knowledge).</li>
+<li>Declarative is <em>what is</em>, imperative is <em>how to</em>.</li>
+</ul>
+<h2 id="1.1.8" class="anchor">
+<a class="anchor__link link" href="#1.1.8" aria-hidden="true">#</a> <span class="number">1.1.8</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.8">Procedures as Black-Box Abstractions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Each procedure in a program should accomplish and identifiable task that can be used as a module in defining other procedures.</li>
+<li>When we use a procedure as a “black box,” we are concerned with <em>what</em> it is doing but not <em>how</em> it is doing it.</li>
+<li>This is called procedural abstraction. Its purpose is to suppress detail.</li>
+</ul>
+<blockquote>
+<p>A user should not need to know how the procedure is implemented in order to use it. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.8" title="SICP Section 1.1.8">(Section&nbsp;1.1.8)</a></p>
+</blockquote>
+<h3 id="1.1.8.1" class="anchor">
+<a class="anchor__link link" href="#1.1.8.1" aria-hidden="true">#</a> Local names
+</h3>
+<ul>
+<li>The choice of names for the procedure’s formal parameters should not matter to the user of the procedure.</li>
+<li>Consequentially, the parameter names must be local to the body of the procedure.</li>
+<li>The name of the formal parameter doesn’t matter; it is called a <em>bound variable</em>. The procedure <em>binds</em> its formal parameters.</li>
+<li>If a variable is not bound, it is <em>free</em>.</li>
+<li>The expressions in which a binding exists is called the <em>scope</em> of the name. For parameters of procedures, this is the body.</li>
+<li>Using the same name for a bound variable and an existing free variable is called <em>capturing</em> the variable.</li>
+<li>The names of the free variables <em>do</em> matter for the meaning of the procedure.</li>
+</ul>
+<h3 id="1.1.8.2" class="anchor">
+<a class="anchor__link link" href="#1.1.8.2" aria-hidden="true">#</a> Internal definitions and block structure
+</h3>
+<ul>
+<li>Putting a definition in the body of a procedure makes it local to that procedure. This nesting is called <em>block structure</em>.</li>
+<li>Now we have two kinds of name isolation: formal parameters and internal definitions.</li>
+<li>By internalizing auxiliary procedures, we can often eliminate bindings by allowing variables to remain free.</li>
+<li>Lexical scoping: free variables in a procedure refer to bindings in enclosing procedure definitions.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="2.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

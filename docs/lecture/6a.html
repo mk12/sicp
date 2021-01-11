@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Lecture 6A Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="5b.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="6b.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">6A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6a-streams-part-1">Streams, Part 1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="1" class="anchor">
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
+</h2>
+<h3 id="1.1" class="anchor">
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
+</h3>
+<ul>
+<li>We’ve learned about assignment and its frightening implications.</li>
+<li>The substitution model of evaluation breaks down; we have to use the much more complicated environment model.</li>
+<li>Worry about: assignment, state, change, time, identity, objects, sharing.</li>
+<li>Suddenly a variable doesn’t just stand for a value; it specifies a place that holds a value.</li>
+<li>Our goal was <em>modularity</em>, writing programs that mirror reality.</li>
+<li>Maybe we have the wrong view of reality; maybe time is an illusion and nothing changes.</li>
+</ul>
+<h3 id="1.2" class="anchor">
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Motivation
+</h3>
+<ul>
+<li>We’re going to look at another way to decompose systems: <em>stream processing</em>.</li>
+<li>Consider summing the odd squares in a binary tree of integers:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (sum-odd-squares tree)
+  (<span class="kw">if</span> (leaf-node? tree)
+      (<span class="kw">if</span> (<span class="fu">odd?</span> tree)
+          (square tree)
+          <span class="cn">0</span>)
+      (<span class="fu">+</span> (sum-odd-squares (left-branch tree))
+         (sum-odd-squares (right-branch tree)))))</code></pre>
+<ul>
+<li>And contrast with collecting the odd Fibonacci numbers:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (odd-fibs n)
+  (<span class="kw">define</span> (next k)
+    (<span class="kw">if</span> (<span class="fu">&gt;</span> k n)
+        &#39;()
+        (<span class="kw">let</span> ((f (fib k)))
+          (<span class="kw">if</span> (<span class="fu">odd?</span> f)
+              (<span class="fu">cons</span> f (next (<span class="fu">1+</span> k)))
+              (next (<span class="fu">1+</span> k))))))
+  (next <span class="cn">1</span>))</code></pre>
+<ul>
+<li>1st procedure: enumerate leaves → filter <code>odd?</code> → map <code>square</code> → accumulate <code>+</code>, 0.</li>
+<li>2nd procedure: enumerate interval → map <code>fib</code> → filter <code>odd?</code> → accumulate <code>cons</code>, <code>&#39;()</code>.</li>
+<li>These are similar, but the commonality is obscured by how we wrote the procedures.</li>
+</ul>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="highlight.html#6a-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>Going back to this fundamental principle of computer science that in order to control something, you need the name of it. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6a-streams-part-1/JkGKLILLy0I.pdf#page=4" title="SICP Lecture 6A transcript, page 4">Abelson</a></span></p>
+</blockquote>
+</div>
+<h3 id="1.3" class="anchor">
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Defining streams
+</h3>
+<ul>
+<li>The arrows between the boxes represent data structures called <em>streams</em>.</li>
+<li><code>(<span class="kw">cons-stream</span> x y)</code> and <code>the-empty-stream</code> construct streams.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(head (<span class="kw">cons-stream</span> x y))</code> is <code>x</code>.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(tail (<span class="kw">cons-stream</span> x y))</code> is <code>y</code>.</li>
+<li>We can define higher-order procedures like we did for lists:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (map-stream proc s)
+  (<span class="kw">if</span> (empty-stream? s)
+      the-empty-stream
+      (<span class="kw">cons-stream</span> (proc (head s))
+                   (map-stream proc (tail se)))))</code></pre>
+<h3 id="1.4" class="anchor">
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Using the language
+</h3>
+<ul>
+<li>Now we can reimplement those problems with explicit stream processing:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (sum-odd-squares tree)
+  (accumulate <span class="fu">+</span>
+              <span class="cn">0</span>
+              (<span class="fu">map</span> square
+                   (<span class="fu">filter</span> odd
+                           (enumerate-tree tree)))))
+(<span class="kw">define</span> (odd-fibs n)
+  (accumulate <span class="fu">cons</span>
+              &#39;()
+              (<span class="fu">filter</span> odd
+                      (<span class="fu">map</span> fib
+                           (enumerate-interval <span class="cn">1</span> n)))))</code></pre>
+<ul>
+<li>This reveals their commonality, and makes it easy to mix and match boxes.</li>
+<li>The advantage of stream processing is that it establishes <em>conventional interfaces</em>.</li>
+<li>Conventional interfaces are powerful because we can easily glue things together.</li>
+</ul>
+<h2 id="2" class="anchor">
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
+</h2>
+<h3 id="2.1" class="anchor">
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> More complicated stream processing
+</h3>
+<ul>
+<li>Suppose we have a stream of streams <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mo>…</mo><mtext> </mtext><mo stretchy="false">}</mo><mo separator="true">,</mo><mo stretchy="false">{</mo><mn>10</mn><mo separator="true">,</mo><mn>20</mn><mo separator="true">,</mo><mn>30</mn><mo separator="true">,</mo><mo>…</mo><mtext> </mtext><mo stretchy="false">}</mo><mo separator="true">,</mo><mo>…</mo><mtext> </mtext><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{\{1,2,3,\dots\},\{10,20,30,\dots\},\dots\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">}</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">}</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mclose">}</span></span></span></span>.</li>
+<li>We can define a procedure <code>flatten</code> to accumulate them into a single flat stream.</li>
+<li>Problem: Given <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span>, find all pairs <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>j</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">0&lt;j&lt;i≤N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.79549em;vertical-align:-0.13597em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i+j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.74285em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> is prime.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (prime-sum-pairs n)
+  (<span class="fu">map</span>
+   (<span class="kw">lambda</span> (p)
+     (<span class="fu">list</span> (<span class="fu">car</span> p) (<span class="fu">cadr</span> p) (<span class="fu">+</span> (<span class="fu">car</span> p) (<span class="fu">cadr</span> p))))
+   (<span class="fu">filter</span>
+    (<span class="kw">lambda</span> (p)
+      (prime (<span class="fu">+</span> (<span class="fu">car</span> p) (<span class="fu">cadr</span> p))))
+    (flatmap
+     (<span class="kw">lambda</span> (i)
+       (<span class="fu">map</span>
+        (<span class="kw">lambda</span> (j) (<span class="fu">list</span> i j))
+        (enumerate-interval <span class="cn">1</span> (<span class="fu">-1+</span> i))))
+     (enumerate-interval <span class="cn">1</span> n)))))</code></pre>
+<ul>
+<li><code>flatmap</code> takes the place of nested loops in most other languages.</li>
+<li>We can simplify it with syntactic sugar <code>collect</code>:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (prime-sum-pairs n)
+  (collect
+   (<span class="fu">list</span> i j (<span class="fu">+</span> i j))
+   ((i (enumerate-interval <span class="cn">1</span> n))
+    (j (enumerate-interval <span class="cn">1</span> (<span class="fu">-1+</span> i))))
+   (prime? (<span class="fu">+</span> i j))))</code></pre>
+<h3 id="2.2" class="anchor">
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Eight queens puzzle
+</h3>
+<ul>
+<li>Solving this typically uses a <em>backtracking search</em>, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).</li>
+<li>This is unnecessary—it’s inordinately concerned with <em>time</em>.</li>
+<li>A simpler way is to employ <em>wishful thinking</em> and go from <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> columns to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> columns.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (queens size)
+  (<span class="kw">define</span> (fill-cols k)
+    (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">0</span>)
+        (singleton empty-board)
+        (collect (adjoin-position try-row k rest-queens)
+                 ((rest-queens (fill-cols (<span class="fu">-1+</span> k)))
+                  (try-row (enumerate-interval <span class="cn">1</span> size)))
+                 (safe? try-row k rest-queens))))
+  (fill-cols size))</code></pre>
+<ul>
+<li>This gives us <em>all solutions</em> to the <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>-queens puzzle.</li>
+<li>We changed our view from things that evolve in time and have state to a global view where we’re not concerned with time.</li>
+</ul>
+<h2 id="3" class="anchor">
+<a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
+</h2>
+<h3 id="3.1" class="anchor">
+<a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Streams are not lists
+</h3>
+<ul>
+<li>By now you should be suspicious—what’s the catch?</li>
+<li>Problem: Find the second prime between 10,000 and 1,000,000.</li>
+<li>Stream solution: enumerate 10,000 to 1,000,000 → filter <code>prime?</code> → take 2nd.</li>
+<li>This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.</li>
+<li>But we can have our cake and eat it to! We can make it just as efficient.</li>
+<li>The key to this is that streams are <em>not</em> lists.</li>
+</ul>
+<h3 id="3.2" class="anchor">
+<a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Implementing streams
+</h3>
+<ul>
+<li>We want the stream to compute itself incrementally, to be an “on demand” data structure.
+<ul>
+<li><code>(<span class="kw">cons-stream</span> x y)</code> is an abbreviation for <code>(<span class="fu">cons</span> x (<span class="kw">delay</span> y))</code></li>
+<li><code>(head s)</code> is <code>(<span class="fu">car</span> s)</code></li>
+<li><code>(tail s)</code> is <code>(<span class="fu">force</span> (<span class="fu">cdr</span> s))</code></li>
+</ul></li>
+<li><code>delay</code> creates a promise to compute something when <code>force</code> d.
+<ul>
+<li><code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="kw">lambda</span> () <span class="ss">expr</span>)</code></li>
+<li><code>(<span class="fu">force</span> p)</code> is <code>(p)</code></li>
+</ul></li>
+<li><code>delay</code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
+<li>One little hack: to be efficient, <code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is <code class="sourceCode scheme">(memo-proc (<span class="kw">lambda</span> () <span class="ss">expr</span>))</code>.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (memo-proc proc)
+  (<span class="kw">let</span> ((already-run? nil) (result nil))
+    (<span class="kw">lambda</span> ()
+      (<span class="kw">if</span> (<span class="fu">not</span> already-run?)
+          (sequence (<span class="kw">set!</span> result (proc))
+                    (<span class="kw">set!</span> already-run? (<span class="fu">not</span> nil))
+                    result)
+          result))))</code></pre>
+<ul>
+<li>Streams blur the line between data structures and procedures.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="5b.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="6b.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

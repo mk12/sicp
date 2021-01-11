@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 2.4 Notes</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="3.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="5.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html">Multiple Representations for Abstract Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<ul>
+<li>Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.</li>
+<li>We erect abstraction barriers to control complexity.</li>
+<li>This still isn’t powerful enough—it doesn’t always make sense to speak of the “underlying representation.”</li>
+<li>We might want to deal with multiple representations.</li>
+<li>For example, complex numbers can be represented in rectangular form or in polar form.</li>
+<li>We need abstraction barriers that isolate representation from use <em>and</em> others that isolate design choices.</li>
+<li>We want to permit multiple design choices to coexist.</li>
+<li>This is important for modularity.</li>
+<li>We will construct <em>generic procedures</em>, which can operate on data that may be represented in more than one way.</li>
+<li>We will accomplish this with <em>type tags</em>. We will also discuss <em>data-directed</em> programming.</li>
+<li>We now have horizontal abstraction barriers, separating higher-level from lower-level, and vertical ones, separately alternative representations.</li>
+</ul>
+<h2 id="2.4.1" class="anchor">
+<a class="anchor__link link" href="#2.4.1" aria-hidden="true">#</a> <span class="number">2.4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.1">Representations for Complex Numbers<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>This system will perform arithmetic operations on complex numbers represented in rectangular form <em>or</em> polar form.</li>
+<li>Different representations are appropriate for different operations.</li>
+<li>We have four selectors: <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>.</li>
+<li>We have two constructors: <code>make-from-real-img</code> and <code>make-from-mag-ang</code>.</li>
+</ul>
+<h2 id="2.4.2" class="anchor">
+<a class="anchor__link link" href="#2.4.2" aria-hidden="true">#</a> <span class="number">2.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.2">Tagged Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>One way to view data abstraction: principle of least commitment.</li>
+<li>We waited until the last minute to choose the concrete representation, retaining maximum flexibility.</li>
+<li>We can take it even further: let’s use <em>both</em>!</li>
+<li>To include both in the same system, we need some way of distinguishing between them.</li>
+<li>We will use a symbol as a type tag.</li>
+<li>Each generic selector uses case analysis to check the tag of its argument and dispatches the appropriate procedure.</li>
+<li>Our general mechanism for interfacing separate representations: in a specific implementation, the data object is an untyped pair. The generic selectors dispatch on the tag and strip off the tag before passing the data to the appropriate procedure.</li>
+</ul>
+<h2 id="2.4.3" class="anchor">
+<a class="anchor__link link" href="#2.4.3" aria-hidden="true">#</a> <span class="number">2.4.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.3">Data-Directed Programming and Additivity<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>The strategy of checking the type and calling an appropriate procedure is called dispatching on type.</li>
+<li>The implementation in <a href="#2.4.2">§&nbsp;2.4.2</a> had two significant weaknesses:
+<ol type="1">
+<li>The generic interface procedures must know about all the different representations. Adding a new representation means adding a clause to all the generic procedures.</li>
+<li>We must guarantee that no two procedures have the same name.</li>
+</ol></li>
+<li>The underlying issue: the technique we used was not <em>additive</em>.</li>
+<li>This is a source of inconvenience and error.</li>
+<li>The solution is a technique known as data-directed programming.</li>
+<li>We imagine a table with operations on one axis and possible types on the other axis.</li>
+<li>Before, we used case analysis to perform explicit dispatch.</li>
+<li>With DDP, we use a single procedure that looks up the operation name and the argument type in the table.</li>
+<li>We assume we have procedures <code>put</code> and <code>get</code>.</li>
+<li><code>(put op type item)</code> installs <code>item</code> in the table.</li>
+<li><code>(get op type)</code> retrieves the item.</li>
+</ul>
+<h3 id="2.4.3.1" class="anchor">
+<a class="anchor__link link" href="#2.4.3.1" aria-hidden="true">#</a> Message passing
+</h3>
+<ul>
+<li>Data-directed programming handles generic operations by dealing explicitly with operation-and-type tables.</li>
+<li>In our example, each operation took care of its own dispatching.</li>
+<li>An alternative approach is to dispatch on the operator name within the data object itself.</li>
+<li>Rather than applying a generic operation to a data object on which it dispatches to the appropriate procedure, we apply the data object to a message.</li>
+<li>This is called message-passing style, and we can accomplish it in Scheme using closures.</li>
+<li>Message passing can be a powerful tool for structuring simulation programs.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="3.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="5.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

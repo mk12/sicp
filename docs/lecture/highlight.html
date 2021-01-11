@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Lecture Highlights</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-right" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M12.771 9H5.23M9 5.229L12.771 9 9 12.771"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="1a.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+Highlights
+</h1>
+<h2 id="1a" class="anchor">
+<a class="anchor__link link" href="#1a" aria-hidden="true">#</a> <span class="number">1A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp">Overview and Introduction to Lisp<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="1a-q1" class="highlight">
+<a class="highlight__link link" href="1a.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>The real problems come when we try to build very, very large systems … nobody can really hold them in their heads all at once … the only reason that that’s possible is because there are techniques for controlling the complexity of these large systems. And these techniques that are controlling complexity are what this course is really about. And in some sense, that’s really what computer science is about. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp/-J_xL4IGhJA.pdf#page=3" title="SICP Lecture 1A transcript, page 3">Abelson</a></span></p>
+</blockquote>
+</div>
+<div id="1a-q2" class="highlight">
+<a class="highlight__link link" href="1a.html#q2" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>So in that sense, computer science is like an abstract form of engineering. It’s the kind of engineering where you ignore the constraints that are imposed by reality. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp/-J_xL4IGhJA.pdf#page=3" title="SICP Lecture 1A transcript, page 3">Abelson</a></span></p>
+</blockquote>
+</div>
+<h2 id="1b" class="anchor">
+<a class="anchor__link link" href="#1b" aria-hidden="true">#</a> <span class="number">1B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model">Procedures and Processes; Substitution Model<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="1b-q1" class="highlight">
+<a class="highlight__link link" href="1b.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>But one of the things we have to learn how to do is ignore details. The key to understanding complicated things is to know what not to look at, and what not compute, and what not to think. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=3" title="SICP Lecture 1B transcript, page 3">Sussman</a></span></p>
+</blockquote>
+</div>
+<div id="1b-q2" class="highlight">
+<a class="highlight__link link" href="1b.html#q2" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>The way in which you would construct a recursive process is by wishful thinking. You have to believe. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf#page=13" title="SICP Lecture 1B transcript, page 13">Sussman</a></span></p>
+</blockquote>
+</div>
+<h2 id="2b" class="anchor">
+<a class="anchor__link link" href="#2b" aria-hidden="true">#</a> <span class="number">2B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data">Compound Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="2b-q1" class="highlight">
+<a class="highlight__link link" href="2b.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>See, in general, as systems designers, you’re forced with the necessity to make decisions about how you’re going to do things, and in general, the way you’d like to retain flexibility is to never make up your mind about anything until you’re forced to do it. The problem is, there’s a very, very narrow line between deferring decisions and outright procrastination. So you’d like to make progress, but also at the same time, never be bound by the consequences of your decisions. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=10" title="SICP Lecture 2B transcript, page 10">Abelson</a></span></p>
+</blockquote>
+</div>
+<div id="2b-q2" class="highlight">
+<a class="highlight__link link" href="2b.html#q2" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>I said that computer science is a lot like magic, and it’s sort of good that it’s like magic. There’s a bad part of computer science that’s a lot like religion. And in general, I think people who really believe that you design everything before you implement it basically are people who haven’t designed very many things.</p>
+<p>The real power is that you can pretend that you’ve made the decision and then later on figure out which one is right, which decision you ought to have made. And when you can do that, you have the best of both worlds. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=11" title="SICP Lecture 2B transcript, page 11">Abelson</a></span></p>
+</blockquote>
+</div>
+<h2 id="3a" class="anchor">
+<a class="anchor__link link" href="#3a" aria-hidden="true">#</a> <span class="number">3A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example">Henderson Escher Example<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="3a-q1" class="highlight">
+<a class="highlight__link link" href="3a.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>Lisp is a lousy language for doing any particular problem. What it’s good for is figuring out the right language that you want and embedding that in Lisp. That’s the real power of this approach to design. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example/PEwZL3H2oKg.pdf#page=14" title="SICP Lecture 3A transcript, page 14">Abelson</a></span></p>
+</blockquote>
+</div>
+<div id="3a-q2" class="highlight">
+<a class="highlight__link link" href="3a.html#q2" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>The design process is not so much implementing programs as implementing languages. And that’s really the powerful idea of Lisp. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example/PEwZL3H2oKg.pdf#page=17" title="SICP Lecture 3A transcript, page 17">Abelson</a></span></p>
+</blockquote>
+</div>
+<h2 id="3b" class="anchor">
+<a class="anchor__link link" href="#3b" aria-hidden="true">#</a> <span class="number">3B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation">Symbolic Differentiation; Quotation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="3b-q1" class="highlight">
+<a class="highlight__link link" href="3b.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>In order to make a system that’s robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf#page=1" title="SICP Lecture 3B transcript, page 1">Sussman</a></span></p>
+</blockquote>
+</div>
+<h2 id="5a" class="anchor">
+<a class="anchor__link link" href="#5a" aria-hidden="true">#</a> <span class="number">5A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5a-assignment-state-and-side-effects">Assignment, State, and Side-Effects<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="5a-q1" class="highlight">
+<a class="highlight__link link" href="5a.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>For example, here I am, I am a particular person, a particular object. Now, I can take out my knife, and cut my fingernail. A piece of my fingernail has fallen off onto the table. I believe I am the same person I was a second ago, but I’m not physically the same in the slightest. I have changed. Why am I the same? What is the identity of me? I don’t know. Except for the fact that I have some sort of identity. And so, I think by introducing assignment and objects, we have opened ourselves up to all the horrible questions of philosophy that have been plaguing philosophers for some thousands of years about this sort of thing. It’s why mathematics is a lot cleaner. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5a-assignment-state-and-side-effects/dO1aqPBJCPg.pdf#page=14" title="SICP Lecture 5A transcript, page 14">Sussman</a></span></p>
+</blockquote>
+</div>
+<h2 id="5b" class="anchor">
+<a class="anchor__link link" href="#5b" aria-hidden="true">#</a> <span class="number">5B</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5b-computational-objects">Computational Objects<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="5b-q1" class="highlight">
+<a class="highlight__link link" href="5b.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>But inadvertent sharing, unanticipated interactions between objects, is the source of most of the bugs that occur in complicated programs. So by introducing this possibility of things having identity and sharing and having multiple names for the same thing, we get a lot of power. But we’re going to pay for it with lots of complexity and bugs. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/5b-computational-objects/yedzRWhi-9E.pdf#page=12" title="SICP Lecture 5B transcript, page 12">Sussman</a></span></p>
+</blockquote>
+</div>
+<h2 id="6a" class="anchor">
+<a class="anchor__link link" href="#6a" aria-hidden="true">#</a> <span class="number">6A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6a-streams-part-1">Streams, Part 1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<div id="6a-q1" class="highlight">
+<a class="highlight__link link" href="6a.html#q1" aria-label="view quote in notes">Notes <svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-right"/></svg></a>
+<blockquote>
+<p>Going back to this fundamental principle of computer science that in order to control something, you need the name of it. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/6a-streams-part-1/JkGKLILLy0I.pdf#page=4" title="SICP Lecture 6A transcript, page 4">Abelson</a></span></p>
+</blockquote>
+</div>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="1a.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

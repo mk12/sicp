@@ -41,7 +41,7 @@
         {
             "label": "lint",
             "type": "shell",
-            "command": "make lint",
+            "command": "make lintscheme",
             "group": "build",
             "problemMatcher": {
                 "pattern": {
@@ -56,13 +56,6 @@
                 "reveal": "never",
                 "revealProblems": "onProblem"
             }
-        },
-        {
-            "label": "docs",
-            "type": "shell",
-            "command": "make -C docs watch",
-            "group": "build",
-            "problemMatcher": []
         }
     ]
 }

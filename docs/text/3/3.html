@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 3.3 Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="2.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="4.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html">Modeling with Mutable Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<ul>
+<li>We previously looked at compound data and data abstraction.</li>
+<li>To model stateful objects, we need <em>mutators</em> in addition to constructors and selectors.</li>
+<li>A mutator is a procedure that modifies the data object.</li>
+</ul>
+<h2 id="3.3.1" class="anchor">
+<a class="anchor__link link" href="#3.3.1" aria-hidden="true">#</a> <span class="number">3.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.1">Mutable List Structure<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>The primitive mutators for pairs are <code>set-car!</code> and <code>set-cdr!</code>.</li>
+<li><code>(<span class="fu">set-car!</span> p x)</code> changes the <code>car</code> of the pair <code>p</code>, making it point to <code>x</code> instead.</li>
+<li>The old <code>car</code> is unreachable garbage. We will see later how Lisp recycles this memory.</li>
+<li>We could implement <code>cons</code> in terms of these two procedures in addition to a <code>get-new-part</code> procedure.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">let</span> ((new (get-new-pair)))
+    (<span class="fu">set-car!</span> new x)
+    (<span class="fu">set-cdr!</span> new y)
+    new))</code></pre>
+<h3 id="3.3.1.1" class="anchor">
+<a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a> Sharing and identity
+</h3>
+<ul>
+<li>Consider <code>(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code> and <code>(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
+<li><code>z1</code> is a pair whose <code>car</code> and <code>cdr</code> both point to the same <code>x</code>.</li>
+<li>In contrast: <code>(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code>.</li>
+<li>In <code>z2</code>, the two <code>(a b)</code> lists are distinct, although the actual symbols are shared.</li>
+<li>Before assignment, we would think <code>z1</code> and <code>z2</code> were “the same.”</li>
+<li>The sharing is undetectable without mutators on list structure.</li>
+<li>It <em>is</em> detectable in our environmental model.</li>
+<li>If we <code>set-car!</code> on the <code>car</code>, this will change both <code>a</code> symbols in <code>z1</code> but only the first in <code>z2</code>.</li>
+<li>We can use the predicate <code>eq?</code> to test for sameness in the sense of identity.</li>
+<li><code>(<span class="fu">eq?</span> x y)</code> tests whether <code>x</code> and <code>y</code> point to the same object.</li>
+<li>We can exploit sharing for good, but it can be dangerous.</li>
+</ul>
+<h3 id="3.3.1.2" class="anchor">
+<a class="anchor__link link" href="#3.3.1.2" aria-hidden="true">#</a> Mutation is just assignment
+</h3>
+<ul>
+<li>Earlier we said we can represent pairs purely in terms of procedures:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">lambda</span> (sel)
+    (sel x y)))
+(<span class="kw">define</span> (<span class="fu">car</span> p)
+  (p (<span class="kw">lambda</span> (x y) x)))
+(<span class="kw">define</span> (<span class="fu">cdr</span> p)
+  (p (<span class="kw">lambda</span> (x y) y)))</code></pre>
+<ul>
+<li>The same is true of mutable data. We can implement mutators with procedures and assignment alone:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+  (<span class="kw">define</span> (set-x! v) (<span class="kw">set!</span> x v))
+  (<span class="kw">define</span> (set-y! v) (<span class="kw">set!</span> y v))
+  (<span class="kw">define</span> (dispatch m)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;car</span>) x)
+          ((<span class="fu">eq?</span> m <span class="cn">&#39;cdr</span>) y)
+          ((<span class="fu">eq?</span> m <span class="cn">&#39;set-car!</span>) set-x!)
+          ((<span class="fu">eq?</span> m <span class="cn">&#39;set-cdr!</span>) set-y!)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Undefined operation: CONS&quot;</span> m))))
+  dispatch)</code></pre>
+<ul>
+<li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
+</ul>
+<h2 id="3.3.2" class="anchor">
+<a class="anchor__link link" href="#3.3.2" aria-hidden="true">#</a> <span class="number">3.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.2">Representing Queues<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>The mutators allow us to construct new data structures.</li>
+<li>A <em>queue</em> is a sequence in which items are inserted at one end (the rear) and deleted from the other end (the front).</li>
+<li>It is also called a FIFO buffer (first in, first out).</li>
+<li>We define the following operations for data abstraction:
+<ul>
+<li>a constructor <code>(make-queue)</code>,</li>
+<li>a predicate <code>(empty-queue? q)</code>,</li>
+<li>a selector <code>(front-queue q)</code>,</li>
+<li>two mutators: <code>(insert-queue! q x)</code> and <code>(delete-queue! q)</code>.</li>
+</ul></li>
+<li>A simple list representation is inefficient because we have to scan to get to one end.</li>
+<li>Scanning a list takes <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> operations.</li>
+<li>A simply modification lets us implement all the operations with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> time complexity: keep a pointer to the end as well.</li>
+<li>A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.</li>
+</ul>
+<h2 id="3.3.3" class="anchor">
+<a class="anchor__link link" href="#3.3.3" aria-hidden="true">#</a> <span class="number">3.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.3">Representing Tables<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>In a one-dimensional table, each value is indexed by one key.</li>
+<li>We can implement it as a simple list of <em>records</em>.</li>
+<li>A record is a pair consisting of a key and an associated value.</li>
+<li>The first record in the table is a dummy, and it hold the arbitrarily chosen symbol <code>'*table*</code>.
+<ul>
+<li>If a table was just a pointer to the first actual record, then when we wouldn’t be able to write a mutator to add a record to the front.</li>
+<li>We would need to change the table to point to the new front, but <code>set!</code> on a formal parameter doesn’t work as desired.</li>
+<li>It would only change the parameter in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>E</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">E_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, not the value in the calling environment.</li>
+<li>We didn’t need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the <code>car</code> and <code>cdr</code>—but we couldn’t change the set <em>itself</em>, since it was effectively a pointer to the pair, <em>copied</em> on application.</li>
+<li>We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide <code>box</code>, <code>unbox</code>, and <code>set-box!</code> for this purpose.</li>
+</ul></li>
+<li>The <code>lookup</code> procedure returns the value associated with a key in a table, or <code>false</code> if it cannot be found.</li>
+<li>It uses <code>assoc</code>, which returns the whole record rather than just the associated value.</li>
+</ul>
+<h3 id="3.3.3.1" class="anchor">
+<a class="anchor__link link" href="#3.3.3.1" aria-hidden="true">#</a> Two-dimensional tables
+</h3>
+<ul>
+<li>Two-dimensional tables are indexed by two keys.</li>
+<li>In some cases, we could just use a one dimensional table whose keys are pairs of keys.</li>
+<li>We can implement a two-dimensional table as a one-dimensional table whose values are themselves one-dimensional tables.</li>
+<li>We could just use them like that without any specific procedures. However, insertion with two keys is complex enough to merit a convenient two-dimensional procedure.</li>
+<li>We don’t need to box the subtables. They key of the record serves the purpose of <code>'*table*</code>.</li>
+</ul>
+<h3 id="3.3.3.2" class="anchor">
+<a class="anchor__link link" href="#3.3.3.2" aria-hidden="true">#</a> Creating local tables
+</h3>
+<ul>
+<li>With our <code>lookup</code> and <code>insert!</code> procedures taking the table as an argument, we can manage multiple tables.</li>
+<li>Another approach is to have separate procedures for each table.</li>
+<li>We could use the message-passing style with the <code>dispatch</code> procedure that we’ve seen a few times already.</li>
+<li>We could also take the λ-calculus approach:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-table) (<span class="kw">lambda</span> (k) <span class="cn">false</span>))
+(<span class="kw">define</span> (lookup key table) (table key))
+(<span class="kw">define</span> (insert! key value table)
+  (<span class="kw">lambda</span> (k)
+    (<span class="kw">if</span> (<span class="fu">eq?</span> k key)
+        value
+        (table k))))</code></pre>
+<h2 id="3.3.4" class="anchor">
+<a class="anchor__link link" href="#3.3.4" aria-hidden="true">#</a> <span class="number">3.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.4">A Simulator for Digital Circuits<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Digital circuits are made up of simple elements.</li>
+<li>Networks of these simple elements can have very complex behaviour.</li>
+<li>We will design a system to simulator digital logic. This type of program is called an <em>event-driven simulation</em>.</li>
+<li>Our computational model is based on the physical components.
+<ul>
+<li>A <em>wire</em> carries a <em>digital signal</em>, which is either 0 or 1.</li>
+<li>A <em>function box</em> connects to input wires and output wires.</li>
+<li>The output signal is delayed by a time that depends on the type of function box.</li>
+<li>Our primitive function boxes are the <em>inverter</em>, <em>and-gate</em>, and <em>or-gate</em>. Each has its own delay.</li>
+<li>We construct complex functions by connecting primitives.</li>
+<li>Multiple outputs are not necessarily generated at the same time.</li>
+</ul></li>
+<li>We construct wires with <code>(make-wire)</code>.</li>
+<li>Evaluating <code>(<span class="kw">define</span> a (make-wire))</code> and <code>(<span class="kw">define</span> b (make-wire))</code> followed by <code>(inverter a b)</code> connects <code>a</code> and <code>b</code> with an inverter.</li>
+<li>The primitive functions are our primitive elements; wiring is the means of combination; specifying wiring patterns as procedures is the means of abstraction.</li>
+</ul>
+<h3 id="3.3.4.1" class="anchor">
+<a class="anchor__link link" href="#3.3.4.1" aria-hidden="true">#</a> Primitive function boxes
+</h3>
+<ul>
+<li>The primitives boxes implement “forces” by which changes in the signal of one wire influence the signal of another.</li>
+<li>We have the following operations on wires:
+<ul>
+<li><code>(get-signal <span class="ss">wire</span>)</code> returns the current value of the signal.</li>
+<li><code>(set-signal! <span class="ss">wire</span> <span class="ss">value</span>)</code> changes the value of the signal.</li>
+<li><code>(add-action! <span class="ss">wire</span> <span class="ss">procedure-of-no-arguments</span>)</code> asserts that the given procedure should be run whenever the signal on the wire changes value.</li>
+</ul></li>
+<li>The procedure <code>after-delay</code> executes a procedure after a given time delay.</li>
+</ul>
+<h3 id="3.3.4.2" class="anchor">
+<a class="anchor__link link" href="#3.3.4.2" aria-hidden="true">#</a> Representing wires
+</h3>
+<ul>
+<li>Our wires will be computational objects each having two local state variables: <code>signal-value</code> and <code>action-procedures</code>.</li>
+<li>We use the message-passing style as before.</li>
+<li>Wires have time-varying signals and can be incrementally attached to devices. They are a good example of when you need to use a mutable object in the computational model.</li>
+<li>A wire is shared between the devices connected to it. If one changes it, the rest see the change.</li>
+<li>This would be impossible if you didn’t model the wire as an identity, separate from its signal value.</li>
+</ul>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="../highlight.html#3.3-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between “procedures” and “data,” and we can choose our syntactic sugar to allow us to program in whatever style we choose. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#footnote_Temp_385" title="SICP Chapter 3, Footnote 27">(Footnote&nbsp;3.27)</a></p>
+</blockquote>
+</div>
+<h3 id="3.3.4.3" class="anchor">
+<a class="anchor__link link" href="#3.3.4.3" aria-hidden="true">#</a> The agenda
+</h3>
+<ul>
+<li>The only thing left is <code>after-delay</code>.</li>
+<li>An <em>agenda</em> is a data structure that schedules things to do.</li>
+<li>For an agenda <code>(<span class="kw">define</span> a (make-agenda))</code>, the operations <code>(empty-agenda? a)</code>, <code>(first-agenda-item a)</code>, <code>(remove-first-agenda-item! a)</code>, and <code>(current-time a)</code> are self-explanatory.</li>
+<li>We schedule new items with <code>(add-to-agenda <span class="ss">time</span> <span class="ss">action</span> a)</code>.</li>
+<li>We call the global agenda <code>the-agenda</code>.</li>
+<li>The simulation is driven by <code>propagate</code>, which executes each item on the agenda in sequence.</li>
+</ul>
+<h3 id="3.3.4.4" class="anchor">
+<a class="anchor__link link" href="#3.3.4.4" aria-hidden="true">#</a> Implementing the agenda
+</h3>
+<ul>
+<li>The agenda is a pair: the current time, and a list of <em>time segments</em> sorted in increasing order of time.</li>
+<li>A time segment is a pair: a number (the time) and a queue of procedures that are scheduled to run during that time segment.</li>
+<li>To add an action to the agenda, we scan its segments, examining their times. If we find the right time, we add the action to that segment’s queue. Otherwise, we create a new segment.</li>
+<li>To remove the first agenda item, we delete the first item in the first queue, and if this makes the queue empty, we delete the first time segment as well.</li>
+<li>Whenever we extract the first item with <code>first-agenda-item</code>, we also update the current time.</li>
+</ul>
+<h2 id="3.3.5" class="anchor">
+<a class="anchor__link link" href="#3.3.5" aria-hidden="true">#</a> <span class="number">3.3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.5">Propagation of Constraints<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>We often organize computer programs in one direction: from input to output.</li>
+<li>On the other hand, we often model systems in terms of relations among quantities.</li>
+<li>The equation <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>A</mi><mi>E</mi><mo>=</mo><mi>F</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">dAE = FL</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal">L</span></span></span></span> is not one-directional.</li>
+<li>We will create a language to work in terms of the relations themselves, so that we don’t have to write five procedures.</li>
+<li>The primitive elements are <em>primitive constraints</em>.
+<ul>
+<li><code>(adder a b c)</code> specifies <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>=</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">a + b = c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">c</span></span></span></span>.</li>
+<li><code>(multiplier x y z)</code> specifies <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mi>y</mi><mo>=</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">xy = z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">x</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span>.</li>
+<li><code>(constant <span class="cn">3.14</span> x)</code> says that the value of <code>x</code> must be 3.14.</li>
+</ul></li>
+<li>The means of combination are constructing <em>constraint networks</em> in which constraints are joined by <em>connectors</em>.</li>
+<li>The means of abstraction are procedures.</li>
+</ul>
+<h3 id="3.3.5.1" class="anchor">
+<a class="anchor__link link" href="#3.3.5.1" aria-hidden="true">#</a> Using the constraint system
+</h3>
+<ul>
+<li>We create connectors with <code>(make-connector)</code>, just like wires.</li>
+<li>We use <code>(probe <span class="cn">&quot;name&quot;</span> <span class="ss">connector</span>)</code>, again just like wires.</li>
+<li><code>(set-value! <span class="ss">connector</span> <span class="ss">value</span> <span class="cn">&#39;user</span>)</code> assigns a value to the connector, and this information propagates through the network.</li>
+<li>This will give an error if the new value causes a contradiction.</li>
+<li><code>(forget-value! <span class="ss">connector</span> <span class="cn">&#39;user</span>)</code> undoes the assignment.</li>
+</ul>
+<h3 id="3.3.5.2" class="anchor">
+<a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a> Implementing the constraint system
+</h3>
+<ul>
+<li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
+<li>There are five basic operations on a connector <code>c</code>: <code>(has-value? c)</code>, <code class="sourceCode scheme">(get-value c)</code>, <code class="sourceCode scheme">(set-value! c <span class="ss">value</span> <span class="ss">informant</span>)</code>, <code class="sourceCode scheme">(forget-value! c <span class="ss">retractor</span>)</code>, and <code class="sourceCode scheme">(connect c <span class="ss">constraint</span>)</code>.</li>
+<li>The procedures <code>inform-about-value</code> and <code>inform-about-no-value</code> tells the constraint that a connector has (lost) a value.</li>
+<li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
+</ul>
+<h3 id="3.3.5.3" class="anchor">
+<a class="anchor__link link" href="#3.3.5.3" aria-hidden="true">#</a> Representing connectors
+</h3>
+<ul>
+<li>A connector is a procedural object with local state variables—again, just like a wire.</li>
+<li>Each time the connector’s value is set, it remembers the informant. This could be a constraint, or a symbol like <code>'user</code>.</li>
+<li><code>for-each-except</code> is used to notify all <em>other</em> constraints.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="2.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="4.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

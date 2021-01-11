@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Lecture 1A Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+    <symbol id="circle-left" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" stroke-width="1.69" transform="matrix(.8889 0 0 .8889 -1.667 -1.667)"/>
+      <path stroke-width="1.5" d="M5.229 9h7.542M9 5.229L5.229 9 9 12.771"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="highlight.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="1b.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">1A</span> <a class="link" href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp">Overview and Introduction to Lisp<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="1" class="anchor">
+<a class="anchor__link link" href="#1" aria-hidden="true">#</a> Part 1
+</h2>
+<h3 id="1.1" class="anchor">
+<a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Computer science
+</h3>
+<ul>
+<li>It’s not a science, and it’s not <em>really</em> about computers.</li>
+<li>It’s not about computers in the same way that astronomy isn’t about telescopes.</li>
+<li>The ancient Egyptians began geometry using surveying instruments. We now know that the essence of geometry is much bigger than the act of using these primitive tools.</li>
+<li>We often conflate the essence of a field with its tools.</li>
+<li>In a thousand years, they will look back on us in a similar way to how we look at the ancient Egyptians: “They were playing around with these digital computers, but that was only the beginning of the much broader ideas about computation.”</li>
+</ul>
+<h3 id="1.2" class="anchor">
+<a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Declarative vs. imperative
+</h3>
+<p>Mathematical declarative statement (what-is knowledge): The square root of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> is the <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">y ≥ 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304100000000001em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y^2 = x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>.</p>
+<p>Imperative instructions (how-to knowledge): approximate the square root of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> with the following steps:</p>
+<ol type="1">
+<li>Make a guess, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span></span></span></span>.</li>
+<li>Improve the guess by averaging <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mi mathvariant="normal">/</mi><mi>G</mi></mrow><annotation encoding="application/x-tex">x/G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">x</span><span class="mord">/</span><span class="mord mathnormal">G</span></span></span></span>.</li>
+<li>Keep improving until the guess is good enough.</li>
+</ol>
+<h3 id="1.3" class="anchor">
+<a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Processes and Lisp
+</h3>
+<ul>
+<li>The above is an algorithm. More generally, it is a <em>process</em>.</li>
+<li>What is a process? It’s like a magical spirit that lives in the computer and does something.</li>
+<li>The process is directed by a pattern of rules called a procedure (procedure is the spell that controls the spirit).</li>
+<li>We conjure our spirits in a language called Lisp.</li>
+<li>Lisp is easy to learn just as chess is easy to learn.</li>
+<li>Rules stated in minutes, but there are many implications.</li>
+<li>Much more difficult to become a master programmer: understanding all the implications, knowing how to approach problems.</li>
+</ul>
+<h3 id="1.4" class="anchor">
+<a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Complexity and computer science
+</h3>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="highlight.html#1a-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>The real problems come when we try to build very, very large systems … nobody can really hold them in their heads all at once … the only reason that that’s possible is because there are techniques for controlling the complexity of these large systems. And these techniques that are controlling complexity are what this course is really about. And in some sense, that’s really what computer science is about. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp/-J_xL4IGhJA.pdf#page=3" title="SICP Lecture 1A transcript, page 3">Abelson</a></span></p>
+</blockquote>
+</div>
+<ul>
+<li>Computer scientists are in the business of controlling complexity.</li>
+<li>This is different from the complexity that others, for example aeronautical engineers, deal with, because the complexity in CS in a sense is not real.</li>
+<li>Computer science deals with <em>idealized</em> components.</li>
+<li>We know as much as we want about the components; we don’t need to worry about tolerance.</li>
+<li>Not much difference between what I can <em>build</em> and what I can <em>image</em>.</li>
+<li>Other disciplines have physical constraints; in CS, the only constraint is your mind.</li>
+</ul>
+<div id="q2" class="highlight">
+<a class="highlight__link link" href="highlight.html#1a-q2" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>So in that sense, computer science is like an abstract form of engineering. It’s the kind of engineering where you ignore the constraints that are imposed by reality. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/1a-overview-and-introduction-to-lisp/-J_xL4IGhJA.pdf#page=3" title="SICP Lecture 1A transcript, page 3">Abelson</a></span></p>
+</blockquote>
+</div>
+<h3 id="1.5" class="anchor">
+<a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Techniques for managing complexity
+</h3>
+<h4 id="1.5.1" class="anchor">
+<a class="anchor__link link" href="#1.5.1" aria-hidden="true">#</a> Black box abstraction
+</h4>
+<p>Take something and build a box around it. The important thing is that you don’t care what is going on inside the box—it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and build bigger boxes.</p>
+<ul>
+<li>Primitive objects: primitive procedures, primitive data.</li>
+<li>Means of combination: procedure composition, construction of compound data.</li>
+<li>Means of abstraction: procedure definition, simple data abstraction.</li>
+<li>Capturing common patterns: higher-order procedures, data as procedures.</li>
+</ul>
+<h4 id="1.5.2" class="anchor">
+<a class="anchor__link link" href="#1.5.2" aria-hidden="true">#</a> Conventional interfaces
+</h4>
+<p>Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.</p>
+<ul>
+<li>generic operations</li>
+<li>large-scale structure and modularity</li>
+<li>object-oriented programming</li>
+<li>operations on aggregates</li>
+</ul>
+<h4 id="1.5.3" class="anchor">
+<a class="anchor__link link" href="#1.5.3" aria-hidden="true">#</a> Metalinguistic abstraction
+</h4>
+<p>Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.</p>
+<p>The process of interpreting Lisp in Lisp is like a giant wheel of two processes, <code>apply</code> and <code>eval</code>, which reduce expressions to each other. Very magical.</p>
+<ul>
+<li><code>apply</code> and <code>eval</code></li>
+<li>logical programming</li>
+<li>register machines</li>
+</ul>
+<h2 id="2" class="anchor">
+<a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
+</h2>
+<h3 id="2.1" class="anchor">
+<a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Three main features
+</h3>
+<h4 id="2.1.1" class="anchor">
+<a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a> Primitive elements
+</h4>
+<p>Here are some primitive elements is Lisp: <code>3</code>, <code>14.4</code>, <code>5</code>, <code>+</code>. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.</p>
+<h4 id="2.1.2" class="anchor">
+<a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a> Means of combination
+</h4>
+<ul>
+<li>We can take the sum using a <em>combination</em>: <code>(<span class="fu">+</span> <span class="cn">3</span> <span class="cn">14.4</span> <span class="cn">5</span>)</code>.</li>
+<li>Combination: applying and operator to operands.</li>
+<li>The operator and operands themselves can be combinations.</li>
+<li>Lisp uses fully parenthesized (unambiguous) prefix notation.</li>
+<li>Parentheses are very different in Lisp and in mathematics.</li>
+<li>Nested combinations can be modelled as trees.</li>
+<li>Parentheses are just a way to write trees as a linear sequence of characters.</li>
+</ul>
+<h4 id="2.1.3" class="anchor">
+<a class="anchor__link link" href="#2.1.3" aria-hidden="true">#</a> Means of abstraction
+</h4>
+<p>This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure—it is a <em>special form</em>. We can also define procedures this way:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code></pre>
+<p>We can also make it more clear that we are naming something:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code></pre>
+<p>The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former <em>desugars</em> to the latter.</p>
+<p>In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in.</p>
+<h3 id="2.2" class="anchor">
+<a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Case analysis
+</h3>
+<p>We do case analysis in Lisp using <code>cond</code>.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">abs</span> x)
+  (<span class="kw">cond</span> ((<span class="fu">&lt;</span> x <span class="cn">0</span>) (<span class="fu">-</span> x))
+        ((<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span>)
+        ((<span class="fu">&gt;</span> x <span class="cn">0</span>) x)))</code></pre>
+<p>Each line is a clause consisting of a predicate (true or false) and an action. We can use <code>if</code> if there is a single case:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">abs</span> x)
+  (<span class="kw">if</span> (<span class="fu">&lt;</span> x <span class="cn">0</span>)
+      (<span class="fu">-</span> x)
+      x))</code></pre>
+<p>You can think of <code>if</code> as syntactic sugar for <code>cond</code> or vice versa.</p>
+<h3 id="2.3" class="anchor">
+<a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Recursion
+</h3>
+<ul>
+<li>We now know enough to implement any numerical procedure that you could implement in other languages.</li>
+<li>We don’t need any looping constructs in Lisp. We can define things in terms of themselves using <em>recursion</em>.</li>
+</ul>
+<h3 id="2.4" class="anchor">
+<a class="anchor__link link" href="#2.4" aria-hidden="true">#</a> Block structure
+</h3>
+<ul>
+<li>We can create a black box by packaging internals inside of a definition. This is called <em>block structure</em>.</li>
+</ul>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="highlight.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="1b.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

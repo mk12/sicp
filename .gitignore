@@ -5,8 +5,9 @@
 *.dep
 *.zo
 
-# Pandoc output
-out.html
-
-# Linter binary
+# Binaries
+/docgen
 /linter
+
+# Sockets
+katex.sock

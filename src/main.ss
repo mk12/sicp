@@ -9,10 +9,7 @@
         (rnrs programs (6))
         (only (src compat active) format seed-rng)
         (only (src lang core) run-sicp)
-        (src book chapter-1)
-        (src book chapter-2)
-        (src book chapter-3)
-        (src book chapter-4))
+        (src sicp chapter-5))
 
 (define (usage program)
   (format "\
@@ -66,10 +63,7 @@ options:
   (go alist '()))
 
 (define (run filters verbose color)
-  chapter-1-effects
-  chapter-2-effects
-  chapter-3-effects
-  chapter-4-effects
+  chapter-5-effects
   (unless (run-sicp filters verbose color)
     (exit 1)))
 

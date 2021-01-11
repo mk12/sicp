@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 2.2 Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="1.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="3.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html">Hierarchical Data and the Closure Property<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<ul>
+<li>Pairs form a primitive “glue” for compound data objects.</li>
+<li>We can visualize cons pairs with <em>box-and-pointer</em> notation.</li>
+<li>Each pair is a double box. Both the left box and the right box contain an arrow pointing to something else: either to a primitive data object, or to another cons pair.</li>
+<li>The <em>closure property</em> of cons is the ability to make pairs whose elements are pairs.</li>
+<li>Closure allows us to create hierarchal structures.</li>
+<li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
+</ul>
+<h2 id="2.2.1" class="anchor">
+<a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a> <span class="number">2.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.1">Representing Sequences<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Among the things we can build with pairs is a sequence.</li>
+<li>A sequence is an ordered collection of data objects.</li>
+<li>The <code>car</code> of each pair is the corresponding item in the chain, and the <code>cdr</code> of the pair is the next pair in the chain.</li>
+<li>The <code>cdr</code> of the final pair is a special value, nil.</li>
+<li>This sequence of nested conses is called a <em>list</em>.</li>
+<li>We usually represent such lists by placing each element one after the other and enclosing the whole thing in parentheses.</li>
+<li>The procedure <code>car</code> gives us the first item; <code>cdr</code> gives us the sublist containing all items but the first; <code>cons</code> returns a list with an item added to the front.</li>
+<li>The nil value can be thought of as an empty list.</li>
+</ul>
+<h3 id="2.2.1.1" class="anchor">
+<a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a> List operations
+</h3>
+<ul>
+<li>We can get at the nth item of the list by <code>cdr</code>ing one less than <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span> times, and then taking the <code>car</code>.</li>
+<li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is the empty list.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
+  (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
+      (<span class="fu">car</span> items)
+      (<span class="fu">list-ref</span> (<span class="fu">cdr</span> items) (<span class="fu">-</span> n <span class="cn">1</span>))))</code></pre>
+<ul>
+<li>We often write recursive procedures that <code>cdr</code> all the way through the list.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
+  (<span class="kw">if</span> (<span class="fu">null?</span> items)
+      <span class="cn">0</span>
+      (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">length</span> (<span class="fu">cdr</span> items)))))</code></pre>
+<ul>
+<li>We can build up lists to return by <code>cons</code> ing them up.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
+  (<span class="kw">if</span> (<span class="fu">null?</span> list1)
+      list2
+      (<span class="fu">cons</span> (<span class="fu">car</span> list1 (<span class="fu">append</span> (<span class="fu">cdr</span> list1) list2)))))</code></pre>
+<h3 id="2.2.1.2" class="anchor">
+<a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a> Mapping over lists
+</h3>
+<ul>
+<li>Useful operation: applying the same transformation to each element in a list, producing a new list.</li>
+<li>This is a higher-order procedure called <code>map</code>.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">map</span> f xs)
+  (<span class="kw">if</span> (<span class="fu">null?</span> xs)
+      nil
+      (<span class="fu">cons</span> (f (<span class="fu">car</span> xs))
+            (<span class="fu">map</span> f (<span class="fu">cdr</span> xs)))))</code></pre>
+<ul>
+<li>Using map, we can do <code>(<span class="fu">map</span> <span class="fu">abs</span> (<span class="fu">list</span> <span class="cn">-1</span> <span class="cn">5</span> <span class="cn">-3</span> <span class="cn">0</span> <span class="cn">2</span> <span class="cn">-2</span>))</code> and get back the list <code>(<span class="cn">1</span> <span class="cn">5</span> <span class="cn">3</span> <span class="cn">0</span> <span class="cn">2</span> <span class="cn">2</span>)</code>.</li>
+<li>Map establishes a higher level of abstraction for dealing with lists. It suppressive the recursive detail.</li>
+<li>We think about the process differently when we use map.</li>
+</ul>
+<blockquote>
+<p>This abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.1" title="SICP Section 2.2.1">(Section&nbsp;2.2.1)</a></p>
+</blockquote>
+<h2 id="2.2.2" class="anchor">
+<a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a> <span class="number">2.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.2">Hierarchical Structures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>We can represent lists whose elements themselves may also be lists. We can also think of them as <em>trees</em>.</li>
+<li>Recursion is a natural tool for dealing with trees.</li>
+<li>The primitive predicate <code>pair?</code> returns true if its argument is a pair (formed with cons).</li>
+<li>We can count the number of leaves in a tree with this:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (count-leaves x)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> x) <span class="cn">0</span>)
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> x)) <span class="cn">1</span>)
+        (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))
+                 (count-leaves (<span class="fu">cdr</span> x))))))</code></pre>
+<h3 id="2.2.2.1" class="anchor">
+<a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a> Mapping over trees
+</h3>
+<ul>
+<li>We can deal with trees using <code>map</code> together with recursion.</li>
+<li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
+</ul>
+<h2 id="2.2.3" class="anchor">
+<a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a> <span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>Abstractions preserves the flexibility to experiment with alternative representations.</li>
+<li>Another powerful design principle for working with data structures is the use of conventional interfaces.</li>
+<li>To make abstract operations for things other than numbers, we need to have a conventional style in which we manipulate data.</li>
+</ul>
+<h3 id="2.2.3.1" class="anchor">
+<a class="anchor__link link" href="#2.2.3.1" aria-hidden="true">#</a> Sequence operations
+</h3>
+<ul>
+<li>Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.</li>
+<li>To help, we can implement <code>filter</code> and <code>accumulate</code>.</li>
+<li>Expressing programs as sequence operations helps us make program designs that are <em>modular</em>—made of relatively independent pieces that we can connect in flexible ways.</li>
+<li>This is a strategy for controlling complexity.</li>
+<li>A vast range of operations can be expressed as sequence operations, even if you don’t realize it at first.</li>
+<li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
+</ul>
+<h3 id="2.2.3.2" class="anchor">
+<a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a> Nested mappings
+</h3>
+<ul>
+<li>For many computations, the sequence paradigm can be used where loops would otherwise be needed.</li>
+<li>Sometimes we need to use <em>nested</em> mappings, where each mapping maps to a second set of mappings.</li>
+<li>We can use <code>mapcat</code> to flatten the nested mapping result into one list at the end.</li>
+<li>The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (permutations s)
+  (<span class="kw">if</span> (<span class="fu">null?</span> s)
+      (<span class="fu">list</span> nil)
+      (mapcat (<span class="kw">lambda</span> (x)
+                (<span class="fu">map</span> (<span class="kw">lambda</span> (p) (<span class="fu">cons</span> x p))
+                     (permutations (<span class="fu">remove</span> x s))))
+              s)))</code></pre>
+<h2 id="2.2.4" class="anchor">
+<a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a> <span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<ul>
+<li>We will use a simple language for drawing pictures.</li>
+<li>The data objects are represented as procedures rather than as list structure.</li>
+</ul>
+<h3 id="2.2.4.1" class="anchor">
+<a class="anchor__link link" href="#2.2.4.1" aria-hidden="true">#</a> The picture language
+</h3>
+<ul>
+<li>There is only one kind of element, called a <em>painter</em>.</li>
+<li>The painter draws an image transformed into a parallelogram.</li>
+<li>We combine images with operations like <code>beside</code> and <code>below</code>.</li>
+<li>We transform single images with operations like <code>flip-vert</code> and <code>flip-horiz</code>.</li>
+<li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
+</ul>
+<h3 id="2.2.4.2" class="anchor">
+<a class="anchor__link link" href="#2.2.4.2" aria-hidden="true">#</a> Higher-order operations
+</h3>
+<ul>
+<li>Just as we have higher-order procedures, we can have higher-order painting operations.</li>
+<li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
+</ul>
+<h3 id="2.2.4.3" class="anchor">
+<a class="anchor__link link" href="#2.2.4.3" aria-hidden="true">#</a> Frames
+</h3>
+<ul>
+<li>Painters paint their contents in frames.</li>
+<li>A frame can be represented by three vectors: a position vector for one of the corners, and two vectors going along the edges.</li>
+<li>We can use data abstraction to avoid being specific about how these vectors will actually be represented.</li>
+<li>We will use coordinates in the unit square.</li>
+<li>We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.</li>
+</ul>
+<h3 id="2.2.4.4" class="anchor">
+<a class="anchor__link link" href="#2.2.4.4" aria-hidden="true">#</a> Painters
+</h3>
+<ul>
+<li>A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.</li>
+<li>The details of primitive painters depend on the characteristics of the graphics system.</li>
+<li>Painters as procedures is a powerful abstraction barrier.</li>
+</ul>
+<h3 id="2.2.4.5" class="anchor">
+<a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a> Transforming and combining painters
+</h3>
+<ul>
+<li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
+<li>They are all based on the procedure <code>transform-painter</code>.</li>
+</ul>
+<h3 id="2.2.4.6" class="anchor">
+<a class="anchor__link link" href="#2.2.4.6" aria-hidden="true">#</a> Levels of language for robust design
+</h3>
+<ul>
+<li>The picture language uses abstraction with procedures and data.</li>
+<li>Painters are the data abstraction.</li>
+<li>This example also uses <em>stratified design</em>, the notion that a complex system should be structured as a sequence of levels.</li>
+<li>Each time we start a new level, we treat the old complex things as primitive black boxes and combine them.</li>
+<li>Stratified design helps make programs <em>robust</em>: small changes in a specification will likely mean small changes in the program.</li>
+</ul>
+<blockquote>
+<p>In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4" title="SICP Section 2.2.4">(Section&nbsp;2.2.4)</a></p>
+</blockquote>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="1.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="3.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>

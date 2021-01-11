@@ -145,9 +145,11 @@ This works in Chez Scheme and Racket. It also works in Guile, but only the inter
 
 ## License
 
-© 2020 Mitchell Kember
+Most of the source code in this repository is available under the MIT License.
 
-SICP Study is available under the MIT License; see [LICENSE](LICENSE.md) for details.
+The derivative works in [src/sicp/](src/sicp), [notes/](notes), and [docs/](docs) are available under the CC BY-SA 4.0 License.
+
+See [LICENSE](LICENSE.md) for details.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [pages]: https://mk12.github.io/sicp

@@ -1,0 +1,36 @@
+$if(prev)$
+<div class="pagenav__item pagenav__item--left">
+  <a class="pagenav__link link" href="$prev$" aria-label="previous page">
+    <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+    </svg><span class="pagenav__prev">Prev</span>
+  </a>
+</div>
+$else$
+<div class="pagenav__item pagenav__item--left" role="link" aria-disabled="true"
+    aria-label="previous page">
+  <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+  </svg><span class="pagenav__prev">Prev</span>
+</div>
+$endif$
+<div class="pagenav__item pagenav__item--center">
+  <a class="pagenav__link link" href="$up$" aria-label="parent page">
+    <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+    </svg><span class="pagenav__up">Up</span>
+  </a>
+</div>
+$if(next)$
+<div class="pagenav__item pagenav__item--right">
+  <a class="pagenav__link link" href="$next$" aria-label="next page">
+    <span class="pagenav__next">Next</span
+      ><svg width="12" height="11" aria-hidden="true"
+      ><use xlink:href="#right"/></svg>
+  </a>
+</div>
+$else$
+<div class="pagenav__item pagenav__item--right" role="link" aria-disabled="true"
+    aria-label="next page">
+  <span class="pagenav__next">Next</span
+    ><svg width="12" height="11" aria-hidden="true"
+    ><use xlink:href="#right"/></svg>
+</div>
+$endif$

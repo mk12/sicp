@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mitchell Kember">
+  <title>SICP Section 3.5 Exercises</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="4.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="../4/index.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1>
+<span class="number">3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html">Streams<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h1>
+<h2 id="3.5.1" class="anchor">
+<a class="anchor__link link" href="#3.5.1" aria-hidden="true">#</a> <span class="number">3.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.1">Streams Are Delayed Lists<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">(<span class="kw">define</span> (stream-ref s n)
+  (<span class="kw">if</span> (<span class="fu">zero?</span> n)
+      (stream-car s)
+      (stream-ref (stream-cdr s) (<span class="fu">-</span> n <span class="cn">1</span>))))
+(<span class="kw">define</span> (stream-map f s)
+  (<span class="kw">if</span> (stream-null? s)
+      the-empty-stream
+      (<span class="kw">cons-stream</span> (f (stream-car s))
+                   (stream-map f (stream-cdr s)))))
+(<span class="kw">define</span> (stream-for-each f s)
+  (unless (stream-null? s)
+    (f (stream-car s))
+    (stream-for-each f (stream-cdr s))))
+
+(<span class="kw">define</span> (display-stream s) (stream-for-each display-line s))
+(<span class="kw">define</span> (display-line x) (<span class="fu">newline</span>) (<span class="fu">display</span> x))</code></pre>
+<p><code>cons-stream</code> is defined in src/lang/sicp.ss.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> the-empty-stream &#39;())
+(<span class="kw">define</span> stream-null? <span class="fu">null?</span>)
+(<span class="kw">define</span> (stream-car s) (<span class="fu">car</span> s))
+(<span class="kw">define</span> (stream-cdr s) (<span class="fu">force</span> (<span class="fu">cdr</span> s)))</code></pre>
+<h3 id="3.5.1.1" class="anchor">
+<a class="anchor__link link" href="#3.5.1.1" aria-hidden="true">#</a> <span class="number">3.5.1.1</span> The stream implementation in action
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? the-empty-stream)
+       (?<span class="cn">1.23</span> prime?)))
+
+(<span class="kw">define</span> (stream-enumerate-interval low high)
+  (<span class="kw">if</span> (<span class="fu">&gt;</span> low high)
+      the-empty-stream
+      (<span class="kw">cons-stream</span> low (stream-enumerate-interval (<span class="fu">+</span> low <span class="cn">1</span>) high))))
+
+(<span class="kw">define</span> (stream-filter pred s)
+  (<span class="kw">cond</span> ((stream-null? s) the-empty-stream)
+        ((pred (stream-car s))
+         (<span class="kw">cons-stream</span> (stream-car s)
+                      (stream-filter pred (stream-cdr s))))
+        (<span class="kw">else</span> (stream-filter pred (stream-cdr s)))))</code></pre>
+<p>Abbreviations to save space below.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> a stream-car)
+(<span class="kw">define</span> d stream-cdr)
+(<span class="kw">define</span> i stream-enumerate-interval)
+(<span class="kw">define</span> f stream-filter)
+(<span class="kw">define</span> p? prime?)
+
+(a (d (f p? (i <span class="cn">10000</span> <span class="cn">1000000</span>))))
+<span class="op">=&gt;</span> (a (d (f p? (<span class="fu">cons</span> <span class="cn">10000</span> (<span class="kw">delay</span> (i <span class="cn">10001</span> <span class="cn">1000000</span>))))))</code></pre>
+<p>… 10001 through 10006 …</p>
+<pre><code class="blockcode"><span class="op">=&gt;</span> (a (d (f p? (<span class="fu">cons</span> <span class="cn">10007</span> (<span class="kw">delay</span> (i <span class="cn">10008</span> <span class="cn">1000000</span>))))))
+<span class="op">=&gt;</span> (a (d (<span class="fu">cons</span> <span class="cn">10007</span> (<span class="kw">delay</span> (f p? (<span class="fu">cons</span> <span class="cn">10008</span> (<span class="kw">delay</span> (i <span class="cn">10009</span> <span class="cn">1000000</span>))))))))
+<span class="op">=&gt;</span> (a (f p? (<span class="fu">cons</span> <span class="cn">10008</span> (<span class="kw">delay</span> (i <span class="cn">10009</span> <span class="cn">1000000</span>)))))
+<span class="op">=&gt;</span> (a (f p? (<span class="fu">cons</span> <span class="cn">10009</span> (<span class="kw">delay</span> (i <span class="cn">10010</span> <span class="cn">1000000</span>)))))
+<span class="op">=&gt;</span> (a (<span class="fu">cons</span> <span class="cn">10009</span> (<span class="kw">delay</span> (f p? (<span class="fu">cons</span> <span class="cn">10010</span> (<span class="kw">delay</span> (i <span class="cn">10011</span> <span class="cn">1000000</span>)))))))
+<span class="op">=&gt;</span> <span class="cn">10009</span></code></pre>
+<h3 id="3.5.1.2" class="anchor">
+<a class="anchor__link link" href="#3.5.1.2" aria-hidden="true">#</a> <span class="number">3.5.1.2</span> Implementing <code>delay</code> and <code>force</code>
+</h3>
+<p><code>delay</code> is a special form such that <code>(<span class="kw">delay</span> EXPR)</code> is syntactic sugar for <code>(<span class="kw">lambda</span> () EXPR)</code>. <code>force</code> can be implemented as procedure, as done below. However, outside this section we use the Scheme implementation’s versions.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">force</span> delayed-object) (delayed-object))
+
+(<span class="kw">define</span> (memo-proc proc)
+  (<span class="kw">let</span> ((already-run? <span class="cn">#f</span>)
+        (result <span class="cn">#f</span>))
+    (<span class="kw">lambda</span> ()
+      (unless already-run?
+        (<span class="kw">set!</span> result (proc))
+        (<span class="kw">set!</span> already-run? <span class="cn">#t</span>))
+      result)))</code></pre>
+<p>We would then define <code>(<span class="kw">delay</span> EXPR)</code> to be <code>(memo-proc (<span class="kw">lambda</span> () EXPR))</code>.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.50">Exercise 3.50<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? the-empty-stream)))
+
+(<span class="kw">define</span> (stream-map f . ss)
+  (<span class="kw">if</span> (stream-null? (<span class="fu">car</span> ss))
+      the-empty-stream
+      (<span class="kw">cons-stream</span> (<span class="fu">apply</span> f (<span class="fu">map</span> stream-car ss))
+                   (<span class="fu">apply</span> stream-map f (<span class="fu">map</span> stream-cdr ss)))))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.51">Exercise 3.51<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> display-line stream-map stream-ref)
+       (:<span class="cn">3.5.1.1</span> stream-enumerate-interval)))
+
+(<span class="kw">define</span> (show x) (display-line x) x)
+
+(<span class="kw">define</span> x)
+(<span class="kw">set!</span> x (stream-map show (stream-enumerate-interval <span class="cn">0</span> <span class="cn">10</span>)))
+<span class="op">=$&gt;</span> [<span class="cn">&quot;0&quot;</span>]
+
+(stream-ref x <span class="cn">5</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;1&quot;</span> <span class="cn">&quot;2&quot;</span> <span class="cn">&quot;3&quot;</span> <span class="cn">&quot;4&quot;</span> <span class="cn">&quot;5&quot;</span>]
+(stream-ref x <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(stream-ref x <span class="cn">7</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;6&quot;</span> <span class="cn">&quot;7&quot;</span>]
+(stream-ref x <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.52">Exercise 3.52<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> display-stream stream-map stream-ref)
+       (:<span class="cn">3.5.1.1</span> stream-enumerate-interval stream-filter)))
+
+(<span class="kw">define</span> sum <span class="cn">0</span>)
+(<span class="kw">define</span> (accum x) (<span class="kw">set!</span> sum (<span class="fu">+</span> x sum)) sum)
+(<span class="kw">define</span> seq (stream-map accum (stream-enumerate-interval <span class="cn">1</span> <span class="cn">20</span>)))
+sum <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="kw">define</span> y (stream-filter <span class="fu">even?</span> seq))
+sum <span class="op">=&gt;</span> <span class="cn">6</span>
+(<span class="kw">define</span> z (stream-filter (<span class="kw">lambda</span> (x) (<span class="fu">=</span> (<span class="fu">remainder</span> x <span class="cn">5</span>) <span class="cn">0</span>)) seq))
+sum <span class="op">=&gt;</span> <span class="cn">10</span>
+(stream-ref y <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">136</span>
+sum <span class="op">=&gt;</span> <span class="cn">136</span>
+(display-stream z) <span class="op">=$&gt;</span> [<span class="cn">&quot;10&quot;</span> <span class="cn">&quot;15&quot;</span> <span class="cn">&quot;45&quot;</span> <span class="cn">&quot;55&quot;</span> <span class="cn">&quot;105&quot;</span> <span class="cn">&quot;120&quot;</span> <span class="cn">&quot;190&quot;</span> <span class="cn">&quot;210&quot;</span>]</code></pre>
+<p>Yes, responses would differ if <code>delay</code> did not use memoization. The stream <code>seq</code> would get its <code>cdr</code> evaluated multiple times, and it would be different each time because <code>sum</code> keeps increasing. Instead of 1, 6, 10, 120, it would be 1, 6, 15, 162. Displaying <code>z</code> would only show 15. The rest of <code>seq</code> gets generated using a much higher <code>sum</code>, none of which are divisible by 5.</p>
+<h2 id="3.5.2" class="anchor">
+<a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref) (:<span class="cn">3.5.1.1</span> stream-filter)))
+
+(<span class="kw">define</span> (stream-take s n)
+  (<span class="kw">cond</span> ((<span class="fu">zero?</span> n) &#39;())
+        (<span class="kw">else</span> (<span class="fu">cons</span> (stream-car s) (stream-take (stream-cdr s) (<span class="fu">-</span> n <span class="cn">1</span>))))))
+
+(<span class="kw">define</span> (integers-starting-from n)
+  (<span class="kw">cons-stream</span> n (integers-starting-from (<span class="fu">+</span> <span class="cn">1</span> n))))
+(<span class="kw">define</span> integers (integers-starting-from <span class="cn">1</span>))
+
+(<span class="kw">define</span> (divisible? x y) (<span class="fu">=</span> (<span class="fu">remainder</span> x y) <span class="cn">0</span>))
+(<span class="kw">define</span> no-sevens
+  (stream-filter (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (divisible? x <span class="cn">7</span>))) integers))
+(stream-ref no-sevens <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">117</span>
+
+(<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
+(<span class="kw">define</span> fibs (fibgen <span class="cn">0</span> <span class="cn">1</span>))
+(stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">8</span> <span class="cn">13</span> <span class="cn">21</span> <span class="cn">34</span>)
+
+(<span class="kw">define</span> (sieve s)
+  (<span class="kw">cons-stream</span>
+   (stream-car s)
+   (sieve (stream-filter
+           (<span class="kw">lambda</span> (x)
+             (<span class="fu">not</span> (divisible? x (stream-car s))))
+           (stream-cdr s)))))
+(<span class="kw">define</span> primes (sieve (integers-starting-from <span class="cn">2</span>)))
+(stream-ref primes <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">233</span></code></pre>
+<h3 id="3.5.2.1" class="anchor">
+<a class="anchor__link link" href="#3.5.2.1" aria-hidden="true">#</a> <span class="number">3.5.2.1</span> Defining streams implicitly
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref)
+       (:<span class="cn">3.5.1.1</span> stream-filter)
+       (:<span class="cn">3.5.2</span> divisible? integers-starting-from stream-take)
+       (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
+
+(<span class="kw">define</span> (add-streams s1 s2) (stream-map <span class="fu">+</span> s1 s2))
+
+(<span class="kw">define</span> integers
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams ones integers)))
+(stream-take integers <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span>)
+
+(<span class="kw">define</span> fibs
+  (<span class="kw">cons-stream</span> <span class="cn">0</span> (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams (stream-cdr fibs) fibs))))
+(stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">8</span> <span class="cn">13</span> <span class="cn">21</span> <span class="cn">34</span>)
+
+(<span class="kw">define</span> (scale-stream stream factor)
+  (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) stream))
+(<span class="kw">define</span> (negate-stream stream) (scale-stream stream <span class="cn">-1</span>))
+
+(<span class="kw">define</span> double
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (scale-stream double <span class="cn">2</span>)))
+(stream-take double <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">8</span> <span class="cn">16</span> <span class="cn">32</span> <span class="cn">64</span> <span class="cn">128</span> <span class="cn">256</span> <span class="cn">512</span>)
+
+(<span class="kw">define</span> primes
+  (<span class="kw">cons-stream</span> <span class="cn">2</span> (stream-filter prime? (integers-starting-from <span class="cn">3</span>))))
+(<span class="kw">define</span> (prime? n)
+  (<span class="kw">define</span> (iter ps)
+    (<span class="kw">or</span> (<span class="fu">&gt;</span> (square (stream-car ps)) n)
+        (<span class="kw">and</span> (<span class="fu">not</span> (divisible? n (stream-car ps)))
+             (iter (stream-cdr ps)))))
+  (iter primes))
+(stream-ref primes <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">233</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.53">Exercise 3.53<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take) (:<span class="cn">3.5.2.1</span> add-streams)))
+
+(<span class="kw">define</span> s (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams s s)))</code></pre>
+<p>It produces all powers of two, just like <code>double</code> in Section 3.5.2.1. This can be seen from the fact that <code>x * 2</code> (scaling a stream by 2) is the same as <code>x + x</code> (adding a stream to itself).</p>
+<pre><code class="blockcode">(stream-take s <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">8</span> <span class="cn">16</span> <span class="cn">32</span> <span class="cn">64</span> <span class="cn">128</span> <span class="cn">256</span> <span class="cn">512</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.54">Exercise 3.54<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> integers-starting-from stream-take) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (mul-streams s1 s2) (stream-map <span class="fu">*</span> s1 s2))
+(<span class="kw">define</span> factorials
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (mul-streams factorials (integers-starting-from <span class="cn">2</span>))))
+(stream-take factorials <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span> <span class="cn">24</span> <span class="cn">120</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.55">Exercise 3.55<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> stream-take)
+       (:<span class="cn">3.5.2.1</span> add-streams integers)))
+
+(<span class="kw">define</span> (partial-sums s)
+  (<span class="kw">define</span> self (<span class="kw">cons-stream</span> (stream-car s) (add-streams self (stream-cdr s))))
+  self)
+(stream-take (partial-sums integers) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">6</span> <span class="cn">10</span> <span class="cn">15</span> <span class="cn">21</span> <span class="cn">28</span> <span class="cn">36</span> <span class="cn">45</span> <span class="cn">55</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.56">Exercise 3.56<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null?) (:<span class="cn">3.5.2</span> stream-take)
+       (:<span class="cn">3.5.2.1</span> scale-stream)))
+
+(<span class="kw">define</span> (merge s1 s2)
+  (<span class="kw">cond</span> ((stream-null? s1) s2)
+        ((stream-null? s2) s1)
+        (<span class="kw">else</span> (<span class="kw">let</span> ((x1 (stream-car s1))
+                    (x2 (stream-car s2)))
+                (<span class="kw">cond</span> ((<span class="fu">&lt;</span> x1 x2) (<span class="kw">cons-stream</span> x1 (merge (stream-cdr s1) s2)))
+                      ((<span class="fu">&gt;</span> x1 x2) (<span class="kw">cons-stream</span> x2 (merge s1 (stream-cdr s2))))
+                      (<span class="kw">else</span> (<span class="kw">cons-stream</span>
+                             x1
+                             (merge (stream-cdr s1) (stream-cdr s2)))))))))
+(<span class="kw">define</span> S
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (merge (scale-stream S <span class="cn">2</span>)
+                        (merge (scale-stream S <span class="cn">3</span>)
+                               (scale-stream S <span class="cn">5</span>)))))
+
+(stream-take S <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span> <span class="cn">12</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.57">Exercise 3.57<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<p>See proofs.pdf for the proof that the number of additions when computing the nth Fibonacci number using <code>fibs</code> from Section 3.5.2.1 would be exponentially greater if <code>delay</code> is implemented without memoization.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.58">Exercise 3.58<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take)))
+
+(<span class="kw">define</span> (expand num den radix)
+  (<span class="kw">cons-stream</span>
+   (<span class="fu">quotient</span> (<span class="fu">*</span> num radix) den)
+   (expand (<span class="fu">remainder</span> (<span class="fu">*</span> num radix) den) den radix)))</code></pre>
+<p>This procedure produces the stream of digits in the base given by <code>radix</code> that represent the quotient of <code>num</code> and <code>den</code>. It does it without using floating-point operations.</p>
+<pre><code class="blockcode">(stream-take (expand <span class="cn">1</span> <span class="cn">7</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">2</span> <span class="cn">8</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">2</span> <span class="cn">8</span>)
+(<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">7</span>)) <span class="op">~&gt;</span> <span class="cn">0.14285714285714285</span>
+(stream-take (expand <span class="cn">3</span> <span class="cn">8</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> <span class="cn">7</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)
+(<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">3</span> <span class="cn">8</span>)) <span class="op">~&gt;</span> <span class="cn">0.375</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.59">Exercise 3.59<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">3.5.2</span> integers-starting-from stream-take)
+       (:<span class="cn">3.5.2.1</span> negate-stream) (?<span class="cn">3.50</span> stream-map)))</code></pre>
+<ol type="a">
+<li>Integration</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (integrate-series power-series)
+  (stream-map <span class="fu">/</span> power-series (integers-starting-from <span class="cn">1</span>)))</code></pre>
+<ol start="2" type="a">
+<li>Exponential, sine, cosine</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> exp-series
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (integrate-series exp-series)))
+(<span class="kw">define</span> cosine-series
+  (<span class="kw">cons-stream</span> <span class="cn">1</span> (negate-stream (integrate-series sine-series))))
+(<span class="kw">define</span> sine-series
+  (<span class="kw">cons-stream</span> <span class="cn">0</span> (integrate-series cosine-series)))</code></pre>
+<p>Evaluating series</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (eval-series s x n)
+  (<span class="kw">let</span> ((terms (stream-map (<span class="kw">lambda</span> (c k) (<span class="fu">*</span> c (<span class="fu">expt</span> x k)))
+                           s
+                           (integers-starting-from <span class="cn">0</span>))))
+    (accumulate <span class="fu">+</span> <span class="cn">0.0</span> (stream-take terms n))))
+
+(eval-series exp-series <span class="cn">1.0</span> <span class="cn">15</span>) <span class="op">~&gt;</span> <span class="cn">2.7182818285</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.60">Exercise 3.60<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2.1</span> add-streams scale-stream)
+       (?<span class="cn">3.59</span> cosine-series eval-series sine-series)))
+
+(<span class="kw">define</span> (mul-series s1 s2)
+  (<span class="kw">cons-stream</span> (<span class="fu">*</span> (stream-car s1) (stream-car s2))
+               (add-streams (scale-stream (stream-cdr s2) (stream-car s1))
+                            (mul-series (stream-cdr s1) s2))))</code></pre>
+<p>Verifying that sin^2(x) + cos^2(x) = 1. We can rely on the result being exactly 1, not just approximately 1, because the identity is satisfied all the way in the partial sums, not just in the limit.</p>
+<pre><code class="blockcode">(eval-series (add-streams (mul-series sine-series sine-series)
+                          (mul-series cosine-series cosine-series))
+             (random <span class="cn">100</span>)
+             <span class="cn">15</span>)
+<span class="op">=&gt;</span> <span class="cn">1.0</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.61">Exercise 3.61<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2.1</span> negate-stream scale-stream)
+       (?<span class="cn">3.60</span> mul-series)))
+
+(<span class="kw">define</span> (invert-unit-series s)
+  (<span class="kw">cons-stream</span>
+   <span class="cn">1</span>
+   (negate-stream (mul-series (stream-cdr s)
+                              (invert-unit-series s)))))</code></pre>
+<p>Note: <code>invert-series</code> requires a nonzero constant term.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (invert-series s)
+  (<span class="kw">let</span> ((constant (stream-car s)))
+    (<span class="kw">cond</span> ((<span class="fu">=</span> constant <span class="cn">0</span>) (<span class="fu">error</span> <span class="cn">&#39;invert-series</span> <span class="cn">&quot;division by zero&quot;</span> s))
+          ((<span class="fu">=</span> constant <span class="cn">1</span>) (invert-unit-series s))
+          (<span class="kw">else</span> (scale-stream
+                 (invert-unit-series (scale-stream s (<span class="fu">/</span> constant)))
+                 (<span class="fu">/</span> constant))))))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.62">Exercise 3.62<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car) (?<span class="cn">3.59</span> cosine-series eval-series sine-series)
+       (?<span class="cn">3.60</span> mul-series) (?<span class="cn">3.61</span> invert-series)))
+
+(<span class="kw">define</span> (div-series s1 s2)
+  (<span class="kw">let</span> ((den-constant (stream-car s2)))
+    (<span class="kw">cond</span> ((<span class="fu">zero?</span> den-constant) (<span class="fu">error</span> <span class="cn">&#39;div-series</span> <span class="cn">&quot;division by zero&quot;</span> s1 s2))
+          (<span class="kw">else</span> (mul-series s1 (invert-series s2))))))
+
+(<span class="kw">define</span> tangent-series (div-series sine-series cosine-series))
+
+(eval-series tangent-series (<span class="fu">atan</span> <span class="cn">0.123</span>) <span class="cn">10</span>) <span class="op">~&gt;</span> <span class="cn">0.123</span></code></pre>
+<h2 id="3.5.3" class="anchor">
+<a class="anchor__link link" href="#3.5.3" aria-hidden="true">#</a> <span class="number">3.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.3">Exploiting the Stream Paradigm<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<h3 id="3.5.3.1" class="anchor">
+<a class="anchor__link link" href="#3.5.3.1" aria-hidden="true">#</a> <span class="number">3.5.3.1</span> Formulating iterations as stream processes
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.1.7</span> improve)
+       (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref) (:<span class="cn">3.5.2.1</span> scale-stream)
+       (?<span class="cn">3.50</span> stream-map) (?<span class="cn">3.55</span> partial-sums)))
+
+(<span class="kw">define</span> (sqrt-stream x)
+  (<span class="kw">define</span> guesses
+    (<span class="kw">cons-stream</span>
+     <span class="cn">1.0</span>
+     (stream-map (<span class="kw">lambda</span> (guess) (improve guess x))
+                 guesses)))
+  guesses)
+
+(<span class="kw">define</span> (pi-summands n)
+  (<span class="kw">cons-stream</span> (<span class="fu">/</span> <span class="cn">1.0</span> n) (stream-map <span class="fu">-</span> (pi-summands (<span class="fu">+</span> n <span class="cn">2</span>)))))
+(<span class="kw">define</span> pi-stream
+  (scale-stream (partial-sums (pi-summands <span class="cn">1</span>)) <span class="cn">4</span>))
+
+(<span class="kw">define</span> (euler-transform s)
+  (<span class="kw">let</span> ((s0 (stream-ref s <span class="cn">0</span>))
+        (s1 (stream-ref s <span class="cn">1</span>))
+        (s2 (stream-ref s <span class="cn">2</span>)))
+    (<span class="kw">cons-stream</span> (<span class="fu">-</span> s2 (<span class="fu">/</span> (square (<span class="fu">-</span> s2 s1))
+                          (<span class="fu">+</span> s0 (<span class="fu">*</span> <span class="cn">-2</span> s1) s2)))
+                 (euler-transform (stream-cdr s)))))
+
+(<span class="kw">define</span> (make-tableau transform s)
+  (<span class="kw">cons-stream</span> s (make-tableau transform (transform s))))
+(<span class="kw">define</span> (accelerated-sequence transform s)
+  (stream-map stream-car (make-tableau transform s)))
+
+(stream-ref (sqrt-stream <span class="cn">2</span>) <span class="cn">10</span>)
+<span class="op">~&gt;</span> <span class="cn">1.414213562373095</span>
+(stream-ref pi-stream <span class="cn">10</span>)
+<span class="op">~&gt;</span> <span class="cn">3.232315809405594</span>
+(stream-ref (euler-transform pi-stream) <span class="cn">10</span>)
+<span class="op">~&gt;</span> <span class="cn">3.1417360992606667</span>
+(stream-ref (accelerated-sequence euler-transform pi-stream) <span class="cn">8</span>)
+<span class="op">~&gt;</span> <span class="cn">3.141592653589793</span></code></pre>
+<p>The 11th term is NaN, probably because a denominator becomes extremely tiny.</p>
+<pre><code class="blockcode">(stream-ref (accelerated-sequence euler-transform pi-stream) <span class="cn">10</span>)
+<span class="op">=&gt;</span> +nan<span class="cn">.0</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.63">Exercise 3.63<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> improve) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (sqrt-stream x)
+  (<span class="kw">cons-stream</span>
+   <span class="cn">1.0</span>
+   (stream-map (<span class="kw">lambda</span> (guess) (improve guess x))
+               (sqrt-stream x))))</code></pre>
+<p>This implementation is less efficient because it doesn’t take advantage of memoization. It improves the first guess to get the second item, but then it must do that all over again in the recursive call to improve the second gues when it calls <code>(sqrt-stream x)</code>. If our implementation of <code>delay</code> didn’t use the optimization provided by <code>memo-proc</code>, then there would be no difference in efficiency between the original procedure and this one.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.64">Exercise 3.64<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.3.1</span> sqrt-stream)))
+
+(<span class="kw">define</span> (stream-limit s tolerance)
+  (<span class="kw">define</span> (iter prev s)
+    (<span class="kw">let</span> ((next (stream-car s)))
+      (<span class="kw">if</span> (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> prev next)) tolerance)
+          next
+          (iter next (stream-cdr s)))))
+  (iter (stream-car s) (stream-cdr s)))
+
+(<span class="kw">define</span> (<span class="fu">sqrt</span> x tolerance)
+  (stream-limit (sqrt-stream x) tolerance))
+
+(<span class="fu">sqrt</span> <span class="cn">2</span> <span class="cn">0.1</span>) <span class="op">~&gt;</span> <span class="cn">1.4166666666666665</span>
+(<span class="fu">sqrt</span> <span class="cn">2</span> <span class="cn">0.0001</span>) <span class="op">~&gt;</span> <span class="cn">1.4142135623746899</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.65">Exercise 3.65<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-ref) (:<span class="cn">3.5.2.1</span> negate-stream)
+       (:<span class="cn">3.5.3.1</span> accelerated-sequence euler-transform) (?<span class="cn">3.55</span> partial-sums)))
+
+(<span class="kw">define</span> (ln<span class="cn">-2</span>-summands n)
+  (<span class="kw">cons-stream</span> (<span class="fu">/</span> <span class="cn">1.0</span> n) (negate-stream (ln<span class="cn">-2</span>-summands (<span class="fu">+</span> n <span class="cn">1</span>)))))
+(<span class="kw">define</span> ln<span class="cn">-2</span>-stream
+  (partial-sums (ln<span class="cn">-2</span>-summands <span class="cn">1</span>)))</code></pre>
+<p>This converges fairly slowly on its own:</p>
+<pre><code class="blockcode">(stream-ref ln<span class="cn">-2</span>-stream <span class="cn">10</span>) <span class="op">~&gt;</span> <span class="cn">0.7365440115440116</span></code></pre>
+<p>The accelerated sequence converges much faster:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> accel-ln<span class="cn">-2</span>-stream (accelerated-sequence euler-transform ln<span class="cn">-2</span>-stream))
+(stream-ref accel-ln<span class="cn">-2</span>-stream <span class="cn">8</span>) <span class="op">~&gt;</span> (<span class="fu">log</span> <span class="cn">2</span>)</code></pre>
+<h3 id="3.5.3.2" class="anchor">
+<a class="anchor__link link" href="#3.5.3.2" aria-hidden="true">#</a> <span class="number">3.5.3.2</span> Infinite streams of pairs
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null?) (:<span class="cn">3.5.2</span> integers stream-take)
+       (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (pairs s t)
+  (<span class="kw">cons-stream</span>
+   (<span class="fu">list</span> (stream-car s) (stream-car t))
+   (interleave
+    (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">list</span> (stream-car s) x))
+                (stream-cdr t))
+    (pairs (stream-cdr s) (stream-cdr t)))))
+
+(<span class="kw">define</span> (interleave s1 s2)
+  (<span class="kw">cond</span> ((stream-null? s1) s2)
+        (<span class="kw">else</span> (<span class="kw">cons-stream</span> (stream-car s1)
+                           (interleave s2 (stream-cdr s1))))))
+
+(<span class="kw">define</span> integer-pairs (pairs integers integers))
+(<span class="kw">define</span> first<span class="cn">-10</span>-pairs (stream-take integer-pairs <span class="cn">10</span>))
+first<span class="cn">-10</span>-pairs <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.66">Exercise 3.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval) (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref)
+       (:<span class="cn">3.5.2</span> divisible?) (:<span class="cn">3.5.3.2</span> first<span class="cn">-10</span>-pairs integer-pairs)))</code></pre>
+<p>Let f(n) be the nth pair in the stream, starting at 0.</p>
+<pre><code class="blockcode">f(<span class="cn">0</span>)  <span class="fu">=</span> (<span class="cn">1</span>,<span class="cn">1</span>)<span class="co">; f(n) = (1,_) when n = 1  + 2k</span>
+f(<span class="cn">2</span>)  <span class="fu">=</span> (<span class="cn">2</span>,<span class="cn">2</span>)<span class="co">; f(n) = (2,_) when n = 4  + 4k</span>
+f(<span class="cn">6</span>)  <span class="fu">=</span> (<span class="cn">3</span>,<span class="cn">3</span>)<span class="co">; f(n) = (3,_) when n = 10 + 8k</span>
+f(<span class="cn">14</span>) <span class="fu">=</span> (<span class="cn">4</span>,<span class="cn">4</span>)<span class="co">; f(n) = (4,_) when n = 22 + 16k</span>
+...</code></pre>
+<p>The next row (where the first number in the pair is incremented once) always gets updated half as often as the previous row. In general,</p>
+<pre><code class="blockcode">f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span>) <span class="fu">=</span> (x,x)<span class="co">;</span>
+f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span> <span class="fu">+</span> <span class="cn">2</span>^(x<span class="cn">-1</span>) <span class="fu">+</span> (k <span class="fu">-</span> <span class="cn">1</span>)<span class="cn">2</span>^x) <span class="fu">=</span> (x,x+k), k <span class="fu">&gt;</span> <span class="cn">0.</span></code></pre>
+<p>We can write a function to find the index of a given pair:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (pair-&gt;index pair)
+  (<span class="kw">let*</span> ((x (<span class="fu">car</span> pair))
+         (k (<span class="fu">-</span> (<span class="fu">cadr</span> pair) x)))
+    (<span class="kw">cond</span> ((<span class="fu">zero?</span> k) (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2</span> x) <span class="cn">2</span>))
+          (<span class="kw">else</span> (<span class="fu">-</span> (<span class="fu">*</span> (<span class="fu">expt</span> <span class="cn">2</span> (<span class="fu">-</span> x <span class="cn">1</span>))
+                      (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> k) <span class="cn">1</span>))
+                   <span class="cn">2</span>)))))
+
+(pair-&gt;index &#39;(<span class="cn">1</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> <span class="cn">197</span>
+(pair-&gt;index &#39;(<span class="cn">99</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> <span class="cn">950737950171172051122527404030</span>
+(pair-&gt;index &#39;(<span class="cn">100</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">100</span>) <span class="cn">2</span>)</code></pre>
+<p>We can confirm that it’s correct for small indices:</p>
+<pre><code class="blockcode">(<span class="fu">map</span> pair-&gt;index first<span class="cn">-10</span>-pairs) <span class="op">=&gt;</span> (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)
+(stream-ref integer-pairs <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
+(<span class="kw">define</span> random-pair-fst (<span class="fu">+</span> <span class="cn">1</span> (random <span class="cn">5</span>)))
+(<span class="kw">define</span> random-pair (<span class="fu">list</span> random-pair-fst (<span class="fu">+</span> random-pair-fst (random <span class="cn">46</span>))))
+(<span class="kw">define</span> random-index (pair-&gt;index random-pair))
+(<span class="fu">&gt;=</span> random-index <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>    <span class="co">; sanity check</span>
+(<span class="fu">&lt;=</span> random-index <span class="cn">1454</span>) <span class="op">=&gt;</span> <span class="cn">#t</span> <span class="co">; ensure it&#39;s not too large</span>
+(stream-ref integer-pairs random-index) <span class="op">=&gt;</span> random-pair</code></pre>
+<p>Going the other way, from index to pair, is possible without generating the stream. But there is no simple closed form solution. For an index n, the first element of the pair (from which we can easily solve for the second) is given by https://oeis.org/A091090.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (index-&gt;pair n)
+  <span class="co">;; Maintains the invariants a = 2^x, b = 3*2^(x-1).</span>
+  (<span class="kw">define</span> (iter x a b)
+    (<span class="kw">cond</span> ((divisible? (<span class="fu">-</span> n (<span class="fu">-</span> b <span class="cn">2</span>)) a)
+           (<span class="fu">list</span> x (<span class="fu">+</span> x (<span class="fu">/</span> (<span class="fu">+</span> n <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">-3</span>/<span class="cn">2</span> a)) a) <span class="cn">1</span>)))
+          (<span class="kw">else</span> (iter (<span class="fu">+</span> x <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>) (<span class="fu">*</span> b <span class="cn">2</span>)))))
+  (<span class="kw">let</span> ((x (<span class="fu">log</span> (<span class="fu">+</span> n <span class="cn">2</span>) <span class="cn">2</span>)))
+    (<span class="kw">cond</span> ((<span class="fu">integer?</span> x) (<span class="fu">list</span> (<span class="fu">exact</span> x) (<span class="fu">exact</span> x)))
+          (<span class="kw">else</span> (iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)))))
+
+(<span class="fu">map</span> index-&gt;pair (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)) <span class="op">=&gt;</span> first<span class="cn">-10</span>-pairs
+(index-&gt;pair <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
+(index-&gt;pair random-index) <span class="op">=&gt;</span> random-pair</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.67">Exercise 3.67<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> integers stream-take)
+       (:<span class="cn">3.5.3.2</span> interleave) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (pairs s t)
+  (<span class="kw">cons-stream</span>
+   (<span class="fu">list</span> (stream-car s) (stream-car t))
+   (interleave
+    (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">list</span> (stream-car s) x))
+                (stream-cdr t))
+    (interleave
+     (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">list</span> x (stream-car t)))
+                 (stream-cdr s))
+     (pairs (stream-cdr s) (stream-cdr t))))))
+
+(stream-take (pairs integers integers) <span class="cn">10</span>)
+<span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.68">Exercise 3.68<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.3.2</span> interleave) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (pairs s t)
+  (interleave
+   (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">list</span> (stream-car s) x))
+               t)
+   (pairs (stream-cdr s) (stream-cdr t))))</code></pre>
+<p>No, this will not work: there will be an infinite loop. The recursive call <code>(pairs (stream-cdr s) (stream-cdr t))</code> is not delayed by a <code>cons-stream</code>, so the procedure will never return.</p>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.69">Exercise 3.69<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.1.1</span> stream-filter)
+       (:<span class="cn">3.5.2</span> integers) (:<span class="cn">3.5.3.2</span> interleave pairs) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (triples s t u)
+  (<span class="kw">cons-stream</span>
+   (<span class="fu">list</span> (stream-car s) (stream-car t) (stream-car u))
+   (interleave
+    (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">cons</span> (stream-car s) x))
+                (stream-cdr (pairs t u)))
+    (triples (stream-cdr s)
+             (stream-cdr t)
+             (stream-cdr u)))))
+
+(<span class="kw">define</span> pythagorean-triples
+  (stream-filter
+   (<span class="kw">lambda</span> (x)
+     (<span class="fu">=</span> (<span class="fu">+</span> (square (<span class="fu">car</span> x)) (square (<span class="fu">cadr</span> x))) (square (<span class="fu">caddr</span> x))))
+   (triples integers integers integers)))
+
+(stream-car pythagorean-triples) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.70">Exercise 3.70<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null?) (:<span class="cn">3.5.1.1</span> stream-filter)
+       (:<span class="cn">3.5.2</span> divisible? integers stream-take) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (merge-weighted s1 s2 weight)
+  (<span class="kw">define</span> (merge s1 s2)
+    (<span class="kw">cond</span> ((stream-null? s1) s2)
+          ((stream-null? s2) s1)
+          (<span class="kw">else</span> (<span class="kw">let</span> ((x1 (stream-car s1))
+                      (x2 (stream-car s2)))
+                  (<span class="kw">if</span> (<span class="fu">&lt;=</span> (weight x1) (weight x2))
+                      (<span class="kw">cons-stream</span> x1 (merge (stream-cdr s1) s2))
+                      (<span class="kw">cons-stream</span> x2 (merge s1 (stream-cdr s2))))))))
+  (merge s1 s2))
+
+(<span class="kw">define</span> (weighted-pairs s t weight)
+  (<span class="kw">cons-stream</span>
+   (<span class="fu">list</span> (stream-car s) (stream-car s))
+   (merge-weighted
+    (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">list</span> (stream-car s) x))
+                (stream-cdr t))
+    (weighted-pairs (stream-cdr s) (stream-cdr t) weight)
+    weight)))</code></pre>
+<ol type="a">
+<li>Pairs of positive integers (i, j) with i &lt;= j ordered by i + j.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (a-weight p) (<span class="fu">apply</span> <span class="fu">+</span> p))
+(<span class="kw">define</span> a-stream (weighted-pairs integers integers a-weight))
+(<span class="kw">define</span> a<span class="cn">-10</span> (stream-take a-stream <span class="cn">10</span>))
+a<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))
+(<span class="fu">map</span> a-weight a<span class="cn">-10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">7</span>)</code></pre>
+<ol start="2" type="a">
+<li>Pairs of positive integers (i, j) with i &lt;= j, where neither i nor j is divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.</li>
+</ol>
+<pre><code class="blockcode">(<span class="kw">define</span> (b-weight p)
+  (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> (<span class="fu">car</span> p))
+     (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">cadr</span> p))
+     (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">car</span> p) (<span class="fu">cadr</span> p))))
+(<span class="kw">define</span> b-stream
+  (<span class="kw">let</span> ((filtered
+         (stream-filter
+          (<span class="kw">lambda</span> (x)
+            (<span class="fu">not</span> (<span class="kw">or</span> (divisible? x <span class="cn">2</span>) (divisible? x <span class="cn">3</span>) (divisible? x <span class="cn">5</span>))))
+          integers)))
+    (weighted-pairs filtered filtered b-weight)))
+(<span class="kw">define</span> b<span class="cn">-10</span> (stream-take b-stream <span class="cn">10</span>))
+b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">7</span>) (<span class="cn">1</span> <span class="cn">11</span>) (<span class="cn">1</span> <span class="cn">13</span>) (<span class="cn">1</span> <span class="cn">17</span>) (<span class="cn">1</span> <span class="cn">19</span>) (<span class="cn">1</span> <span class="cn">23</span>) (<span class="cn">1</span> <span class="cn">29</span>) (<span class="cn">1</span> <span class="cn">31</span>) (<span class="cn">7</span> <span class="cn">7</span>))
+(<span class="fu">map</span> b-weight b<span class="cn">-10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">58</span> <span class="cn">90</span> <span class="cn">106</span> <span class="cn">138</span> <span class="cn">154</span> <span class="cn">186</span> <span class="cn">234</span> <span class="cn">250</span> <span class="cn">280</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.71">Exercise 3.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3</span> cube) (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> integers stream-take)
+       (?<span class="cn">3.70</span> weighted-pairs)))
+
+(<span class="kw">define</span> (weight p) (<span class="fu">+</span> (cube (<span class="fu">car</span> p)) (cube (<span class="fu">cadr</span> p))))
+(<span class="kw">define</span> (analyze pairs)
+  (<span class="kw">let*</span> ((w1 (weight (stream-car pairs)))
+         (w2 (weight (stream-car (stream-cdr pairs)))))
+    (<span class="kw">if</span> (<span class="fu">=</span> w1 w2)
+        (<span class="kw">cons-stream</span> w1 (analyze (stream-cdr (stream-cdr pairs))))
+        (analyze (stream-cdr pairs)))))
+(<span class="kw">define</span> ramanujan-numbers
+  (analyze (weighted-pairs integers integers weight)))
+
+(stream-take ramanujan-numbers <span class="cn">6</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1729</span> <span class="cn">4104</span> <span class="cn">13832</span> <span class="cn">20683</span> <span class="cn">32832</span> <span class="cn">39312</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.72">Exercise 3.72<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.5.1</span> stream-car stream-cdr)
+       (:<span class="cn">3.5.2</span> integers stream-take) (?<span class="cn">3.70</span> weighted-pairs)))
+
+(<span class="kw">define</span> (weight p) (<span class="fu">+</span> (square (<span class="fu">car</span> p)) (square (<span class="fu">cadr</span> p))))
+(<span class="kw">define</span> (analyze pairs)
+  (<span class="kw">let*</span> ((x1 (stream-car pairs))
+         (x2 (stream-car (stream-cdr pairs)))
+         (x3 (stream-car (stream-cdr (stream-cdr pairs))))
+         (w1 (weight x1)))
+    (<span class="kw">if</span> (<span class="fu">=</span> w1 (weight x2) (weight x3))
+        (<span class="kw">cons-stream</span> (<span class="fu">list</span> w1 x1 x2 x3)
+                     (analyze (stream-cdr (stream-cdr (stream-cdr pairs)))))
+        (analyze (stream-cdr pairs)))))
+(<span class="kw">define</span> thrice-square-sums
+  (analyze (weighted-pairs integers integers weight)))
+
+(stream-take thrice-square-sums <span class="cn">3</span>)
+<span class="op">=&gt;</span> &#39;((<span class="cn">325</span> (<span class="cn">1</span> <span class="cn">18</span>) (<span class="cn">6</span> <span class="cn">17</span>) (<span class="cn">10</span> <span class="cn">15</span>))
+     (<span class="cn">425</span> (<span class="cn">5</span> <span class="cn">20</span>) (<span class="cn">8</span> <span class="cn">19</span>) (<span class="cn">13</span> <span class="cn">16</span>))
+     (<span class="cn">650</span> (<span class="cn">5</span> <span class="cn">25</span>) (<span class="cn">11</span> <span class="cn">23</span>) (<span class="cn">17</span> <span class="cn">19</span>)))</code></pre>
+<h3 id="3.5.3.3" class="anchor">
+<a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> <span class="number">3.5.3.3</span> Streams as signals
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2.1</span> add-streams scale-stream)))
+
+(<span class="kw">define</span> (integral integrand initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span> initial-value
+                 (add-streams (scale-stream integrand dt)
+                              int)))
+  int)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.73">Exercise 3.73<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take) (:<span class="cn">3.5.2.1</span> add-streams ones scale-stream)
+       (:<span class="cn">3.5.3.3</span> integral)))
+
+(<span class="kw">define</span> (RC R C dt)
+  (<span class="kw">lambda</span> (i v0)
+    (add-streams (scale-stream i R)
+                 (integral (scale-stream i (<span class="fu">/</span> C)) v0 dt))))</code></pre>
+<p>RC circuit with R = 5 ohms, C = 1 farad, and dt = 0.5 s.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> RC1 (RC <span class="cn">5</span> <span class="cn">1</span> <span class="cn">0.5</span>))</code></pre>
+<p>Calculate the stream of voltages given a constant i = 1 amp and v0 = 0 V.</p>
+<pre><code class="blockcode">(stream-take (RC1 ones <span class="cn">0</span>) <span class="cn">10</span>)
+<span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">5.5</span> <span class="cn">6.0</span> <span class="cn">6.5</span> <span class="cn">7.0</span> <span class="cn">7.5</span> <span class="cn">8.0</span> <span class="cn">8.5</span> <span class="cn">9.0</span> <span class="cn">9.5</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.74">Exercise 3.74<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> stream-take) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (cycle original)
+  (<span class="kw">define</span> (iter xs)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) (iter original))
+          (<span class="kw">else</span> (<span class="kw">cons-stream</span> (<span class="fu">car</span> xs) (iter (<span class="fu">cdr</span> xs))))))
+  (iter original))</code></pre>
+<p>Alyssa’s original implementation</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (sign-change-detector new old)
+  (<span class="kw">cond</span> ((<span class="kw">and</span> (<span class="fu">&lt;</span> old <span class="cn">0</span>) (<span class="fu">&gt;=</span> new <span class="cn">0</span>)) <span class="cn">1</span>)
+        ((<span class="kw">and</span> (<span class="fu">&gt;=</span> old <span class="cn">0</span>) (<span class="fu">&lt;</span> new <span class="cn">0</span>)) <span class="cn">-1</span>)
+        (<span class="kw">else</span> <span class="cn">0</span>)))
+(<span class="kw">define</span> (make-zero-crossings input-stream last-value)
+  (<span class="kw">cons-stream</span>
+   (sign-change-detector (stream-car input-stream) last-value)
+   (make-zero-crossings (stream-cdr input-stream) (stream-car input-stream))))
+(<span class="kw">define</span> (zero-crossings sense-data) (make-zero-crossings sense-data <span class="cn">0</span>))
+
+(<span class="kw">define</span> test-data (cycle &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">-1</span> <span class="cn">-2</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">5</span>)))
+(<span class="kw">define</span> test-result &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">-1</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>))
+(stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
+<p>My implementation based on Eva Lu Ator’s suggestion</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (zero-crossings sense-data)
+  (stream-map sign-change-detector
+              sense-data
+              (<span class="kw">cons-stream</span> <span class="cn">0</span> sense-data)))
+
+(stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.75">Exercise 3.75<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> stream-take)
+       (?<span class="cn">3.74</span> sign-change-detector test-data)))
+
+(<span class="kw">define</span> (make-zero-crossings input-stream last-value last-avpt)
+  (<span class="kw">let*</span> ((value (stream-car input-stream))
+         (avpt (<span class="fu">/</span> (<span class="fu">+</span> value last-value) <span class="cn">2</span>)))
+    (<span class="kw">cons-stream</span>
+     (sign-change-detector avpt last-avpt)
+     (make-zero-crossings (stream-cdr input-stream) value avpt))))
+(<span class="kw">define</span> (zero-crossings sense-data) (make-zero-crossings sense-data <span class="cn">0</span> <span class="cn">0</span>))
+
+(<span class="kw">define</span> test-result &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>))
+(stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.76">Exercise 3.76<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average) (:<span class="cn">3.5.2</span> stream-take) (?<span class="cn">3.50</span> stream-map)
+       (?<span class="cn">3.74</span> test-data zero-crossings) (?<span class="cn">3.75</span> test-result)))
+
+(<span class="kw">define</span> (smooth s) (stream-map average s (<span class="kw">cons-stream</span> <span class="cn">0</span> s)))
+(<span class="kw">define</span> (smooth-zero-crossings sense-data) (zero-crossings (smooth sense-data)))
+
+(stream-take (smooth-zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
+<h2 id="3.5.4" class="anchor">
+<a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-ref) (:<span class="cn">3.5.2.1</span> add-streams scale-stream)
+       (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (integral delayed-integrand initial-value dt)
+  (<span class="kw">define</span> int
+    (<span class="kw">cons-stream</span>
+     initial-value
+     (<span class="kw">let</span> ((integrand (<span class="fu">force</span> delayed-integrand)))
+       (add-streams (scale-stream integrand dt) int))))
+  int)</code></pre>
+<p>Solves y’ = f(y).</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (solve f y0 dt)
+  (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
+  (<span class="kw">define</span> dy (stream-map f y))
+  y)</code></pre>
+<p>When f(y) = y and y0 = 1, the solution is e.</p>
+<pre><code class="blockcode">(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.77">Exercise 3.77<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? stream-ref the-empty-stream)
+       (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (integral delayed-integrand initial-value dt)
+  (<span class="kw">cons-stream</span>
+   initial-value
+   (<span class="kw">let</span> ((integrand (<span class="fu">force</span> delayed-integrand)))
+     (<span class="kw">if</span> (stream-null? integrand)
+         the-empty-stream
+         (integral (<span class="kw">delay</span> (stream-cdr integrand))
+                   (<span class="fu">+</span> (<span class="fu">*</span> dt (stream-car integrand))
+                      initial-value)
+                   dt)))))
+
+(<span class="kw">paste</span> (:<span class="cn">3.5.4</span> solve))
+(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.78">Exercise 3.78<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2.1</span> add-streams scale-stream) (:<span class="cn">3.5.4</span> integral)))</code></pre>
+<p>Solves y’’ - ay’ - by = 0.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (solve<span class="cn">-2</span>nd a b y0 dy0 dt)
+  (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
+  (<span class="kw">define</span> dy (integral (<span class="kw">delay</span> ddy) dy0 dt))
+  (<span class="kw">define</span> ddy (add-streams (scale-stream dy a)
+                           (scale-stream y b)))
+  y)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.79">Exercise 3.79<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.4</span> integral) (?<span class="cn">3.50</span> stream-map)))</code></pre>
+<p>Solves y’’ = f(y’, y).</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (solve<span class="cn">-2</span>nd f y0 dy0 dt)
+  (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
+  (<span class="kw">define</span> dy (integral (<span class="kw">delay</span> ddy) dy0 dt))
+  (<span class="kw">define</span> ddy (stream-map f dy y))
+  y)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.80">Exercise 3.80<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take) (:<span class="cn">3.5.2.1</span> add-streams scale-stream)
+       (:<span class="cn">3.5.4</span> integral)))
+
+(<span class="kw">define</span> (RLC R L C dt)
+  (<span class="kw">lambda</span> (vC0 iL0)
+    (<span class="kw">define</span> vC (integral (<span class="kw">delay</span> dvC) vC0 dt))
+    (<span class="kw">define</span> iL (integral (<span class="kw">delay</span> diL) iL0 dt))
+    (<span class="kw">define</span> dvC (scale-stream iL (<span class="fu">/</span> <span class="cn">-1</span> C)))
+    (<span class="kw">define</span> diL (add-streams (scale-stream vC (<span class="fu">/</span> L))
+                             (scale-stream iL (<span class="fu">/</span> (<span class="fu">-</span> R) L))))
+    (<span class="fu">cons</span> vC iL)))
+
+(<span class="kw">define</span> (three-decimals x)
+  (<span class="kw">let-values</span> (((a b) (<span class="fu">div-and-mod</span> (<span class="fu">round</span> (<span class="fu">*</span> (<span class="fu">abs</span> x) <span class="cn">1000</span>)) <span class="cn">1000</span>)))
+    (format <span class="cn">&quot;~a~a.~a~a~a&quot;</span>
+            (<span class="kw">if</span> (<span class="fu">negative?</span> x) <span class="cn">&quot;-&quot;</span> <span class="cn">&quot;&quot;</span>)
+            (<span class="fu">exact</span> a)
+            (<span class="kw">if</span> (<span class="fu">&lt;</span> b <span class="cn">10</span>) <span class="cn">0</span> <span class="cn">&quot;&quot;</span>)
+            (<span class="kw">if</span> (<span class="fu">&lt;</span> b <span class="cn">100</span>) <span class="cn">0</span> <span class="cn">&quot;&quot;</span>)
+            (<span class="fu">exact</span> b))))</code></pre>
+<p>RLC circuit with R = 1 ohm, C = 0.2 farad, L = 1 henry, and dt = 0.1 s.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> RLC1 (RLC <span class="cn">1</span> <span class="cn">1</span> <span class="cn">0.2</span> <span class="cn">0.1</span>))</code></pre>
+<p>Calculate the stream of vC (capacitor voltage) and iL (inductor current) given initial values iL0 = 0 amps and vC0 = 10 volts.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> v-and-i (RLC1 <span class="cn">10</span> <span class="cn">0</span>))
+(<span class="fu">map</span> three-decimals (stream-take (<span class="fu">car</span> v-and-i) <span class="cn">9</span>))
+<span class="op">=&gt;</span> &#39;(<span class="cn">&quot;10.000&quot;</span> <span class="cn">&quot;10.000&quot;</span> <span class="cn">&quot;9.500&quot;</span> <span class="cn">&quot;8.550&quot;</span> <span class="cn">&quot;7.220&quot;</span> <span class="cn">&quot;5.596&quot;</span> <span class="cn">&quot;3.772&quot;</span> <span class="cn">&quot;1.852&quot;</span> <span class="cn">&quot;-0.065&quot;</span>)
+(<span class="fu">map</span> three-decimals (stream-take (<span class="fu">cdr</span> v-and-i) <span class="cn">9</span>))
+<span class="op">=&gt;</span> &#39;(<span class="cn">&quot;0.000&quot;</span> <span class="cn">&quot;1.000&quot;</span> <span class="cn">&quot;1.900&quot;</span> <span class="cn">&quot;2.660&quot;</span> <span class="cn">&quot;3.249&quot;</span> <span class="cn">&quot;3.646&quot;</span> <span class="cn">&quot;3.841&quot;</span> <span class="cn">&quot;3.834&quot;</span> <span class="cn">&quot;3.636&quot;</span>)</code></pre>
+<h2 id="3.5.5" class="anchor">
+<a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a> <span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h2>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)
+       (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref) (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (map-successive-pairs f s)
+  (<span class="kw">cons-stream</span>
+   (f (stream-car s) (stream-car (stream-cdr s)))
+   (map-successive-pairs f (stream-cdr (stream-cdr s)))))
+
+(<span class="kw">define</span> (monte-carlo experiment-stream passed failed)
+  (<span class="kw">define</span> (next passed failed)
+    (<span class="kw">cons-stream</span>
+     (<span class="fu">/</span> passed (<span class="fu">+</span> passed failed))
+     (monte-carlo (stream-cdr experiment-stream) passed failed)))
+  (<span class="kw">if</span> (stream-car experiment-stream)
+      (next (<span class="fu">+</span> passed <span class="cn">1</span>) failed)
+      (next passed (<span class="fu">+</span> failed <span class="cn">1</span>))))
+
+(<span class="kw">define</span> random-numbers
+  (<span class="kw">cons-stream</span>
+   <span class="co">;; Start at `(rand-update random-init)` rather than `random-init` to match</span>
+   <span class="co">;; the behavior in Section 3.1.2. This ensures the same estimate of pi.</span>
+   (rand-update random-init)
+   (stream-map rand-update random-numbers)))
+(<span class="kw">define</span> cesaro-stream
+  (map-successive-pairs
+   (<span class="kw">lambda</span> (r1 r2) (<span class="fu">=</span> (<span class="fu">gcd</span> r1 r2) <span class="cn">1</span>))
+   random-numbers))
+(<span class="kw">define</span> pi
+  (stream-map
+   (<span class="kw">lambda</span> (p) (<span class="fu">sqrt</span> (<span class="fu">/</span> <span class="cn">6</span> p)))
+   (monte-carlo cesaro-stream <span class="cn">0</span> <span class="cn">0</span>)))</code></pre>
+<p>This is deterministic because the <code>random-init</code> seed is fixed.</p>
+<pre><code class="blockcode">(stream-ref pi <span class="cn">999</span>) <span class="op">~&gt;</span> <span class="cn">3.149183286488868</span></code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.81">Exercise 3.81<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)
+       (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? the-empty-stream)
+       (:<span class="cn">3.5.2</span> stream-take) (?<span class="cn">3.74</span> cycle)))
+
+(<span class="kw">define</span> (random-numbers request-stream)
+  (<span class="kw">define</span> (iter s prev)
+    (<span class="kw">if</span> (stream-null? s)
+        the-empty-stream
+        (<span class="kw">let*</span> ((request (stream-car s))
+               (operation (<span class="fu">car</span> request))
+               (value (<span class="kw">cond</span> ((<span class="fu">eq?</span> operation <span class="cn">&#39;reset</span>) (<span class="fu">cadr</span> request))
+                            ((<span class="fu">eq?</span> operation <span class="cn">&#39;generate</span>) (rand-update prev))
+                            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;random-numbers</span>
+                                         <span class="cn">&quot;unknown request&quot;</span>
+                                         request)))))
+          (<span class="kw">cons-stream</span> value (iter (stream-cdr s) value)))))
+  (iter request-stream random-init))
+
+(<span class="kw">define</span> reqs (cycle &#39;((generate) (reset <span class="cn">7</span>) (generate) (generate) (reset <span class="cn">0</span>))))
+(stream-take (random-numbers reqs) <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">262145</span> <span class="cn">7</span> <span class="cn">1835015</span> <span class="cn">58720487</span> <span class="cn">0</span>)</code></pre>
+<h3>
+<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.82">Exercise 3.82<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+</h3>
+<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.1.2</span> random-max) (:<span class="cn">3.5.1</span> stream-ref)
+       (:<span class="cn">3.5.5</span> map-successive-pairs monte-carlo random-numbers)
+       (?<span class="cn">3.50</span> stream-map)))
+
+(<span class="kw">define</span> (estimate-integral pred x1 x2 y1 y2)
+  (<span class="kw">let*</span> ((dx (<span class="fu">-</span> x2 x1))
+         (dy (<span class="fu">-</span> y2 y1))
+         (experiment-stream
+          (map-successive-pairs
+           (<span class="kw">lambda</span> (r1 r2)
+             (pred (<span class="fu">+</span> x1 (<span class="fu">*</span> dx (<span class="fu">/</span> r1 random-max)))
+                   (<span class="fu">+</span> y1 (<span class="fu">*</span> dy (<span class="fu">/</span> r2 random-max)))))
+           random-numbers)))
+    (stream-map (<span class="kw">lambda</span> (p) (<span class="fu">*</span> p dx dy))
+                (monte-carlo experiment-stream <span class="cn">0</span> <span class="cn">0</span>))))
+
+(<span class="kw">define</span> pi
+  (<span class="kw">let</span> ((pred (<span class="kw">lambda</span> (x y)
+                (<span class="fu">&lt;=</span> (<span class="fu">+</span> (square x) (square y)) <span class="cn">1</span>))))
+    (estimate-integral pred <span class="cn">-1.0</span> <span class="cn">1.0</span> <span class="cn">-1.0</span> <span class="cn">1.0</span>)))
+
+(stream-ref pi <span class="cn">999</span>) <span class="op">~&gt;</span> <span class="cn">3.092</span></code></pre>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="4.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="../4/index.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2020 Mitchell Kember</p>
+</footer>
+</body>
+</html>
