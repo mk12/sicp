@@ -19,8 +19,7 @@ doc_lecture := $(patsubst %,docs/lecture/%.html,index highlight $(doc_lec_nums))
 doc_exercise := $(patsubst %,docs/exercise/%.html,index language $(doc_sec_all))
 doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise)
 
-doc_assets_link := docs/assets/style.css
-doc_assets_embed := $(patsubst %,notes/assets/%.svg,\
+doc_assets := $(patsubst %,notes/assets/%.svg,\
 	arrows circle-left circle-right external github)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 	config.yml filter.lua katex.ts pagenav.html scheme.xml template.html)
@@ -58,9 +57,9 @@ help:
 test:
 	./run.sh all
 
-docs: $(doc_html) $(doc_assets_link)
+docs: $(doc_html)
 
-$(doc_html): docgen $(doc_assets_embed) $(doc_pandoc_aux) | $(katex_sock)
+$(doc_html): docgen $(doc_assets) $(doc_pandoc_aux) | $(katex_sock)
 	./docgen $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -73,10 +72,6 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_2)): src/sicp/chapter-2.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_4)): src/sicp/chapter-4.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
-
-$(doc_assets_link): docs/assets/%: | notes/assets/%
-	mkdir -p docs/assets
-	-ln -s ../../$| $@
 
 katex:
 	deno run $(DENOFLAGS) $(katex_src) $(katex_sock)
