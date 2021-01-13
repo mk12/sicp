@@ -155,8 +155,8 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 
 (<span class="kw">define</span> (<span class="fu">&gt;=</span> x y) (<span class="kw">or</span> (<span class="fu">&gt;</span> x y) (<span class="fu">=</span> x y)))
 (<span class="kw">define</span> (<span class="fu">&gt;=</span> x y) (<span class="fu">not</span> (<span class="fu">&lt;</span> x y)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.1">Exercise 1.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.1" class="anchor">
+<a class="anchor__link link" href="#ex1.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.1">Exercise 1.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode"><span class="cn">10</span> <span class="op">=&gt;</span> <span class="cn">10</span>
 (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">12</span>
@@ -184,14 +184,14 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
          (<span class="kw">else</span> <span class="cn">-1</span>))
    (<span class="fu">+</span> a <span class="cn">1</span>))
 <span class="op">=&gt;</span> <span class="cn">16</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.2">Exercise 1.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.2" class="anchor">
+<a class="anchor__link link" href="#ex1.2" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.2">Exercise 1.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">4</span> (<span class="fu">-</span> <span class="cn">2</span> (<span class="fu">-</span> <span class="cn">3</span> (<span class="fu">+</span> <span class="cn">6</span> <span class="cn">4</span>/<span class="cn">5</span>))))
    (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">-</span> <span class="cn">6</span> <span class="cn">2</span>) (<span class="fu">-</span> <span class="cn">2</span> <span class="cn">7</span>)))
 <span class="op">=&gt;</span> <span class="cn">-37</span>/<span class="cn">150</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.3">Exercise 1.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.3" class="anchor">
+<a class="anchor__link link" href="#ex1.3" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.3">Exercise 1.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (f a b c)
   (<span class="kw">cond</span> ((<span class="kw">and</span> (<span class="fu">&lt;=</span> a b) (<span class="fu">&lt;=</span> a c))
@@ -203,14 +203,14 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 
 (f <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">13</span>
 (f <span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">13</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.4">Exercise 1.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.4" class="anchor">
+<a class="anchor__link link" href="#ex1.4" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.4">Exercise 1.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (a-plus-abs-b a b)
   ((<span class="kw">if</span> (<span class="fu">&gt;</span> b <span class="cn">0</span>) <span class="fu">+</span> <span class="fu">-</span>) a b))</code></pre>
 <p>The operator evaluates to <code>+</code> (addition) when <code>b</code> is positive, and to <code>-</code> (subtraction) when <code>b</code> is negative. Subtracting a negative is equivalent to adding its absolute value, so this procedure performs <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mo stretchy="false">∣</mo><mi>b</mi><mo stretchy="false">∣</mo></mrow><annotation encoding="application/x-tex">a + \lvert b\rvert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∣</span><span class="mord mathnormal">b</span><span class="mclose">∣</span></span></span></span> in all cases.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.5">Exercise 1.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.5" class="anchor">
+<a class="anchor__link link" href="#ex1.5" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.5">Exercise 1.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (p) (p))
 (<span class="kw">define</span> (test x y)
@@ -245,8 +245,8 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <span class="op">~&gt;</span> <span class="cn">1.7739279023207892</span>
 (square (<span class="fu">sqrt</span> <span class="cn">1000</span>))
 <span class="op">~&gt;</span> <span class="cn">1000.000369924366</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.6">Exercise 1.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.6" class="anchor">
+<a class="anchor__link link" href="#ex1.6" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.6">Exercise 1.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> good-enough? improve)))
 
@@ -262,8 +262,8 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
           guess
           (sqrt-iter (improve guess x) x)))</code></pre>
 <p>When Alyssa attempts to use this to compute square roots, it will not work. The <code>sqrt</code> procedure will never return a value because it gets stuck in <code>sqrt-iter</code> due to infinite recursion. The <code>new-if</code> combination always evaluates the else-clause, which contains the recursive call, so the recursion will never end.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.1">Exercise 1.7.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.7.1" class="anchor">
+<a class="anchor__link link" href="#ex1.7.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.1">Exercise 1.7.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> <span class="fu">sqrt</span>)))</code></pre>
 <p>The <code>good-enough?</code> predicate does not work well for small numbers because the tolerance is fixed. If the number is smaller than the tolerance, the result will be hopelessly inaccurate, like measuring an atom with a yard stick.</p>
@@ -272,8 +272,8 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <p>The test is inadequate for very large numbers. With limited precision, it is impossible to represent small differences between very large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
 <span class="co">; (sqrt 1e20) ; never terminates</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.2">Exercise 1.7.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.7.2" class="anchor">
+<a class="anchor__link link" href="#ex1.7.2" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.2">Exercise 1.7.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> improve)))</code></pre>
 <p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
@@ -295,8 +295,8 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <p>For large numbers, it works better in that it always terminates. However, the results are less precise because “a small fraction” change in <code>guess</code> can be fairly large when the guesses themselves are very large.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1.0000029650278373e7</span>
 (<span class="fu">sqrt</span> <span class="cn">1e20</span>) <span class="op">~&gt;</span> <span class="cn">1.0000021484861237e10</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.8">Exercise 1.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.8" class="anchor">
+<a class="anchor__link link" href="#ex1.8" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.8">Exercise 1.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
 

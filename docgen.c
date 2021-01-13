@@ -517,7 +517,7 @@ static void close_md(struct MarkdownScanner *scan) {
 }
 
 // Advances a Markdown line scanner to the next line. Returns true on successs,
-// and false on failure or EOF. Takes care of closing the file.
+// and false on failure or EOF.
 static bool scan_md(struct MarkdownScanner *scan) {
     if (!scan->file) {
         return false;
@@ -526,7 +526,6 @@ static bool scan_md(struct MarkdownScanner *scan) {
     scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
     scan->level = 0;
     if (scan->line.len == -1) {
-        close_md(scan);
         return false;
     }
     if (startswith(scan->line.data, "```")) {
@@ -581,6 +580,11 @@ static bool init_hl(struct HighlightScanner *scan, const char *path) {
     scan->sector = 0;
     scan->highlight_sector = 0;
     return true;
+}
+
+// Closes the file associated with the highlight scanner.
+static void close_hl(struct HighlightScanner *scan) {
+    close_md(&scan->md);
 }
 
 // Advances a highlight scanner to the next line. See also scan_md.
@@ -669,7 +673,7 @@ static void close_ss(struct SchemeScanner *scan) {
 }
 
 // Advances a Scheme line scanner to the next line. Returns true on successs,
-// and false on failure, EOF, or END_SICP_LINE. Takes care of closing the file.
+// and false on failure, EOF, or END_SICP_LINE.
 static bool scan_ss(struct SchemeScanner *scan) {
     if (!scan->file) {
         return false;
@@ -678,7 +682,6 @@ static bool scan_ss(struct SchemeScanner *scan) {
     scan->line.len = getline(&scan->line.data, &scan->cap, scan->file);
     const bool current_blank = scan->line.len <= 1;
     if (scan->line.len == -1 || strcmp(scan->line.data, END_SICP_LINE) == 0) {
-        close_ss(scan);
         return false;
     }
     if (scan->level == 0 && prev_blank) {
@@ -714,6 +717,29 @@ static bool scan_ss(struct SchemeScanner *scan) {
         scan->use = false;
     }
     return true;
+}
+
+// Saved state for a Scheme line scanner.
+struct SchemeSave {
+    // The old scanner, with line set to NULL_SPAN.
+    struct SchemeScanner scan;
+    // The position in the file as reported by ftell.
+    long offset;
+};
+
+// Saves a checkpoint in the Scheme file, to be restored later with restore_ss.
+static struct SchemeSave save_ss(struct SchemeScanner *scan) {
+    struct SchemeSave save = { .scan = *scan };
+    save.scan.line = NULL_SPAN;
+    save.offset = ftell(scan->file);
+    return save;
+}
+
+// Restores a checkpoint saved by save_ss. Everything will be as it was at that
+// point, except the line will be NULL_SPAN until the next scan.
+static void restore_ss(struct SchemeScanner *scan, struct SchemeSave save) {
+    *scan = save.scan;
+    fseek(scan->file, save.offset, SEEK_SET);
 }
 
 // Renders a heading to out. The level determines h1/h2/etc. If id is present,
@@ -1108,6 +1134,7 @@ static bool gen_text_index(const char *output) {
                 DS_INDEX(scan.sector, 2));
         }
     } while (scan_md(&scan));
+    close_md(&scan);
     render_toc_end(&tr, proc.in);
     return finish_pandoc(&proc, output);
 }
@@ -1173,6 +1200,7 @@ static bool gen_text_highlight(const char *output) {
             break;
         }
     }
+    close_hl(&scan);
     return finish_pandoc(&proc, output);
 }
 
@@ -1360,6 +1388,7 @@ static bool gen_lecture_index(const char *output) {
                 "%.*s.html", href.len, href.data);
         }
     } while (scan_md(&scan));
+    close_md(&scan);
     render_toc_end(&tr, proc.in);
     return finish_pandoc(&proc, output);
 }
@@ -1412,6 +1441,7 @@ static bool gen_lecture_highlight(const char *output) {
             break;
         }
     }
+    close_hl(&scan);
     return finish_pandoc(&proc, output);
 }
 
@@ -1540,6 +1570,7 @@ static bool gen_exercise_index(const char *output) {
                     DS_INDEX(scan.sector, 2));
             }
         }
+        close_ss(&scan);
     }
     render_toc_end(&tr, proc.in);
     return finish_pandoc(&proc, output);
@@ -1572,6 +1603,7 @@ static bool gen_exercise_language(const char *output) {
             copy_md(&scan, proc.in);
         }
     } while (scan_md(&scan));
+    close_md(&scan);
     return finish_pandoc(&proc, output);
 }
 
@@ -1604,10 +1636,29 @@ static bool gen_exercise_chapter(const char *output) {
     const Sector target_sector = make_sector(chapter, 0);
     while (scan_ss(&scan) && scan.sector != target_sector);
     assert(scan.sector == target_sector);
+    const struct SchemeSave save = save_ss(&scan);
     struct Heading h = parse_ss_heading(scan.line);
     assert(h.label.data);
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, text_url_num(target_sector));
+    render_heading(proc.in, 2, SPAN("exercises"), TITLE_HEADING("Exercises"), NULL);
+    fputs("<ol class=\"exercise-list\">", proc.in);
+    int section = 0;
+    do {
+        if (scan.level == 2) {
+            // TOOD: consider having scan_ss include section in exercise sector
+            section = DS_INDEX(scan.sector, 2);
+        } else if (scan.level == DS_EXERCISE_LEVEL) {
+            int exercise = DS_INDEX(scan.sector, DS_EXERCISE_LEVEL);
+            fprintf(proc.in,
+                "<li class=\"exercise-list__item\">"
+                "<a href=\"%d.html#ex%d.%d\">%d.%d</a>"
+                "</li>\n",
+                section, chapter, exercise, chapter, exercise);
+        }
+    } while (scan_ss(&scan));
+    fputs("</ol>", proc.in);
+    restore_ss(&scan, save);
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
     do {
@@ -1622,6 +1673,7 @@ static bool gen_exercise_chapter(const char *output) {
                 "%d.html#%d.%d.%d", section, chapter, section, subsection);
         }
     } while (scan_ss(&scan));
+    close_ss(&scan);
     render_toc_end(&tr, proc.in);
     return finish_pandoc(&proc, output);
 }
@@ -1680,7 +1732,11 @@ static bool gen_exercise_section(const char *output) {
                 snprintf(buf, sizeof buf,
                     "Exercise %.*s", label.len, label.data);
                 h.title = SPAN(buf);
-                render_heading(proc.in, 3, h.label, h,
+
+                char id_buf[SZ_LABEL];
+                snprintf(id_buf, sizeof id_buf, "ex%.*s", label.len, label.data);
+                struct Span id = SPAN(id_buf);
+                render_heading(proc.in, 3, /* h.label */ id, h,
                     "%s-%d.html#%%25_thm_%.*s", TEXT_URL_BASE, page_num,
                     label.len, label.data);
             }
@@ -1688,8 +1744,8 @@ static bool gen_exercise_section(const char *output) {
             render_literate(&lr, proc.in, scan.line);
         }
     }
-    end_literate_section(&lr, proc.in);
     close_ss(&scan);
+    end_literate_section(&lr, proc.in);
     return finish_pandoc(&proc, output);
 }
 

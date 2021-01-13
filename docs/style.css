@@ -206,6 +206,17 @@ h1 code, h2 code, h3 code, .toc__item code {
     text-align: right;
 }
 
+.exercise-list {
+    margin: -2px -4.5px 0;
+    line-height: 1.6;
+}
+
+.exercise-list__item {
+    display: inline-block;
+    width: 39px;
+    margin: 0 4.5px;
+}
+
 /* Page layout */
 
 body {

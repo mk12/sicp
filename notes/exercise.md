@@ -15,6 +15,12 @@ These are my solutions to the exercises in <cite>[Structure and Interpretation o
 
 # Note on the Language
 
+## Modules
+
+## Tests
+
+--------
+
 Tests use `=>`, `~>`, `=$>`, and `=!>`:
 
 ```

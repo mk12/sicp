@@ -1,17 +1,18 @@
 # New to do
 
-- respond on https://github.com/jgm/pandoc/issues/6651 with my katex solution
 - spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
 - exercises appendix for core.ss etc.
 - reconsider → in lecture 6a
 - have special callout thing at end of text sections with exercise links
+- deal with the OLD proofs, diagrams
 - go over all exercises and fix up
 - decide on styling for exercise headings (tabular numbers makes external link look bad)
 - implement exercise intralinking in lua filter
 - fix exercise link for 1.7.1, 1.7.2
 - problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underline making number look weird.. maybe it's fine
 - implement (use) block styling
++ respond on https://github.com/jgm/pandoc/issues/6651 with my katex solution
 + rewrite README
     + mention pandoc, katex, BEM css, deps.sh, emphasize no JS
 + update index.md in light of CC license

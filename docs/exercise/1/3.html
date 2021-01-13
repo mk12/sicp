@@ -102,8 +102,8 @@
 
 (integral cube <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0.01</span>) <span class="op">~&gt;</span> <span class="cn">.24998750000000042</span>
 (integral cube <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0.001</span>) <span class="op">~&gt;</span> <span class="cn">.249999875000001</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.29">Exercise 1.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.29" class="anchor">
+<a class="anchor__link link" href="#ex1.29" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.29">Exercise 1.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3</span> cube) (:<span class="cn">1.3.1</span> inc sum)))
 
@@ -117,8 +117,8 @@
     (<span class="fu">*</span> h <span class="cn">1</span>/<span class="cn">3</span> (sum term <span class="cn">0.0</span> inc n))))</code></pre>
 <p>The integral procedure is a bit inaccurate, whereas the <code>simpson</code> procedure gives the exact answer even when n = 2 (note the <code>=&gt;</code> rather than <code>~&gt;</code>), at least for this particular integral.</p>
 <pre><code class="blockcode">(simpson cube <span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">0.25</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.30">Exercise 1.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.30" class="anchor">
+<a class="anchor__link link" href="#ex1.30" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.30">Exercise 1.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (sum term a next b)
   (<span class="kw">define</span> (iter a acc)
@@ -126,8 +126,8 @@
         acc
         (iter (next a) (<span class="fu">+</span> acc (term a)))))
   (iter a <span class="cn">0</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.31">Exercise 1.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.31" class="anchor">
+<a class="anchor__link link" href="#ex1.31" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.31">Exercise 1.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.1</span> identity inc)))</code></pre>
 <ol type="a">
@@ -165,8 +165,8 @@
 (approx-pi <span class="cn">00100</span>) <span class="op">~&gt;</span> <span class="cn">3.1570301764551654</span>
 (approx-pi <span class="cn">01000</span>) <span class="op">~&gt;</span> <span class="cn">3.1431607055322552</span>
 (approx-pi <span class="cn">10000</span>) <span class="op">~&gt;</span> <span class="cn">3.1417497057380084</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.32">Exercise 1.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.32" class="anchor">
+<a class="anchor__link link" href="#ex1.32" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.32">Exercise 1.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.1</span> identity inc)))</code></pre>
 <ol type="a">
@@ -195,8 +195,8 @@
 
 (sum identity <span class="cn">1</span> inc <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">55</span>
 (product identity <span class="cn">1</span> inc <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">3628800</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.33">Exercise 1.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.33" class="anchor">
+<a class="anchor__link link" href="#ex1.33" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.33">Exercise 1.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.1</span> identity inc) (?<span class="cn">1.23</span> prime?)))
 
@@ -229,8 +229,8 @@
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
 
 ((<span class="kw">lambda</span> (x y z) (<span class="fu">+</span> x y (square z))) <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.34">Exercise 1.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.34" class="anchor">
+<a class="anchor__link link" href="#ex1.34" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.34">Exercise 1.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
 
@@ -308,8 +308,8 @@
   (fixed-point (<span class="kw">lambda</span> (y) (average y (<span class="fu">/</span> x y))) <span class="cn">1.0</span>))
 
 (<span class="fu">sqrt</span> <span class="cn">2</span>) <span class="op">~&gt;</span> <span class="cn">1.4142135623746899</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.35">Exercise 1.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.35" class="anchor">
+<a class="anchor__link link" href="#ex1.35" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.35">Exercise 1.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.3.2</span> fixed-point)))</code></pre>
 <p>See proofs.pdf for the proof that the golden ratio is a fixed point of the transformation x -&gt; 1 + 1/x.</p>
@@ -319,8 +319,8 @@ golden-ratio
 <span class="op">~&gt;</span> <span class="cn">1.6180339887498950</span>
 (fixed-point (<span class="kw">lambda</span> (x) (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">/</span> x))) <span class="cn">1.0</span>)
 <span class="op">~&gt;</span> <span class="cn">1.6180327868852458</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.36">Exercise 1.36<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.36" class="anchor">
+<a class="anchor__link link" href="#ex1.36" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.36">Exercise 1.36<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average) (:<span class="cn">1.3.3.2</span> close-enough?)))
 
@@ -341,8 +341,8 @@ golden-ratio
 <pre><code class="blockcode">(<span class="kw">define</span> (f-damped x) (average x (f x)))
 (hide-output (fixed-point-verbose f-damped <span class="cn">5</span>)) <span class="op">~&gt;</span> <span class="cn">4.5555361005218895</span>
 (<span class="fu">string-count</span> <span class="cn">#\</span>newline (capture-output (fixed-point-verbose f-damped <span class="cn">5</span>))) <span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.37">Exercise 1.37<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.37" class="anchor">
+<a class="anchor__link link" href="#ex1.37" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.37">Exercise 1.37<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">1.35</span> golden-ratio)))</code></pre>
 <ol type="a">
@@ -383,8 +383,8 @@ golden-ratio
 
 (<span class="kw">define</span> (round4 x) (<span class="fu">*</span> <span class="cn">1e-4</span> (<span class="fu">truncate</span> (<span class="fu">*</span> <span class="cn">1e4</span> x))))
 (round4 (approx-gr <span class="cn">11</span>)) <span class="op">~&gt;</span> (round4 (<span class="fu">/</span> golden-ratio))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.38">Exercise 1.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.38" class="anchor">
+<a class="anchor__link link" href="#ex1.38" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.38">Exercise 1.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">1.37</span> always-one cont-frac)))
 
@@ -401,8 +401,8 @@ golden-ratio
 (approx-e <span class="cn">4</span>) <span class="op">~&gt;</span> <span class="cn">2.7142857142857144</span>
 (approx-e <span class="cn">5</span>) <span class="op">~&gt;</span> <span class="cn">2.71875</span>
 (approx-e <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.7182818284590455</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.39">Exercise 1.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.39" class="anchor">
+<a class="anchor__link link" href="#ex1.39" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.39">Exercise 1.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.37</span> cont-frac)))
 
@@ -468,8 +468,8 @@ golden-ratio
 
 (<span class="kw">define</span> (<span class="fu">sqrt</span> x)
   (fixed-point-of-transform (<span class="kw">lambda</span> (y) (<span class="fu">-</span> (square y) x)) newton-transform <span class="cn">1.0</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.40">Exercise 1.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.40" class="anchor">
+<a class="anchor__link link" href="#ex1.40" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.40">Exercise 1.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.4.1</span> newtons-method)))
 
@@ -483,8 +483,8 @@ golden-ratio
 
 (newtons-method (cubic <span class="cn">-3</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="cn">1.0</span>) <span class="op">~&gt;</span> <span class="cn">1</span>
 ((cubic <span class="cn">-3</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="cn">1</span>) <span class="op">~&gt;</span> <span class="cn">0</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.41">Exercise 1.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.41" class="anchor">
+<a class="anchor__link link" href="#ex1.41" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.41">Exercise 1.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.1</span> inc)))
 
@@ -504,8 +504,8 @@ golden-ratio
 <span class="op">=&gt;</span> (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc (inc
      (inc <span class="cn">5</span>)))))))))))))))) <span class="co">; NOALIGN</span>
 <span class="op">=&gt;</span> <span class="cn">21</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.42">Exercise 1.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.42" class="anchor">
+<a class="anchor__link link" href="#ex1.42" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.42">Exercise 1.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.1</span> inc)))
 
@@ -514,8 +514,8 @@ golden-ratio
     (f (g x))))
 
 ((compose square inc) <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="cn">49</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.43">Exercise 1.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.43" class="anchor">
+<a class="anchor__link link" href="#ex1.43" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.43">Exercise 1.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.42</span> compose)))
 
@@ -525,8 +525,8 @@ golden-ratio
       (compose (repeated f (<span class="fu">-</span> n <span class="cn">1</span>)) f)))
 
 ((repeated square <span class="cn">2</span>) <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">625</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.44">Exercise 1.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.44" class="anchor">
+<a class="anchor__link link" href="#ex1.44" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.44">Exercise 1.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.43</span> repeated)))
 
@@ -540,8 +540,8 @@ golden-ratio
 
 ((smooth square) <span class="cn">2</span>) <span class="op">~&gt;</span> <span class="cn">4.006666666666667</span>
 (((repeated smooth <span class="cn">5</span>) square) <span class="cn">2</span>) <span class="op">~&gt;</span> <span class="cn">4.033333333333333</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.45">Exercise 1.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.45" class="anchor">
+<a class="anchor__link link" href="#ex1.45" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.45">Exercise 1.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.3.2</span> fixed-point) (:<span class="cn">1.3.4</span> average-damp) (?<span class="cn">1.43</span> repeated)))</code></pre>
 <p>We need to average-damp floor(log2(n)) times.</p>
@@ -555,8 +555,8 @@ golden-ratio
 (nth-root <span class="cn">4</span> <span class="cn">2</span>) <span class="op">~&gt;</span> <span class="cn">2.000000000000002</span>
 (nth-root <span class="cn">256</span> <span class="cn">8</span>) <span class="op">~&gt;</span> <span class="cn">2.0000000000039666</span>
 (nth-root <span class="cn">1048576</span> <span class="cn">20</span>) <span class="op">~&gt;</span> <span class="cn">1.999999063225966</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.46">Exercise 1.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.46" class="anchor">
+<a class="anchor__link link" href="#ex1.46" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.46">Exercise 1.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.1.7</span> average) (:<span class="cn">1.3.3.2</span> tolerance)))
 
