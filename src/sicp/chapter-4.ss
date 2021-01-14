@@ -1919,7 +1919,15 @@
 
 (Section :4.3 "Variations on a Scheme --- Nondeterministic Computing")
 
+(Exercise ?4.35)
+
+(Exercise ?4.54)
+
 (Section :4.4 "Logic Programming")
+
+(Exercise ?4.55)
+
+(Exercise ?4.79)
 
 ) ; end of SICP
 ) ; end of library

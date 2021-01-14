@@ -1572,7 +1572,7 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.55)
 
-;; `''abracadabra` is a shortant for `(quote (quote abracadabra))`. This is the
+;; `''abracadabra` is a shorthand for `(quote (quote abracadabra))`. This is the
 ;; same as `'(quote abracadabra)`, and it evaluates to a list with two symbols:
 ;; `(quote abracadabra)`. Taking the car of this gives you the first item, which
 ;; is the symbol `quote`. This is what the interpreter prints.
