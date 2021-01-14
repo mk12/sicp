@@ -146,6 +146,15 @@ function relpath(src, dst)
     return rel
 end
 
+-- Usage: last_exercise_in_section[chapter][section].
+local last_exercise_in_section = {
+    { 8, 28, 46 },
+    { 16, 52, 72, 76, 97 },
+    { 8, 11, 37, 49, 82 },
+    { 24, 34, 54, 79 },
+    { 6, 19, 22, 30, 52 },
+}
+
 -- Converts links like [](:1.2.3), [](1a), and [](?1.23) -- textbook sections,
 -- lectures, and exercises respectively. If the link content [] is empty, sets
 -- it automatically to § 1.2.3, Lecture 1A, Exercise 1.23, etc.
@@ -165,7 +174,7 @@ function internal_link(el)
             if #num == 1 then
                 target = "text/" .. num .. "/index.html"
             else
-                chap, sec = num:match("^(%d)%.(%d)")
+                local chap, sec = num:match("^(%d)%.(%d)")
                 target = "text/" .. chap .. "/" .. sec .. ".html"
                 if #num > 3 then
                     frag = "#" .. num
@@ -173,8 +182,20 @@ function internal_link(el)
             end
         end
     elseif sigil == "?" then
-        title = "Exercise&nbps;" .. num
-        assert(false, "not implemented")
+        title = "Exercise&nbsp;" .. num
+        local chap, ex = num:match("^(%d)%.(%d+)$")
+        chap = tonumber(chap)
+        ex = tonumber(ex)
+        local sec
+        for i, last in ipairs(last_exercise_in_section[chap]) do
+            if ex <= last then
+                sec = i
+                break
+            end
+        end
+        assert(sec, "exercise " .. num .. " out of range")
+        target = "exercise/" .. tostring(chap) .. "/" .. tostring(sec) .. ".html"
+        frag = "#ex" .. num
     else
         return
     end
