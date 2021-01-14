@@ -1642,7 +1642,7 @@ static bool gen_exercise_chapter(const char *output) {
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, text_url_num(target_sector));
     render_heading(proc.in, 2, SPAN("exercises"), TITLE_HEADING("Exercises"), NULL);
-    fputs("<ol class=\"exercise-list\">", proc.in);
+    fputs("<ol class=\"exercise-list\">\n", proc.in);
     int section = 0;
     do {
         if (scan.level == 2) {
@@ -1656,7 +1656,7 @@ static bool gen_exercise_chapter(const char *output) {
                 section, chapter, exercise, chapter, exercise);
         }
     } while (scan_ss(&scan));
-    fputs("</ol>", proc.in);
+    fputs("</ol>\n", proc.in);
     restore_ss(&scan, save);
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
@@ -1713,8 +1713,11 @@ static bool gen_exercise_section(const char *output) {
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, page_num);
     struct LiterateRenderer lr = new_literate_renderer();
+    // Nesting depth inside (use (id name ...) ...).
+    int use_depth = 0;
     while (scan_ss(&scan) && scan.level != 1 && scan.level != 2) {
         if (scan.level >= 3) {
+            use_depth = 0;
             end_literate_section(&lr, proc.in);
             h = parse_ss_heading(scan.line);
             assert(h.label.data);
@@ -1740,7 +1743,51 @@ static bool gen_exercise_section(const char *output) {
                     label.len, label.data);
             }
         } else if (scan.use) {
-            // parse use
+            int start = -1;
+            bool first = true;
+            for (int i = 0; i < scan.line.len; i++) {
+                char c = scan.line.data[i];
+                switch (c) {
+                case '(':
+                    use_depth++;
+                    first = true;
+                    if (use_depth == 1) {
+                        fputs("<ul class=\"\">\n", proc.in);
+                    } else if (use_depth == 2) {
+                        fputs("<li class=\"\">\n", proc.in);
+                    }
+                    break;
+                default:
+                    if (start == -1) {
+                        start = i;
+                    }
+                    break;
+                case ' ':
+                case '\n':
+                case ')':
+                    if (use_depth == 2 && start != -1) {
+                        if (first) {
+                            fprintf(proc.in,
+                                "<span class=\"\">%.*s</span><ul class=\"\">\n",
+                                i - start, scan.line.data + start);
+                        } else {
+                            fprintf(proc.in, "<li class=\"\">%.*s</li>\n",
+                                i - start, scan.line.data + start);
+                        }
+                    }
+                    if (c == ')') {
+                        if (use_depth == 2) {
+                            fputs("</ul></li>\n", proc.in);
+                        } else if (use_depth == 1) {
+                            fputs("</ul>\n", proc.in);
+                        }
+                        use_depth--;
+                    }
+                    first = false;
+                    start = -1;
+                    break;
+                }
+            }
         } else {
             render_literate(&lr, proc.in, scan.line);
         }
