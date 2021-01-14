@@ -1646,13 +1646,12 @@ static bool gen_exercise_chapter(const char *output) {
     int section = 0;
     do {
         if (scan.level == 2) {
-            // TOOD: consider having scan_ss include section in exercise sector
             section = DS_INDEX(scan.sector, 2);
         } else if (scan.level == DS_EXERCISE_LEVEL) {
             int exercise = DS_INDEX(scan.sector, DS_EXERCISE_LEVEL);
             fprintf(proc.in,
                 "<li class=\"exercise-list__item\">"
-                "<a href=\"%d.html#ex%d.%d\">%d.%d</a>"
+                "<a href=\"%d.html#ex%d.%d\">%d.%02d</a>"
                 "</li>\n",
                 section, chapter, exercise, chapter, exercise);
         }
@@ -1740,6 +1739,8 @@ static bool gen_exercise_section(const char *output) {
                     "%s-%d.html#%%25_thm_%.*s", TEXT_URL_BASE, page_num,
                     label.len, label.data);
             }
+        } else if (scan.use) {
+            // parse use
         } else {
             render_literate(&lr, proc.in, scan.line);
         }
