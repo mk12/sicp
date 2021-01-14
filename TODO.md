@@ -8,10 +8,11 @@
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
 - decide on styling for exercise headings (tabular numbers makes external link look bad)
-- implement exercise intralinking in lua filter
 - fix exercise link for 1.7.1, 1.7.2
-- problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underline making number look weird.. maybe it's fine
 - implement (use) block styling
++ implement exercise intralinking in lua filter
+x problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underline making number look weird
+    x it's fine
 + respond on https://github.com/jgm/pandoc/issues/6651 with my katex solution
 + rewrite README
     + mention pandoc, katex, BEM css, deps.sh, emphasize no JS

@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Mitchell Kember">
   <title>SICP Section 3.4 Exercises</title>
   <link rel="stylesheet" href="../../style.css">
 </head>
@@ -71,8 +70,8 @@
 <h2 id="3.4.1" class="anchor">
 <a class="anchor__link link" href="#3.4.1" aria-hidden="true">#</a> <span class="number">3.4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.1">The Nature of Time in Concurrent Systems<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.38">Exercise 3.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.38" class="anchor">
+<a class="anchor__link link" href="#ex3.38" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.38">Exercise 3.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> balance <span class="cn">100</span>)
 (<span class="kw">define</span> (peter) (<span class="kw">set!</span> balance (<span class="fu">+</span> balance <span class="cn">10</span>)))
@@ -134,8 +133,8 @@
             ((<span class="fu">eq?</span> m <span class="cn">&#39;balance</span>) balance)
             (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
     dispatch))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.39">Exercise 3.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.39" class="anchor">
+<a class="anchor__link link" href="#ex3.39" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.39">Exercise 3.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer) (?<span class="cn">3.38</span> in?)))
 
@@ -149,8 +148,8 @@
          <span class="cn">121</span>   <span class="co">; incremented, then squared</span>
          <span class="cn">100</span>)) <span class="co">; incremented between squarer read and write</span>
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.40">Exercise 3.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.40" class="anchor">
+<a class="anchor__link link" href="#ex3.40" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.40">Exercise 3.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> permutations)
        (:<span class="cn">3.3.3.1</span> insert! lookup make-table) (:<span class="cn">3.4.2.3</span> make-serializer)
@@ -241,13 +240,13 @@ final-values
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x x))))))
 x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.41">Exercise 3.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.41" class="anchor">
+<a class="anchor__link link" href="#ex3.41" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.41">Exercise 3.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.1</span> make-account)))</code></pre>
 <p>Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank balance because it would make no difference. If we serialize it, then the value will be read either before or after (in sequence) it is written, assuming someone is withdrawing or depositing concurrently. However, if we don’t serialize it, we still get one value or the other. There is nothing that can be interleaved because reading the balance takes only one step, assuming the Scheme implementation considers this a thread-safe operation.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.42">Exercise 3.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.42" class="anchor">
+<a class="anchor__link link" href="#ex3.42" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.42">Exercise 3.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>This is a safe change to make. Each bank account still has one serializer and the deposit and withdraw procedures returned from the dispatcher are always protected by it. It makes no difference in what concurrency is allowed. If it did, then the specification of <code>make-serializer</code> must be incorrect.</p>
 <h3 id="3.4.2.2" class="anchor">
@@ -289,8 +288,8 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
     ((serializer1 (serializer2 exchange))
      account1
      account2)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.43">Exercise 3.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.43" class="anchor">
+<a class="anchor__link link" href="#ex3.43" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.43">Exercise 3.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>The balances in the accounts start out as $10, $20, and $30. Exchanging balances A and B works by taking D = A - B, and then withdrawing to get A’ = A - D = B and depositing to get B’ = B + D = A. Going from {A, B} to {B, A}, we can see that any sequence of exchanges preserves the set {A, B}, and in this particular case {10, 20, 30}.</p>
 <p>Using the first version of <code>exchange</code>, where only individual deposits and withdrawals are serialized (by account), the {10, 20, 30} set will not be preserved. For example, let us refer to concurrent processes P and Q:</p>
@@ -301,16 +300,16 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
     ((acc2 <span class="cn">&#39;deposit</span>) diff)))        <span class="co">; (4)</span></code></pre>
 <p>Suppose accounts A, B, C begin with $10, $20, $30. Process P exchanges A and B, process Q exchanges A and C. We interleave steps as P1, Q1, Q2, Q3, Q4, P2, P3, P4. P finds the balance of A to be $10. Then Q carries out all its steps: A and C are exchanged, and P’s read operation does not affect this. Therefore A, B, C now have balances $30, $20, $10. Now P carries out its three remaining steps. It finds B to have $20. It calculates 10 - 20 = -10. It withdraws -10 from A, leaving A with a balance of 30 - (-10) = 40. It deposits this in B, leaving B with a balance of 20 + (-10) = 10. Now the balances of A, B, C are $40, $10, $10. Thus {10, 20, 30} is not preserved. But it does preserve the sum 10 + 20 + 30 = 40 + 10 + 10 = 60. This would be the case even if <code>diff</code> was a random number, because deposits and withdrawals are serialized, and we deposit and withdraw the same <code>diff</code>.</p>
 <p>If we used the original implementation but changed <code>make-account</code> so that it did no serializing, the sum would not be preserved. This is because the steps of the deposits and withdrawals of concurrent processes will interleave, and we have already seen the issues this produces earlier.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.44">Exercise 3.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.44" class="anchor">
+<a class="anchor__link link" href="#ex3.44" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.44">Exercise 3.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (transfer from-acc to-acc amount)
   ((from-acc <span class="cn">&#39;withdraw</span>) amount) <span class="co">; (1)</span>
   ((to-acc <span class="cn">&#39;deposit</span>) amount))   <span class="co">; (2)</span></code></pre>
 <p>Ben Bitdiddle is correct. This procedure will behave correctly, even with multiple concurrent transfers involving the same accounts. Suppose we transfer $10 between A and B (process P), and concurrently transfer $20 between A and C (process Q). P1 and Q1 will be in the same serialization set, because they both withdraw from A. P2 and Q2 will neither be in that set nor in each other’s set. One deposits to B, and the other deposits to C. They cannot interfere with each other.</p>
 <p>The essential difference between the transfer problem and the exchange problem is that the exchange amount depends on the current balances, and so it must include steps that read the balance, introducing a hole into which a concurrent step can be interleaved, unless the whole exchange is serialized.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.45">Exercise 3.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.45" class="anchor">
+<a class="anchor__link link" href="#ex3.45" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.45">Exercise 3.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>Louis Reasoner is wrong. The problem with automatically serializing all deposits and withdrawals is that, when we create our own multi-step operations such as the exchange or the transfer, and we serialize them, we end up with nested serialization, i.e. deadlock.</p>
 <h3 id="3.4.2.3" class="anchor">
@@ -339,8 +338,8 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
       <span class="cn">#t</span>
       (<span class="kw">begin</span> (<span class="fu">set-car!</span> cell <span class="cn">#t</span>)
              <span class="cn">#f</span>)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.46">Exercise 3.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.46" class="anchor">
+<a class="anchor__link link" href="#ex3.46" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.46">Exercise 3.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-mutex-from-scratch) (?<span class="cn">3.38</span> in?)))
 
@@ -360,8 +359,8 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
          <span class="cn">200</span>  <span class="co">; P1, Q1, Q2, P2 (interleaved)</span>
          <span class="cn">50</span>)) <span class="co">; Q1, P1, P2, Q2 (interleaved)</span></code></pre>
 <p>The interleaved results can happen since with the non-atomic <code>test-and-set!</code>, both processes can acquire the mutex at the same time. Both check if the cell is set, find it is #f, and then both set it to #t.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.47">Exercise 3.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.47" class="anchor">
+<a class="anchor__link link" href="#ex3.47" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.47">Exercise 3.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> clear! test-and-set!) (?<span class="cn">3.38</span> in?)))</code></pre>
 <ol type="a">
@@ -414,8 +413,8 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <a class="anchor__link link" href="#3.4.2.4" aria-hidden="true">#</a> <span class="number">3.4.2.4</span> Deadlock
 </h3>
 <p>One way to avoid deadlock is to give each account a unique identification number, and write procedures like <code>exchange</code> so that they always try to acquire the mutex for the lower-numbered account first.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.48">Exercise 3.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.48" class="anchor">
+<a class="anchor__link link" href="#ex3.48" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.48">Exercise 3.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.2</span> exchange) (:<span class="cn">3.4.2.3</span> make-serializer)))</code></pre>
 <p>Before we locked the <code>exchange</code> operation using the serializers of both accounts. This can lead to deadlock if lock sequences A, B and B, A are interleaved such that both processes are trying to acquire the mutex that the other has already acquired. They wait forever, and neither is released. This problem is solved when we lock accounts in a particular order because that interleaving wouldn’t work. Both processes would have the lock sequence A, B, and the second process cannot acquire A after the first already has. The first is then free to acquire B, perform its operations, and release both.</p>
@@ -459,8 +458,8 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
  (<span class="kw">lambda</span> () (serialized-exchange a2 a1)))
 (a1 <span class="cn">&#39;balance</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
 (a2 <span class="cn">&#39;balance</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.49">Exercise 3.49<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.49" class="anchor">
+<a class="anchor__link link" href="#ex3.49" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.49">Exercise 3.49<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>The deadlock avoidance mechanism used in Exercise 3.48 would not work with <code>(contrived-exchange acc)</code>, which exchanges the balance of <code>acc</code> with that of the account whose balance is closest to the balance of <code>acc</code>. We must either always lock <code>acc</code> first (without the ordering mechanism of 3.48, allowing deadlocks), or we must lock after accessing <code>acc</code>, creating a hole into which other operations can be interleaved.</p>
 <h3 id="3.4.2.5" class="anchor">

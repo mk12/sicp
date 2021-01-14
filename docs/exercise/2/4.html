@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Mitchell Kember">
   <title>SICP Section 2.4 Exercises</title>
   <link rel="stylesheet" href="../../style.css">
 </head>
@@ -290,8 +289,8 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
 z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">4</span> <span class="cn">6</span>)
 z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <span class="cn">3</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.73">Exercise 2.73<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.73" class="anchor">
+<a class="anchor__link link" href="#ex2.73" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.73">Exercise 2.73<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)
        (:<span class="cn">2.3.2</span> make-product make-sum same-variable? variable?)
@@ -356,8 +355,8 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 (deriv &#39;(<span class="fu">*</span> x y) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">&#39;y</span>
 (deriv &#39;(<span class="fu">*</span> (<span class="fu">*</span> x y) (<span class="fu">+</span> x <span class="cn">3</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> x y) (<span class="fu">*</span> y (<span class="fu">+</span> x <span class="cn">3</span>)))
 (deriv &#39;(<span class="fu">*</span> <span class="cn">3</span> (** x <span class="cn">5</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">5</span> (** x <span class="cn">4</span>)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.74">Exercise 2.74<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.74" class="anchor">
+<a class="anchor__link link" href="#ex2.74" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.74">Exercise 2.74<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> apply-specific using) (:<span class="cn">3.3.3.3</span> put)))</code></pre>
 <ol type="a">
@@ -432,8 +431,8 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 
 (apply-generic <span class="cn">&#39;real-part</span> (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> <span class="cn">3</span>
 (apply-generic <span class="cn">&#39;magnitude</span> (make-from-real-imag <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">1</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.75">Exercise 2.75<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.75" class="anchor">
+<a class="anchor__link link" href="#ex2.75" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.75">Exercise 2.75<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3.1</span> apply-generic)))
 
@@ -447,8 +446,8 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 
 (apply-generic <span class="cn">&#39;magnitude</span> (make-from-mag-ang <span class="cn">15</span> <span class="cn">0.5</span>)) <span class="op">=&gt;</span> <span class="cn">15</span>
 (apply-generic <span class="cn">&#39;imag-part</span> (make-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">~&gt;</span> <span class="cn">0</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.76">Exercise 2.76<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.76" class="anchor">
+<a class="anchor__link link" href="#ex2.76" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.76">Exercise 2.76<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <ol type="1">
 <li>Generic operations with explicit dispatch</li>

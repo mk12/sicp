@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Mitchell Kember">
   <title>SICP Section 2.2 Exercises</title>
   <link rel="stylesheet" href="../../style.css">
 </head>
@@ -115,8 +114,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (<span class="fu">append</span> squares odds) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>)
 (<span class="fu">append</span> odds squares) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.17">Exercise 2.17<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.17" class="anchor">
+<a class="anchor__link link" href="#ex2.17" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.17">Exercise 2.17<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (last-pair xs)
   (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdr</span> xs))
@@ -124,8 +123,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
       (last-pair (<span class="fu">cdr</span> xs))))
 
 (last-pair (<span class="fu">list</span> <span class="cn">23</span> <span class="cn">72</span> <span class="cn">149</span> <span class="cn">34</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">34</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.18">Exercise 2.18<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.18" class="anchor">
+<a class="anchor__link link" href="#ex2.18" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.18">Exercise 2.18<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
   (<span class="kw">define</span> (iter xs ys)
@@ -136,8 +135,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (iter xs &#39;()))
 
 (<span class="fu">reverse</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">25</span> <span class="cn">16</span> <span class="cn">9</span> <span class="cn">4</span> <span class="cn">1</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.19">Exercise 2.19<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.19" class="anchor">
+<a class="anchor__link link" href="#ex2.19" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.19">Exercise 2.19<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> us-coins (<span class="fu">list</span> <span class="cn">50</span> <span class="cn">25</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">1</span>))
 (<span class="kw">define</span> uk-coins (<span class="fu">list</span> <span class="cn">100</span> <span class="cn">50</span> <span class="cn">20</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">2</span> <span class="cn">1</span> <span class="cn">1</span>/<span class="cn">2</span>))
@@ -162,8 +161,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (cc <span class="cn">100</span> (<span class="fu">reverse</span> us-coins)) <span class="op">=&gt;</span> <span class="cn">292</span>
 (cc <span class="cn">100</span> (<span class="fu">list</span> <span class="cn">5</span> <span class="cn">50</span> <span class="cn">1</span> <span class="cn">25</span> <span class="cn">10</span>)) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
 <p>This is because the cc algorithm does not assume the coin values are sorted in any particular order. It recurs on the <code>cdr</code> of the list, so it will always be able to reach the end of the list unless it reaches one of the other base cases first.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.20">Exercise 2.20<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.20" class="anchor">
+<a class="anchor__link link" href="#ex2.20" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.20">Exercise 2.20<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (same-parity . xs)
   (<span class="kw">define</span> (helper pred xs)
@@ -197,8 +196,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="kw">define</span> (scale-list items factor)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) items))
 (scale-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">20</span> <span class="cn">30</span> <span class="cn">40</span> <span class="cn">50</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.21">Exercise 2.21<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.21" class="anchor">
+<a class="anchor__link link" href="#ex2.21" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.21">Exercise 2.21<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
 
@@ -211,8 +210,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (<span class="kw">define</span> (square-list xs) (<span class="fu">map</span> square xs))
 (square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.22">Exercise 2.22<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.22" class="anchor">
+<a class="anchor__link link" href="#ex2.22" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.22">Exercise 2.22<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))</code></pre>
 <p>Louis’s procedure reverses the order of the list because he is building up a new list in the reverse order that the original one was constructed. The first element to be consed onto the original list is its last element. Consing in reverse order produces a reversed list.</p>
@@ -237,8 +236,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (iter items &#39;()))
 
 (square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(((((() . <span class="cn">1</span>) . <span class="cn">4</span>) . <span class="cn">9</span>) . <span class="cn">16</span>) . <span class="cn">25</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.23">Exercise 2.23<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.23" class="anchor">
+<a class="anchor__link link" href="#ex2.23" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.23">Exercise 2.23<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">for-each</span> f xs)
   (unless (<span class="fu">null?</span> xs)
@@ -267,8 +266,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="fu">list</span> x x) <span class="op">=&gt;</span> &#39;(((<span class="cn">1</span> <span class="cn">2</span>) <span class="cn">3</span> <span class="cn">4</span>) ((<span class="cn">1</span> <span class="cn">2</span>) <span class="cn">3</span> <span class="cn">4</span>))
 (<span class="fu">length</span> (<span class="fu">list</span> x x)) <span class="op">=&gt;</span> <span class="cn">2</span>
 (count-leaves (<span class="fu">list</span> x x)) <span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.24">Exercise 2.24<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.24" class="anchor">
+<a class="anchor__link link" href="#ex2.24" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.24">Exercise 2.24<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>)))</code></pre>
 <p>Box-and-pointer structure:</p>
@@ -285,8 +284,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 <span class="co">; 1 /\</span>
 <span class="co">;  2 /\</span>
 <span class="co">;   3 4</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.25">Exercise 2.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.25" class="anchor">
+<a class="anchor__link link" href="#ex2.25" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.25">Exercise 2.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">cdr</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> (<span class="cn">5</span> <span class="cn">7</span>) <span class="cn">9</span>))))))
 <span class="op">=&gt;</span> <span class="cn">7</span>
@@ -297,8 +296,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span>
   &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> (<span class="cn">4</span> (<span class="cn">5</span> (<span class="cn">6</span> <span class="cn">7</span>)))))))))))))))))) <span class="co">; NOALIGN</span>
 <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.26">Exercise 2.26<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.26" class="anchor">
+<a class="anchor__link link" href="#ex2.26" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.26">Exercise 2.26<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>))
 (<span class="kw">define</span> y (<span class="fu">list</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>))
@@ -306,8 +305,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="fu">append</span> x y) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>)
 (<span class="fu">cons</span> x y) <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>)
 (<span class="fu">list</span> x y) <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.27">Exercise 2.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.27" class="anchor">
+<a class="anchor__link link" href="#ex2.27" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.27">Exercise 2.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (deep-reverse x)
   (<span class="kw">if</span> (<span class="fu">pair?</span> x)
@@ -315,8 +314,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
       x))
 
 (deep-reverse &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;((<span class="cn">4</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">1</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.28">Exercise 2.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.28" class="anchor">
+<a class="anchor__link link" href="#ex2.28" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.28">Exercise 2.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (fringe t)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> t) t)
@@ -328,8 +327,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (fringe &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
 (fringe &#39;((((<span class="cn">5</span>) <span class="cn">2</span>) ((<span class="cn">3</span> <span class="cn">2</span>) <span class="cn">9</span>)))) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">2</span> <span class="cn">9</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.29">Exercise 2.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.29" class="anchor">
+<a class="anchor__link link" href="#ex2.29" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.29">Exercise 2.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-mobile left right) (<span class="fu">list</span> left right))
 (<span class="kw">define</span> (make-branch <span class="fu">length</span> structure) (<span class="fu">list</span> <span class="fu">length</span> structure))</code></pre>
@@ -394,8 +393,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (scale-tree (<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="fu">list</span> <span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>)
 <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.30">Exercise 2.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.30" class="anchor">
+<a class="anchor__link link" href="#ex2.30" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.30">Exercise 2.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
 
@@ -418,8 +417,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
        t))
 
 (square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.31">Exercise 2.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.31" class="anchor">
+<a class="anchor__link link" href="#ex2.31" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.31">Exercise 2.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">2.30</span> squared-tree tree)))</code></pre>
 <p>Without map</p>
@@ -438,8 +437,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (<span class="kw">define</span> (square-tree tree) (tree-map square tree))
 (square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.32">Exercise 2.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.32" class="anchor">
+<a class="anchor__link link" href="#ex2.32" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.32">Exercise 2.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (subsets s)
   (<span class="kw">if</span> (<span class="fu">null?</span> s)
@@ -541,8 +540,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (accumulate <span class="fu">*</span> <span class="cn">1</span> (<span class="fu">map</span> square (<span class="fu">filter</span> <span class="fu">odd?</span> sequence))))
 
 (product-of-squares-of-odd-elements (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> <span class="cn">225</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.33">Exercise 2.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.33" class="anchor">
+<a class="anchor__link link" href="#ex2.33" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.33">Exercise 2.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
 
@@ -552,8 +551,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (accumulate <span class="fu">cons</span> ys xs))
 (<span class="kw">define</span> (<span class="fu">length</span> xs)
   (accumulate (<span class="kw">lambda</span> (x n) (<span class="fu">+</span> n <span class="cn">1</span>)) <span class="cn">0</span> xs))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.34">Exercise 2.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.34" class="anchor">
+<a class="anchor__link link" href="#ex2.34" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.34">Exercise 2.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
 
@@ -564,8 +563,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
               coefs))
 
 (horner-eval <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">0</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">79</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.35">Exercise 2.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.35" class="anchor">
+<a class="anchor__link link" href="#ex2.35" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.35">Exercise 2.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate enumerate-tree)))
 
@@ -574,8 +573,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
                        (enumerate-tree t))))
 
 (count-leaves &#39;(<span class="cn">1</span> <span class="cn">2</span> (<span class="cn">3</span> (<span class="cn">4</span>) <span class="cn">5</span>) (<span class="cn">6</span> <span class="cn">7</span>))) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.36">Exercise 2.36<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.36" class="anchor">
+<a class="anchor__link link" href="#ex2.36" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.36">Exercise 2.36<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
 
@@ -586,8 +585,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
             (accumulate-n op init (<span class="fu">map</span> <span class="fu">cdr</span> seqs)))))
 
 (accumulate-n <span class="fu">+</span> <span class="cn">0</span> &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>) (<span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span>) (<span class="cn">10</span> <span class="cn">11</span> <span class="cn">12</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">22</span> <span class="cn">26</span> <span class="cn">30</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.37">Exercise 2.37<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.37" class="anchor">
+<a class="anchor__link link" href="#ex2.37" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.37">Exercise 2.37<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (?<span class="cn">2.36</span> accumulate-n)))
 
@@ -610,8 +609,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="kw">define</span> identity &#39;((<span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>) (<span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span>) (<span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span>)))
 (matrix-*-matrix mat identity) <span class="op">=&gt;</span> mat
 (matrix-*-matrix identity mat) <span class="op">=&gt;</span> mat</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.38">Exercise 2.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.38" class="anchor">
+<a class="anchor__link link" href="#ex2.38" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.38">Exercise 2.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)))
 
@@ -630,8 +629,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (fold-right <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> ())))
 (fold-left <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(((() <span class="cn">1</span>) <span class="cn">2</span>) <span class="cn">3</span>)</code></pre>
 <p>If <code>op</code> satisfies the commutative property <code>(<span class="fu">=</span> (op x y) (op y x))</code>, then <code>fold-right</code> and <code>fold-left</code> will produce the same values for any sequence.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.39">Exercise 2.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.39" class="anchor">
+<a class="anchor__link link" href="#ex2.39" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.39">Exercise 2.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.38</span> fold-left fold-right)))
 
@@ -680,8 +679,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (<span class="fu">filter</span> (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (<span class="fu">equal?</span> x item))) sequence))
 
 (permutations &#39;(a b c)) <span class="op">=&gt;</span> &#39;((a b c) (a c b) (b a c) (b c a) (c a b) (c b a))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.40">Exercise 2.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.40" class="anchor">
+<a class="anchor__link link" href="#ex2.40" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.40">Exercise 2.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval <span class="fu">filter</span>)
        (:<span class="cn">2.2.3.2</span> flatmap make-pair-sum prime-sum?)))
@@ -696,8 +695,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (<span class="fu">map</span> make-pair-sum (<span class="fu">filter</span> prime-sum? (unique-pairs n))))
 
 (prime-sum-pairs <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;((<span class="cn">2</span> <span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">3</span> <span class="cn">2</span> <span class="cn">5</span>) (<span class="cn">4</span> <span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">4</span> <span class="cn">3</span> <span class="cn">7</span>) (<span class="cn">5</span> <span class="cn">2</span> <span class="cn">7</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.41">Exercise 2.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.41" class="anchor">
+<a class="anchor__link link" href="#ex2.41" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.41">Exercise 2.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> flatmap)))
 
@@ -715,8 +714,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
           (unique-triples n)))
 
 (triple-sums <span class="cn">8</span> <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;((<span class="cn">5</span> <span class="cn">3</span> <span class="cn">2</span>) (<span class="cn">5</span> <span class="cn">4</span> <span class="cn">1</span>) (<span class="cn">6</span> <span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">7</span> <span class="cn">2</span> <span class="cn">1</span>))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.42">Exercise 2.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.42" class="anchor">
+<a class="anchor__link link" href="#ex2.42" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.42">Exercise 2.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> flatmap)))
 
@@ -757,8 +756,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (queens <span class="cn">3</span>) <span class="op">=&gt;</span> &#39;()
 (queens <span class="cn">4</span>) <span class="op">=&gt;</span> &#39;(((<span class="cn">3</span> . <span class="cn">4</span>) (<span class="cn">1</span> . <span class="cn">3</span>) (<span class="cn">4</span> . <span class="cn">2</span>) (<span class="cn">2</span> . <span class="cn">1</span>))
                 ((<span class="cn">2</span> . <span class="cn">4</span>) (<span class="cn">4</span> . <span class="cn">3</span>) (<span class="cn">1</span> . <span class="cn">2</span>) (<span class="cn">3</span> . <span class="cn">1</span>)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.43">Exercise 2.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.43" class="anchor">
+<a class="anchor__link link" href="#ex2.43" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.43">Exercise 2.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>The interchange makes the program run slowly because it evaluates the recursive call to queen-cols multiple times. Instead of doing the recursive call and then adjoining all possible new positions to each set of positions for the k-1 case, Louis Reasoner’s procedure enumerates the interval for the possible new positions once and then for each one does the same recursive call to get the set of positions for the k-1 case. The original procedure evaluates the enumeration multiple times, which does not significantly affect performance. Evaluating the recursive call multiple times is wasteful. Louis Reasoner could still use the interchanged version if he bound the value of the recursive call in a let-binding surrounding the <code>flatmap</code> application.</p>
 <p>Assuming the original solution solves the puzzle in time T, Louis’s program will take longer than T. Exactly how long is hard to say. If <code>queen-cols</code> did a constant amount of work outside the recursive call, it would be (8^8)T = 16,777,216T. But T includes more than just the tree of recursive calls, so it would be less than that.</p>
@@ -799,8 +798,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (<span class="kw">let</span> ((quarter (corner-split painter n)))
     (<span class="kw">let</span> ((half (beside (flip-horiz quarter) quarter)))
       (below (flip-vert half) half))))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.44">Exercise 2.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.44" class="anchor">
+<a class="anchor__link link" href="#ex2.44" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.44">Exercise 2.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside) (?<span class="cn">2.51</span> below)))
 
@@ -831,8 +830,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (<span class="kw">let</span> ((combine4 (square-of-four flip-horiz identity
                                   rotate180 flip-vert)))
     (combine4 (corner-split painter n))))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.45">Exercise 2.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.45" class="anchor">
+<a class="anchor__link link" href="#ex2.45" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.45">Exercise 2.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside) (?<span class="cn">2.51</span> below)))
 
@@ -858,8 +857,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
      (origin-frame frame)
      (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
                (scale-vect (ycor-vect v) (edge2-frame frame))))))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.46">Exercise 2.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.46" class="anchor">
+<a class="anchor__link link" href="#ex2.46" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.46">Exercise 2.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> make-vect <span class="fu">cons</span>)
 (<span class="kw">define</span> xcor-vect <span class="fu">car</span>)
@@ -874,8 +873,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="kw">define</span> (scale-vect s v)
   (make-vect (<span class="fu">*</span> s (xcor-vect v))
              (<span class="fu">*</span> s (ycor-vect v))))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.47">Exercise 2.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.47" class="anchor">
+<a class="anchor__link link" href="#ex2.47" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.47">Exercise 2.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>First representation</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-frame origin edge1 edge2)
@@ -906,14 +905,14 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
                   ((frame-coord-map frame)
                    (end-segment segment))))
      segment-list)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.48">Exercise 2.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.48" class="anchor">
+<a class="anchor__link link" href="#ex2.48" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.48">Exercise 2.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> make-segment <span class="fu">cons</span>)
 (<span class="kw">define</span> start-segment <span class="fu">car</span>)
 (<span class="kw">define</span> end-segment <span class="fu">cdr</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.49">Exercise 2.49<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.49" class="anchor">
+<a class="anchor__link link" href="#ex2.49" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.49">Exercise 2.49<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.4</span> segments-&gt;painter) (?<span class="cn">2.46</span> make-vect) (?<span class="cn">2.48</span> make-segment)))</code></pre>
 <ol type="a">
@@ -1024,8 +1023,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
       (<span class="kw">lambda</span> (frame)
         (paint-left frame)
         (paint-right frame)))))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.50">Exercise 2.50<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.50" class="anchor">
+<a class="anchor__link link" href="#ex2.50" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.50">Exercise 2.50<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> transform-painter) (?<span class="cn">2.46</span> make-vect)))
 
@@ -1049,8 +1048,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
    (make-vect <span class="cn">0</span> <span class="cn">1</span>)
    (make-vect <span class="cn">0</span> <span class="cn">0</span>)
    (make-vect <span class="cn">1</span> <span class="cn">1</span>)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.51">Exercise 2.51<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.51" class="anchor">
+<a class="anchor__link link" href="#ex2.51" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.51">Exercise 2.51<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.5</span> beside rotate90 transform-painter) (?<span class="cn">2.46</span> make-vect)
        (?<span class="cn">2.50</span> rotate270)))</code></pre>
@@ -1077,8 +1076,8 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
   (rotate90
    (beside (rotate270 painter1)
            (rotate270 painter2))))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.52">Exercise 2.52<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex2.52" class="anchor">
+<a class="anchor__link link" href="#ex2.52" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.52">Exercise 2.52<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.4.1</span> right-split) (:<span class="cn">2.2.4.2</span> square-of-four)
        (:<span class="cn">2.2.4.4</span> segments-&gt;painter) (:<span class="cn">2.2.4.5</span> beside) (?<span class="cn">2.44</span> up-split)

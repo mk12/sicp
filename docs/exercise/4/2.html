@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Mitchell Kember">
   <title>SICP Section 4.2 Exercises</title>
   <link rel="stylesheet" href="../../style.css">
 </head>
@@ -74,8 +73,8 @@
 
 (<span class="kw">define</span> (unless <span class="fu">condition</span> usual-value exceptional-value)
   (<span class="kw">if</span> <span class="fu">condition</span> exceptional-value usual-value))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.25">Exercise 4.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.25" class="anchor">
+<a class="anchor__link link" href="#ex4.25" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.25">Exercise 4.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">4.2</span> unless)))
 
@@ -84,8 +83,8 @@
 
 <span class="co">; (factorial 5) ; never terminates</span></code></pre>
 <p>This never terminates in our applicative-order Scheme because the call to <code>unless</code> always evaluates all parameters, including the recursive call to <code>factorial</code> when <code>n</code> is 1. In a normal-order language, it would work, since the recursive call in the base case is not used and hence not evaluated.</p>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.26">Exercise 4.26<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.26" class="anchor">
+<a class="anchor__link link" href="#ex4.26" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.26">Exercise 4.26<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">3.3.3.3</span> put) (:<span class="cn">4.1.4</span> setup-environment)
        (?<span class="cn">4.3</span> <span class="fu">eval</span> eval-pkg)))</code></pre>
@@ -197,8 +196,8 @@
            (<span class="fu">set-cdr!</span> (<span class="fu">cdr</span> obj) &#39;())
            result))
         (<span class="kw">else</span> obj)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.27">Exercise 4.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.27" class="anchor">
+<a class="anchor__link link" href="#ex4.27" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.27">Exercise 4.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">4.1.4</span> setup-environment) (:<span class="cn">4.2.2.1</span> lazy-eval-pkg)
        (:<span class="cn">4.2.2.2</span> actual-value thunk?) (?<span class="cn">4.3</span> eval-pkg)))
@@ -216,8 +215,8 @@
 <pre><code class="blockcode">(actual-value <span class="cn">&#39;w</span> env) <span class="op">=&gt;</span> <span class="cn">10</span></code></pre>
 <p>Forcing <code>w</code> caused the inner <code>(id <span class="cn">10</span>)</code> to increment <code>count</code> again.</p>
 <pre><code class="blockcode">(actual-value <span class="cn">&#39;count</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.28">Exercise 4.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.28" class="anchor">
+<a class="anchor__link link" href="#ex4.28" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.28">Exercise 4.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">4.1.2</span> operands operator) (:<span class="cn">4.1.4</span> setup-environment)
        (:<span class="cn">4.2.2.1</span> <span class="fu">apply</span> lazy-eval-pkg) (:<span class="cn">4.2.2.2</span> actual-value force-it)
@@ -234,8 +233,8 @@
 <pre><code class="blockcode">(do-it-with actual-value) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <p>But with <code>eval</code>, the operator <code>((<span class="kw">lambda</span> (x) x) <span class="fu">car</span>)</code> remains a thunk, whereas <code>apply</code> expects either a primitive or compound procedure object.</p>
 <pre><code class="blockcode">(do-it-with <span class="fu">eval</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.29">Exercise 4.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.29" class="anchor">
+<a class="anchor__link link" href="#ex4.29" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.29">Exercise 4.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.2</span> fib) (:<span class="cn">2.4.3</span> using) (:<span class="cn">4.1.4</span> setup-environment)
        (:<span class="cn">4.2.2.1</span> lazy-eval-pkg) (:<span class="cn">4.2.2.2</span> actual-value) (?<span class="cn">4.3</span> eval-pkg)))</code></pre>
@@ -255,8 +254,8 @@
 <span class="op">=&gt;</span> <span class="cn">100</span></code></pre>
 <p>With memoization, this is 1. Without memoization, it would be 2.</p>
 <pre><code class="blockcode">(actual-value <span class="cn">&#39;count</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.30">Exercise 4.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.30" class="anchor">
+<a class="anchor__link link" href="#ex4.30" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.30">Exercise 4.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">3.3.3.3</span> put)
        (:<span class="cn">4.1.2</span> begin-actions first-exp last-exp? operands operator rest-exps)
@@ -319,8 +318,8 @@
 <ol start="4" type="a">
 <li>I prefer Cy’s approach because otherwise <code>begin</code> blocks, or procedures with multiple expressions in the body, are useless with the lazy evaluator. This does not totally solve the side-effects confusion, but it helps.</li>
 </ol>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.31">Exercise 4.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.31" class="anchor">
+<a class="anchor__link link" href="#ex4.31" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.31">Exercise 4.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">3.3.3.3</span> put)
        (:<span class="cn">4.1.2</span> first-operand no-operands? operands operator rest-operands)
@@ -437,8 +436,8 @@
     y)
   (<span class="fu">list-ref</span> (solve (<span class="kw">lambda</span> (x) x) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>))
 <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.32">Exercise 4.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.32" class="anchor">
+<a class="anchor__link link" href="#ex4.32" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.32">Exercise 4.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">4.1.3.3</span> make-environment) (:<span class="cn">4.2.2.1</span> lazy-eval-pkg)
        (:<span class="cn">4.2.2.2</span> actual-value) (:<span class="cn">4.2.3</span> lazy-list-env) (?<span class="cn">4.3</span> eval-pkg)))
@@ -460,8 +459,8 @@
   (<span class="kw">define</span> display-ints (from <span class="cn">0</span>))
   (<span class="fu">list-ref</span> display-ints <span class="cn">5</span>))
 <span class="op">=$&gt;</span> <span class="cn">&quot;5&quot;</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.33">Exercise 4.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.33" class="anchor">
+<a class="anchor__link link" href="#ex4.33" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.33">Exercise 4.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">3.3.3.3</span> put) (:<span class="cn">4.1.2</span> text-of-quotation)
        (:<span class="cn">4.1.3.3</span> make-environment) (:<span class="cn">4.2.2.1</span> lazy-eval-pkg)
@@ -491,8 +490,8 @@
 (actual-value &#39;&#39;() env) <span class="op">=&gt;</span> &#39;()
 (actual-value &#39;<span class="cn">&#39;a</span> env) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
 (actual-value &#39;(<span class="fu">car</span> &#39;(a b c)) env) <span class="op">=&gt;</span> <span class="cn">&#39;a</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.34">Exercise 4.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex4.34" class="anchor">
+<a class="anchor__link link" href="#ex4.34" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.34">Exercise 4.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">4.1.3.3</span> make-environment) (:<span class="cn">4.2.2.1</span> lazy-eval-pkg)
        (:<span class="cn">4.2.2.2</span> actual-value evaluated-thunk? force-it memo-thunk? thunk-exp)

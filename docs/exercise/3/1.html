@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Mitchell Kember">
   <title>SICP Section 3.1 Exercises</title>
   <link rel="stylesheet" href="../../style.css">
 </head>
@@ -131,8 +130,8 @@
 ((acc <span class="cn">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
 ((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span>
 ((acc <span class="cn">&#39;floof</span>)) <span class="op">=!&gt;</span> <span class="cn">&quot;unknown request: floof&quot;</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.1">Exercise 3.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.1" class="anchor">
+<a class="anchor__link link" href="#ex3.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.1">Exercise 3.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-accumulator amount)
   (<span class="kw">lambda</span> (increment)
@@ -142,8 +141,8 @@
 (<span class="kw">define</span> A (make-accumulator <span class="cn">5</span>))
 (A <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">15</span>
 (A <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.2">Exercise 3.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.2" class="anchor">
+<a class="anchor__link link" href="#ex3.2" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.2">Exercise 3.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-monitored f)
   (<span class="kw">let</span> ((n-calls <span class="cn">0</span>))
@@ -160,8 +159,8 @@
 (s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
 (s <span class="cn">&#39;reset-count</span>)
 (s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">0</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.3">Exercise 3.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.3" class="anchor">
+<a class="anchor__link link" href="#ex3.3" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.3">Exercise 3.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-account balance password)
   (<span class="kw">define</span> (withdraw amount)
@@ -182,8 +181,8 @@
 (<span class="kw">define</span> acc (make-account <span class="cn">100</span> <span class="cn">&#39;secret-password</span>))
 ((acc <span class="cn">&#39;secret-password</span> <span class="cn">&#39;withdraw</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">60</span>
 ((acc <span class="cn">&#39;some-other-password</span> <span class="cn">&#39;deposit</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.4">Exercise 3.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.4" class="anchor">
+<a class="anchor__link link" href="#ex3.4" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.4">Exercise 3.4<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-account balance password)
   (<span class="kw">define</span> (withdraw amount)
@@ -251,8 +250,8 @@
   (iter trials <span class="cn">0</span>))</code></pre>
 <p>This is deterministic because the <code>random-init</code> seed is fixed.</p>
 <pre><code class="blockcode">(estimate-pi <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">3.149183286488868</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.5">Exercise 3.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.5" class="anchor">
+<a class="anchor__link link" href="#ex3.5" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.5">Exercise 3.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.1.2</span> monte-carlo rand)))
 
@@ -272,8 +271,8 @@
   (<span class="kw">let</span> ((pred (<span class="kw">lambda</span> (x y)
                 (<span class="fu">&lt;=</span> (<span class="fu">+</span> (square x) (square y)) <span class="cn">1</span>))))
     (estimate-integral pred <span class="cn">-1.0</span> <span class="cn">1.0</span> <span class="cn">-1.0</span> <span class="cn">1.0</span> trials)))</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.6">Exercise 3.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.6" class="anchor">
+<a class="anchor__link link" href="#ex3.6" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.6">Exercise 3.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)))
 
@@ -362,8 +361,8 @@
     (iter)))
 
 (imperative-factorial <span class="cn">10</span>) <span class="op">=&gt;</span> (factorial <span class="cn">10</span>)</code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.7">Exercise 3.7<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.7" class="anchor">
+<a class="anchor__link link" href="#ex3.7" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.7">Exercise 3.7<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">3.3</span> make-account)))
 
@@ -378,8 +377,8 @@
 ((peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
 ((paul-acc <span class="cn">&#39;rosebud</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">80</span>
 ((peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">70</span></code></pre>
-<h3>
-<a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.8">Exercise 3.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex3.8" class="anchor">
+<a class="anchor__link link" href="#ex3.8" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.8">Exercise 3.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> f
   (<span class="kw">let</span> ((x <span class="cn">0</span>))
