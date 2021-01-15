@@ -102,7 +102,29 @@
 <h3 id="3.4.2.1" class="anchor">
 <a class="anchor__link link" href="#3.4.2.1" aria-hidden="true">#</a> <span class="number">3.4.2.1</span> Serializing access to shared state
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer) (?<span class="cn">3.38</span> in?)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-serializer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.38">Ex 3.38</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>in?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Without serialization, there are five possible values:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
 (parallel-execute
@@ -136,9 +158,30 @@
 <h3 id="ex3.39" class="anchor">
 <a class="anchor__link link" href="#ex3.39" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.39">Exercise 3.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer) (?<span class="cn">3.38</span> in?)))
-
-(<span class="kw">define</span> x <span class="cn">10</span>)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-serializer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.38">Ex 3.38</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>in?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    (<span class="kw">lambda</span> () (<span class="kw">set!</span> x ((s (<span class="kw">lambda</span> () (<span class="fu">*</span> x x))))))
@@ -151,11 +194,60 @@
 <h3 id="ex3.40" class="anchor">
 <a class="anchor__link link" href="#ex3.40" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.40">Exercise 3.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> <span class="fu">filter</span>) (:<span class="cn">2.2.3.2</span> permutations)
-       (:<span class="cn">3.3.3.1</span> insert! lookup make-table) (:<span class="cn">3.4.2.3</span> make-serializer)
-       (?<span class="cn">3.38</span> in?)))
-
-(<span class="kw">define</span> x <span class="cn">10</span>)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../2/2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>filter</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../2/2.html#2.2.3.2">2.2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>permutations</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="3.html#3.3.3.1">3.3.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>insert!</code>
+</li>
+<li class="imports__name">
+<code>lookup</code>
+</li>
+<li class="imports__name">
+<code>make-table</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-serializer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.38">Ex 3.38</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>in?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
 (parallel-execute
  <span class="co">; process S: 3        1 2</span>
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
@@ -243,7 +335,21 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <h3 id="ex3.41" class="anchor">
 <a class="anchor__link link" href="#ex3.41" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.41">Exercise 3.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.1</span> make-account)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.1">3.4.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-account</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank balance because it would make no difference. If we serialize it, then the value will be read either before or after (in sequence) it is written, assuming someone is withdrawing or depositing concurrently. However, if we don’t serialize it, we still get one value or the other. There is nothing that can be interleaved because reading the balance takes only one step, assuming the Scheme implementation considers this a thread-safe operation.</p>
 <h3 id="ex3.42" class="anchor">
 <a class="anchor__link link" href="#ex3.42" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.42">Exercise 3.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -252,9 +358,22 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <h3 id="3.4.2.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2.2" aria-hidden="true">#</a> <span class="number">3.4.2.2</span> Complexity of using multiple shared resources
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-serializer)))
-
-(<span class="kw">define</span> (exchange account1 account2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-serializer</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (exchange account1 account2)
   (<span class="kw">let</span> ((difference (<span class="fu">-</span> (account1 <span class="cn">&#39;balance</span>)
                        (account2 <span class="cn">&#39;balance</span>))))
     ((account1 <span class="cn">&#39;withdraw</span>) difference)
@@ -341,9 +460,30 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <h3 id="ex3.46" class="anchor">
 <a class="anchor__link link" href="#ex3.46" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.46">Exercise 3.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> make-mutex-from-scratch) (?<span class="cn">3.38</span> in?)))
-
-(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-mutex-from-scratch</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.38">Ex 3.38</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>in?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
 (<span class="kw">paste</span> (:<span class="cn">3.4.2.3</span> make-serializer))</code></pre>
 <p>Suppose we execute this using the non-atomic <code>test-and-set!</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">100</span>)
@@ -362,7 +502,32 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <h3 id="ex3.47" class="anchor">
 <a class="anchor__link link" href="#ex3.47" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.47">Exercise 3.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.3</span> clear! test-and-set!) (?<span class="cn">3.38</span> in?)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>clear!</code>
+</li>
+<li class="imports__name">
+<code>test-and-set!</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.38">Ex 3.38</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>in?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Sempahore in terms of mutexes</li>
 </ol>
@@ -416,7 +581,29 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <h3 id="ex3.48" class="anchor">
 <a class="anchor__link link" href="#ex3.48" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.48">Exercise 3.48<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.4.2.2</span> exchange) (:<span class="cn">3.4.2.3</span> make-serializer)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.4.2.2">3.4.2.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>exchange</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.4.2.3">3.4.2.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-serializer</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Before we locked the <code>exchange</code> operation using the serializers of both accounts. This can lead to deadlock if lock sequences A, B and B, A are interleaved such that both processes are trying to acquire the mutex that the other has already acquired. They wait forever, and neither is released. This problem is solved when we lock accounts in a particular order because that interleaving wouldn’t work. Both processes would have the lock sequence A, B, and the second process cannot acquire A after the first already has. The first is then free to acquire B, perform its operations, and release both.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> *uuid* <span class="cn">0</span>)
 (<span class="kw">define</span> (gen-uuid)

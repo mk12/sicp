@@ -94,10 +94,39 @@
 <h3 id="3.5.1.1" class="anchor">
 <a class="anchor__link link" href="#3.5.1.1" aria-hidden="true">#</a> <span class="number">3.5.1.1</span> The stream implementation in action
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? the-empty-stream)
-       (?<span class="cn">1.23</span> prime?)))
-
-(<span class="kw">define</span> (stream-enumerate-interval low high)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>
+</li>
+<li class="imports__name">
+<code>the-empty-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../1/2.html#ex1.23">Ex 1.23</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>prime?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (stream-enumerate-interval low high)
   (<span class="kw">if</span> (<span class="fu">&gt;</span> low high)
       the-empty-stream
       (<span class="kw">cons-stream</span> low (stream-enumerate-interval (<span class="fu">+</span> low <span class="cn">1</span>) high))))
@@ -142,9 +171,31 @@
 <h3 id="ex3.50" class="anchor">
 <a class="anchor__link link" href="#ex3.50" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.50">Exercise 3.50<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? the-empty-stream)))
-
-(<span class="kw">define</span> (stream-map f . ss)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>
+</li>
+<li class="imports__name">
+<code>the-empty-stream</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (stream-map f . ss)
   (<span class="kw">if</span> (stream-null? (<span class="fu">car</span> ss))
       the-empty-stream
       (<span class="kw">cons-stream</span> (<span class="fu">apply</span> f (<span class="fu">map</span> stream-car ss))
@@ -152,10 +203,36 @@
 <h3 id="ex3.51" class="anchor">
 <a class="anchor__link link" href="#ex3.51" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.51">Exercise 3.51<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> display-line stream-map stream-ref)
-       (:<span class="cn">3.5.1.1</span> stream-enumerate-interval)))
-
-(<span class="kw">define</span> (show x) (display-line x) x)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>display-line</code>
+</li>
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1.1">3.5.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-enumerate-interval</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (show x) (display-line x) x)
 
 (<span class="kw">define</span> x)
 (<span class="kw">set!</span> x (stream-map show (stream-enumerate-interval <span class="cn">0</span> <span class="cn">10</span>)))
@@ -168,10 +245,39 @@
 <h3 id="ex3.52" class="anchor">
 <a class="anchor__link link" href="#ex3.52" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.52">Exercise 3.52<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> display-stream stream-map stream-ref)
-       (:<span class="cn">3.5.1.1</span> stream-enumerate-interval stream-filter)))
-
-(<span class="kw">define</span> sum <span class="cn">0</span>)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>display-stream</code>
+</li>
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1.1">3.5.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-enumerate-interval</code>
+</li>
+<li class="imports__name">
+<code>stream-filter</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> sum <span class="cn">0</span>)
 (<span class="kw">define</span> (accum x) (<span class="kw">set!</span> sum (<span class="fu">+</span> x sum)) sum)
 (<span class="kw">define</span> seq (stream-map accum (stream-enumerate-interval <span class="cn">1</span> <span class="cn">20</span>)))
 sum <span class="op">=&gt;</span> <span class="cn">1</span>
@@ -186,9 +292,36 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h2 id="3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref) (:<span class="cn">3.5.1.1</span> stream-filter)))
-
-(<span class="kw">define</span> (stream-take s n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1.1">3.5.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-filter</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (stream-take s n)
   (<span class="kw">cond</span> ((<span class="fu">zero?</span> n) &#39;())
         (<span class="kw">else</span> (<span class="fu">cons</span> (stream-car s) (stream-take (stream-cdr s) (<span class="fu">-</span> n <span class="cn">1</span>))))))
 
@@ -217,12 +350,66 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="3.5.2.1" class="anchor">
 <a class="anchor__link link" href="#3.5.2.1" aria-hidden="true">#</a> <span class="number">3.5.2.1</span> Defining streams implicitly
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref)
-       (:<span class="cn">3.5.1.1</span> stream-filter)
-       (:<span class="cn">3.5.2</span> divisible? integers-starting-from stream-take)
-       (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1.1">3.5.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-filter</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>divisible?</code>
+</li>
+<li class="imports__name">
+<code>integers-starting-from</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
 
 (<span class="kw">define</span> (add-streams s1 s2) (stream-map <span class="fu">+</span> s1 s2))
 
@@ -254,37 +441,150 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.53" class="anchor">
 <a class="anchor__link link" href="#ex3.53" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.53">Exercise 3.53<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take) (:<span class="cn">3.5.2.1</span> add-streams)))
-
-(<span class="kw">define</span> s (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams s s)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> s (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams s s)))</code></pre>
 <p>It produces all powers of two, just like <code>double</code> in Section 3.5.2.1. This can be seen from the fact that <code>x * 2</code> (scaling a stream by 2) is the same as <code>x + x</code> (adding a stream to itself).</p>
 <pre><code class="blockcode">(stream-take s <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">8</span> <span class="cn">16</span> <span class="cn">32</span> <span class="cn">64</span> <span class="cn">128</span> <span class="cn">256</span> <span class="cn">512</span>)</code></pre>
 <h3 id="ex3.54" class="anchor">
 <a class="anchor__link link" href="#ex3.54" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.54">Exercise 3.54<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> integers-starting-from stream-take) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (mul-streams s1 s2) (stream-map <span class="fu">*</span> s1 s2))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers-starting-from</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (mul-streams s1 s2) (stream-map <span class="fu">*</span> s1 s2))
 (<span class="kw">define</span> factorials
   (<span class="kw">cons-stream</span> <span class="cn">1</span> (mul-streams factorials (integers-starting-from <span class="cn">2</span>))))
 (stream-take factorials <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span> <span class="cn">24</span> <span class="cn">120</span>)</code></pre>
 <h3 id="ex3.55" class="anchor">
 <a class="anchor__link link" href="#ex3.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.55">Exercise 3.55<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> stream-take)
-       (:<span class="cn">3.5.2.1</span> add-streams integers)))
-
-(<span class="kw">define</span> (partial-sums s)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>integers</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (partial-sums s)
   (<span class="kw">define</span> self (<span class="kw">cons-stream</span> (stream-car s) (add-streams self (stream-cdr s))))
   self)
 (stream-take (partial-sums integers) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">6</span> <span class="cn">10</span> <span class="cn">15</span> <span class="cn">21</span> <span class="cn">28</span> <span class="cn">36</span> <span class="cn">45</span> <span class="cn">55</span>)</code></pre>
 <h3 id="ex3.56" class="anchor">
 <a class="anchor__link link" href="#ex3.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.56">Exercise 3.56<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null?) (:<span class="cn">3.5.2</span> stream-take)
-       (:<span class="cn">3.5.2.1</span> scale-stream)))
-
-(<span class="kw">define</span> (merge s1 s2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>scale-stream</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (merge s1 s2)
   (<span class="kw">cond</span> ((stream-null? s1) s2)
         ((stream-null? s2) s1)
         (<span class="kw">else</span> (<span class="kw">let</span> ((x1 (stream-car s1))
@@ -307,9 +607,22 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.58" class="anchor">
 <a class="anchor__link link" href="#ex3.58" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.58">Exercise 3.58<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take)))
-
-(<span class="kw">define</span> (expand num den radix)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (expand num den radix)
   (<span class="kw">cons-stream</span>
    (<span class="fu">quotient</span> (<span class="fu">*</span> num radix) den)
    (expand (<span class="fu">remainder</span> (<span class="fu">*</span> num radix) den) den radix)))</code></pre>
@@ -321,8 +634,48 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.59" class="anchor">
 <a class="anchor__link link" href="#ex3.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.59">Exercise 3.59<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">3.5.2</span> integers-starting-from stream-take)
-       (:<span class="cn">3.5.2.1</span> negate-stream) (?<span class="cn">3.50</span> stream-map)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../2/2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers-starting-from</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Integration</li>
 </ol>
@@ -348,10 +701,50 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.60" class="anchor">
 <a class="anchor__link link" href="#ex3.60" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.60">Exercise 3.60<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2.1</span> add-streams scale-stream)
-       (?<span class="cn">3.59</span> cosine-series eval-series sine-series)))
-
-(<span class="kw">define</span> (mul-series s1 s2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.59">Ex 3.59</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cosine-series</code>
+</li>
+<li class="imports__name">
+<code>eval-series</code>
+</li>
+<li class="imports__name">
+<code>sine-series</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (mul-series s1 s2)
   (<span class="kw">cons-stream</span> (<span class="fu">*</span> (stream-car s1) (stream-car s2))
                (add-streams (scale-stream (stream-cdr s2) (stream-car s1))
                             (mul-series (stream-cdr s1) s2))))</code></pre>
@@ -364,10 +757,44 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.61" class="anchor">
 <a class="anchor__link link" href="#ex3.61" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.61">Exercise 3.61<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2.1</span> negate-stream scale-stream)
-       (?<span class="cn">3.60</span> mul-series)))
-
-(<span class="kw">define</span> (invert-unit-series s)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-stream</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.60">Ex 3.60</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul-series</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (invert-unit-series s)
   (<span class="kw">cons-stream</span>
    <span class="cn">1</span>
    (negate-stream (mul-series (stream-cdr s)
@@ -383,10 +810,52 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.62" class="anchor">
 <a class="anchor__link link" href="#ex3.62" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.62">Exercise 3.62<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car) (?<span class="cn">3.59</span> cosine-series eval-series sine-series)
-       (?<span class="cn">3.60</span> mul-series) (?<span class="cn">3.61</span> invert-series)))
-
-(<span class="kw">define</span> (div-series s1 s2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.59">Ex 3.59</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cosine-series</code>
+</li>
+<li class="imports__name">
+<code>eval-series</code>
+</li>
+<li class="imports__name">
+<code>sine-series</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.60">Ex 3.60</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul-series</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.61">Ex 3.61</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>invert-series</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (div-series s1 s2)
   (<span class="kw">let</span> ((den-constant (stream-car s2)))
     (<span class="kw">cond</span> ((<span class="fu">zero?</span> den-constant) (<span class="fu">error</span> <span class="cn">&#39;div-series</span> <span class="cn">&quot;division by zero&quot;</span> s1 s2))
           (<span class="kw">else</span> (mul-series s1 (invert-series s2))))))
@@ -400,11 +869,68 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="3.5.3.1" class="anchor">
 <a class="anchor__link link" href="#3.5.3.1" aria-hidden="true">#</a> <span class="number">3.5.3.1</span> Formulating iterations as stream processes
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.1.7</span> improve)
-       (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref) (:<span class="cn">3.5.2.1</span> scale-stream)
-       (?<span class="cn">3.50</span> stream-map) (?<span class="cn">3.55</span> partial-sums)))
-
-(<span class="kw">define</span> (sqrt-stream x)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../1/1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>improve</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.55">Ex 3.55</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>partial-sums</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (sqrt-stream x)
   (<span class="kw">define</span> guesses
     (<span class="kw">cons-stream</span>
      <span class="cn">1.0</span>
@@ -444,9 +970,30 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.63" class="anchor">
 <a class="anchor__link link" href="#ex3.63" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.63">Exercise 3.63<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> improve) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (sqrt-stream x)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>improve</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (sqrt-stream x)
   (<span class="kw">cons-stream</span>
    <span class="cn">1.0</span>
    (stream-map (<span class="kw">lambda</span> (guess) (improve guess x))
@@ -455,9 +1002,33 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.64" class="anchor">
 <a class="anchor__link link" href="#ex3.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.64">Exercise 3.64<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.3.1</span> sqrt-stream)))
-
-(<span class="kw">define</span> (stream-limit s tolerance)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.1">3.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>sqrt-stream</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (stream-limit s tolerance)
   (<span class="kw">define</span> (iter prev s)
     (<span class="kw">let</span> ((next (stream-car s)))
       (<span class="kw">if</span> (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> prev next)) tolerance)
@@ -473,10 +1044,49 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="ex3.65" class="anchor">
 <a class="anchor__link link" href="#ex3.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.65">Exercise 3.65<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-ref) (:<span class="cn">3.5.2.1</span> negate-stream)
-       (:<span class="cn">3.5.3.1</span> accelerated-sequence euler-transform) (?<span class="cn">3.55</span> partial-sums)))
-
-(<span class="kw">define</span> (ln<span class="cn">-2</span>-summands n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.1">3.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accelerated-sequence</code>
+</li>
+<li class="imports__name">
+<code>euler-transform</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.55">Ex 3.55</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>partial-sums</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (ln<span class="cn">-2</span>-summands n)
   (<span class="kw">cons-stream</span> (<span class="fu">/</span> <span class="cn">1.0</span> n) (negate-stream (ln<span class="cn">-2</span>-summands (<span class="fu">+</span> n <span class="cn">1</span>)))))
 (<span class="kw">define</span> ln<span class="cn">-2</span>-stream
   (partial-sums (ln<span class="cn">-2</span>-summands <span class="cn">1</span>)))</code></pre>
@@ -488,10 +1098,47 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 <h3 id="3.5.3.2" class="anchor">
 <a class="anchor__link link" href="#3.5.3.2" aria-hidden="true">#</a> <span class="number">3.5.3.2</span> Infinite streams of pairs
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null?) (:<span class="cn">3.5.2</span> integers stream-take)
-       (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (pairs s t)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (pairs s t)
   (<span class="kw">cons-stream</span>
    (<span class="fu">list</span> (stream-car s) (stream-car t))
    (interleave
@@ -510,8 +1157,54 @@ first<span class="cn">-10</span>-pairs <span class="op">=&gt;</span> &#39;((<spa
 <h3 id="ex3.66" class="anchor">
 <a class="anchor__link link" href="#ex3.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.66">Exercise 3.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> enumerate-interval) (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref)
-       (:<span class="cn">3.5.2</span> divisible?) (:<span class="cn">3.5.3.2</span> first<span class="cn">-10</span>-pairs integer-pairs)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../2/2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>enumerate-interval</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>divisible?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.2">3.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>first-10-pairs</code>
+</li>
+<li class="imports__name">
+<code>integer-pairs</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Let f(n) be the nth pair in the stream, starting at 0.</p>
 <pre><code class="blockcode">f(<span class="cn">0</span>)  <span class="fu">=</span> (<span class="cn">1</span>,<span class="cn">1</span>)<span class="co">; f(n) = (1,_) when n = 1  + 2k</span>
 f(<span class="cn">2</span>)  <span class="fu">=</span> (<span class="cn">2</span>,<span class="cn">2</span>)<span class="co">; f(n) = (2,_) when n = 4  + 4k</span>
@@ -559,10 +1252,52 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
 <h3 id="ex3.67" class="anchor">
 <a class="anchor__link link" href="#ex3.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.67">Exercise 3.67<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> integers stream-take)
-       (:<span class="cn">3.5.3.2</span> interleave) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (pairs s t)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.2">3.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>interleave</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (pairs s t)
   (<span class="kw">cons-stream</span>
    (<span class="fu">list</span> (stream-car s) (stream-car t))
    (interleave
@@ -578,9 +1313,41 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
 <h3 id="ex3.68" class="anchor">
 <a class="anchor__link link" href="#ex3.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.68">Exercise 3.68<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.3.2</span> interleave) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (pairs s t)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.2">3.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>interleave</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (pairs s t)
   (interleave
    (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">list</span> (stream-car s) x))
                t)
@@ -589,10 +1356,68 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
 <h3 id="ex3.69" class="anchor">
 <a class="anchor__link link" href="#ex3.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.69">Exercise 3.69<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.1.1</span> stream-filter)
-       (:<span class="cn">3.5.2</span> integers) (:<span class="cn">3.5.3.2</span> interleave pairs) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (triples s t u)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1.1">3.5.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-filter</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.2">3.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>interleave</code>
+</li>
+<li class="imports__name">
+<code>pairs</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (triples s t u)
   (<span class="kw">cons-stream</span>
    (<span class="fu">list</span> (stream-car s) (stream-car t) (stream-car u))
    (interleave
@@ -612,10 +1437,58 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
 <h3 id="ex3.70" class="anchor">
 <a class="anchor__link link" href="#ex3.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.70">Exercise 3.70<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null?) (:<span class="cn">3.5.1.1</span> stream-filter)
-       (:<span class="cn">3.5.2</span> divisible? integers stream-take) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (merge-weighted s1 s2 weight)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1.1">3.5.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-filter</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>divisible?</code>
+</li>
+<li class="imports__name">
+<code>integers</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (merge-weighted s1 s2 weight)
   (<span class="kw">define</span> (merge s1 s2)
     (<span class="kw">cond</span> ((stream-null? s1) s2)
           ((stream-null? s2) s1)
@@ -662,10 +1535,52 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.71" class="anchor">
 <a class="anchor__link link" href="#ex3.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.71">Exercise 3.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3</span> cube) (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> integers stream-take)
-       (?<span class="cn">3.70</span> weighted-pairs)))
-
-(<span class="kw">define</span> (weight p) (<span class="fu">+</span> (cube (<span class="fu">car</span> p)) (cube (<span class="fu">cadr</span> p))))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/3.html">1.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cube</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.70">Ex 3.70</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>weighted-pairs</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (weight p) (<span class="fu">+</span> (cube (<span class="fu">car</span> p)) (cube (<span class="fu">cadr</span> p))))
 (<span class="kw">define</span> (analyze pairs)
   (<span class="kw">let*</span> ((w1 (weight (stream-car pairs)))
          (w2 (weight (stream-car (stream-cdr pairs)))))
@@ -679,10 +1594,52 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.72" class="anchor">
 <a class="anchor__link link" href="#ex3.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.72">Exercise 3.72<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.5.1</span> stream-car stream-cdr)
-       (:<span class="cn">3.5.2</span> integers stream-take) (?<span class="cn">3.70</span> weighted-pairs)))
-
-(<span class="kw">define</span> (weight p) (<span class="fu">+</span> (square (<span class="fu">car</span> p)) (square (<span class="fu">cadr</span> p))))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integers</code>
+</li>
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.70">Ex 3.70</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>weighted-pairs</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (weight p) (<span class="fu">+</span> (square (<span class="fu">car</span> p)) (square (<span class="fu">cadr</span> p))))
 (<span class="kw">define</span> (analyze pairs)
   (<span class="kw">let*</span> ((x1 (stream-car pairs))
          (x2 (stream-car (stream-cdr pairs)))
@@ -702,9 +1659,25 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="3.5.3.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> <span class="number">3.5.3.3</span> Streams as signals
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2.1</span> add-streams scale-stream)))
-
-(<span class="kw">define</span> (integral integrand initial-value dt)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (integral integrand initial-value dt)
   (<span class="kw">define</span> int
     (<span class="kw">cons-stream</span> initial-value
                  (add-streams (scale-stream integrand dt)
@@ -713,10 +1686,44 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.73" class="anchor">
 <a class="anchor__link link" href="#ex3.73" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.73">Exercise 3.73<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take) (:<span class="cn">3.5.2.1</span> add-streams ones scale-stream)
-       (:<span class="cn">3.5.3.3</span> integral)))
-
-(<span class="kw">define</span> (RC R C dt)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>ones</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.3.3">3.5.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integral</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (RC R C dt)
   (<span class="kw">lambda</span> (i v0)
     (add-streams (scale-stream i R)
                  (integral (scale-stream i (<span class="fu">/</span> C)) v0 dt))))</code></pre>
@@ -728,9 +1735,41 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.74" class="anchor">
 <a class="anchor__link link" href="#ex3.74" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.74">Exercise 3.74<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> stream-take) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (cycle original)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (cycle original)
   (<span class="kw">define</span> (iter xs)
     (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) (iter original))
           (<span class="kw">else</span> (<span class="kw">cons-stream</span> (<span class="fu">car</span> xs) (iter (<span class="fu">cdr</span> xs))))))
@@ -759,10 +1798,44 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.75" class="anchor">
 <a class="anchor__link link" href="#ex3.75" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.75">Exercise 3.75<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr) (:<span class="cn">3.5.2</span> stream-take)
-       (?<span class="cn">3.74</span> sign-change-detector test-data)))
-
-(<span class="kw">define</span> (make-zero-crossings input-stream last-value last-avpt)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.74">Ex 3.74</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>sign-change-detector</code>
+</li>
+<li class="imports__name">
+<code>test-data</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-zero-crossings input-stream last-value last-avpt)
   (<span class="kw">let*</span> ((value (stream-car input-stream))
          (avpt (<span class="fu">/</span> (<span class="fu">+</span> value last-value) <span class="cn">2</span>)))
     (<span class="kw">cons-stream</span>
@@ -775,20 +1848,98 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.76" class="anchor">
 <a class="anchor__link link" href="#ex3.76" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.76">Exercise 3.76<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average) (:<span class="cn">3.5.2</span> stream-take) (?<span class="cn">3.50</span> stream-map)
-       (?<span class="cn">3.74</span> test-data zero-crossings) (?<span class="cn">3.75</span> test-result)))
-
-(<span class="kw">define</span> (smooth s) (stream-map average s (<span class="kw">cons-stream</span> <span class="cn">0</span> s)))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.74">Ex 3.74</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>test-data</code>
+</li>
+<li class="imports__name">
+<code>zero-crossings</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.75">Ex 3.75</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>test-result</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (smooth s) (stream-map average s (<span class="kw">cons-stream</span> <span class="cn">0</span> s)))
 (<span class="kw">define</span> (smooth-zero-crossings sense-data) (zero-crossings (smooth sense-data)))
 
 (stream-take (smooth-zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
 <h2 id="3.5.4" class="anchor">
 <a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-ref) (:<span class="cn">3.5.2.1</span> add-streams scale-stream)
-       (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (integral delayed-integrand initial-value dt)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (integral delayed-integrand initial-value dt)
   (<span class="kw">define</span> int
     (<span class="kw">cons-stream</span>
      initial-value
@@ -805,10 +1956,42 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.77" class="anchor">
 <a class="anchor__link link" href="#ex3.77" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.77">Exercise 3.77<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? stream-ref the-empty-stream)
-       (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (integral delayed-integrand initial-value dt)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>
+</li>
+<li class="imports__name">
+<code>the-empty-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (integral delayed-integrand initial-value dt)
   (<span class="kw">cons-stream</span>
    initial-value
    (<span class="kw">let</span> ((integrand (<span class="fu">force</span> delayed-integrand)))
@@ -824,7 +2007,32 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.78" class="anchor">
 <a class="anchor__link link" href="#ex3.78" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.78">Exercise 3.78<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2.1</span> add-streams scale-stream) (:<span class="cn">3.5.4</span> integral)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.4">3.5.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integral</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Solves y’’ - ay’ - by = 0.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (solve<span class="cn">-2</span>nd a b y0 dy0 dt)
   (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
@@ -835,7 +2043,29 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.79" class="anchor">
 <a class="anchor__link link" href="#ex3.79" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.79">Exercise 3.79<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.4</span> integral) (?<span class="cn">3.50</span> stream-map)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.4">3.5.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integral</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Solves y’’ = f(y’, y).</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (solve<span class="cn">-2</span>nd f y0 dy0 dt)
   (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
@@ -845,10 +2075,41 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.80" class="anchor">
 <a class="anchor__link link" href="#ex3.80" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.80">Exercise 3.80<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.5.2</span> stream-take) (:<span class="cn">3.5.2.1</span> add-streams scale-stream)
-       (:<span class="cn">3.5.4</span> integral)))
-
-(<span class="kw">define</span> (RLC R L C dt)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2.1">3.5.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-streams</code>
+</li>
+<li class="imports__name">
+<code>scale-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.4">3.5.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integral</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (RLC R L C dt)
   (<span class="kw">lambda</span> (vC0 iL0)
     (<span class="kw">define</span> vC (integral (<span class="kw">delay</span> dvC) vC0 dt))
     (<span class="kw">define</span> iL (integral (<span class="kw">delay</span> diL) iL0 dt))
@@ -876,10 +2137,47 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h2 id="3.5.5" class="anchor">
 <a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a> <span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)
-       (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-ref) (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (map-successive-pairs f s)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#3.1.2">3.1.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>rand-update</code>
+</li>
+<li class="imports__name">
+<code>random-init</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (map-successive-pairs f s)
   (<span class="kw">cons-stream</span>
    (f (stream-car s) (stream-car (stream-cdr s)))
    (map-successive-pairs f (stream-cdr (stream-cdr s)))))
@@ -912,11 +2210,58 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.81" class="anchor">
 <a class="anchor__link link" href="#ex3.81" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.81">Exercise 3.81<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)
-       (:<span class="cn">3.5.1</span> stream-car stream-cdr stream-null? the-empty-stream)
-       (:<span class="cn">3.5.2</span> stream-take) (?<span class="cn">3.74</span> cycle)))
-
-(<span class="kw">define</span> (random-numbers request-stream)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#3.1.2">3.1.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>rand-update</code>
+</li>
+<li class="imports__name">
+<code>random-init</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-car</code>
+</li>
+<li class="imports__name">
+<code>stream-cdr</code>
+</li>
+<li class="imports__name">
+<code>stream-null?</code>
+</li>
+<li class="imports__name">
+<code>the-empty-stream</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.2">3.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-take</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.74">Ex 3.74</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cycle</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (random-numbers request-stream)
   (<span class="kw">define</span> (iter s prev)
     (<span class="kw">if</span> (stream-null? s)
         the-empty-stream
@@ -935,11 +2280,60 @@ b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
 <h3 id="ex3.82" class="anchor">
 <a class="anchor__link link" href="#ex3.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.82">Exercise 3.82<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.1.2</span> random-max) (:<span class="cn">3.5.1</span> stream-ref)
-       (:<span class="cn">3.5.5</span> map-successive-pairs monte-carlo random-numbers)
-       (?<span class="cn">3.50</span> stream-map)))
-
-(<span class="kw">define</span> (estimate-integral pred x1 x2 y1 y2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="1.html#3.1.2">3.1.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>random-max</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.1">3.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-ref</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.5.5">3.5.5</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>map-successive-pairs</code>
+</li>
+<li class="imports__name">
+<code>monte-carlo</code>
+</li>
+<li class="imports__name">
+<code>random-numbers</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex3.50">Ex 3.50</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>stream-map</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (estimate-integral pred x1 x2 y1 y2)
   (<span class="kw">let*</span> ((dx (<span class="fu">-</span> x2 x1))
          (dy (<span class="fu">-</span> y2 y1))
          (experiment-stream

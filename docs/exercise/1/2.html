@@ -265,7 +265,21 @@
 <h2 id="1.2.4" class="anchor">
 <a class="anchor__link link" href="#1.2.4" aria-hidden="true">#</a> <span class="number">1.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_sec_1.2.4">Exponentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Recursive naive: O(n) time, O(n) space</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">expt</span> b n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
@@ -292,7 +306,21 @@
 <h3 id="ex1.16" class="anchor">
 <a class="anchor__link link" href="#ex1.16" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.16">Exercise 1.16<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Iterative successive squaring: O(log(n)) time, O(1) space</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (fast-expt b n)
   (<span class="kw">define</span> (iter a b n)
@@ -326,7 +354,24 @@
 <h3 id="ex1.18" class="anchor">
 <a class="anchor__link link" href="#ex1.18" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.18">Exercise 1.18<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">1.17</span> double halve)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex1.17">Ex 1.17</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>double</code>
+</li>
+<li class="imports__name">
+<code>halve</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Iterative successive doubling: O(log(n)) time, O(1) space</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (fast-* a b)
   (<span class="kw">define</span> (iter c a b)
@@ -403,9 +448,22 @@
 <h3 id="1.2.6.1" class="anchor">
 <a class="anchor__link link" href="#1.2.6.1" aria-hidden="true">#</a> <span class="number">1.2.6.1</span> Searching for divisors
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (smallest-divisor n) (find-divisor n <span class="cn">2</span>))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (smallest-divisor n) (find-divisor n <span class="cn">2</span>))
 (<span class="kw">define</span> (find-divisor n test-divisor)
   (<span class="kw">cond</span> ((<span class="fu">&gt;</span> (square test-divisor) n) n)
         ((divides? test-divisor n) test-divisor)
@@ -420,9 +478,30 @@
 <h3 id="1.2.6.2" class="anchor">
 <a class="anchor__link link" href="#1.2.6.2" aria-hidden="true">#</a> <span class="number">1.2.6.2</span> The Fermat test
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.2.6.1</span> prime?)))
-
-(<span class="kw">define</span> (expmod base exp m)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.2.6.1">1.2.6.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>prime?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (expmod base exp m)
   (<span class="kw">cond</span> ((<span class="fu">=</span> exp <span class="cn">0</span>) <span class="cn">1</span>)
         ((<span class="fu">even?</span> exp)
          (<span class="fu">remainder</span> (square (expmod base (<span class="fu">/</span> exp <span class="cn">2</span>) m))
@@ -450,17 +529,43 @@
 <h3 id="ex1.21" class="anchor">
 <a class="anchor__link link" href="#ex1.21" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.21">Exercise 1.21<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.1</span> smallest-divisor)))
-
-(smallest-divisor <span class="cn">199</span>) <span class="op">=&gt;</span> <span class="cn">199</span>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.2.6.1">1.2.6.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>smallest-divisor</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(smallest-divisor <span class="cn">199</span>) <span class="op">=&gt;</span> <span class="cn">199</span>
 (smallest-divisor <span class="cn">1999</span>) <span class="op">=&gt;</span> <span class="cn">1999</span>
 (smallest-divisor <span class="cn">19999</span>) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3 id="ex1.22" class="anchor">
 <a class="anchor__link link" href="#ex1.22" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.22">Exercise 1.22<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.1</span> prime?)))
-
-(<span class="kw">define</span> (timed-prime-test p? n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.2.6.1">1.2.6.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>prime?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (timed-prime-test p? n)
   (<span class="fu">newline</span>)
   (<span class="fu">display</span> n)
   (start-prime-test p? n (runtime)))
@@ -502,7 +607,29 @@
 <h3 id="ex1.23" class="anchor">
 <a class="anchor__link link" href="#ex1.23" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.23">Exercise 1.23<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.22</span> search-for-primes)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex1.22">Ex 1.22</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>search-for-primes</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Trial division, but only testing odd divisors.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (prime? n)
   (<span class="kw">define</span> (divides? a b)
@@ -541,9 +668,30 @@
 <h3 id="ex1.24" class="anchor">
 <a class="anchor__link link" href="#ex1.24" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.24">Exercise 1.24<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.2</span> fast-prime?) (?<span class="cn">1.22</span> search-for-primes)))
-
-(<span class="kw">define</span> (prime? n) (fast-prime? n <span class="cn">100</span>))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.2.6.2">1.2.6.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fast-prime?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex1.22">Ex 1.22</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>search-for-primes</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (prime? n) (fast-prime? n <span class="cn">100</span>))
 
 (string-contains?
  (capture-output (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
@@ -569,9 +717,38 @@
 <h3 id="ex1.25" class="anchor">
 <a class="anchor__link link" href="#ex1.25" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.25">Exercise 1.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.2.4</span> fast-expt) (:<span class="cn">1.2.6.2</span> expmod)))
-
-(<span class="kw">define</span> (alyssa-expmod base exp m)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.2.4">1.2.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fast-expt</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.2.6.2">1.2.6.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>expmod</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (alyssa-expmod base exp m)
   (<span class="fu">remainder</span> (fast-expt base exp) m))</code></pre>
 <p>This procedure works, but it is not as efficient. The Fermat test takes much longer using this version of expmod – longer by three orders of magnitude. While <code>fast-expt</code> is reasonably fast, the original <code>expmod</code> procedure is much faster. The key to its implementation is not only successive squaring (which <code>fast-expt</code> does as well in Alyssa’s procedure), but that it calls remainder between each squaring. Alyssa’s procedure does not, so the value becomes enormous (requiring bignums, which is slow) by the time the remainder is finally taken. Suppose we test the primality of n = 9, choosing a = 5. Using the old definition of <code>expmod</code>, the process will evolve like so:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> r <span class="fu">remainder</span>)
@@ -605,9 +782,30 @@
 <h3 id="ex1.27" class="anchor">
 <a class="anchor__link link" href="#ex1.27" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.27">Exercise 1.27<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.6.1</span> prime?) (:<span class="cn">1.2.6.2</span> expmod)))
-
-(<span class="kw">define</span> (fermat-all? n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.2.6.1">1.2.6.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>prime?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.2.6.2">1.2.6.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>expmod</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (fermat-all? n)
   (<span class="kw">define</span> (iter a)
     (<span class="kw">or</span> (<span class="fu">&gt;=</span> a n)
         (<span class="kw">and</span> (<span class="fu">=</span> (expmod a n n) a)
@@ -630,9 +828,30 @@
 <h3 id="ex1.28" class="anchor">
 <a class="anchor__link link" href="#ex1.28" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.28">Exercise 1.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.2.6.2</span> many-times)))
-
-(<span class="kw">define</span> (square-check x m)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.2.6.2">1.2.6.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>many-times</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (square-check x m)
   (<span class="kw">let</span> ((sqm (<span class="fu">remainder</span> (square x) m)))
     (<span class="kw">if</span> (<span class="kw">and</span> (<span class="fu">not</span> (<span class="kw">or</span> (<span class="fu">=</span> x <span class="cn">1</span>) (<span class="fu">=</span> x (<span class="fu">-</span> m <span class="cn">1</span>))))
              (<span class="fu">=</span> sqm <span class="cn">1</span>))

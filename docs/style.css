@@ -11,7 +11,6 @@ html, body, blockquote, pre, p, ul, ol, li {
     color-scheme: light dark;
     --bg: #fafafa;
     --block: #f0f0f0;
-    --block-00: #f0f0f000;
     --active: #e8e8e8;
     --border: #ccc;
     --subdued: #888;
@@ -25,7 +24,6 @@ html, body, blockquote, pre, p, ul, ol, li {
     :root {
         --bg: #202020;
         --block: #2e2e2e;
-        --block-00: #2e2e2e00;
         --active: #444;
         --border: #666;
         --subdued: #888;
@@ -71,6 +69,14 @@ h2::after {
     display: block;
     margin-top: 0.1667em;
     border-bottom: 1px solid var(--border);
+}
+
+h4 {
+    display: inline;
+    margin-right: 0.25em;
+    font-size: inherit;
+    font-weight: normal;
+    font-style: italic;
 }
 
 em, cite {
@@ -206,15 +212,34 @@ h1 code, h2 code, h3 code, .toc__item code {
     text-align: right;
 }
 
-.exercise-list {
+.exercises {
     margin: -2px -4.5px 0;
     line-height: 1.6;
 }
 
-.exercise-list__item {
+.exercises__item {
     display: inline-block;
     width: 39px;
     margin: 0 4.5px;
+}
+
+.imports {
+    margin: 0;
+    border-left: 10px solid var(--block);
+    padding-left: 15px;
+}
+
+.imports__item {
+    display: inline;
+}
+
+.imports__list {
+    display: inline;
+    margin: 0;
+}
+
+.imports__name {
+    display: inline-block;
 }
 
 /* Page layout */

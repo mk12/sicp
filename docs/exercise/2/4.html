@@ -70,9 +70,22 @@
 <h2 id="2.4.1" class="anchor">
 <a class="anchor__link link" href="#2.4.1" aria-hidden="true">#</a> <span class="number">2.4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.1">Representations for Complex Numbers<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (add-complex z1 z2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-complex z1 z2)
   (make-from-real-imag
    (<span class="fu">+</span> (real-part z1) (real-part z2))
    (<span class="fu">+</span> (imag-part z1) (imag-part z2))))
@@ -123,9 +136,22 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h2 id="2.4.2" class="anchor">
 <a class="anchor__link link" href="#2.4.2" aria-hidden="true">#</a> <span class="number">2.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.2">Tagged Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (attach-tag type-tag contents)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (attach-tag type-tag contents)
   (<span class="fu">cons</span> type-tag contents))
 (<span class="kw">define</span> (type-tag datum)
   (<span class="kw">if</span> (<span class="fu">pair?</span> datum)
@@ -203,8 +229,49 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h2 id="2.4.3" class="anchor">
 <a class="anchor__link link" href="#2.4.3" aria-hidden="true">#</a> <span class="number">2.4.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.3">Data-Directed Programming and Additivity<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">2.4.2</span> attach-tag contents type-tag)
-       (:<span class="cn">3.3.3.3</span> get put reset)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>
+</li>
+<li class="imports__name">
+<code>reset</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Note: The textbook calls these procedures <code>install-rectangular-package</code> and <code>install-polar-package</code>. I use <code>rectangular-pkg</code> and <code>polar-pkg</code> since there are many of these procedures and the long names tend to bloat import lists.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (rectangular-pkg)
   <span class="co">;; Internal procedures</span>
@@ -292,12 +359,66 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h3 id="ex2.73" class="anchor">
 <a class="anchor__link link" href="#ex2.73" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.73">Exercise 2.73<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)
-       (:<span class="cn">2.3.2</span> make-product make-sum same-variable? variable?)
-       (:<span class="cn">2.4.3</span> apply-specific using) (:<span class="cn">3.3.3.3</span> put)
-       (?<span class="cn">2.56</span> make-exponentiation)))
-
-(<span class="kw">define</span> (deriv expr var)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-product</code>
+</li>
+<li class="imports__name">
+<code>make-sum</code>
+</li>
+<li class="imports__name">
+<code>same-variable?</code>
+</li>
+<li class="imports__name">
+<code>variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-specific</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="3.html#ex2.56">Ex 2.56</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-exponentiation</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
         ((variable? expr) (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
         (<span class="kw">else</span> (apply-specific <span class="cn">&#39;deriv</span> (operator expr) (operands expr) var))))
@@ -358,7 +479,32 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h3 id="ex2.74" class="anchor">
 <a class="anchor__link link" href="#ex2.74" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.74">Exercise 2.74<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> apply-specific using) (:<span class="cn">3.3.3.3</span> put)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-specific</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Each division must implement the <code>get-record</code> procedure. This gets dispatched based on the division symbol, i.e. the type tag on the file. We have chosen the structure <code>(division . records)</code>, where the <code>car</code> is the type information and the <code>cdr</code> is the division-specific set of records.</li>
 </ol>
@@ -417,9 +563,22 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h3 id="2.4.3.1" class="anchor">
 <a class="anchor__link link" href="#2.4.3.1" aria-hidden="true">#</a> <span class="number">2.4.3.1</span> Message passing
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (make-from-real-imag a b)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag a b)
   (<span class="kw">lambda</span> (op)
     (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="cn">&#39;real-part</span>) a)
           ((<span class="fu">eq?</span> op <span class="cn">&#39;imag-part</span>) b)
@@ -434,9 +593,22 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h3 id="ex2.75" class="anchor">
 <a class="anchor__link link" href="#ex2.75" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.75">Exercise 2.75<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3.1</span> apply-generic)))
-
-(<span class="kw">define</span> (make-from-mag-ang r a)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.4.3.1">2.4.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-from-mag-ang r a)
   (<span class="kw">lambda</span> (op)
     (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="cn">&#39;real-part</span>) (<span class="fu">*</span> r (<span class="fu">cos</span> a)))
           ((<span class="fu">eq?</span> op <span class="cn">&#39;imag-part</span>) (<span class="fu">*</span> r (<span class="fu">sin</span> a)))

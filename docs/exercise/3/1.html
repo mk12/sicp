@@ -253,9 +253,33 @@
 <h3 id="ex3.5" class="anchor">
 <a class="anchor__link link" href="#ex3.5" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.5">Exercise 3.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">3.1.2</span> monte-carlo rand)))
-
-(<span class="kw">define</span> (random-in-range low high)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.1.2">3.1.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>monte-carlo</code>
+</li>
+<li class="imports__name">
+<code>rand</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (random-in-range low high)
   (<span class="kw">let</span> ((range (<span class="fu">-</span> high low)))
     (<span class="fu">+</span> low (random range))))
 
@@ -274,9 +298,25 @@
 <h3 id="ex3.6" class="anchor">
 <a class="anchor__link link" href="#ex3.6" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.6">Exercise 3.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.2</span> rand-update random-init)))
-
-(<span class="kw">define</span> rand
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.1.2">3.1.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>rand-update</code>
+</li>
+<li class="imports__name">
+<code>random-init</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> rand
   (<span class="kw">let</span> ((x random-init))
     (<span class="kw">lambda</span> (message)
       (<span class="kw">cond</span> ((<span class="fu">eq?</span> message <span class="cn">&#39;generate</span>)
@@ -322,8 +362,32 @@
 <h3 id="3.1.3.1" class="anchor">
 <a class="anchor__link link" href="#3.1.3.1" aria-hidden="true">#</a> <span class="number">3.1.3.1</span> Sameness and change
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">3.1.1</span> make-account)
-       (:<span class="cn">3.1.3</span> make-decrementer make-simplified-withdraw)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#3.1.1">3.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-account</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#3.1.3">3.1.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-decrementer</code>
+</li>
+<li class="imports__name">
+<code>make-simplified-withdraw</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p><code>D1</code> and <code>D2</code> are the same.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> D1 (make-decrementer <span class="cn">25</span>))
 (<span class="kw">define</span> D2 (make-decrementer <span class="cn">25</span>))
@@ -347,9 +411,22 @@
 <h3 id="3.1.3.2" class="anchor">
 <a class="anchor__link link" href="#3.1.3.2" aria-hidden="true">#</a> <span class="number">3.1.3.2</span> Pitfalls of imperative programming
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.2.1</span> factorial)))
-
-(<span class="kw">define</span> (imperative-factorial n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/2.html#1.2.1">1.2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>factorial</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (imperative-factorial n)
   (<span class="kw">let</span> ((product <span class="cn">1</span>)
         (counter <span class="cn">1</span>))
     (<span class="kw">define</span> (iter)
@@ -364,9 +441,22 @@
 <h3 id="ex3.7" class="anchor">
 <a class="anchor__link link" href="#ex3.7" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.7">Exercise 3.7<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">3.3</span> make-account)))
-
-(<span class="kw">define</span> (make-joint pp-acc password new-password)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex3.3">Ex 3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-account</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-joint pp-acc password new-password)
   (<span class="kw">lambda</span> (p m)
     (pp-acc (<span class="kw">if</span> (<span class="fu">eq?</span> p new-password) password <span class="cn">#f</span>) m)))
 

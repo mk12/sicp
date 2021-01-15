@@ -172,9 +172,28 @@
 <h3 id="ex2.3" class="anchor">
 <a class="anchor__link link" href="#ex2.3" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.3">Exercise 2.3<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.2</span> make-point x-point y-point)))
-
-(<span class="kw">define</span> (perimeter rect)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.2">Ex 2.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-point</code>
+</li>
+<li class="imports__name">
+<code>x-point</code>
+</li>
+<li class="imports__name">
+<code>y-point</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (perimeter rect)
   (<span class="fu">*</span> <span class="cn">2</span> (<span class="fu">+</span> (width-rect rect) (height-rect rect))))
 (<span class="kw">define</span> (area rect)
   (<span class="fu">*</span> (width-rect rect) (height-rect rect)))</code></pre>
@@ -269,9 +288,28 @@
 <h2 id="2.1.4" class="anchor">
 <a class="anchor__link link" href="#2.1.4" aria-hidden="true">#</a> <span class="number">2.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.4">Extended Exercise: Interval Arithmetic<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
-
-(<span class="kw">define</span> (add-interval x y)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>lower-bound</code>
+</li>
+<li class="imports__name">
+<code>make-interval</code>
+</li>
+<li class="imports__name">
+<code>upper-bound</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-interval x y)
   (make-interval (<span class="fu">+</span> (lower-bound x) (lower-bound y))
                  (<span class="fu">+</span> (upper-bound x) (upper-bound y))))
 
@@ -297,7 +335,27 @@
 <h3 id="ex2.8" class="anchor">
 <a class="anchor__link link" href="#ex2.8" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.8">Exercise 2.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>lower-bound</code>
+</li>
+<li class="imports__name">
+<code>make-interval</code>
+</li>
+<li class="imports__name">
+<code>upper-bound</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>The minimum value the difference could be is the difference of the lower bound of the minuend and the upper bound of the subtrahend. The maximum value would be the difference of the upper bound of the minuend and the lower bound of the subtrahend.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (sub-interval x y)
   (make-interval (<span class="fu">-</span> (lower-bound x) (upper-bound y))
@@ -305,10 +363,50 @@
 <h3 id="ex2.9" class="anchor">
 <a class="anchor__link link" href="#ex2.9" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.9">Exercise 2.9<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> add-interval div-interval mul-interval)
-       (?<span class="cn">2.7</span> lower-bound make-interval upper-bound) (?<span class="cn">2.8</span> sub-interval)))
-
-(<span class="kw">define</span> (width x)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.1.4">2.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-interval</code>
+</li>
+<li class="imports__name">
+<code>div-interval</code>
+</li>
+<li class="imports__name">
+<code>mul-interval</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>lower-bound</code>
+</li>
+<li class="imports__name">
+<code>make-interval</code>
+</li>
+<li class="imports__name">
+<code>upper-bound</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.8">Ex 2.8</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>sub-interval</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (width x)
   (<span class="fu">/</span> (<span class="fu">-</span> (upper-bound x) (lower-bound x)) <span class="cn">2</span>))</code></pre>
 <p>Consider arbitrary intervals <code>x</code> and <code>y</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x1 (random <span class="cn">1000</span>))
@@ -349,9 +447,36 @@
 <h3 id="ex2.10" class="anchor">
 <a class="anchor__link link" href="#ex2.10" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.10">Exercise 2.10<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> mul-interval) (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
-
-(<span class="kw">define</span> (div-interval x y)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.1.4">2.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul-interval</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>lower-bound</code>
+</li>
+<li class="imports__name">
+<code>make-interval</code>
+</li>
+<li class="imports__name">
+<code>upper-bound</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (div-interval x y)
   (<span class="kw">let</span> ((y1 (lower-bound y))
         (y2 (upper-bound y)))
     (<span class="kw">if</span> (<span class="fu">&lt;=</span> y1 <span class="cn">0</span> y2)
@@ -363,9 +488,28 @@
 <h3 id="ex2.11" class="anchor">
 <a class="anchor__link link" href="#ex2.11" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.11">Exercise 2.11<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
-
-(<span class="kw">define</span> (mul-interval x y)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>lower-bound</code>
+</li>
+<li class="imports__name">
+<code>make-interval</code>
+</li>
+<li class="imports__name">
+<code>upper-bound</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (mul-interval x y)
   (<span class="kw">let</span> ((x1 (lower-bound x))
         (x2 (upper-bound x))
         (y1 (lower-bound y))
@@ -388,9 +532,36 @@
 <h3 id="ex2.12" class="anchor">
 <a class="anchor__link link" href="#ex2.12" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.12">Exercise 2.12<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average) (?<span class="cn">2.7</span> lower-bound make-interval upper-bound)))
-
-(<span class="kw">define</span> (make-center-width c w)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>lower-bound</code>
+</li>
+<li class="imports__name">
+<code>make-interval</code>
+</li>
+<li class="imports__name">
+<code>upper-bound</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-center-width c w)
   (make-interval (<span class="fu">-</span> c w) (<span class="fu">+</span> c w)))
 (<span class="kw">define</span> (center x)
   (average (lower-bound x) (upper-bound x)))
@@ -408,7 +579,32 @@
 <h3 id="ex2.13" class="anchor">
 <a class="anchor__link link" href="#ex2.13" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.13">Exercise 2.13<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> mul-interval) (?<span class="cn">2.12</span> make-center-percent percent)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.1.4">2.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul-interval</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.12">Ex 2.12</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-center-percent</code>
+</li>
+<li class="imports__name">
+<code>percent</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Under the assumption of small percent tolerances, there is a simple formula for the approximate percent tolerance of the product of two intervals in terms of the tolerances of the factors: it is their sum. Assuming all numbers are positive, we have [a,b] * [c,d] = [ac,bd]. We can define a single interval in terms of its centre and percentage: i = [c-cp/100,c+cp/100]. Factoring out the centre gives us i = [c(1-p/100),c(1+p/100)], And multiplying two intervals can now be written as ij = [ci<em>cj(1-pi/100)(1-pj/100),ci</em>cj(1+pi/100)(1+pj/100)]. We can expand the bracketed factors: (1-pi/100)(1-pj/100) = 1 - pi/100 - pj/100 + pi<em>pj/10000 = 1 - (pi+pj)/100 + pi</em>pj/10000. (1+pi/100)(1+pj/100) = 1 + pi/100 + pj/100 + pi<em>pj/10000 = 1 + (pi+pj)/100 + pi</em>pj/10000. We can substitute this back into the interval multiplication: ij = [ci<em>cj(1-(pi+pj)/100+pi</em>pj/10000),ci<em>cj(1+(pi+pj)/100+pi</em>pj/10000)]. Since pi and pj are small, we can drop the pi<em>pj/10000 terms: ij = [ci<em>cj(1-(pi+pj)/100),ci</em>cj(1+(pi+pj)/100)]. This is back into centre &amp; percent form. The centre of the product interval is ci</em>cj, and its percentage uncertainty is pi + pj – the sum. We can try it out to make sure:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> i (make-center-percent <span class="cn">30</span> <span class="cn">1</span>))
 (<span class="kw">define</span> j (make-center-percent <span class="cn">25</span> <span class="cn">3</span>))
@@ -418,10 +614,50 @@
 <h3 id="ex2.14" class="anchor">
 <a class="anchor__link link" href="#ex2.14" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_thm_2.14">Exercise 2.14<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.4</span> add-interval div-interval mul-interval) (?<span class="cn">2.7</span> make-interval)
-       (?<span class="cn">2.12</span> center make-center-percent percent)))
-
-(<span class="kw">define</span> (par1 r1 r2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.1.4">2.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-interval</code>
+</li>
+<li class="imports__name">
+<code>div-interval</code>
+</li>
+<li class="imports__name">
+<code>mul-interval</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.7">Ex 2.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-interval</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.12">Ex 2.12</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>center</code>
+</li>
+<li class="imports__name">
+<code>make-center-percent</code>
+</li>
+<li class="imports__name">
+<code>percent</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (par1 r1 r2)
   (div-interval (mul-interval r1 r2)
                 (add-interval r1 r2)))
 

@@ -89,9 +89,22 @@
 <h3 id="ex2.53" class="anchor">
 <a class="anchor__link link" href="#ex2.53" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.53">Exercise 2.53<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.1</span> <span class="fu">memq</span>)))
-
-(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span> <span class="cn">&#39;c</span>) <span class="op">=&gt;</span> &#39;(a b c)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.1">2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>memq</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span> <span class="cn">&#39;c</span>) <span class="op">=&gt;</span> &#39;(a b c)
 (<span class="fu">list</span> (<span class="fu">list</span> <span class="cn">&#39;george</span>)) <span class="op">=&gt;</span> &#39;((george))
 (<span class="fu">cdr</span> &#39;((x1 x2) (y1 y2))) <span class="op">=&gt;</span> &#39;((y1 y2))
 (<span class="fu">cadr</span> &#39;((x1 x2) (y1 y2))) <span class="op">=&gt;</span> &#39;(y1 y2)
@@ -180,10 +193,52 @@
 <h3 id="ex2.56" class="anchor">
 <a class="anchor__link link" href="#ex2.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.56">Exercise 2.56<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> =number? addend augend make-product make-sum multiplicand
-               multiplier product? same-variable? sum? variable?)))
-
-(<span class="kw">define</span> (deriv expr var)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>=number?</code>
+</li>
+<li class="imports__name">
+<code>addend</code>
+</li>
+<li class="imports__name">
+<code>augend</code>
+</li>
+<li class="imports__name">
+<code>make-product</code>
+</li>
+<li class="imports__name">
+<code>make-sum</code>
+</li>
+<li class="imports__name">
+<code>multiplicand</code>
+</li>
+<li class="imports__name">
+<code>multiplier</code>
+</li>
+<li class="imports__name">
+<code>product?</code>
+</li>
+<li class="imports__name">
+<code>same-variable?</code>
+</li>
+<li class="imports__name">
+<code>sum?</code>
+</li>
+<li class="imports__name">
+<code>variable?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
         ((variable? expr)
          (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
@@ -217,10 +272,45 @@
 <h3 id="ex2.57" class="anchor">
 <a class="anchor__link link" href="#ex2.57" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.57">Exercise 2.57<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate)
-       (:<span class="cn">2.3.2</span> make-product make-sum product? same-variable? sum? variable?)))
-
-(<span class="kw">paste</span> (:<span class="cn">2.3.2</span> deriv))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-product</code>
+</li>
+<li class="imports__name">
+<code>make-sum</code>
+</li>
+<li class="imports__name">
+<code>product?</code>
+</li>
+<li class="imports__name">
+<code>same-variable?</code>
+</li>
+<li class="imports__name">
+<code>sum?</code>
+</li>
+<li class="imports__name">
+<code>variable?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">paste</span> (:<span class="cn">2.3.2</span> deriv))
 
 (<span class="kw">define</span> addend <span class="fu">cadr</span>)
 (<span class="kw">define</span> (augend sum)
@@ -233,9 +323,36 @@
 <h3 id="ex2.58" class="anchor">
 <a class="anchor__link link" href="#ex2.58" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.58">Exercise 2.58<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.1</span> <span class="fu">memq</span>) (:<span class="cn">2.3.2</span> =number? same-variable? variable?)))
-
-(<span class="kw">paste</span> (:<span class="cn">2.3.2</span> deriv))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.1">2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>memq</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>=number?</code>
+</li>
+<li class="imports__name">
+<code>same-variable?</code>
+</li>
+<li class="imports__name">
+<code>variable?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">paste</span> (:<span class="cn">2.3.2</span> deriv))</code></pre>
 <ol type="a">
 <li>Fully parenthesized binary infix form</li>
 </ol>
@@ -324,9 +441,30 @@
 <h3 id="ex2.59" class="anchor">
 <a class="anchor__link link" href="#ex2.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.59">Exercise 2.59<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.3.1</span> adjoin-set)))
-
-(<span class="kw">define</span> (union-set set1 set2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.3.3.1">2.3.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>adjoin-set</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
   (accumulate adjoin-set set2 set1))
 
 (union-set &#39;() &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
@@ -452,9 +590,28 @@
 <h3 id="ex2.63" class="anchor">
 <a class="anchor__link link" href="#ex2.63" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.63">Exercise 2.63<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.3.3</span> entry left-branch right-branch)))
-
-(<span class="kw">define</span> (tree-&gt;list<span class="cn">-1</span> tree)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.3.3">2.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>entry</code>
+</li>
+<li class="imports__name">
+<code>left-branch</code>
+</li>
+<li class="imports__name">
+<code>right-branch</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (tree-&gt;list<span class="cn">-1</span> tree)
   (<span class="kw">if</span> (<span class="fu">null?</span> tree)
       &#39;()
       (<span class="fu">append</span> (tree-&gt;list<span class="cn">-1</span> (left-branch tree))
@@ -498,9 +655,22 @@
 <h3 id="ex2.64" class="anchor">
 <a class="anchor__link link" href="#ex2.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.64">Exercise 2.64<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.3.3</span> make-tree)))
-
-(<span class="kw">define</span> (list-&gt;tree elements)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.3.3">2.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-tree</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (list-&gt;tree elements)
   (<span class="fu">car</span> (partial-tree elements (<span class="fu">length</span> elements))))
 
 (<span class="kw">define</span> (partial-tree elts n)
@@ -533,7 +703,29 @@
 <h3 id="ex2.65" class="anchor">
 <a class="anchor__link link" href="#ex2.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.65">Exercise 2.65<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.63</span> tree-&gt;list<span class="cn">-2</span>) (?<span class="cn">2.64</span> list-&gt;tree)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.63">Ex 2.63</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>tree-&gt;list-2</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.64">Ex 2.64</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>list-&gt;tree</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>The <code>tree-&gt;list-2</code> conversion, the union/intersection on ordered lists, and the <code>list-&gt;tree</code> conversion are all O(n), so combined they are still O(n).</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
   (<span class="kw">define</span> (union-list l1 l2)
@@ -596,9 +788,36 @@
 <h3 id="ex2.66" class="anchor">
 <a class="anchor__link link" href="#ex2.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.66">Exercise 2.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.3.3</span> entry left-branch right-branch) (:<span class="cn">2.3.3.4</span> key)))
-
-(<span class="kw">define</span> (lookup given-key set-of-records)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.3.3">2.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>entry</code>
+</li>
+<li class="imports__name">
+<code>left-branch</code>
+</li>
+<li class="imports__name">
+<code>right-branch</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.3.3.4">2.3.3.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>key</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (lookup given-key set-of-records)
   (<span class="kw">if</span> (<span class="fu">null?</span> set-of-records)
       <span class="cn">#f</span>
       (<span class="kw">let*</span> ((record (entry set-of-records))
@@ -668,9 +887,28 @@
 <h3 id="ex2.67" class="anchor">
 <a class="anchor__link link" href="#ex2.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.67">Exercise 2.67<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.4</span> decode make-code-tree make-leaf)))
-
-(<span class="kw">define</span> sample-tree
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.4">2.3.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>decode</code>
+</li>
+<li class="imports__name">
+<code>make-code-tree</code>
+</li>
+<li class="imports__name">
+<code>make-leaf</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> sample-tree
   (make-code-tree (make-leaf <span class="cn">&#39;A</span> <span class="cn">4</span>)
                   (make-code-tree (make-leaf <span class="cn">&#39;B</span> <span class="cn">2</span>)
                                   (make-code-tree (make-leaf <span class="cn">&#39;D</span> <span class="cn">1</span>)
@@ -682,10 +920,42 @@
 <h3 id="ex2.68" class="anchor">
 <a class="anchor__link link" href="#ex2.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.68">Exercise 2.68<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.4</span> leaf? left-branch right-branch symbols)
-       (?<span class="cn">2.67</span> sample-message sample-tree)))
-
-(<span class="kw">define</span> (encode message tree)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.4">2.3.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>leaf?</code>
+</li>
+<li class="imports__name">
+<code>left-branch</code>
+</li>
+<li class="imports__name">
+<code>right-branch</code>
+</li>
+<li class="imports__name">
+<code>symbols</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.67">Ex 2.67</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>sample-message</code>
+</li>
+<li class="imports__name">
+<code>sample-tree</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (encode message tree)
   (<span class="kw">if</span> (<span class="fu">null?</span> message)
       &#39;()
       (<span class="fu">append</span> (encode-symbol (<span class="fu">car</span> message) tree)
@@ -709,10 +979,41 @@
 <h3 id="ex2.69" class="anchor">
 <a class="anchor__link link" href="#ex2.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.69">Exercise 2.69<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.4</span> make-code-tree make-leaf-set) (?<span class="cn">2.38</span> fold-left)
-       (?<span class="cn">2.68</span> encode-symbol)))
-
-(<span class="kw">define</span> (generate-huffman-tree pairs)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.3.4">2.3.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-code-tree</code>
+</li>
+<li class="imports__name">
+<code>make-leaf-set</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="2.html#ex2.38">Ex 2.38</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fold-left</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.68">Ex 2.68</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>encode-symbol</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
 
 (<span class="kw">define</span> (successive-merge set)
@@ -726,9 +1027,30 @@
 <h3 id="ex2.70" class="anchor">
 <a class="anchor__link link" href="#ex2.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.70">Exercise 2.70<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.68</span> encode) (?<span class="cn">2.69</span> generate-huffman-tree)))
-
-(<span class="kw">define</span> rock-tree
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.68">Ex 2.68</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>encode</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.69">Ex 2.69</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>generate-huffman-tree</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> rock-tree
   (generate-huffman-tree
    &#39;((a <span class="cn">2</span>) (get <span class="cn">2</span>) (sha <span class="cn">3</span>) (wah <span class="cn">1</span>) (boom <span class="cn">1</span>) (job <span class="cn">2</span>) (na <span class="cn">16</span>) (yip <span class="cn">9</span>))))
 
@@ -748,7 +1070,29 @@ encoded-song
 <h3 id="ex2.71" class="anchor">
 <a class="anchor__link link" href="#ex2.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.71">Exercise 2.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">2.68</span> encode-symbol) (?<span class="cn">2.69</span> generate-huffman-tree)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex2.68">Ex 2.68</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>encode-symbol</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.69">Ex 2.69</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>generate-huffman-tree</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>We have a Huffman tree for an alphabet of n symbols. The relative frequency of the nth symbol is 2^(n-1). For n = 5, we have the following tree:</p>
 <pre><code class="blockcode"><span class="co">;         *</span>
 <span class="co">;        /\</span>

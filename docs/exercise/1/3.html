@@ -71,9 +71,22 @@
 <h2 id="1.3.1" class="anchor">
 <a class="anchor__link link" href="#1.3.1" aria-hidden="true">#</a> <span class="number">1.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_sec_1.3.1">Procedures as Arguments<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3</span> cube)))
-
-(<span class="kw">define</span> (sum term a next b)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#">1.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cube</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (sum term a next b)
   (<span class="kw">if</span> (<span class="fu">&gt;</span> a b)
       <span class="cn">0</span>
       (<span class="fu">+</span> (term a)
@@ -104,9 +117,33 @@
 <h3 id="ex1.29" class="anchor">
 <a class="anchor__link link" href="#ex1.29" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.29">Exercise 1.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3</span> cube) (:<span class="cn">1.3.1</span> inc sum)))
-
-(<span class="kw">define</span> (simpson f a b n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#">1.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cube</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.1">1.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>inc</code>
+</li>
+<li class="imports__name">
+<code>sum</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (simpson f a b n)
   (<span class="kw">let</span> ((h (<span class="fu">/</span> (<span class="fu">-</span> b a) n)))
     (<span class="kw">define</span> (term k)
       (<span class="fu">*</span> (f (<span class="fu">+</span> a (<span class="fu">*</span> k h)))
@@ -128,7 +165,24 @@
 <h3 id="ex1.31" class="anchor">
 <a class="anchor__link link" href="#ex1.31" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.31">Exercise 1.31<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.1</span> identity inc)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.3.1">1.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>identity</code>
+</li>
+<li class="imports__name">
+<code>inc</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Recursive</li>
 </ol>
@@ -167,7 +221,24 @@
 <h3 id="ex1.32" class="anchor">
 <a class="anchor__link link" href="#ex1.32" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.32">Exercise 1.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.1</span> identity inc)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.3.1">1.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>identity</code>
+</li>
+<li class="imports__name">
+<code>inc</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Recursive</li>
 </ol>
@@ -197,9 +268,41 @@
 <h3 id="ex1.33" class="anchor">
 <a class="anchor__link link" href="#ex1.33" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.33">Exercise 1.33<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.1</span> identity inc) (?<span class="cn">1.23</span> prime?)))
-
-(<span class="kw">define</span> (filtered-accumulate combine pred? id term a next b)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.1">1.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>identity</code>
+</li>
+<li class="imports__name">
+<code>inc</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="2.html#ex1.23">Ex 1.23</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>prime?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (filtered-accumulate combine pred? id term a next b)
   (<span class="kw">define</span> (iter a acc)
     (<span class="kw">cond</span> ((<span class="fu">&gt;</span> a b) acc)
           ((pred? a)
@@ -225,15 +328,41 @@
 <h2 id="1.3.2" class="anchor">
 <a class="anchor__link link" href="#1.3.2" aria-hidden="true">#</a> <span class="number">1.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_sec_1.3.2">Constructing Procedures Using <code>Lambda</code><span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-((<span class="kw">lambda</span> (x y z) (<span class="fu">+</span> x y (square z))) <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">((<span class="kw">lambda</span> (x y z) (<span class="fu">+</span> x y (square z))) <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
 <h3 id="ex1.34" class="anchor">
 <a class="anchor__link link" href="#ex1.34" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.34">Exercise 1.34<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (f g) (g <span class="cn">2</span>))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (f g) (g <span class="cn">2</span>))
 
 (f square) <span class="op">=&gt;</span> <span class="cn">4</span>
 (f (<span class="kw">lambda</span> (z) (<span class="fu">*</span> z (<span class="fu">+</span> z <span class="cn">1</span>)))) <span class="op">=&gt;</span> <span class="cn">6</span></code></pre>
@@ -248,9 +377,22 @@
 <h3 id="1.3.3.1" class="anchor">
 <a class="anchor__link link" href="#1.3.3.1" aria-hidden="true">#</a> <span class="number">1.3.3.1</span> Finding roots of equations by the half-interval method
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average)))
-
-(<span class="kw">define</span> (search f neg-point pos-point)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (search f neg-point pos-point)
   (<span class="kw">let</span> ((midpoint (average neg-point pos-point)))
     (<span class="kw">if</span> (close-enough? neg-point pos-point)
         midpoint
@@ -285,9 +427,22 @@
 <h3 id="1.3.3.2" class="anchor">
 <a class="anchor__link link" href="#1.3.3.2" aria-hidden="true">#</a> <span class="number">1.3.3.2</span> Finding fixed points of functions
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average)))
-
-(<span class="kw">define</span> tolerance <span class="cn">0.00001</span>)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> tolerance <span class="cn">0.00001</span>)
 (<span class="kw">define</span> (close-enough? x y) (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> x y)) tolerance))
 
 (<span class="kw">define</span> (fixed-point f first-guess)
@@ -310,7 +465,21 @@
 <h3 id="ex1.35" class="anchor">
 <a class="anchor__link link" href="#ex1.35" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.35">Exercise 1.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.3.2</span> fixed-point)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fixed-point</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>See proofs.pdf for the proof that the golden ratio is a fixed point of the transformation x -&gt; 1 + 1/x.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> golden-ratio (<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">sqrt</span> <span class="cn">5</span>)) <span class="cn">2</span>))
 
@@ -321,9 +490,30 @@ golden-ratio
 <h3 id="ex1.36" class="anchor">
 <a class="anchor__link link" href="#ex1.36" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.36">Exercise 1.36<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average) (:<span class="cn">1.3.3.2</span> close-enough?)))
-
-(<span class="kw">define</span> (fixed-point-verbose f first-guess)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>close-enough?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (fixed-point-verbose f first-guess)
   (<span class="kw">define</span> (try guess)
     (<span class="kw">let</span> ((next (f guess)))
       (<span class="fu">display</span> next)
@@ -343,7 +533,21 @@ golden-ratio
 <h3 id="ex1.37" class="anchor">
 <a class="anchor__link link" href="#ex1.37" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.37">Exercise 1.37<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">1.35</span> golden-ratio)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex1.35">Ex 1.35</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>golden-ratio</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Recursive</li>
 </ol>
@@ -385,9 +589,25 @@ golden-ratio
 <h3 id="ex1.38" class="anchor">
 <a class="anchor__link link" href="#ex1.38" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.38">Exercise 1.38<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (?<span class="cn">1.37</span> always-one cont-frac)))
-
-(<span class="kw">define</span> (approx-e k)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#ex1.37">Ex 1.37</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>always-one</code>
+</li>
+<li class="imports__name">
+<code>cont-frac</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (approx-e k)
   (<span class="kw">define</span> (d i)
     (<span class="kw">if</span> (<span class="fu">zero?</span> (<span class="fu">remainder</span> (<span class="fu">+</span> i <span class="cn">1</span>) <span class="cn">3</span>))
         (<span class="fu">*</span> <span class="cn">2</span>/<span class="cn">3</span> (<span class="fu">+</span> i <span class="cn">1</span>))
@@ -403,9 +623,30 @@ golden-ratio
 <h3 id="ex1.39" class="anchor">
 <a class="anchor__link link" href="#ex1.39" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.39">Exercise 1.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.37</span> cont-frac)))
-
-(<span class="kw">define</span> (tan-cf x k)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex1.37">Ex 1.37</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>cont-frac</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (tan-cf x k)
   (cont-frac
    (<span class="kw">lambda</span> (i) (<span class="kw">if</span> (<span class="fu">=</span> i <span class="cn">1</span>) x (<span class="fu">-</span> (square x))))
    (<span class="kw">lambda</span> (i) (<span class="fu">-</span> (<span class="fu">*</span> i <span class="cn">2</span>) <span class="cn">1</span>))
@@ -422,9 +663,38 @@ golden-ratio
 <h2 id="1.3.4" class="anchor">
 <a class="anchor__link link" href="#1.3.4" aria-hidden="true">#</a> <span class="number">1.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_sec_1.3.4">Procedures as Returned Values<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.1.7</span> average) (:<span class="cn">1.3.3.2</span> fixed-point)))
-
-(<span class="kw">define</span> (average-damp f)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fixed-point</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (average-damp f)
   (<span class="kw">lambda</span> (x) (average x (f x))))
 
 ((average-damp square) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">55</span>
@@ -437,9 +707,30 @@ golden-ratio
 <h3 id="1.3.4.1" class="anchor">
 <a class="anchor__link link" href="#1.3.4.1" aria-hidden="true">#</a> <span class="number">1.3.4.1</span> Newton’s method
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.3.2</span> fixed-point)))
-
-(<span class="kw">define</span> dx <span class="cn">0.00001</span>)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fixed-point</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> dx <span class="cn">0.00001</span>)
 (<span class="kw">define</span> (deriv g)
   (<span class="kw">lambda</span> (x) (<span class="fu">/</span> (<span class="fu">-</span> (g (<span class="fu">+</span> x dx)) (g x)) dx)))
 
@@ -456,10 +747,54 @@ golden-ratio
 <h3 id="1.3.4.2" class="anchor">
 <a class="anchor__link link" href="#1.3.4.2" aria-hidden="true">#</a> <span class="number">1.3.4.2</span> Abstractions and first-class procedures
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.1.7</span> average) (:<span class="cn">1.3.3.2</span> fixed-point)
-       (:<span class="cn">1.3.4</span> average-damp) (:<span class="cn">1.3.4.1</span> newton-transform)))
-
-(<span class="kw">define</span> (fixed-point-of-transform g transform guess)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fixed-point</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.4">1.3.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average-damp</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.4.1">1.3.4.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>newton-transform</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (fixed-point-of-transform g transform guess)
   (fixed-point (transform g) guess))
 
 (<span class="kw">define</span> (<span class="fu">sqrt</span> x)
@@ -470,9 +805,30 @@ golden-ratio
 <h3 id="ex1.40" class="anchor">
 <a class="anchor__link link" href="#ex1.40" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.40">Exercise 1.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.4.1</span> newtons-method)))
-
-(<span class="kw">define</span> (cubic a b c)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.4.1">1.3.4.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>newtons-method</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (cubic a b c)
   (<span class="kw">lambda</span> (x)
     (<span class="kw">let</span> ((xx (square x)))
       (<span class="fu">+</span> (<span class="fu">*</span> x xx)
@@ -485,9 +841,22 @@ golden-ratio
 <h3 id="ex1.41" class="anchor">
 <a class="anchor__link link" href="#ex1.41" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.41">Exercise 1.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.1</span> inc)))
-
-(<span class="kw">define</span> (double f)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.3.1">1.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>inc</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (double f)
   (<span class="kw">lambda</span> (x)
     (f (f x))))
 
@@ -506,9 +875,30 @@ golden-ratio
 <h3 id="ex1.42" class="anchor">
 <a class="anchor__link link" href="#ex1.42" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.42">Exercise 1.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.3.1</span> inc)))
-
-(<span class="kw">define</span> (compose f g)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.1">1.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>inc</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (compose f g)
   (<span class="kw">lambda</span> (x)
     (f (g x))))
 
@@ -516,9 +906,30 @@ golden-ratio
 <h3 id="ex1.43" class="anchor">
 <a class="anchor__link link" href="#ex1.43" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.43">Exercise 1.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.42</span> compose)))
-
-(<span class="kw">define</span> (repeated f n)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex1.42">Ex 1.42</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>compose</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (repeated f n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">1</span>)
       f
       (compose (repeated f (<span class="fu">-</span> n <span class="cn">1</span>)) f)))
@@ -527,9 +938,30 @@ golden-ratio
 <h3 id="ex1.44" class="anchor">
 <a class="anchor__link link" href="#ex1.44" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.44">Exercise 1.44<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (?<span class="cn">1.43</span> repeated)))
-
-(<span class="kw">define</span> dx <span class="cn">0.1</span>)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex1.43">Ex 1.43</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>repeated</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> dx <span class="cn">0.1</span>)
 (<span class="kw">define</span> (smooth f)
   (<span class="kw">lambda</span> (x)
     (<span class="fu">/</span> (<span class="fu">+</span> (f (<span class="fu">-</span> x dx))
@@ -542,7 +974,37 @@ golden-ratio
 <h3 id="ex1.45" class="anchor">
 <a class="anchor__link link" href="#ex1.45" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.45">Exercise 1.45<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.3.3.2</span> fixed-point) (:<span class="cn">1.3.4</span> average-damp) (?<span class="cn">1.43</span> repeated)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>fixed-point</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.4">1.3.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average-damp</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex1.43">Ex 1.43</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>repeated</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>We need to average-damp floor(log2(n)) times.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (nth-root x n)
   (fixed-point
@@ -557,9 +1019,38 @@ golden-ratio
 <h3 id="ex1.46" class="anchor">
 <a class="anchor__link link" href="#ex1.46" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-12.html#%25_thm_1.46">Exercise 1.46<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square) (:<span class="cn">1.1.7</span> average) (:<span class="cn">1.3.3.2</span> tolerance)))
-
-(<span class="kw">define</span> (iterative-improve good-enough? improve)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="1.html#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#1.3.3.2">1.3.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>tolerance</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (iterative-improve good-enough? improve)
   (<span class="kw">define</span> (iter guess)
     (<span class="kw">if</span> (good-enough? guess)
         guess

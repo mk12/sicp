@@ -72,7 +72,6 @@
 <h2 id="1.1.1" class="anchor">
 <a class="anchor__link link" href="#1.1.1" aria-hidden="true">#</a> <span class="number">1.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.1">Expressions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<p>See <a href="../3/3.html#ex3.16">Exercise&nbsp;3.16</a></p>
 <pre><code class="blockcode"><span class="cn">486</span> <span class="op">=&gt;</span> <span class="cn">486</span>
 (<span class="fu">+</span> <span class="cn">137</span> <span class="cn">349</span>) <span class="op">=&gt;</span> <span class="cn">486</span>
 (<span class="fu">-</span> <span class="cn">1000</span> <span class="cn">334</span>) <span class="op">=&gt;</span> <span class="cn">666</span>
@@ -120,7 +119,27 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h2 id="1.1.5" class="anchor">
 <a class="anchor__link link" href="#1.1.5" aria-hidden="true">#</a> <span class="number">1.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.5">The Substitution Model for Procedure Application<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> f square sum-of-squares)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>f</code>
+</li>
+<li class="imports__name">
+<code>square</code>
+</li>
+<li class="imports__name">
+<code>sum-of-squares</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Applicative-order evaluation:</p>
 <pre><code class="blockcode">(f <span class="cn">5</span>)
 <span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
@@ -222,9 +241,22 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h2 id="1.1.7" class="anchor">
 <a class="anchor__link link" href="#1.1.7" aria-hidden="true">#</a> <span class="number">1.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.7">Example: Square Roots by Newton’s Method<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (sqrt-iter guess x)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (sqrt-iter guess x)
   (<span class="kw">if</span> (good-enough? guess x)
       guess
       (sqrt-iter (improve guess x) x)))
@@ -248,9 +280,25 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h3 id="ex1.6" class="anchor">
 <a class="anchor__link link" href="#ex1.6" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.6">Exercise 1.6<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> good-enough? improve)))
-
-(<span class="kw">define</span> (new-if predicate then-clause else-clause)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>good-enough?</code>
+</li>
+<li class="imports__name">
+<code>improve</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (new-if predicate then-clause else-clause)
   (<span class="kw">cond</span> (predicate then-clause)
         (<span class="kw">else</span> else-clause)))
 
@@ -265,7 +313,21 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h3 id="ex1.7.1" class="anchor">
 <a class="anchor__link link" href="#ex1.7.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.1">Exercise 1.7.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> <span class="fu">sqrt</span>)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>sqrt</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>The <code>good-enough?</code> predicate does not work well for small numbers because the tolerance is fixed. If the number is smaller than the tolerance, the result will be hopelessly inaccurate, like measuring an atom with a yard stick.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="co">; should be 0</span>
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="co">; should be 1e-10</span></code></pre>
@@ -275,7 +337,21 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h3 id="ex1.7.2" class="anchor">
 <a class="anchor__link link" href="#ex1.7.2" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.2">Exercise 1.7.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> improve)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>improve</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (good-enough? g1 g2)
   <span class="co">;; Note: unlike `infinite?`, the negation of `finite?` will catch NaN.</span>
@@ -298,9 +374,22 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h3 id="ex1.8" class="anchor">
 <a class="anchor__link link" href="#ex1.8" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.8">Exercise 1.8<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)))
-
-(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
 (<span class="kw">define</span> (cbrt-iter guess x)
   (<span class="kw">if</span> (good-enough? guess x)
       guess
@@ -318,7 +407,21 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h2 id="1.1.8" class="anchor">
 <a class="anchor__link link" href="#1.1.8" aria-hidden="true">#</a> <span class="number">1.1.8</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_sec_1.1.8">Procedures as Black-Box Abstractions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.7</span> average)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#1.1.7">1.1.7</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>average</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>The following two procedures should be indistinguishable:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
 (<span class="kw">define</span> (square x) (exp (<span class="fu">+</span> (<span class="fu">log</span> x) (<span class="fu">log</span> x))))</code></pre>

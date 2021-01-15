@@ -70,13 +70,99 @@
 <h2 id="2.5.1" class="anchor">
 <a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> add-rat denom div-rat mul-rat numer sub-rat) (:<span class="cn">2.4.2</span> attach-tag)
-       (:<span class="cn">2.4.3</span> add-complex apply-generic apply-specific div-complex
-               make-from-mag-ang make-from-real-imag mul-complex polar-pkg
-               rectangular-pkg sub-complex using)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.1</span> make-rat)))
-
-(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-rat</code>
+</li>
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>div-rat</code>
+</li>
+<li class="imports__name">
+<code>mul-rat</code>
+</li>
+<li class="imports__name">
+<code>numer</code>
+</li>
+<li class="imports__name">
+<code>sub-rat</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>attach-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-complex</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>apply-specific</code>
+</li>
+<li class="imports__name">
+<code>div-complex</code>
+</li>
+<li class="imports__name">
+<code>make-from-mag-ang</code>
+</li>
+<li class="imports__name">
+<code>make-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>mul-complex</code>
+</li>
+<li class="imports__name">
+<code>polar-pkg</code>
+</li>
+<li class="imports__name">
+<code>rectangular-pkg</code>
+</li>
+<li class="imports__name">
+<code>sub-complex</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="1.html#ex2.1">Ex 2.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-rat</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
 (<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
 (<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
 (<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
@@ -139,11 +225,67 @@
 <h3 id="ex2.77" class="anchor">
 <a class="anchor__link link" href="#ex2.77" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.77">Exercise 2.77<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">1.1.4</span> square)
-       (:<span class="cn">2.4.3</span> angle apply-generic imag-part magnitude real-part using)
-       (:<span class="cn">2.5.1</span> complex-pkg make-complex-from-real-imag) (:<span class="cn">3.3.3.3</span> get put)))
-
-(<span class="kw">define</span> (complex-components-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="../1/1.html#1.1.4">1.1.4</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>square</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>angle</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>imag-part</code>
+</li>
+<li class="imports__name">
+<code>magnitude</code>
+</li>
+<li class="imports__name">
+<code>real-part</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>complex-pkg</code>
+</li>
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (complex-components-pkg)
   (put <span class="cn">&#39;real-part</span> &#39;(complex) real-part)
   (put <span class="cn">&#39;imag-part</span> &#39;(complex) imag-part)
   (put <span class="cn">&#39;magnitude</span> &#39;(complex) magnitude)
@@ -168,9 +310,33 @@
 <h3 id="ex2.78" class="anchor">
 <a class="anchor__link link" href="#ex2.78" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.78">Exercise 2.78<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">3.3.3.3</span> get put)))
-
-(<span class="kw">define</span> (attach-tag type-tag contents)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (attach-tag type-tag contents)
   (<span class="kw">if</span> (<span class="fu">eq?</span> type-tag <span class="cn">&#39;scheme-number</span>)
       contents
       (<span class="fu">cons</span> type-tag contents)))
@@ -199,12 +365,70 @@
 <h3 id="ex2.79" class="anchor">
 <a class="anchor__link link" href="#ex2.79" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.79">Exercise 2.79<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.3</span> apply-generic imag-part real-part using)
-       (:<span class="cn">2.5.1</span> make-complex-from-mag-ang make-complex-from-real-imag
-               make-rational make-scheme-number numeric-pkg)
-       (:<span class="cn">3.3.3.3</span> put)))
-
-(<span class="kw">define</span> (equ-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>imag-part</code>
+</li>
+<li class="imports__name">
+<code>real-part</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-mag-ang</code>
+</li>
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-rational</code>
+</li>
+<li class="imports__name">
+<code>make-scheme-number</code>
+</li>
+<li class="imports__name">
+<code>numeric-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (equ-pkg)
   (put <span class="cn">&#39;equ?</span> &#39;(scheme-number scheme-number) <span class="fu">=</span>)
   (put <span class="cn">&#39;equ?</span> &#39;(rational rational)
        (<span class="kw">lambda</span> (x y)
@@ -231,12 +455,67 @@
 <h3 id="ex2.80" class="anchor">
 <a class="anchor__link link" href="#ex2.80" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.80">Exercise 2.80<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> numer) (:<span class="cn">2.4.3</span> apply-generic imag-part real-part using)
-       (:<span class="cn">2.5.1</span> make-complex-from-mag-ang make-complex-from-real-imag
-               make-rational make-scheme-number numeric-pkg)
-       (:<span class="cn">3.3.3.3</span> put)))
-
-(<span class="kw">define</span> (zero-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>imag-part</code>
+</li>
+<li class="imports__name">
+<code>real-part</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-mag-ang</code>
+</li>
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-rational</code>
+</li>
+<li class="imports__name">
+<code>make-scheme-number</code>
+</li>
+<li class="imports__name">
+<code>numeric-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (zero-pkg)
   (put <span class="cn">&#39;=zero?</span> &#39;(scheme-number) <span class="fu">zero?</span>)
   (put <span class="cn">&#39;=zero?</span> &#39;(rational)
        (<span class="kw">lambda</span> (x) (<span class="fu">zero?</span> (numer x))))
@@ -257,11 +536,58 @@
 <h2 id="2.5.2" class="anchor">
 <a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a> <span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.2">Combining Data of Different Types<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> contents type-tag) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-scheme-number numeric-pkg)
-       (:<span class="cn">3.3.3.3</span> get put)))
-
-(<span class="kw">define</span> (get-coercion type1 type2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-scheme-number</code>
+</li>
+<li class="imports__name">
+<code>numeric-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (get-coercion type1 type2)
   (get <span class="cn">&#39;coerce</span> (<span class="fu">list</span> type1 type2)))
 (<span class="kw">define</span> (put-coercion type1 type2 coerce)
   (put <span class="cn">&#39;coerce</span> (<span class="fu">list</span> type1 type2) coerce))
@@ -303,11 +629,72 @@
 <h3 id="ex2.81" class="anchor">
 <a class="anchor__link link" href="#ex2.81" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.81">Exercise 2.81<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> attach-tag contents type-tag) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.1</span> complex-pkg make-complex-from-real-imag)
-       (:<span class="cn">2.5.2</span> apply-generic get-coercion put-coercion) (:<span class="cn">3.3.3.3</span> get put)))
-
-(<span class="kw">define</span> (identity-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>complex-pkg</code>
+</li>
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.2">2.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>get-coercion</code>
+</li>
+<li class="imports__name">
+<code>put-coercion</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (identity-pkg)
   (<span class="kw">define</span> (scheme-number-&gt;scheme-number n) n)
   (<span class="kw">define</span> (complex-&gt;complex z) z)
   (put-coercion <span class="cn">&#39;scheme-number</span> <span class="cn">&#39;scheme-number</span> scheme-number-&gt;scheme-number)
@@ -355,12 +742,78 @@
 <h3 id="ex2.82" class="anchor">
 <a class="anchor__link link" href="#ex2.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> attach-tag contents type-tag) (:<span class="cn">2.4.3</span> add-complex using)
-       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-scheme-number numeric-pkg)
-       (:<span class="cn">2.5.2</span> add get-coercion install-scheme-number-&gt;complex-package)
-       (:<span class="cn">3.3.3.3</span> get put)))
-
-(<span class="kw">define</span> (get-coercion-or-id from to)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-complex</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-scheme-number</code>
+</li>
+<li class="imports__name">
+<code>numeric-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.2">2.5.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>get-coercion</code>
+</li>
+<li class="imports__name">
+<code>install-scheme-number-&gt;complex-package</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (get-coercion-or-id from to)
   (<span class="kw">if</span> (<span class="fu">eq?</span> from to)
       (<span class="kw">lambda</span> (x) x)
       (get-coercion from to)))
@@ -409,13 +862,78 @@
 <h3 id="ex2.83" class="anchor">
 <a class="anchor__link link" href="#ex2.83" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.83">Exercise 2.83<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.2</span> attach-tag)
-       (:<span class="cn">2.4.3</span> apply-generic apply-specific using)
-       (:<span class="cn">2.5.1</span> add complex-pkg <span class="fu">div</span> make-complex-from-real-imag make-rational
-               rational-pkg)
-       (:<span class="cn">3.3.3.3</span> put)))
-
-(<span class="kw">define</span> (integer-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>attach-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>apply-specific</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>complex-pkg</code>
+</li>
+<li class="imports__name">
+<code>div</code>
+</li>
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-rational</code>
+</li>
+<li class="imports__name">
+<code>rational-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (integer-pkg)
   (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;integer</span> x))
   (put <span class="cn">&#39;add</span> &#39;(integer integer) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
   (put <span class="cn">&#39;sub</span> &#39;(integer integer) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
@@ -469,11 +987,72 @@
 <h3 id="ex2.84" class="anchor">
 <a class="anchor__link link" href="#ex2.84" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.84">Exercise 2.84<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.2</span> contents type-tag) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-rational) (:<span class="cn">3.3.3.3</span> get)
-       (?<span class="cn">2.83</span> extended-numeric-pkg make-integer make-real <span class="kw">raise</span> raise-pkg)))
-
-(<span class="kw">define</span> numeric-tower
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-rational</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.83">Ex 2.83</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>extended-numeric-pkg</code>
+</li>
+<li class="imports__name">
+<code>make-integer</code>
+</li>
+<li class="imports__name">
+<code>make-real</code>
+</li>
+<li class="imports__name">
+<code>raise</code>
+</li>
+<li class="imports__name">
+<code>raise-pkg</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> numeric-tower
   &#39;(integer rational real complex))
 
 (<span class="kw">define</span> (tower-bottom? type) (<span class="fu">eq?</span> type <span class="cn">&#39;integer</span>))
@@ -526,13 +1105,114 @@
 <h3 id="ex2.85" class="anchor">
 <a class="anchor__link link" href="#ex2.85" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.85">Exercise 2.85<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.2</span> contents type-tag) (:<span class="cn">2.4.3</span> real-part using)
-       (:<span class="cn">2.5.1</span> make-complex-from-real-imag make-rational) (:<span class="cn">3.3.3.3</span> get put)
-       (?<span class="cn">2.79</span> equ-pkg equ?)
-       (?<span class="cn">2.83</span> extended-numeric-pkg make-integer make-real <span class="kw">raise</span> raise-pkg)
-       (?<span class="cn">2.84</span> tower-bottom? tower-position tower-top?)))
-
-(<span class="kw">define</span> (project-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>real-part</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-rational</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>get</code>
+</li>
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.79">Ex 2.79</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>equ-pkg</code>
+</li>
+<li class="imports__name">
+<code>equ?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.83">Ex 2.83</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>extended-numeric-pkg</code>
+</li>
+<li class="imports__name">
+<code>make-integer</code>
+</li>
+<li class="imports__name">
+<code>make-real</code>
+</li>
+<li class="imports__name">
+<code>raise</code>
+</li>
+<li class="imports__name">
+<code>raise-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.84">Ex 2.84</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>tower-bottom?</code>
+</li>
+<li class="imports__name">
+<code>tower-position</code>
+</li>
+<li class="imports__name">
+<code>tower-top?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (project-pkg)
   (<span class="kw">define</span> (complex-&gt;real x)
     (make-real (real-part x)))
   (<span class="kw">define</span> (real-&gt;rational x)
@@ -597,14 +1277,146 @@
 <h3 id="ex2.86" class="anchor">
 <a class="anchor__link link" href="#ex2.86" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.86">Exercise 2.86<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.2</span> attach-tag contents type-tag)
-       (:<span class="cn">2.4.3</span> angle apply-specific imag-part magnitude make-from-mag-ang
-               make-from-real-imag real-part using)
-       (:<span class="cn">2.5.1</span> make-complex-from-mag-ang make-complex-from-real-imag
-               make-rational rational-pkg)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.79</span> equ-pkg equ?)
-       (?<span class="cn">2.83</span> integer-pkg make-integer make-real raise-pkg real-pkg)
-       (?<span class="cn">2.85</span> add apply-generic <span class="fu">div</span> mul project-pkg sub)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.2">2.4.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>angle</code>
+</li>
+<li class="imports__name">
+<code>apply-specific</code>
+</li>
+<li class="imports__name">
+<code>imag-part</code>
+</li>
+<li class="imports__name">
+<code>magnitude</code>
+</li>
+<li class="imports__name">
+<code>make-from-mag-ang</code>
+</li>
+<li class="imports__name">
+<code>make-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>real-part</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-complex-from-mag-ang</code>
+</li>
+<li class="imports__name">
+<code>make-complex-from-real-imag</code>
+</li>
+<li class="imports__name">
+<code>make-rational</code>
+</li>
+<li class="imports__name">
+<code>rational-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.79">Ex 2.79</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>equ-pkg</code>
+</li>
+<li class="imports__name">
+<code>equ?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.83">Ex 2.83</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>integer-pkg</code>
+</li>
+<li class="imports__name">
+<code>make-integer</code>
+</li>
+<li class="imports__name">
+<code>make-real</code>
+</li>
+<li class="imports__name">
+<code>raise-pkg</code>
+</li>
+<li class="imports__name">
+<code>real-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.85">Ex 2.85</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>div</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>project-pkg</code>
+</li>
+<li class="imports__name">
+<code>sub</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>This has to be built on top of the numeric tower, rather than just the types from Section 2.5.1 (scheme-number, rational, complex) because we need coercions between all the types. For example, internally complex numbers will take sines, cosines, square roots, etc. of their components, so if they are integers, they will need to be promoted to real numbers, and then be combined in other operations potentially using different data types.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (mul x x))
 
@@ -741,10 +1553,72 @@
 <h3 id="2.5.3.1" class="anchor">
 <a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a> <span class="number">2.5.3.1</span> Arithmetic on polynomials
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable?)
-       (:<span class="cn">2.5.3.2</span> adjoin-term coeff empty-termlist? first-term make-term order
-                 rest-terms the-empty-termlist)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> add attach-tag mul)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>adjoin-term</code>
+</li>
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>
+</li>
+<li class="imports__name">
+<code>rest-terms</code>
+</li>
+<li class="imports__name">
+<code>the-empty-termlist</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <p>Note: We are following Footnote 58 and using the generic arithmetic system from Exercise 2.78, where Scheme numbers are not explicitly tagged.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (variable p) (<span class="fu">car</span> p))
 (<span class="kw">define</span> (term-list p) (<span class="fu">cdr</span> p))
@@ -800,9 +1674,30 @@
 <h3 id="2.5.3.2" class="anchor">
 <a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a> <span class="number">2.5.3.2</span> Representing term lists
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> apply-specific) (?<span class="cn">2.78</span> apply-generic)))
-
-(<span class="kw">define</span> (adjoin-term term term-list)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-specific</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
   <span class="co">;; Can&#39;t use `=zero?` from Exercise 2.87 due to import cycle.</span>
   (<span class="kw">if</span> (apply-generic <span class="cn">&#39;=zero?</span> (coeff term))
       term-list
@@ -822,11 +1717,78 @@
 <h3 id="ex2.87" class="anchor">
 <a class="anchor__link link" href="#ex2.87" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.87">Exercise 2.87<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.3.1</span> polynomial-pkg term-list)
-       (:<span class="cn">2.5.3.2</span> coeff empty-termlist? first-term make-polynomial rest-terms)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> add apply-generic mul scheme-number-pkg)))
-
-(<span class="kw">define</span> (zero-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>polynomial-pkg</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>
+</li>
+<li class="imports__name">
+<code>rest-terms</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (zero-pkg)
   (<span class="kw">define</span> (poly-zero? p)
     (<span class="kw">define</span> (all-zero? terms)
       (<span class="kw">or</span> (empty-termlist? terms)
@@ -857,13 +1819,98 @@
 <h3 id="ex2.88" class="anchor">
 <a class="anchor__link link" href="#ex2.88" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.88">Exercise 2.88<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.3.1</span> polynomial-pkg term-list variable)
-       (:<span class="cn">2.5.3.2</span> adjoin-term coeff empty-termlist? first-term make-polynomial
-                 make-term order rest-terms the-empty-termlist)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> add apply-generic scheme-number-pkg)
-       (?<span class="cn">2.87</span> zero-pkg)))
-
-(<span class="kw">define</span> (negate-terms tl)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>polynomial-pkg</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>adjoin-term</code>
+</li>
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>
+</li>
+<li class="imports__name">
+<code>rest-terms</code>
+</li>
+<li class="imports__name">
+<code>the-empty-termlist</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (negate-terms tl)
   (<span class="kw">if</span> (empty-termlist? tl)
       (the-empty-termlist)
       (<span class="kw">let*</span> ((term (first-term tl))
@@ -892,9 +1939,39 @@
 <h3 id="ex2.89" class="anchor">
 <a class="anchor__link link" href="#ex2.89" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.89">Exercise 2.89<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.5.3.2</span> coeff make-term order the-empty-termlist) (?<span class="cn">2.87</span> =zero?)))
-
-(<span class="kw">define</span> (adjoin-term term term-list)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>
+</li>
+<li class="imports__name">
+<code>the-empty-termlist</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>=zero?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
   (<span class="kw">cond</span> ((=zero? (coeff term)) term-list)
         ((<span class="fu">=</span> (order term) (<span class="fu">length</span> term-list))
          (<span class="fu">cons</span> (coeff term) term-list))
@@ -909,13 +1986,102 @@
 <h3 id="ex2.90" class="anchor">
 <a class="anchor__link link" href="#ex2.90" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.90">Exercise 2.90<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.2</span> same-variable?)
-       (:<span class="cn">2.4.3</span> apply-specific using) (:<span class="cn">2.5.3.1</span> term-list variable)
-       (:<span class="cn">2.5.3.2</span> coeff make-term order) (:<span class="cn">3.3.3.3</span> put)
-       (?<span class="cn">2.78</span> add apply-generic attach-tag mul scheme-number-pkg)
-       (?<span class="cn">2.87</span> =zero?)))
-
-(<span class="kw">define</span> (sparse-termlist-pkg)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-specific</code>
+</li>
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>=zero?</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (sparse-termlist-pkg)
   (<span class="kw">define</span> (the-empty-termlist) &#39;())
   (<span class="kw">define</span> empty-termlist? <span class="fu">null?</span>)
   (<span class="kw">define</span> first-term <span class="fu">car</span>)
@@ -991,15 +2157,128 @@
 <h3 id="ex2.91" class="anchor">
 <a class="anchor__link link" href="#ex2.91" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.91">Exercise 2.91<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable?) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.3.1</span> add-terms mul-term-by-all-terms polynomial-pkg term-list
-                 variable)
-       (:<span class="cn">2.5.3.2</span> adjoin-term make-polynomial make-term)
-       (:<span class="cn">2.5.3.2</span> coeff empty-termlist? first-term order the-empty-termlist)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> apply-generic <span class="fu">div</span> scheme-number-pkg)
-       (?<span class="cn">2.87</span> zero-pkg) (?<span class="cn">2.88</span> negate-pkg negate-terms sub)))
-
-(<span class="kw">define</span> (div-terms l1 l2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-terms</code>
+</li>
+<li class="imports__name">
+<code>mul-term-by-all-terms</code>
+</li>
+<li class="imports__name">
+<code>polynomial-pkg</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>adjoin-term</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>
+</li>
+<li class="imports__name">
+<code>the-empty-termlist</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>div</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.88">Ex 2.88</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-pkg</code>
+</li>
+<li class="imports__name">
+<code>negate-terms</code>
+</li>
+<li class="imports__name">
+<code>sub</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (div-terms l1 l2)
   (<span class="kw">if</span> (empty-termlist? l1)
       (<span class="fu">list</span> (the-empty-termlist)
             (the-empty-termlist))
@@ -1037,15 +2316,124 @@
 <h3 id="ex2.92" class="anchor">
 <a class="anchor__link link" href="#ex2.92" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.92">Exercise 2.92<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable? variable?) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.3.1</span> add-terms mul-term-by-all-terms mul-terms term-list variable)
-       (:<span class="cn">2.5.3.2</span> adjoin-term coeff empty-termlist? first-term make-polynomial
-                 make-term order rest-terms the-empty-termlist)
-       (:<span class="cn">3.3.3.3</span> put)
-       (?<span class="cn">2.78</span> add attach-tag contents mul scheme-number-pkg type-tag)
-       (?<span class="cn">2.87</span> zero-pkg)))
-
-(<span class="kw">define</span> (polynomial? x)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>
+</li>
+<li class="imports__name">
+<code>variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add-terms</code>
+</li>
+<li class="imports__name">
+<code>mul-term-by-all-terms</code>
+</li>
+<li class="imports__name">
+<code>mul-terms</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>adjoin-term</code>
+</li>
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>
+</li>
+<li class="imports__name">
+<code>rest-terms</code>
+</li>
+<li class="imports__name">
+<code>the-empty-termlist</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>contents</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>
+</li>
+<li class="imports__name">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (polynomial? x)
   (<span class="fu">eq?</span> (type-tag x) <span class="cn">&#39;polynomial</span>))
 
 (<span class="kw">define</span> (variable&lt;? a b)
@@ -1123,11 +2511,96 @@
 <h3 id="ex2.93" class="anchor">
 <a class="anchor__link link" href="#ex2.93" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.93">Exercise 2.93<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.1</span> make-rational)
-       (:<span class="cn">2.5.3.1</span> polynomial-pkg) (:<span class="cn">2.5.3.2</span> make-polynomial) (:<span class="cn">3.3.3.3</span> put)
-       (?<span class="cn">2.78</span> add attach-tag <span class="fu">div</span> mul scheme-number-pkg sub) (?<span class="cn">2.87</span> zero-pkg)))
-
-(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-rational</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>polynomial-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-polynomial</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>div</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>
+</li>
+<li class="imports__name">
+<code>sub</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
 
 (<span class="kw">define</span> (add-rat x y)
   (make-rat (add (mul (numer x) (denom y))
@@ -1158,13 +2631,98 @@
 <h3 id="ex2.94" class="anchor">
 <a class="anchor__link link" href="#ex2.94" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.94">Exercise 2.94<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.3.2</span> same-variable?) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.3.1</span> polynomial-pkg term-list variable)
-       (:<span class="cn">2.5.3.2</span> empty-termlist? make-polynomial) (:<span class="cn">3.3.3.3</span> put)
-       (?<span class="cn">2.78</span> apply-generic scheme-number-pkg) (?<span class="cn">2.87</span> zero-pkg)
-       (?<span class="cn">2.88</span> negate-pkg) (?<span class="cn">2.91</span> div-terms)))
-
-(<span class="kw">define</span> (remainder-terms l1 l2)
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>polynomial-pkg</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.88">Ex 2.88</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.91">Ex 2.91</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>div-terms</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">define</span> (remainder-terms l1 l2)
   (<span class="fu">cadr</span> (div-terms l1 l2)))
 
 (<span class="kw">define</span> (gcd-terms a b)
@@ -1197,12 +2755,87 @@
 <h3 id="ex2.95" class="anchor">
 <a class="anchor__link link" href="#ex2.95" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.95">Exercise 2.95<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.3.1</span> polynomial-pkg) (:<span class="cn">2.5.3.2</span> make-polynomial)
-       (?<span class="cn">2.78</span> <span class="fu">div</span> mul scheme-number-pkg) (?<span class="cn">2.87</span> zero-pkg) (?<span class="cn">2.88</span> negate-pkg)
-       (?<span class="cn">2.91</span> polynomial-div-pkg)
-       (?<span class="cn">2.94</span> greatest-common-divisor greatest-common-divisor-pkg)))
-
-(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>polynomial-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-polynomial</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>div</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.88">Ex 2.88</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.91">Ex 2.91</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>polynomial-div-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.94">Ex 2.94</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>greatest-common-divisor</code>
+</li>
+<li class="imports__name">
+<code>greatest-common-divisor-pkg</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        greatest-common-divisor-pkg)
 
 (<span class="kw">define</span> p1 (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">-2</span>) (<span class="cn">0</span> <span class="cn">1</span>))))
@@ -1226,15 +2859,152 @@
 <h3 id="ex2.96" class="anchor">
 <a class="anchor__link link" href="#ex2.96" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.96">Exercise 2.96<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.2</span> same-variable?) (:<span class="cn">2.4.3</span> using)
-       (:<span class="cn">2.5.3.1</span> mul-term-by-all-terms polynomial-pkg term-list variable)
-       (:<span class="cn">2.5.3.2</span> coeff empty-termlist? first-term make-polynomial make-term
-                 order rest-terms)
-       (:<span class="cn">3.3.3.3</span> put) (?<span class="cn">2.78</span> mul scheme-number-pkg) (?<span class="cn">2.87</span> zero-pkg)
-       (?<span class="cn">2.88</span> negate-pkg) (?<span class="cn">2.91</span> div-terms polynomial-div-pkg)
-       (?<span class="cn">2.94</span> greatest-common-divisor remainder-terms) (?<span class="cn">2.95</span> p1 q1 q2)))
-
-(<span class="kw">paste</span> (?<span class="cn">2.94</span> greatest-common-divisor-pkg))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul-term-by-all-terms</code>
+</li>
+<li class="imports__name">
+<code>polynomial-pkg</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>empty-termlist?</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>
+</li>
+<li class="imports__name">
+<code>rest-terms</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.88">Ex 2.88</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.91">Ex 2.91</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>div-terms</code>
+</li>
+<li class="imports__name">
+<code>polynomial-div-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.94">Ex 2.94</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>greatest-common-divisor</code>
+</li>
+<li class="imports__name">
+<code>remainder-terms</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.95">Ex 2.95</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>p1</code>
+</li>
+<li class="imports__name">
+<code>q1</code>
+</li>
+<li class="imports__name">
+<code>q2</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
+<pre><code class="blockcode">(<span class="kw">paste</span> (?<span class="cn">2.94</span> greatest-common-divisor-pkg))</code></pre>
 <ol type="a">
 <li>GCD with integer coefficients</li>
 </ol>
@@ -1283,14 +3053,165 @@
 <h3 id="ex2.97" class="anchor">
 <a class="anchor__link link" href="#ex2.97" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.97">Exercise 2.97<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">  (<span class="kw">use</span> (:<span class="cn">2.1.1</span> denom numer) (:<span class="cn">2.2.3.1</span> accumulate) (:<span class="cn">2.3.2</span> same-variable?)
-       (:<span class="cn">2.4.3</span> using) (:<span class="cn">2.5.1</span> make-rational)
-       (:<span class="cn">2.5.3.1</span> mul-term-by-all-terms polynomial-pkg term-list variable)
-       (:<span class="cn">2.5.3.2</span> coeff first-term make-polynomial make-term order)
-       (:<span class="cn">3.3.3.3</span> put)
-       (?<span class="cn">2.78</span> add apply-generic attach-tag <span class="fu">div</span> mul scheme-number-pkg sub)
-       (?<span class="cn">2.87</span> zero-pkg) (?<span class="cn">2.88</span> negate-pkg) (?<span class="cn">2.91</span> div-terms polynomial-div-pkg)
-       (?<span class="cn">2.96</span> gcd-terms termlist-coeffs)))</code></pre>
+<aside class="imports">
+<h4>
+Imports
+</h4>
+<ul class="imports__list">
+<li class="imports__item">
+<a href="1.html#2.1.1">2.1.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>denom</code>
+</li>
+<li class="imports__name">
+<code>numer</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="2.html#2.2.3.1">2.2.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>accumulate</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="3.html#2.3.2">2.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>same-variable?</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="4.html#2.4.3">2.4.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>using</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.1">2.5.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>make-rational</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.1">2.5.3.1</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>mul-term-by-all-terms</code>
+</li>
+<li class="imports__name">
+<code>polynomial-pkg</code>
+</li>
+<li class="imports__name">
+<code>term-list</code>
+</li>
+<li class="imports__name">
+<code>variable</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#2.5.3.2">2.5.3.2</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>coeff</code>
+</li>
+<li class="imports__name">
+<code>first-term</code>
+</li>
+<li class="imports__name">
+<code>make-polynomial</code>
+</li>
+<li class="imports__name">
+<code>make-term</code>
+</li>
+<li class="imports__name">
+<code>order</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="../3/3.html#3.3.3.3">3.3.3.3</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>put</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.78">Ex 2.78</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>add</code>
+</li>
+<li class="imports__name">
+<code>apply-generic</code>
+</li>
+<li class="imports__name">
+<code>attach-tag</code>
+</li>
+<li class="imports__name">
+<code>div</code>
+</li>
+<li class="imports__name">
+<code>mul</code>
+</li>
+<li class="imports__name">
+<code>scheme-number-pkg</code>
+</li>
+<li class="imports__name">
+<code>sub</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.87">Ex 2.87</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>zero-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.88">Ex 2.88</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>negate-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.91">Ex 2.91</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>div-terms</code>
+</li>
+<li class="imports__name">
+<code>polynomial-div-pkg</code>,
+</li>
+</ul>
+</li>
+<li class="imports__item">
+<a href="#ex2.96">Ex 2.96</a>
+<ul class="imports__list">
+<li class="imports__name">
+<code>gcd-terms</code>
+</li>
+<li class="imports__name">
+<code>termlist-coeffs</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <ol type="a">
 <li>Reduce a rational function to lowest terms</li>
 </ol>
