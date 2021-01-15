@@ -163,7 +163,7 @@ function internal_link(el)
     local num = el.target:sub(2)
     local title, target
     local frag = ""
-    if sigil == ":" then
+    if sigil == "@" then
         local lecture, rest = num:match("^(%d+[ab])(.*)$")
         if lecture then
             title = "Lecture&nbps;" .. lecture:upper()
@@ -179,6 +179,17 @@ function internal_link(el)
                 if #num > 3 then
                     frag = "#" .. num
                 end
+            end
+        end
+    elseif sigil == ":" then
+        title = "§&nbsp;" .. num
+        if #num == 1 then
+            target = "exercise/" .. num .. "/index.html"
+        else
+            local chap, sec = num:match("^(%d)%.(%d)")
+            target = "exercise/" .. chap .. "/" .. sec .. ".html"
+            if #num > 3 then
+                frag = "#" .. num
             end
         end
     elseif sigil == "?" then

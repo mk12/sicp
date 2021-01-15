@@ -96,7 +96,7 @@ Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](
 
 - Heading labels: `# 1A: Foo`, `## 1.2: Bar`.
 - LaTeX math: inline `$...$`, display `$$...$$`.
-- Internal links: `[](:1.2.3)` (Section 1.2.3 of the textbook), `[previous lecture](:2b)` (Lecture 2B), `[](?1.23)` (Exercise 1.23).
+- Internal links: `[](@1.2.3)` (Section 1.2.3 of the textbook), `[previous lecture](@2b)` (Lecture 2B), `[](:1.2)` (Section 1.2 in the exercises), `[](?1.23)` (Exercise 1.23).
 - Citations: `[@1.2.3]` (Section 1.2.3 of the textbook), `[@1.2.fn42]` (footnote 42 on the Section 1.2 page), `[@1a.p3]` (page 3 of the transcript for Lecture 1A).
 - Code blocks implicitly receive the `scheme` language class.
 - Quotes wrapped with `::: highlight`/`:::` go on the Highlights page.
