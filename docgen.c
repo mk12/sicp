@@ -945,7 +945,8 @@ static void render_import(
             ir->depth++;
             first = true;
             if (ir->depth == 1) {
-                fputs("<ul class=\"imports\">\n", out);
+                fputs("<aside class=\"imports\"><h4>Imports</h4>"
+                    "<ul class=\"imports__list\">\n", out);
             } else if (ir->depth == 2) {
                 fputs("<li class=\"imports__item\">\n", out);
             }
@@ -959,21 +960,30 @@ static void render_import(
         case '\n':
         case ')':
             if (ir->depth == 2 && start != -1) {
+                int len = i - start;
+                char *ptr = line.data + start;
                 if (first) {
+                    const char sigil = ptr[0];
+                    ptr++; len--;
+                    const char *prefix = sigil == '?' ? "Ex&nbsp;" : "";
                     fprintf(out,
-                        "<span class=\"imports__id\">[](%.*s)</span>"
+                        "[%s%.*s](%c%.*s)"
                         "<ul class=\"imports__list\">\n",
-                        i - start, line.data + start);
+                        prefix, len, ptr, sigil, len, ptr);
                 } else {
-                    fprintf(out, "<li class=\"imports__name\">`%.*s`</li>\n",
-                        i - start, line.data + start);
+                    const char *punct = "";
+                    if (c == ')' && !(i < line.len && line.data[i+1] == ')')) {
+                        punct = ",";
+                    }
+                    fprintf(out, "<li class=\"imports__name\">`%.*s`%s</li>\n",
+                        len, ptr, punct);
                 }
             }
             if (c == ')') {
                 if (ir->depth == 2) {
                     fputs("</ul></li>\n", out);
                 } else if (ir->depth == 1) {
-                    fputs("</ul>\n", out);
+                    fputs("</ul></aside>\n", out);
                 }
                 // Avoid going to -1 when we encounter the heading's ')', which
                 // is on the same line as the use-block's ')'.

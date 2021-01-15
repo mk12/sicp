@@ -9,8 +9,9 @@
 - go over all exercises and fix up
 - decide on styling for exercise headings (tabular numbers makes external link look bad)
 - fix exercise link for 1.7.1, 1.7.2
-- implement (use) block styling
-- links between text & exercise sections
++ implement use-block styling
+x links between text & exercise sections
+    x no, too confusing
 + different sigil for text/lecture links (since :1.2.3 is exercise section)
 + implement exercise intralinking in lua filter
 x problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in exercise numbers are relevant due to imports; but subsubsections (h3) have no underline making number look weird

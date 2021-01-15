@@ -1133,7 +1133,7 @@ z2 => '((a b) a b)
             (else (error 'make-table "unknown operation" m))))
     dispatch))
 
-;; This is used extensively in Chapter 2.
+;; This is used extensively in [Chapter 2](:2).
 (define operation-table (make-table))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
