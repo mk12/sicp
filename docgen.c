@@ -920,6 +920,74 @@ static void render_literate(
     }
 }
 
+// State for rendering (use (id name ...) ...) blocks as nested lists.
+struct ImportRenderer {
+    // Number of unclosed parens in the use-block.
+    int depth;
+};
+
+// Creates a new import renderer.
+static struct ImportRenderer new_import_renderer(void) {
+    return (struct ImportRenderer){
+        .depth = 0,
+    };
+}
+
+// Renders imports from the given line.
+static void render_import(
+        struct ImportRenderer *ir, FILE *out, struct Span line) {
+    int start = -1;
+    bool first = true;
+    for (int i = 0; i < line.len; i++) {
+        char c = line.data[i];
+        switch (c) {
+        case '(':
+            ir->depth++;
+            first = true;
+            if (ir->depth == 1) {
+                fputs("<ul class=\"imports\">\n", out);
+            } else if (ir->depth == 2) {
+                fputs("<li class=\"imports__item\">\n", out);
+            }
+            break;
+        default:
+            if (start == -1) {
+                start = i;
+            }
+            break;
+        case ' ':
+        case '\n':
+        case ')':
+            if (ir->depth == 2 && start != -1) {
+                if (first) {
+                    fprintf(out,
+                        "<span class=\"imports__id\">[](%.*s)</span>"
+                        "<ul class=\"imports__list\">\n",
+                        i - start, line.data + start);
+                } else {
+                    fprintf(out, "<li class=\"imports__name\">`%.*s`</li>\n",
+                        i - start, line.data + start);
+                }
+            }
+            if (c == ')') {
+                if (ir->depth == 2) {
+                    fputs("</ul></li>\n", out);
+                } else if (ir->depth == 1) {
+                    fputs("</ul>\n", out);
+                }
+                // Avoid going to -1 when we encounter the heading's ')', which
+                // is on the same line as the use-block's ')'.
+                if (ir->depth > 0) {
+                    ir->depth--;
+                }
+            }
+            first = false;
+            start = -1;
+            break;
+        }
+    }
+}
+
 // Returns the sector for the given textbook chapter/section.
 static Sector make_sector(int chapter, int section) {
     return (Sector)chapter | ((Sector)section << DS_BITS);
@@ -1642,7 +1710,7 @@ static bool gen_exercise_chapter(const char *output) {
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, text_url_num(target_sector));
     render_heading(proc.in, 2, SPAN("exercises"), TITLE_HEADING("Exercises"), NULL);
-    fputs("<ol class=\"exercise-list\">\n", proc.in);
+    fputs("<ol class=\"exercises\">\n", proc.in);
     int section = 0;
     do {
         if (scan.level == 2) {
@@ -1650,7 +1718,7 @@ static bool gen_exercise_chapter(const char *output) {
         } else if (scan.level == DS_EXERCISE_LEVEL) {
             int exercise = DS_INDEX(scan.sector, DS_EXERCISE_LEVEL);
             fprintf(proc.in,
-                "<li class=\"exercise-list__item\">"
+                "<li class=\"exercises__item\">"
                 "<a href=\"%d.html#ex%d.%d\">%d.%02d</a>"
                 "</li>\n",
                 section, chapter, exercise, chapter, exercise);
@@ -1713,11 +1781,9 @@ static bool gen_exercise_section(const char *output) {
     render_heading(proc.in, 1, NULL_SPAN, h,
         "%s-%d.html", TEXT_URL_BASE, page_num);
     struct LiterateRenderer lr = new_literate_renderer();
-    // Nesting depth inside (use (id name ...) ...).
-    int use_depth = 0;
+    struct ImportRenderer ir = new_import_renderer();
     while (scan_ss(&scan) && scan.level != 1 && scan.level != 2) {
         if (scan.level >= 3) {
-            use_depth = 0;
             end_literate_section(&lr, proc.in);
             h = parse_ss_heading(scan.line);
             assert(h.label.data);
@@ -1728,66 +1794,21 @@ static bool gen_exercise_section(const char *output) {
             } else if (scan.level == 4) {
                 render_heading(proc.in, 3, h.label, h, NULL);
             } else if (scan.level == DS_EXERCISE_LEVEL) {
-                struct Span label = h.label;
-                h.label = NULL_SPAN;
-                char buf[SZ_HEADING];
-                snprintf(buf, sizeof buf,
-                    "Exercise %.*s", label.len, label.data);
-                h.title = SPAN(buf);
-
-                char id_buf[SZ_LABEL];
-                snprintf(id_buf, sizeof id_buf, "ex%.*s", label.len, label.data);
-                struct Span id = SPAN(id_buf);
-                render_heading(proc.in, 3, /* h.label */ id, h,
+                struct Span num = h.label;
+                char id_buf[SZ_LABEL], title_buf[SZ_HEADING];
+                snprintf(id_buf, sizeof id_buf, "ex%.*s", num.len, num.data);
+                snprintf(title_buf, sizeof title_buf,
+                    "Exercise %.*s", num.len, num.data);
+                h = (struct Heading){
+                    .label = NULL_SPAN,
+                    .title = SPAN(title_buf),
+                };
+                render_heading(proc.in, 3, SPAN(id_buf), h,
                     "%s-%d.html#%%25_thm_%.*s", TEXT_URL_BASE, page_num,
-                    label.len, label.data);
+                    num.len, num.data);
             }
         } else if (scan.use) {
-            int start = -1;
-            bool first = true;
-            for (int i = 0; i < scan.line.len; i++) {
-                char c = scan.line.data[i];
-                switch (c) {
-                case '(':
-                    use_depth++;
-                    first = true;
-                    if (use_depth == 1) {
-                        fputs("<ul class=\"\">\n", proc.in);
-                    } else if (use_depth == 2) {
-                        fputs("<li class=\"\">\n", proc.in);
-                    }
-                    break;
-                default:
-                    if (start == -1) {
-                        start = i;
-                    }
-                    break;
-                case ' ':
-                case '\n':
-                case ')':
-                    if (use_depth == 2 && start != -1) {
-                        if (first) {
-                            fprintf(proc.in,
-                                "<span class=\"\">%.*s</span><ul class=\"\">\n",
-                                i - start, scan.line.data + start);
-                        } else {
-                            fprintf(proc.in, "<li class=\"\">%.*s</li>\n",
-                                i - start, scan.line.data + start);
-                        }
-                    }
-                    if (c == ')') {
-                        if (use_depth == 2) {
-                            fputs("</ul></li>\n", proc.in);
-                        } else if (use_depth == 1) {
-                            fputs("</ul>\n", proc.in);
-                        }
-                        use_depth--;
-                    }
-                    first = false;
-                    start = -1;
-                    break;
-                }
-            }
+            render_import(&ir, proc.in, scan.line);
         } else {
             render_literate(&lr, proc.in, scan.line);
         }
