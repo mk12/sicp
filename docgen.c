@@ -1119,9 +1119,10 @@ static bool extract_chapter_section(
 }
 
 // Returns the "prev" link for a chapter page, possibly using the given buffer.
-static const char *href_chapter_prev(int chapter, char *buf, int cap) {
+static const char *href_chapter_prev(
+        int chapter, bool text, char *buf, int cap) {
     if (chapter == 1) {
-        return "../" LANGUAGE ".html";
+        return text ? "../" FRONT ".html" : "../" LANGUAGE ".html";
     }
     snprintf(buf, cap, "../%d/%d.html", chapter - 1, num_sections(chapter - 1));
     return buf;
@@ -1338,7 +1339,7 @@ static bool gen_text_chapter(const char *output) {
         .output = STDOUT,
         .dest = output,
         .title = title,
-        .prev = href_chapter_prev(chapter, prev_buf, sizeof prev_buf),
+        .prev = href_chapter_prev(chapter, true, prev_buf, sizeof prev_buf),
         .up = HREF(PARENT INDEX),
         .next = HREF("1"),
     })) {
@@ -1705,7 +1706,7 @@ static bool gen_exercise_chapter(const char *output) {
         .output = STDOUT,
         .dest = output,
         .title = title,
-        .prev = href_chapter_prev(chapter, prev_buf, sizeof prev_buf),
+        .prev = href_chapter_prev(chapter, false, prev_buf, sizeof prev_buf),
         .up = HREF(PARENT INDEX),
         .next = HREF("1"),
     })) {
