@@ -7,7 +7,7 @@
 - have special callout thing at end of text sections with exercise links
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
-- fix exercise link for 1.7.1, 1.7.2
++ fix exercise link for 1.7.1, 1.7.2
 x decide on styling for exercise headings (tabular numbers makes external link look bad)
     x only looked bad when they were lined up without any body
 + implement use-block styling

@@ -219,8 +219,8 @@ circumference ~> 62.8318
 ;; evaluates the else-clause, which contains the recursive call, so the
 ;; recursion will never end.
 
-(Exercise ?1.7.1
-  (use (:1.1.7 sqrt)))
+(Exercise ?1.7
+  (use (:1.1.7 improve sqrt)))
 
 ;; The `good-enough?` predicate does not work well for small numbers because the
 ;; tolerance is fixed. If the number is smaller than the tolerance, the result
@@ -237,9 +237,6 @@ circumference ~> 62.8318
 (sqrt 1e14) ~> 1e7
 ; (sqrt 1e20) ; never terminates
 
-(Exercise ?1.7.2
-  (use (:1.1.7 improve)))
-
 ;; Here is an alternative implementation of `sqrt` that watches how `guess`
 ;; changes from one iteration to the next and stops when the change is a very
 ;; small fraction of the guess.
@@ -254,9 +251,10 @@ circumference ~> 62.8318
     (if (good-enough? guess better)
         guess
         (sqrt-iter better x))))
-(define (sqrt x)
-  (sqrt-iter 1.0 x))
+(set! sqrt (lambda (x) (sqrt-iter 1.0 x)))
 
+;; (We use `set!` because shadowing imports with `define` is not allowed.)
+;;
 ;; It works much better for small numbers. For zero, it works because even
 ;; though the `guess` change is always a 50% reduction, it eventually gets so
 ;; small that it becomes NaN, and the algorithm terminates.
