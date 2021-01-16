@@ -117,7 +117,7 @@ To view the website, open [docs/index.html](docs/index.html) in your browser.
 
 The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, and math.
 
-The math is the most complicated, because [KaTeX][] is implemented in JavaScript, not Lua. Instead of invoking it directly, the Lua filter communicates over a Unix pipe with [katex.ts](notes/pandoc/katex.ts), a [Deno][] server that uses the KaTeX module.
+The math is the most complicated, because [KaTeX][] is implemented in JavaScript, not Lua. Instead of invoking it directly, the Lua filter communicates over a Unix pipe with [katex.ts](notes/pandoc/katex.ts), a [Deno][] server that uses the KaTeX module. The filter uses [luaposix][] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
 
 Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml].
 
@@ -187,7 +187,7 @@ This works in Chez Scheme and Racket. It also works in Guile, but only the inter
 Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only) `./deps.sh install` to install them.
 
 - [Chez Scheme][], [Guile][], and [Racket][]: Scheme implementations.
-- [Pandoc][]: Used to build the website.
+- [Pandoc][]: Used to build the website. Must be dynamically linked to libc.
 - [Lua][] and [luaposix][]: Used in the Pandoc filter.
 - [Deno][]: Used to run a server that pre-renders math with [KaTeX][].
 - [vnu][]: Used to validate HTML files.
@@ -213,6 +213,7 @@ See [LICENSE](LICENSE.md) for details.
 [Pandoc Markdown]: https://pandoc.org/MANUAL.html#pandocs-markdown
 [Lua]: https://www.lua.org
 [luaposix]: https://github.com/luaposix/luaposix
+[static]: https://github.com/jgm/pandoc/issues/3986
 [Deno]: https://deno.land
 [KaTeX]: https://katex.org
 [vnu]: https://validator.github.io/validator/
