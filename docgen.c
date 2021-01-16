@@ -945,7 +945,7 @@ static void render_import(
             ir->depth++;
             first = true;
             if (ir->depth == 1) {
-                fputs("<aside class=\"imports\"><h4>Imports</h4>"
+                fputs("<aside class=\"imports\"><h4>Imports:</h4>"
                     "<ul class=\"imports__list\">\n", out);
             } else if (ir->depth == 2) {
                 fputs("<li class=\"imports__item\">\n", out);
