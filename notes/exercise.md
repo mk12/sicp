@@ -77,8 +77,6 @@ To avoid confusion, shadowing imports is not allowed:
 (define x 2) ; ERROR: imported x is shadowed by local definition
 ```
 
-### Hoisting
-
 Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:
 
 ```

@@ -61,7 +61,7 @@ h3 { font-size: 1.17em; }
 
 h1 { margin: 0.77em 0; }
 h2 { margin: 0.93em 0 0.835em; }
-h3 { margin: 1.1em 0; }
+h3 { margin: 1.2em 0 0.855em; }
 
 /* Can't put the border on h2 because .anchor adds left padding. */
 h2::after {
@@ -238,7 +238,7 @@ h1 code, h2 code, h3 code, .toc__item code {
 }
 
 .imports {
-    margin: -0.5em 0 1.5em;
+    margin: -0.5em 0 1.25em;
 }
 
 /* Page layout */

@@ -6,6 +6,10 @@
 - reconsider → in lecture 6a
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
+- add all the exercise links mechanically
+- fix headings in language.html
+- linkify `paste` IDs
++ fix h3 heading spacing (appears uneven after blockquote/code)
 + have special callout thing at end of text sections with exercise links
 x clang-format C sources
     x don't like it
