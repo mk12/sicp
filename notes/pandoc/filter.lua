@@ -72,17 +72,28 @@ function div(el)
     assert(false, "bad div class: " .. el.classes[1])
 end
 
+local last_exercise_range_end
+
 -- Converts a "::: exercises" div to a list of exercise links.
 function exercises_div(el)
     assert(#el.content == 1, "bad div size: " .. #el.content)
     assert(el.content[1].t == "Para", "bad tag: " .. el.content[1].t)
     local range = pandoc.utils.stringify(el)
     local chap, from, to = range:match("(%d)%.(%d+)-(%d+)")
+    if not chap then
+        chap, from = range:match("(%d)%.(%d+)")
+        to = from
+    end
     assert(chap, "bad exercise range: " .. range)
     local links = {}
     chap = tonumber(chap)
     from = tonumber(from)
     to = tonumber(to)
+    if last_exercise_range_end then
+        assert(from == last_exercise_range_end + 1,
+            "gap after exercise " .. tostring(last_exercise_range_end))
+    end
+    last_exercise_range_end = to
     for ex = from, to do
         local target, frag = exercise_target(chap, ex)
         local href = relpath(vars.id .. ".html", target) .. frag

@@ -43,7 +43,7 @@ body {
     line-height: 1.4;
 }
 
-p, ul, ol, blockquote, pre, aside { margin-top: 1em; }
+p, ul, ol, blockquote, pre { margin-top: 1em; }
 p:first-child, li ul, li ol { margin-top: 0; }
 
 ul { margin-left: 1.05em; }
@@ -79,7 +79,10 @@ h4 {
     font-style: italic;
 }
 
-aside { font-size: 0.8em; }
+aside {
+    font-size: 0.8em;
+    margin-top: 1.25em;
+}
 
 em, cite {
     font-style: italic;

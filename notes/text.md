@@ -152,7 +152,7 @@ An example of normal order procedure application:
 - Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures.
 
 ::: exercises
-1.1-6
+1.1-5
 :::
 
 ### 1.1.7: Example: Square Roots by Newton's Method
@@ -162,6 +162,10 @@ An example of normal order procedure application:
 - In mathematics, you can say "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$." This is not a procedure.
 - Mathematical functions describes things (declarative knowledge); procedures describe how to do things (imperative knowledge).
 - Declarative is _what is_, imperative is _how to_.
+
+::: exercises
+1.6-8
+:::
 
 ### 1.1.8: Procedures as Black-Box Abstractions
 
@@ -240,6 +244,10 @@ An example of normal order procedure application:
 - A recursive _process_ refers to the evolution of the process described above.
 - A recursive procedure can generate an iterative process in Scheme thanks to tail-call optimization. In other languages, special-purpose looping constructs are needed for this.
 
+::: exercises
+1.9-10
+:::
+
 ### 1.2.2: Tree Recursion
 
 - With tree recursion, the procedure invokes itself more than once, causing the process to evolve in the shape of a tree.
@@ -265,6 +273,10 @@ $$
 
 Like Fibonacci, the easy tree-recursive implementation involves a lot of redundancy. Unlike it, there is no obvious iterative solution (it is possible, just harder). One way to improve the performance of the tree-recursive process is to use _memoization_ (maintaining a lookup table).
 
+::: exercises
+1.11-13
+:::
+
 ### 1.2.3: Orders of Growth
 
 - Some processes consume more or less computational resources than others.
@@ -277,6 +289,10 @@ if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) 
 - The linear recursive process for computing factorials had $Θ(n)$ time and $Θ(n)$ space (both linear), whereas the linear iterative process had $Θ(1)$ space (constant).
 - The order of growth is a crude description of the behavior of a process.
 - Its importance is allowing us to see the _change_ in the amount of resources required when you, say, increment $n$ or double $n$.
+
+::: exercises
+1.14-15
+:::
 
 ### 1.2.4: Exponentiation
 
@@ -292,6 +308,10 @@ b^n = \begin{cases}
 b * b^{n-1}, & \text{if $n$ is odd.}
 \end{cases}
 $$
+
+::: exercises
+1.16-19
+:::
 
 ### 1.2.5: Greatest Common Divisors
 
@@ -311,6 +331,10 @@ $$
 - This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.
 - This is called _Euclid's Algorithm_.
 - Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair $(a,b)$, then $\min\{a,b\} ≥ \text{Fib}(k)$.
+
+::: exercises
+1.20
+:::
 
 ### 1.2.6: Example: Testing for Primality
 
@@ -341,6 +365,10 @@ The test works like this:
 
 ::: highlight
 > Numbers that fool the Fermat test are called Carmichael numbers, and little is known about them other than that they are extremely rare. ... In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a "correct" algorithm. Considering an algorithm to be inadequate for the first reason but not for the second illustrates the difference between mathematics and engineering. [@1.2.fn47]
+:::
+
+::: exercises
+1.21-28
 :::
 
 ## 1.3: Formulating Abstractions with Higher-Order Procedures
