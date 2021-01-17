@@ -68,12 +68,21 @@ Here, `:1.1` imports `x` from `:1`, and `y` and `z` from `?1.1`. This implies th
 
 You will not see expressions like `(Chapter ...)` and `(Section ...)` elsewhere on this website because they are converted to HTML headings. Likewise, the `(use ...)` blocks are converted to compact HTML lists set in a smaller font.
 
+To avoid confusion, shadowing imports is not allowed:
+
+```
+(Exercise ?1.1
+  (use (:1.1 x)))
+
+(define x 2) ; ERROR: imported x is shadowed by local definition
+```
+
 ### Hoisting
 
 Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:
 
 ```
-(Section :1.1)
+(Exercise ?1.1)
 
 (display x) ; prints #<void> in chez
 (display y) ; ERROR: y is undefined
