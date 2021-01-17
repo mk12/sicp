@@ -90,7 +90,6 @@ endif
 
 fmt:
 	find . -type f -name "*.ts" | xargs deno fmt
-	@echo "TODO: clang-format"
 
 lint: lintscheme
 	find . -type f -name "*.sh" | xargs shellcheck

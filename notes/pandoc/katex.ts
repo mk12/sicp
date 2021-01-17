@@ -11,7 +11,7 @@ const SCRIPT_NAME = "katex.ts";
 const COLOR = !Deno.noColor && Deno.isatty(1) && Deno.isatty(2);
 const RED = COLOR ? "\x1b[31;1m" : "";
 const RESET = COLOR ? "\x1b[0m" : "";
-const ERROR = `${RED}ERROR:${RESET}`
+const ERROR = `${RED}ERROR:${RESET}`;
 
 // Prints the usage message using the given writing function.
 function usage(write: (s: string) => void) {
@@ -99,7 +99,7 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
 
   // In order to serve clients concurrently, we do _not_ await handle(conn).
   for await (const conn of listener) {
-    handle(conn).catch(ex => {
+    handle(conn).catch((ex) => {
       console.error(`${ERROR} ${ex}`);
     }).finally(() => {
       conn.close();

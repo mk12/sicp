@@ -7,6 +7,8 @@
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
 - have special callout thing at end of text sections with exercise links
+x clang-format C sources
+    x don't like it
 + fixup highlights of `use`, `:1.2`, `?1.2`, etc.
 + finish writeup for exercise/language
 + finish writeup for exercise/index
