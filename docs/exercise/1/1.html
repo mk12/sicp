@@ -121,7 +121,7 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 </h2>
 <aside class="imports">
 <h4>
-Imports
+Imports:
 </h4>
 <ul class="imports__list">
 <li class="imports__item">
@@ -243,7 +243,7 @@ Imports
 </h2>
 <aside class="imports">
 <h4>
-Imports
+Imports:
 </h4>
 <ul class="imports__list">
 <li class="imports__item">
@@ -282,7 +282,7 @@ Imports
 </h3>
 <aside class="imports">
 <h4>
-Imports
+Imports:
 </h4>
 <ul class="imports__list">
 <li class="imports__item">
@@ -310,17 +310,20 @@ Imports
           guess
           (sqrt-iter (improve guess x) x)))</code></pre>
 <p>When Alyssa attempts to use this to compute square roots, it will not work. The <code>sqrt</code> procedure will never return a value because it gets stuck in <code>sqrt-iter</code> due to infinite recursion. The <code>new-if</code> combination always evaluates the else-clause, which contains the recursive call, so the recursion will never end.</p>
-<h3 id="ex1.7.1" class="anchor">
-<a class="anchor__link link" href="#ex1.7.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.1">Exercise 1.7.1<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<h3 id="ex1.7" class="anchor">
+<a class="anchor__link link" href="#ex1.7" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7">Exercise 1.7<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
-Imports
+Imports:
 </h4>
 <ul class="imports__list">
 <li class="imports__item">
 <a href="#1.1.7">1.1.7</a>
 <ul class="imports__list">
+<li class="imports__name">
+<code>improve</code>
+</li>
 <li class="imports__name">
 <code>sqrt</code>
 </li>
@@ -334,24 +337,6 @@ Imports
 <p>The test is inadequate for very large numbers. With limited precision, it is impossible to represent small differences between very large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
 <span class="co">; (sqrt 1e20) ; never terminates</span></code></pre>
-<h3 id="ex1.7.2" class="anchor">
-<a class="anchor__link link" href="#ex1.7.2" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.7.2">Exercise 1.7.2<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
-</h3>
-<aside class="imports">
-<h4>
-Imports
-</h4>
-<ul class="imports__list">
-<li class="imports__item">
-<a href="#1.1.7">1.1.7</a>
-<ul class="imports__list">
-<li class="imports__name">
-<code>improve</code>
-</li>
-</ul>
-</li>
-</ul>
-</aside>
 <p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (good-enough? g1 g2)
   <span class="co">;; Note: unlike `infinite?`, the negation of `finite?` will catch NaN.</span>
@@ -363,8 +348,8 @@ Imports
     (<span class="kw">if</span> (good-enough? guess better)
         guess
         (sqrt-iter better x))))
-(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
-  (sqrt-iter <span class="cn">1.0</span> x))</code></pre>
+(<span class="kw">set!</span> <span class="fu">sqrt</span> (<span class="kw">lambda</span> (x) (sqrt-iter <span class="cn">1.0</span> x)))</code></pre>
+<p>(We use <code>set!</code> because shadowing imports with <code>define</code> is not allowed.)</p>
 <p>It works much better for small numbers. For zero, it works because even though the <code>guess</code> change is always a 50% reduction, it eventually gets so small that it becomes NaN, and the algorithm terminates.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0</span>
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">1e-10</span></code></pre>
@@ -376,7 +361,7 @@ Imports
 </h3>
 <aside class="imports">
 <h4>
-Imports
+Imports:
 </h4>
 <ul class="imports__list">
 <li class="imports__item">
@@ -409,7 +394,7 @@ Imports
 </h2>
 <aside class="imports">
 <h4>
-Imports
+Imports:
 </h4>
 <ul class="imports__list">
 <li class="imports__item">
