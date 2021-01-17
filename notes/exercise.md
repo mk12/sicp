@@ -5,7 +5,7 @@ This project supports three Scheme implementations: [Chez Scheme][], [Guile][], 
 These webpages are [generated][] directly from source code.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
-[next section]: language.html
+[next section]: language.html "A Note on the Language"
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
 [Chez Scheme]: https://cisco.github.io/ChezScheme/ "Chez Scheme"
@@ -66,7 +66,7 @@ We can import from other modules like so:
 
 Here, `:1.1` imports `x` from `:1`, and `y` and `z` from `?1.1`. This implies that `:1.1` must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, [Chapter 2](:2) depends heavily on two-dimensional tables, which are not implemented until [](:3.3.3.3).
 
-You will not see blocks like `(Chapter ...)` and `(Section ...)` elsewhere on this website because they are converted to HTML headings. Likewise, the `(use ...)` blocks are converted to compact HTML lists set in a smaller font.
+You will not see expressions like `(Chapter ...)` and `(Section ...)` elsewhere on this website because they are converted to HTML headings. Likewise, the `(use ...)` blocks are converted to compact HTML lists set in a smaller font.
 
 ### Hoisting
 
@@ -119,7 +119,7 @@ Starting in [Chapter 2](:2), many modules use [data-directed programming](@2.4.3
 ; tests go here
 ```
 
-The `using` procedure defined in [](:2.4.3) resets the global table and installs the given packages. There is no automatic tracking of dependencies, so `using` calls must list everything explicitly. The package system has no special support in the language, but it's worth explaining here because so many modules use it.
+The `using` procedure defined in [](:2.4.3) resets the global table and installs the given packages. There is no automatic tracking of dependencies, so `using` calls must list everything explicitly. This package system is not part of the language, but it's worth explaining here because so many modules use it.
 
 ## Assertions
 
@@ -159,7 +159,7 @@ test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 
 ### Inexact
 
-The `~>` operator asserts that floating-point numbers are approximately equal, using an absolute tolerance of $10^{-10}$. For example:
+The `~>` operator asserts that floating-point numbers are approximately equal using an absolute tolerance of $10^{-10}$. For example:
 
 ```
 (* 4 (atan 1)) ~> 3.141592653589793
@@ -169,22 +169,91 @@ Like `=>`, it can be chained. Each item is compared to the previous one, not to 
 
 When `(* 4 (atan 1)) ~> 3.14` fails, the output looks like this:
 
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(* 4 (atan 1))</span>
+=> <span class="cn">3.141592653589793</span>
+
+right: <span class="fu">3.14</span>
+=> <span class="cn">3.14</span>
+
+delta: <span class="cn">0.0015926535897929917</span> > 1e-10
+
+test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+
 ### Output
+
+The `=$>` operator captures standard output. For example:
+
+```
+(display "hello") =$> "hello"
+```
+
+If the right-hand side is a list, it is not evaluated but instead treated as a list of lines. By convention these lists use square brackets, which are interchangeable with parentheses in R6RS but not used anywhere else in this project.
+
+```
+(define (foo)
+  (display "hello")
+  (newline)
+  (display "world"))
+
+(foo) =$> ["hello" "world"]
+```
+
+Newlines occurring at the beginning, end, or after another newline are ignored:
+
+```
+(display "\nOne\n\nTwo\n\n\nThree\n") =$> ["One" "Two" "Three"]
+```
+
+When `(display "pong\nping") =$> ["ping" "pong"]` fails, the output looks like this:
+
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(display "pong\nping")</span>
+=> [<span class="yl">"pong"</span>
+    <span class="yl">"ping"</span>]
+
+right:
+=> [<span class="yl">"ping"</span>
+    <span class="yl">"pong"</span>]
+
+test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
 
 ### Error
 
-<!--
-Tests use `=>`, `~>`, `=$>`, and `=!>`:
+The `=!>` operator asserts that an error will occur. For example:
 
 ```
-(+ 1 2 3) => (+ 3 2 1) => 6            ; => asserts equality
-
-(+ 1.0 0.1) ~> (- 1.2 0.1) ~> 1.1      ; ~> allows a small margin of error
-
-(display "hi") =$> "hi"                ; =$> "..." tests standard output
-(display "hi\nbye\n") =$> ["hi" "bye"] ; =$> [...] splits lines
-
-(error 'foo "bad" 3) =!> "foo: bad: 3" ; =!> tests the error message
-(error 'foo "bad" 3) =!> "bad"         ; any substring will do
+(error 'foo "oops" 1 2) =!> "foo: oops: 1 2"
 ```
--->
+
+The assertion passes if the right-hand side occurs as a substring in the representation `«who»: «message»: «irritants»`. Thus, `(f) =!> ""` passes as long as `(f)` raises _any_ error. This operator works best for errors raised by user code, as opposed to system errors. For example, `(/ 1 0)` fails in all Schemes, but they all use different error messages.
+
+When `(+ 1 2) =!> "disaster"` fails, the output looks like this:
+
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(+ 1 2)</span>
+=> <span class="cn">3</span>
+
+right:
+=!> ... <span class="co">disaster</span> ...
+
+test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+
+When `(error 'foo "catastrophe" 1) =!> "disaster"` fails, the output looks like this:
+
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(error 'foo "catastrophe" 1)</span>
+=!> <span class="co">foo: catastrophe: 1</span>
+
+right:
+=!> ... <span class="co">disaster</span> ...
+
+test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>

@@ -438,12 +438,14 @@ body {
 .fu { color: #0060d5; }
 .cn { color: #307a06; }
 .co { color: #c0392b; }
+.yl { color: #986801; } /* used in language.html */
 
 @media (prefers-color-scheme: dark) {
     .kw { color: #c678dd; }
     .fu { color: #61afef; }
     .cn { color: #98c379; }
     .co { color: #e7727b; }
+    .yl { color: #e5c07b; }
 }
 
 .op {
@@ -457,6 +459,4 @@ body {
     text-underline-offset: 2px;
 }
 
-.bo {
-    font-weight: bold;
-}
+.bo { font-weight: bold; } /* used in language.html */

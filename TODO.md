@@ -7,8 +7,8 @@
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
 - have special callout thing at end of text sections with exercise links
-- finish writeup for exercise/index
-- finish writeup for exercise/language
++ finish writeup for exercise/language
++ finish writeup for exercise/index
 + exercise/language heading anchors
 + figure out the whole lua module symbol stuff
 + fix exercise link for 1.7.1, 1.7.2

@@ -90,6 +90,8 @@ We can also unhygienically paste code, but only from earlier sections in the sam
 (inc 42) => 41
 ```
 
+For more details, see [A Note on the Language][note].
+
 ## Notes
 
 Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](notes/lecture.md). They are written [Pandoc Markdown][], with some extras implemented by the [website generator](#website):
@@ -204,6 +206,7 @@ See [LICENSE](LICENSE.md) for details.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [the website]: https://mk12.github.io/sicp
+[note]: https://mk12.github.io/sicp/exercise/language.html
 [lectures]: https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
 [R6RS Scheme]: http://www.r6rs.org
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
