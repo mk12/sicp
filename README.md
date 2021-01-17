@@ -102,6 +102,7 @@ Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](
 - Citations: `[@1.2.3]` (Section 1.2.3 of the textbook), `[@1.2.fn42]` (footnote 42 on the Section 1.2 page), `[@1a.p3]` (page 3 of the transcript for Lecture 1A).
 - Code blocks implicitly receive the `scheme` language class.
 - Quotes wrapped with `::: highlight`/`:::` go on the Highlights page.
+- Ranges like `1.1-6` wrapped with `::: exercises`/`:::` produce a list of exercise links.
 
 ## Website
 

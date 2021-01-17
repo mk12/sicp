@@ -61,9 +61,43 @@ local highlight_fwd = false
 -- True if the page has a backward reference from notes to highlights.
 local highlight_bwd = false
 
--- Styles and links blockquotes marked with the "::: highlight" div.
+-- Processes "::: exercises" and "::: highlight" divs.
+function div(el)
+    assert(#el.classes == 1, "bad number of classes")
+    if el.classes[1] == "exercises" then
+        return exercises_div(el)
+    elseif el.classes[1] == "highlight" then
+        return highlight_div(el)
+    end
+    assert(false, "bad div class: " .. el.classes[1])
+end
+
+-- Converts a "::: exercises" div to a list of exercise links.
+function exercises_div(el)
+    assert(#el.content == 1, "bad div size: " .. #el.content)
+    assert(el.content[1].t == "Para", "bad tag: " .. el.content[1].t)
+    local range = pandoc.utils.stringify(el)
+    local chap, from, to = range:match("(%d)%.(%d+)-(%d+)")
+    assert(chap, "bad exercise range: " .. range)
+    local links = {}
+    chap = tonumber(chap)
+    from = tonumber(from)
+    to = tonumber(to)
+    for ex = from, to do
+        local target, frag = exercise_target(chap, ex)
+        local href = relpath(vars.id .. ".html", target) .. frag
+        table.insert(links,
+            string.format(
+                '<li class="flat__item"><a href="%s">%d.%d</a>%s</li>',
+                href, chap, ex, ex == to and "" or ", "))
+    end
+    return {pandoc.RawBlock("html",
+        '<aside><h4>Exercises:</h4> <ul class="flat">'
+        .. table.concat(links) .. '</ul></aside>')}
+end
+
+-- Styles and links blockquotes marked with the "::: highlight" div
 function highlight_div(el)
-    assert(el.classes[1] == "highlight", "bad class: " .. el.classes[1])
     assert(#el.content == 1, "bad div size: " .. #el.content)
     assert(el.content[1].t == "BlockQuote", "bad tag: " .. el.content[1].t)
     local aria, href, content
@@ -155,67 +189,78 @@ local last_exercise_in_section = {
     { 6, 19, 22, 30, 52 },
 }
 
+-- Returns the path and fragment for an exercise.
+function exercise_target(chap, ex)
+    local sec
+    for i, last in ipairs(last_exercise_in_section[chap]) do
+        if ex <= last then
+            sec = i
+            break
+        end
+    end
+    local num = string.format('%d.%d', chap, ex)
+    assert(sec, "exercise " .. num .. " out of range")
+    return "exercise/" .. tostring(chap) .. "/" .. tostring(sec) .. ".html",
+        "#ex" .. num
+end
+
+-- Returns the path and fragment for an internal link.
+function internal_target(sigil, num)
+    if sigil == "@" then
+        local lecture, rest = num:match("^(%d+[ab])(.*)$")
+        if lecture then
+            return "lecture/" .. lecture .. ".html", rest:gsub("%.", "#", 1)
+        end
+        if #num == 1 then
+            return "text/" .. num .. "/index.html", ""
+        end
+        local chap, sec = num:match("^(%d)%.(%d)")
+        return "text/" .. chap .. "/" .. sec .. ".html",
+            #num > 3 and "#" .. num or ""
+    end
+    if sigil == ":" then
+        if #num == 1 then
+            return "exercise/" .. num .. "/index.html", ""
+        end
+        local chap, sec = num:match("^(%d)%.(%d)")
+        return "exercise/" .. chap .. "/" .. sec .. ".html",
+            #num > 3 and "#" .. num or ""
+    end
+    assert(sigil == "?", "invalid sigil " .. sigil)
+    local chap, ex = num:match("^(%d)%.(%d+)$")
+    return exercise_target(tonumber(chap), tonumber(ex))
+end
+
 -- Converts links like [](:1.2.3), [](1a), and [](?1.23) -- textbook sections,
 -- lectures, and exercises respectively. If the link content [] is empty, sets
 -- it automatically to § 1.2.3, Lecture 1A, Exercise 1.23, etc.
 function internal_link(el)
     local sigil = el.target:sub(1, 1)
     local num = el.target:sub(2)
-    local title, target
-    local frag = ""
+    local prefix
+    local ident = num
     if sigil == "@" then
-        local lecture, rest = num:match("^(%d+[ab])(.*)$")
+        local lecture = num:match("^(%d+[ab])")
         if lecture then
-            title = "Lecture&nbps;" .. lecture:upper()
-            target = "lecture/" .. lecture .. ".html"
-            frag = rest:gsub("%.", "#", 1)
+            prefix = "Lecture"
+            ident = lecture:upper()
         else
-            title = "§&nbsp;" .. num
-            if #num == 1 then
-                target = "text/" .. num .. "/index.html"
-            else
-                local chap, sec = num:match("^(%d)%.(%d)")
-                target = "text/" .. chap .. "/" .. sec .. ".html"
-                if #num > 3 then
-                    frag = "#" .. num
-                end
-            end
+            prefix = num:find("%.") and "§" or "Chapter"
         end
     elseif sigil == ":" then
-        title = "§&nbsp;" .. num
-        if #num == 1 then
-            target = "exercise/" .. num .. "/index.html"
-        else
-            local chap, sec = num:match("^(%d)%.(%d)")
-            target = "exercise/" .. chap .. "/" .. sec .. ".html"
-            if #num > 3 then
-                frag = "#" .. num
-            end
-        end
+        prefix = num:find("%.") and "§" or "Chapter"
     elseif sigil == "?" then
-        title = "Exercise&nbsp;" .. num
-        local chap, ex = num:match("^(%d)%.(%d+)$")
-        chap = tonumber(chap)
-        ex = tonumber(ex)
-        local sec
-        for i, last in ipairs(last_exercise_in_section[chap]) do
-            if ex <= last then
-                sec = i
-                break
-            end
-        end
-        assert(sec, "exercise " .. num .. " out of range")
-        target = "exercise/" .. tostring(chap) .. "/" .. tostring(sec) .. ".html"
-        frag = "#ex" .. num
+        prefix = "Exercise"
     else
         return
     end
+    local target, frag = internal_target(sigil, num)
     el.target = relpath(vars.id .. ".html", target) .. frag
     if el.target == "" then
         el.target = "#"
     end
     if #el.content == 0 then
-        el.content = {pandoc.RawInline("html", title)}
+        el.content = {pandoc.RawInline("html", prefix .. "&nbsp;" .. ident)}
     end
     return el
 end
@@ -419,7 +464,7 @@ return {
     {Math = render_math},
     {Pandoc = close_socket},
     {Meta = read_meta},
-    {Div = highlight_div},
+    {Div = div},
     {Meta = write_meta},
     {Link = internal_link},
     {CodeBlock = code_block},

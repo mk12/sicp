@@ -946,9 +946,9 @@ static void render_import(
             first = true;
             if (ir->depth == 1) {
                 fputs("<aside class=\"imports\"><h4>Imports:</h4>"
-                    "<ul class=\"imports__list\">\n", out);
+                    "<ul class=\"flat\">\n", out);
             } else if (ir->depth == 2) {
-                fputs("<li class=\"imports__item\">\n", out);
+                fputs("<li class=\"flat__item\">\n", out);
             }
             break;
         default:
@@ -968,14 +968,14 @@ static void render_import(
                     const char *prefix = sigil == '?' ? "Ex&nbsp;" : "";
                     fprintf(out,
                         "[%s%.*s](%c%.*s)"
-                        "<ul class=\"imports__list\">\n",
+                        "<ul class=\"flat\">\n",
                         prefix, len, ptr, sigil, len, ptr);
                 } else {
                     const char *punct = "";
                     if (c == ')' && !(i < line.len && line.data[i+1] == ')')) {
                         punct = ",";
                     }
-                    fprintf(out, "<li class=\"imports__name\">`%.*s`%s</li>\n",
+                    fprintf(out, "<li class=\"flat__item nowrap\">`%.*s`%s</li>\n",
                         len, ptr, punct);
                 }
             }

@@ -151,6 +151,10 @@ An example of normal order procedure application:
 - The `if` conditional can be used when there are two cases.
 - Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures.
 
+::: exercises
+1.1-6
+:::
+
 ### 1.1.7: Example: Square Roots by Newton's Method
 
 > But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. [@1.1.7]

@@ -64,7 +64,7 @@ We can import from other modules like so:
 (define z 3)
 ```
 
-Here, `:1.1` imports `x` from `:1`, and `y` and `z` from `?1.1`. This implies that `:1.1` must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, [Chapter 2](:2) depends heavily on two-dimensional tables, which are not implemented until [](:3.3.3.3).
+Here, `:1.1` imports `x` from `:1`, and `y` and `z` from `?1.1`. This implies that `:1.1` must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, [](:2) depends heavily on two-dimensional tables, which are not implemented until [](:3.3.3.3).
 
 You will not see expressions like `(Chapter ...)` and `(Section ...)` elsewhere on this website because they are converted to HTML headings. Likewise, the `(use ...)` blocks are converted to compact HTML lists set in a smaller font.
 
@@ -111,7 +111,7 @@ If `:2` had imported `inc` instead, the result would be 43 in both cases since `
 
 ### Packages
 
-Starting in [Chapter 2](:2), many modules use [data-directed programming](@2.4.3) to dispatch based on operation names and type tags. Modules define _packages_ (procedures ending in `-pkg`) that install operations in the global table. For example:
+Starting in [](:2), many modules use [data-directed programming](@2.4.3) to dispatch based on operation names and type tags. Modules define _packages_ (procedures ending in `-pkg`) that install operations in the global table. For example:
 
 ```
 (define (real-part z) (apply-generic 'real-part z))

@@ -43,7 +43,7 @@ body {
     line-height: 1.4;
 }
 
-p, ul, ol, blockquote, pre { margin-top: 1em; }
+p, ul, ol, blockquote, pre, aside { margin-top: 1em; }
 p:first-child, li ul, li ol { margin-top: 0; }
 
 ul { margin-left: 1.05em; }
@@ -78,6 +78,8 @@ h4 {
     font-weight: normal;
     font-style: italic;
 }
+
+aside { font-size: 0.8em; }
 
 em, cite {
     font-style: italic;
@@ -145,6 +147,15 @@ h1 code, h2 code, h3 code, .toc__item code {
     scrollbar along the bottom. */
     padding: 15px 0;
     margin: -15px 0;
+}
+
+.flat {
+    margin: 0;
+    display: inline;
+}
+
+.flat__item {
+    display: inline;
 }
 
 .nowrap {
@@ -225,20 +236,6 @@ h1 code, h2 code, h3 code, .toc__item code {
 
 .imports {
     margin: -0.5em 0 1.5em;
-    font-size: 0.8em;
-}
-
-.imports__item {
-    display: inline;
-}
-
-.imports__list {
-    display: inline;
-    margin: 0;
-}
-
-.imports__name {
-    display: inline-block;
 }
 
 /* Page layout */
