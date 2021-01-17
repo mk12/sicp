@@ -11,3 +11,6 @@
 
 # Sockets
 katex.sock
+
+# Downloaded HTML files
+/sicp_html

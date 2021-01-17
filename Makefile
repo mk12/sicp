@@ -121,3 +121,20 @@ vscode: .vscode/tasks.json
 .vscode/%.json: %.json
 	mkdir -p .vscode
 	cp $< $@
+
+# Download SICP HTML files locally. Useful for development.
+sicp_url_prefix := \
+	https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H
+sicp_html:
+	mkdir $@
+	num_sec=(0 3 5 5 4 5); \
+	offset=(0 0 3 8 13 17); \
+	for c in 1 2 3 4 5; do \
+		echo "Chapter $$c ..."; \
+		for s in $$(seq 0 $${num_sec[$$c]}); do \
+			o=$${offset[$$c]}; \
+			n=$$(( 8 + c + o + s )); \
+			curl -s $(sicp_url_prefix)-$$n.html > $@/$$c.$$s.html & \
+		done; \
+		wait; \
+	done
