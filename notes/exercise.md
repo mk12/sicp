@@ -1,26 +1,179 @@
-These are my solutions to the exercises in <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>.
+These are my solutions to the exercises in <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>. The code is written in a language based on [R6RS Scheme][] that provides lightweight modules and assertions, allowing each section to explicitly declare its dependencies and run unit tests. The language is described more in the [next section][].
 
-- webpages generate from code
-- custom langauge built on R6RS
-- works in C/G/R (compatibility shim)
-- also textbook code
-- modules explicit dependencies
+This project supports three Scheme implementations: [Chez Scheme][], [Guile][], and [Racket][]. For each one there is a [compatibility shim][] exposing some features that are not part of R6RS under a common interface.
+
+These webpages are [generated][] directly from source code.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
-[Chez]: https://cisco.github.io/ChezScheme/ "Chez Scheme"
+[next section]: language.html
+[R6RS Scheme]: http://www.r6rs.org
+    "The Revised(6) Report on the Algorithmic Language Scheme"
+[Chez Scheme]: https://cisco.github.io/ChezScheme/ "Chez Scheme"
 [Guile]: https://www.gnu.org/software/guile/ "GNU Guile"
 [Racket]: http://racket-lang.org "Racket programming language"
-[r6rs]: http://www.r6rs.org
-    "The Revised(6) Report on the Algorithmic Language Scheme"
+[compatibility shim]: https://github.com/mk12/sicp/blob/master/src/compat
+[generated]: https://github.com/mk12/sicp#website
 
 # Note on the Language
 
+The code on this website is written in a language based on [R6RS Scheme][]. The language is [implemented][] with macros, and provides two features: modules and assertions.
+
+[R6RS Scheme]: http://www.r6rs.org
+    "The Revised(6) Report on the Algorithmic Language Scheme"
+[implemented]: https://github.com/mk12/sicp/blob/master/src/lang/core.ss
+
 ## Modules
 
-## Tests
+While R6RS provides a module system, using them for hundreds of sections and exercises is impractical. Their verbose syntax and indentation would distract from the flow of the chapter. We also need the flexibility to control module evaluation, for example to only run a subset of tests. This leads us to a custom solution:
 
---------
+```
+(Chapter :1 "Chapter Title")
 
+(define x 1)
+
+(Section :1.1 "Section Title")
+
+(define w (+ x y z)) ; ERROR: x, y, and z are undefined
+
+(Exercise ?1.1)
+
+(define y 2)
+(define z 3)
+```
+
+Although every expression is at the top level, this actually defines three separate modules. Each module has a unique identifier, beginning with the ":" sigil for chapters and sections and the "?" sigil for exercises. Modules do not nest, so `:1` and `:1.1` are equal siblings rather than parent and child.
+
+### Imports
+
+We can import from other modules like so:
+
+```
+(Chapter :1 "Chapter Title")
+
+(define x 1)
+
+(Section :1.1 "Section Title"
+  (use (:1 x) (?1.1 y z)))
+
+(define w (+ x y z)) ; ok
+(set! x 10) ; only affects :1.1
+
+(Exercise ?1.1)
+
+(define y 2)
+(define z 3)
+```
+
+Here, `:1.1` imports `x` from `:1`, and `y` and `z` from `?1.1`. This implies that `:1.1` must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, [Chapter 2](:2) depends heavily on two-dimensional tables, which are not implemented until [](:3.3.3.3).
+
+You will not see blocks like `(Chapter ...)` and `(Section ...)` elsewhere on this website because they are converted to HTML headings. Likewise, the `(use ...)` blocks are converted to compact HTML lists set in a smaller font.
+
+### Hoisting
+
+Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:
+
+```
+(Section :1.1)
+
+(display x) ; prints #<void> in chez
+(display y) ; ERROR: y is undefined
+(define x 1)
+```
+
+### Pasting
+
+The language provides one more feature for code reuse: _pasting_. Modules can unhygienically paste code from an earlier module in the same file: 
+
+```
+(Section :1 "Original")
+
+(define a 1)
+(define (inc x) (+ x a))
+(inc 42) ; 43
+
+(Section :2 "Paste")
+
+(define a -1)
+(paste (:1 inc))
+(inc 42) ; 41
+```
+
+If `:2` had imported `inc` instead, the result would be 43 in both cases since `a` is resolved lexically. Using `paste` is inelegant, but preferable to duplicating code. It is often useful when an exercise asks to make an adjustment to earlier code and there is no dynamic dispatch to hook into.
+
+### Packages
+
+Starting in [Chapter 2](:2), many modules use [data-directed programming](@2.4.3) to dispatch based on operation names and type tags. Modules define _packages_ (procedures ending in `-pkg`) that install operations in the global table. For example:
+
+```
+(define (real-part z) (apply-generic 'real-part z))
+
+(define (rectangular-pkg)
+  (put 'real-part '(rectangular) ...)
+  ...)
+(define (polar-pkg)
+  (put 'real-part '(polar) ...)
+  ...)
+
+(using rectangular-pkg polar-pkg)
+
+; tests go here
+```
+
+The `using` procedure defined in [](:2.4.3) resets the global table and installs the given packages. There is no automatic tracking of dependencies, so `using` calls must list everything explicitly. The package system has no special support in the language, but it's worth explaining here because so many modules use it.
+
+## Assertions
+
+As with modules, standard techniques for assertions are too heavyweight. The mere word "assert" is too verbose for our use case. Instead, the language provides four assertion operators that work at the top level: `=>`, `~>`, `=$>`, and `=!>`. They report detailed information when they fail, including the actual result, expected result, and line number.
+
+### Exact
+
+The `=>` operator is by far the most common. It asserts that the left-hand side is equal to the right-hand side, using `equal?`. For example:
+
+```
+(+ 1 1) => 2
+```
+
+It can also be chained to assert that several expressions are equal, while ensuring that each expression is evaluated only once:
+
+```
+(fact 3)
+=> (* 3 (fact 2))
+=> (* 3 (* 2 (fact 1)))
+=> (* 3 (* 2 1))
+=> (* 3 2)
+=> 6
+```
+
+When `(fact 3) => (fact 5)` fails, the output looks like this:
+
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(fact 3)</span>
+=> <span class="cn">6</span>
+
+right: <span class="fu">(fact 5)</span>
+=> <span class="cn">120</span>
+
+test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+
+### Inexact
+
+The `~>` operator asserts that floating-point numbers are approximately equal, using an absolute tolerance of $10^{-10}$. For example:
+
+```
+(* 4 (atan 1)) ~> 3.141592653589793
+```
+
+Like `=>`, it can be chained. Each item is compared to the previous one, not to the first.
+
+When `(* 4 (atan 1)) ~> 3.14` fails, the output looks like this:
+
+### Output
+
+### Error
+
+<!--
 Tests use `=>`, `~>`, `=$>`, and `=!>`:
 
 ```
@@ -34,59 +187,4 @@ Tests use `=>`, `~>`, `=$>`, and `=!>`:
 (error 'foo "bad" 3) =!> "foo: bad: 3" ; =!> tests the error message
 (error 'foo "bad" 3) =!> "bad"         ; any substring will do
 ```
-
-Code fragments are isolated to their part of the book:
-
-```
-(Chapter :1 "chapter title")  ; The ":" sigil is for the text
-
-(define a 1)  ; This belongs to Chapter 1
-
-(Section :1.1 "section title")
-
-(define b 2)  ; This belongs to Section 1.1
-
-(Section :1.1.1 "subsection title")
-
-(define c 3)  ; This belongs to Subsection 1.1.1
-
-(Exercise ?1.1)  ; The "?" sigil is for exercises
-
-(define d 4)  ; This belongs to Exercise 1.1
-```
-
-We can import definitions out of order:
-
-```
-(Section :1.1 "first section"
-  (use (:1.2 square)))    ; import square from Section 1.2
-
-(define nine (square 3))  ; ok
-(define eight (cube 2))   ; ERROR, 'cube' not defined
-
-(Section :1.2 "second section")
-
-(define (square x) (* x x))
-(define (cube x) (* x x x))
-
-(Exercise ?1.15
-  (use :1.2 square cube))
-
-(define a (+ (square 3) (cube 4)))  ; ok
-```
-
-We can also unhygienically paste code, but only from earlier sections in the same file:
-
-```
-(Section :1 "Original")
-
-(define a 1)
-(define (inc x) (+ x a))
-(inc 42) => 43
-
-(Section :2 "Copy")
-
-(define a -1)
-(paste (:1 inc))
-(inc 42) => 41
-```
+-->
