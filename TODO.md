@@ -9,6 +9,7 @@
 - HTML tables (Exercise 2.60)
 - add all the exercise links mechanically
 - highlight `=$>` and `=!>` differently
++ don't highlight `div`
 + linkify `paste` IDs
     + https://stackoverflow.com/a/54219536
     + https://owickstrom.github.io/pandoc-emphasize-code/

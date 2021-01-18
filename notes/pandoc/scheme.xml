@@ -164,7 +164,8 @@
       <item>denominator</item>
       <item>display</item>
       <item>div-and-mod</item>
-      <item>div</item>
+      <!-- Looks bad when only div is highlighted in add, sub, mul, div. -->
+      <!-- <item>div</item> -->
       <item>div0-and-mod0</item>
       <item>div0</item>
       <item>eq?</item>
