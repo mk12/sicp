@@ -35,7 +35,7 @@ heading_exceptions := \
 validate_exceptions := \
 	'.*“mrow” not allowed as child of element “mo”.*'
 
-.PHONY: all help test docs katex fmt lint lintscheme spell validate clean vscode
+.PHONY: all help test docs katex fmt lint lintss spell validate clean vscode
 
 # Ordered from fastest to slowest, for early feedback.
 all: lint fmt spell docs validate test
@@ -92,7 +92,7 @@ fmt:
 	find . -type f -name "*.c" | xargs clang-format -i
 	find . -type f -name "*.ts" | xargs deno fmt
 
-lint: lintscheme
+lint: lintss
 	find . -type f -name "*.sh" | xargs shellcheck
 	find . -type f -name "*.ts" | xargs deno lint --unstable
 	# Ensure all headings in the code appear in text.md.
@@ -103,7 +103,7 @@ lint: lintscheme
 		| sed 's/^.*"\(.*\)".*$$/\1/;' | sort) \
 	| grep -v '^$(heading_exceptions)$$' | grep '^'
 
-lintscheme: linter
+lintss: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
 
 spell:

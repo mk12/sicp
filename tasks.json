@@ -41,7 +41,7 @@
         {
             "label": "lint",
             "type": "shell",
-            "command": "make lintscheme",
+            "command": "make lintss",
             "group": "build",
             "problemMatcher": {
                 "pattern": {
