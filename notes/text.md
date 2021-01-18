@@ -2085,7 +2085,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 4.1.1: The Core of the Evaluator
 
-#### Eval
+#### `Eval`
 
 - `eval` classifies an expression and directs its evaluation in an environment.
 - We use _abstract syntax_ to avoid committing to a particular syntax in the evaluator.
@@ -2109,7 +2109,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
         (else (error "Unknown expression type: EVAL" exp))))
 ```
 
-#### Apply
+#### `Apply`
 
 - `apply` classifies a procedure and directs its application to a list of arguments.
 - If compound, it evaluates the procedure body in an extended environment.

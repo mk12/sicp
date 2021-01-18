@@ -8,7 +8,7 @@
 - go over all exercises and fix up
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
-- decide on `eval`/`apply` headings
++ decide on `eval`/`apply` headings
 + add all the exercise links mechanically
     + 3.5.2 has the most (example to look at)
 + highlight `=$>` and `=!>` differently
