@@ -656,6 +656,7 @@ static int lint(const char *filename) {
         }
     }
 end:
+    free(line);
     fclose(fp);
     return state.status;
 }

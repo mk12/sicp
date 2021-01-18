@@ -531,8 +531,10 @@ static bool init_md(struct MarkdownScanner *scan, const char *path) {
     return true;
 }
 
-// Closes the file associated with the Markdown line scanner.
+// Closes the Markdown line scanner's file and frees memory for the line.
 static void close_md(struct MarkdownScanner *scan) {
+    free(scan->line.data);
+    scan->line = NULL_SPAN;
     if (scan->file) {
         fclose(scan->file);
         scan->file = NULL;
@@ -605,7 +607,7 @@ static bool init_hl(struct HighlightScanner *scan, const char *path) {
     return true;
 }
 
-// Closes the file associated with the highlight scanner.
+// Closes the highlight scanner's file and frees memory for the line.
 static void close_hl(struct HighlightScanner *scan) { close_md(&scan->md); }
 
 // Advances a highlight scanner to the next line. See also scan_md.
@@ -685,8 +687,10 @@ static bool init_ss(struct SchemeScanner *scan, const char *path) {
     return true;
 }
 
-// Closes the file associated with the Scheme line scanner.
+// Closes the Scheme line scanner's file and frees memory for the line.
 static void close_ss(struct SchemeScanner *scan) {
+    free(scan->line.data);
+    scan->line = NULL_SPAN;
     if (scan->file) {
         fclose(scan->file);
         scan->file = NULL;
@@ -1653,12 +1657,12 @@ static bool gen_exercise_index(const char *output) {
     while (scan_md(&scan) && scan.sector == 0) {
         copy_md(&scan, proc.in);
     }
+    struct Heading language = parse_md_heading(scan.line);
+    assert(!language.label.data);
     close_md(&scan);
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
-    struct Heading h = parse_md_heading(scan.line);
-    assert(!h.label.data);
-    render_toc_item(&tr, proc.in, 1, h, HREF(LANGUAGE));
+    render_toc_item(&tr, proc.in, 1, language, HREF(LANGUAGE));
     for (int i = 0; i < NUM_CHAPTERS; i++) {
         struct SchemeScanner scan;
         if (!init_ss(&scan, SCHEME_FILES[i])) {
