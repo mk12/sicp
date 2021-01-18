@@ -399,6 +399,10 @@ This is a useful abstraction, just as sigma notation in math is useful because t
 
 > The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. [@1.3.1]
 
+::: exercises
+1.29-33
+:::
+
 ### 1.3.2: Constructing Procedures Using `Lambda`
 
 `lambda` creates anonymous procedures. They are just like the procedures created by `define`, but without a name: `(lambda («formal-parameters») «body»)`.
@@ -436,6 +440,10 @@ This is just syntactic sugar for
 - The variables in the let-expression are parallel and independent. They cannot refer to each other, and their order does not matter.
 - You can use let-expressions (`let`, `let*`, and `letrec`) instead of internal definitions (block structure).
 
+::: exercises
+1.34
+:::
+
 ### 1.3.3: Procedures as General Methods
 
 So far, we have seen
@@ -456,6 +464,10 @@ Now we will take it a bit further.
 - A number $x$ is a _fixed point_ of a function if $f(x) = x$.
 - In some cases, repeatedly applying the function to an initial guess will converge on the fixed point.
 - The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.
+
+::: exercises
+1.35-39
+:::
 
 ### 1.3.4: Procedures as Returned Values
 
@@ -518,6 +530,10 @@ Now we can do things like this:
     - They may be included in data structures.
 - In Lisp, procedures have first-class status. This gives us an enormous gain in expressive power.
 
+::: exercises
+1.40-46
+:::
+
 # 2: Building Abstractions with Data
 
 - Recap: we looked at computations processes and the role of procedures in program design.
@@ -576,6 +592,10 @@ Now we can do things like this:
 #### Representing rational numbers
 <!-- DELETE -->
 
+::: exercises
+2.1
+:::
+
 ### 2.1.2: Abstraction Barriers
 
 > In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. [@2.1.2]
@@ -584,6 +604,10 @@ Now we can do things like this:
 - This makes programs easier to maintain and modify.
 
 > Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations. [@2.1.2]
+
+::: exercises
+2.2-3
+:::
 
 ### 2.1.3: What Is Meant by Data?
 
@@ -612,10 +636,18 @@ Now we can do things like this:
 
 - This style of programming is often called _message passing_.
 
+::: exercises
+2.4-6
+:::
+
 ### 2.1.4: Extended Exercise: Interval Arithmetic
 
 - We want to design a system that allows us to manipulate inexact quantities with known precision (uncertainty).
 - To do this, we need arithmetic operations for combining intervals---ranges of possible values.
+
+::: exercises
+2.7-16
+:::
 
 ## 2.2: Hierarchical Data and the Closure Property
 
@@ -667,6 +699,10 @@ Now we can do things like this:
       (cons (car list1 (append (cdr list1) list2)))))
 ```
 
+::: exercises
+2.17-20
+:::
+
 #### Mapping over lists
 
 - Useful operation: applying the same transformation to each element in a list, producing a new list.
@@ -686,6 +722,10 @@ Now we can do things like this:
 
 > This abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. [@2.2.1]
 
+::: exercises
+2.21-23
+:::
+
 ### 2.2.2: Hierarchical Structures
 
 - We can represent lists whose elements themselves may also be lists. We can also think of them as _trees_.
@@ -701,10 +741,18 @@ Now we can do things like this:
                  (count-leaves (cdr x))))))
 ```
 
+::: exercises
+2.24-29
+:::
+
 #### Mapping over trees
 
 - We can deal with trees using `map` together with recursion.
 - This makes it possible to apply an operation to all the leaves in a tree, for example.
+
+::: exercises
+2.30-32
+:::
 
 ### 2.2.3: Sequences as Conventional Interfaces
 
@@ -720,6 +768,10 @@ Now we can do things like this:
 - This is a strategy for controlling complexity.
 - A vast range of operations can be expressed as sequence operations, even if you don't realize it at first.
 - Sequences (here, they are lists) serve as a conventional interface for the modules of the program.
+
+::: exercises
+2.33-39
+:::
 
 #### Nested mappings
 
@@ -738,6 +790,10 @@ Now we can do things like this:
               s)))
 ```
 
+::: exercises
+2.40-43
+:::
+
 ### 2.2.4: Example: A Picture Language
 
 - We will use a simple language for drawing pictures.
@@ -751,10 +807,18 @@ Now we can do things like this:
 - We transform single images with operations like `flip-vert` and `flip-horiz`.
 - We can build up complexity easily because painters are closed under the language's means of combination (this is closure).
 
+::: exercises
+2.44
+:::
+
 #### Higher-order operations
 
 - Just as we have higher-order procedures, we can have higher-order painting operations.
 - We can manipulate the painter operations rather than manipulating the painters directly.
+
+::: exercises
+2.45
+:::
 
 #### Frames
 
@@ -764,16 +828,28 @@ Now we can do things like this:
 - We will use coordinates in the unit square.
 - We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.
 
+::: exercises
+2.46-47
+:::
+
 #### Painters
 
 - A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.
 - The details of primitive painters depend on the characteristics of the graphics system.
 - Painters as procedures is a powerful abstraction barrier.
 
+::: exercises
+2.48-49
+:::
+
 #### Transforming and combining painters
 
 - Operations on painters invoke the original painters with new frames drives from the argument frame.
 - They are all based on the procedure `transform-painter`.
+
+::: exercises
+2.50-51
+:::
 
 #### Levels of language for robust design
 
@@ -784,6 +860,10 @@ Now we can do things like this:
 - Stratified design helps make programs _robust_: small changes in a specification will likely mean small changes in the program.
 
 > In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it. [@2.2.4]
+
+::: exercises
+2.52
+:::
 
 ## 2.3: Symbolic Data
 
@@ -809,6 +889,10 @@ Now we can do things like this:
 
 - We can write lists directly with quotation rather than using `cons` or list, and we can represent the empty list with `'()`.
 - We need one more primitive now: `eq?`. This tests to see if two symbols are the same.
+
+::: exercises
+2.53-55
+:::
 
 ### 2.3.2: Example: Symbolic Differentiation
 
@@ -841,6 +925,10 @@ Now we can do things like this:
 - We can simplify the answers just like we did in the rational number example: by changing the constructors.
 - Simplifying the way a human would is hard, partly because the most "simplified" form is sometimes subjective.
 
+::: exercises
+2.56-58
+:::
+
 ### 2.3.3: Example: Representing Sets
 
 There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:
@@ -859,6 +947,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - If we don't eliminate duplicates, most operations are faster.
 - On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.
 
+::: exercises
+2.59-60
+:::
+
 #### Sets as ordered lists
 
 - A more efficient representation is a sorted list.
@@ -866,6 +958,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Now, scanning the entire list in `element-of-set?` is a worst-case scenario. Most of the time we won't have to.
 - On average we should expect to scan about half of the set.
 - This is still $Θ(n)$; however, intersection gets much faster. Instead of $Θ(n^2)$, it is $Θ(n)$.
+
+::: exercises
+2.61-62
+:::
 
 #### Sets as binary trees
 
@@ -879,6 +975,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Efficiency hinges on the tree being balanced.
 - We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).
 
+::: exercises
+2.63-65
+:::
+
 #### Sets and information retrieval
 
 - The techniques discussed for sets show up again and again in information retrieval.
@@ -887,6 +987,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The simplest, least efficient method is to use a set of records represented by an unordered list. This provides $Θ(n)$ access.
 - For "random access," meaning $Θ(1)$ access time complexity, trees are usually used.
 - Data abstraction is important here---you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
+
+::: exercises
+2.66
+:::
 
 ### 2.3.4: Example: Huffman Encoding Trees
 
@@ -915,6 +1019,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Sets of weighted elements
 <!-- DELETE -->
+
+::: exercises
+2.67-72
+:::
 
 ## 2.4: Multiple Representations for Abstract Data
 
@@ -963,6 +1071,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `(put op type item)` installs `item` in the table.
 - `(get op type)` retrieves the item.
 
+::: exercises
+2.73-74
+:::
+
 #### Message passing
 
 - Data-directed programming handles generic operations by dealing explicitly with operation-and-type tables.
@@ -971,6 +1083,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Rather than applying a generic operation to a data object on which it dispatches to the appropriate procedure, we apply the data object to a message.
 - This is called message-passing style, and we can accomplish it in Scheme using closures.
 - Message passing can be a powerful tool for structuring simulation programs.
+
+::: exercises
+2.75-76
+:::
 
 ## 2.5: Systems with Generic Operations
 
@@ -988,6 +1104,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Just as we did in our first data-directed example, we will install a "package" for each kind of data.
 - For complex numbers we have two levels of tagging: a `'complex` tag on top of the `'rectangular` or `'polar` tag.
 - The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.
+
+::: exercises
+2.77-80
+:::
 
 ### 2.5.2: Combining Data of Different Types
 
@@ -1032,6 +1152,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 > Developing a useful, general framework for expressing the relations among different types of entities (what philosophers call "ontology") seems intractably difficult. The main difference between the confusion that existed ten years ago and the confusion that exists now is that now a variety of inadequate ontological theories have been embodied in a plethora of correspondingly inadequate programming languages. For example, much of the complexity of object-oriented programming languages---and the subtle and confusing differences among contemporary object-oriented languages---centers on the treatment of generic operations on interrelated types. [@2.5.fn52]
 :::
 
+::: exercises
+2.81-86
+:::
+
 ### 2.5.3: Example: Symbolic Algebra
 
 - The manipulation of symbolic algebraic expressions is hard.
@@ -1060,12 +1184,20 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Dense term lists, where most coefficients are nonzero, are best represented by simple lists.
 - Sparse term lists, where there are many zeros, are better represented by some kind of associative list or map.
 
+::: exercises
+2.87-91
+:::
+
 #### Hierarchies of types in symbolic algebra
 
 - Our polynomial system used complex objects that had objects of many different parts as types.
 - It was recursive data abstraction because the terms of the polynomial could themselves be polynomials.
 - The data types in polynomial algebra cannot be arranged in a tower.
 - Controlling coercion is a hard problem in these systems.
+
+::: exercises
+2.92
+:::
 
 #### Extended exercise: Rational functions
 
@@ -1080,6 +1212,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
     4. Divide both by the GCD of all their coefficients.
 - This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.
 - This one is very slow. Probabilistic algorithms are faster.
+
+::: exercises
+2.93-97
+:::
 
 # 3: Modularity, Objects, and State
 
@@ -1192,6 +1328,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
   dispatch)
 ```
 
+::: exercises
+3.1-4
+:::
+
 ### 3.1.2: The Benefits of Introducing Assignment
 
 ::: highlight
@@ -1220,6 +1360,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - If we had to use `rand-update` directly, our Monte Carlo program would betray some painful breaches of modularity.
 
 > The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behavior changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. [@3.1.2]
+
+::: exercises
+3.5-6
+:::
 
 ### 3.1.3: The Costs of Introducing Assignment
 
@@ -1268,6 +1412,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 > In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. [@3.1.3]
 >
 > In view of this, it is ironic that introductory programming is most often taught in a highly imperative style. This may be a vestige of a belief, common throughout the 1960s and 1970s, that programs that call procedures must inherently be less efficient than programs that perform assignments. ... Alternatively it may reflect a view that step-by-step assignment is easier for beginners to visualize than procedure call. Whatever the reason, it often saddles beginning programmers with "should I set this variable before or after that one" concerns that can complicate programming and obscure the important ideas. [@3.1.fn11]
+:::
+
+::: exercises
+3.7-8
 :::
 
 ## 3.2: The Environment Model of Evaluation
@@ -1326,6 +1474,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - In $E_2$, we evaluate `(+ (square x) (square y))`.
 - The process continues recursively. We end up with `(+ 36 100)`, which evaluates to `136`.
 
+::: exercises
+3.9
+:::
+
 ### 3.2.3: Frames as the Repository of Local State
 
 - Now we can see how the environment model makes sense of assignment and local state.
@@ -1354,6 +1506,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - This is independent from $E_1$, which is why the `W2` object and its local state is independent from `W1`.
     - On the other hand, `W1` and `W2` share the same code.
 
+::: exercises
+3.10
+:::
+
 ### 3.2.4: Internal Definitions
 
 - With block structure, we nested definitions using `define` to avoid exposing helper procedures.
@@ -1363,6 +1519,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - When we apply the internal procedures, the formal parameter environment $E_n$ is created, and its enclosing environment is $E_1$ because that was where the procedure was defined.
 - This means each internal procedure has access to the arguments of the procedure they are defined within.
 - The names of local procedures don't interfere with names external to the enclosing procedure, due to $E_1$.
+
+::: exercises
+3.11
+:::
 
 ## 3.3: Modeling with Mutable Data
 
@@ -1385,6 +1545,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
     new))
 ```
 
+::: exercises
+3.12-14
+:::
+
 #### Sharing and identity
 
 - Consider `(define x (list 'a 'b))` and `(define z1 (cons x x))`.
@@ -1398,6 +1562,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We can use the predicate `eq?` to test for sameness in the sense of identity.
 - `(eq? x y)` tests whether `x` and `y` point to the same object.
 - We can exploit sharing for good, but it can be dangerous.
+
+::: exercises
+3.15-19
+:::
 
 #### Mutation is just assignment
 
@@ -1430,6 +1598,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Assignment and mutation are equipotent: each can be implemented in terms of the other.
 
+::: exercises
+3.20
+:::
+
 ### 3.3.2: Representing Queues
 
 - The mutators allow us to construct new data structures.
@@ -1444,6 +1616,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Scanning a list takes $Θ(n)$ operations.
 - A simply modification lets us implement all the operations with $Θ(1)$ time complexity: keep a pointer to the end as well.
 - A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.
+
+::: exercises
+3.21-23
+:::
 
 ### 3.3.3: Representing Tables
 
@@ -1484,6 +1660,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
         (table k))))
 ```
 
+::: exercises
+3.24-27
+:::
+
 ### 3.3.4: A Simulator for Digital Circuits
 
 - Digital circuits are made up of simple elements.
@@ -1509,6 +1689,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - `(add-action! «wire» «procedure-of-no-arguments»)` asserts that the given procedure should be run whenever the signal on the wire changes value.
 - The procedure `after-delay` executes a procedure after a given time delay.
 
+::: exercises
+3.28-30
+:::
+
 #### Representing wires
 
 - Our wires will be computational objects each having two local state variables: `signal-value` and `action-procedures`.
@@ -1533,6 +1717,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### A sample simulation
 <!-- DELETE -->
 
+::: exercises
+3.31
+:::
+
 #### Implementing the agenda
 
 - The agenda is a pair: the current time, and a list of _time segments_ sorted in increasing order of time.
@@ -1540,6 +1728,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - To add an action to the agenda, we scan its segments, examining their times. If we find the right time, we add the action to that segment's queue. Otherwise, we create a new segment.
 - To remove the first agenda item, we delete the first item in the first queue, and if this makes the queue empty, we delete the first time segment as well.
 - Whenever we extract the first item with `first-agenda-item`, we also update the current time.
+
+::: exercises
+3.32
+:::
 
 ### 3.3.5: Propagation of Constraints
 
@@ -1575,6 +1767,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Each time the connector's value is set, it remembers the informant. This could be a constraint, or a symbol like `'user`.
 - `for-each-except` is used to notify all _other_ constraints.
 
+::: exercises
+3.33-37
+:::
+
 ## 3.4: Concurrency: Time Is of the Essence
 
 - The power of stateful computational objects comes at a price: the loss of referential transparency.
@@ -1604,6 +1800,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - A less stringent restriction: to ensure that the system produces the same result as if the processes had run sequentially in some order (we don't specify a particular order).
 - Concurrent programs are inherently _nondeterministic_, because we don't what order of execution its result is equivalent to, so there is a set of possible values it could take.
 
+::: exercises
+3.38
+:::
+
 ### 3.4.2: Mechanisms for Controlling Concurrency
 
 - If one process has three ordered events $(a,b,c)$ and another, running concurrently, has three ordered events $(x,y,z)$, then there are twenty ways of interleaving them.
@@ -1628,6 +1828,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - A serializer takes a procedure as its argument and returns a serialized procedure that behaves like the original.
 - Calls to the same serializer return procedures in the same set.
 
+::: exercises
+3.39-42
+:::
+
 #### Complexity of using multiple shared resources
 
 - Serializers are powerful, and easy to use for one resource.
@@ -1646,6 +1850,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - One solution is to expose the serializer from `make-account`, and use that to serialize the entire exchanging procedure.
 - We would have to manually serialize deposits, but this would give us the flexibility to serialize the exchanging procedure.
 
+::: exercises
+3.43-45
+:::
+
 #### Implementing serializers
 
 - Serializers are implemented in terms of the primitive _mutex_.
@@ -1660,6 +1868,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - To acquire the mutex, we test the cell. We wait until it is false, then we set it to true and proceed.
 - To release the mutex, we set its contents to false.
 
+::: exercises
+3.46-47
+:::
+
 #### Deadlock
 
 - Even with a proper implementation of mutexes and seralizers, we still have a problem with the account exchanging procedure.
@@ -1669,6 +1881,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Now both need to lock the other, but they can't. This situation is called _deadlock_.
 - In this case, we can fix the problem by locking accounts in a particular order based on a unique identifier.
 - In some cases, it is not possible to avoid deadlock, and we simply have to "back out" and try again.
+
+::: exercises
+3.48-49
+:::
 
 #### Concurrency, time, and communication
 
@@ -1708,6 +1924,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `force` simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.
 - The promise stored in the `cdr` of the stream is also known as a _thunk_.
 
+::: exercises
+3.50-52
+:::
+
 ### 3.5.2: Infinite Streams
 
 - With lazy sequences, we can manipulate infinitely long streams!
@@ -1736,6 +1956,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - This implicit technique is known as _corecursion_. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.
 
+::: exercises
+3.53-62
+:::
+
 ### 3.5.3: Exploiting the Stream Paradigm
 
 - Streams can provide many of the benefits of local state and assignment while avoiding some of the theoretical tangles.
@@ -1748,6 +1972,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - To compute the square root, we improved a guess until the values didn't change very much.
 - We can make a stream that converges on the square root of `x`, and a stream to approximate $π$.
 - One neat thing we can do with these streams is use sequence accelerators, such as Euler's transform.
+
+::: exercises
+3.63-65
+:::
 
 #### Infinite streams of pairs
 
@@ -1764,6 +1992,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - More generally, we can combined two streams to get a two-dimensional grid of pairs, and we want to reduce this to a one-dimensional stream.
 - One way to do this is to use `interleave` in the recursive definition, in order to handle infinite streams.
 
+::: exercises
+3.66-72
+:::
+
 #### Streams as signals
 
 - We can use streams to model signal-processing systems.
@@ -1778,6 +2010,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
   int)
 ```
 
+::: exercises
+3.73-76
+:::
+
 ### 3.5.4: Streams and Delayed Evaluation
 
 - The use of `delay` in `cons-stream` is crucial to defining streams with feedback loops.
@@ -1785,6 +2021,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - For example, solving the differential equation $dy/dt = f(y)$ where $f$ is a given function.
 - The problem here is that `y` and `dy` will depend on each other.
 - To solve this, we need to change `integral` to take a delayed integrand.
+
+::: exercises
+3.77-80
+:::
 
 #### Normal-order evaluation
 
@@ -1799,6 +2039,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Modularity through encapsulation is a major benefit of introducing assignment.
 - Stream models can provide equivalent modularity without assignment.
 - For example, we can reimplement the Monte Carlo simulation with streams.
+
+::: exercises
+3.81-82
+:::
 
 #### A functional-programming view of time
 
@@ -1896,6 +2140,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Assignments and definitions
 <!-- DELETE -->
 
+::: exercises
+4.1
+:::
+
 ### 4.1.2: Representing Expressions
 
 - The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.
@@ -1939,6 +2187,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Practical Lisp systems allow the user to define new derived expressions by syntactic transformation. These are called _macros_.
 - There is much research on avoiding name-conflict problems in macro definition languages.
+
+::: exercises
+4.2-10
+:::
 
 ### 4.1.3: Evaluator Data Structures
 
@@ -2003,6 +2255,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```
 
 - This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called _deep binding_.
+
+::: exercises
+4.11-13
+:::
 
 ### 4.1.4: Running the Evaluator as a Program
 
@@ -2074,6 +2330,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
       (display object)))
 ```
 
+::: exercises
+4.14
+:::
+
 ### 4.1.5: Data as Programs
 
 - A program can be viewed as a description of an abstract machine.
@@ -2089,6 +2349,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 > From this perspective, our evaluator is seen to be a _universal machine_. It mimics other machines when these are described as Lisp programs. This is striking. Try to imagine an analogous evaluator for electrical circuits. This would be a circuit that takes as input a signal encoding the plans for some other circuit, such as a filter. Given this input, the circuit evaluator would then behave like a filter with the same description. Such a universal electrical circuit is almost unimaginably complex. It is remarkable that the program evaluator is a rather simple program. [@4.1.5]
 >
 > Some people find it counterintuitive that an evaluator, which is implemented by a relatively simple procedure, can emulate programs that are more complex than the evaluator itself. The existence of a universal evaluator machine is a deep and wonderful property of computation. _Recursion theory_, a branch of mathematical logic, is concerned with logical limits of computation. Douglas Hofstadter's beautiful book <cite>Gödel, Escher, Bach</cite> (1979) explores some of these ideas. [@4.1.fn20]
+:::
+
+::: exercises
+4.15
 :::
 
 ### 4.1.6: Internal Definitions
@@ -2116,6 +2380,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```
 
 - Here, `'*unassigned*` is a special symbol causing an error upon variable lookup.
+
+::: exercises
+4.16-21
+:::
 
 ### 4.1.7: Separating Syntactic Analysis from Execution
 
@@ -2157,6 +2425,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
     (lambda (env) (make-procedure vars bproc env))))
 ```
 
+::: exercises
+4.22-24
+:::
+
 ## 4.2: Variations on a Scheme --- Lazy Evaluation
 
 - We can experiment with different language design just by modifying the evaluator.
@@ -2174,6 +2446,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - In Scheme, `(try 0 (/ 1 0))` causes a division-by-zero error. With lazy evaluation, it does not because the value of `b` is never needed.
 - In a lazy language, we can implement `if` as an ordinary procedure.
+
+::: exercises
+4.25-26
+:::
 
 ### 4.2.2: An Interpreter with Lazy Evaluation
 
@@ -2260,6 +2536,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - To memoize thunks, `force-it` becomes a bit more complicated.
 
+::: exercises
+4.27-31
+:::
+
 ### 4.2.3: Streams as Lazy Lists
 
 - Before introducing lazy evaluation, we implemented [streams as delayed lists](@3.5.1).
@@ -2277,6 +2557,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - These lazy lists are even lazier than our original streams, since the `car` is delayed too.
 - This also eliminates [the problems we had earlier](@3.5.4) around having to explicitly delay and force some arguments when computing integrals.
 
+::: exercises
+4.32-34
+:::
+
 ## 4.3: Variations on a Scheme --- Nondeterministic Computing
 
 - _Nondeterministic computing_
@@ -2285,11 +2569,23 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Driver loop
 
+::: exercises
+4.35-37
+:::
+
 ### 4.3.2: Examples of Nondeterministic Programs
 
 #### Logic puzzles
 
+::: exercises
+4.38-44
+:::
+
 #### Parsing natural language
+
+::: exercises
+4.45-49
+:::
 
 ### 4.3.3: Implementing the `Amb` Evaluator
 
@@ -2309,6 +2605,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Driver loop
 
+::: exercises
+4.50-54
+:::
+
 ## 4.4: Logic Programming
 
 ### 4.4.1: Deductive Information Retrieval
@@ -2323,11 +2623,23 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ## 5.1: Designing Register Machines
 
+::: exercises
+5.1
+:::
+
 ### 5.1.1: A Language for Describing Register Machines
+
+::: exercises
+5.2
+:::
 
 #### Actions
 
 ### 5.1.2: Abstraction in Machine Design
+
+::: exercises
+5.3
+:::
 
 ### 5.1.3: Subroutines
 
@@ -2335,9 +2647,17 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### A double recursion
 
+::: exercises
+5.4-6
+:::
+
 ### 5.1.5: Instruction Summary
 
 ## 5.2: A Register-Machine Simulator
+
+::: exercises
+5.7
+:::
 
 ### 5.2.1: The Machine Model
 
@@ -2348,6 +2668,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### The basic machine
 
 ### 5.2.2: The Assembler
+
+::: exercises
+5.8
+:::
 
 ### 5.2.3: Generating Execution Procedures for Instructions
 
@@ -2363,7 +2687,15 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Execution procedures for subexpressions
 <!-- DELETE -->
 
+::: exercises
+5.9-13
+:::
+
 ### 5.2.4: Monitoring Machine Performance
+
+::: exercises
+5.14-19
+:::
 
 ## 5.3: Storage Allocation and Garbage Collection
 
@@ -2377,6 +2709,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Implementing stacks
 <!-- DELETE -->
+
+::: exercises
+5.20-22
+:::
 
 ### 5.3.2: Maintaining the Illusion of Infinite Memory
 
@@ -2400,9 +2736,17 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Assignments and definitions
 
+::: exercises
+5.23-25
+:::
+
 ### 5.4.4: Running the Evaluator
 
 #### Monitoring the performance of the evaluator
+
+::: exercises
+5.26-30
+:::
 
 ## 5.5: Compilation
 
@@ -2411,6 +2755,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Targets and linkages
 
 #### Instruction sequences and stack usage
+
+::: exercises
+5.31-32
+:::
 
 ### 5.5.2: Compiling Expressions
 
@@ -2434,6 +2782,14 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 5.5.5: An Example of Compiled Code
 
+::: exercises
+5.33-38
+:::
+
 ### 5.5.6: Lexical Addressing
+
+::: exercises
+5.39-44
+:::
 
 ### 5.5.7: Interfacing Compiled Code to the Evaluator
