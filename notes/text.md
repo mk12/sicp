@@ -570,6 +570,12 @@ Now we can do things like this:
 - Data objects constructed from pairs are _list-structured_ data.
 - To ensure that our rational numbers are always in lowest terms, we need `make-rat` to divide the numerator and the denominator by their greatest common divisor (GCD).
 
+#### Pairs
+<!-- DELETE -->
+
+#### Representing rational numbers
+<!-- DELETE -->
+
 ### 2.1.2: Abstraction Barriers
 
 > In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. [@2.1.2]
@@ -903,6 +909,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Leaves are represented by the list beginning with the symbol `leaf` and with two more elements: the symbol and the weight.
 - Trees are represented by the list `(left right symbols weight)`, where `left` and `right` are subtrees, `symbols` is a list of the symbols underneath the node, and `weight` is the sum of the weights of all the leaves beneath the node.
+
+#### The decoding procedure
+<!-- DELETE -->
+
+#### Sets of weighted elements
+<!-- DELETE -->
 
 ## 2.4: Multiple Representations for Abstract Data
 
@@ -1518,6 +1530,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We call the global agenda `the-agenda`.
 - The simulation is driven by `propagate`, which executes each item on the agenda in sequence.
 
+#### A sample simulation
+<!-- DELETE -->
+
 #### Implementing the agenda
 
 - The agenda is a pair: the current time, and a list of _time segments_ sorted in increasing order of time.
@@ -1826,7 +1841,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 4.1.1: The Core of the Evaluator
 
-#### `Eval`
+#### Eval
 
 - `eval` classifies an expression and directs its evaluation in an environment.
 - We use _abstract syntax_ to avoid committing to a particular syntax in the evaluator.
@@ -1850,7 +1865,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
         (else (error "Unknown expression type: EVAL" exp))))
 ```
 
-#### `Apply`
+#### Apply
 
 - `apply` classifies a procedure and directs its application to a list of arguments.
 - If compound, it evaluates the procedure body in an extended environment.
@@ -1868,6 +1883,18 @@ There are a number of possible ways we could represent sets. A set is a collecti
            (procedure-environment procedure))))
         (else (error "Unknown procedure type: APPLY" procedure))))
 ```
+
+#### Procedure arguments
+<!-- DELETE -->
+
+#### Conditionals
+<!-- DELETE -->
+
+#### Sequences
+<!-- DELETE -->
+
+#### Assignments and definitions
+<!-- DELETE -->
 
 ### 4.1.2: Representing Expressions
 
@@ -2254,16 +2281,159 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - _Nondeterministic computing_
 
+### 4.3.1: `Amb` and Search
+
+#### Driver loop
+
+### 4.3.2: Examples of Nondeterministic Programs
+
+#### Logic puzzles
+
+#### Parsing natural language
+
+### 4.3.3: Implementing the `Amb` Evaluator
+
+#### Execution procedures and continuations
+
+#### Structure of the evaluator
+
+#### Simple expressions
+
+#### Conditionals and sequences
+
+#### Definitions and assignments
+
+#### Procedure applications
+
+#### Evaluating `amb` expressions
+
+#### Driver loop
+
 ## 4.4: Logic Programming
+
+### 4.4.1: Deductive Information Retrieval
+
+### 4.4.2: How the Query System Works
+
+### 4.4.3: Is Logic Programming Mathematical Logic?
+
+### 4.4.4: Implementing the Query System
 
 # 5: Computing with Register Machines
 
 ## 5.1: Designing Register Machines
 
+### 5.1.1: A Language for Describing Register Machines
+
+#### Actions
+
+### 5.1.2: Abstraction in Machine Design
+
+### 5.1.3: Subroutines
+
+### 5.1.4: Using a Stack to Implement Recursion
+
+#### A double recursion
+
+### 5.1.5: Instruction Summary
+
 ## 5.2: A Register-Machine Simulator
+
+### 5.2.1: The Machine Model
+
+#### Registers
+
+#### The stack
+
+#### The basic machine
+
+### 5.2.2: The Assembler
+
+### 5.2.3: Generating Execution Procedures for Instructions
+
+#### `Assign` instructions
+<!-- DELETE -->
+
+#### `Test`, `branch`, and `goto` instructions
+<!-- DELETE -->
+
+#### Other instructions
+<!-- DELETE -->
+
+#### Execution procedures for subexpressions
+<!-- DELETE -->
+
+### 5.2.4: Monitoring Machine Performance
 
 ## 5.3: Storage Allocation and Garbage Collection
 
+### 5.3.1: Memory as Vectors
+
+#### Representing Lisp data
+<!-- DELETE -->
+
+#### Implementing the primitive list operations
+<!-- DELETE -->
+
+#### Implementing stacks
+<!-- DELETE -->
+
+### 5.3.2: Maintaining the Illusion of Infinite Memory
+
+#### Implementation of a stop-and-copy garbage collector
+
 ## 5.4: The Explicit-Control Evaluator
 
+### 5.4.1: The Core of the Explicit-Control Evaluator
+
+#### Evaluating simple expressions
+
+#### Evaluating procedure applications
+
+#### Procedure application
+
+### 5.4.2: Sequence Evaluation and Tail Recursion
+
+#### Tail recursion
+
+### 5.4.3: Conditionals, Assignments, and Definitions
+
+#### Assignments and definitions
+
+### 5.4.4: Running the Evaluator
+
+#### Monitoring the performance of the evaluator
+
 ## 5.5: Compilation
+
+### 5.5.1: Structure of the Compiler
+
+#### Targets and linkages
+
+#### Instruction sequences and stack usage
+
+### 5.5.2: Compiling Expressions
+
+#### Compiling linkage code
+
+#### Compiling simple expressions
+
+#### Compiling conditional expressions
+
+#### Compiling sequences
+
+#### Compiling `lambda` expressions
+
+### 5.5.3: Compiling Combinations
+
+#### Applying procedures
+
+#### Applying compiled procedures
+
+### 5.5.4: Combining Instruction Sequences
+
+### 5.5.5: An Example of Compiled Code
+
+### 5.5.6: Lexical Addressing
+
+### 5.5.7: Interfacing Compiled Code to the Evaluator
