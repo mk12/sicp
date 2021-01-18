@@ -2676,16 +2676,12 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 5.2.3: Generating Execution Procedures for Instructions
 
 #### `Assign` instructions
-<!-- DELETE -->
 
 #### `Test`, `branch`, and `goto` instructions
-<!-- DELETE -->
 
 #### Other instructions
-<!-- DELETE -->
 
 #### Execution procedures for subexpressions
-<!-- DELETE -->
 
 ::: exercises
 5.9-13
@@ -2702,13 +2698,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 5.3.1: Memory as Vectors
 
 #### Representing Lisp data
-<!-- DELETE -->
 
 #### Implementing the primitive list operations
-<!-- DELETE -->
 
 #### Implementing stacks
-<!-- DELETE -->
 
 ::: exercises
 5.20-22

@@ -7,8 +7,10 @@
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
 - HTML tables (Exercise 2.60)
+- remove `<!-- DELETE -->` in text.md
 - decide on `eval`/`apply` headings
 + add all the exercise links mechanically
+    + 3.5.2 has the most (example to look at)
 + highlight `=$>` and `=!>` differently
     + actually just `=!>`, in bold red. `=$>` is fine as is
 + don't highlight `div`
