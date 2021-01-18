@@ -1709,7 +1709,9 @@ static bool gen_exercise_language(const char *output) {
             assert(!h.label.data);
             char buf[SZ_HEADING];
             struct Span id = tolower_s(h.title, buf, sizeof buf);
-            for (int i = 0; i < id.len; i++) assert(id.data[i] != ' ');
+            for (int i = 0; i < id.len; i++) {
+                if (id.data[i] == ' ') id.data[i] = '-';
+            }
             render_heading(proc.in, scan.level, id, h, NULL);
         } else {
             copy_md(&scan, proc.in);

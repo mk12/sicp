@@ -16,10 +16,11 @@ These webpages are [generated][] directly from source code.
 
 # Note on the Language
 
-The code on this website is written in a language based on [R6RS Scheme][]. The language is [implemented][] with macros, and provides two features: modules and assertions.
+The code on this website is written in a language based on [R6RS Scheme][]. The language provides custom syntax for modules and assertions, and defines a few special forms. [Source files][] use the language by wrapping their content with `SICP`, a macro [implemented][] in plain R6RS Scheme.
 
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
+[Source files]: https://github.com/mk12/sicp/blob/master/src/sicp
 [implemented]: https://github.com/mk12/sicp/blob/master/src/lang/core.ss
 
 ## Modules
@@ -264,3 +265,13 @@ right:
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
+
+## Special Forms
+
+The language also [defines][] a few special forms. They are usable anywhere, not just at the top level like the assertion operators.
+
+The `cons-stream` special form is defined so that `(cons-stream «a» «b»)` is equivalent to `(cons «a» (delay «b»))`, as specified in the textbook. It is used in [](:3.5).
+
+The `with-eval` special form is defined so that `(with-eval «eval» «env» «exp*» ...)` is equivalent to `(begin («eval» «exp*» «env») ...)`, except it first creates bindings for `«eval»` and `«env»` to avoid re-evaluating them. It is used in [](:4) to make tests more readable.
+
+[defines]: https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss

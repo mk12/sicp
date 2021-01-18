@@ -8,7 +8,9 @@
 - go over all exercises and fix up
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
-- spell checker for Markdown, integrated in Makefile
+- implement spell checker using NSSpellChecker
++ mention `cons-stream` and `with-eval` in language.html
++ free lines from getline
 + clang-format C sources
 + decide on `eval`/`apply` headings
 + add all the exercise links mechanically
