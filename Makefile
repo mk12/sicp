@@ -89,6 +89,7 @@ $(katex_sock):
 endif
 
 fmt:
+	find . -type f -name "*.c" | xargs clang-format -i
 	find . -type f -name "*.ts" | xargs deno fmt
 
 lint: lintscheme

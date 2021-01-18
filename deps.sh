@@ -71,7 +71,7 @@ get_platform() {
 
 check() {
     say "checking programs"
-    for cmd in chez guile racket pandoc deno vnu; do
+    for cmd in chez guile racket pandoc deno vnu clang-format; do
         command -v $cmd &> /dev/null || warn "$cmd not installed"
     done
     say "checking pandoc lua version"
@@ -137,7 +137,8 @@ install_macos_scheme() {
 install_macos_docs() {
     lua="lua@$lua_version"
     lua_dir=$(brew --prefix $lua)
-    install_macos_cmds pandoc "$lua:$lua_dir/bin/lua" luarocks deno vnu
+    install_macos_cmds \
+        pandoc "$lua:$lua_dir/bin/lua" luarocks deno vnu clang-format
     if "$lua_dir/bin/lua" -l posix <<< "" &> /dev/null; then
         say "luaposix is already installed"
     else

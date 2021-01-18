@@ -1,13 +1,15 @@
 # New to do
 
-- spell checker for Markdown, integrated in Makefile
 - test in all browsers, without JS, without CSS
 - exercises appendix for core.ss etc.
 - reconsider → in lecture 6a
 - deal with the OLD proofs, diagrams
+- en/em dashes in comments
 - go over all exercises and fix up
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
+- spell checker for Markdown, integrated in Makefile
++ clang-format C sources
 + decide on `eval`/`apply` headings
 + add all the exercise links mechanically
     + 3.5.2 has the most (example to look at)
@@ -21,8 +23,6 @@
 + fix headings in language.html
 + fix h3 heading spacing (appears uneven after blockquote/code)
 + have special callout thing at end of text sections with exercise links
-x clang-format C sources
-    x don't like it
 + fixup highlights of `use`, `:1.2`, `?1.2`, etc.
 + finish writeup for exercise/language
 + finish writeup for exercise/index

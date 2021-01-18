@@ -1,0 +1,7 @@
+BasedOnStyle: Google
+ColumnLimit: 80
+IndentWidth: 4
+ContinuationIndentWidth: 4
+IndentCaseLabels: false
+BreakBeforeBinaryOperators: NonAssignment
+AlignOperands: AlignAfterOperator

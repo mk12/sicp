@@ -135,7 +135,7 @@ The pages are styled by [style.css](docs/style.css). It follows the [BEM naming 
 Before submitting a PR, run `make`. This makes the following targets:
 
 - `make lint`: Lints Scheme, TypeScript, and Bash.
-- `make fmt`: Formats TypeScript.
+- `make fmt`: Formats C and TypeScript.
 - `make spell`: Spellchecks Markdown and Scheme.
 - `make docs`: Builds the website.
 - `make validate`: Validates HTML.
@@ -194,6 +194,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 - [Lua][] and [luaposix][]: Used in the Pandoc filter.
 - [Deno][]: Used to run a server that pre-renders math with [KaTeX][].
 - [vnu][]: Used to validate HTML files.
+- [clang-format][]: Used to format C files.
 
 You also need a C compiler to compile [linter.c](linter.c) and [docgen.c](docgen.c).
 
@@ -221,6 +222,7 @@ See [LICENSE](LICENSE.md) for details.
 [Deno]: https://deno.land
 [KaTeX]: https://katex.org
 [vnu]: https://validator.github.io/validator/
+[clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [skylighting]: https://github.com/jgm/skylighting
 [kate]: https://docs.kde.org/trunk5/en/applications/katepart/highlight.html
 [scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml

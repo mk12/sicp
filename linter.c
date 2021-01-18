@@ -93,38 +93,38 @@ static const struct {
     enum IndentRules rules;
 } INDENT_RULES[] = {
     // Exceptional cases.
-    { .name = "SICP", .rules = IR_WRAPPER },
-    { .name = "begin", .rules = IR_SPECIAL | IR_UNIFORM },
-    { .name = "cond", .rules = IR_SPECIAL | IR_UNIFORM },
-    { .name = "library", .rules = IR_SPECIAL | IR_WRAPPER },
+    {.name = "SICP", .rules = IR_WRAPPER},
+    {.name = "begin", .rules = IR_SPECIAL | IR_UNIFORM},
+    {.name = "cond", .rules = IR_SPECIAL | IR_UNIFORM},
+    {.name = "library", .rules = IR_SPECIAL | IR_WRAPPER},
 
     // Special forms.
-    { .name = "Chapter", .rules = IR_SPECIAL },
-    { .name = "Exercise", .rules = IR_SPECIAL },
-    { .name = "Section", .rules = IR_SPECIAL },
-    { .name = "case", .rules = IR_SPECIAL },
-    { .name = "define", .rules = IR_SPECIAL },
-    { .name = "define-record-type", .rules = IR_SPECIAL },
-    { .name = "define-syntax", .rules = IR_SPECIAL },
-    { .name = "lambda", .rules = IR_SPECIAL },
-    { .name = "let", .rules = IR_SPECIAL },
-    { .name = "let*", .rules = IR_SPECIAL },
-    { .name = "let-syntax", .rules = IR_SPECIAL },
-    { .name = "let-values", .rules = IR_SPECIAL },
-    { .name = "letrec", .rules = IR_SPECIAL },
-    { .name = "parameterize", .rules = IR_SPECIAL },
-    { .name = "syntax-case", .rules = IR_SPECIAL },
-    { .name = "syntax-rules", .rules = IR_SPECIAL },
-    { .name = "unless", .rules = IR_SPECIAL },
-    { .name = "when", .rules = IR_SPECIAL },
-    { .name = "with-eval", .rules = IR_SPECIAL },
-    { .name = "with-mutex", .rules = IR_SPECIAL },
-    { .name = "with-syntax", .rules = IR_SPECIAL },
+    {.name = "Chapter", .rules = IR_SPECIAL},
+    {.name = "Exercise", .rules = IR_SPECIAL},
+    {.name = "Section", .rules = IR_SPECIAL},
+    {.name = "case", .rules = IR_SPECIAL},
+    {.name = "define", .rules = IR_SPECIAL},
+    {.name = "define-record-type", .rules = IR_SPECIAL},
+    {.name = "define-syntax", .rules = IR_SPECIAL},
+    {.name = "lambda", .rules = IR_SPECIAL},
+    {.name = "let", .rules = IR_SPECIAL},
+    {.name = "let*", .rules = IR_SPECIAL},
+    {.name = "let-syntax", .rules = IR_SPECIAL},
+    {.name = "let-values", .rules = IR_SPECIAL},
+    {.name = "letrec", .rules = IR_SPECIAL},
+    {.name = "parameterize", .rules = IR_SPECIAL},
+    {.name = "syntax-case", .rules = IR_SPECIAL},
+    {.name = "syntax-rules", .rules = IR_SPECIAL},
+    {.name = "unless", .rules = IR_SPECIAL},
+    {.name = "when", .rules = IR_SPECIAL},
+    {.name = "with-eval", .rules = IR_SPECIAL},
+    {.name = "with-mutex", .rules = IR_SPECIAL},
+    {.name = "with-syntax", .rules = IR_SPECIAL},
 };
 
 // Looks up the indentation rules for the given operator.
-static enum IndentRules lookup_indent_rules(
-        const char *line, int start, int len) {
+static enum IndentRules lookup_indent_rules(const char *line, int start,
+                                            int len) {
     const char *s = line + start;
     const int array_len = sizeof INDENT_RULES / sizeof INDENT_RULES[0];
     for (int i = 0; i < array_len; i++) {
@@ -181,8 +181,9 @@ static enum ImportBlock parent_import_block(enum ImportBlock block) {
 }
 
 // Looks up the new import block given the current one and an operator.
-static enum ImportBlock lookup_import_block(
-        enum ImportBlock current, const char *line, int start, int len) {
+static enum ImportBlock lookup_import_block(enum ImportBlock current,
+                                            const char *line, int start,
+                                            int len) {
     const char *s = line + start;
     switch (current) {
     case IB_NONE:
@@ -190,7 +191,7 @@ static enum ImportBlock lookup_import_block(
             break;
         }
         if (strncmp(s, "Chapter", len) == 0 || strncmp(s, "Section", len) == 0
-                || strncmp(s, "Exercise", len) == 0) {
+            || strncmp(s, "Exercise", len) == 0) {
             return IB_SEC;
         }
         if (strncmp(s, "paste", len) == 0) {
@@ -214,11 +215,11 @@ static enum ImportBlock lookup_import_block(
 
 // Returns true if the Chapter/Section/Exercise ids prev (null-terminated) and
 // current (substring of line) are ordered correctly.
-static bool correct_id_order(
-        const char *prev, const char *line, int start, int len) {
+static bool correct_id_order(const char *prev, const char *line, int start,
+                             int len) {
     int i, j, cmp = 0;
     for (i = 0, j = 0; prev[i] != '\0' && j < len; i++, j++) {
-        char ci = prev[i], cj = line[start+j];
+        char ci = prev[i], cj = line[start + j];
         if (i == 0 && ci != cj) {
             // The Chapter/Section sigil ':' (0x3a) is numerically less than the
             // Exercise sigil '?' (0x3f).
@@ -241,7 +242,7 @@ static bool correct_id_order(
     bool ei = prev[i] == '\0';
     bool ej = j == len;
     char ci = ei ? '.' : prev[i];
-    char cj = ej ? '.' : line[start+j];
+    char cj = ej ? '.' : line[start + j];
     if (ci == '.' && cj == '.' && cmp != 0) {
         return cmp < 0;
     }
@@ -251,8 +252,8 @@ static bool correct_id_order(
 
 // Returns true if the import names prev (null-terminated) and current
 // (substring of line) are ordered correctly.
-static bool correct_name_order(
-        const char *prev, const char *line, int start, int len) {
+static bool correct_name_order(const char *prev, const char *line, int start,
+                               int len) {
     return strncmp(prev, line + start, len) < 0;
 }
 
@@ -307,7 +308,7 @@ static void fail(struct State *state, int column, const char *format, ...) {
 // true if linting should continue, and false otherwise.
 static bool lint_line(struct State *state, const char *line, int line_len) {
     assert(line_len > 0);
-    assert(line[line_len-1] == '\n');
+    assert(line[line_len - 1] == '\n');
     assert(state->depth >= 0);
     assert(state->depth < MAX_DEPTH);
 
@@ -321,15 +322,15 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
     }
     state->prev_blanks = 0;
     if (line_len - 1 > MAX_COLUMNS) {
-        fail(state, MAX_COLUMNS - 1,
-            "line too long: %d > %d" , line_len, MAX_COLUMNS);
+        fail(state, MAX_COLUMNS - 1, "line too long: %d > %d", line_len,
+             MAX_COLUMNS);
     }
-    if (line[line_len-2] == ' ') {
+    if (line[line_len - 2] == ' ') {
         fail(state, line_len - 2, "trailing whitespace");
     }
     if (line[0] == ';') {
         int i;
-        for (i = 1; line[i] == ';'; i++);
+        for (i = 1; line[i] == ';'; i++) continue;
         if (i > 3) {
             fail(state, 0, "too many semicolons");
         } else if (i == 3 && state->lineno != 1) {
@@ -343,21 +344,27 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
 
     // Steps 2. Check spacing, alignment, and import ordering.
     const size_t na_len = sizeof NO_ALIGN_COMMENT - 1;
-    const bool no_align = (size_t)line_len >= na_len
+    const bool no_align =
+        (size_t)line_len >= na_len
         && strncmp(line + line_len - na_len, NO_ALIGN_COMMENT, na_len) == 0;
     bool can_pack_inside = (state->import_mode & IB_MASK_INSIDE) != 0;
-    bool can_pack_outside =
-        state->prev_import_mode != IB_NONE
-        && ((state->prev_import_mode & IB_MASK_INSIDE) == 0)
-        && ((state->import_mode & IB_MASK_OUTSIDE) != 0);
+    bool can_pack_outside = state->prev_import_mode != IB_NONE
+                         && ((state->prev_import_mode & IB_MASK_INSIDE) == 0)
+                         && ((state->import_mode & IB_MASK_OUTSIDE) != 0);
     state->prev_import_mode = state->import_mode;
     char prev = 0;            // previous character
     bool escaped = false;     // last character was unescaped backslash
     bool two_spaces = false;  // saw two spaces in a row
     int word_start = 0;       // start of the last word (used for imports)
     int last_open = 0;        // column of the last '(' (used for imports)
-    enum { INDENT, NORMAL, OPERATOR, STRING, COMMENT, COMMENT_SPACE } mode =
-        state->in_string ? STRING : INDENT;
+    enum {
+        INDENT,
+        NORMAL,
+        OPERATOR,
+        STRING,
+        COMMENT,
+        COMMENT_SPACE
+    } mode = state->in_string ? STRING : INDENT;
     for (int i = 0; i < line_len; i++) {
         char c = line[i];
         if (c == '\t') {
@@ -405,15 +412,22 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                 state->stack[++state->depth] = i + 1;
                 if (i > 0) {
                     switch (prev) {
-                        case ' ': case '#': case '\'': case '(': case ',':
-                        case '@': case '[': case '`':
-                            break;
-                        default:
-                            fail(state, i, "expected space before '('");
-                            break;
+                    case ' ':
+                    case '#':
+                    case '\'':
+                    case '(':
+                    case ',':
+                    case '@':
+                    case '[':
+                    case '`':
+                        break;
+                    default:
+                        fail(state, i, "expected space before '('");
+                        break;
                     }
                 }
-                if (prev == '\'' || (state->quoted_align != -1
+                if (prev == '\''
+                    || (state->quoted_align != -1
                         && (prev == '(' || prev == '['))) {
                     state->quoted_align = i + 1;
                 } else {
@@ -435,38 +449,38 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                     if ((state->import_mode & IB_MASK_INSIDE) != 0) {
                         int start = word_start;
                         int len = i - start;
-                        if (!correct_name_order(
-                                state->last_import_name, line, start, len)) {
+                        if (!correct_name_order(state->last_import_name, line,
+                                                start, len)) {
                             fail(state, start,
-                                "incorrect import name ordering: %s > %.*s",
-                                state->last_import_name, len, line + start);
+                                 "incorrect import name ordering: %s > %.*s",
+                                 state->last_import_name, len, line + start);
                         }
                         state->last_import_name[0] = '\0';
                         if (can_pack_outside) {
                             can_pack_outside = false;
                             int would_be =
                                 state->prev_length + 1 + (i - last_open + 1);
-                            for (int j = i + 1;
-                                    j < line_len && line[j] == ')'; j++) {
+                            for (int j = i + 1; j < line_len && line[j] == ')';
+                                 j++) {
                                 would_be++;
                             }
                             if (would_be <= MAX_COLUMNS) {
                                 fail(state, last_open,
-                                    "pack imports on previous line: %.*s",
-                                    i - last_open + 1, line + last_open);
+                                     "pack imports on previous line: %.*s",
+                                     i - last_open + 1, line + last_open);
                             }
                         }
                         if (can_pack_inside) {
                             can_pack_inside = false;
                             int would_be = state->prev_length + 1 + len + 1;
-                            for (int j = i + 1;
-                                    j < line_len && line[j] == ')'; j++) {
+                            for (int j = i + 1; j < line_len && line[j] == ')';
+                                 j++) {
                                 would_be++;
                             }
                             if (would_be <= MAX_COLUMNS) {
                                 fail(state, start,
-                                    "pack import on previous line: %.*s",
-                                    len, line + start);
+                                     "pack import on previous line: %.*s", len,
+                                     line + start);
                             }
                         }
                     } else if ((state->import_mode & IB_MASK_OUTSIDE) != 0) {
@@ -497,7 +511,7 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                     }
                     if (c == ' ') {
                         if ((rules & IR_SPECIAL) != 0
-                                && (rules & IR_UNIFORM) == 0) {
+                            && (rules & IR_UNIFORM) == 0) {
                             state->stack[state->depth]++;
                         } else {
                             state->stack[state->depth] = i + 1;
@@ -507,14 +521,14 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                             state->stack[state->depth]++;
                         }
                     }
-                    state->import_mode = lookup_import_block(
-                        state->import_mode, line, start, len);
+                    state->import_mode = lookup_import_block(state->import_mode,
+                                                             line, start, len);
                     if ((state->import_mode & IB_MASK_OUTSIDE) != 0) {
-                        if (!correct_id_order(
-                                state->last_import_id, line, start, len)) {
+                        if (!correct_id_order(state->last_import_id, line,
+                                              start, len)) {
                             fail(state, start,
-                                "incorrect import id ordering: %s > %.*s",
-                                state->last_import_id, len, line + start);
+                                 "incorrect import id ordering: %s > %.*s",
+                                 state->last_import_id, len, line + start);
                         }
                         strncpy(state->last_import_id, line + start, len);
                         state->last_import_id[len] = '\0';
@@ -522,25 +536,25 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                 } else if ((state->import_mode & IB_MASK_INSIDE) != 0) {
                     int start = word_start;
                     int len = i - start;
-                    if (!correct_name_order(
-                            state->last_import_name, line, start, len)) {
+                    if (!correct_name_order(state->last_import_name, line,
+                                            start, len)) {
                         fail(state, start,
-                            "incorrect import name ordering: %s > %.*s",
-                            state->last_import_name, len, line + start);
+                             "incorrect import name ordering: %s > %.*s",
+                             state->last_import_name, len, line + start);
                     }
                     strncpy(state->last_import_name, line + start, len);
                     state->last_import_name[len] = '\0';
                     if (can_pack_inside) {
                         can_pack_inside = false;
                         int would_be = state->prev_length + 1 + len;
-                        for (int j = i + 1;
-                                j < line_len && line[j] == ')'; j++) {
+                        for (int j = i + 1; j < line_len && line[j] == ')';
+                             j++) {
                             would_be++;
                         }
                         if (would_be <= MAX_COLUMNS) {
                             fail(state, start,
-                                "pack import on previous line: %.*s",
-                                len, line + start);
+                                 "pack import on previous line: %.*s", len,
+                                 line + start);
                         }
                     }
                 }
