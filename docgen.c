@@ -292,7 +292,10 @@ static bool wait_pandoc(struct PandocProc *proc) {
 }
 
 // Post-processes HTML, removing unwanted tags and classes in inline code and
-// code blocks (there is no option to prevent Pandoc from producing these).
+// code blocks (there is no option to prevent Pandoc from producing these). Also
+// deletes "«" and "»", and converts "‹" and "›" to "<" and ">". The Markdown
+// source uses the former for metavariables. The Lua filter uses the latter to
+// inject HTML links in code blocks.
 static void postprocess_html(FILE *in, FILE *out) {
     char *line = NULL;
     size_t cap = 0;
@@ -318,21 +321,38 @@ static void postprocess_html(FILE *in, FILE *out) {
         }
         const char *n;
         if (p == line) {
+            // We're not in a code block. Deal with inline code.
             const char *needle = "<code class=\"sourceCode scheme\">";
             while ((n = strstr(p, needle))) {
                 fwrite(p, n - p, 1, out);
                 fputs("<code>", out);
                 p = n + strlen(needle);
+                // Deal with metavariables.
                 while ((n = strstr(p, "<span class=\"sc\">"))) {
                     fwrite(p, n - p, 1, out);
                     p = n + strlen("<span class=\"sc\">«</span>");
                 }
             }
         } else {
+            // We're in a code block. Deal with metavariables and pastes. While
+            // these two steps really should be interleaved, it doesn't matter
+            // because we never use them together.
             while ((n = strstr(p, "<span class=\"sc\">"))) {
                 fwrite(p, n - p, 1, out);
                 p = n + strlen("<span class=\"sc\">«</span>");
-            } 
+            }
+            const int open_len = strlen("‹");
+            const int close_len = strlen("›");
+            while ((n = strstr(p, "‹"))) {
+                fwrite(p, n - p, 1, out);
+                putc('<', out);
+                p = n + open_len;
+                n = strstr(p, "›");
+                assert(n);
+                fwrite(p, n - p, 1, out);
+                putc('>', out);
+                p = n + close_len;
+            }
         }
         assert(p <= q);
         fwrite(p, q - p, 1, out);

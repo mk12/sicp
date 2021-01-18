@@ -276,12 +276,47 @@ function internal_link(el)
     return el
 end
 
--- Adds the scheme class to CodeBlock elements.
+-- Adds the scheme class to CodeBlock elements. Also links IDs in (paste ...)
+-- blocks to the corresponding section/exercise.
 function code_block(el)
-    if #el.classes == 0 then
-        el.classes = {"scheme"}
+    if #el.classes > 0 then
+        return
+    end
+    el.classes = {"scheme"}
+    local text = el.text
+    if not text:find("(paste (", 1, true) then
         return el
     end
+    local pieces = {}
+    local i = 1
+    while true do
+        _, j = text:find("(paste (", i, true)
+        if not j then
+            break
+        end
+        while true do
+            table.insert(pieces, text:sub(i, j))
+            local a, b = text:find("[:?][%d%.]+", j + 1)
+            local id = text:sub(a, b)
+            local target, frag = internal_target(id:sub(1, 1), id:sub(2))
+            local href = relpath(vars.id .. ".html", target) .. frag
+            -- The unicode characters ‹ and › are rendered as RawHtml in
+            -- scheme.xml, and docgen.c converts them back to < and >.
+            table.insert(pieces, string.format('‹a href=%s›%s‹/a›', href, id))
+            i = b + 1
+            j = text:find(")", i, true)
+            assert(j)
+            j = j + 1
+            if text:sub(j, j) == ")" then
+                break
+            end
+            j = text:find("(", j, true)
+            assert(j)
+        end
+    end
+    table.insert(pieces, text:sub(i))
+    el.text = table.concat(pieces)
+    return el
 end
 
 -- Adds the scheme class to all Code elements within el. We do this, rather than

@@ -6,9 +6,14 @@
 - reconsider → in lecture 6a
 - deal with the OLD proofs, diagrams
 - go over all exercises and fix up
+- HTML tables (Exercise 2.60)
 - add all the exercise links mechanically
-- fix headings in language.html
-- linkify `paste` IDs
+- highlight `=$>` and `=!>` differently
++ linkify `paste` IDs
+    + https://stackoverflow.com/a/54219536
+    + https://owickstrom.github.io/pandoc-emphasize-code/
+    + injected HTML with `‹` and `›`, and omitted `"` since they are not necessary (`make validate` passes) and if I include pandoc coverts to `&quot;`
++ fix headings in language.html
 + fix h3 heading spacing (appears uneven after blockquote/code)
 + have special callout thing at end of text sections with exercise links
 x clang-format C sources

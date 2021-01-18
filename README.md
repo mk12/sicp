@@ -183,7 +183,7 @@ The Scheme implementation must support mutating quoted lists:
 
 This works in Chez Scheme and Racket. It also works in Guile, but only the interpreter, not the compiler. When compiled with Guile, the line `(write '(a b))` above produces the bizarre result `(c b)`, because the `set-car!` call modified the interned representation of `'(a b)`.
 
-`run.sh guile` takes care of passing `--no-auto-compile` to ensure the interpreter is used.
+`./run.sh guile` takes care of passing `--no-auto-compile` to ensure the interpreter is used.
 
 ## Dependencies
 

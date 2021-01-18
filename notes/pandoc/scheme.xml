@@ -415,6 +415,7 @@
         <keyword attribute="Assert" context="#stay" String="asserts"/>
         <keyword attribute="Macro" context="#stay" String="macros"/>
         <keyword attribute="Function" context="#stay" String="functions"/>
+        <RegExpr attribute="RawHtml" context="#stay" String="‹.+?›"/>
         <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++\.?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+|"/>
         <RegExpr attribute="ModuleId" context="#stay" String="[:?][0-9.]++"/>
         <RegExpr attribute="Symbol" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~-]++"/>
