@@ -437,21 +437,20 @@ body {
 .kw { color: #a626a4; }
 .fu { color: #0060d5; }
 .cn { color: #307a06; }
-.co { color: #c0392b; }
-.yl { color: #986801; } /* used in language.html */
+.co, .er { color: #c0392b; }
+.yl { color: #986801; } /* .yl used in language.html */
 
 @media (prefers-color-scheme: dark) {
     .kw { color: #c678dd; }
     .fu { color: #61afef; }
     .cn { color: #98c379; }
-    .co { color: #e7727b; }
+    .co, .er { color: #e7727b; }
     .yl { color: #e5c07b; }
 }
 
-.op {
-    color: var(--subdued);
-    font-weight: bold;
-}
+/* .op (=> ~>), .al (=$>), .er (=!>) */
+.op { color: var(--subdued); }
+.op, .er { font-weight: bold; }
 
 .ss {
     font-style: italic;
@@ -459,4 +458,4 @@ body {
     text-underline-offset: 2px;
 }
 
-.bo { font-weight: bold; } /* used in language.html */
+.bo { font-weight: bold; } /* .bo used in language.html */

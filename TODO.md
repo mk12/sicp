@@ -8,7 +8,8 @@
 - go over all exercises and fix up
 - HTML tables (Exercise 2.60)
 - add all the exercise links mechanically
-- highlight `=$>` and `=!>` differently
++ highlight `=$>` and `=!>` differently
+    + actually just `=!>`, in bold red. `=$>` is fine as is
 + don't highlight `div`
 + linkify `paste` IDs
     + https://stackoverflow.com/a/54219536

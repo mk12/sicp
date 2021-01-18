@@ -161,7 +161,7 @@ left: <span class="fu">(fact 3)</span>
 right: <span class="fu">(fact 5)</span>
 => <span class="cn">120</span>
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 
 ### Inexact
@@ -186,7 +186,7 @@ right: <span class="fu">3.14</span>
 
 delta: <span class="cn">0.0015926535897929917</span> > 1e-10
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 
 ### Output
@@ -219,14 +219,14 @@ When `(display "pong\nping") =$> ["ping" "pong"]` fails, the output looks like t
 <pre><code class="blockcode"><!--
 --><span class="bo">path/to/file.ss:123:1: assertion failed</span>
 left: <span class="fu">(display "pong\nping")</span>
-=> [<span class="yl">"pong"</span>
-    <span class="yl">"ping"</span>]
+=$> [<span class="yl">"pong"</span>
+     <span class="yl">"ping"</span>]
 
 right:
-=> [<span class="yl">"ping"</span>
-    <span class="yl">"pong"</span>]
+=$> [<span class="yl">"ping"</span>
+     <span class="yl">"pong"</span>]
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 
 ### Error
@@ -249,7 +249,7 @@ left: <span class="fu">(+ 1 2)</span>
 right:
 =!> ... <span class="co">disaster</span> ...
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 
 When `(error 'foo "catastrophe" 1) =!> "disaster"` fails, the output looks like this:
@@ -262,5 +262,5 @@ left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 right:
 =!> ... <span class="co">disaster</span> ...
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>

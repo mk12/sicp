@@ -403,7 +403,6 @@
       <item>=></item>
       <item>~></item>
       <item>=$></item>
-      <item>=!></item>
     </list>
     <contexts>
       <context name="Default" attribute="Normal" lineEndContext="#stay">
@@ -415,6 +414,7 @@
         <DetectChar attribute="MetaBracket" context="Meta" char="«"/>
         <keyword attribute="Boolean" context="#stay" String="booleans"/>
         <keyword attribute="Assert" context="#stay" String="asserts"/>
+        <StringDetect attribute="ErrorAssert" context="#stay" String="=!>"/>
         <keyword attribute="Macro" context="#stay" String="macros"/>
         <keyword attribute="Function" context="#stay" String="functions"/>
         <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++\.?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+|"/>
@@ -459,6 +459,7 @@
     <itemDatas>
       <itemData name="Normal"      defStyleNum="dsNormal"/>
       <itemData name="Assert"      defStyleNum="dsOperator"/>
+      <itemData name="ErrorAssert" defStyleNum="dsError"/>
       <itemData name="Macro"       defStyleNum="dsKeyword"/>
       <itemData name="Function"    defStyleNum="dsFunction"/>
       <itemData name="Boolean"     defStyleNum="dsConstant"/>
