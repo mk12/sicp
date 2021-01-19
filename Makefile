@@ -49,10 +49,11 @@ help:
 	@echo "katex     run the katex server"
 	@echo "fmt       format C and TypeScript code"
 	@echo "lint      lint all source files"
-	@echo "spell     spellcheck Markdown files"
+	@echo "spell     spellcheck Markdown and Scheme files"
 	@echo "validate  validate generated HTML files"
 	@echo "clean     remove compilation artifacts"
 	@echo "vscode    install vscode tasks"
+	@echo "sicp_html download SICP HTML files"
 
 test:
 	./run.sh all
@@ -89,7 +90,7 @@ $(katex_sock):
 endif
 
 fmt:
-	find . -type f -name "*.c" | xargs clang-format -i
+	find . -type f \( -name "*.c" -o -name "*.m" \) | xargs clang-format -i
 	find . -type f -name "*.ts" | xargs deno fmt
 
 lint: lintss
@@ -106,8 +107,11 @@ lint: lintss
 lintss: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
 
-spell:
-	@echo TODO
+spell: spellc
+	./$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
+
+spellc: %: %.m
+	$(CC) -o $@ $(CFLAGS) -fmodules -fobjc-arc $^
 
 validate:
 	find docs -type f -name "*.html" \
