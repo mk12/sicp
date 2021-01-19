@@ -7,13 +7,21 @@
 #include <unistd.h>
 
 @import AppKit.NSSpellChecker;
+@import Foundation.NSOrthography;
+@import Foundation.NSSpellServer;
 @import Foundation.NSString;
+@import Foundation.NSTextCheckingResult;
+
+// Wrapper around NSSpellChecker that stores the document tag.
+struct SpellChecker {
+    NSSpellChecker *checker;
+    int tag;
+};
 
 // State for spell checking.
 struct State {
-    // Spell checker and document tag.
-    NSSpellChecker *spell;
-    int tag;
+    // Spell checker.
+    struct SpellChecker spell;
     // Cumulative status, set to 1 if there are any errors.
     int status;
     // The file being scanned.
@@ -27,7 +35,7 @@ struct State {
 };
 
 // Initializes spell checker state for the given file. Returns true on success.
-static bool init_state(struct State *state, NSSpellChecker *spell, int tag,
+static bool init_state(struct State *state, struct SpellChecker spell,
                        const char *path) {
     FILE *file = fopen(path, "r");
     if (!file) {
@@ -35,7 +43,6 @@ static bool init_state(struct State *state, NSSpellChecker *spell, int tag,
         return false;
     }
     state->spell = spell;
-    state->tag = tag;
     state->status = 0;
     state->path = path;
     state->file = file;
@@ -70,50 +77,63 @@ struct Source {
     int last;
 };
 
-// Print a failure message for the given error range in str.
-static void fail(struct State *state, struct Source src, NSString *str,
-                 NSRange error, const char *kind) {
-    const char *s = [str UTF8String];
-    if (src.first == src.last) {
-        printf("%s:%d: %s: %.*s\n", state->path, src.first, kind,
-               (int)error.length, s + error.location);
-    } else {
-        printf("%s:%d-%d: %s: %.*s\n", state->path, src.first, src.last, kind,
-               (int)error.length, s + error.location);
-    }
-    state->status = 1;
-}
-
-// Checks spelling and grammar in a string.
+// Checks spelling and grammar in a string, printing error messages to stdout.
 static void check_string(struct State *state, struct Source src,
                          NSString *str) {
-    NSRange range;
-    range = NSMakeRange(0, 0);
-    for (;;) {
-        range =
-            [state->spell checkSpellingOfString:str
-                                     startingAt:range.location + range.length
-                                       language:@""
-                                           wrap:NO
-                         inSpellDocumentWithTag:state->tag
-                                      wordCount:NULL];
-        if (range.location == NSNotFound) {
+    NSArray<NSTextCheckingResult *> *results =
+        [state->spell.checker checkString:str
+                                    range:NSMakeRange(0, str.length)
+                                    types:NSTextCheckingTypeSpelling
+                                          | NSTextCheckingTypeGrammar
+                                  options:NULL
+                   inSpellDocumentWithTag:state->spell.tag
+                              orthography:NULL
+                                wordCount:NULL];
+    const char *c_str = str.UTF8String;
+    for (NSTextCheckingResult *result in results) {
+        NSRange range = result.range;
+        NSString *replacement = NULL;
+        NSArray<NSDictionary<NSString *, id> *> *grammarDetails = NULL;
+        switch (result.resultType) {
+        case NSTextCheckingTypeSpelling:
+            replacement = [state->spell.checker
+                correctionForWordRange:range
+                              inString:str
+                              language:state->spell.checker.language
+                inSpellDocumentWithTag:state->spell.tag];
             break;
-        }
-        fail(state, src, str, range, "spelling");
-    }
-    range = NSMakeRange(0, 0);
-    for (;;) {
-        range = [state->spell checkGrammarOfString:str
-                                        startingAt:range.location + range.length
-                                          language:@""
-                                              wrap:NO
-                            inSpellDocumentWithTag:state->tag
-                                           details:NULL];
-        if (range.location == NSNotFound) {
+        case NSTextCheckingTypeGrammar:
+            grammarDetails = result.grammarDetails;
             break;
+        default:
+            assert(false);
         }
-        fail(state, src, str, range, "grammar");
+        state->status = 1;
+        fputs(state->path, stdout);
+        if (src.first == src.last) {
+            printf("%d: ", src.first);
+        } else {
+            printf("%d-%d: ", src.first, src.last);
+        }
+        printf("“%.*s”", (int)range.length, c_str + range.location);
+        if (replacement) {
+            printf(" (did you mean “%s”?)", replacement.UTF8String);
+        }
+        if (grammarDetails) {
+            for (NSDictionary<NSString *, id> *detail in grammarDetails) {
+                printf("\n    ");
+                NSValue *value = detail[NSGrammarRange];
+                if (value) {
+                    NSRange subrange = value.rangeValue;
+                    printf("“%.*s”", (int)subrange.length, c_str + range.location + subrange.location);
+                }
+                NSString *description = detail[NSGrammarUserDescription];
+                if (description) {
+                    printf(": %s", description.UTF8String);
+                }
+            }
+        }
+        putchar('\n');
     }
 }
 
@@ -275,7 +295,6 @@ static char *strip_markdown(char *s) {
 end:
     *s = '\0';
     return start;
-    // links, citations, code, emphasis, math, highlight/exercise
 }
 
 // Spellchecks a Markdown file.
@@ -324,14 +343,14 @@ static enum FileType detect_filetype(const char *path) {
 }
 
 // Spellchecks a single file. Returns 0 on success.
-static int check(NSSpellChecker *spell, int tag, bool print, const char *path) {
+static int check(struct SpellChecker spell, bool print, const char *path) {
     enum FileType ft = detect_filetype(path);
     if (ft == FT_NONE) {
         fprintf(stderr, "%s: invalid file type\n", path);
         return 1;
     }
     struct State state;
-    if (!init_state(&state, spell, tag, path)) {
+    if (!init_state(&state, spell, path)) {
         return 1;
     }
     switch (ft) {
@@ -349,11 +368,7 @@ static int check(NSSpellChecker *spell, int tag, bool print, const char *path) {
 }
 
 // Returns a list of non-English words to ignore.
-static NSArray *ignored_words() {
-    return @[
-        @"sicp",
-    ];
-}
+static NSArray<NSString *> *ignored_words() { return @[]; }
 
 int main(int argc, char **argv) {
     if (argc == 1) {
@@ -390,13 +405,17 @@ or the -d flag to show a diff from the input to the plain text.\n\
         print = true;
         first_idx++;
     }
-    NSSpellChecker *spell = [NSSpellChecker sharedSpellChecker];
-    int tag = [NSSpellChecker uniqueSpellDocumentTag];
-    [spell setLanguage:@"en_US"];
-    [spell setIgnoredWords:ignored_words() inSpellDocumentWithTag:tag];
+    struct SpellChecker spell = {
+        .checker = [NSSpellChecker sharedSpellChecker],
+        .tag = [NSSpellChecker uniqueSpellDocumentTag],
+    };
+    spell.checker.language = @"en_US";
+    spell.checker.automaticallyIdentifiesLanguages = NO;
+    [spell.checker setIgnoredWords:ignored_words()
+            inSpellDocumentWithTag:spell.tag];
     int status = 0;
     for (int i = first_idx; i < argc; i++) {
-        status |= check(spell, tag, print, argv[i]);
+        status |= check(spell, print, argv[i]);
     }
     return status;
 }
