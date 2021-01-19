@@ -9,6 +9,7 @@
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
 - implement spell checker using NSSpellChecker
++ better usage messages for C programs
 + mention `cons-stream` and `with-eval` in language.html
 + free lines from getline
 + clang-format C sources

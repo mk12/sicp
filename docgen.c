@@ -1918,7 +1918,13 @@ static bool gen(const char *output) {
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr, "usage: %s OUT_FILE\n", argv[0]);
+        fprintf(stderr,
+                "\
+usage: %s OUT_FILE\n\
+\n\
+Generates an HTML file in docs/.\n\
+",
+                argv[0]);
         return 1;
     }
     const char *output = argv[1];

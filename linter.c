@@ -663,8 +663,15 @@ end:
 
 int main(int argc, char **argv) {
     if (argc == 1) {
-        printf("usage: %s FILE ...\n", argv[0]);
-        return 0;
+        fprintf(stderr,
+                "\
+usage: %s FILE ...\n\
+\n\
+Lints Scheme code, printing errors for any style violations.\n\
+If a file ends in .md (Markdown), lints fenced code blocks.\n\
+",
+                argv[0]);
+        return 1;
     }
     int status = 0;
     for (int i = 1; i < argc; i++) {
