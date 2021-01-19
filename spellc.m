@@ -1,6 +1,7 @@
 // Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
 #include <assert.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,6 +12,50 @@
 @import Foundation.NSSpellServer;
 @import Foundation.NSString;
 @import Foundation.NSTextCheckingResult;
+
+// Returns a list of words to ignore while spellchecking.
+static NSArray<NSString *> *ignored_words() {
+    return @[
+        @"conses",
+        @"desugars",
+        @"Haumann",
+        @"Kuna",
+        @"luaposix",
+        @"noninfringement",
+        @"Paweł",
+        @"skylighting",
+        @"tabler",
+        @"vnu",
+    ];
+}
+
+// List of phrases about which to ignore grammar warnings.
+static const char *const IGNORED_PHRASES[] = {
+    "---",
+};
+static const int N_IGNORED_PHRASES =
+    sizeof IGNORED_PHRASES / sizeof IGNORED_PHRASES[0];
+
+// List of grammar suggestions to ignore, by substring.
+static const char *const IGNORED_GRAMMAR[] = {
+    "Consider ‘F 8’ instead of ‘F8’",
+    "Consider ‘off’ instead",
+    "Consider ‘too’ instead",
+    "Consider rewriting as ‘,\"’",
+    "If this is an ordinary number, consider",
+    "The first word of a sentence should be capitalized",
+    "The word ‘mark’ may not agree",
+    "The word ‘source’ may not agree",
+    "The word ‘work’ may not agree",
+    "This may be a sentence fragment",
+};
+static const int N_IGNORED_GRAMMAR =
+    sizeof IGNORED_GRAMMAR / sizeof IGNORED_GRAMMAR[0];
+
+// Returns true if s starts with the given prefix.
+static bool startswith(const char *s, const char *prefix) {
+    return strncmp(s, prefix, strlen(prefix)) == 0;
+}
 
 // Wrapper around NSSpellChecker that stores the document tag.
 struct SpellChecker {
@@ -94,6 +139,7 @@ static void check_string(struct State *state, struct Source src,
         NSRange range = result.range;
         NSString *replacement = NULL;
         NSArray<NSDictionary<NSString *, id> *> *grammarDetails = NULL;
+        uint64_t grammarSkip = 0;
         switch (result.resultType) {
         case NSTextCheckingTypeSpelling:
             replacement = [state->spell.checker
@@ -104,6 +150,41 @@ static void check_string(struct State *state, struct Source src,
             break;
         case NSTextCheckingTypeGrammar:
             grammarDetails = result.grammarDetails;
+            assert(grammarDetails.count <= 64);
+            int index = -1, skips = 0;
+            for (NSDictionary<NSString *, id> *detail in grammarDetails) {
+                index++;
+                NSString *description = detail[NSGrammarUserDescription];
+                const char *c_description = description.UTF8String;
+                NSValue *value;
+                NSRange subrange;
+                const char *c_phrase;
+                for (int i = 0; i < N_IGNORED_GRAMMAR; i++) {
+                    if (strstr(c_description, IGNORED_GRAMMAR[i]) != NULL) {
+                        skips++;
+                        grammarSkip |= UINT64_C(1) << index;
+                        goto next;
+                    }
+                }
+                value = detail[NSGrammarRange];
+                if (!value) {
+                    goto next;
+                }
+                subrange = value.rangeValue;
+                c_phrase = c_str + range.location + subrange.location;
+                for (int i = 0; i < N_IGNORED_PHRASES; i++) {
+                    if (strnstr(c_phrase, IGNORED_PHRASES[i], subrange.length)
+                        != NULL) {
+                        skips++;
+                        grammarSkip |= UINT64_C(1) << index;
+                        goto next;
+                    }
+                }
+            next:;
+            }
+            if (skips == (int)grammarDetails.count) {
+                continue;
+            }
             break;
         default:
             assert(false);
@@ -111,26 +192,31 @@ static void check_string(struct State *state, struct Source src,
         state->status = 1;
         fputs(state->path, stdout);
         if (src.first == src.last) {
-            printf("%d: ", src.first);
+            printf(":%d: ", src.first);
         } else {
-            printf("%d-%d: ", src.first, src.last);
+            printf(":%d-%d: ", src.first, src.last);
         }
         printf("“%.*s”", (int)range.length, c_str + range.location);
         if (replacement) {
             printf(" (did you mean “%s”?)", replacement.UTF8String);
         }
         if (grammarDetails) {
+            int index = -1;
             for (NSDictionary<NSString *, id> *detail in grammarDetails) {
+                index++;
+                if ((grammarSkip & (UINT64_C(1) << index)) != 0) {
+                    continue;
+                }
                 printf("\n    ");
                 NSValue *value = detail[NSGrammarRange];
                 if (value) {
                     NSRange subrange = value.rangeValue;
-                    printf("“%.*s”", (int)subrange.length, c_str + range.location + subrange.location);
+                    printf("“%.*s”", (int)subrange.length,
+                           c_str + range.location + subrange.location);
                 }
                 NSString *description = detail[NSGrammarUserDescription];
-                if (description) {
-                    printf(": %s", description.UTF8String);
-                }
+                if (value) fputs(": ", stdout);
+                fputs(description.UTF8String, stdout);
             }
         }
         putchar('\n');
@@ -167,7 +253,7 @@ static enum Mode next_mode(enum Mode old, const char *line) {
     case M_DISPLAY_MATH_END:
     case M_EXERCISE_DIV_END:
     case M_HTML_PRE_END:
-        if (strcmp(line, "```\n") == 0) {
+        if (startswith(line, "```")) {
             return M_CODE_BLOCK_START;
         };
         if (strcmp(line, "$$\n") == 0) {
@@ -176,7 +262,7 @@ static enum Mode next_mode(enum Mode old, const char *line) {
         if (strcmp(line, "::: exercises\n") == 0) {
             return M_EXERCISE_DIV_START;
         }
-        if (strncmp(line, "<pre>", 5) == 0) {
+        if (startswith(line, "<pre>")) {
             return M_HTML_PRE_START;
         }
         return M_NORMAL;
@@ -211,18 +297,21 @@ static enum Mode next_mode(enum Mode old, const char *line) {
 // indicating the beginning (e.g. would go past the hashes in headings), or NULL
 // if this line has no content that should be spellchecked.
 static char *strip_markdown(char *s) {
-    if (s[0] == '[' || (s[0] == '$' && s[1] == '$')
-        || strncmp(s, ":::", 3) == 0) {
+    // Skip link definitions, display math, and divs.
+    if (s[0] == '[' || (s[0] == '$' && s[1] == '$') || startswith(s, ":::")) {
         return NULL;
     }
     if (*s == '#') {
+        // Headings.
         while (*s == '#') s++;
         while (*s == ' ') s++;
     } else if (*s == '>') {
+        // Block quotes.
         s++;
         while (*s == ' ') s++;
     } else {
         while (*s == ' ') s++;
+        // Lists.
         if (*s == '-') {
             s++;
             while (*s == ' ') s++;
@@ -243,11 +332,13 @@ static char *strip_markdown(char *s) {
     char delim;
     while (*p) {
         switch (*p) {
+        // Escaped backticks, dollar signs, etc.
         case '\\':
             p++;
             if (!*p) goto end;
             *s++ = *p++;
             break;
+        // Inline code/math.
         case '`':
         case '$':
             delim = *p;
@@ -258,12 +349,19 @@ static char *strip_markdown(char *s) {
             *s++ = 'C';
             *s++ = 'C';
             break;
+        // HTML tags and URLs.
         case '<':
             p++;
+            if (startswith(p, "http")) {
+                *s++ = 'U';
+                *s++ = 'R';
+                *s++ = 'L';
+            }
             while (*p && *p != '>') p++;
             if (!*p) goto end;
             p++;
             break;
+        // Links and citations.
         case '[':
             if (p[1] == '@') {
                 while (*p && *p != ']') p++;
@@ -272,20 +370,65 @@ static char *strip_markdown(char *s) {
                 break;
             }
             // fallthrough
+        // Emphasis.
         case '_':
+        case '*':
             p++;
             break;
+        // Link targets.
         case ']':
+            if (p[1] == ' ') {
+                *s++ = *p++;
+                break;
+            }
             p++;
             if (*p == '[')
                 delim = ']';
             else if (*p == '(')
                 delim = ')';
+            else if (*p == '{')
+                delim = '}';
             else
                 assert(false);
             while (*p && *p != delim) p++;
             if (!*p) goto end;
             p++;
+            break;
+        // HTML entities.
+        case '&':
+            if (p > start && p[-1] == ' ' && islower(p[1])) {
+                while (*p && *p != ';') p++;
+                if (!*p) goto end;
+            }
+            break;
+        // Filenames.
+        case '.':
+            if (p > start && isalnum(p[-1]) && islower(p[1])) {
+                while (s > start && *s != ' ') s--;
+                if (*s == ' ') s++;
+                *s++ = 'F';
+                *s++ = 'I';
+                *s++ = 'L';
+                while (*p && *p != ' ' && *p != '\n') p++;
+                if (!*p) goto end;
+            } else {
+                *s++ = *p++;
+            }
+            break;
+        // Directories.
+        case '/':
+            if (p > start && isalnum(p[-1])
+                && (p[1] == ' ' || p[1] == '\n' || p[1] == ']')) {
+                while (s > start && *s != ' ') s--;
+                if (*s == ' ') s++;
+                *s++ = 'D';
+                *s++ = 'I';
+                *s++ = 'R';
+                while (*p && *p != ' ' && *p != '\n' && *p != ']') p++;
+                if (!*p) goto end;
+            } else {
+                *s++ = *p++;
+            }
             break;
         default:
             *s++ = *p++;
@@ -366,9 +509,6 @@ static int check(struct SpellChecker spell, bool print, const char *path) {
     close_state(&state);
     return state.status;
 }
-
-// Returns a list of non-English words to ignore.
-static NSArray<NSString *> *ignored_words() { return @[]; }
 
 int main(int argc, char **argv) {
     if (argc == 1) {
