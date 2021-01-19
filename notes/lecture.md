@@ -97,7 +97,7 @@ Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all n
 - The operator and operands themselves can be combinations.
 - Lisp uses fully parenthesized (unambiguous) prefix notation.
 - Parentheses are very different in Lisp and in mathematics.
-- Nested combinations can be modelled as trees.
+- Nested combinations can be modeled as trees.
 - Parentheses are just a way to write trees as a linear sequence of characters.
 
 #### Means of abstraction
@@ -158,7 +158,7 @@ You can think of `if` as syntactic sugar for `cond` or vice versa.
 - The job of a programmer is to design processes that accomplish particular goals (like finding the square root of a number).
 - You do this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.
 - You must understand the relationship between the particular spells you cast and the process you're trying to control.
-- How do particular patterns of procedures and expressions cause particular patterns of execution and behaviour in the process?
+- How do particular patterns of procedures and expressions cause particular patterns of execution and behavior in the process?
 
 ### Kinds of expressions
 
@@ -297,7 +297,7 @@ We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, ... in Lisp:
          (fib (- n 2)))))
 ```
 
-This is a _tree-recursive_ process. We can represent the evaluation with a tree. This is a terribly inefficient process because their is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.
+This is a _tree-recursive_ process. We can represent the evaluation with a tree. This is a terribly inefficient process because there is so much redundant computation. The time complexity of this is actually the Fibonacci numbers. The space complexity is linear.
 
 >  And the reason why people think of programming as being hard, of course, is because you're writing down a general rule, which is going to be used for lots of instances ... You've got to write down something that's a general in terms of variables, and you have to think of all the things that could possibly fit in those variables, and all those have to lead to the process you want to work. [@1b.p13]
 
@@ -572,7 +572,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Lists
 
-- Their are a lot of different ways of building list structure.
+- There are a lot of different ways of building list structure.
 - Lisp has a particular convention for representing a sequence as chained pairs: a list.
 - The car of the pair is the first item. The `cdr` of the pair is the rest of the sequence.
 - The `cdr` of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as `()`.
@@ -652,7 +652,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 >  In order to make a system that's robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. [@3b.p1]
 :::
 
-- Don't solve a particular problem at each level; solve a class of problems in the neighbourhood of the particular problem by building a language suited to them.
+- Don't solve a particular problem at each level; solve a class of problems in the neighborhood of the particular problem by building a language suited to them.
 - We've seen the power of embedding languages.
 - We are going to confuse the distinction between procedures and data even more badly.
 
@@ -692,7 +692,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - The expressions we get from the `deriv` procedure are ugly.
 - Nothing is simplified, and it is hard to read.
-- There is nothing wrong with the rules. The solutions is to change the representation to add a simplification step.
+- There is nothing wrong with the rules. The solution is to change the representation to add a simplification step.
 
 > So the way we might solve this problem is ... change the representation ... it's one of the pieces of artillery we have in our war against complexity. [@3b.p10]
 
@@ -710,7 +710,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Recap
 
-- We wrote a program to differentiate expressions that had a highly stylized behaviour and structure.
+- We wrote a program to differentiate expressions that had a highly stylized behavior and structure.
 - We used quotation to represent symbolic math expressions.
 - Why did we have to translate the rules of differential calculus into the language of the computer?
 - Our program was a conditional dispatch on the type of the expression.
@@ -720,8 +720,8 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We follow rules to differentiate expressions. What is a rule, exactly?
 - A rule has a left-hand side and a right-hand side.
-  - The LHS is what you compare your expression to.
-  - The RHS is the replacement expression.
+    - You compare your expression to the LHS.
+    - The RHS gives the replacement expression.
 - A rule is an arrow from a _pattern_ to a _skeleton_.
 - We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.
 - We want to build a language that allows us to directly express these rules. We will work bottom-up, like before.
@@ -749,7 +749,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - It could be prettier, but that doesn't matter. What matters is that we are writing rules directly in our language.
 - `deriv-rules` is simply a list of rules.
-- Each rule is of the form `(LHS RHS)`. `LHS` is a pattern; `RHS` is a skeleton.
+- Each rule has the form `(LHS RHS)`. `LHS` is a pattern; `RHS` is a skeleton.
 - The forms beginning with question marks in the LHS are called _pattern variables_. We have invented them for our language.
 - The forms beginning with colons in the RHS are called _substitution objects_. They are skeleton evaluations.
 - Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:
@@ -1102,7 +1102,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - Symbols for variables no longer refer directly to their values, but to some _place_.
 - A variable now refers to an _identity_. This is an entity associated with a series of causally related values over time.
-- The state of an identity is it's current associated value.
+- The state of an identity is its current associated value.
 - When we talk about _time_, we mean the before/after ordering of causal values.
 
 ### Factorial example
@@ -1367,8 +1367,8 @@ Then, we learned how to use higher-order procedures to represent general methods
   (next 1))
 ```
 
-- 1st procedure: enumerate leaves → filter `odd?` → map `square` → accumulate `+`, 0.
-- 2nd procedure: enumerate interval → map `fib` → filter `odd?` → accumulate `cons`, `'()`.
+- `sum-odd-squares`: enumerate leaves → filter `odd?` → map `square` → accumulate `+`, 0.
+- `odd-fibs`: enumerate interval → map `fib` → filter `odd?` → accumulate `cons`, `'()`.
 - These are similar, but the commonality is obscured by how we wrote the procedures.
 
 ::: highlight
@@ -1479,7 +1479,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Problem: Find the second prime between 10,000 and 1,000,000.
 - Stream solution: enumerate 10,000 to 1,000,000 → filter `prime?` → take 2nd.
 - This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.
-- But we can have our cake and eat it to! We can make it just as efficient.
+- But we can have our cake and eat it too! We can make it just as efficient.
 - The key to this is that streams are _not_ lists.
 
 ### Implementing streams
@@ -1626,7 +1626,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We've been divorcing time in the program from time in the computer.
 - Sometimes, to really take advantage of this method, you have to write explicit `delay`&thinsp;s. But in larger programs it can be very difficult to see where you need them.
-- Is there a way around this? Yes! By making _all_ arguments to _every_ procedure delayed.
+- Is there a way around this? Yes, by making _all_ arguments to _every_ procedure delayed.
 - This is _normal-order_ evaluation, as opposed to _applicative-order_ which we've been using.
 - We wouldn't need `cons-stream` because it would be the same as `cons`.
 - But there's a price. The language becomes more elegant, but less expressive. For example, we could no longer write iterative procedures.

@@ -76,7 +76,7 @@ This section applies to the following file:
 - [notes/pandoc/scheme.xml](notes/pandoc/scheme.xml)
     - Based on [scheme.xml](https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml).
 
-This work is adapated from [KDE/syntax-highlighting](https://github.com/KDE/syntax-highlighting).
+This work is adapted from [KDE/syntax-highlighting](https://github.com/KDE/syntax-highlighting).
 
 ## The MIT License
 

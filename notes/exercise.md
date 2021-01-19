@@ -16,7 +16,7 @@ These webpages are [generated][] directly from source code.
 
 # Note on the Language
 
-The code on this website is written in a language based on [R6RS Scheme][]. The language provides custom syntax for modules and assertions, and defines a few special forms. [Source files][] use the language by wrapping their content with `SICP`, a macro [implemented][] in plain R6RS Scheme.
+The code on this website is written in a language based on [R6RS Scheme][]. The language provides custom syntax for modules and assertions, and defines a few special forms. [Source files][] use the language by wrapping their content in `(SICP ...)`, a macro [implemented][] in plain R6RS Scheme.
 
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
@@ -42,7 +42,7 @@ While R6RS provides a module system, using them for hundreds of sections and exe
 (define z 3)
 ```
 
-Although every expression is at the top level, this actually defines three separate modules. Each module has a unique identifier, beginning with the ":" sigil for chapters and sections and the "?" sigil for exercises. Modules do not nest, so `:1` and `:1.1` are equal siblings rather than parent and child.
+Although every expression is at the top level, this actually defines three separate modules. Each module has a unique identifier, beginning with the `:` sigil for chapters and sections and the `?` sigil for exercises. Modules do not nest, so `:1` and `:1.1` are equal siblings rather than parent and child.
 
 ### Imports
 
@@ -131,7 +131,7 @@ The `using` procedure defined in [](:2.4.3) resets the global table and installs
 
 ## Assertions
 
-As with modules, standard techniques for assertions are too heavyweight. The mere word "assert" is too verbose for our use case. Instead, the language provides four assertion operators that work at the top level: `=>`, `~>`, `=$>`, and `=!>`. They report detailed information when they fail, including the actual result, expected result, and line number.
+As with modules, standard techniques for assertions are too distracting. The mere word "assert" is too verbose for our use case. Instead, the language provides four assertion operators that work at the top level: `=>`, `~>`, `=$>`, and `=!>`. They report detailed information when they fail, including the actual result, expected result, and line number.
 
 ### Exact
 

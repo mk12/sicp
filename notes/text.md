@@ -125,7 +125,7 @@ An example of procedure application:
 - That example used _applicative order_&hairsp;: evaluate everything first, then apply the procedure to the arguments.
 - With _normal order_, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.
 
-An example of normal order procedure application:
+An example of normal-order procedure application:
 
 ```
 (f 5)
@@ -160,7 +160,7 @@ An example of normal order procedure application:
 > But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. [@1.1.7]
 
 - In mathematics, you can say "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$." This is not a procedure.
-- Mathematical functions describes things (declarative knowledge); procedures describe how to do things (imperative knowledge).
+- Mathematical functions describe things (declarative knowledge); procedures describe how to do things (imperative knowledge).
 - Declarative is _what is_, imperative is _how to_.
 
 ::: exercises
@@ -181,7 +181,7 @@ An example of normal order procedure application:
 - Consequentially, the parameter names must be local to the body of the procedure.
 - The name of the formal parameter doesn't matter; it is called a _bound variable_. The procedure _binds_ its formal parameters.
 - If a variable is not bound, it is _free_.
-- The expressions in which a binding exists is called the _scope_ of the name. For parameters of procedures, this is the body.
+- The expressions in which a binding exists is called the _scope_ of the name. For parameters of a procedure, this is the body.
 - Using the same name for a bound variable and an existing free variable is called _capturing_ the variable.
 - The names of the free variables _do_ matter for the meaning of the procedure.
 
@@ -238,7 +238,7 @@ An example of normal order procedure application:
     - It is summarized by a fixed number of state variables and a rule to describe how they should update and when the process should terminate.
     - It is a _linear_ iterative process because the number of steps grows linearly with $N$.
 - In the iterative process, the variables provide a complete description of the state of the process at any point.
-- In the recursive process, their is "hidden" information that makes it impossible to resume the process midway through.
+- In the recursive process, there is "hidden" information that makes it impossible to resume the process midway through.
 - The longer the chain of deferred operations, the more information must be maintained (in a stack, as we will see).
 - A recursive _procedure_ is simply a procedure that refers to itself directly or indirectly.
 - A recursive _process_ refers to the evolution of the process described above.

@@ -16,7 +16,7 @@ Racket produces artifacts in `compiled/` directories. To remove them, run `make 
 
 ### Structure
 
-The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/sicp/](src/sicp), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat](src/compat) reconcile differences between the supported Scheme implementations.
+The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/sicp/](src/sicp), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat/](src/compat) reconcile differences between the supported Scheme implementations.
 
 ### Language
 

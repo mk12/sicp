@@ -8,7 +8,9 @@
 - go over all exercises and fix up
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
-- implement spell checker using NSSpellChecker
+- place spell in the right order for `make all`
+- finish correcting spelling and adding ignores
++ implement spell checker using NSSpellChecker
 + better usage messages for C programs
 + mention `cons-stream` and `with-eval` in language.html
 + free lines from getline
