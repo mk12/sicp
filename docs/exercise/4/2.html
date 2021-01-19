@@ -69,7 +69,7 @@
 </h1>
 <pre><code class="blockcode">(<span class="kw">define</span> (try a b) (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b))</code></pre>
 <p>With lazy evaluation, this would return 1 instead of raising an error.</p>
-<pre><code class="blockcode">(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">=!&gt;</span> <span class="cn">&quot;/&quot;</span>
+<pre><code class="blockcode">(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) <span class="er">=!&gt;</span> <span class="cn">&quot;/&quot;</span>
 
 (<span class="kw">define</span> (unless <span class="fu">condition</span> usual-value exceptional-value)
   (<span class="kw">if</span> <span class="fu">condition</span> exceptional-value usual-value))</code></pre>
@@ -80,11 +80,11 @@
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#">4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>unless</code>
 </li>
 </ul>
@@ -103,38 +103,38 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -159,7 +159,7 @@ Imports:
                       (<span class="fu">map</span> f (<span class="fu">cdr</span> as) (<span class="fu">cdr</span> bs) (<span class="fu">cdr</span> cs))))))
   (<span class="kw">define</span> uppercase &#39;(<span class="cn">#t</span> <span class="cn">#f</span>))
   (<span class="fu">map</span> unless uppercase &#39;(a b) &#39;(A B)))
-<span class="op">=!&gt;</span> <span class="cn">&quot;unbound variable: unless&quot;</span></code></pre>
+<span class="er">=!&gt;</span> <span class="cn">&quot;unbound variable: unless&quot;</span></code></pre>
 <h2 id="4.2.2" class="anchor">
 <a class="anchor__link link" href="#4.2.2" aria-hidden="true">#</a> <span class="number">4.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_sec_4.2.2">An Interpreter with Lazy Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -170,125 +170,125 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2">4.1.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>first-operand</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>if-alternative</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>if-consequent</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>if-predicate</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>no-operands?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operands</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operator</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-operands</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2.2">4.1.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-primitive-procedure</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>primitive-procedure?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.1">4.1.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>true?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.2">4.1.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>compound-procedure?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-body</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-environment</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-parameters</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>extend-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>memo-delay-it</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-sequence</code>
 </li>
 </ul>
@@ -334,7 +334,7 @@ Imports:
 (<span class="kw">with-eval</span> <span class="fu">eval</span> (setup-environment)
   (<span class="kw">define</span> (try a b) (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b))
   (try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)))
-<span class="op">=!&gt;</span> <span class="cn">&quot;/&quot;</span></code></pre>
+<span class="er">=!&gt;</span> <span class="cn">&quot;/&quot;</span></code></pre>
 <p>Note: With the lazy evaluator, we use <code>actual-value</code> for the top-level REPL rather than <code>eval</code>. Thus we have a fourth condition for forcing expressions (in addition to operands, if-predicates, and primitive procedure operands).</p>
 <pre><code class="blockcode">(using eval-pkg lazy-eval-pkg)
 (<span class="kw">with-eval</span> actual-value (setup-environment)
@@ -348,19 +348,19 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#4.1.2">4.1.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>tagged-list?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
 </ul>
@@ -396,46 +396,46 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>thunk?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -462,63 +462,63 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2">4.1.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>operands</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operator</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>force-it</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -535,7 +535,7 @@ Imports:
 <p>With <code>actual-value</code> (the normal behavior), it works fine.</p>
 <pre><code class="blockcode">(do-it-with actual-value) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <p>But with <code>eval</code>, the operator <code>((<span class="kw">lambda</span> (x) x) <span class="fu">car</span>)</code> remains a thunk, whereas <code>apply</code> expects either a primitive or compound procedure object.</p>
-<pre><code class="blockcode">(do-it-with <span class="fu">eval</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span></code></pre>
+<pre><code class="blockcode">(do-it-with <span class="fu">eval</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span></code></pre>
 <h3 id="ex4.29" class="anchor">
 <a class="anchor__link link" href="#ex4.29" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.29">Exercise 4.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -543,51 +543,51 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../1/2.html#1.2.2">1.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>fib</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -617,126 +617,126 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2">4.1.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>begin-actions</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-exp</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>last-exp?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operands</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operator</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-exps</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2.2">4.1.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-primitive-procedure</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>primitive-procedure?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.2">4.1.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>compound-procedure?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-body</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-environment</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-parameters</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>extend-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>list-of-arg-values</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>list-of-delayed-args</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">paste</span> (:4.2.2.1 <span class="fu">apply</span> eval-call))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.2.2.1>:4.2.2.1</a> <span class="fu">apply</span> eval-call))</code></pre>
 <p>Cy D. Fect proposes the following change:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (eval-sequence exps env)
   (<span class="kw">cond</span> ((last-exp? exps) (<span class="fu">eval</span> (first-exp exps) env))
@@ -795,129 +795,129 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2">4.1.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>first-operand</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>no-operands?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operands</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>operator</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-operands</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2.2">4.1.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-primitive-procedure</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>primitive-procedure?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.2">4.1.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>compound-procedure?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-body</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-environment</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-parameters</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>extend-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval-if</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>list-of-arg-values</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>delay-it</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>force-it</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>memo-delay-it</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-sequence</code>
 </li>
 </ul>
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">paste</span> (:4.2.2.1 eval-call))
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.2.2.1>:4.2.2.1</a> eval-call))
 
 (<span class="kw">define</span> (procedure-parameter-names p)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="kw">if</span> (<span class="fu">pair?</span> x) (<span class="fu">cadr</span> x) x))
@@ -962,7 +962,7 @@ Imports:
   (<span class="kw">define</span> (double-lazy (lazy x)) (<span class="fu">+</span> x x))
   (<span class="kw">define</span> (double-lazy-memo (lazy-memo x)) (<span class="fu">+</span> x x)))
 
-(actual-value &#39;(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) env) <span class="op">=!&gt;</span> <span class="cn">&quot;/&quot;</span>
+(actual-value &#39;(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) env) <span class="er">=!&gt;</span> <span class="cn">&quot;/&quot;</span>
 (actual-value &#39;(try-lazy <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (actual-value &#39;(try-lazy-memo <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) env) <span class="op">=&gt;</span> <span class="cn">1</span>
 
@@ -976,68 +976,68 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.2">4.1.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>compound-procedure?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-environment</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>procedure-parameters</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lookup-variable-value</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.4">4.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>setup-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -1096,51 +1096,51 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.3">4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-list-env</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -1171,70 +1171,70 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.2">4.1.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>text-of-quotation</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.3">4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-list-env</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>
@@ -1259,7 +1259,7 @@ Imports:
 (using eval-pkg lazy-eval-pkg)
 (actual-value &#39;&#39;() env) <span class="op">=&gt;</span> &#39;()
 (actual-value &#39;<span class="cn">&#39;a</span> env) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
-(actual-value &#39;(<span class="fu">car</span> &#39;(a b c)) env) <span class="op">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span>
+(actual-value &#39;(<span class="fu">car</span> &#39;(a b c)) env) <span class="er">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span>
 
 (using eval-pkg lazy-eval-pkg lazy-quote-pkg)
 (actual-value &#39;&#39;() env) <span class="op">=&gt;</span> &#39;()
@@ -1272,75 +1272,75 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#4.1.3.3">4.1.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-environment</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.1">4.2.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-eval-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.2.2">4.2.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>actual-value</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>evaluated-thunk?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>force-it</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>memo-thunk?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>thunk-exp</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#4.2.3">4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>lazy-cons-car</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>lazy-cons-cdr</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>lazy-cons?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>lazy-list-env</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex4.3">Ex 4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>eval</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>eval-pkg</code>
 </li>
 </ul>

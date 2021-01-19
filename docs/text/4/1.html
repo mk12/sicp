@@ -124,6 +124,23 @@
            arguments
            (procedure-environment procedure))))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</code></pre>
+<h3 id="4.1.1.3" class="anchor">
+<a class="anchor__link link" href="#4.1.1.3" aria-hidden="true">#</a> Procedure arguments
+</h3>
+<!-- DELETE -->
+<h3 id="4.1.1.4" class="anchor">
+<a class="anchor__link link" href="#4.1.1.4" aria-hidden="true">#</a> Conditionals
+</h3>
+<!-- DELETE -->
+<h3 id="4.1.1.5" class="anchor">
+<a class="anchor__link link" href="#4.1.1.5" aria-hidden="true">#</a> Sequences
+</h3>
+<!-- DELETE -->
+<h3 id="4.1.1.6" class="anchor">
+<a class="anchor__link link" href="#4.1.1.6" aria-hidden="true">#</a> Assignments and definitions
+</h3>
+<!-- DELETE -->
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.1">4.1</a></li></ul></aside>
 <h2 id="4.1.2" class="anchor">
 <a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a> <span class="number">4.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.2">Representing Expressions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -167,6 +184,7 @@
 <li>Practical Lisp systems allow the user to define new derived expressions by syntactic transformation. These are called <em>macros</em>.</li>
 <li>There is much research on avoiding name-conflict problems in macro definition languages.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.2">4.2</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.3">4.3</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.4">4.4</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.5">4.5</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.6">4.6</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.7">4.7</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.8">4.8</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.9">4.9</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.10">4.10</a></li></ul></aside>
 <h2 id="4.1.3" class="anchor">
 <a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.3">Evaluator Data Structures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -230,6 +248,7 @@
 <ul>
 <li>This representation is simple, but inefficient, since the evaluator may have to search through many frames to find a binding. This approach is called <em>deep binding</em>.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.11">4.11</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.12">4.12</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.13">4.13</a></li></ul></aside>
 <h2 id="4.1.4" class="anchor">
 <a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -293,6 +312,7 @@
                      (procedure-body object)
                      &#39;<span class="ss">procedure-env</span>))
       (<span class="fu">display</span> object)))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.14">4.14</a></li></ul></aside>
 <h2 id="4.1.5" class="anchor">
 <a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.5">Data as Programs<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -312,6 +332,7 @@
 <p>Some people find it counterintuitive that an evaluator, which is implemented by a relatively simple procedure, can emulate programs that are more complex than the evaluator itself. The existence of a universal evaluator machine is a deep and wonderful property of computation. <em>Recursion theory</em>, a branch of mathematical logic, is concerned with logical limits of computation. Douglas Hofstadter’s beautiful book <cite>Gödel, Escher, Bach</cite> (1979) explores some of these ideas. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#footnote_Temp_554" title="SICP Chapter 4, Footnote 20">(Footnote&nbsp;4.20)</a></p>
 </blockquote>
 </div>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.15">4.15</a></li></ul></aside>
 <h2 id="4.1.6" class="anchor">
 <a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.6">Internal Definitions<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -336,6 +357,7 @@
 <ul>
 <li>Here, <code>'*unassigned*</code> is a special symbol causing an error upon variable lookup.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.16">4.16</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.17">4.17</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.18">4.18</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.19">4.19</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.20">4.20</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.21">4.21</a></li></ul></aside>
 <h2 id="4.1.7" class="anchor">
 <a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -373,6 +395,7 @@
   (<span class="kw">let</span> ((vars (lambda-parameters exp))
         (bproc (analyze-sequence (lambda-body exp))))
     (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.22">4.22</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.23">4.23</a>, </li><li class="flat__item"><a href="../../exercise/4/1.html#ex4.24">4.24</a></li></ul></aside>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

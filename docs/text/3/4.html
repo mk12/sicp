@@ -77,7 +77,7 @@
 <li>We want computational processes executing <em>concurrently</em>.</li>
 <li>Writing programs this way forces us to avoid inessential timing constraints, making the program more modular.</li>
 <li>It can also provide a speed advantage on multicore computers.</li>
-<li>The complexities introduces by assignment become even more problematic in the presence of concurrency.</li>
+<li>The complexities introduced by assignment become even more problematic in the presence of concurrency.</li>
 </ul>
 <h2 id="3.4.1" class="anchor">
 <a class="anchor__link link" href="#3.4.1" aria-hidden="true">#</a> <span class="number">3.4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.1">The Nature of Time in Concurrent Systems<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -102,6 +102,7 @@
 <li>A less stringent restriction: to ensure that the system produces the same result as if the processes had run sequentially in some order (we don’t specify a particular order).</li>
 <li>Concurrent programs are inherently <em>nondeterministic</em>, because we don’t what order of execution its result is equivalent to, so there is a set of possible values it could take.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/4.html#ex3.38">3.38</a></li></ul></aside>
 <h2 id="3.4.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2" aria-hidden="true">#</a> <span class="number">3.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.2">Mechanisms for Controlling Concurrency<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -129,6 +130,7 @@
 <li>A serializer takes a procedure as its argument and returns a serialized procedure that behaves like the original.</li>
 <li>Calls to the same serializer return procedures in the same set.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/4.html#ex3.39">3.39</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.40">3.40</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.41">3.41</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.42">3.42</a></li></ul></aside>
 <h3 id="3.4.2.3" class="anchor">
 <a class="anchor__link link" href="#3.4.2.3" aria-hidden="true">#</a> Complexity of using multiple shared resources
 </h3>
@@ -147,6 +149,7 @@
 <li>One solution is to expose the serializer from <code>make-account</code>, and use that to serialize the entire exchanging procedure.</li>
 <li>We would have to manually serialize deposits, but this would give us the flexibility to serialize the exchanging procedure.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/4.html#ex3.43">3.43</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.44">3.44</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.45">3.45</a></li></ul></aside>
 <h3 id="3.4.2.4" class="anchor">
 <a class="anchor__link link" href="#3.4.2.4" aria-hidden="true">#</a> Implementing serializers
 </h3>
@@ -165,11 +168,12 @@
 <li>To acquire the mutex, we test the cell. We wait until it is false, then we set it to true and proceed.</li>
 <li>To release the mutex, we set its contents to false.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/4.html#ex3.46">3.46</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.47">3.47</a></li></ul></aside>
 <h3 id="3.4.2.5" class="anchor">
 <a class="anchor__link link" href="#3.4.2.5" aria-hidden="true">#</a> Deadlock
 </h3>
 <ul>
-<li>Even with a proper implementation of mutexes and seralizers, we still have a problem with the account exchanging procedure.</li>
+<li>Even with a proper implementation of mutexes and serializers, we still have a problem with the account exchanging procedure.</li>
 <li>We serialize the whole procedure with both accounts so that an account may only participate in one exchange at a time.</li>
 <li>There are two mutexes, so it is possible for something to happen in between acquiring the first and the second.</li>
 <li>If we exchange <code>a1</code> with <code>a2</code> and concurrently do the reverse exchange, it is possible for the first process to lock <code>a1</code> and the second process to lock <code>a2</code>.</li>
@@ -177,6 +181,7 @@
 <li>In this case, we can fix the problem by locking accounts in a particular order based on a unique identifier.</li>
 <li>In some cases, it is not possible to avoid deadlock, and we simply have to “back out” and try again.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/4.html#ex3.48">3.48</a>, </li><li class="flat__item"><a href="../../exercise/3/4.html#ex3.49">3.49</a></li></ul></aside>
 <h3 id="3.4.2.6" class="anchor">
 <a class="anchor__link link" href="#3.4.2.6" aria-hidden="true">#</a> Concurrency, time, and communication
 </h3>

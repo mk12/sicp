@@ -74,11 +74,11 @@
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../1/1.html#1.1.4">1.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>square</code>
 </li>
 </ul>
@@ -140,11 +140,11 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../1/1.html#1.1.4">1.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>square</code>
 </li>
 </ul>
@@ -220,7 +220,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> make-from-real-imag make-from-real-imag-rectangular)
 (<span class="kw">define</span> make-from-mag-ang make-from-mag-ang-polar)</code></pre>
 <p>Generic operators</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (:2.4.1 add-complex div-complex mul-complex sub-complex))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.4.1>:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Now we can get exact answers for all operations:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
@@ -233,39 +233,39 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../1/1.html#1.1.4">1.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>square</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>reset</code>
 </li>
 </ul>
@@ -344,7 +344,7 @@ Imports:
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (apply-specific <span class="cn">&#39;make-from-mag-ang</span> <span class="cn">&#39;polar</span> r a))</code></pre>
 <p>Generic operators</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (:2.4.1 add-complex div-complex mul-complex sub-complex))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.4.1>:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Helper function to run installers on a clean slate.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (using . installers)
   (reset)
@@ -363,55 +363,55 @@ z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="2.html#2.2.3.1">2.2.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>accumulate</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-product</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-sum</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>same-variable?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-specific</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="3.html#ex2.56">Ex 2.56</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-exponentiation</code>
 </li>
 </ul>
@@ -483,22 +483,22 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-specific</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -567,11 +567,11 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../1/1.html#1.1.4">1.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>square</code>
 </li>
 </ul>
@@ -597,11 +597,11 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#2.4.3.1">2.4.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
 </ul>

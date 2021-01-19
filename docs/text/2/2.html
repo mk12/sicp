@@ -115,6 +115,7 @@
   (<span class="kw">if</span> (<span class="fu">null?</span> list1)
       list2
       (<span class="fu">cons</span> (<span class="fu">car</span> list1 (<span class="fu">append</span> (<span class="fu">cdr</span> list1) list2)))))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.17">2.17</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.18">2.18</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.19">2.19</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.20">2.20</a></li></ul></aside>
 <h3 id="2.2.1.2" class="anchor">
 <a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a> Mapping over lists
 </h3>
@@ -135,6 +136,7 @@
 <blockquote>
 <p>This abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.1" title="SICP Section 2.2.1">(Section&nbsp;2.2.1)</a></p>
 </blockquote>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.21">2.21</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.22">2.22</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.23">2.23</a></li></ul></aside>
 <h2 id="2.2.2" class="anchor">
 <a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a> <span class="number">2.2.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.2">Hierarchical Structures<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -149,6 +151,7 @@
         ((<span class="fu">not</span> (<span class="fu">pair?</span> x)) <span class="cn">1</span>)
         (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))
                  (count-leaves (<span class="fu">cdr</span> x))))))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.24">2.24</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.25">2.25</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.26">2.26</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.27">2.27</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.28">2.28</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.29">2.29</a></li></ul></aside>
 <h3 id="2.2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a> Mapping over trees
 </h3>
@@ -156,6 +159,7 @@
 <li>We can deal with trees using <code>map</code> together with recursion.</li>
 <li>This makes it possible to apply an operation to all the leaves in a tree, for example.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.30">2.30</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.31">2.31</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.32">2.32</a></li></ul></aside>
 <h2 id="2.2.3" class="anchor">
 <a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a> <span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -175,6 +179,7 @@
 <li>A vast range of operations can be expressed as sequence operations, even if you don’t realize it at first.</li>
 <li>Sequences (here, they are lists) serve as a conventional interface for the modules of the program.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.33">2.33</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.34">2.34</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.35">2.35</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.36">2.36</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.37">2.37</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.38">2.38</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.39">2.39</a></li></ul></aside>
 <h3 id="2.2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a> Nested mappings
 </h3>
@@ -191,6 +196,7 @@
                 (<span class="fu">map</span> (<span class="kw">lambda</span> (p) (<span class="fu">cons</span> x p))
                      (permutations (<span class="fu">remove</span> x s))))
               s)))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.40">2.40</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.41">2.41</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.42">2.42</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.43">2.43</a></li></ul></aside>
 <h2 id="2.2.4" class="anchor">
 <a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a> <span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -208,6 +214,7 @@
 <li>We transform single images with operations like <code>flip-vert</code> and <code>flip-horiz</code>.</li>
 <li>We can build up complexity easily because painters are closed under the language’s means of combination (this is closure).</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.44">2.44</a></li></ul></aside>
 <h3 id="2.2.4.2" class="anchor">
 <a class="anchor__link link" href="#2.2.4.2" aria-hidden="true">#</a> Higher-order operations
 </h3>
@@ -215,6 +222,7 @@
 <li>Just as we have higher-order procedures, we can have higher-order painting operations.</li>
 <li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.45">2.45</a></li></ul></aside>
 <h3 id="2.2.4.3" class="anchor">
 <a class="anchor__link link" href="#2.2.4.3" aria-hidden="true">#</a> Frames
 </h3>
@@ -225,6 +233,7 @@
 <li>We will use coordinates in the unit square.</li>
 <li>We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.46">2.46</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.47">2.47</a></li></ul></aside>
 <h3 id="2.2.4.4" class="anchor">
 <a class="anchor__link link" href="#2.2.4.4" aria-hidden="true">#</a> Painters
 </h3>
@@ -233,6 +242,7 @@
 <li>The details of primitive painters depend on the characteristics of the graphics system.</li>
 <li>Painters as procedures is a powerful abstraction barrier.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.48">2.48</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.49">2.49</a></li></ul></aside>
 <h3 id="2.2.4.5" class="anchor">
 <a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a> Transforming and combining painters
 </h3>
@@ -240,6 +250,7 @@
 <li>Operations on painters invoke the original painters with new frames drives from the argument frame.</li>
 <li>They are all based on the procedure <code>transform-painter</code>.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.50">2.50</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.51">2.51</a></li></ul></aside>
 <h3 id="2.2.4.6" class="anchor">
 <a class="anchor__link link" href="#2.2.4.6" aria-hidden="true">#</a> Levels of language for robust design
 </h3>
@@ -253,6 +264,7 @@
 <blockquote>
 <p>In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4" title="SICP Section 2.2.4">(Section&nbsp;2.2.4)</a></p>
 </blockquote>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.52">2.52</a></li></ul></aside>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

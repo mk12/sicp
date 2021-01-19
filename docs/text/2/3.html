@@ -93,6 +93,7 @@
 <li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>&#39;()</code>.</li>
 <li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.53">2.53</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.54">2.54</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.55">2.55</a></li></ul></aside>
 <h2 id="2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -127,6 +128,7 @@
 <li>We can simplify the answers just like we did in the rational number example: by changing the constructors.</li>
 <li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.56">2.56</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.57">2.57</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.58">2.58</a></li></ul></aside>
 <h2 id="2.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -148,6 +150,7 @@
 <li>If we don’t eliminate duplicates, most operations are faster.</li>
 <li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.59">2.59</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.60">2.60</a></li></ul></aside>
 <h3 id="2.3.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.3.2" aria-hidden="true">#</a> Sets as ordered lists
 </h3>
@@ -158,6 +161,7 @@
 <li>On average we should expect to scan about half of the set.</li>
 <li>This is still <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>; however, intersection gets much faster. Instead of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>, it is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.61">2.61</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.62">2.62</a></li></ul></aside>
 <h3 id="2.3.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3.3" aria-hidden="true">#</a> Sets as binary trees
 </h3>
@@ -172,6 +176,7 @@
 <li>Efficiency hinges on the tree being balanced.</li>
 <li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.63">2.63</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.64">2.64</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.65">2.65</a></li></ul></aside>
 <h3 id="2.3.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.3.4" aria-hidden="true">#</a> Sets and information retrieval
 </h3>
@@ -183,6 +188,7 @@
 <li>For “random access,” meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
 <li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.66">2.66</a></li></ul></aside>
 <h2 id="2.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -211,6 +217,15 @@
 <li>Leaves are represented by the list beginning with the symbol <code>leaf</code> and with two more elements: the symbol and the weight.</li>
 <li>Trees are represented by the list <code>(left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
 </ul>
+<h3 id="2.3.4.3" class="anchor">
+<a class="anchor__link link" href="#2.3.4.3" aria-hidden="true">#</a> The decoding procedure
+</h3>
+<!-- DELETE -->
+<h3 id="2.3.4.4" class="anchor">
+<a class="anchor__link link" href="#2.3.4.4" aria-hidden="true">#</a> Sets of weighted elements
+</h3>
+<!-- DELETE -->
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.67">2.67</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.68">2.68</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.69">2.69</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.70">2.70</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.71">2.71</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.72">2.72</a></li></ul></aside>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

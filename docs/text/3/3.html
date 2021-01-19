@@ -92,6 +92,7 @@
     (<span class="fu">set-car!</span> new x)
     (<span class="fu">set-cdr!</span> new y)
     new))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.12">3.12</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.13">3.13</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.14">3.14</a></li></ul></aside>
 <h3 id="3.3.1.1" class="anchor">
 <a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a> Sharing and identity
 </h3>
@@ -108,6 +109,7 @@
 <li><code>(<span class="fu">eq?</span> x y)</code> tests whether <code>x</code> and <code>y</code> point to the same object.</li>
 <li>We can exploit sharing for good, but it can be dangerous.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.15">3.15</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.16">3.16</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.17">3.17</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.18">3.18</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.19">3.19</a></li></ul></aside>
 <h3 id="3.3.1.2" class="anchor">
 <a class="anchor__link link" href="#3.3.1.2" aria-hidden="true">#</a> Mutation is just assignment
 </h3>
@@ -137,6 +139,7 @@
 <ul>
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.20">3.20</a></li></ul></aside>
 <h2 id="3.3.2" class="anchor">
 <a class="anchor__link link" href="#3.3.2" aria-hidden="true">#</a> <span class="number">3.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.2">Representing Queues<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -154,8 +157,9 @@
 <li>A simple list representation is inefficient because we have to scan to get to one end.</li>
 <li>Scanning a list takes <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> operations.</li>
 <li>A simply modification lets us implement all the operations with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> time complexity: keep a pointer to the end as well.</li>
-<li>A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.</li>
+<li>A queue is a pair formed by <code>cons</code> ing the front-pointer and the rear-pointer of a normal list.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.21">3.21</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.22">3.22</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.23">3.23</a></li></ul></aside>
 <h2 id="3.3.3" class="anchor">
 <a class="anchor__link link" href="#3.3.3" aria-hidden="true">#</a> <span class="number">3.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.3">Representing Tables<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -200,12 +204,13 @@
     (<span class="kw">if</span> (<span class="fu">eq?</span> k key)
         value
         (table k))))</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.24">3.24</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.25">3.25</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.26">3.26</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.27">3.27</a></li></ul></aside>
 <h2 id="3.3.4" class="anchor">
 <a class="anchor__link link" href="#3.3.4" aria-hidden="true">#</a> <span class="number">3.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.4">A Simulator for Digital Circuits<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>Digital circuits are made up of simple elements.</li>
-<li>Networks of these simple elements can have very complex behaviour.</li>
+<li>Networks of these simple elements can have very complex behavior.</li>
 <li>We will design a system to simulator digital logic. This type of program is called an <em>event-driven simulation</em>.</li>
 <li>Our computational model is based on the physical components.
 <ul>
@@ -233,6 +238,7 @@
 </ul></li>
 <li>The procedure <code>after-delay</code> executes a procedure after a given time delay.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.28">3.28</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.29">3.29</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.30">3.30</a></li></ul></aside>
 <h3 id="3.3.4.2" class="anchor">
 <a class="anchor__link link" href="#3.3.4.2" aria-hidden="true">#</a> Representing wires
 </h3>
@@ -261,7 +267,12 @@
 <li>The simulation is driven by <code>propagate</code>, which executes each item on the agenda in sequence.</li>
 </ul>
 <h3 id="3.3.4.4" class="anchor">
-<a class="anchor__link link" href="#3.3.4.4" aria-hidden="true">#</a> Implementing the agenda
+<a class="anchor__link link" href="#3.3.4.4" aria-hidden="true">#</a> A sample simulation
+</h3>
+<!-- DELETE -->
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.31">3.31</a></li></ul></aside>
+<h3 id="3.3.4.5" class="anchor">
+<a class="anchor__link link" href="#3.3.4.5" aria-hidden="true">#</a> Implementing the agenda
 </h3>
 <ul>
 <li>The agenda is a pair: the current time, and a list of <em>time segments</em> sorted in increasing order of time.</li>
@@ -270,6 +281,7 @@
 <li>To remove the first agenda item, we delete the first item in the first queue, and if this makes the queue empty, we delete the first time segment as well.</li>
 <li>Whenever we extract the first item with <code>first-agenda-item</code>, we also update the current time.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.32">3.32</a></li></ul></aside>
 <h2 id="3.3.5" class="anchor">
 <a class="anchor__link link" href="#3.3.5" aria-hidden="true">#</a> <span class="number">3.3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.5">Propagation of Constraints<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -314,6 +326,7 @@
 <li>Each time the connector’s value is set, it remembers the informant. This could be a constraint, or a symbol like <code>'user</code>.</li>
 <li><code>for-each-except</code> is used to notify all <em>other</em> constraints.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/3.html#ex3.33">3.33</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.34">3.34</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.35">3.35</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.36">3.36</a>, </li><li class="flat__item"><a href="../../exercise/3/3.html#ex3.37">3.37</a></li></ul></aside>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

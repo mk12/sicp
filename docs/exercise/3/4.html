@@ -106,19 +106,19 @@
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-serializer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex3.38">Ex 3.38</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>in?</code>
 </li>
 </ul>
@@ -162,19 +162,19 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-serializer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex3.38">Ex 3.38</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>in?</code>
 </li>
 </ul>
@@ -198,49 +198,49 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../2/2.html#2.2.3.1">2.2.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>filter</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../2/2.html#2.2.3.2">2.2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>permutations</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="3.html#3.3.3.1">3.3.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>insert!</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>lookup</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-table</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-serializer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex3.38">Ex 3.38</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>in?</code>
 </li>
 </ul>
@@ -335,21 +335,6 @@ x <span class="op">=&gt;</span> <span class="cn">1000000</span></code></pre>
 <h3 id="ex3.41" class="anchor">
 <a class="anchor__link link" href="#ex3.41" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.41">Exercise 3.41<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<aside class="imports">
-<h4>
-Imports:
-</h4>
-<ul class="imports__list">
-<li class="imports__item">
-<a href="#3.4.2.1">3.4.2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
-<code>make-account</code>
-</li>
-</ul>
-</li>
-</ul>
-</aside>
 <p>Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank balance because it would make no difference. If we serialize it, then the value will be read either before or after (in sequence) it is written, assuming someone is withdrawing or depositing concurrently. However, if we don’t serialize it, we still get one value or the other. There is nothing that can be interleaved because reading the balance takes only one step, assuming the Scheme implementation considers this a thread-safe operation.</p>
 <h3 id="ex3.42" class="anchor">
 <a class="anchor__link link" href="#ex3.42" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.42">Exercise 3.42<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -362,11 +347,11 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-serializer</code>
 </li>
 </ul>
@@ -410,6 +395,7 @@ Imports:
 <h3 id="ex3.43" class="anchor">
 <a class="anchor__link link" href="#ex3.43" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.43">Exercise 3.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<!-- TODO escape dollars -->
 <p>The balances in the accounts start out as $10, $20, and $30. Exchanging balances A and B works by taking D = A - B, and then withdrawing to get A’ = A - D = B and depositing to get B’ = B + D = A. Going from {A, B} to {B, A}, we can see that any sequence of exchanges preserves the set {A, B}, and in this particular case {10, 20, 30}.</p>
 <p>Using the first version of <code>exchange</code>, where only individual deposits and withdrawals are serialized (by account), the {10, 20, 30} set will not be preserved. For example, let us refer to concurrent processes P and Q:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (exchange acc1 acc2)
@@ -464,19 +450,19 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-mutex-from-scratch</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex3.38">Ex 3.38</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>in?</code>
 </li>
 </ul>
@@ -484,7 +470,7 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
-(<span class="kw">paste</span> (:3.4.2.3 make-serializer))</code></pre>
+(<span class="kw">paste</span> (<a href=#3.4.2.3>:3.4.2.3</a> make-serializer))</code></pre>
 <p>Suppose we execute this using the non-atomic <code>test-and-set!</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">100</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
@@ -506,22 +492,22 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>clear!</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>test-and-set!</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex3.38">Ex 3.38</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>in?</code>
 </li>
 </ul>
@@ -585,19 +571,19 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#3.4.2.2">3.4.2.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>exchange</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#3.4.2.3">3.4.2.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-serializer</code>
 </li>
 </ul>

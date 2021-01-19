@@ -74,7 +74,7 @@
 <a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
 <ul>
-<li>We wrote a program to differentiate expressions that had a highly stylized behaviour and structure.</li>
+<li>We wrote a program to differentiate expressions that had a highly stylized behavior and structure.</li>
 <li>We used quotation to represent symbolic math expressions.</li>
 <li>Why did we have to translate the rules of differential calculus into the language of the computer?</li>
 <li>Our program was a conditional dispatch on the type of the expression.</li>
@@ -87,8 +87,8 @@
 <li>We follow rules to differentiate expressions. What is a rule, exactly?</li>
 <li>A rule has a left-hand side and a right-hand side.
 <ul>
-<li>The LHS is what you compare your expression to.</li>
-<li>The RHS is the replacement expression.</li>
+<li>You compare your expression to the LHS.</li>
+<li>The RHS gives the replacement expression.</li>
 </ul></li>
 <li>A rule is an arrow from a <em>pattern</em> to a <em>skeleton</em>.</li>
 <li>We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.</li>
@@ -117,7 +117,7 @@
 <ul>
 <li>It could be prettier, but that doesn’t matter. What matters is that we are writing rules directly in our language.</li>
 <li><code>deriv-rules</code> is simply a list of rules.</li>
-<li>Each rule is of the form <code>(LHS RHS)</code>. <code>LHS</code> is a pattern; <code>RHS</code> is a skeleton.</li>
+<li>Each rule has the form <code>(LHS RHS)</code>. <code>LHS</code> is a pattern; <code>RHS</code> is a skeleton.</li>
 <li>The forms beginning with question marks in the LHS are called <em>pattern variables</em>. We have invented them for our language.</li>
 <li>The forms beginning with colons in the RHS are called <em>substitution objects</em>. They are skeleton evaluations.</li>
 <li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>

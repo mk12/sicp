@@ -74,88 +74,88 @@
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add-rat</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div-rat</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul-rat</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>sub-rat</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>attach-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add-complex</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-specific</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div-complex</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-from-mag-ang</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul-complex</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>polar-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rectangular-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>sub-complex</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="1.html#ex2.1">Ex 2.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-rat</code>
 </li>
 </ul>
@@ -165,7 +165,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
 (<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
 (<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
-(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+(<span class="kw">define</span> (div x y) (apply-generic <span class="cn">&#39;div</span> x y))
 
 (<span class="kw">define</span> (scheme-number-pkg)
   (<span class="kw">define</span> (tag x) (attach-tag <span class="cn">&#39;scheme-number</span> x))
@@ -229,56 +229,56 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="../1/1.html#1.1.4">1.1.4</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>square</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>angle</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>imag-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>magnitude</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>real-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>complex-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -314,22 +314,22 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -356,7 +356,7 @@ Imports:
 (contents &#39;(foo . a)) <span class="op">=&gt;</span> <span class="cn">&#39;a</span>
 (contents <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
 
-(<span class="kw">paste</span> (:2.4.3 apply-generic) (:2.5.1 add <span class="fu">div</span> mul scheme-number-pkg sub))
+(<span class="kw">paste</span> (<a href=4.html#2.4.3>:2.4.3</a> apply-generic) (<a href=#2.5.1>:2.5.1</a> add div mul scheme-number-pkg sub))
 
 (using scheme-number-pkg)
 
@@ -369,59 +369,59 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>imag-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>real-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-mag-ang</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-rational</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-scheme-number</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numeric-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -459,56 +459,56 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>imag-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>real-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-mag-ang</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-rational</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-scheme-number</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numeric-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -540,47 +540,47 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-scheme-number</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numeric-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -619,7 +619,7 @@ Imports:
 (<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
 (<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
 (<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
-(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+(<span class="kw">define</span> (div x y) (apply-generic <span class="cn">&#39;div</span> x y))
 
 (using numeric-pkg install-scheme-number-&gt;complex-package)
 
@@ -633,61 +633,61 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>complex-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.2">2.5.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>get-coercion</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put-coercion</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -746,67 +746,67 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add-complex</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-scheme-number</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numeric-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.2">2.5.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>get-coercion</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>install-scheme-number-&gt;complex-package</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -866,67 +866,67 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>attach-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-specific</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>complex-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-rational</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rational-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>
 </li>
 </ul>
@@ -978,8 +978,8 @@ Imports:
 (using extended-numeric-pkg raise-pkg)
 
 (add (make-integer <span class="cn">1</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">3</span>)
-(<span class="fu">div</span> (make-integer <span class="cn">10</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">5</span>)
-(<span class="fu">div</span> (make-integer <span class="cn">1</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
+(div (make-integer <span class="cn">10</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">5</span>)
+(div (make-integer <span class="cn">1</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
 
 (<span class="kw">raise</span> (make-integer <span class="cn">1</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">1</span>)
 (<span class="kw">raise</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)
@@ -991,61 +991,61 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-rational</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.83">Ex 2.83</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>extended-numeric-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-integer</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-real</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>raise</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>raise-pkg</code>
 </li>
 </ul>
@@ -1090,7 +1090,7 @@ Imports:
 (<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
 (<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
 (<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
-(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+(<span class="kw">define</span> (div x y) (apply-generic <span class="cn">&#39;div</span> x y))
 
 (using extended-numeric-pkg raise-pkg)
 
@@ -1100,7 +1100,7 @@ Imports:
 (add (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-real <span class="cn">0.5</span>))
 <span class="op">=&gt;</span> (make-real <span class="cn">1.0</span>)
 
-(<span class="fu">div</span> (make-real <span class="cn">1</span>) (make-integer <span class="cn">2</span>))
+(div (make-real <span class="cn">1</span>) (make-integer <span class="cn">2</span>))
 <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)</code></pre>
 <h3 id="ex2.85" class="anchor">
 <a class="anchor__link link" href="#ex2.85" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.85">Exercise 2.85<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1109,103 +1109,103 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>real-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-rational</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>get</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.79">Ex 2.79</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>equ-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>equ?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.83">Ex 2.83</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>extended-numeric-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-integer</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-real</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>raise</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>raise-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.84">Ex 2.84</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>tower-bottom?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>tower-position</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>tower-top?</code>
 </li>
 </ul>
@@ -1266,11 +1266,11 @@ Imports:
 (<span class="kw">define</span> (add x y) (apply-generic <span class="cn">&#39;add</span> x y))
 (<span class="kw">define</span> (sub x y) (apply-generic <span class="cn">&#39;sub</span> x y))
 (<span class="kw">define</span> (mul x y) (apply-generic <span class="cn">&#39;mul</span> x y))
-(<span class="kw">define</span> (<span class="fu">div</span> x y) (apply-generic <span class="cn">&#39;div</span> x y))
+(<span class="kw">define</span> (div x y) (apply-generic <span class="cn">&#39;div</span> x y))
 
 (using extended-numeric-pkg equ-pkg raise-pkg project-pkg)
 
-(<span class="fu">div</span> (make-real <span class="cn">1</span>) (make-complex-from-real-imag <span class="cn">2</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
+(div (make-real <span class="cn">1</span>) (make-complex-from-real-imag <span class="cn">2</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
 (add (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">0</span>) (make-integer <span class="cn">1</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">2</span>)
 (mul (make-rational <span class="cn">3</span> <span class="cn">2</span>) (make-real <span class="cn">8</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">12</span>)
 (sub (make-real <span class="cn">2</span>) (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">3</span> <span class="cn">2</span>)</code></pre>
@@ -1281,136 +1281,136 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.2">2.4.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>angle</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-specific</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>imag-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>magnitude</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-from-mag-ang</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>real-part</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-complex-from-mag-ang</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-complex-from-real-imag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-rational</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rational-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.79">Ex 2.79</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>equ-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>equ?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.83">Ex 2.83</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>integer-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-integer</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-real</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>raise-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>real-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.85">Ex 2.85</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>project-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>sub</code>
 </li>
 </ul>
@@ -1492,7 +1492,7 @@ Imports:
     (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
                        (add (angle z1) (angle z2))))
   (<span class="kw">define</span> (div-complex z1 z2)
-    (make-from-mag-ang (<span class="fu">div</span> (magnitude z1) (magnitude z2))
+    (make-from-mag-ang (div (magnitude z1) (magnitude z2))
                        (sub (angle z1) (angle z2))))
   (rectangular-pkg)
   (polar-pkg)
@@ -1544,7 +1544,7 @@ Imports:
      (make-complex-from-real-imag (make-rational <span class="cn">3</span> <span class="cn">4</span>) (make-real <span class="cn">2</span>)))
 <span class="op">=&gt;</span> (make-complex-from-real-imag (make-rational <span class="cn">5</span> <span class="cn">4</span>) (make-integer <span class="cn">2</span>))
 
-(<span class="fu">div</span> (make-complex-from-mag-ang (make-integer <span class="cn">3</span>) (make-real <span class="cn">1</span>))
+(div (make-complex-from-mag-ang (make-integer <span class="cn">3</span>) (make-real <span class="cn">1</span>))
      (make-complex-from-mag-ang (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-real <span class="cn">1</span>)))
 <span class="op">=&gt;</span> (make-integer <span class="cn">6</span>)</code></pre>
 <h2 id="2.5.3" class="anchor">
@@ -1557,62 +1557,62 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>adjoin-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>the-empty-termlist</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
 </ul>
@@ -1678,19 +1678,19 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-specific</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
 </ul>
@@ -1721,67 +1721,67 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-terms</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>
 </li>
 </ul>
@@ -1815,7 +1815,7 @@ Imports:
 <span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">2</span>)))
 
 (add (make-polynomial <span class="cn">&#39;x</span> &#39;()) (make-polynomial <span class="cn">&#39;y</span> &#39;()))
-<span class="op">=!&gt;</span> <span class="cn">&quot;polys not in same var&quot;</span></code></pre>
+<span class="er">=!&gt;</span> <span class="cn">&quot;polys not in same var&quot;</span></code></pre>
 <h3 id="ex2.88" class="anchor">
 <a class="anchor__link link" href="#ex2.88" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.88">Exercise 2.88<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1823,87 +1823,87 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>adjoin-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>the-empty-termlist</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>
 </li>
 </ul>
@@ -1943,28 +1943,28 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>the-empty-termlist</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>=zero?</code>
 </li>
 </ul>
@@ -1990,91 +1990,91 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="2.html#2.2.3.1">2.2.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>accumulate</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-specific</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>=zero?</code>
 </li>
 </ul>
@@ -2139,8 +2139,8 @@ Imports:
                (<span class="kw">else</span> (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;sparse-termlist</span> terms)))))
     (apply-specific <span class="cn">&#39;make</span> <span class="cn">&#39;polynomial</span> var new-terms)))
 
-(<span class="kw">paste</span> (:2.5.3.1 add-terms mul-term-by-all-terms mul-terms polynomial-pkg)
-       (?2.87 zero-pkg))
+(<span class="kw">paste</span> (<a href=#2.5.3.1>:2.5.3.1</a> add-terms mul-term-by-all-terms mul-terms polynomial-pkg)
+       (<a href=#ex2.87>?2.87</a> zero-pkg))
 
 (using sparse-termlist-pkg dense-termlist-pkg scheme-number-pkg polynomial-pkg
        zero-pkg)</code></pre>
@@ -2161,117 +2161,117 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul-term-by-all-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>adjoin-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>the-empty-termlist</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.88">Ex 2.88</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>negate-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>negate-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>sub</code>
 </li>
 </ul>
@@ -2286,7 +2286,7 @@ Imports:
             (t2 (first-term l2)))
         (<span class="kw">if</span> (<span class="fu">&gt;</span> (order t2) (order t1))
             (<span class="fu">list</span> (the-empty-termlist) l1)
-            (<span class="kw">let*</span> ((new-c (<span class="fu">div</span> (coeff t1) (coeff t2)))
+            (<span class="kw">let*</span> ((new-c (div (coeff t1) (coeff t2)))
                    (new-o (sub (order t1) (order t2)))
                    (new-term (make-term new-o new-c))
                    (multiplied (mul-term-by-all-terms new-term l2))
@@ -2307,7 +2307,7 @@ Imports:
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg)</code></pre>
 <p>(x^5 - 1) / (x^2 - 1) = (x^3 + x), remainder (x - 1)</p>
-<pre><code class="blockcode">(<span class="fu">div</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">5</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))) (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))
+<pre><code class="blockcode">(div (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">5</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))) (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))
 <span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">1</span>)))
          (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> <span class="cn">-1</span>))))</code></pre>
 <h3 id="2.5.3.3" class="anchor">
@@ -2320,113 +2320,113 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul-term-by-all-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>adjoin-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>the-empty-termlist</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>contents</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>type-tag</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>
 </li>
 </ul>
@@ -2515,85 +2515,85 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-rational</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>sub</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>
 </li>
 </ul>
@@ -2617,7 +2617,7 @@ Imports:
   (make-rat (mul (numer x) (denom y))
             (mul (denom x) (numer y))))
 
-(<span class="kw">paste</span> (:2.5.1 rational-pkg))
+(<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> rational-pkg))
 
 (using scheme-number-pkg zero-pkg polynomial-pkg rational-pkg)
 
@@ -2635,87 +2635,87 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.88">Ex 2.88</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>negate-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.91">Ex 2.91</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>div-terms</code>
 </li>
 </ul>
@@ -2759,76 +2759,76 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>div</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.88">Ex 2.88</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>negate-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.91">Ex 2.91</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>polynomial-div-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.94">Ex 2.94</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>greatest-common-divisor</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>greatest-common-divisor-pkg</code>
 </li>
 </ul>
@@ -2844,7 +2844,7 @@ Imports:
 (<span class="kw">define</span> q1 (mul p1 p2))
 (<span class="kw">define</span> q2 (mul p1 p3))
 
-(<span class="kw">define</span> (rem p q) (<span class="fu">cadr</span> (<span class="fu">div</span> p q)))</code></pre>
+(<span class="kw">define</span> (rem p q) (<span class="fu">cadr</span> (div p q)))</code></pre>
 <p>The GCD calculation makes two recursive calls:</p>
 <pre><code class="blockcode">(greatest-common-divisor q1 q2)
 <span class="op">=&gt;</span> (greatest-common-divisor q2 (rem q1 q2))                   <span class="co">; 1st recursion</span>
@@ -2863,148 +2863,148 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="2.html#2.2.3.1">2.2.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>accumulate</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>mul-term-by-all-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>empty-termlist?</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>rest-terms</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.88">Ex 2.88</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>negate-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.91">Ex 2.91</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>div-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>polynomial-div-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.94">Ex 2.94</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>greatest-common-divisor</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>remainder-terms</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.95">Ex 2.95</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>p1</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>q1</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>q2</code>
 </li>
 </ul>
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">paste</span> (?2.94 greatest-common-divisor-pkg))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#ex2.94>?2.94</a> greatest-common-divisor-pkg))</code></pre>
 <ol type="a">
 <li>GCD with integer coefficients</li>
 </ol>
@@ -3057,155 +3057,155 @@ Imports:
 <h4>
 Imports:
 </h4>
-<ul class="imports__list">
-<li class="imports__item">
+<ul class="flat">
+<li class="flat__item">
 <a href="1.html#2.1.1">2.1.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>denom</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>numer</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="2.html#2.2.3.1">2.2.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>accumulate</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="3.html#2.3.2">2.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>same-variable?</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="4.html#2.4.3">2.4.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>using</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.1">2.5.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>make-rational</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>mul-term-by-all-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>polynomial-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>term-list</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>variable</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#2.5.3.2">2.5.3.2</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>first-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-polynomial</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>make-term</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>order</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="../3/3.html#3.3.3.3">3.3.3.3</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>put</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.78">Ex 2.78</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>add</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>apply-generic</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>attach-tag</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>div</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>mul</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>scheme-number-pkg</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>sub</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.87">Ex 2.87</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>zero-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.88">Ex 2.88</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>negate-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.91">Ex 2.91</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>div-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>polynomial-div-pkg</code>,
 </li>
 </ul>
 </li>
-<li class="imports__item">
+<li class="flat__item">
 <a href="#ex2.96">Ex 2.96</a>
-<ul class="imports__list">
-<li class="imports__name">
+<ul class="flat">
+<li class="flat__item nowrap">
 <code>gcd-terms</code>
 </li>
-<li class="imports__name">
+<li class="flat__item nowrap">
 <code>termlist-coeffs</code>
 </li>
 </ul>
@@ -3260,8 +3260,8 @@ Imports:
   (<span class="kw">let</span> ((reduced (reduce n d)))
     (<span class="fu">cons</span> (<span class="fu">car</span> reduced) (<span class="fu">cadr</span> reduced))))
 
-(<span class="kw">paste</span> (?2.93 add-rat div-rat mul-rat sub-rat)
-       (:2.5.1 rational-pkg))
+(<span class="kw">paste</span> (<a href=#ex2.93>?2.93</a> add-rat div-rat mul-rat sub-rat)
+       (<a href=#2.5.1>:2.5.1</a> rational-pkg))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        rational-pkg reduce-pkg)

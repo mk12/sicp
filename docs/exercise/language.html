@@ -67,7 +67,7 @@
 </nav>
 <main id="main">
 <h1 id="note-on-the-language">Note on the Language</h1>
-<p>The code on this website is written in a language based on <a href="http://www.r6rs.org" title="The Revised(6) Report on the Algorithmic Language Scheme">R6RS Scheme</a>. The language is <a href="https://github.com/mk12/sicp/blob/master/src/lang/core.ss">implemented</a> with macros, and provides two features: modules and assertions.</p>
+<p>The code on this website is written in a language based on <a href="http://www.r6rs.org" title="The Revised(6) Report on the Algorithmic Language Scheme">R6RS Scheme</a>. The language provides custom syntax for modules and assertions, and defines a few special forms. <a href="https://github.com/mk12/sicp/blob/master/src/sicp">Source files</a> use the language by wrapping their content in <code>(SICP ...)</code>, a macro <a href="https://github.com/mk12/sicp/blob/master/src/lang/core.ss">implemented</a> in plain R6RS Scheme.</p>
 <h2 id="modules" class="anchor">
 <a class="anchor__link link" href="#modules" aria-hidden="true">#</a> Modules
 </h2>
@@ -84,7 +84,7 @@
 
 (<span class="kw">define</span> y <span class="cn">2</span>)
 (<span class="kw">define</span> z <span class="cn">3</span>)</code></pre>
-<p>Although every expression is at the top level, this actually defines three separate modules. Each module has a unique identifier, beginning with the “:” sigil for chapters and sections and the “?” sigil for exercises. Modules do not nest, so <code>:1</code> and <code>:1.1</code> are equal siblings rather than parent and child.</p>
+<p>Although every expression is at the top level, this actually defines three separate modules. Each module has a unique identifier, beginning with the <code>:</code> sigil for chapters and sections and the <code>?</code> sigil for exercises. Modules do not nest, so <code>:1</code> and <code>:1.1</code> are equal siblings rather than parent and child.</p>
 <h3 id="imports" class="anchor">
 <a class="anchor__link link" href="#imports" aria-hidden="true">#</a> Imports
 </h3>
@@ -103,16 +103,13 @@
 
 (<span class="kw">define</span> y <span class="cn">2</span>)
 (<span class="kw">define</span> z <span class="cn">3</span>)</code></pre>
-<p>Here, <code>:1.1</code> imports <code>x</code> from <code>:1</code>, and <code>y</code> and <code>z</code> from <code>?1.1</code>. This implies that <code>:1.1</code> must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, <a href="2/index.html">Chapter 2</a> depends heavily on two-dimensional tables, which are not implemented until <a href="3/3.html#3.3.3.3">§&nbsp;3.3.3.3</a>.</p>
+<p>Here, <code>:1.1</code> imports <code>x</code> from <code>:1</code>, and <code>y</code> and <code>z</code> from <code>?1.1</code>. This implies that <code>:1.1</code> must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, <a href="2/index.html">Chapter&nbsp;2</a> depends heavily on two-dimensional tables, which are not implemented until <a href="3/3.html#3.3.3.3">§&nbsp;3.3.3.3</a>.</p>
 <p>You will not see expressions like <code>(Chapter ...)</code> and <code>(Section ...)</code> elsewhere on this website because they are converted to HTML headings. Likewise, the <code>(use ...)</code> blocks are converted to compact HTML lists set in a smaller font.</p>
 <p>To avoid confusion, shadowing imports is not allowed:</p>
 <pre><code class="blockcode">(Exercise ?1.1
   (use (:1.1 x)))
 
 (<span class="kw">define</span> x <span class="cn">2</span>) <span class="co">; ERROR: imported x is shadowed by local definition</span></code></pre>
-<h3 id="hoisting" class="anchor">
-<a class="anchor__link link" href="#hoisting" aria-hidden="true">#</a> Hoisting
-</h3>
 <p>Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:</p>
 <pre><code class="blockcode">(Exercise ?1.1)
 
@@ -132,13 +129,13 @@
 (Section :2 <span class="cn">&quot;Paste&quot;</span>)
 
 (<span class="kw">define</span> a <span class="cn">-1</span>)
-(<span class="kw">paste</span> (:1 inc))
+(<span class="kw">paste</span> (<a href=1/index.html>:1</a> inc))
 (inc <span class="cn">42</span>) <span class="co">; 41</span></code></pre>
 <p>If <code>:2</code> had imported <code>inc</code> instead, the result would be 43 in both cases since <code>a</code> is resolved lexically. Using <code>paste</code> is inelegant, but preferable to duplicating code. It is often useful when an exercise asks to make an adjustment to earlier code and there is no dynamic dispatch to hook into.</p>
 <h3 id="packages" class="anchor">
 <a class="anchor__link link" href="#packages" aria-hidden="true">#</a> Packages
 </h3>
-<p>Starting in <a href="2/index.html">Chapter 2</a>, many modules use <a href="../text/2/4.html#2.4.3">data-directed programming</a> to dispatch based on operation names and type tags. Modules define <em>packages</em> (procedures ending in <code>-pkg</code>) that install operations in the global table. For example:</p>
+<p>Starting in <a href="2/index.html">Chapter&nbsp;2</a>, many modules use <a href="../text/2/4.html#2.4.3">data-directed programming</a> to dispatch based on operation names and type tags. Modules define <em>packages</em> (procedures ending in <code>-pkg</code>) that install operations in the global table. For example:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="cn">&#39;real-part</span> z))
 
 (<span class="kw">define</span> (rectangular-pkg)
@@ -155,7 +152,7 @@
 <h2 id="assertions" class="anchor">
 <a class="anchor__link link" href="#assertions" aria-hidden="true">#</a> Assertions
 </h2>
-<p>As with modules, standard techniques for assertions are too heavyweight. The mere word “assert” is too verbose for our use case. Instead, the language provides four assertion operators that work at the top level: <code>=&gt;</code>, <code>~&gt;</code>, <code>=$&gt;</code>, and <code>=!&gt;</code>. They report detailed information when they fail, including the actual result, expected result, and line number.</p>
+<p>As with modules, standard techniques for assertions are too distracting. The mere word “assert” is too verbose for our use case. Instead, the language provides four assertion operators that work at the top level: <code>=&gt;</code>, <code>~&gt;</code>, <code>=$&gt;</code>, and <code>=!&gt;</code>. They report detailed information when they fail, including the actual result, expected result, and line number.</p>
 <h3 id="exact" class="anchor">
 <a class="anchor__link link" href="#exact" aria-hidden="true">#</a> Exact
 </h3>
@@ -177,7 +174,7 @@ left: <span class="fu">(fact 3)</span>
 right: <span class="fu">(fact 5)</span>
 => <span class="cn">120</span>
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 <h3 id="inexact" class="anchor">
 <a class="anchor__link link" href="#inexact" aria-hidden="true">#</a> Inexact
@@ -196,7 +193,7 @@ right: <span class="fu">3.14</span>
 
 delta: <span class="cn">0.0015926535897929917</span> > 1e-10
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 <h3 id="output" class="anchor">
 <a class="anchor__link link" href="#output" aria-hidden="true">#</a> Output
@@ -216,22 +213,22 @@ test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <pre><code class="blockcode"><!--
 --><span class="bo">path/to/file.ss:123:1: assertion failed</span>
 left: <span class="fu">(display "pong\nping")</span>
-=> [<span class="yl">"pong"</span>
-    <span class="yl">"ping"</span>]
+=$> [<span class="yl">"pong"</span>
+     <span class="yl">"ping"</span>]
 
 right:
-=> [<span class="yl">"ping"</span>
-    <span class="yl">"pong"</span>]
+=$> [<span class="yl">"ping"</span>
+     <span class="yl">"pong"</span>]
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 <h3 id="error" class="anchor">
 <a class="anchor__link link" href="#error" aria-hidden="true">#</a> Error
 </h3>
 <p>The <code>=!&gt;</code> operator asserts that an error will occur. For example:</p>
-<pre><code class="blockcode">(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;oops&quot;</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;foo: oops: 1 2&quot;</span></code></pre>
-<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="op">=!&gt;</span> <span class="cn">&quot;&quot;</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
-<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode">(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;oops&quot;</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;foo: oops: 1 2&quot;</span></code></pre>
+<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">&quot;&quot;</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><span class="bo">path/to/file.ss:123:1: assertion failed</span>
 left: <span class="fu">(+ 1 2)</span>
@@ -240,9 +237,9 @@ left: <span class="fu">(+ 1 2)</span>
 right:
 =!> ... <span class="co">disaster</span> ...
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
-<p>When <code>(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;catastrophe&quot;</span> <span class="cn">1</span>) <span class="op">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<p>When <code>(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;catastrophe&quot;</span> <span class="cn">1</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><span class="bo">path/to/file.ss:123:1: assertion failed</span>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
@@ -251,8 +248,14 @@ left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 right:
 =!> ... <span class="co">disaster</span> ...
 
-test result: <span class="bo co">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
+<h2 id="special-forms" class="anchor">
+<a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special Forms
+</h2>
+<p>The language also <a href="https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss">defines</a> a few special forms. They are usable anywhere, not just at the top level like the assertion operators.</p>
+<p>The <code>cons-stream</code> special form is defined so that <code>(<span class="kw">cons-stream</span> <span class="ss">a</span> <span class="ss">b</span>)</code> is equivalent to <code class="sourceCode scheme">(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>, as specified in the textbook. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
+<p>The <code>with-eval</code> special form is defined so that <code>(<span class="kw">with-eval</span> <span class="ss">eval</span> <span class="ss">env</span> <span class="ss">exp*</span> ...)</code> is equivalent to <code class="sourceCode scheme">(<span class="kw">begin</span> (<span class="ss">eval</span> <span class="ss">exp*</span> <span class="ss">env</span>) ...)</code>, except it first creates bindings for <code class="sourceCode scheme"><span class="ss">eval</span></code> and <code class="sourceCode scheme"><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

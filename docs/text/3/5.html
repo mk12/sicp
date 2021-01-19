@@ -109,6 +109,7 @@
 <li><code>force</code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
 <li>The promise stored in the <code>cdr</code> of the stream is also known as a <em>thunk</em>.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.50">3.50</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.51">3.51</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.52">3.52</a></li></ul></aside>
 <h2 id="3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -137,6 +138,7 @@
 <ul>
 <li>This implicit technique is known as <em>corecursion</em>. Recursion works backward towards a base case, but corecursion works from the base and creates more data in terms of itself.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.53">3.53</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.54">3.54</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.55">3.55</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.56">3.56</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.57">3.57</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.58">3.58</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.59">3.59</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.60">3.60</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.61">3.61</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.62">3.62</a></li></ul></aside>
 <h2 id="3.5.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3" aria-hidden="true">#</a> <span class="number">3.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.3">Exploiting the Stream Paradigm<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -154,6 +156,7 @@
 <li>We can make a stream that converges on the square root of <code>x</code>, and a stream to approximate <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>π</mi></mrow><annotation encoding="application/x-tex">π</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span></span></span></span>.</li>
 <li>One neat thing we can do with these streams is use sequence accelerators, such as Euler’s transform.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.63">3.63</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.64">3.64</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.65">3.65</a></li></ul></aside>
 <h3 id="3.5.3.2" class="anchor">
 <a class="anchor__link link" href="#3.5.3.2" aria-hidden="true">#</a> Infinite streams of pairs
 </h3>
@@ -169,6 +172,7 @@
 <li>More generally, we can combined two streams to get a two-dimensional grid of pairs, and we want to reduce this to a one-dimensional stream.</li>
 <li>One way to do this is to use <code>interleave</code> in the recursive definition, in order to handle infinite streams.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.66">3.66</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.67">3.67</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.68">3.68</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.69">3.69</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.70">3.70</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.71">3.71</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.72">3.72</a></li></ul></aside>
 <h3 id="3.5.3.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> Streams as signals
 </h3>
@@ -182,6 +186,7 @@
                  (add-streams (scale-stream integrand dt)
                               int)))
   int)</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.73">3.73</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.74">3.74</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.75">3.75</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.76">3.76</a></li></ul></aside>
 <h2 id="3.5.4" class="anchor">
 <a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -192,6 +197,7 @@
 <li>The problem here is that <code>y</code> and <code>dy</code> will depend on each other.</li>
 <li>To solve this, we need to change <code>integral</code> to take a delayed integrand.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.77">3.77</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.78">3.78</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.79">3.79</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.80">3.80</a></li></ul></aside>
 <h3 id="3.5.4.1" class="anchor">
 <a class="anchor__link link" href="#3.5.4.1" aria-hidden="true">#</a> Normal-order evaluation
 </h3>
@@ -210,6 +216,7 @@
 <li>Stream models can provide equivalent modularity without assignment.</li>
 <li>For example, we can reimplement the Monte Carlo simulation with streams.</li>
 </ul>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/5.html#ex3.81">3.81</a>, </li><li class="flat__item"><a href="../../exercise/3/5.html#ex3.82">3.82</a></li></ul></aside>
 <h3 id="3.5.5.1" class="anchor">
 <a class="anchor__link link" href="#3.5.5.1" aria-hidden="true">#</a> A functional-programming view of time
 </h3>

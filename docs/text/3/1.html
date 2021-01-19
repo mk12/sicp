@@ -75,7 +75,7 @@
 </h1>
 <ul>
 <li>The world is populated by independent objects possessing changing state.</li>
-<li>An object “has state”: its behaviour is influenced by history.</li>
+<li>An object “has state”: its behavior is influenced by history.</li>
 <li>A bank account is an example of a stateful object.</li>
 <li>An object’s state can be characterized by <em>state variables</em>.</li>
 <li>We need an <em>assignment operator</em> to change the value associated with a name representing a local variable of an object.</li>
@@ -99,7 +99,7 @@
 <span class="op">=&gt;</span> <span class="cn">35</span></code></pre>
 <ul>
 <li>Evaluating the same combination twice, <code>(withdraw <span class="cn">25</span>)</code>, returned different values.</li>
-<li>We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
+<li>We have lost referential transparency. This is a new kind of behavior of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
 <li>To implement <code>withdraw</code>, we define a variable called <code>balance</code>:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> balance <span class="cn">100</span>)
@@ -160,6 +160,7 @@
           ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))
   dispatch)</code></pre>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/1.html#ex3.1">3.1</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.2">3.2</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.3">3.3</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.4">3.4</a></li></ul></aside>
 <h2 id="3.1.2" class="anchor">
 <a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a> <span class="number">3.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -195,6 +196,7 @@
 <blockquote>
 <p>The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behavior changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.2" title="SICP Section 3.1.2">(Section&nbsp;3.1.2)</a></p>
 </blockquote>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/1.html#ex3.5">3.5</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.6">3.6</a></li></ul></aside>
 <h2 id="3.1.3" class="anchor">
 <a class="anchor__link link" href="#3.1.3" aria-hidden="true">#</a> <span class="number">3.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.3">The Costs of Introducing Assignment<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -249,6 +251,7 @@
 <p>In view of this, it is ironic that introductory programming is most often taught in a highly imperative style. This may be a vestige of a belief, common throughout the 1960s and 1970s, that programs that call procedures must inherently be less efficient than programs that perform assignments. … Alternatively it may reflect a view that step-by-step assignment is easier for beginners to visualize than procedure call. Whatever the reason, it often saddles beginning programmers with “should I set this variable before or after that one” concerns that can complicate programming and obscure the important ideas. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#footnote_Temp_339" title="SICP Chapter 3, Footnote 11">(Footnote&nbsp;3.11)</a></p>
 </blockquote>
 </div>
+<aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/1.html#ex3.7">3.7</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.8">3.8</a></li></ul></aside>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">
