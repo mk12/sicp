@@ -159,7 +159,7 @@ An example of normal-order procedure application:
 
 > But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. [@1.1.7]
 
-- In mathematics, you can say "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$." This is not a procedure.
+- In mathematics, you can say, "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$." This is not a procedure.
 - Mathematical functions describe things (declarative knowledge); procedures describe how to do things (imperative knowledge).
 - Declarative is _what is_, imperative is _how to_.
 
@@ -1224,9 +1224,9 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We also need organizational principles to guide the overall design of the program.
 - We need to structure large systems to make them _modular_.
 - A modular program can be divided into coherent parts that can be separately developed and maintained.
-- One designed strategy is to base the structure of the program on the structure of physical systems being modelled.
+- One designed strategy is to base the structure of the program on the structure of physical systems being modeled.
 - Done properly, this allows us to add new objects or new actions easily and locally, without changing the whole strategy.
-- Program organization depends on the system to be modelled.
+- Program organization depends on the system to be modeled.
 - Two "world views": concentrate on _objects_, or on _streams_.
 - Objects: Must allow change but preserve identity. Abandon the substitution model for the environment model. Grapple with time in the computational model.
 - Streams: Decouple simulated time in the model from the order of events that take place in the computer. Delayed evaluation.
@@ -1234,7 +1234,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ## 3.1: Assignment and Local State
 
 - The world is populated by independent objects possessing changing state.
-- An object "has state": its behaviour is influenced by history.
+- An object "has state": its behavior is influenced by history.
 - A bank account is an example of a stateful object.
 - An object's state can be characterized by _state variables_.
 - We need an _assignment operator_ to change the value associated with a name representing a local variable of an object.
@@ -1258,7 +1258,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ```
 
 - Evaluating the same combination twice, `(withdraw 25)`, returned different values.
-- We have lost referential transparency. This is a new kind of behaviour of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.
+- We have lost referential transparency. This is a new kind of behavior of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.
 - To implement `withdraw`, we define a variable called `balance`:
 
 ```
@@ -1437,9 +1437,6 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 ### 3.2.1: The Rules for Evaluation
 
-- And some random stuff.
-    - Lorem dolar ipsum sit amet. Promum iqur.
-    - Unless the sheep of wool of gold of tyre.
 - To evaluate a combination:
     1. Evaluate the subexpressions of the combination.
     2. Apply the value of the operator subexpression to the values of the operand subexpressions.
@@ -1615,7 +1612,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - A simple list representation is inefficient because we have to scan to get to one end.
 - Scanning a list takes $Θ(n)$ operations.
 - A simply modification lets us implement all the operations with $Θ(1)$ time complexity: keep a pointer to the end as well.
-- A queue is a pair formed by consing the front-pointer and the rear-pointer of a normal list.
+- A queue is a pair formed by `cons`&thinsp;ing the front-pointer and the rear-pointer of a normal list.
 
 ::: exercises
 3.21-23
@@ -1667,7 +1664,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 3.3.4: A Simulator for Digital Circuits
 
 - Digital circuits are made up of simple elements.
-- Networks of these simple elements can have very complex behaviour.
+- Networks of these simple elements can have very complex behavior.
 - We will design a system to simulator digital logic. This type of program is called an _event-driven simulation_.
 - Our computational model is based on the physical components.
     - A _wire_ carries a _digital signal_, which is either 0 or 1.
@@ -1780,7 +1777,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We want computational processes executing _concurrently_.
 - Writing programs this way forces us to avoid inessential timing constraints, making the program more modular.
 - It can also provide a speed advantage on multicore computers.
-- The complexities introduces by assignment become even more problematic in the presence of concurrency.
+- The complexities introduced by assignment become even more problematic in the presence of concurrency.
 
 ### 3.4.1: The Nature of Time in Concurrent Systems
 
@@ -1874,7 +1871,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Deadlock
 
-- Even with a proper implementation of mutexes and seralizers, we still have a problem with the account exchanging procedure.
+- Even with a proper implementation of mutexes and serializers, we still have a problem with the account exchanging procedure.
 - We serialize the whole procedure with both accounts so that an account may only participate in one exchange at a time.
 - There are two mutexes, so it is possible for something to happen in between acquiring the first and the second.
 - If we exchange `a1` with `a2` and concurrently do the reverse exchange, it is possible for the first process to lock `a1` and the second process to lock `a2`.

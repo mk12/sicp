@@ -2140,8 +2140,7 @@ final-values
    (s (lambda () (set! x (* x x x))))))
 x => 1000000
 
-(Exercise ?3.41
-  (use (:3.4.2.1 make-account)))
+(Exercise ?3.41)
 
 ;; Ben Bitdiddle is wrong. It is unnecessary to serialize access to the bank
 ;; balance because it would make no difference. If we serialize it, then the
@@ -2197,6 +2196,8 @@ x => 1000000
      account2)))
 
 (Exercise ?3.43)
+
+;; <!-- TODO escape dollars -->
 
 ;; The balances in the accounts start out as $10, $20, and $30. Exchanging
 ;; balances A and B works by taking D = A - B, and then withdrawing to get A' =

@@ -20,6 +20,7 @@
 static NSArray<NSString *> *ignored_words() {
     return @[
         @"conses",
+        @"consing",
         @"desugars",
         @"Haumann",
         @"Kuna",
@@ -29,6 +30,12 @@ static NSArray<NSString *> *ignored_words() {
         @"skylighting",
         @"tabler",
         @"vnu",
+        @"supertype",
+        @"integerized",
+        @"integerizing",
+        @"indeterminates",
+        @"mutexes",
+        @"corecursion",
     ];
 }
 
@@ -486,6 +493,12 @@ static char *strip_markdown(char *s) {
             p++;
             *s++ = 'C';
             *s++ = 'C';
+            if (p[0] == 't' && p[1] == 'h' && p[3] == ' ') {
+                s[-2] = '1';
+                s[-1] = 's';
+                *s++ = 't';
+                p += 2;
+            }
             break;
         // HTML tags and URLs.
         case '<':
@@ -534,7 +547,8 @@ static char *strip_markdown(char *s) {
             break;
         // HTML entities.
         case '&':
-            if (p > start && (p[-1] == ' ' || p[-1] == '`') && islower(p[1])) {
+            if (p > start && (p[-1] == ' ' || p[-1] == '`' || p[-1] == 'r')
+                && islower(p[1])) {
                 while (*p && *p != ';') p++;
                 if (!*p) goto end;
                 p++;
