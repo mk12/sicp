@@ -230,6 +230,10 @@ function internal_target(sigil, num)
             #num > 3 and "#" .. num or ""
     end
     if sigil == ":" then
+        lang = "language"
+        if num:sub(1, #lang) == lang then
+            return "exercise/language.html", num:sub(#lang + 1)
+        end
         if #num == 1 then
             return "exercise/" .. num .. "/index.html", ""
         end
