@@ -1267,14 +1267,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We've made a simulation where objects and state changed in the computer match the objects and state changes in the world.
 - We're going to use agendas (priority queues) to organize time.
 - We have a constructor `make-agenda`; selector `current-time` and `first-item`; predicate `empty-agenda?`; and mutators `add-to-agenda!` and `remove-first-item!`.
-- We will represent it as a list a segments. Each segment is a time `cons`&thinsp;ed to a queue of tasks (procedures of no arguments).
+- We will represent it as a list a segments. Each segment is a time `cons`ed to a queue of tasks (procedures of no arguments).
 - To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.
 
 #### Queues
 
 - We construct queues with `(make-queue)`.
 - There are two mutators, `(insert-queue! q x)` and `(delete-queue! q)`; a selector, `(front-queue q)`; and a predicate, `(empty-queue? q)`.
-- A queue is represented as a front pointer of a list `cons`&thinsp;ed to the rear pointer of the same list.
+- A queue is represented as a front pointer of a list `cons`ed to the rear pointer of the same list.
 - The mutators use `set-car!` and `set-cdr!`.
 
 ## Part 3
@@ -1488,7 +1488,7 @@ Then, we learned how to use higher-order procedures to represent general methods
     - `(cons-stream x y)` is an abbreviation for `(cons x (delay y))`
     - `(head s)` is `(car s)`
     - `(tail s)` is `(force (cdr s))`
-- `delay` creates a promise to compute something when `force`&thinsp;d.
+- `delay` creates a promise to compute something when `force`d.
     - `(delay «expr»)` is an abbreviation for `(lambda () «expr»)`
     - `(force p)` is `(p)`
 - `delay` decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.
@@ -1625,7 +1625,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Normal-order evaluation
 
 - We've been divorcing time in the program from time in the computer.
-- Sometimes, to really take advantage of this method, you have to write explicit `delay`&thinsp;s. But in larger programs it can be very difficult to see where you need them.
+- Sometimes, to really take advantage of this method, you have to write explicit `delay`s. But in larger programs it can be very difficult to see where you need them.
 - Is there a way around this? Yes, by making _all_ arguments to _every_ procedure delayed.
 - This is _normal-order_ evaluation, as opposed to _applicative-order_ which we've been using.
 - We wouldn't need `cons-stream` because it would be the same as `cons`.

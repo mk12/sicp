@@ -156,7 +156,7 @@ circumference ~> 62.8318
 
 ;; The operator evaluates to `+` (addition) when `b` is positive, and to `-`
 ;; (subtraction) when `b` is negative. Subtracting a negative is equivalent to
-;; adding its absolute value, so this procedure performs $a + \lvert b\rvert$
+;; adding its absolute value, so this procedure returns $a + \lvert b\rvert$
 ;; in all cases.
 
 (Exercise ?1.5)
@@ -229,9 +229,9 @@ circumference ~> 62.8318
 (sqrt 0) ~> 0.03125     ; should be 0
 (sqrt 1e-20) ~> 0.03125 ; should be 1e-10
 
-;; The test is inadequate for very large numbers. With limited precision, it is
-;; impossible to represent small differences between very large numbers. This
-;; means the algorithm might never terminate, because the guess never satisfies
+;; It is also inadequate for very large numbers. With limited precision, it is
+;; impossible to represent small differences between large numbers. This means
+;; the algorithm might never terminate, because the guess never satisfies
 ;; `good-enough?` no matter how many times `improve` is called.
 
 (sqrt 1e14) ~> 1e7
@@ -242,7 +242,7 @@ circumference ~> 62.8318
 ;; small fraction of the guess.
 
 (define (good-enough? g1 g2)
-  ;; Note: unlike `infinite?`, the negation of `finite?` will catch NaN.
+  ;; Note: unlike `infinite?`, the negation of `finite?` catches NaN.
   (or (not (finite? g2))
       (< (/ (abs (- g2 g1)) g1)
          0.001)))
@@ -253,11 +253,12 @@ circumference ~> 62.8318
         (sqrt-iter better x))))
 (set! sqrt (lambda (x) (sqrt-iter 1.0 x)))
 
-;; (We use `set!` because shadowing imports with `define` is not allowed.)
+;; (We use `set!` because shadowing imports with `define` is [not
+;; allowed](:language#imports).)
 ;;
-;; It works much better for small numbers. For zero, it works because even
-;; though the `guess` change is always a 50% reduction, it eventually gets so
-;; small that it becomes NaN, and the algorithm terminates.
+;; The results for small numbers are much better. For zero, it works because
+;; even though the `guess` change is always a 50% reduction, it eventually gets
+;; so small that it becomes NaN, and the algorithm terminates.
 
 (sqrt 0) ~> 0
 (sqrt 1e-20) ~> 1e-10
@@ -326,12 +327,13 @@ circumference ~> 62.8318
 
 (Section :1.2.1 "Linear Recursion and Iteration")
 
+;; Linear recursive process:
+
 (define (factorial n)
   (if (= n 1)
       1
       (* n (factorial (- n 1)))))
 
-;; Linear recursive process:
 (factorial 6)
 => (* 6 (factorial 5))
 => (* 6 (* 5 (factorial 4)))
@@ -345,6 +347,8 @@ circumference ~> 62.8318
 => (* 6 120)
 => 720
 
+;; Linear iterative process:
+
 (define (factorial n)
   (fact-iter 1 1 n))
 (define (fact-iter product counter max-count)
@@ -354,7 +358,6 @@ circumference ~> 62.8318
                  (+ counter 1)
                  max-count)))
 
-;; Linear iterative process:
 (factorial 6)
 => (fact-iter 1 1 6)
 => (fact-iter 1 2 6)
@@ -409,6 +412,7 @@ circumference ~> 62.8318
 (A 2 4) => 65536
 (A 3 3) => 65536
 
+;; `(f n)` computes $2n$.
 (define (f n) (A 0 n))
 ;; 2n
 ;; (f n) => (A 0 n) => (* 2 n)

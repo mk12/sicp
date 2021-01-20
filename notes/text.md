@@ -38,7 +38,7 @@ These notes are based on the second edition of <cite>[Structure and Interpretati
 > Underlying our approach to this subject is our conviction that "computer science" is not a science and that its significance has little to do with computers. [@preface]
 :::
 
-> Mathematics provides a framework for dealing precisely with notions of "what is." Computation provides a framework for dealing precisely with notions of "how to." [@preface]
+> Mathematics provides a framework for dealing precisely with notions of "what is". Computation provides a framework for dealing precisely with notions of "how to". [@preface]
 
 # 1: Building Abstractions with Procedures
 
@@ -50,45 +50,42 @@ These notes are based on the second edition of <cite>[Structure and Interpretati
 
 ## 1.1: The Elements of Programming
 
-There are three mechanisms for combining simple ideas to form more complex ideas in every powerful programming language:
+There are three mechanisms for combining simple ideas to form more complex ideas found in every powerful programming language:
 
-- primitive expressions,
-- means of combination,
-- means of abstraction.
+- primitive expressions
+- means of combination
+- means of abstraction
 
-Programming deals with _procedures_ and _data_ (which are almost the same thing in Lisp). Procedures manipulate data.
+Programming deals with procedures and data (which are almost the same thing in Lisp). Procedures manipulate data.
 
 ### 1.1.1: Expressions
 
 - The REPL reads an expression, evaluates it, prints the result, and repeats.
 - A number is one kind of primitive expression.
-- An application of a primitive procedure is a compound expression.
-- Combination: list of expressions inside parentheses to denote procedure application.
-- The first element is the operator; the rest are the operands.
-- The value of the combination is the result of applying the value of the operator to the value of the operands.
-- Lisp combinations use prefix notation.
+- An application of a primitive procedure is one kind of compound expression.
+- A _combination_ denotes procedure application by a list of expressions inside parentheses. The first element is the _operator_; the rest are the _operands_.
+- Lisp combinations use prefix notation (the operator comes first).
 - Combinations can be nested: an operator or operand can itself be another combination.
 
 ### 1.1.2: Naming and the Environment
 
 - Scheme names things with the `define`. This is the simplest means of abstraction.
-- The name-value pairs are stored in an _environment_.
+- The name--value pairs are stored in an _environment_.
 
 ### 1.1.3: Evaluating Combinations
 
-- To evaluate a combination, do the following:
+- To evaluate a combination:
     1. Evaluate the subexpressions of the combination.
-    2. Apply the procedure (value of left more subexpression, the operator) to the arguments (values of other subexpressions, the operands).
+    2. Apply the procedure (value of leftmost subexpression, the operator) to the arguments (values of other subexpressions, the operands).
 - Before evaluating a combination, we must first evaluate each element inside it.
 - Evaluation is recursive in nature---one of its steps is invoking itself.
-- The evaluation of a combination can be represents with a tree.
+- The evaluation of a combination can be represented with a tree.
 - Recursion is a powerful technique for dealing with hierarchical, tree-like objects.
 - To end the recursion, we stipulate the following:
     1. Numbers evaluate to themselves.
     2. Built-in operators evaluate to machine instruction sequences.
     3. Names evaluate to the values associated with them in the environment.
-- Rule 2 is a special case of rule 3 if we consider the arithmetic operators to be names in the environment.
-- Evaluating `(define x 3)` does not apply `define` to two arguments; this is not a combination.
+- `(define x 3)` does not apply `define` to two arguments; this is not a combination.
 - Exceptions such as these are _special forms_. Each one has its own evaluation rule.
 
 ::: highlight
@@ -97,17 +94,17 @@ Programming deals with _procedures_ and _data_ (which are almost the same thing 
 
 ### 1.1.4: Compound Procedures
 
-- Procedure definitions are very powerful for abstraction.
+- _Procedure definition_ is a powerful technique for abstraction.
 - A squaring procedure: `(define (square x) (* x x))`.
-- This is a compound procedure given the name _square_.
-- The general form of a procedure definition is `(define («name» «formal-parameters») «body»)`.
+- This is a compound procedure given the name "square".
+- General form of a procedure definition: `(define («name» «formal-parameters») «body»)`.
 - If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.
 
 ### 1.1.5: The Substitution Model for Procedure Application
 
 This is the substitution model:
 
-> To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.
+> To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument. [@1.1.5]
 
 An example of procedure application:
 
@@ -122,7 +119,7 @@ An example of procedure application:
 
 #### Applicative order versus normal order
 
-- That example used _applicative order_&hairsp;: evaluate everything first, then apply the procedure to the arguments.
+- That example used _applicative order_: evaluate all the subexpressions first, then apply the procedure to the arguments.
 - With _normal order_, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.
 
 An example of normal-order procedure application:
@@ -137,19 +134,17 @@ An example of normal-order procedure application:
 136
 ```
 
-- In this example, normal order causes a few combinations to be evaluated multiple times.
-- Applicative: evaluate the arguments and then apply.
-- Normal: fully expand and then reduce.
+- Here, normal order causes some combinations to be evaluated multiple times.
 
 ### 1.1.6: Conditional Expressions and Predicates
 
-- To make more useful procedures, we need to be able to make tests and perform different operations accordingly.
+- To make more useful procedures, we need to be able to conduct tests and perform different operations accordingly.
 - We do _case analysis_ in Scheme using `cond`.
-- Those conditional expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.
-- A predicate is an expression that evaluates to true or false, or a procedure that returns true or false.
+- `cond` expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.
+- A predicate is an expression that evaluates to true or false.
 - The symbol `else` can be used as the last clause---it will always evaluate to true.
-- The `if` conditional can be used when there are two cases.
-- Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures.
+- The `if` conditional can be used when there are only two cases.
+- Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures, because they have short-circuiting behavior.
 
 ::: exercises
 1.1-5
@@ -159,7 +154,7 @@ An example of normal-order procedure application:
 
 > But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. [@1.1.7]
 
-- In mathematics, you can say, "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$." This is not a procedure.
+- In mathematics, you can define square roots by saying, "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$". This is not a procedure.
 - Mathematical functions describe things (declarative knowledge); procedures describe how to do things (imperative knowledge).
 - Declarative is _what is_, imperative is _how to_.
 
@@ -169,8 +164,8 @@ An example of normal-order procedure application:
 
 ### 1.1.8: Procedures as Black-Box Abstractions
 
-- Each procedure in a program should accomplish and identifiable task that can be used as a module in defining other procedures.
-- When we use a procedure as a "black box," we are concerned with _what_ it is doing but not _how_ it is doing it.
+- Each procedure in a program should accomplish an identifiable task that can be used as a module in defining other procedures.
+- When we use a procedure as a "black box", we are concerned with _what_ it is doing but not _how_ it is doing it.
 - This is called procedural abstraction. Its purpose is to suppress detail.
 
 > A user should not need to know how the procedure is implemented in order to use it. [@1.1.8]
@@ -179,9 +174,9 @@ An example of normal-order procedure application:
 
 - The choice of names for the procedure's formal parameters should not matter to the user of the procedure.
 - Consequentially, the parameter names must be local to the body of the procedure.
-- The name of the formal parameter doesn't matter; it is called a _bound variable_. The procedure _binds_ its formal parameters.
+- The name of a formal parameter doesn't matter; it is a _bound variable_. The procedure _binds_ its formal parameters.
 - If a variable is not bound, it is _free_.
-- The expressions in which a binding exists is called the _scope_ of the name. For parameters of a procedure, this is the body.
+- The expression in which a binding exists is called the _scope_ of the name. For parameters of a procedure, this is the body.
 - Using the same name for a bound variable and an existing free variable is called _capturing_ the variable.
 - The names of the free variables _do_ matter for the meaning of the procedure.
 
@@ -190,7 +185,7 @@ An example of normal-order procedure application:
 - Putting a definition in the body of a procedure makes it local to that procedure. This nesting is called _block structure_.
 - Now we have two kinds of name isolation: formal parameters and internal definitions.
 - By internalizing auxiliary procedures, we can often eliminate bindings by allowing variables to remain free.
-- Lexical scoping: free variables in a procedure refer to bindings in enclosing procedure definitions.
+- Scheme uses _lexical scoping_, meaning free variables in a procedure refer to bindings in enclosing procedure definitions.
 
 ## 1.2: Procedures and the Processes They Generate
 
@@ -875,7 +870,7 @@ Now we can do things like this:
 - Lists containing symbols look just like expressions (code).
 - We need to _quote_ data objects to manipulate symbols.
 - To make the list `(a b)`, we can't just do `(list a b)` because this will evaluate `a` and `b`.
-- This is just like natural language. If I say, "Say your name," you will say the _value_ of "your name." If I instead say, "Say 'your name,'" you will literally say the words "your name."
+- This is just like natural language. If I say, "Say your name," you will say the _value_ of "your name". If I instead say, "Say 'your name,'" you will literally say the words "your name".
 - To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.
 - Here is the difference between symbols and their values:
 
@@ -985,7 +980,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - In a data-management system, each record is identified by a key.
 - The key must be unique.
 - The simplest, least efficient method is to use a set of records represented by an unordered list. This provides $Θ(n)$ access.
-- For "random access," meaning $Θ(1)$ access time complexity, trees are usually used.
+- For "random access", meaning $Θ(1)$ access time complexity, trees are usually used.
 - Data abstraction is important here---you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
 
 ::: exercises
@@ -1028,7 +1023,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.
 - We erect abstraction barriers to control complexity.
-- This still isn't powerful enough---it doesn't always make sense to speak of the "underlying representation."
+- This still isn't powerful enough---it doesn't always make sense to speak of the "underlying representation".
 - We might want to deal with multiple representations.
 - For example, complex numbers can be represented in rectangular form or in polar form.
 - We need abstraction barriers that isolate representation from use _and_ others that isolate design choices.
@@ -1390,7 +1385,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 #### Sameness and change
 
 - By introducing change into our computational models, many previously straightforward notions become problematic.
-- Consider the concept of two things being "the same."
+- Consider the concept of two things being "the same".
 - If we have `(make-withdraw 25)` and `(make-withdraw 25)`, are they the same? No, because they can have different local state.
 - A language that supports "equals can be substituted for equals" is _referentially transparent_. `set!` violates this.
 - Reasoning about programs that use assignment is much more difficult for this reason.
@@ -1399,7 +1394,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - In the first case, they have distinct accounts. In the second, both refer to the same account---this is called _aliasing_.
 - As long as we never modify objects, we can regard them to be precisely the totality of their pieces.
 - This is no longer valid in the presence of change, because "identity" is something different from the pieces.
-- A bank account is still "the same" account after a withdrawal. Conversely, two distinct accounts with the same balance are "different."
+- A bank account is still "the same" account after a withdrawal. Conversely, two distinct accounts with the same balance are "different".
 - The name is attached to an identity rather than the data itself.
 
 #### Pitfalls of imperative programming
@@ -1440,7 +1435,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - To evaluate a combination:
     1. Evaluate the subexpressions of the combination.
     2. Apply the value of the operator subexpression to the values of the operand subexpressions.
-- The environment model redefines the meaning of "apply."
+- The environment model redefines the meaning of "apply".
 - A procedure is created by evaluating a λ-expression relative to a given environment.
 - The resulting procedure object is a pair consisting of the text of the λ-expression and a pointer to the environment in which the procedure was created.
 - To apply a procedure to arguments, create a new environment whose frame binds the parameters to the values of the arguments and whose enclosing environment is specified by the procedure.
@@ -1552,7 +1547,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - `z1` is a pair whose `car` and `cdr` both point to the same `x`.
 - In contrast: `(define z2 (cons (list 'a 'b)) (list 'a 'b))`.
 - In `z2`, the two `(a b)` lists are distinct, although the actual symbols are shared.
-- Before assignment, we would think `z1` and `z2` were "the same."
+- Before assignment, we would think `z1` and `z2` were "the same".
 - The sharing is undetectable without mutators on list structure.
 - It _is_ detectable in our environmental model.
 - If we `set-car!` on the `car`, this will change both `a` symbols in `z1` but only the first in `z2`.
@@ -1699,7 +1694,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - This would be impossible if you didn't model the wire as an identity, separate from its signal value.
 
 ::: highlight
-> The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between "procedures" and "data," and we can choose our syntactic sugar to allow us to program in whatever style we choose. [@3.3.fn27]
+> The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between "procedures" and "data", and we can choose our syntactic sugar to allow us to program in whatever style we choose. [@3.3.fn27]
 :::
 
 #### The agenda
@@ -1885,7 +1880,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Concurrency, time, and communication
 
-- Concurrency can be tricky because it's not always clear what is meant by "shared state."
+- Concurrency can be tricky because it's not always clear what is meant by "shared state".
 - It also becomes more complicated in large, distributed systems.
 - The notion of time in concurrency control must be intimately linked to _communication_.
 - There are some parallels with the theory of relativity.
@@ -2193,7 +2188,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Testing of predicates
 
-- Anything other than `false` is considered "truthy."
+- Anything other than `false` is considered "truthy".
 
 ```
 (define (true? x) (not (eq? x false)))
