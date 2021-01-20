@@ -298,7 +298,7 @@ static bool wait_pandoc(struct PandocProc *proc) {
 // code blocks (there is no option to prevent Pandoc from producing these). Also
 // deletes "«" and "»", and converts "‹" and "›" to "<" and ">". The Markdown
 // source uses the former for metavariables. The Lua filter uses the latter to
-// inject HTML links in code blocks.
+// inject HTML links in code blocks. Also inserts some spacing.
 static void postprocess_html(FILE *in, FILE *out) {
     char *line = NULL;
     size_t cap = 0;
@@ -324,16 +324,34 @@ static void postprocess_html(FILE *in, FILE *out) {
         }
         const char *n;
         if (p == line) {
-            // We're not in a code block. Deal with inline code.
-            const char *needle = "<code class=\"sourceCode scheme\">";
-            while ((n = strstr(p, needle))) {
+            // We're not in a code block. Deal with inline stuff.
+            const char *colon = "r</em>";
+            while ((n = strstr(p, "<code")) || (n = strstr(p, colon))) {
                 fwrite(p, n - p, 1, out);
+                if (*n == 'r') {
+                    fputs("r</em>", out);
+                    p = n + strlen(colon);
+                    if (*p == ':' || *p == ';') {
+                        fputs("&hairsp;", out);
+                    }
+                    continue;
+                }
                 fputs("<code>", out);
-                p = n + strlen(needle);
+                p = strchr(n, '>');
+                assert(p);
+                p++;
+                const char *end = strstr(p, "</code>");
+                assert(end);
                 // Deal with metavariables.
-                while ((n = strstr(p, "<span class=\"sc\">"))) {
+                while ((n = strstr(p, "<span class=\"sc\">")) && n < end) {
                     fwrite(p, n - p, 1, out);
                     p = n + strlen("<span class=\"sc\">«</span>");
+                }
+                n = end + strlen("</code>");
+                fwrite(p, n - p, 1, out);
+                p = n;
+                if (isalpha(*p)) {
+                    fputs("&thinsp;", out);
                 }
             }
         } else {

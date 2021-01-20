@@ -10,6 +10,11 @@
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
+- make spellc.m interactive
+- perfect text chapter 1
+- automatic `&thinsp;` after code, `&hairsp;` between italic "r" and colon
+- decide on bold/italic for technicaly terms
++ fix bug in postprocess (not all inline code is scheme class)
 + implement spell checker using NSSpellChecker
 + better usage messages for C programs
 + mention `cons-stream` and `with-eval` in language.html
