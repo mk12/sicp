@@ -28,8 +28,8 @@ Imperative instructions (how-to knowledge): approximate the square root of $x$ w
 ### Processes and Lisp
 
 - The above is an algorithm. More generally, it is a _process_.
-- What is a process? It's like a magical spirit that lives in the computer and does something.
-- The process is directed by a pattern of rules called a procedure (procedure is the spell that controls the spirit).
+- What is a process? It's like a magical spirit that lives in the computer.
+- The process is directed by a pattern of rules (magical spell) called a procedure.
 - We conjure our spirits in a language called Lisp.
 - Lisp is easy to learn just as chess is easy to learn.
 - Rules stated in minutes, but there are many implications.
@@ -44,7 +44,7 @@ Imperative instructions (how-to knowledge): approximate the square root of $x$ w
 - Computer scientists are in the business of controlling complexity.
 - This is different from the complexity that others, for example aeronautical engineers, deal with, because the complexity in CS in a sense is not real.
 - Computer science deals with _idealized_ components.
-- We know as much as we want about the components; we don't need to worry about tolerance.
+- We know as much as we want about the components; no worrying about tolerance.
 - Not much difference between what I can _build_ and what I can _image_.
 - Other disciplines have physical constraints; in CS, the only constraint is your mind.
 
@@ -54,27 +54,21 @@ Imperative instructions (how-to knowledge): approximate the square root of $x$ w
 
 ### Techniques for managing complexity
 
-#### Black box abstraction
-
-Take something and build a box around it. The important thing is that you don't care what is going on inside the box---it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
+**Black box abstraction**: Take something and build a box around it. The important thing is that you don't care what is going on inside the box---it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
 
 - Primitive objects: primitive procedures, primitive data.
 - Means of combination: procedure composition, construction of compound data.
 - Means of abstraction: procedure definition, simple data abstraction.
 - Capturing common patterns: higher-order procedures, data as procedures.
 
-#### Conventional interfaces
-
-Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.
+**Conventional interfaces**: Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.
 
 - generic operations
 - large-scale structure and modularity
 - object-oriented programming
 - operations on aggregates
 
-#### Metalinguistic abstraction
-
-Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.
+**Metalinguistic abstraction**: Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.
 
 The process of interpreting Lisp in Lisp is like a giant wheel of two processes, `apply` and `eval`, which reduce expressions to each other. Very magical.
 
@@ -86,11 +80,9 @@ The process of interpreting Lisp in Lisp is like a giant wheel of two processes,
 
 ### Three main features
 
-#### Primitive elements
+**Primitive elements**: Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.
 
-Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.
-
-#### Means of combination
+**Means of combination**:
 
 - We can take the sum using a _combination_: `(+ 3 14.4 5)`.
 - Combination: applying and operator to operands.
@@ -100,9 +92,7 @@ Here are some primitive elements is Lisp: `3`, `14.4`, `5`, `+`. These are all n
 - Nested combinations can be modeled as trees.
 - Parentheses are just a way to write trees as a linear sequence of characters.
 
-#### Means of abstraction
-
-This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure---it is a _special form_. We can also define procedures this way:
+**Means of abstraction**: This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure---it is a _special form_. We can also define procedures this way:
 
 ```
 (define (square x) (* x x))
@@ -155,7 +145,7 @@ You can think of `if` as syntactic sugar for `cond` or vice versa.
 
 ### Programs and processes
 
-- The job of a programmer is to design processes that accomplish particular goals (like finding the square root of a number).
+- The job of a programmer is to design processes that accomplish particular goals, like finding the square root of a number.
 - You do this by constructing spells (procedures, expressions) which direct a process to accomplish the desired goal.
 - You must understand the relationship between the particular spells you cast and the process you're trying to control.
 - How do particular patterns of procedures and expressions cause particular patterns of execution and behavior in the process?
@@ -176,7 +166,7 @@ These are also expressions, but they are _special forms_, so we will worry about
 
 ### Evaluating combinations
 
-These are the substitution rules for evaluating a combination. Note that the order does not matter for steps 1 and 2.
+These are the substitution rules for evaluating a combination:
 
 1. Evaluate the operator to get the procedure.
 2. Evaluate the operands to get the arguments.
@@ -185,7 +175,7 @@ These are the substitution rules for evaluating a combination. Note that the ord
     2. Substitute the arguments supplied for the formal parameters of the procedure.
     3. Evaluate the resulting body.
 
-#### Example
+### Example
 
 The `sos` procedure takes the sum of the squares:
 
@@ -220,7 +210,7 @@ To evaluate `(if «predicate» «consequent» «alternative»)`, follow these st
     1. If it yields true, evaluate the consequent expression.
     2. If it yields false, evaluate the alternative expression.
 
-#### Example
+### Example
 
 The addition operator in Peano arithmetic uses a conditional:
 
@@ -255,9 +245,9 @@ Now we can evaluate `(+ 3 4)` like so:
 
 ### Pre-visualization
 
-- A program made of procedures and expression evolves a process.
+- Programs are made of procedures and expressions, and they evolves processes.
 - But how do particular programs evolve particle processes?
-- We want to be able to go from particularly shaped programs to particularly shaped processes.
+- We want to go from particularly shaped programs to particularly shaped processes.
 - We want to pre-visualize the process like a photographer pre-visualizes the photo before taking the shot.
 
 ### Peano arithmetic
@@ -283,7 +273,7 @@ The iteration has all of its state in explicit variables. The recursion does not
 
 ### Perturbation analysis
 
-Make small changes to the program, see how it affects the process.
+Make small changes to the program and see how it affects the process.
 
 ### Fibonacci sequence
 

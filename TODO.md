@@ -2,7 +2,6 @@
 
 - test in all browsers, without JS, without CSS
 - exercises appendix for core.ss etc.
-- reconsider → in lecture 6a
 - deal with the OLD proofs, diagrams
 - en/em dashes in comments
 - go over all exercises and fix up
@@ -11,9 +10,15 @@
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
 - make spellc.m interactive
-- perfect text chapter 1
-- automatic `&thinsp;` after code, `&hairsp;` between italic "r" and colon
-- decide on bold/italic for technicaly terms
+- perfection:
+    - text: 1.1, 1.2
+    - lecture: 1a, 1b
+    - exercise: 1.1
+x reconsider → in lecture 6a
+    x it's fine
++ automatic `&thinsp;` after code, `&hairsp;` between italic "r" and colon
++ decide on bold/italic for technicaly terms
+    + just using _em_ for everything, simplest
 + fix bug in postprocess (not all inline code is scheme class)
 + implement spell checker using NSSpellChecker
 + better usage messages for C programs
