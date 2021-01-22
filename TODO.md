@@ -13,7 +13,7 @@
 - perfection:
     - text: 1.1, 1.2
     - lecture: 1a, 1b
-    - exercise: 1.1
+    - exercise: 1.1, 1.2*(in progress, next ex 1.13 proof)
 x reconsider → in lecture 6a
     x it's fine
 + automatic `&thinsp;` after code, `&hairsp;` between italic "r" and colon

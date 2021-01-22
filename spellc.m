@@ -401,7 +401,7 @@ static enum Mode next_mode(enum Mode old, const char *line) {
         if (startswith(line, "```")) {
             return M_CODE_BLOCK_START;
         };
-        if (strcmp(line, "$$\n") == 0) {
+        if (strcmp(line, "\n") == 0) {
             return M_DISPLAY_MATH_START;
         }
         if (strcmp(line, "::: exercises\n") == 0) {
@@ -443,6 +443,7 @@ static enum Mode next_mode(enum Mode old, const char *line) {
 // if this line has no content that should be spellchecked.
 static char *strip_markdown(char *s) {
     // Skip link definitions, display math, and divs.
+    // TODO: handle all $$ cases (not on own lines).
     if (s[0] == '[' || (s[0] == '$' && s[1] == '$') || startswith(s, ":::")) {
         return NULL;
     }

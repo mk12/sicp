@@ -156,8 +156,8 @@ circumference ~> 62.8318
 
 ;; The operator evaluates to `+` (addition) when `b` is positive, and to `-`
 ;; (subtraction) when `b` is negative. Subtracting a negative is equivalent to
-;; adding its absolute value, so this procedure returns $a + \lvert b\rvert$
-;; in all cases.
+;; adding its absolute value, so this procedure returns $a + \abs{b}$ in all
+;; cases.
 
 (Exercise ?1.5)
 
@@ -500,8 +500,73 @@ circumference ~> 62.8318
 
 (Exercise ?1.13)
 
-;; See proofs.pdf for the proof that Fib(n) is the closest integer to
-;; phi^n/sqrt(5), where phi = (1 + sqrt(5))/2 is the golden ratio.
+;; The constants $\varphi$ and $\psi$ are the positive and negative solutions to
+;; the golden ratio equation for a rectangle with side lengths of 1 and $x$:
+;;
+;; $$\frac{1}{x}=\frac{x}{1+x}.$$
+;;
+;; The Fibonacci sequence is defined recursively by
+;;
+;; $$\begin{aligned} \Fib(0) &= 0, \\
+;; \Fib(1) &= 1, \\
+;; \Fib(n) &= \Fib(n-1) + \Fib(n-2). \end{aligned}$$
+;;
+;; **Lemma.** $\Fib(n)$ is equal to $f(n)=\dfrac{\varphi^n-\psi^n}{\sqrt5}.$
+;;
+;; First, we will demonstrate three base cases. When $n=0$,
+;;
+;; $$f(0)=\frac{\varphi^0-\psi^0}{\sqrt5} = \frac{1-1}{\sqrt5} = 0.$$
+;;
+;; When $n=1$,
+;;
+;; $$f(1)=\frac{\varphi^1-\psi^1}{\sqrt5} =
+;; \frac{\frac{1+\sqrt5}{2}-\frac{1-\sqrt5}{2}}{\sqrt5} =
+;; \frac{\frac{2\sqrt5}{2}}{\sqrt5} = 1.$$
+;;
+;; When $n=2$,
+;;
+;; $$\begin{aligned} f(2) &= \frac{\varphi^2-\psi^2}{\sqrt5} \\
+;;  &= \frac{\left(\frac{1+\sqrt5}{2}\right)^2 -
+;;       \left(\frac{1-\sqrt5}{2}\right)^2}{\sqrt5} \\
+;; &= \frac{\frac{(1+\sqrt5)^2-(1-\sqrt5)^2}{4}}{\sqrt5} \\
+;; &= \frac{\left(\left(1+\sqrt5\right)-\left(1-\sqrt5\right)\right)
+;;       \left(\left(1+\sqrt5\right)+\left(1-\sqrt5\right)\right)}{4\sqrt5} \\
+;; &= \frac{\left(2\sqrt5\right)(2)}{4\sqrt5} \\
+;; &= 1. \end{aligned}$$
+;;
+;; Now comes the inductive step:
+;;
+;; $$\begin{aligned} f(n-1)+f(n-2) &= \frac{\varphi^{n-1}-\psi^{n-1}}{\sqrt5} +
+;; \frac{\varphi^{n-2}-\psi^{n-2}}{\sqrt{5}} \\
+;; &= \frac{\left(\varphi^{n-1}+\varphi^{n-2}\right) -
+;;       \left(\psi^{n-1}+\psi^{n-2}\right)}{\sqrt5} \\
+;; &= \frac{\varphi^n\left(\varphi^{-1}+\varphi^{-2}\right) -
+;;       \psi^n\left(\psi^{-1}+\psi^{-2}\right)}{\sqrt5} \\
+;; &= \frac{\varphi^n\varphi^{-1}\left(1+\varphi^{-1}\right) -
+;;       \psi^n\psi^{-1}\left(1+\psi^{-1}\right)}{\sqrt5} \\
+;; &= \frac{\varphi^n\varphi^{-1}\left(\varphi\right) -
+;;       \psi^n\psi^{-1}\left(\psi\right)}{\sqrt5} \\
+;; &= \frac{\varphi^n-\psi^n}{\sqrt5} \\
+;; &= f(n). \hspace{12.75em}\square
+;; \end{aligned}$$
+;;
+;; **Theorem.** $\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$, where
+;; $\varphi=(1+\sqrt5)/2$.
+;;
+;; For this to be true, the absolute difference must be less than one half:
+;;
+;; $$\begin{aligned}
+;; \abs{\Fib(n)-\frac{\varphi^n}{\sqrt5}} &< \frac12 \\
+;; \abs{\frac{\varphi^n-\psi^n}{\sqrt5} - \frac{\varphi^n}{\sqrt5}} &< \frac12\\
+;; \abs{-\frac{\psi^n}{\sqrt5}} &< \frac12 \\
+;; \frac{\abs{-\psi^n}}{\sqrt5} &< \frac12 \\
+;; \abs{\psi^n} &< \frac{\sqrt5}{2} \\
+;; \abs{\psi}^n &< \frac{\sqrt5}{2}.
+;; \end{aligned}$$
+;;
+;; Since $\abs{\psi}<0.619<1$, we have $\abs{\psi}^n<1<\dfrac{\sqrt5}{2}$ for
+;; all $n \ge 0$. This completes the proof.
+;; <!-- TODO: consistent QED for lemma and proof, right aligned. -->
 
 (Section :1.2.3 "Orders of Growth")
 
@@ -1077,10 +1142,10 @@ circumference ~> 62.8318
 (fast-prime? 13 many-times) => #t
 
 ;; We cannot write a deterministic test for composite numbers (for the same
-;; reason as for the Fermat test in Section 1.2.6), nor for Carmichael numbers
+;; reason as for the Fermat test in [](:1.2.6)), nor for Carmichael numbers
 ;; since we could get unlucky with the random integers. But I checked and the
 ;; new `fast-prime?` procedure based on the Millner-Rabin test does indeed
-;; return #f most of the time for Carmichael numbers.
+;; return `#f` most of the time for Carmichael numbers.
 
 (Section :1.3 "Formulating Abstractions with Higher-Order Procedures")
 

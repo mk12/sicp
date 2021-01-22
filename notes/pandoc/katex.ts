@@ -118,6 +118,7 @@ function renderKatex(tex: string, displayMode: boolean): string {
       displayMode,
       throwOnError: true,
       macros: {
+        "\\abs": "\\left\\lvert #1\\right\\rvert",
         "\\Fib": "\\text{Fib}",
       },
     });
