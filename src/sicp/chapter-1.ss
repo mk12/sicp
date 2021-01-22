@@ -500,10 +500,10 @@ circumference ~> 62.8318
 
 (Exercise ?1.13)
 
-;; The constants $\varphi$ and $\psi$ are the positive and negative solutions to
-;; the golden ratio equation for a rectangle with side lengths of 1 and $x$:
+;; The constants $\varphi$ and $\psi$ are the solutions to golden ratio equation
+;; $x+1=x^2$:
 ;;
-;; $$\frac{1}{x}=\frac{x}{1+x}.$$
+;; $$\varphi=\frac{1+\sqrt5}{2},\qquad\psi=\frac{1-\sqrt5}{2}.$$
 ;;
 ;; The Fibonacci sequence is defined recursively by
 ;;
@@ -547,13 +547,15 @@ circumference ~> 62.8318
 ;; &= \frac{\varphi^n\varphi^{-1}\left(\varphi\right) -
 ;;       \psi^n\psi^{-1}\left(\psi\right)}{\sqrt5} \\
 ;; &= \frac{\varphi^n-\psi^n}{\sqrt5} \\
-;; &= f(n). \hspace{12.75em}\square
+;; &= f(n).
 ;; \end{aligned}$$
+;;
+;; By induction, $f(n)=\Fib(n)$ for all $n$. $\blacksquare$
 ;;
 ;; **Theorem.** $\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$, where
 ;; $\varphi=(1+\sqrt5)/2$.
 ;;
-;; For this to be true, the absolute difference must be less than one half:
+;; For this to hold, the absolute difference must be less than one half:
 ;;
 ;; $$\begin{aligned}
 ;; \abs{\Fib(n)-\frac{\varphi^n}{\sqrt5}} &< \frac12 \\
@@ -565,8 +567,7 @@ circumference ~> 62.8318
 ;; \end{aligned}$$
 ;;
 ;; Since $\abs{\psi}<0.619<1$, we have $\abs{\psi}^n<1<\dfrac{\sqrt5}{2}$ for
-;; all $n \ge 0$. This completes the proof.
-;; <!-- TODO: consistent QED for lemma and proof, right aligned. -->
+;; all $n$. $\blacksquare$
 
 (Section :1.2.3 "Orders of Growth")
 

@@ -117,6 +117,7 @@ function renderKatex(tex: string, displayMode: boolean): string {
     html = katex.renderToString(tex, {
       displayMode,
       throwOnError: true,
+      strict: "error",
       macros: {
         "\\abs": "\\left\\lvert #1\\right\\rvert",
         "\\Fib": "\\text{Fib}",
