@@ -37,6 +37,10 @@ function render_math(el)
         table.insert(chunks, chunk)
     end
     local response = table.concat(chunks)
+    local error_prefix = "error:"
+    if response:sub(1, #error_prefix) == error_prefix then
+        error("math error: " .. response:sub(#error_prefix + 1))
+    end
     return pandoc.RawInline("html", response)
 end
 
@@ -69,7 +73,7 @@ function div(el)
     elseif el.classes[1] == "highlight" then
         return highlight_div(el)
     end
-    assert(false, "bad div class: " .. el.classes[1])
+    error("bad div class: " .. el.classes[1])
 end
 
 local last_exercise_range_end

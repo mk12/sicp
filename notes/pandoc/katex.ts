@@ -25,6 +25,7 @@ Runs a server that renders TeX into KaTeX HTML.
 The server listens on the Unix domain socket SOCKET_FILE (stream-oriented).
 Requests and responses are null-terminated.
 The request prefix "display:" enables display mode.
+The response prefix "error:" indicates an error message.
 
 The server automatically exits if SOCKET_FILE is removed.
 
@@ -74,8 +75,10 @@ function handleSignals(): Promise<never> {
   ));
 }
 
-// Prefix used to request display mode.
+// Request prefix used to request display mode.
 const DISPLAY_PREFIX = "display:";
+// Response prefix used to indicate an error message follows.
+const ERROR_PREFIX = "error:";
 
 // Responds to TeX requests with KaTeX HTML responses.
 async function serveKatex(listener: Deno.Listener): Promise<void> {
@@ -109,7 +112,18 @@ async function serveKatex(listener: Deno.Listener): Promise<void> {
 
 // Renders a TeX string to KaTeX HTML.
 function renderKatex(tex: string, displayMode: boolean): string {
-  const html = katex.renderToString(tex, { displayMode, throwOnError: false });
+  let html;
+  try {
+    html = katex.renderToString(tex, {
+      displayMode,
+      throwOnError: true,
+      macros: {
+        "\\Fib": "\\text{Fib}",
+      },
+    });
+  } catch (ex) {
+    return ERROR_PREFIX + ex.toString();
+  }
   // There is no need to include xmlns:
   // https://www.w3.org/TR/MathML3/chapter6.html#interf.html
   return html.replace(
