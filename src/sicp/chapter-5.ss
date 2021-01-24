@@ -3,15 +3,11 @@
 #!r6rs
 
 (library (src sicp chapter-5)
-  (export chapter-5-effects)
+  (export register-chapter-5)
   (import (rnrs base (6))
-          (src lang sicp)
-          (only (src sicp chapter-4) chapter-4-effects))
+          (src lang sicp))
 
-;; Introduce a dependency on the previous chapter so that it executes first.
-(define chapter-5-effects chapter-4-effects)
-
-(SICP
+(SICP register-chapter-5
 
 (Chapter :5 "Computing with Register Machines")
 

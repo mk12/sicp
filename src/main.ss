@@ -9,6 +9,10 @@
         (rnrs programs (6))
         (only (src compat active) format seed-rng)
         (only (src lang core) run-sicp)
+        (src sicp chapter-1)
+        (src sicp chapter-2)
+        (src sicp chapter-3)
+        (src sicp chapter-4)
         (src sicp chapter-5))
 
 (define (usage program)
@@ -63,7 +67,14 @@ options:
   (go alist '()))
 
 (define (run filters verbose color)
-  chapter-5-effects
+  ;; It's important that we register the chapters in order, since this provides
+  ;; the default order for running tests. The topological sort step only moves
+  ;; entries when it absolutely has to (because of forward dependencies).
+  (register-chapter-1)
+  (register-chapter-2)
+  (register-chapter-3)
+  (register-chapter-4)
+  (register-chapter-5)
   (unless (run-sicp filters verbose color)
     (exit 1)))
 

@@ -3,15 +3,11 @@
 #!r6rs
 
 (library (src sicp chapter-3)
-  (export chapter-3-effects)
+  (export register-chapter-3)
   (import (rnrs base (6))
-          (src lang sicp)
-          (only (src sicp chapter-2) chapter-2-effects))
+          (src lang sicp))
 
-;; Introduce a dependency on the previous chapter so that it executes first.
-(define chapter-3-effects chapter-2-effects)
-
-(SICP
+(SICP register-chapter-3
 
 (Chapter :3 "Modularity, Objects, and State")
 

@@ -490,7 +490,9 @@
               ...)))))
   (auxiliary Chapter Section Exercise ~> =?> =$> =!> paste))
 
-;; A DSL for SICP code samples and exercises.
+;; A DSL for SICP code samples and exercises. `(SICP reg e* ...)` defines a
+;; function named `reg` that registers all the definitions produced by the
+;; expressions that follow, which are written in the DSL.
 (define-syntax (SICP x)
   ;; Creates an entry `num` from its `id` syntax. This just chops off the sigil
   ;; used to differentiate chapters/sections from exercises (and also used
@@ -662,7 +664,7 @@
        (with-syntax ((assert #`(assert-close (list #,@terms) #'#,terms)))
          (go #'(e* ...) header exports #`(#,@body assert) ntests out)))))
 
-  (with-syntax (((_ e* ...) x))
-    #`(begin #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))))
+  (with-syntax (((_ register e* ...) x))
+    #`(define (register) #,@(go #'(e* ...) 'no-header #'() #'() 0 #'()))))
 
 ) ; end of library

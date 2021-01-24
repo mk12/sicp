@@ -3,13 +3,11 @@
 #!r6rs
 
 (library (src sicp chapter-1)
-  (export chapter-1-effects)
+  (export register-chapter-1)
   (import (rnrs base (6))
           (src lang sicp))
 
-(define chapter-1-effects)
-
-(SICP
+(SICP register-chapter-1
 
 (Chapter :1 "Building Abstractions with Procedures")
 

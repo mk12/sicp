@@ -3,15 +3,11 @@
 #!r6rs
 
 (library (src sicp chapter-2)
-  (export chapter-2-effects)
+  (export register-chapter-2)
   (import (rnrs base (6))
-          (src lang sicp)
-          (only (src sicp chapter-1) chapter-1-effects))
+          (src lang sicp))
 
-;; Introduce a dependency on the previous chapter so that it executes first.
-(define chapter-2-effects chapter-1-effects)
-
-(SICP
+(SICP register-chapter-2
 
 (Chapter :2 "Building Abstractions with Data")
 
