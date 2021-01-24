@@ -67,7 +67,7 @@
 </nav>
 <main id="main">
 <h1 id="note-on-the-language">Note on the Language</h1>
-<p>The code on this website is written in a language based on <a href="http://www.r6rs.org" title="The Revised(6) Report on the Algorithmic Language Scheme">R6RS Scheme</a>. The language provides custom syntax for modules and assertions, and defines a few special forms. <a href="https://github.com/mk12/sicp/blob/master/src/sicp">Source files</a> use the language by wrapping their content in <code>(SICP ...)</code>, a macro <a href="https://github.com/mk12/sicp/blob/master/src/lang/core.ss">implemented</a> in plain R6RS Scheme.</p>
+<p>The code on this website is written in a language based on <a href="http://www.r6rs.org" title="The Revised(6) Report on the Algorithmic Language Scheme">R6RS Scheme</a>. The language provides custom syntax for modules and assertions, and defines a few built-in procedures and special forms. <a href="https://github.com/mk12/sicp/blob/master/src/sicp">Source files</a> use the language by wrapping their content in <code>(SICP ...)</code>, a macro <a href="https://github.com/mk12/sicp/blob/master/src/lang/core.ss">implemented</a> in plain R6RS Scheme.</p>
 <h2 id="modules" class="anchor">
 <a class="anchor__link link" href="#modules" aria-hidden="true">#</a> Modules
 </h2>
@@ -267,12 +267,23 @@ right:
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
-<h2 id="special-forms" class="anchor">
-<a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special Forms
+<h2 id="built-ins" class="anchor">
+<a class="anchor__link link" href="#built-ins" aria-hidden="true">#</a> Built-ins
 </h2>
-<p>The language also <a href="https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss">defines</a> a few special forms. They are usable anywhere, not just at the top level like the assertion operators.</p>
-<p>The <code>cons-stream</code> special form is defined so that <code>(<span class="kw">cons-stream</span> <span class="ss">a</span> <span class="ss">b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>, as specified in the textbook. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
-<p>The <code>with-eval</code> special form is defined so that <code>(<span class="kw">with-eval</span> <span class="ss">eval</span> <span class="ss">env</span> <span class="ss">exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval</span> <span class="ss">exp*</span> <span class="ss">env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
+<p>The language also <a href="https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss">defines</a> a few procedures and special forms. They are usable anywhere, not just at the top level like the assertion operators.</p>
+<h3 id="procedures" class="anchor">
+<a class="anchor__link link" href="#procedures" aria-hidden="true">#</a> Procedures
+</h3>
+<p><code>(runtime)</code> returns the time elapsed since some arbitrary point in the past, in seconds. Unlike the <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_thm_1.22">textbook version</a>, which returns an integer, ours returns an inexact number with as much precision as possible. It is used for prime-test benchmarking in <a href="1/2.html#1.2.6">§&nbsp;1.2.6</a>.</p>
+<p><code>(parallel-execute <span class="ss">proc*</span> ...)</code> executes the given procedures in parallel. Unlike the <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%_sec_Temp_414">textbook version</a>, which returns immediately with a control object, ours blocks until all threads have completed. In addition, each thread sleeps for a random amount of time up to one millisecond before executing its procedure to help reveal bugs. It is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
+<p><code>(make-mutex)</code> returns an object <code><span class="ss">mutex</span></code> that supports messages <code>(<span class="ss">mutex</span> <span class="cn">&#39;acquire</span>)</code> and <code>(<span class="ss">mutex</span> <span class="cn">&#39;release</span>)</code>. Unlike the <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%_sec_Temp_427">textbook version</a>, which calls <code>test-and-set!</code> in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like <code>parallel-execute</code>, it is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
+<h3 id="special-forms" class="anchor">
+<a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special forms
+</h3>
+<p><code>(capture-output <span class="ss">exp*</span> ...)</code> evaluates the given expressions and returns standard output captured in a string. The <code>=$&gt;</code> operator uses this internally, and it’s useful to invoke directly when you need to manipulate the string in some way.</p>
+<p><code>(hide-output <span class="ss">exp*</span> ...)</code> evaluates the given expressions while suppressing standard output. It returns the value of the last expression.</p>
+<p><code>(<span class="kw">cons-stream</span> <span class="ss">a</span> <span class="ss">b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
+<p><code>(<span class="kw">with-eval</span> <span class="ss">eval</span> <span class="ss">env</span> <span class="ss">exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval</span> <span class="ss">exp*</span> <span class="ss">env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

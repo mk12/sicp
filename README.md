@@ -8,7 +8,7 @@ For more information, see [the website][].
 
 ### Usage
 
-Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Scheme implementation.
+Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Scheme implementation. Use `./run.sh chezd` to start the Chez debugger when an error occurs.
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 

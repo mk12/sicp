@@ -1,6 +1,6 @@
 These are my solutions to the exercises in <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>. The code is written in a language based on [R6RS Scheme][] that provides lightweight modules and assertions, allowing each section to explicitly declare its dependencies and run unit tests. The language is described more in the [next section][].
 
-This project supports three Scheme implementations: [Chez Scheme][], [Guile][], and [Racket][]. For each one there is a [compatibility shim][] exposing some features that are not part of R6RS under a common interface.
+This project supports three Scheme implementations: [Chez Scheme][], [Guile][], and [Racket][]. For each one there is a [compatibility shim][] exposing some features that are not part of R6RS under a common interface. In my experience, Chez has the best performance and debugger while Racket has the best error messages. There are [known issues][] with some implementations: notably, Guile only works when compilation is disabled.
 
 These webpages are [generated][] directly from source code.
 
@@ -12,11 +12,12 @@ These webpages are [generated][] directly from source code.
 [Guile]: https://www.gnu.org/software/guile/ "GNU Guile"
 [Racket]: http://racket-lang.org "Racket programming language"
 [compatibility shim]: https://github.com/mk12/sicp/blob/master/src/compat
+[known issues]: https://github.com/mk12/sicp#known-issues
 [generated]: https://github.com/mk12/sicp#website
 
 # Note on the Language
 
-The code on this website is written in a language based on [R6RS Scheme][]. The language provides custom syntax for modules and assertions, and defines a few special forms. [Source files][] use the language by wrapping their content in `(SICP ...)`, a macro [implemented][] in plain R6RS Scheme.
+The code on this website is written in a language based on [R6RS Scheme][]. The language provides custom syntax for modules and assertions, and defines a few built-in procedures and special forms. [Source files][] use the language by wrapping their content in `(SICP ...)`, a macro [implemented][] in plain R6RS Scheme.
 
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
@@ -289,12 +290,30 @@ right:
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 
-## Special Forms
+## Built-ins
 
-The language also [defines][] a few special forms. They are usable anywhere, not just at the top level like the assertion operators.
+The language also [defines][] a few procedures and special forms. They are usable anywhere, not just at the top level like the assertion operators.
 
-The `cons-stream` special form is defined so that `(cons-stream «a» «b»)` is equivalent to `(cons «a» (delay «b»))`, as specified in the textbook. It is used in [](:3.5).
+### Procedures
 
-The `with-eval` special form is defined so that `(with-eval «eval» «env» «exp*» ...)` is equivalent to `(begin («eval» «exp*» «env») ...)`, except it first creates bindings for `«eval»` and `«env»` to avoid re-evaluating them. It is used in [](:4) to make tests more readable.
+`(runtime)` returns the time elapsed since some arbitrary point in the past, in seconds. Unlike the [textbook version][runtime], which returns an integer, ours returns an inexact number with as much precision as possible. It is used for prime-test benchmarking in [](:1.2.6).
+
+`(parallel-execute «proc*» ...)` executes the given procedures in parallel. Unlike the [textbook version][parallel], which returns immediately with a control object, ours blocks until all threads have completed. In addition, each thread sleeps for a random amount of time up to one millisecond before executing its procedure to help reveal bugs. It is used in [](:3.4).
+
+`(make-mutex)` returns an object `«mutex»` that supports messages `(«mutex» 'acquire)` and `(«mutex» 'release)`. Unlike the [textbook version][mutex], which calls `test-and-set!` in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like `parallel-execute`, it is used in [](:3.4).
+
+[runtime]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_thm_1.22
+[parallel]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%_sec_Temp_414
+[mutex]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%_sec_Temp_427
+
+### Special forms
+
+`(capture-output «exp*» ...)` evaluates the given expressions and returns standard output captured in a string. The `=$>` operator uses this internally, and it's useful to invoke directly when you need to manipulate the string in some way.
+
+`(hide-output «exp*» ...)` evaluates the given expressions while suppressing standard output. It returns the value of the last expression.
+
+`(cons-stream «a» «b»)` is equivalent to `(cons «a» (delay «b»))`. It is used in [](:3.5).
+
+`(with-eval «eval» «env» «exp*» ...)` is equivalent to `(begin («eval» «exp*» «env») ...)`, except it first creates bindings for `«eval»` and `«env»` to avoid re-evaluating them. It is used in [](:4) to make tests more readable.
 
 [defines]: https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss
