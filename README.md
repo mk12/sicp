@@ -20,12 +20,14 @@ The program starts in [main.ss](main.ss). Each chapter of the book has its own f
 
 ### Language
 
-Tests use `=>`, `~>`, `=$>`, and `=!>`:
+Tests use `=>`, `~>`, `=?>`, `=$>`, and `=!>`:
 
 ```scheme
 (+ 1 2 3) => (+ 3 2 1) => 6            ; => asserts equality
 
 (+ 1.0 0.1) ~> (- 1.2 0.1) ~> 1.1      ; ~> allows a small margin of error
+
+(random 5) =?> [0 1 (+ 1 1) 3 4]       ; =?> is for nondeterministic tests
 
 (display "hi") =$> "hi"                ; =$> "..." tests standard output
 (display "hi\nbye\n") =$> ["hi" "bye"] ; =$> [...] splits lines
