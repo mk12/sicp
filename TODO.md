@@ -13,7 +13,8 @@
 - perfection:
     - text: 1.1, 1.2
     - lecture: 1a, 1b
-    - exercise: 1.1, 1.2*(in progress, next: 1.2.5)
+    - exercise: 1.1, 1.2
++ fix scheme linter
 + `=?>` operator instead of `in?`
 + fix assertion failure when building all docs
 x html minifier

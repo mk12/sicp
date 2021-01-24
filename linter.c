@@ -429,9 +429,9 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                         break;
                     }
                 }
-                if (prev == '\''
-                    || (state->quoted_align != -1
-                        && (prev == '(' || prev == '['))) {
+                if (prev == '\'' || (state->quoted_align != -1 && prev == '(')
+                    || c == '['  // we only use square brackets for =?> and =$>
+                ) {
                     state->quoted_align = i + 1;
                 } else {
                     state->quoted_align = -1;
