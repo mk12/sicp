@@ -919,39 +919,35 @@ circumference ~> 62.8318
  "7 *** ")
 => #t
 
-;; 3 primes greater than 1,000 (A)
+;; $A=$ time for 3 primes greater than 1,000.
 ; 1009 *** 4.792213439941406e-5
 ; 1013 *** 4.291534423828125e-5
 ; 1019 *** 4.792213439941406e-5
 
-;; 3 primes greater than 10,000 (B)
-;; 2.3A < B < 2.8A, sqrt(10) = 3.16
+;; $B=$ time for 3 primes greater than 10,000. $(2.3A < B < 2.8A)$
 ; 10007 *** 1.1086463928222656e-4
 ; 10009 *** 1.1396408081054688e-4
 ; 10037 *** 1.2302398681640625e-4
 
-;; 3 primes greater than 100,000 (C)
-;; 3.3B < C < 4.1B, sqrt(10) = 3.16
+;; $C=$ time for 3 primes greater than 100,000. $(3.3B < C < 4.1B)$
 ; 100003 *** 4.010200500488281e-4
 ; 100019 *** 3.6597251892089844e-4
 ; 100043 *** 4.558563232421875e-4
 
-;; 3 primes greater than 1,000,000 (D)
-;; 2.8C < D < 3.4C, sqrt(10) = 3.16
-;; 23.7A < D < 31.9A, sqrt(1000) = 31.62
+;; $D=$ time for 3 primes greater than 1,000,000. $(2.8C < D < 3.4C)$
 ; 1000003 *** .0013530254364013672
 ; 1000033 *** .0011339187622070312
 ; 1000037 *** .0013699531555175781
 
-;; The data seems to bear out the $\Theta(\sqrt n)$ prediction. The larger the
-;; numbers, the closer the growth between powers of ten is to the square root of
-;; ten. This result is compatible with the notion that programs on the machine
-;; run in time proportional to the number of steps required for the computation.
+;; The data bears out the $\Theta(\sqrt n)$ prediction. The growth between
+;; powers of ten gets closer to $\sqrt{10}\approx3.16$ as $n$ gets larger. This
+;; result is compatible with the notion that programs on the machine run in time
+;; proportional to the number of steps required for the computation.
 
 (Exercise ?1.23
   (use (:1.1.4 square) (?1.22 search-for-primes)))
 
-;; Trial division, but only testing odd divisors.
+;; Trial division, but only testing odd divisors:
 (define (prime? n)
   (define (divides? a b)
     (= (remainder b a) 0))
@@ -970,35 +966,31 @@ circumference ~> 62.8318
  "7 *** ")
 => #t
 
-;; 3 primes greater than 1,000
+;; Time for 3 primes greater than 1,000:
 ; 1009 *** 5.1975250244140625e-5   (1.085x)
 ; 1013 *** 5.1975250244140625e-5   (1.211x)
 ; 1019 *** 6.198883056640625e-5    (1.294x)
 
-;; 3 primes greater than 10,000
+;; Time for 3 primes greater than 10,000:
 ; 10007 *** 1.1491775512695312e-4  (1.037x)
 ; 10009 *** 1.1801719665527344e-4  (1.036x)
 ; 10037 *** 1.1897087097167969e-4  (0.967x)
 
-;; 3 primes greater than 100,000
+;; Time for 3 primes greater than 100,000:
 ; 100003 *** 3.540515899658203e-4  (0.883x)
 ; 100019 *** 3.490447998046875e-4  (0.954x)
 ; 100043 *** 3.590583801269531e-4  (0.788x)
 
-;; 3 primes greater than 1,000,000
+;; Time for 3 primes greater than 1,000,000:
 ; 1000003 *** .0010960102081298828 (0.810x)
 ; 1000033 *** .001055002212524414  (0.930x)
 ; 1000037 *** .0010900497436523438 (0.796x)
 
 ;; The expectation of half time was not confirmed. In fact, this method is
-;; actually slower for primes under 10,000. Even for seven-figure primes, this
-;; method only shaves off 20% of the time. There was probably some error in
-;; these measurements -- the time measured is too small. Other processes on the
-;; computer and random factors might have played a role. I was surprised that
-;; the new method turned out this bad (for relatively small primes, anyway). By
-;; replacing the increment with a call to the next procedure, we add some
-;; overhead and a conditional (which implicates branch prediction), and maybe
-;; this outweighed the gain from skipping the even numbers past two.
+;; actually slower for primes under 10,000. Even for seven-figure primes, it
+;; only shaves off 20%. There was probably some error in the measurements; other
+;; processes on the computer and random factors might have played a role. Maybe
+;; the overhead of calling `next` cancels the benefit of skipping even numbers.
 
 (Exercise ?1.24
   (use (:1.2.6.2 fast-prime?) (?1.22 search-for-primes)))
@@ -1010,38 +1002,33 @@ circumference ~> 62.8318
  "7 *** ")
 => #t
 
-;; 3 primes greater than 1,000 (A)
+;; $A=$ time for 3 primes greater than 1,000.
 ; 1009 *** .003638029098510742
 ; 1013 *** .003793001174926758
 ; 1019 *** .003606081008911133
 
-;; 3 primes greater than 10,000 (B)
-;; 0.988A < B < 1.196A
+;; $B=$ time for 3 primes greater than 10,000. $(0.988A < B < 1.196A)$
 ; 10007 *** .004311084747314453
 ; 10009 *** .0039730072021484375
 ; 10037 *** .0037479400634765625
 
-;; 3 primes greater than 100,000 (C)
-;; 0.893B < C < 1.294B
+;; $C=$ time for 3 primes greater than 100,000. $(0.893B < C < 1.294B)$
 ; 100003 *** .004847049713134766
 ; 100019 *** .004848003387451172
 ; 100043 *** .003850221633911133
 
-;; 3 primes greater than 1,000,000 (D)
-;; 0.891C < D < 1.453C
-;; 1.138A < D < 1.551A
+;; $D=$ time for 3 primes greater than 1,000,000. $(0.891C < D < 1.453C)$
 ; 1000003 *** .005592823028564453
 ; 1000033 *** .004972934722900391
 ; 1000037 *** .0043179988861083984
 
-;; Since the Fermat test has $\Theta(\log n)$ growth, I expected the time to the
-;; primes near 1,000,000 to be only a bit greater than the time needed to test
-;; primes near 1,000. The data bears this out -- for each additional order of
-;; magnitude of the primes, the time required increases by a small, constant
-;; amount. Specifically, primes that are 10 times larger take about 0.001
-;; seconds longer to test using the Fermat method. It should be noted that these
-;; results may be dependent on the choice of 100 as the second argument to
-;; `fast-prime?` (the exercise did not specify what value to use).
+;; Since the Fermat test has $\Theta(\log n)$ growth, I expected the time to
+;; test primes near 1,000,000 to be only a bit greater than for primes near
+;; 1,000. The data bears this out: for each additional order of magnitude of the
+;; primes, the time required increases by a small, constant amount.
+;; Specifically, primes that are 10 times larger take about 1 millisecond
+;; longer. These results may be dependent on the choice of 100 as the second
+;; argument to `fast-prime?` (the exercise did not specify what value to use).
 
 (Exercise ?1.25
   (use (:1.1.4 square) (:1.2.4 fast-expt) (:1.2.6.2 expmod)))
@@ -1050,14 +1037,12 @@ circumference ~> 62.8318
   (remainder (fast-expt base exp) m))
 
 ;; This procedure works, but it is not as efficient. The Fermat test takes much
-;; longer using this version of expmod -- longer by three orders of magnitude.
-;; While `fast-expt` is reasonably fast, the original `expmod` procedure is much
-;; faster. The key to its implementation is not only successive squaring (which
-;; `fast-expt` does as well in Alyssa's procedure), but that it calls remainder
-;; between each squaring. Alyssa's procedure does not, so the value becomes
-;; enormous (requiring bignums, which is slow) by the time the remainder is
-;; finally taken. Suppose we test the primality of n = 9, choosing a = 5. Using
-;; the old definition of `expmod`, the process will evolve like so:
+;; longer using `alyssa-expmod`---longer by three orders of magnitude. The key
+;; to the original `expmod` is not only successive squaring (which `fast-expt`
+;; does as well in Alyssa's procedure), but also calling `remainder` between
+;; each squaring. Alyssa's procedure does not, so the value becomes enormous,
+;; requiring bignums. Suppose we test the primality of $n=9$, choosing $a=5$.
+;; Using the original `expmod`, the process evolves like so:
 
 (define r remainder)
 (define s square)
@@ -1086,9 +1071,9 @@ circumference ~> 62.8318
 => (r 1953125 9)
 
 ;; The original `expmod` doesn't need to deal with numbers anywhere near that
-;; size, so it is much more efficient. This number may seem okay, but it will
-;; grow exponentially with n (by definition), and will quickly require arbitrary
-;; precision integer math (bignum), which is much slower than fixnum arithmetic.
+;; size. This number may seem okay, but it will grow exponentially with $n$ by
+;; definition, and will quickly require arbitrary precision arithmetic, which is
+;; much slower than fixnum arithmetic.
 
 (Exercise ?1.26)
 
@@ -1111,7 +1096,7 @@ circumference ~> 62.8318
              (iter (+ a 1)))))
   (iter 1))
 
-;; These Carmichael numbers pass the Fermat tests for all values of a < n:
+;; These Carmichael numbers pass the Fermat tests for all values $a < n$:
 (fermat-all? 561) => #t
 (fermat-all? 1105) => #t
 (fermat-all? 1729) => #t
@@ -1152,13 +1137,15 @@ circumference ~> 62.8318
       (and (miller-rabin-test n)
            (fast-prime? n (- times 1)))))
 
-(fast-prime? 13 many-times) => #t
+;; Like the Fermat test in [](:1.2.6), the Miller--Rabin test always returns
+;; true for primes but has probabilistic behavior for composites numbers:
 
-;; We cannot write a deterministic test for composite numbers (for the same
-;; reason as for the Fermat test in [](:1.2.6)), nor for Carmichael numbers
-;; since we could get unlucky with the random integers. But I checked and the
-;; new `fast-prime?` procedure based on the Millner-Rabin test does indeed
-;; return `#f` most of the time for Carmichael numbers.
+(fast-prime? 13 many-times) => #t
+(fast-prime? 10 many-times) =?> [#f #t] ; correct answer is #f
+
+;; Unlike the Fermat test, it is not fooled by Carmichael numbers:
+
+(fast-prime? 561 many-times) =?> [#f #t] ; correct answer is #f
 
 (Section :1.3 "Formulating Abstractions with Higher-Order Procedures")
 
