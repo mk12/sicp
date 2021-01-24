@@ -507,9 +507,11 @@ circumference ~> 62.8318
 ;;
 ;; The Fibonacci sequence is defined recursively by
 ;;
-;; $$\begin{aligned} \Fib(0) &= 0, \\
+;; $$\begin{aligned}
+;; \Fib(0) &= 0, \\
 ;; \Fib(1) &= 1, \\
-;; \Fib(n) &= \Fib(n-1) + \Fib(n-2). \end{aligned}$$
+;; \Fib(n) &= \Fib(n-1) + \Fib(n-2).
+;; \end{aligned}$$
 ;;
 ;; **Lemma.** $\Fib(n)$ is equal to $f(n)=\dfrac{\varphi^n-\psi^n}{\sqrt5}.$
 ;;
@@ -525,27 +527,30 @@ circumference ~> 62.8318
 ;;
 ;; When $n=2$,
 ;;
-;; $$\begin{aligned} f(2) &= \frac{\varphi^2-\psi^2}{\sqrt5} \\
-;;  &= \frac{\left(\frac{1+\sqrt5}{2}\right)^2 -
-;;       \left(\frac{1-\sqrt5}{2}\right)^2}{\sqrt5} \\
+;; $$\begin{aligned}
+;; f(2) &= \frac{\varphi^2-\psi^2}{\sqrt5} \\
+;; &= \frac{\left(\frac{1+\sqrt5}{2}\right)^2 -
+;;    \left(\frac{1-\sqrt5}{2}\right)^2}{\sqrt5} \\
 ;; &= \frac{\frac{(1+\sqrt5)^2-(1-\sqrt5)^2}{4}}{\sqrt5} \\
 ;; &= \frac{\left(\left(1+\sqrt5\right)-\left(1-\sqrt5\right)\right)
-;;       \left(\left(1+\sqrt5\right)+\left(1-\sqrt5\right)\right)}{4\sqrt5} \\
+;;    \left(\left(1+\sqrt5\right)+\left(1-\sqrt5\right)\right)}{4\sqrt5} \\
 ;; &= \frac{\left(2\sqrt5\right)(2)}{4\sqrt5} \\
-;; &= 1. \end{aligned}$$
+;; &= 1.
+;; \end{aligned}$$
 ;;
 ;; Now comes the inductive step:
 ;;
-;; $$\begin{aligned} f(n-1)+f(n-2) &= \frac{\varphi^{n-1}-\psi^{n-1}}{\sqrt5} +
+;; $$\begin{aligned}
+;; f(n-1)+f(n-2) &= \frac{\varphi^{n-1}-\psi^{n-1}}{\sqrt5} +
 ;; \frac{\varphi^{n-2}-\psi^{n-2}}{\sqrt{5}} \\
 ;; &= \frac{\left(\varphi^{n-1}+\varphi^{n-2}\right) -
-;;       \left(\psi^{n-1}+\psi^{n-2}\right)}{\sqrt5} \\
+;;    \left(\psi^{n-1}+\psi^{n-2}\right)}{\sqrt5} \\
 ;; &= \frac{\varphi^n\left(\varphi^{-1}+\varphi^{-2}\right) -
-;;       \psi^n\left(\psi^{-1}+\psi^{-2}\right)}{\sqrt5} \\
+;;    \psi^n\left(\psi^{-1}+\psi^{-2}\right)}{\sqrt5} \\
 ;; &= \frac{\varphi^n\varphi^{-1}\left(1+\varphi^{-1}\right) -
-;;       \psi^n\psi^{-1}\left(1+\psi^{-1}\right)}{\sqrt5} \\
+;;    \psi^n\psi^{-1}\left(1+\psi^{-1}\right)}{\sqrt5} \\
 ;; &= \frac{\varphi^n\varphi^{-1}\left(\varphi\right) -
-;;       \psi^n\psi^{-1}\left(\psi\right)}{\sqrt5} \\
+;;    \psi^n\psi^{-1}\left(\psi\right)}{\sqrt5} \\
 ;; &= \frac{\varphi^n-\psi^n}{\sqrt5} \\
 ;; &= f(n).
 ;; \end{aligned}$$
@@ -798,7 +803,7 @@ circumference ~> 62.8318
 
 (Exercise ?1.20)
 
-;; Applicative order performs 4 remainder operations.
+;; With applicative order, it performs 4 remainder operations.
 (gcd 206 40)
 => (gcd 40 (remainder 206 40))
 => (gcd 40 6)
@@ -810,9 +815,9 @@ circumference ~> 62.8318
 => (gcd 2 0)
 => 2
 
-;; Normal order performs 18 remainder operations. Each `b` gets evaluated once
-;; in the `(= b 0)` predicate (14 operations). The final `a` gets evaluated in
-;; the end (4 operations). Together, that makes 18.
+;; With normal order, it performs 18 remainder operations. Each `b` gets
+;; evaluated once in the `(= b 0)` predicate (14 operations). The final `a` gets
+;; evaluated in the end (4 operations). Together, that makes 18.
 (gcd 206 40)
 => (gcd 40 (remainder 206 40))
 => (gcd (remainder 206 40)
@@ -871,11 +876,10 @@ circumference ~> 62.8318
 
 (define many-times 10)
 
-;; The Fermat test only has false positives on composite numbers (incorrectly
-;; reported as prime), not prime numbers. So the test for 13 is deterministic.
-;; We leave the test for 10 commented out since it will fail at random.
-; (fast-prime? 10 many-times) => #f
+;; The Fermat test only produces false positives on composite numbers, not prime
+;; numbers, so we can be certain it will return true for 13.
 (fast-prime? 13 many-times) => #t
+(fast-prime? 10 many-times) =?> [#f #t] ; correct answer is #f
 
 ;; The first Carmichael number, 561, fools the Fermat test: no matter how many
 ;; iterations we use, it will always think it's prime.

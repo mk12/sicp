@@ -4,7 +4,7 @@
 
 (library (src lang sicp)
   (export SICP Chapter Section Exercise
-          define => ~> =$> =!> paste
+          define => ~> =?> =$> =!> paste
           capture-output hide-output
           cons-stream delay display eval force format fxand
           fxarithmetic-shift-left fxarithmetic-shift-right fxxor make-mutex

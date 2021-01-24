@@ -402,6 +402,7 @@
     <list name="asserts">
       <item>=></item>
       <item>~></item>
+      <item>=?></item>
       <item>=$></item>
     </list>
     <contexts>

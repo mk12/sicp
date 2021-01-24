@@ -131,7 +131,7 @@ The `using` procedure defined in [](:2.4.3) resets the global table and installs
 
 ## Assertions
 
-As with modules, standard techniques for assertions are too distracting. The mere word "assert" is too verbose for our use case. Instead, the language provides four assertion operators that work at the top level: `=>`, `~>`, `=$>`, and `=!>`. They report detailed information when they fail, including the actual result, expected result, and line number.
+As with modules, standard techniques for assertions are too distracting. The mere word "assert" is too verbose for our use case. Instead, the language provides five assertion operators that work at the top level: `=>`, `~>`, `=?>`, `=$>`, and `=!>`. They report detailed information when they fail, including the actual result, expected result, and line number.
 
 ### Exact
 
@@ -190,6 +190,29 @@ delta: <span class="cn">0.0015926535897929917</span> > 1e-10
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 
+### Nondeterministic
+
+The `=?>` operator asserts that the left-hand side is equal to one of the elements from the right-hand side, using `equal?`. For example:
+
+```
+(random 5) =?> [0 1 2 3 4]
+```
+
+The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to `=?>` and `=$>` assertions. They serve to remind us that the list is treated like `(list ...)`, not `(...)` or `'(...)`.
+
+When `(+ 1 1) =?> [(* 1 1) "two"]` fails, the output looks like this:
+
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(+ 1 1)</span>
+=> <span class="cn">2</span>
+
+right: <span class="fu">[(* 1 1) "two"]</span>
+=?> <span class="cn">1</span> | <span class="cn">"two"</span>
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+
 ### Output
 
 The `=$>` operator captures standard output. For example:
@@ -198,7 +221,7 @@ The `=$>` operator captures standard output. For example:
 (display "hello") =$> "hello"
 ```
 
-If the right-hand side is a list, it is not evaluated but instead treated as a list of lines. By convention these lists use square brackets, which are interchangeable with parentheses in R6RS but not used anywhere else in this project.
+If the right-hand side is a list, it is not evaluated but instead treated as a list of lines. Like with `=?>`, these lists are conventionally written using square brackets.
 
 ```
 (define (foo)

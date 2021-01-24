@@ -3,11 +3,12 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define => ~> =$> =!> paste
+  (export SICP Chapter Section Exercise define => ~> =?> =$> =!> paste
           capture-output hide-output
           run-sicp)
   (import (except (rnrs (6)) current-output-port define-syntax)
           (rnrs mutable-pairs (6))
+          (rnrs mutable-strings (6))
           (rename (src compat active)
                   (extended-define-syntax define-syntax)))
 
@@ -107,6 +108,33 @@
                     (make-msg v1 v2 (syntax->datum e1) (syntax->datum e2)))))))
    (pairs vals)
    (pairs (syntax->list exprs))))
+
+;; Asserts that `val` is `equal?` to one of the items in `alts`. Expects
+;; `val-expr` and `alts-expr` to contain their respective syntax objects. Note:
+;; `alts-expr` does not evaluate to `alts`, but rather each item of `alts-exprs`
+;; evaluates to the corresponding item of `alts`.
+(define (assert-member val alts val-expr alts-expr)
+  (define (fmt-alts-expr)
+    (let ((s (format "~a" (syntax->datum alts-expr))))
+      (string-set! s 0 #\[)
+      (string-set! s (- (string-length s) 1) #\])
+      s))
+  (define (fmt-alts)
+    (define (slots xs)
+      (cond ((null? xs) '())
+            ((null? (cdr xs)) (list (ansi 'green "~s")))
+            (else (cons (string-append (ansi 'green "~s") " | ")
+                        (slots (cdr xs))))))
+    (apply format (apply string-append (slots alts)) alts))
+  (if (member val alts)
+      (test-pass!)
+      (test-fail!
+       val-expr
+       (format
+        (string-append
+         "left: " (ansi 'blue "~s") "\n=> " (ansi 'green "~s") "\n\n"
+         "right: " (ansi 'blue "~a") "\n=?> ~a\n\n")
+        (syntax->datum val-expr) val (fmt-alts-expr) (fmt-alts)))))
 
 ;; Asserts that the string `output` matches `expected`, a syntax object
 ;; containing either a string or an (unquoted) list. In the string case, we test
@@ -460,7 +488,7 @@
        (begin (define-syntax (lit x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x))
               ...)))))
-  (auxiliary Chapter Section Exercise ~> =$> =!> paste))
+  (auxiliary Chapter Section Exercise ~> =?> =$> =!> paste))
 
 ;; A DSL for SICP code samples and exercises.
 (define-syntax (SICP x)
@@ -575,7 +603,7 @@
       ;; come from the original source -- it would be too confusing if a paste's
       ;; code comes from another paste.
       (add names exports))
-    (syntax-case x (Chapter Section Exercise define => ~> =$> =!> paste)
+    (syntax-case x (Chapter Section Exercise define => ~> =?> =$> =!> paste)
       (() #`(#,@(flush) (increase-total-tests! #,ntests)))
       (((Chapter e1* ...) e2* ...)
        (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -600,6 +628,10 @@
        (go=> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
       ((e1 ~> e2 e* ...)
        (go~> #'(e* ...) #'(e1 e2) header exports body (+ ntests 1) out))
+      ((e1 =?> e2 e* ...)
+       (list? (syntax->datum #'e2))
+       (with-syntax ((assert #`(assert-member e1 (list #,@#'e2) #'e1 #'e2)))
+         (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
       ((e1 =$> e2 e* ...)
        (with-syntax ((assert #'(assert-output (capture-output e1) #'e1 #'e2)))
          (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))

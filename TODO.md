@@ -14,7 +14,8 @@
     - text: 1.1, 1.2
     - lecture: 1a, 1b
     - exercise: 1.1, 1.2*(in progress, next: 1.2.5)
-- fix assertion failure when building all docs
++ `=?>` operator instead of `in?`
++ fix assertion failure when building all docs
 x html minifier
     x barely has any effect, size is from math spans
 x reconsider → in lecture 6a
