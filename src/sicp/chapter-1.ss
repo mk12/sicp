@@ -693,7 +693,8 @@ circumference ~> 62.8318
 
 (expt 2 5) => 32
 
-;; Recursive, successive squaring: $\Theta(\log n)$ time, $\Theta(\log n)$ space.
+;; Recursive, successive squaring: $\Theta(\log n)$ time, $\Theta(\log n)$
+;; space.
 (define (fast-expt b n)
   (cond ((= n 0) 1)
         ((even? n) (square (fast-expt b (/ n 2))))
@@ -729,7 +730,8 @@ circumference ~> 62.8318
 (define (double x) (+ x x))
 (define (halve x) (/ x 2))
 
-;; Recursive, successive doubling: $\Theta(\log n)$ time, $\Theta(\log n)$ space.
+;; Recursive, successive doubling: $\Theta(\log n)$ time, $\Theta(\log n)$
+;; space.
 (define (fast-* a b)
   (cond ((= b 0) 0)
         ((even? b) (double (fast-* a (halve b))))

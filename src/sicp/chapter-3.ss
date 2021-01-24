@@ -1976,25 +1976,21 @@ z2 => '((a b) a b)
 ;; new value is overwritten before being read. In `mary`, the value divided by
 ;; 2 could also be different from the value being subtracted from.
 
-(define (in? x xs)
-  (and (not (null? xs))
-       (or (= (car xs) x) (in? x (cdr xs)))))
-
 (set! balance 100)
 (parallel-execute peter paul mary)
-(in? balance '(25 30 35 40 45 50 55 60 80 90 110)) => #t
+balance =?> [25 30 35 40 45 50 55 60 80 90 110]
 
 (Section :3.4.2 "Mechanisms for Controlling Concurrency")
 
 (Section :3.4.2.1 "Serializing access to shared state"
-  (use (:3.4.2.3 make-serializer) (?3.38 in?)))
+  (use (:3.4.2.3 make-serializer)))
 
 ;; Without serialization, there are five possible values:
 (define x 10)
 (parallel-execute
  (lambda () (set! x (* x x)))
  (lambda () (set! x (+ x 1))))
-(in? x '(11 100 101 110 121)) => #t
+x =?> [11 100 101 110 121]
 
 ;; With serialization, it narrows to two possible values:
 (define x 10)
@@ -2002,7 +1998,7 @@ z2 => '((a b) a b)
   (parallel-execute
    (s (lambda () (set! x (* x x))))
    (s (lambda () (set! x (+ x 1))))))
-(in? x '(101 121)) => #t
+x =?> [101 121]
 
 (define (make-account balance)
   (define (withdraw amount)
@@ -2022,7 +2018,7 @@ z2 => '((a b) a b)
     dispatch))
 
 (Exercise ?3.39
-  (use (:3.4.2.3 make-serializer) (?3.38 in?)))
+  (use (:3.4.2.3 make-serializer)))
 
 (define x 10)
 (let ((s (make-serializer)))
@@ -2031,15 +2027,13 @@ z2 => '((a b) a b)
    (s (lambda () (set! x (+ x 1))))))
 
 ;; Three of the five values are still possible:
-(in? x '(101   ; squared, then incremented
-         121   ; incremented, then squared
-         100)) ; incremented between squarer read and write
-=> #t
+x =?> [101  ; squared, then incremented
+       121  ; incremented, then squared
+       100] ; incremented between squarer read and write
 
 (Exercise ?3.40
   (use (:2.2.3.1 filter) (:2.2.3.2 permutations)
-       (:3.3.3.1 insert! lookup make-table) (:3.4.2.3 make-serializer)
-       (?3.38 in?)))
+       (:3.3.3.1 insert! lookup make-table) (:3.4.2.3 make-serializer)))
 
 (define x 10)
 (parallel-execute
@@ -2049,7 +2043,7 @@ z2 => '((a b) a b)
  (lambda () (set! x (* x x x))))
 
 ;; There are five possible values:
-(in? x '(100 1000 10000 100000 1000000)) => #t
+x =?> [100 1000 10000 100000 1000000]
 
 ;; We will now demonstrate how the steps can interleave to produce these values.
 ;; There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and
@@ -2065,6 +2059,9 @@ z2 => '((a b) a b)
 
 ;; Only certain permutations of steps are valid orderings:
 
+(define (in? x xs)
+  (and (not (null? xs))
+       (or (= (car xs) x) (in? x (cdr xs)))))
 (define (good-interleave? p)
   (define (iter latest-s latest-c p)
     (or (null? p)
@@ -2289,7 +2286,7 @@ x => 1000000
              #f)))
 
 (Exercise ?3.46
-  (use (:3.4.2.3 make-mutex-from-scratch) (?3.38 in?)))
+  (use (:3.4.2.3 make-mutex-from-scratch)))
 
 (define make-mutex make-mutex-from-scratch)
 (paste (:3.4.2.3 make-serializer))
@@ -2304,17 +2301,17 @@ x => 1000000
    (s (lambda () (set! x (/ x 2)))))) ; process Q
 
 ;; There are four possible values:
-(in? x '(100  ; P1, P2, Q1, Q2 (serial)
-         150  ; Q1, Q2, P1, P2 (serial)
-         200  ; P1, Q1, Q2, P2 (interleaved)
-         50)) ; Q1, P1, P2, Q2 (interleaved)
+x =?> [100 ; P1, P2, Q1, Q2 (serial)
+       150 ; Q1, Q2, P1, P2 (serial)
+       200 ; P1, Q1, Q2, P2 (interleaved)
+       50] ; Q1, P1, P2, Q2 (interleaved)
 
 ;; The interleaved results can happen since with the non-atomic `test-and-set!`,
 ;; both processes can acquire the mutex at the same time. Both check if the cell
 ;; is set, find it is #f, and then both set it to #t.
 
 (Exercise ?3.47
-  (use (:3.4.2.3 clear! test-and-set!) (?3.38 in?)))
+  (use (:3.4.2.3 clear! test-and-set!)))
 
 ;; (a) Sempahore in terms of mutexes
 
