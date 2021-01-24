@@ -492,9 +492,6 @@
 
 ;; A DSL for SICP code samples and exercises.
 (define-syntax (SICP x)
-  ;; Use the `SICP` syntax form in `datum->syntax` calls.
-  (define sicp (with-syntax (((s e* ...) x)) #'s))
-
   ;; Creates an entry `num` from its `id` syntax. This just chops off the sigil
   ;; used to differentiate chapters/sections from exercises (and also used
   ;; because `1.1.1` on its own is an invalid R6RS identifier).
