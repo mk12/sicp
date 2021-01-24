@@ -408,6 +408,9 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                 break;
             case '(':
             case '[':
+                if (escaped) {
+                    break;
+                }
                 mode = OPERATOR;
                 state->stack[++state->depth] = i + 1;
                 if (i > 0) {
@@ -437,6 +440,9 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                 break;
             case ')':
             case ']':
+                if (escaped) {
+                    break;
+                }
                 mode = NORMAL;
                 if (i != 0 && state->depth == state->num_wrappers) {
                     fail(state, i, "expected ')' at start of line for wrapper");
@@ -509,16 +515,18 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
                     if ((rules & IR_WRAPPER) != 0) {
                         state->num_wrappers++;
                     }
-                    if (c == ' ') {
+                    int j = i;
+                    while (j < line_len && line[j] == ' ') j++;
+                    if (line[j] == '\n' || line[j] == ';') {
+                        if ((rules & IR_SPECIAL) != 0) {
+                            state->stack[state->depth]++;
+                        }
+                    } else {
                         if ((rules & IR_SPECIAL) != 0
                             && (rules & IR_UNIFORM) == 0) {
                             state->stack[state->depth]++;
                         } else {
                             state->stack[state->depth] = i + 1;
-                        }
-                    } else {
-                        if ((rules & IR_SPECIAL) != 0) {
-                            state->stack[state->depth]++;
                         }
                     }
                     state->import_mode = lookup_import_block(state->import_mode,
