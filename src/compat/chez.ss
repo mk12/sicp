@@ -4,9 +4,8 @@
 
 (library (src compat active)
   (export current-output-port extended-define-syntax format make-mutex
-          open-output-string parallel-execute parameterize patch-output random
-          runtime seed-rng string-contains? syntax->location
-          with-output-to-string)
+          open-output-string parallel-execute parameterize random runtime
+          seed-rng string-contains? syntax->location with-output-to-string)
   (import (rnrs base (6))
           (rename (only (rnrs base (6)) define-syntax)
                   (define-syntax extended-define-syntax))
@@ -25,8 +24,6 @@
    (annotation-source (syntax->annotation s))
    #t   ; get the start, not end
    #t)) ; use the cache
-
-(define (patch-output s) s)
 
 (define (runtime)
   (let ((t (current-time 'time-monotonic)))

@@ -216,7 +216,7 @@
 (define-syntax capture-output
   (syntax-rules ()
     ((_ e* ...)
-     (patch-output (with-output-to-string (lambda () e* ...))))))
+     (with-output-to-string (lambda () e* ...)))))
 
 ;; Supresses printing to standard output.
 (define-syntax hide-output

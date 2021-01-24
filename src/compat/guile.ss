@@ -4,9 +4,8 @@
 
 (library (src compat active)
   (export current-output-port extended-define-syntax format make-mutex
-          open-output-string parallel-execute parameterize patch-output random
-          runtime seed-rng string-contains? syntax->location
-          with-output-to-string)
+          open-output-string parallel-execute parameterize random runtime
+          seed-rng string-contains? syntax->location with-output-to-string)
   (import (rnrs base (6))
           (only (guile)
                 *random-state* current-output-port gettimeofday
@@ -32,8 +31,6 @@
                 (source-property props 'column))
         ;; Guile doesn't store source properties for individual atoms.
         (values "unknown" 0 0))))
-
-(define (patch-output s) s)
 
 (define (format . args)
   (apply guile-format #f args))

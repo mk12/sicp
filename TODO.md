@@ -14,6 +14,11 @@
     - text: 1.1, 1.2
     - lecture: 1a, 1b
     - exercise: 1.1, 1.2
+- fix `(+ 1 1) =?> [(* 1 1) "two"]` (getting `attempt to apply non-procedure #<void>`)
+- document `capture-output` and `hide-output` in exercise.md
++ remove racket's patch-output hack by using `print-mpair-curly-braces`
++ mention chez fast, racket good error message in exercise.md
++ link to known issues in exercise.md
 + remove paste link from language.md
 + fix scheme linter
 + `=?>` operator instead of `in?`
