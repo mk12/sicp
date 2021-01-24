@@ -129,7 +129,7 @@
 (Section :2 <span class="cn">&quot;Paste&quot;</span>)
 
 (<span class="kw">define</span> a <span class="cn">-1</span>)
-(<span class="kw">paste</span> (<a href=1/index.html>:1</a> inc))
+(<span class="kw">paste</span> (:1 inc))
 (inc <span class="cn">42</span>) <span class="co">; 41</span></code></pre>
 <p>If <code>:2</code> had imported <code>inc</code> instead, the result would be 43 in both cases since <code>a</code> is resolved lexically. Using <code>paste</code> is inelegant, but preferable to duplicating code. It is often useful when an exercise asks to make an adjustment to earlier code and there is no dynamic dispatch to hook into.</p>
 <h3 id="packages" class="anchor">

@@ -292,7 +292,8 @@ function code_block(el)
     end
     el.classes = {"scheme"}
     local text = el.text
-    if not text:find("(paste (", 1, true) then
+    -- Don't link in language.html since it's just examples.
+    if vars.id == "exercise/language" or not text:find("(paste (", 1, true) then
         return el
     end
     local pieces = {}

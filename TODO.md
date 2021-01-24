@@ -14,6 +14,7 @@
     - text: 1.1, 1.2
     - lecture: 1a, 1b
     - exercise: 1.1, 1.2
++ remove paste link from language.md
 + fix scheme linter
 + `=?>` operator instead of `in?`
 + fix assertion failure when building all docs
