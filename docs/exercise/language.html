@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SICP Exercises Language</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div hidden>
+  <svg>
+    <symbol id="up" viewBox="0 0 11 12">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5.8v10.4m4.457-5.943L5.5.8 1.043 5.257"/>
+    </symbol>
+    <symbol id="left" viewBox="0 0 12 11">
+      <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M.8 5.5h10.4M5.257 9.957L.8 5.5l4.457-4.457"/>
+    </symbol>
+    <symbol id="right" viewBox="0 0 12 11">
+      <use xlink:href="#left" transform="matrix(-1 0 0 1 12 0)"/>
+    </symbol>
+    <symbol id="external" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10.688 5.438H4.125A2.65 2.65 0 001.5 8.063v11.812A2.65 2.65 0 004.125 22.5h11.813a2.65 2.65 0 002.624-2.625v-6.563m-9.187 1.313L22.5 1.5m-6.563 0H22.5v6.563"/>
+    </symbol>
+  </svg>
+</div>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="header">
+  <a class="title link" href="../index.html">SICP Study</a>
+  <nav class="sitenav" aria-label="site">
+    <a class="sitenav__item link"
+        href="../text/index.html" aria-label="textbook notes">Text</a>
+    <a class="sitenav__item link"
+        href="../lecture/index.html" aria-label="lecture notes">Lecture</a>
+    <a class="sitenav__item sitenav__item--active link"
+        href="../exercise/index.html" aria-label="exercises">Exercise</a>
+    <a class="sitenav__item sitenav__item--last link"
+        href="https://github.com/mk12/sicp" aria-label="GitHub repository">
+      Source
+      <svg class="github-mark" width="25" height="25" viewBox="0 0 136 133" aria-hidden="true">
+        <path fill="currentColor" d="M67.866.002C30.387.002 0 30.39 0 67.877c0 29.988 19.446 55.425 46.417 64.404 3.396.621 4.633-1.475 4.633-3.275 0-1.608-.058-5.879-.091-11.541-18.88 4.1-22.863-9.1-22.863-9.1-3.087-7.838-7.537-9.925-7.537-9.925-6.163-4.213.466-4.13.466-4.13 6.813.484 10.396 6.996 10.396 6.996 6.054 10.371 15.888 7.375 19.754 5.642.617-4.387 2.367-7.38 4.309-9.075-15.071-1.712-30.917-7.537-30.917-33.546 0-7.408 2.646-13.466 6.988-18.212-.7-1.717-3.03-8.617.662-17.963 0 0 5.7-1.825 18.667 6.959 5.412-1.505 11.22-2.259 16.992-2.284 5.762.025 11.57.78 16.991 2.284 12.959-8.784 18.646-6.959 18.646-6.959 3.704 9.346 1.375 16.246.675 17.963 4.35 4.746 6.98 10.804 6.98 18.212 0 26.075-15.872 31.813-30.992 33.492 2.437 2.096 4.608 6.237 4.608 12.57 0 9.072-.083 16.392-.083 18.617 0 1.817 1.22 3.93 4.666 3.267 26.95-8.996 46.38-34.417 46.38-64.396 0-37.487-30.392-67.875-67.88-67.875"/>
+      </svg>      
+    </a>
+  </nav>
+</header>
+<nav class="pagenav pagenav--top" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="1/index.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<main id="main">
+<h1 id="note-on-the-language">Note on the Language</h1>
+<p>The code on this website is written in a language based on <a href="http://www.r6rs.org" title="The Revised(6) Report on the Algorithmic Language Scheme">R6RS Scheme</a>. The language provides custom syntax for modules and assertions, and defines a few special forms. <a href="https://github.com/mk12/sicp/blob/master/src/sicp">Source files</a> use the language by wrapping their content in <code>(SICP ...)</code>, a macro <a href="https://github.com/mk12/sicp/blob/master/src/lang/core.ss">implemented</a> in plain R6RS Scheme.</p>
+<h2 id="modules" class="anchor">
+<a class="anchor__link link" href="#modules" aria-hidden="true">#</a> Modules
+</h2>
+<p>While R6RS provides a module system, using them for hundreds of sections and exercises is impractical. Their verbose syntax and indentation would distract from the flow of the chapter. We also need the flexibility to control module evaluation, for example to only run a subset of tests. This leads us to a custom solution:</p>
+<pre><code class="blockcode">(Chapter :1 <span class="cn">&quot;Chapter Title&quot;</span>)
+
+(<span class="kw">define</span> x <span class="cn">1</span>)
+
+(Section :1.1 <span class="cn">&quot;Section Title&quot;</span>)
+
+(<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="co">; ERROR: x, y, and z are undefined</span>
+
+(Exercise ?1.1)
+
+(<span class="kw">define</span> y <span class="cn">2</span>)
+(<span class="kw">define</span> z <span class="cn">3</span>)</code></pre>
+<p>Although every expression is at the top level, this actually defines three separate modules. Each module has a unique identifier, beginning with the <code>:</code> sigil for chapters and sections and the <code>?</code> sigil for exercises. Modules do not nest, so <code>:1</code> and <code>:1.1</code> are equal siblings rather than parent and child.</p>
+<h3 id="imports" class="anchor">
+<a class="anchor__link link" href="#imports" aria-hidden="true">#</a> Imports
+</h3>
+<p>We can import from other modules like so:</p>
+<pre><code class="blockcode">(Chapter :1 <span class="cn">&quot;Chapter Title&quot;</span>)
+
+(<span class="kw">define</span> x <span class="cn">1</span>)
+
+(Section :1.1 <span class="cn">&quot;Section Title&quot;</span>
+  (use (:1 x) (?1.1 y z)))
+
+(<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="co">; ok</span>
+(<span class="kw">set!</span> x <span class="cn">10</span>) <span class="co">; only affects :1.1</span>
+
+(Exercise ?1.1)
+
+(<span class="kw">define</span> y <span class="cn">2</span>)
+(<span class="kw">define</span> z <span class="cn">3</span>)</code></pre>
+<p>Here, <code>:1.1</code> imports <code>x</code> from <code>:1</code>, and <code>y</code> and <code>z</code> from <code>?1.1</code>. This implies that <code>:1.1</code> must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, <a href="2/index.html">Chapter&nbsp;2</a> depends heavily on two-dimensional tables, which are not implemented until <a href="3/3.html#3.3.3.3">§&nbsp;3.3.3.3</a>.</p>
+<p>You will not see expressions like <code>(Chapter ...)</code> and <code>(Section ...)</code> elsewhere on this website because they are converted to HTML headings. Likewise, the <code>(use ...)</code> blocks are converted to compact HTML lists set in a smaller font.</p>
+<p>To avoid confusion, shadowing imports is not allowed:</p>
+<pre><code class="blockcode">(Exercise ?1.1
+  (use (:1.1 x)))
+
+(<span class="kw">define</span> x <span class="cn">2</span>) <span class="co">; ERROR: imported x is shadowed by local definition</span></code></pre>
+<p>Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:</p>
+<pre><code class="blockcode">(Exercise ?1.1)
+
+(<span class="fu">display</span> x) <span class="co">; prints #&lt;void&gt; in chez</span>
+(<span class="fu">display</span> y) <span class="co">; ERROR: y is undefined</span>
+(<span class="kw">define</span> x <span class="cn">1</span>)</code></pre>
+<h3 id="pasting" class="anchor">
+<a class="anchor__link link" href="#pasting" aria-hidden="true">#</a> Pasting
+</h3>
+<p>The language provides one more feature for code reuse: <em>pasting</em>. Modules can unhygienically paste code from an earlier module in the same file:</p>
+<pre><code class="blockcode">(Section :1 <span class="cn">&quot;Original&quot;</span>)
+
+(<span class="kw">define</span> a <span class="cn">1</span>)
+(<span class="kw">define</span> (inc x) (<span class="fu">+</span> x a))
+(inc <span class="cn">42</span>) <span class="co">; 43</span>
+
+(Section :2 <span class="cn">&quot;Paste&quot;</span>)
+
+(<span class="kw">define</span> a <span class="cn">-1</span>)
+(<span class="kw">paste</span> (<a href=1/index.html>:1</a> inc))
+(inc <span class="cn">42</span>) <span class="co">; 41</span></code></pre>
+<p>If <code>:2</code> had imported <code>inc</code> instead, the result would be 43 in both cases since <code>a</code> is resolved lexically. Using <code>paste</code> is inelegant, but preferable to duplicating code. It is often useful when an exercise asks to make an adjustment to earlier code and there is no dynamic dispatch to hook into.</p>
+<h3 id="packages" class="anchor">
+<a class="anchor__link link" href="#packages" aria-hidden="true">#</a> Packages
+</h3>
+<p>Starting in <a href="2/index.html">Chapter&nbsp;2</a>, many modules use <a href="../text/2/4.html#2.4.3">data-directed programming</a> to dispatch based on operation names and type tags. Modules define <em>packages</em> (procedures ending in <code>-pkg</code>) that install operations in the global table. For example:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="cn">&#39;real-part</span> z))
+
+(<span class="kw">define</span> (rectangular-pkg)
+  (put <span class="cn">&#39;real-part</span> &#39;(rectangular) ...)
+  ...)
+(<span class="kw">define</span> (polar-pkg)
+  (put <span class="cn">&#39;real-part</span> &#39;(polar) ...)
+  ...)
+
+(using rectangular-pkg polar-pkg)
+
+<span class="co">; tests go here</span></code></pre>
+<p>The <code>using</code> procedure defined in <a href="2/4.html#2.4.3">§&nbsp;2.4.3</a> resets the global table and installs the given packages. There is no automatic tracking of dependencies, so <code>using</code> calls must list everything explicitly. This package system is not part of the language, but it’s worth explaining here because so many modules use it.</p>
+<h2 id="assertions" class="anchor">
+<a class="anchor__link link" href="#assertions" aria-hidden="true">#</a> Assertions
+</h2>
+<p>As with modules, standard techniques for assertions are too distracting. The mere word “assert” is too verbose for our use case. Instead, the language provides five assertion operators that work at the top level: <code>=&gt;</code>, <code>~&gt;</code>, <code>=?&gt;</code>, <code>=$&gt;</code>, and <code>=!&gt;</code>. They report detailed information when they fail, including the actual result, expected result, and line number.</p>
+<h3 id="exact" class="anchor">
+<a class="anchor__link link" href="#exact" aria-hidden="true">#</a> Exact
+</h3>
+<p>The <code>=&gt;</code> operator is by far the most common. It asserts that the left-hand side is equal to the right-hand side, using <code>equal?</code>. For example:</p>
+<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+<p>It can also be chained to assert that several expressions are equal, while ensuring that each expression is evaluated only once:</p>
+<pre><code class="blockcode">(fact <span class="cn">3</span>)
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (fact <span class="cn">2</span>))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (fact <span class="cn">1</span>)))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>)
+<span class="op">=&gt;</span> <span class="cn">6</span></code></pre>
+<p>When <code>(fact <span class="cn">3</span>) <span class="op">=&gt;</span> (fact <span class="cn">5</span>)</code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(fact 3)</span>
+=> <span class="cn">6</span>
+
+right: <span class="fu">(fact 5)</span>
+=> <span class="cn">120</span>
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<h3 id="inexact" class="anchor">
+<a class="anchor__link link" href="#inexact" aria-hidden="true">#</a> Inexact
+</h3>
+<p>The <code>~&gt;</code> operator asserts that floating-point numbers are approximately equal using an absolute tolerance of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>10</mn></mrow></msup></mrow><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>. For example:</p>
+<pre><code class="blockcode">(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">atan</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">3.141592653589793</span></code></pre>
+<p>Like <code>=&gt;</code>, it can be chained. Each item is compared to the previous one, not to the first.</p>
+<p>When <code>(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">atan</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">3.14</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(* 4 (atan 1))</span>
+=> <span class="cn">3.141592653589793</span>
+
+right: <span class="fu">3.14</span>
+=> <span class="cn">3.14</span>
+
+delta: <span class="cn">0.0015926535897929917</span> > 1e-10
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<h3 id="nondeterministic" class="anchor">
+<a class="anchor__link link" href="#nondeterministic" aria-hidden="true">#</a> Nondeterministic
+</h3>
+<p>The <code>=?&gt;</code> operator asserts that the left-hand side is equal to one of the elements from the right-hand side, using <code>equal?</code>. For example:</p>
+<pre><code class="blockcode">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>]</code></pre>
+<p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code>&#39;(...)</code>.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="cn">&quot;two&quot;</span>]</code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(+ 1 1)</span>
+=> <span class="cn">2</span>
+
+right: <span class="fu">[(* 1 1) "two"]</span>
+=?> <span class="cn">1</span> | <span class="cn">"two"</span>
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<h3 id="output" class="anchor">
+<a class="anchor__link link" href="#output" aria-hidden="true">#</a> Output
+</h3>
+<p>The <code>=$&gt;</code> operator captures standard output. For example:</p>
+<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">&quot;hello&quot;</span>) <span class="op">=$&gt;</span> <span class="cn">&quot;hello&quot;</span></code></pre>
+<p>If the right-hand side is a list, it is not evaluated but instead treated as a list of lines. Like with <code>=?&gt;</code>, these lists are conventionally written using square brackets.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (foo)
+  (<span class="fu">display</span> <span class="cn">&quot;hello&quot;</span>)
+  (<span class="fu">newline</span>)
+  (<span class="fu">display</span> <span class="cn">&quot;world&quot;</span>))
+
+(foo) <span class="op">=$&gt;</span> [<span class="cn">&quot;hello&quot;</span> <span class="cn">&quot;world&quot;</span>]</code></pre>
+<p>Newlines occurring at the beginning, end, or after another newline are ignored:</p>
+<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">&quot;</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;One&quot;</span> <span class="cn">&quot;Two&quot;</span> <span class="cn">&quot;Three&quot;</span>]</code></pre>
+<p>When <code>(<span class="fu">display</span> <span class="cn">&quot;pong</span><span class="co">\n</span><span class="cn">ping&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;ping&quot;</span> <span class="cn">&quot;pong&quot;</span>]</code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(display "pong\nping")</span>
+=$> [<span class="yl">"pong"</span>
+     <span class="yl">"ping"</span>]
+
+right:
+=$> [<span class="yl">"ping"</span>
+     <span class="yl">"pong"</span>]
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<h3 id="error" class="anchor">
+<a class="anchor__link link" href="#error" aria-hidden="true">#</a> Error
+</h3>
+<p>The <code>=!&gt;</code> operator asserts that an error will occur. For example:</p>
+<pre><code class="blockcode">(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;oops&quot;</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;foo: oops: 1 2&quot;</span></code></pre>
+<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">&quot;&quot;</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(+ 1 2)</span>
+=> <span class="cn">3</span>
+
+right:
+=!> ... <span class="co">disaster</span> ...
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<p>When <code>(<span class="fu">error</span> <span class="cn">&#39;foo</span> <span class="cn">&quot;catastrophe&quot;</span> <span class="cn">1</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+left: <span class="fu">(error 'foo "catastrophe" 1)</span>
+=!> <span class="co">foo: catastrophe: 1</span>
+
+right:
+=!> ... <span class="co">disaster</span> ...
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<h2 id="special-forms" class="anchor">
+<a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special Forms
+</h2>
+<p>The language also <a href="https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss">defines</a> a few special forms. They are usable anywhere, not just at the top level like the assertion operators.</p>
+<p>The <code>cons-stream</code> special form is defined so that <code>(<span class="kw">cons-stream</span> <span class="ss">a</span> <span class="ss">b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>, as specified in the textbook. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
+<p>The <code>with-eval</code> special form is defined so that <code>(<span class="kw">with-eval</span> <span class="ss">eval</span> <span class="ss">env</span> <span class="ss">exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval</span> <span class="ss">exp*</span> <span class="ss">env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
+</main>
+<nav class="pagenav pagenav--bottom" aria-label="page">
+  <div class="pagenav__item pagenav__item--left">
+    <a class="pagenav__link link" href="index.html" aria-label="previous page">
+      <svg width="12" height="11" aria-hidden="true"><use xlink:href="#left"/>
+      </svg><span class="pagenav__prev">Prev</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--center">
+    <a class="pagenav__link link" href="index.html" aria-label="parent page">
+      <svg width="11" height="12" aria-hidden="true"><use xlink:href="#up"/>
+      </svg><span class="pagenav__up">Up</span>
+    </a>
+  </div>
+  <div class="pagenav__item pagenav__item--right">
+    <a class="pagenav__link link" href="1/index.html" aria-label="next page">
+      <span class="pagenav__next">Next</span
+        ><svg width="12" height="11" aria-hidden="true"
+        ><use xlink:href="#right"/></svg>
+    </a>
+  </div>
+</nav>
+<footer class="footer">
+  <p>© 2021 Mitchell Kember</p>
+</footer>
+</body>
+</html>

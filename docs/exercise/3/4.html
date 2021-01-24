@@ -89,13 +89,9 @@
 <ol start="2" type="a">
 <li>If the system allows the processes to be interleaved, you could also get results equivalent to leaving out one or more of the assignments, where the new value is overwritten before being read. In <code>mary</code>, the value divided by 2 could also be different from the value being subtracted from.</li>
 </ol>
-<pre><code class="blockcode">(<span class="kw">define</span> (in? x xs)
-  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> xs))
-       (<span class="kw">or</span> (<span class="fu">=</span> (<span class="fu">car</span> xs) x) (in? x (<span class="fu">cdr</span> xs)))))
-
-(<span class="kw">set!</span> balance <span class="cn">100</span>)
+<pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>)
 (parallel-execute peter paul mary)
-(in? balance &#39;(<span class="cn">25</span> <span class="cn">30</span> <span class="cn">35</span> <span class="cn">40</span> <span class="cn">45</span> <span class="cn">50</span> <span class="cn">55</span> <span class="cn">60</span> <span class="cn">80</span> <span class="cn">90</span> <span class="cn">110</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+balance <span class="op">=?&gt;</span> [<span class="cn">25</span> <span class="cn">30</span> <span class="cn">35</span> <span class="cn">40</span> <span class="cn">45</span> <span class="cn">50</span> <span class="cn">55</span> <span class="cn">60</span> <span class="cn">80</span> <span class="cn">90</span> <span class="cn">110</span>]</code></pre>
 <h2 id="3.4.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2" aria-hidden="true">#</a> <span class="number">3.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.2">Mechanisms for Controlling Concurrency<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -111,15 +107,7 @@ Imports:
 <a href="#3.4.2.3">3.4.2.3</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>make-serializer</code>,
-</li>
-</ul>
-</li>
-<li class="flat__item">
-<a href="#ex3.38">Ex 3.38</a>
-<ul class="flat">
-<li class="flat__item nowrap">
-<code>in?</code>
+<code>make-serializer</code>
 </li>
 </ul>
 </li>
@@ -130,14 +118,14 @@ Imports:
 (parallel-execute
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))
-(in? x &#39;(<span class="cn">11</span> <span class="cn">100</span> <span class="cn">101</span> <span class="cn">110</span> <span class="cn">121</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+x <span class="op">=?&gt;</span> [<span class="cn">11</span> <span class="cn">100</span> <span class="cn">101</span> <span class="cn">110</span> <span class="cn">121</span>]</code></pre>
 <p>With serialization, it narrows to two possible values:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))))
-(in? x &#39;(<span class="cn">101</span> <span class="cn">121</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+x <span class="op">=?&gt;</span> [<span class="cn">101</span> <span class="cn">121</span>]
 
 (<span class="kw">define</span> (make-account balance)
   (<span class="kw">define</span> (withdraw amount)
@@ -167,15 +155,7 @@ Imports:
 <a href="#3.4.2.3">3.4.2.3</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>make-serializer</code>,
-</li>
-</ul>
-</li>
-<li class="flat__item">
-<a href="#ex3.38">Ex 3.38</a>
-<ul class="flat">
-<li class="flat__item nowrap">
-<code>in?</code>
+<code>make-serializer</code>
 </li>
 </ul>
 </li>
@@ -187,10 +167,9 @@ Imports:
    (<span class="kw">lambda</span> () (<span class="kw">set!</span> x ((s (<span class="kw">lambda</span> () (<span class="fu">*</span> x x))))))
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))))</code></pre>
 <p>Three of the five values are still possible:</p>
-<pre><code class="blockcode">(in? x &#39;(<span class="cn">101</span>   <span class="co">; squared, then incremented</span>
-         <span class="cn">121</span>   <span class="co">; incremented, then squared</span>
-         <span class="cn">100</span>)) <span class="co">; incremented between squarer read and write</span>
-<span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">101</span>  <span class="co">; squared, then incremented</span>
+       <span class="cn">121</span>  <span class="co">; incremented, then squared</span>
+       <span class="cn">100</span>] <span class="co">; incremented between squarer read and write</span></code></pre>
 <h3 id="ex3.40" class="anchor">
 <a class="anchor__link link" href="#ex3.40" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.40">Exercise 3.40<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -233,15 +212,7 @@ Imports:
 <a href="#3.4.2.3">3.4.2.3</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>make-serializer</code>,
-</li>
-</ul>
-</li>
-<li class="flat__item">
-<a href="#ex3.38">Ex 3.38</a>
-<ul class="flat">
-<li class="flat__item nowrap">
-<code>in?</code>
+<code>make-serializer</code>
 </li>
 </ul>
 </li>
@@ -254,7 +225,7 @@ Imports:
  <span class="co">; process C: 7        4 5 6</span>
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x x))))</code></pre>
 <p>There are five possible values:</p>
-<pre><code class="blockcode">(in? x &#39;(<span class="cn">100</span> <span class="cn">1000</span> <span class="cn">10000</span> <span class="cn">100000</span> <span class="cn">1000000</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100</span> <span class="cn">1000</span> <span class="cn">10000</span> <span class="cn">100000</span> <span class="cn">1000000</span>]</code></pre>
 <p>We will now demonstrate how the steps can interleave to produce these values. There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and 6 are reads; steps 3 and 7 are writes.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> steps-s-read &#39;(<span class="cn">1</span> <span class="cn">2</span>))
 (<span class="kw">define</span> steps-s-write &#39;(<span class="cn">3</span>))
@@ -264,7 +235,10 @@ Imports:
 (<span class="kw">define</span> steps-c (<span class="fu">append</span> steps-c-read steps-c-write))
 (<span class="kw">define</span> steps (<span class="fu">append</span> steps-s steps-c))</code></pre>
 <p>Only certain permutations of steps are valid orderings:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (good-interleave? p)
+<pre><code class="blockcode">(<span class="kw">define</span> (in? x xs)
+  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> xs))
+       (<span class="kw">or</span> (<span class="fu">=</span> (<span class="fu">car</span> xs) x) (in? x (<span class="fu">cdr</span> xs)))))
+(<span class="kw">define</span> (good-interleave? p)
   (<span class="kw">define</span> (iter latest-s latest-c p)
     (<span class="kw">or</span> (<span class="fu">null?</span> p)
         (<span class="kw">and</span> (in? (<span class="fu">car</span> p) steps-s)
@@ -455,15 +429,7 @@ Imports:
 <a href="#3.4.2.3">3.4.2.3</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>make-mutex-from-scratch</code>,
-</li>
-</ul>
-</li>
-<li class="flat__item">
-<a href="#ex3.38">Ex 3.38</a>
-<ul class="flat">
-<li class="flat__item nowrap">
-<code>in?</code>
+<code>make-mutex-from-scratch</code>
 </li>
 </ul>
 </li>
@@ -480,10 +446,10 @@ Imports:
    <span class="co">;;              2        1</span>
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">/</span> x <span class="cn">2</span>)))))) <span class="co">; process Q</span></code></pre>
 <p>There are four possible values:</p>
-<pre><code class="blockcode">(in? x &#39;(<span class="cn">100</span>  <span class="co">; P1, P2, Q1, Q2 (serial)</span>
-         <span class="cn">150</span>  <span class="co">; Q1, Q2, P1, P2 (serial)</span>
-         <span class="cn">200</span>  <span class="co">; P1, Q1, Q2, P2 (interleaved)</span>
-         <span class="cn">50</span>)) <span class="co">; Q1, P1, P2, Q2 (interleaved)</span></code></pre>
+<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100</span> <span class="co">; P1, P2, Q1, Q2 (serial)</span>
+       <span class="cn">150</span> <span class="co">; Q1, Q2, P1, P2 (serial)</span>
+       <span class="cn">200</span> <span class="co">; P1, Q1, Q2, P2 (interleaved)</span>
+       <span class="cn">50</span>] <span class="co">; Q1, P1, P2, Q2 (interleaved)</span></code></pre>
 <p>The interleaved results can happen since with the non-atomic <code>test-and-set!</code>, both processes can acquire the mutex at the same time. Both check if the cell is set, find it is #f, and then both set it to #t.</p>
 <h3 id="ex3.47" class="anchor">
 <a class="anchor__link link" href="#ex3.47" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_thm_3.47">Exercise 3.47<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -500,15 +466,7 @@ Imports:
 <code>clear!</code>
 </li>
 <li class="flat__item nowrap">
-<code>test-and-set!</code>,
-</li>
-</ul>
-</li>
-<li class="flat__item">
-<a href="#ex3.38">Ex 3.38</a>
-<ul class="flat">
-<li class="flat__item nowrap">
-<code>in?</code>
+<code>test-and-set!</code>
 </li>
 </ul>
 </li>
