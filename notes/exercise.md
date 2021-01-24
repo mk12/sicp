@@ -302,9 +302,9 @@ The language also [defines][] a few procedures and special forms. They are usabl
 
 `(make-mutex)` returns an object `«mutex»` that supports messages `(«mutex» 'acquire)` and `(«mutex» 'release)`. Unlike the [textbook version][mutex], which calls `test-and-set!` in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like `parallel-execute`, it is used in [](:3.4).
 
-[runtime]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_thm_1.22
-[parallel]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%_sec_Temp_414
-[mutex]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%_sec_Temp_427
+[runtime]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.22
+[parallel]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_Temp_414
+[mutex]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_Temp_427
 
 ### Special forms
 
