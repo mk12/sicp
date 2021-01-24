@@ -101,7 +101,7 @@
 <li><code>z1</code> is a pair whose <code>car</code> and <code>cdr</code> both point to the same <code>x</code>.</li>
 <li>In contrast: <code>(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)) (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>))</code>.</li>
 <li>In <code>z2</code>, the two <code>(a b)</code> lists are distinct, although the actual symbols are shared.</li>
-<li>Before assignment, we would think <code>z1</code> and <code>z2</code> were “the same.”</li>
+<li>Before assignment, we would think <code>z1</code> and <code>z2</code> were “the same”.</li>
 <li>The sharing is undetectable without mutators on list structure.</li>
 <li>It <em>is</em> detectable in our environmental model.</li>
 <li>If we <code>set-car!</code> on the <code>car</code>, this will change both <code>a</code> symbols in <code>z1</code> but only the first in <code>z2</code>.</li>
@@ -252,7 +252,7 @@
 <div id="q1" class="highlight">
 <a class="highlight__link link" href="../highlight.html#3.3-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
 <blockquote>
-<p>The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between “procedures” and “data,” and we can choose our syntactic sugar to allow us to program in whatever style we choose. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#footnote_Temp_385" title="SICP Chapter 3, Footnote 27">(Footnote&nbsp;3.27)</a></p>
+<p>The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between “procedures” and “data”, and we can choose our syntactic sugar to allow us to program in whatever style we choose. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#footnote_Temp_385" title="SICP Chapter 3, Footnote 27">(Footnote&nbsp;3.27)</a></p>
 </blockquote>
 </div>
 <h3 id="3.3.4.3" class="anchor">
@@ -314,7 +314,7 @@
 </h3>
 <ul>
 <li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
-<li>There are five basic operations on a connector <code>c</code>: <code>(has-value? c)</code>, <code class="sourceCode scheme">(get-value c)</code>, <code class="sourceCode scheme">(set-value! c <span class="ss">value</span> <span class="ss">informant</span>)</code>, <code class="sourceCode scheme">(forget-value! c <span class="ss">retractor</span>)</code>, and <code class="sourceCode scheme">(connect c <span class="ss">constraint</span>)</code>.</li>
+<li>There are five basic operations on a connector <code>c</code>: <code>(has-value? c)</code>, <code>(get-value c)</code>, <code>(set-value! c <span class="ss">value</span> <span class="ss">informant</span>)</code>, <code>(forget-value! c <span class="ss">retractor</span>)</code>, and <code>(connect c <span class="ss">constraint</span>)</code>.</li>
 <li>The procedures <code>inform-about-value</code> and <code>inform-about-no-value</code> tells the constraint that a connector has (lost) a value.</li>
 <li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
 </ul>

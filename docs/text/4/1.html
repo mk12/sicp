@@ -192,7 +192,7 @@
 <a class="anchor__link link" href="#4.1.3.1" aria-hidden="true">#</a> Testing of predicates
 </h3>
 <ul>
-<li>Anything other than <code>false</code> is considered “truthy.”</li>
+<li>Anything other than <code>false</code> is considered “truthy”.</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))
 (<span class="kw">define</span> (false? x) (<span class="fu">eq?</span> x <span class="cn">false</span>))</code></pre>
@@ -200,8 +200,8 @@
 <a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a> Representing procedures
 </h3>
 <ul>
-<li><code>(apply-primitive-procedure <span class="ss">proc</span> <span class="ss">args</span>)</code> applies a primitive procedure to <code class="sourceCode scheme"><span class="ss">args</span></code>.</li>
-<li><code>(primitive-procedure? <span class="ss">proc</span>)</code> tests whether <code class="sourceCode scheme"><span class="ss">proc</span></code> is a primitive procedure.</li>
+<li><code>(apply-primitive-procedure <span class="ss">proc</span> <span class="ss">args</span>)</code> applies a primitive procedure to <code><span class="ss">args</span></code>.</li>
+<li><code>(primitive-procedure? <span class="ss">proc</span>)</code> tests whether <code><span class="ss">proc</span></code> is a primitive procedure.</li>
 <li>Compound procedures are represented by the following data structure:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-procedure parameters body env)
@@ -215,8 +215,8 @@
 <ul>
 <li><code>(lookup-variable-value <span class="ss">var</span> <span class="ss">env</span>)</code> returns the value bound to a variable.</li>
 <li><code>(extend-environment <span class="ss">variables</span> <span class="ss">values</span> <span class="ss">base-env</span>)</code> returns a new environment extended with a frame containing the given bindings.</li>
-<li><code>(define-variable! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> adds a binding to the first frame of <code class="sourceCode scheme"><span class="ss">env</span></code>.</li>
-<li><code>(set-variable-value! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> changes a binding in <code class="sourceCode scheme"><span class="ss">env</span></code>.</li>
+<li><code>(define-variable! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> adds a binding to the first frame of <code><span class="ss">env</span></code>.</li>
+<li><code>(set-variable-value! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> changes a binding in <code><span class="ss">env</span></code>.</li>
 <li>Here is a partial implementation:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))

@@ -227,7 +227,7 @@ Imports:
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (a-plus-abs-b a b)
   ((<span class="kw">if</span> (<span class="fu">&gt;</span> b <span class="cn">0</span>) <span class="fu">+</span> <span class="fu">-</span>) a b))</code></pre>
-<p>The operator evaluates to <code>+</code> (addition) when <code>b</code> is positive, and to <code>-</code> (subtraction) when <code>b</code> is negative. Subtracting a negative is equivalent to adding its absolute value, so this procedure performs <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mo stretchy="false">∣</mo><mi>b</mi><mo stretchy="false">∣</mo></mrow><annotation encoding="application/x-tex">a + \lvert b\rvert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∣</span><span class="mord mathnormal">b</span><span class="mclose">∣</span></span></span></span> in all cases.</p>
+<p>The operator evaluates to <code>+</code> (addition) when <code>b</code> is positive, and to <code>-</code> (subtraction) when <code>b</code> is negative. Subtracting a negative is equivalent to adding its absolute value, so this procedure returns <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mo stretchy="false">∣</mo><mi>b</mi><mo stretchy="false">∣</mo></mrow><annotation encoding="application/x-tex">a + \lvert b\rvert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∣</span><span class="mord mathnormal">b</span><span class="mclose">∣</span></span></span></span> in all cases.</p>
 <h3 id="ex1.5" class="anchor">
 <a class="anchor__link link" href="#ex1.5" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html#%25_thm_1.5">Exercise 1.5<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -334,12 +334,12 @@ Imports:
 <p>The <code>good-enough?</code> predicate does not work well for small numbers because the tolerance is fixed. If the number is smaller than the tolerance, the result will be hopelessly inaccurate, like measuring an atom with a yard stick.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="co">; should be 0</span>
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="co">; should be 1e-10</span></code></pre>
-<p>The test is inadequate for very large numbers. With limited precision, it is impossible to represent small differences between very large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
+<p>It is also inadequate for very large numbers. With limited precision, it is impossible to represent small differences between large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
 <span class="co">; (sqrt 1e20) ; never terminates</span></code></pre>
 <p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (good-enough? g1 g2)
-  <span class="co">;; Note: unlike `infinite?`, the negation of `finite?` will catch NaN.</span>
+  <span class="co">;; Note: unlike `infinite?`, the negation of `finite?` catches NaN.</span>
   (<span class="kw">or</span> (<span class="fu">not</span> (<span class="fu">finite?</span> g2))
       (<span class="fu">&lt;</span> (<span class="fu">/</span> (<span class="fu">abs</span> (<span class="fu">-</span> g2 g1)) g1)
          <span class="cn">0.001</span>)))
@@ -349,8 +349,8 @@ Imports:
         guess
         (sqrt-iter better x))))
 (<span class="kw">set!</span> <span class="fu">sqrt</span> (<span class="kw">lambda</span> (x) (sqrt-iter <span class="cn">1.0</span> x)))</code></pre>
-<p>(We use <code>set!</code> because shadowing imports with <code>define</code> is not allowed.)</p>
-<p>It works much better for small numbers. For zero, it works because even though the <code>guess</code> change is always a 50% reduction, it eventually gets so small that it becomes NaN, and the algorithm terminates.</p>
+<p>(We use <code>set!</code> because shadowing imports with <code>define</code> is <a href="../language.html#imports">not allowed</a>.)</p>
+<p>The results for small numbers are much better. For zero, it works because even though the <code>guess</code> change is always a 50% reduction, it eventually gets so small that it becomes NaN, and the algorithm terminates.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0</span>
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">1e-10</span></code></pre>
 <p>For large numbers, it works better in that it always terminates. However, the results are less precise because “a small fraction” change in <code>guess</code> can be fairly large when the guesses themselves are very large.</p>

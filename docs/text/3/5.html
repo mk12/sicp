@@ -91,7 +91,7 @@
 <li>We only construct an item of the stream when it is needed.</li>
 <li>We have <code>cons-stream</code>, <code>stream-car</code>, <code>stream-cdr</code>, <code>the-empty-stream</code>, and <code>stream-null?</code>.</li>
 <li>The <code>cons-stream</code> procedure must not evaluate its second argument until it is accessed by <code>stream-cdr</code>.</li>
-<li>To implement streams, we will use <em>promises</em>. <code>(<span class="kw">delay</span> <span class="ss">exp</span>)</code> does not evaluate the argument but returns a promise. <code class="sourceCode scheme">(<span class="fu">force</span> <span class="ss">promise</span>)</code> evaluates a promise and returns the value.</li>
+<li>To implement streams, we will use <em>promises</em>. <code>(<span class="kw">delay</span> <span class="ss">exp</span>)</code> does not evaluate the argument but returns a promise. <code>(<span class="fu">force</span> <span class="ss">promise</span>)</code> evaluates a promise and returns the value.</li>
 <li><code>(<span class="kw">cons-stream</span> a b)</code> is a special form equivalent to <code>(<span class="fu">cons</span> a (<span class="kw">delay</span> b))</code>.</li>
 </ul>
 <h3 id="3.5.1.1" class="anchor">
@@ -105,7 +105,7 @@
 </h3>
 <ul>
 <li>Promises are quite straightforward to implement.</li>
-<li><code>(<span class="kw">delay</span> <span class="ss">exp</span>)</code> is syntactic sugar for <code class="sourceCode scheme">(<span class="kw">lambda</span> () <span class="ss">exp</span>)</code>.</li>
+<li><code>(<span class="kw">delay</span> <span class="ss">exp</span>)</code> is syntactic sugar for <code>(<span class="kw">lambda</span> () <span class="ss">exp</span>)</code>.</li>
 <li><code>force</code> simply calls the procedure. We can optimize it by saving the result and not calling the procedure a second time.</li>
 <li>The promise stored in the <code>cdr</code> of the stream is also known as a <em>thunk</em>.</li>
 </ul>

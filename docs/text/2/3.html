@@ -80,7 +80,7 @@
 <li>Lists containing symbols look just like expressions (code).</li>
 <li>We need to <em>quote</em> data objects to manipulate symbols.</li>
 <li>To make the list <code>(a b)</code>, we can’t just do <code>(<span class="fu">list</span> a b)</code> because this will evaluate <code>a</code> and <code>b</code>.</li>
-<li>This is just like natural language. If I say, “Say your name,” you will say the <em>value</em> of “your name.” If I instead say, “Say ‘your name,’” you will literally say the words “your name.”</li>
+<li>This is just like natural language. If I say, “Say your name,” you will say the <em>value</em> of “your name”. If I instead say, “Say ‘your name,’” you will literally say the words “your name”.</li>
 <li>To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.</li>
 <li>Here is the difference between symbols and their values:</li>
 </ul>
@@ -185,7 +185,7 @@
 <li>In a data-management system, each record is identified by a key.</li>
 <li>The key must be unique.</li>
 <li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> access.</li>
-<li>For “random access,” meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
+<li>For “random access”, meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
 <li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.66">2.66</a></li></ul></aside>

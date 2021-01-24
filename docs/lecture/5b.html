@@ -125,7 +125,7 @@
 <li>We’ve made a simulation where objects and state changed in the computer match the objects and state changes in the world.</li>
 <li>We’re going to use agendas (priority queues) to organize time.</li>
 <li>We have a constructor <code>make-agenda</code>; selector <code>current-time</code> and <code>first-item</code>; predicate <code>empty-agenda?</code>; and mutators <code>add-to-agenda!</code> and <code>remove-first-item!</code>.</li>
-<li>We will represent it as a list a segments. Each segment is a time <code>cons</code> ed to a queue of tasks (procedures of no arguments).</li>
+<li>We will represent it as a list a segments. Each segment is a time <code>cons</code>&thinsp;ed to a queue of tasks (procedures of no arguments).</li>
 <li>To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.</li>
 </ul>
 <h4 id="2.1.1" class="anchor">
@@ -134,7 +134,7 @@
 <ul>
 <li>We construct queues with <code>(make-queue)</code>.</li>
 <li>There are two mutators, <code>(insert-queue! q x)</code> and <code>(delete-queue! q)</code>; a selector, <code>(front-queue q)</code>; and a predicate, <code>(empty-queue? q)</code>.</li>
-<li>A queue is represented as a front pointer of a list <code>cons</code> ed to the rear pointer of the same list.</li>
+<li>A queue is represented as a front pointer of a list <code>cons</code>&thinsp;ed to the rear pointer of the same list.</li>
 <li>The mutators use <code>set-car!</code> and <code>set-cdr!</code>.</li>
 </ul>
 <h2 id="3" class="anchor">

@@ -241,13 +241,13 @@
 <li><code>(head s)</code> is <code>(<span class="fu">car</span> s)</code></li>
 <li><code>(tail s)</code> is <code>(<span class="fu">force</span> (<span class="fu">cdr</span> s))</code></li>
 </ul></li>
-<li><code>delay</code> creates a promise to compute something when <code>force</code> d.
+<li><code>delay</code> creates a promise to compute something when <code>force</code>&thinsp;d.
 <ul>
-<li><code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is an abbreviation for <code class="sourceCode scheme">(<span class="kw">lambda</span> () <span class="ss">expr</span>)</code></li>
+<li><code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is an abbreviation for <code>(<span class="kw">lambda</span> () <span class="ss">expr</span>)</code></li>
 <li><code>(<span class="fu">force</span> p)</code> is <code>(p)</code></li>
 </ul></li>
 <li><code>delay</code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
-<li>One little hack: to be efficient, <code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is <code class="sourceCode scheme">(memo-proc (<span class="kw">lambda</span> () <span class="ss">expr</span>))</code>.</li>
+<li>One little hack: to be efficient, <code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is <code>(memo-proc (<span class="kw">lambda</span> () <span class="ss">expr</span>))</code>.</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (memo-proc proc)
   (<span class="kw">let</span> ((already-run? nil) (result nil))

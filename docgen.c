@@ -327,6 +327,10 @@ static void postprocess_html(FILE *in, FILE *out) {
             // We're not in a code block. Deal with inline stuff.
             const char *colon = "r</em>";
             while ((n = strstr(p, "<code")) || (n = strstr(p, colon))) {
+                if (n - 5 >= line && startswith(n - 5, "<pre>")) {
+                    // Hardcoded <pre><code> in exercise.md.
+                    break;
+                }
                 fwrite(p, n - p, 1, out);
                 if (*n == 'r') {
                     fputs("r</em>", out);

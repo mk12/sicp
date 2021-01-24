@@ -14,6 +14,9 @@
     - text: 1.1, 1.2
     - lecture: 1a, 1b
     - exercise: 1.1, 1.2*(in progress, next ex 1.13 proof)
+- fix assertion failure when building all docs
+x html minifier
+    x barely has any effect, size is from math spans
 x reconsider → in lecture 6a
     x it's fine
 + automatic `&thinsp;` after code, `&hairsp;` between italic "r" and colon

@@ -101,8 +101,8 @@
 </h3>
 <ul>
 <li>The above is an algorithm. More generally, it is a <em>process</em>.</li>
-<li>What is a process? It’s like a magical spirit that lives in the computer and does something.</li>
-<li>The process is directed by a pattern of rules called a procedure (procedure is the spell that controls the spirit).</li>
+<li>What is a process? It’s like a magical spirit that lives in the computer.</li>
+<li>The process is directed by a pattern of rules (magical spell) called a procedure.</li>
 <li>We conjure our spirits in a language called Lisp.</li>
 <li>Lisp is easy to learn just as chess is easy to learn.</li>
 <li>Rules stated in minutes, but there are many implications.</li>
@@ -121,7 +121,7 @@
 <li>Computer scientists are in the business of controlling complexity.</li>
 <li>This is different from the complexity that others, for example aeronautical engineers, deal with, because the complexity in CS in a sense is not real.</li>
 <li>Computer science deals with <em>idealized</em> components.</li>
-<li>We know as much as we want about the components; we don’t need to worry about tolerance.</li>
+<li>We know as much as we want about the components; no worrying about tolerance.</li>
 <li>Not much difference between what I can <em>build</em> and what I can <em>image</em>.</li>
 <li>Other disciplines have physical constraints; in CS, the only constraint is your mind.</li>
 </ul>
@@ -134,30 +134,21 @@
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Techniques for managing complexity
 </h3>
-<h4 id="1.5.1" class="anchor">
-<a class="anchor__link link" href="#1.5.1" aria-hidden="true">#</a> Black box abstraction
-</h4>
-<p>Take something and build a box around it. The important thing is that you don’t care what is going on inside the box—it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and build bigger boxes.</p>
+<p><strong>Black box abstraction</strong>: Take something and build a box around it. The important thing is that you don’t care what is going on inside the box—it’s not important. Black-box abstraction <em>suppresses detail</em>. This allows you to go on and build bigger boxes.</p>
 <ul>
 <li>Primitive objects: primitive procedures, primitive data.</li>
 <li>Means of combination: procedure composition, construction of compound data.</li>
 <li>Means of abstraction: procedure definition, simple data abstraction.</li>
 <li>Capturing common patterns: higher-order procedures, data as procedures.</li>
 </ul>
-<h4 id="1.5.2" class="anchor">
-<a class="anchor__link link" href="#1.5.2" aria-hidden="true">#</a> Conventional interfaces
-</h4>
-<p>Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.</p>
+<p><strong>Conventional interfaces</strong>: Agreed upon ways of connecting things together. Like standard impedances in electrical engineering.</p>
 <ul>
 <li>generic operations</li>
 <li>large-scale structure and modularity</li>
 <li>object-oriented programming</li>
 <li>operations on aggregates</li>
 </ul>
-<h4 id="1.5.3" class="anchor">
-<a class="anchor__link link" href="#1.5.3" aria-hidden="true">#</a> Metalinguistic abstraction
-</h4>
-<p>Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.</p>
+<p><strong>Metalinguistic abstraction</strong>: Another way of controlling complexity is to choose a new design language (a domain-specific language, or DSL) that will highlight different aspects of the system. It will emphasize some kinds of details and suppress others. This is the technology for building new computer languages.</p>
 <p>The process of interpreting Lisp in Lisp is like a giant wheel of two processes, <code>apply</code> and <code>eval</code>, which reduce expressions to each other. Very magical.</p>
 <ul>
 <li><code>apply</code> and <code>eval</code></li>
@@ -170,13 +161,8 @@
 <h3 id="2.1" class="anchor">
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Three main features
 </h3>
-<h4 id="2.1.1" class="anchor">
-<a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a> Primitive elements
-</h4>
-<p>Here are some primitive elements is Lisp: <code>3</code>, <code>14.4</code>, <code>5</code>, <code>+</code>. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.</p>
-<h4 id="2.1.2" class="anchor">
-<a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a> Means of combination
-</h4>
+<p><strong>Primitive elements</strong>: Here are some primitive elements is Lisp: <code>3</code>, <code>14.4</code>, <code>5</code>, <code>+</code>. These are all names that represents things. The first three represent numbers, and the last one represents the concept of addition.</p>
+<p><strong>Means of combination</strong>:</p>
 <ul>
 <li>We can take the sum using a <em>combination</em>: <code>(<span class="fu">+</span> <span class="cn">3</span> <span class="cn">14.4</span> <span class="cn">5</span>)</code>.</li>
 <li>Combination: applying and operator to operands.</li>
@@ -186,10 +172,7 @@
 <li>Nested combinations can be modeled as trees.</li>
 <li>Parentheses are just a way to write trees as a linear sequence of characters.</li>
 </ul>
-<h4 id="2.1.3" class="anchor">
-<a class="anchor__link link" href="#2.1.3" aria-hidden="true">#</a> Means of abstraction
-</h4>
-<p>This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure—it is a <em>special form</em>. We can also define procedures this way:</p>
+<p><strong>Means of abstraction</strong>: This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure—it is a <em>special form</em>. We can also define procedures this way:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code></pre>
 <p>We can also make it more clear that we are naming something:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code></pre>

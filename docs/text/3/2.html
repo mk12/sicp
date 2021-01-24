@@ -96,15 +96,15 @@
 <li>Evaluate the subexpressions of the combination.</li>
 <li>Apply the value of the operator subexpression to the values of the operand subexpressions.</li>
 </ol></li>
-<li>The environment model redefines the meaning of “apply.”</li>
+<li>The environment model redefines the meaning of “apply”.</li>
 <li>A procedure is created by evaluating a λ-expression relative to a given environment.</li>
 <li>The resulting procedure object is a pair consisting of the text of the λ-expression and a pointer to the environment in which the procedure was created.</li>
 <li>To apply a procedure to arguments, create a new environment whose frame binds the parameters to the values of the arguments and whose enclosing environment is specified by the procedure.</li>
 <li>Then, within the new environment, evaluate the procedure body.</li>
 <li><code>(<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x))</code> evaluates a to pair: the parameters and the procedure body as one item, and a pointer to the global environment as the other.</li>
 <li><code>(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code> associates the symbol <code>square</code> with that procedure object in the global frame.</li>
-<li>Evaluating <code>(<span class="kw">define</span> <span class="ss">var</span> <span class="ss">val</span>)</code> creates a binding in the current environment frame to associate <code class="sourceCode scheme"><span class="ss">var</span></code> with <code class="sourceCode scheme"><span class="ss">val</span></code>.</li>
-<li>Evaluating <code>(<span class="kw">set!</span> <span class="ss">var</span> <span class="ss">val</span>)</code> locates the binding of <code class="sourceCode scheme"><span class="ss">var</span></code> in the current environment (the first frame that has a binding for it) and changes the bound value to <code class="sourceCode scheme"><span class="ss">val</span></code>.</li>
+<li>Evaluating <code>(<span class="kw">define</span> <span class="ss">var</span> <span class="ss">val</span>)</code> creates a binding in the current environment frame to associate <code><span class="ss">var</span></code> with <code><span class="ss">val</span></code>.</li>
+<li>Evaluating <code>(<span class="kw">set!</span> <span class="ss">var</span> <span class="ss">val</span>)</code> locates the binding of <code><span class="ss">var</span></code> in the current environment (the first frame that has a binding for it) and changes the bound value to <code><span class="ss">val</span></code>.</li>
 <li>We use <code>define</code> for variables that are currently unbound, and <code>set!</code> for variables that are already bound.</li>
 </ul>
 <h2 id="3.2.2" class="anchor">
