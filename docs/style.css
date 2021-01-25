@@ -41,6 +41,8 @@ body {
     background: var(--bg);
     font: 20px Helvetica, Arial, sans-serif;
     line-height: 1.4;
+    /* Otherwise iOS enlarges text on landscape. */
+    -webkit-text-size-adjust: 100%;
 }
 
 p, ul, ol, blockquote, pre { margin-top: 1em; }

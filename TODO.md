@@ -4,7 +4,6 @@
 - exercises appendix for core.ss etc.
 - deal with the OLD proofs, diagrams
 - en/em dashes in comments
-- go over all exercises and fix up
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
@@ -14,7 +13,8 @@
     - text: 1.1, 1.2
     - lecture: 1a, 1b
     - exercise: 1.1, 1.2
-- investigate way to get 1-5 ordering without recompilation
++ fix landscape zooming on iPhone
++ investigate way to get 1-5 ordering without recompilation
 + document `capture-output` and `hide-output` in exercise.md
 x fix `(+ 1 1) =?> [(* 1 1) "two"]` (getting `attempt to apply non-procedure #<void>`)
     x was just because I redefined `*` later!!
