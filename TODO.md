@@ -10,7 +10,7 @@
 - finish correcting spelling and adding ignores
 - make spellc.m interactive
 - perfection:
-    - text: 1.1, 1.2
+    - text: 1.1, 1.2, 1.3
     - lecture: 1a, 1b
     - exercise: 1.1, 1.2
 + fix landscape zooming on iPhone

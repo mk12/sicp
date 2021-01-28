@@ -368,17 +368,15 @@ The test works like this:
 
 > We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers. [@1.3]
 
-- We could always use `(* x x x)` instead of using a cube procedure, but this would be a disadvantage.
-
 > One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly. [@1.3]
 
-- Even with procedures, we are still limiting ourselves if we only ever let parameters be numbers.
-- To abstract more general programming patterns, we need to write precedes that take other procedures as arguments and return new procedures.
+- Procedures operating on numbers are powerful, but we can go further.
+- To abstract more general programming patterns, we need to write procedures that take other procedures as arguments and return new procedures.
 - These are called _higher-order_ procedures.
 
 ### 1.3.1: Procedures as Arguments
 
-Procedures that compute a sum are all similar. They are all based on the following template:
+Procedures that compute a sum all look the same:
 
 ```
 (define («name» a b)
@@ -388,7 +386,7 @@ Procedures that compute a sum are all similar. They are all based on the followi
          («name» («next» a) b))))
 ```
 
-This is a useful abstraction, just as sigma notation in math is useful because the summation of a series is so common.
+This is a useful abstraction, just as sigma notation is useful in math because the summation of a series is so common.
 
 > The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums. [@1.3.1]
 
@@ -400,14 +398,15 @@ This is a useful abstraction, just as sigma notation in math is useful because t
 
 `lambda` creates anonymous procedures. They are just like the procedures created by `define`, but without a name: `(lambda («formal-parameters») «body»)`.
 
-A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the λ-calculus, which was introduced by Alonzo Church.
+A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the [λ-calculus][], a formal system invented by Alonzo Church.
+
+[λ-calculus]: https://en.wikipedia.org/wiki/Lambda_calculus
 
 #### Using `let` to create local variables
 
-- We often need local variables other than the ones that have been bound as formal parameters.
-- We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special `let` form that does it.
+We often need local variables in addition to the formal parameters. We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special form `let` to make it easier.
 
-The general form of a let-expression is
+The general form of a let-expression is:
 
 ```
 (let ((«var1» «exp1»)
@@ -417,7 +416,7 @@ The general form of a let-expression is
   «body»)
 ```
 
-This is just syntactic sugar for
+This is just syntactic sugar for:
 
 ```
 ((lambda («var1» «var2» ... «varn»)
@@ -428,10 +427,9 @@ This is just syntactic sugar for
  «expn»)
 ```
 
-- The scope of a variable in a let-expression is the body.
-- This allows variables to be bound as locally as possible.
+- The scope of a variable in a let-expression is the body. This allows variables to be bound as locally as possible.
 - The variables in the let-expression are parallel and independent. They cannot refer to each other, and their order does not matter.
-- You can use let-expressions (`let`, `let*`, and `letrec`) instead of internal definitions (block structure).
+- You can use let-expressions instead of [internal definitions](@1.1.8.2).
 
 ::: exercises
 1.34
@@ -439,24 +437,75 @@ This is just syntactic sugar for
 
 ### 1.3.3: Procedures as General Methods
 
-So far, we have seen
+So far, we have seen:
 
-- compound procedures that abstract patterns of numerical operators (mathematical functions), independent of the particular numbers;
-- higher-order procedures that express a more powerful kind of abstraction, independent of the procedures involved.
+- Compound procedures that abstract patterns of numerical operators (mathematical functions), independent of the particular numbers.
+- Higher-order procedures that express a more powerful kind of abstraction, independent of the procedures involved.
 
 Now we will take it a bit further.
 
 #### Finding roots of equations by the half-interval method
 
-- The _half-interval_ method: a simple but powerful technique for finding the solutions to $f(x) = 0$.
+- The _half-interval method_: a simple but powerful technique for solving $f(x) = 0$.
 - Given $f(a) < 0 < f(b)$, there must be at least one zero between $a$ and $b$.
 - To narrow it down, we let $x$ be the average of $a$ and $b$, and then replace either the left bound or the right bound with it.
+
+```
+(define (search f neg-point pos-point)
+  (let ((midpoint (average neg-point pos-point)))
+    (if (close-enough? neg-point pos-point)
+        midpoint
+        (let ((test-value (f midpoint)))
+          (cond ((positive? test-value)
+                 (search f neg-point midpoint))
+                ((negative? test-value)
+                 (search f midpoint pos-point))
+                (else midpoint))))))
+
+(define (close-enough? x y)
+  (< (abs (- x y)) 0.001))
+
+(define (half-interval-method f a b)
+  (let ((a-value (f a))
+        (b-value (f b)))
+    (cond ((and (negative? a-value) (positive? b-value))
+           (search f a b))
+          ((and (negative? b-value) (positive? a-value))
+           (search f b a))
+          (else
+           (error "Values are not of opposite sign" a b)))))
+```
+
+We can use `half-interval-method` to approximate $\pi$ as a root of $\sin x=0$:
+
+```
+(half-interval-method sin 2.0 4.0) ~> 3.14111328125
+```
 
 #### Finding fixed points of functions
 
 - A number $x$ is a _fixed point_ of a function if $f(x) = x$.
-- In some cases, repeatedly applying the function to an initial guess will converge on the fixed point.
+- In some cases, repeatedly applying the function to an arbitrary initial guess will converge on the fixed point.
 - The procedure we made earlier for finding square roots is actually a special case of the fixed point procedure.
+
+```
+(define tolerance 0.00001)
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+```
+
+We can use `fixed-point` to approximate the fixed point of the cosine function:
+
+```
+(fixed-point cos 1.0) ~> 0.7390822985224023
+```
 
 ::: exercises
 1.35-39
@@ -464,20 +513,18 @@ Now we will take it a bit further.
 
 ### 1.3.4: Procedures as Returned Values
 
-Passing procedures as arguments gives us expressive power; Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:
+Passing procedures as arguments gives us expressive power. Returning procedures from functions gives us even more. For example, we can write a procedure that creates a new procedure with average damping:
 
 ```
 (define (average-damp f)
   (lambda (x) (average x (f x))))
 ```
 
-If we use `average-damp` on `square`, we actually get a procedure that takes the sum of the numbers from 1 to n:
+If we use `average-damp` on `square`, we get a procedure that calculates the sum of the numbers from 1 to $n$:
 
 ```
-((average-damp square) 10)
-=> 55
-(+ 1 2 3 4 5 6 7 8 9 10)
-=> 55
+((average-damp square) 10) => 55
+(+ 1 2 3 4 5 6 7 8 9 10) => 55
 ```
 
 ::: highlight
@@ -486,11 +533,11 @@ If we use `average-damp` on `square`, we actually get a procedure that takes the
 
 #### Newton's method
 
-The square-root procedure we did earlier was a special case of Newton's method.  Given a function $f(x)$, the solution to $f(x) = 0$ is given by the fixed point of
+The square-root procedure we wrote earlier was a special case of _Newton's method_.  Given a function $f(x)$, the solution to $f(x) = 0$ is given by the fixed point of
 
 $$x ↦ x - \frac{f(x)}{f'(x)}.$$
 
-Newton's method converges very quickly---much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small dx for this:
+Newton's method converges very quickly---much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small $dx$ for this:
 
 $$f'(x) = \frac{f(x+dx) - f(x)}{dx}.$$
 
@@ -512,10 +559,9 @@ Now we can do things like this:
 
 #### Abstractions and first-class procedures
 
-- Compound procedures permit us to express general methods of computing as explicit elements in our programming language.
-- Higher-order procedures permit us to manipulate these general methods to create further abstractions.
-- We should always be on the lookout for underlying abstractions that can be brought out and generalized.
-- This doesn't mean we should always program in the most abstract form possible; there is a level appropriate for each task.
+- Compound procedures let us express general methods of computing as explicit elements in our programming language.
+- Higher-order procedures let us manipulate methods to create further abstractions.
+- We should always be on the lookout for underlying abstractions that can be brought out and generalized. But this doesn't mean we should always program in the most abstract form possible; there is a level appropriate to each task.
 - Elements with the fewest restrictions are _first-class_:
     - They may be named by variables.
     - They may be passed as arguments to procedures.
