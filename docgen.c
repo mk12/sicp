@@ -325,17 +325,18 @@ static void postprocess_html(FILE *in, FILE *out) {
         const char *n;
         if (p == line) {
             // We're not in a code block. Deal with inline stuff.
-            const char *colon = "r</em>";
-            while ((n = strstr(p, "<code")) || (n = strstr(p, colon))) {
+            const char *close_em = "</em>";
+            while ((n = strstr(p, "<code")) || (n = strstr(p, close_em))) {
                 if (n - 5 >= line && startswith(n - 5, "<pre>")) {
                     // Hardcoded <pre><code> in exercise.md.
                     break;
                 }
                 fwrite(p, n - p, 1, out);
-                if (*n == 'r') {
-                    fputs("r</em>", out);
-                    p = n + strlen(colon);
-                    if (*p == ':' || *p == ';') {
+                if (n[0] == '<' && n[1] == '/') {
+                    fputs(close_em, out);
+                    p = n + strlen(close_em);
+                    if ((*p == ':' || *p == ';')
+                        && (n[-1] == 'd' || n[-1] == 'r')) {
                         fputs("&hairsp;", out);
                     }
                     continue;
