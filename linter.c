@@ -16,8 +16,10 @@
 // Skip alignment checks on lines ending with this comment.
 static const char NO_ALIGN_COMMENT[] = "; NOALIGN\n";
 
-// Line in a Markdown file indicating the start of Scheme code.
-static const char MARKDOWN_SCHEME_START[] = "```scheme\n";
+// Lines in a Markdown file indicating the start of Scheme code. The explicit
+// "```scheme" is only used in README.md for GitHub rendering.
+static const char MARKDOWN_SCHEME_START_1[] = "```scheme\n";
+static const char MARKDOWN_SCHEME_START_2[] = "```\n";
 
 // Line in a Markdown file indicating the end of Scheme code.
 static const char MARKDOWN_SCHEME_END[] = "```\n";
@@ -637,7 +639,8 @@ static int lint(const char *filename) {
         while ((len = getline(&line, &cap, fp)) != -1) {
             switch (mode) {
             case TEXT:
-                if (strncmp(line, MARKDOWN_SCHEME_START, len) == 0) {
+                if (strncmp(line, MARKDOWN_SCHEME_START_1, len) == 0
+                    || strncmp(line, MARKDOWN_SCHEME_START_2, len) == 0) {
                     mode = SCHEME;
                 }
                 break;
