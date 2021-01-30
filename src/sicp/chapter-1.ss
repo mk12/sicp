@@ -555,8 +555,8 @@ circumference ~> 62.8318
 ;;
 ;; By induction, $f(n)=\Fib(n)$ for all $n$. $\blacksquare$
 ;;
-;; **Theorem.** $\Fib(n)$ is the closest integer to $\varphi^n/\sqrt5$, where
-;; $\varphi=(1+\sqrt5)/2$.
+;; **Theorem.** $\Fib(n)$ is the closest integer to $\dfrac{\varphi^n}{\sqrt5}$,
+;; where $\varphi=\dfrac{1+\sqrt5}{2}$.
 ;;
 ;; For this to hold, the absolute difference must be less than one half:
 ;;
@@ -565,7 +565,6 @@ circumference ~> 62.8318
 ;; \abs{\frac{\varphi^n-\psi^n}{\sqrt5} - \frac{\varphi^n}{\sqrt5}} &< \frac12\\
 ;; \abs{-\frac{\psi^n}{\sqrt5}} &< \frac12 \\
 ;; \frac{\abs{-\psi^n}}{\sqrt5} &< \frac12 \\
-;; \abs{\psi^n} &< \frac{\sqrt5}{2} \\
 ;; \abs{\psi}^n &< \frac{\sqrt5}{2}.
 ;; \end{aligned}$$
 ;;

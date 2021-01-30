@@ -4,8 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SICP Lecture 2A Notes</title>
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -77,8 +75,8 @@
 </h3>
 <ul>
 <li>So far Lisp might just seem like a different language with funny syntax. It’s time to shatter that illusion.</li>
-<li>We are already familiar with creating recursive procedures that, for example, calculate the sum of integers from <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span></span></span></span>.</li>
-<li>What about the sum of the squares of the integers from <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span></span></span></span>? That’s almost the same program! We don’t like repetition.</li>
+<li>We are familiar with creating recursive procedures that, for example, calculate the sum of integers from <code>a</code> to <code>b</code>.</li>
+<li>What about the sum of the squares of the integers from <code>a</code> to <code>b</code>? That’s almost the same program! We don’t like repetition.</li>
 </ul>
 <blockquote>
 <p>Now, wherever you see yourself writing the same thing down more than once, there’s something wrong, and you shouldn’t be doing it. And the reason is not because it’s a waste of time to write something down more than once. It’s because there’s some idea here … whenever trying to make complicated systems and understand them, it’s crucial to divide the things up into as many pieces as I can, each of which I understand separately. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2a-higher-order-procedures/eJeMOEiHv8c.pdf#page=2" title="SICP Lecture 2A transcript, page 2">Sussman</a></span></p>
@@ -92,7 +90,7 @@
 <h3 id="1.2" class="anchor">
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Summation
 </h3>
-<p>We can represent the sigma notation with a procedure that takes other procedures as arguments:</p>
+<p>We can represent sigma notation with a procedure that takes other procedures as arguments:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (sum term a next b)
   (<span class="kw">if</span> (<span class="fu">&gt;</span> a b)
       <span class="cn">0</span>
@@ -109,7 +107,7 @@
        a
        (<span class="kw">lambda</span> (i) (<span class="fu">+</span> i <span class="cn">4</span>))
        b))</code></pre>
-<p>We are separating the things we are adding up from the method of doing the addition. Now, we can change the sum procedure so that it generates an iterative process, and all the specific procedures using sum will benefit.</p>
+<p>We are separating the things we are adding up from the method of doing the addition. Now, we can change the <code>sum</code> procedure so that it generates an iterative process, and all the specific procedures using <code>sum</code> will benefit.</p>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
 </h2>
@@ -117,11 +115,10 @@
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Higher-order procedures
 </h3>
 <ul>
-<li>We use abstraction for the purpose of making programs easier to read and write.</li>
-<li>Abstraction helps us to clarify what’s going on.</li>
-<li>Our square root algorithm was a specific instance of the more general fixed-point search.</li>
-<li>The damping part is also a general signal processing strategy, and we can also treat is as a separate thing using a higher-order procedure.</li>
-<li>Higher-order procedures can take procedures as arguments and they can return new procedures.</li>
+<li>We use abstraction to make programs easier to read and write.</li>
+<li>Higher-order procedures increase our abstraction capabilities: they can take other procedures as arguments and return new procedures.</li>
+<li>Our square root algorithm was a specific instance of the more general fixed-point search algorithm. Expressing this directly requires higher-order procedures.</li>
+<li><em>Damping</em> is a general signal processing strategy. Using a higher-order procedure, we can write programs that use damping as a building block.</li>
 </ul>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
@@ -130,14 +127,14 @@
 <a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Newton’s method
 </h3>
 <ul>
-<li>Newton’s method: general method to find the zeros (an <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f(x) = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>).</li>
-<li>We can use the fixed-point procedure to define a procedure for computing zeros using Newton’s method.</li>
+<li><em>Newton’s method</em> is a general technique for finding zeros of a function.</li>
+<li>We can implement Newton’s method in terms of the fixed-point procedure.</li>
 </ul>
 <blockquote>
 <p>Wishful thinking, essential to good engineering, and certainly essential to good computer science. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2a-higher-order-procedures/eJeMOEiHv8c.pdf#page=11" title="SICP Lecture 2A transcript, page 11">Sussman</a></span></p>
 </blockquote>
 <ul>
-<li>We can use names of procedures that we haven’t defined yet while writing a program (top-down design).</li>
+<li><em>Top-down design</em> allows us to use names of procedures that we haven’t defined yet while writing a program.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> The rights and privileges of first-class citizens

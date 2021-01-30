@@ -11,7 +11,7 @@
 - make spellc.m interactive
 - perfection:
     - text: 1.1, 1.2, 1.3
-    - lecture: 1a, 1b
+    - lecture: 1a, 1b, 2a
     - exercise: 1.1, 1.2
 + fix landscape zooming on iPhone
 + investigate way to get 1-5 ordering without recompilation

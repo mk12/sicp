@@ -315,8 +315,8 @@ Move an $n$-high tower from spike `from` to spike `to` using spike `spare` as a 
 ### Don't repeat yourself
 
 - So far Lisp might just seem like a different language with funny syntax. It's time to shatter that illusion.
-- We are already familiar with creating recursive procedures that, for example, calculate the sum of integers from $A$ to $B$.
-- What about the sum of the squares of the integers from $A$ to $B$? That's almost the same program! We don't like repetition.
+- We are familiar with creating recursive procedures that, for example, calculate the sum of integers from `a` to `b`.
+- What about the sum of the squares of the integers from `a` to `b`? That's almost the same program! We don't like repetition.
 
 > Now, wherever you see yourself writing the same thing down more than once, there's something wrong, and you shouldn't be doing it. And the reason is not because it's a waste of time to write something down more than once. It's because there's some idea here ... whenever trying to make complicated systems and understand them, it's crucial to divide the things up into as many pieces as I can, each of which I understand separately. [@2a.p2]
 
@@ -327,7 +327,7 @@ Move an $n$-high tower from spike `from` to spike `to` using spike `spare` as a 
 
 ### Summation
 
-We can represent the sigma notation with a procedure that takes other procedures as arguments:
+We can represent sigma notation with a procedure that takes other procedures as arguments:
 
 ```
 (define (sum term a next b)
@@ -352,28 +352,27 @@ Now we can write particular cases easily, without repeating ourselves:
        b))
 ```
 
-We are separating the things we are adding up from the method of doing the addition. Now, we can change the sum procedure so that it generates an iterative process, and all the specific procedures using sum will benefit.
+We are separating the things we are adding up from the method of doing the addition. Now, we can change the `sum` procedure so that it generates an iterative process, and all the specific procedures using `sum` will benefit.
 
 ## Part 2
 
 ### Higher-order procedures
 
-- We use abstraction for the purpose of making programs easier to read and write.
-- Abstraction helps us to clarify what's going on.
-- Our square root algorithm was a specific instance of the more general fixed-point search.
-- The damping part is also a general signal processing strategy, and we can also treat is as a separate thing using a higher-order procedure.
-- Higher-order procedures can take procedures as arguments and they can return new procedures.
+- We use abstraction to make programs easier to read and write.
+- Higher-order procedures increase our abstraction capabilities: they can take other procedures as arguments and return new procedures.
+- Our square root algorithm was a specific instance of the more general fixed-point search algorithm. Expressing this directly requires higher-order procedures.
+- _Damping_ is a general signal processing strategy. Using a higher-order procedure, we can write programs that use damping as a building block.
 
 ## Part 3
 
 ### Newton's method
 
-- Newton's method: general method to find the zeros (an $x$ such that $f(x) = 0$).
-- We can use the fixed-point procedure to define a procedure for computing zeros using Newton's method.
+- _Newton's method_ is a general technique for finding zeros of a function.
+- We can implement Newton's method in terms of the fixed-point procedure.
 
 > Wishful thinking, essential to good engineering, and certainly essential to good computer science. [@2a.p11]
 
-- We can use names of procedures that we haven't defined yet while writing a program (top-down design).
+- _Top-down design_ allows us to use names of procedures that we haven't defined yet while writing a program.
 
 ### The rights and privileges of first-class citizens
 
