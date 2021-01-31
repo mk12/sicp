@@ -285,12 +285,13 @@ function internal_link(el)
 end
 
 -- Adds the scheme class to CodeBlock elements. Also links IDs in (paste ...)
--- blocks to the corresponding section/exercise.
+-- blocks to the corresponding section/exercise, and removes "NOALIGN" comments.
 function code_block(el)
     if #el.classes > 0 then
         return
     end
     el.classes = {"scheme"}
+    el.text = el.text:gsub(" ; NOALIGN\n", "\n")
     local text = el.text
     -- Don't link in language.html since it's just examples.
     if vars.id == "exercise/language" or not text:find("(paste (", 1, true) then

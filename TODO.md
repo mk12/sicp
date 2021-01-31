@@ -12,7 +12,9 @@
 - perfection:
     - text: 1.1, 1.2, 1.3
     - lecture: 1a, 1b, 2a
-    - exercise: 1.1, 1.2
+    - exercise: 1.1, 1.2, 1.3
+- run HTML simplifier/minifier inside katex.ts just on the math
++ remove ` ; NOALIGN` from code blocks on website
 + fix landscape zooming on iPhone
 + investigate way to get 1-5 ordering without recompilation
 + document `capture-output` and `hide-output` in exercise.md

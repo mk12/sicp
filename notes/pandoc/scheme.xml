@@ -18,6 +18,7 @@
       <item>and</item>
       <item>assert</item>
       <item>begin</item>
+      <item>capture-output</item>
       <item>case</item>
       <item>catch</item>
       <item>cond</item>
@@ -28,6 +29,7 @@
       <item>delay</item>
       <item>else</item>
       <item>export</item>
+      <item>hide-output</item>
       <item>if</item>
       <item>import</item>
       <item>lambda</item>
@@ -408,7 +410,7 @@
     <contexts>
       <context name="Default" attribute="Normal" lineEndContext="#stay">
         <DetectSpaces/>
-        <DetectChar attribute="Comment" context="hash" char="#" lookAhead="1"/>
+        <DetectChar attribute="Normal" context="hash" char="#" lookAhead="1"/>
         <DetectChar attribute="Comment" context="Comment" char=";"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
         <DetectChar attribute="RawHtml" context="RawHtml" char="‹"/>
@@ -426,17 +428,15 @@
       </context>
       <context name="hash" attribute="Normal" lineEndContext="#stay">
         <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="t"/>
-        <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="T"/>
         <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="f"/>
-        <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="F"/>
         <Detect2Chars attribute="Character" context="#pop!Char" char="#" char1="\"/>
         <DetectChar attribute="Normal" context="#pop" char="#"/>
       </context>
       <context name="Char" attribute="Character" lineEndContext="#pop">
+        <keyword attribute="Character" context="#pop" String="characters"/>
         <DetectChar attribute="Character" context="HexChar" char="x"/>
-        <keyword attribute="Character" context="#pop" String="characters" insensitive="1"/>
         <RegExpr attribute="Character" context="#pop" String=".(?!\w)"/>
-        <RegExpr attribute="Error" context="#pop" String="\w+|."/>
+        <RegExpr attribute="ErrorAssert" context="#pop" String="\w+|."/>
       </context>
       <context name="HexChar" attribute="Character" lineEndContext="#pop#pop">
         <RegExpr attribute="Character" context="#pop#pop" String="[0-9a-fA-F]+"/>
@@ -449,6 +449,7 @@
         <AnyChar attribute="Escape" context="#pop" String="abfnrtv&quot;\"/>
         <RegExpr attribute="Escape" context="#pop" String="[xXu][0-9a-fA-F]+;|\\[0-7]{3}|(?:[MC]-|\^)?."/>
       </context>
+      <!-- Converted back to angled brackets after highlighting -->
       <context name="RawHtml" attribute="RawHtml" lineEndContext="#stay">
         <DetectChar attribute="RawHtml" context="#pop" char="›"/>
       </context>
@@ -475,6 +476,6 @@
     </itemDatas>
   </highlighting>
   <general>
-    <keywords casesensitive="1" weakDeliminator="-+*?!&lt;&gt;=/:.,\&amp;~" additionalDeliminator="&quot;;#"/>
+    <keywords casesensitive="1" weakDeliminator="-+*?!&lt;&gt;=/:.,&amp;~" additionalDeliminator="&quot;;#"/>
   </general>
 </language>

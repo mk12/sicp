@@ -51,6 +51,7 @@ p:first-child, li ul, li ol { margin-top: 0; }
 ul { margin-left: 1.05em; }
 ol { margin-left: 1.45em; }
 li ul, li ol { margin-left: 2em; }
+ol[type="a"] li::marker { font-weight: bold; }
 
 h1, h2, h3 {
     font-weight: bold;

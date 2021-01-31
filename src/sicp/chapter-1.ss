@@ -513,7 +513,7 @@ circumference ~> 62.8318
 ;;
 ;; **Lemma.** $\Fib(n)$ is equal to $f(n)=\dfrac{\varphi^n-\psi^n}{\sqrt5}.$
 ;;
-;; First, we will demonstrate three base cases. When $n=0$,
+;; _Proof._ First, we will demonstrate three base cases. When $n=0$,
 ;;
 ;; $$f(0)=\frac{\varphi^0-\psi^0}{\sqrt5} = \frac{1-1}{\sqrt5} = 0.$$
 ;;
@@ -558,7 +558,8 @@ circumference ~> 62.8318
 ;; **Theorem.** $\Fib(n)$ is the closest integer to $\dfrac{\varphi^n}{\sqrt5}$,
 ;; where $\varphi=\dfrac{1+\sqrt5}{2}$.
 ;;
-;; For this to hold, the absolute difference must be less than one half:
+;; _Proof._ It suffices to show that the absolute difference is less than one
+;; half:
 ;;
 ;; $$\begin{aligned}
 ;; \abs{\Fib(n)-\frac{\varphi^n}{\sqrt5}} &< \frac12 \\
@@ -1153,6 +1154,12 @@ circumference ~> 62.8318
 (Section :1.3.1 "Procedures as Arguments"
   (use (:1.3 cube)))
 
+;; Mathematicians long ago created an abstraction for summations:
+;;
+;; $$\sum_{n=a}^b f(n) = f(a) + \dots + f(b).$$
+;;
+;; We can do the same in Lisp using a higher-order procedure:
+
 (define (sum term a next b)
   (if (> a b)
       0
@@ -1173,6 +1180,20 @@ circumference ~> 62.8318
   (sum pi-term a pi-next b))
 (* 8 (pi-sum 1 1000)) ~> 3.139592655589783
 
+;; The definite integral of a function $f$ between limits $a$ and $b$ can be
+;; approximated numerically using the formula
+;;
+;; $$
+;; \int_a^bf\approx\left[
+;; f\left(a+\frac{dx}{2}\right)
+;; + f\left(a+dx+\frac{dx}{2}\right)
+;; + f\left(a+2dx+\frac{dx}{2}\right)
+;; + \cdots
+;; \right]dx
+;; $$
+;;
+;; for small values of $dx$. We can express this directly as a procedure:
+
 (define (integral f a b dx)
   (define (add-dx x)
     (+ x dx))
@@ -1185,6 +1206,17 @@ circumference ~> 62.8318
 (Exercise ?1.29
   (use (:1.3 cube) (:1.3.1 inc sum)))
 
+;; _Simpson's rule_ provides a more accurate method of numerical integration:
+;;
+;; $$\begin{gathered}
+;; \int_a^bf\approx\frac{h}{3}\left[
+;; y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \cdots + 2y_{n-2} + 4y_{n-1} + y_n
+;; \right]dx \\
+;; \text{where}\quad h = \frac{b-a}{n} \quad\text{and}\quad y_k = f(a+kh).
+;; \end{gathered}$$
+;;
+;; The even integer $n$ controls the accuracy of the approximation.
+
 (define (simpson f a b n)
   (let ((h (/ (- b a) n)))
     (define (term k)
@@ -1194,9 +1226,7 @@ circumference ~> 62.8318
              (+ 2 (* 2 (remainder k 2))))))
     (* h 1/3 (sum term 0.0 inc n))))
 
-;; The integral procedure is a bit inaccurate, whereas the `simpson` procedure
-;; gives the exact answer even when n = 2 (note the `=>` rather than `~>`), at
-;; least for this particular integral.
+;; Simpson's rule gives an exact answer for $\int_0^1x^3dx$ when $n=2$:
 
 (simpson cube 0 1 2) => 0.25
 
@@ -1212,20 +1242,22 @@ circumference ~> 62.8318
 (Exercise ?1.31
   (use (:1.3.1 identity inc)))
 
-;; (a) Recursive
+;; (a) Recursive:
 (define (product term a next b)
   (if (> a b)
       1
       (* (term a)
          (product term (next a) next b))))
 
-;; (b) Iterative
+;; (b) Iterative:
 (define (product term a next b)
   (define (iter a acc)
     (if (> a b)
         acc
         (iter (next a) (* acc (term a)))))
   (iter a 1))
+
+;; Calculating factorials and approximating $\pi$ using `product`:
 
 (define (factorial n)
   (product identity 1 inc n))
@@ -1248,20 +1280,22 @@ circumference ~> 62.8318
 (Exercise ?1.32
   (use (:1.3.1 identity inc)))
 
-;; (a) Recursive
+;; (a) Recursive:
 (define (accumulate combine id term a next b)
   (if (> a b)
       id
       (combine (term a)
                (accumulate combine id term (next a) next b))))
 
-;; (b) Iterative
+;; (b) Iterative:
 (define (accumulate combine id term a next b)
   (define (iter a acc)
     (if (> a b)
         acc
         (iter (next a) (combine (term a) acc))))
   (iter a id))
+
+;; Implementing `sum` and `product` in terms of `accumulate`:
 
 (define (sum term a next b)
   (accumulate + 0 term a next b))
@@ -1283,13 +1317,13 @@ circumference ~> 62.8318
           (else (iter (next a) acc))))
   (iter a id))
 
-;; (a) Sum of squares of primes in the interval `a` to `b`
+;; (a) Sum of squares of primes in the interval from `a` to `b`:
 (define (sum-squared-primes a b)
   (filtered-accumulate + prime? 0 square a inc b))
 
 (sum-squared-primes 10 15) => 290
 
-;; (b) Product of positive integers below `n` relatively prime to `n`
+;; (b) Product of positive integers below `n` relatively prime to `n`:
 (define (product-rel-prime n)
   (define (rel-prime? i)
     (= (gcd i n) 1))
@@ -1310,12 +1344,10 @@ circumference ~> 62.8318
 (f square) => 4
 (f (lambda (z) (* z (+ z 1)))) => 6
 
-;; If we try evaluating the combination `(f f)`, we get the following process:
-; (f f)
-; (f 2)
-; (2 2)
-;; This gives an error, since 2 does not evaluate to a procedure. We cannot
-;; apply 2 to the argument 2 because that doesn't make any sense.
+;; If we try evaluating the combination `(f f)`, we get the process
+;; `(f f) => (f 2) => (2 2)`. This fails because 2 is not a procedure:
+
+(f f) =!> "2"
 
 (Section :1.3.3 "Procedures as General Methods")
 
@@ -1336,7 +1368,8 @@ circumference ~> 62.8318
 (define tolerance 0.001)
 (define (close-enough? x y) (< (abs (- x y)) tolerance))
 
-;; Half interval method: $\Theta(\log(|a-b|/\text{tolerance}))$ time.
+;; Half interval method: $\Theta(\log(\abs{a-b}/t))$ time where $t$ is
+;; `tolerance`.
 (define (half-interval-method f a b)
   (let ((a-value (f a))
         (b-value (f b)))
@@ -1372,11 +1405,13 @@ circumference ~> 62.8318
 
 (fixed-point cos 1.0) ~> 0.7390822985224023
 
-;; Without average damping (does not converge)
+;; Without average damping, it does not converge:
 (define (sqrt x)
   (fixed-point (lambda (y) (/ x y)) 1.0))
 
-;; With average damping (converges)
+; (sqrt 2) ; never terminates
+
+;; With average damping, it converges:
 (define (sqrt x)
   (fixed-point (lambda (y) (average y (/ x y))) 1.0))
 
@@ -1385,8 +1420,24 @@ circumference ~> 62.8318
 (Exercise ?1.35
   (use (:1.3.3.2 fixed-point)))
 
-;; See proofs.pdf for the proof that the golden ratio is a fixed point of the
-;; transformation x -> 1 + 1/x.
+;; **Theorem.** The golden ratio $\varphi$ is a fixed point of the
+;; transformation $x\mapsto 1+1/x$.
+;;
+;; _Proof._ We will show that for any $x>1$ and $y=1+1/x$, we have
+;; $\abs{y-\varphi}<\abs{x-\varphi}$, meaning each iteration brings the value
+;; closer to $\varphi$. Recall from [](?1.13) the golden ratio equation
+;; $\varphi+1=\varphi^2$, or equivalently $\varphi=1+1/\varphi$:
+;;
+;; $$\begin{aligned}
+;; \abs{y-\varphi} &= \abs{1+\frac{1}{x}-\varphi} \\
+;; &= \abs{\frac{x+1-\varphi x}{x}} \\
+;; &= \abs{\frac{x+1-(1+1/\varphi)x}{x}} & \text{since $\varphi=1+1/\varphi$} \\
+;; &= \abs{\frac{\varphi-x}{x\varphi}} \\
+;; &= \frac{\abs{x-\varphi}}{\abs{x\varphi}}.
+;; \end{aligned}$$
+;;
+;; Since $x>1$ and $\varphi>1$, we have $\abs{x\varphi}>1$, hence
+;; $\abs{y-\varphi}<\abs{x-\varphi}$ as required. $\blacksquare$
 
 (define golden-ratio (/ (+ 1 (sqrt 5)) 2))
 
@@ -1407,6 +1458,7 @@ golden-ratio
           next
           (try next))))
   (try first-guess))
+
 (define (f x) (/ (log 1000) (log x)))
 
 ;; Without average damping, it takes 28 approximations.
@@ -1421,7 +1473,7 @@ golden-ratio
 (Exercise ?1.37
   (use (?1.35 golden-ratio)))
 
-;; (a) Recursive
+;; (a) Recursive process:
 (define (cont-frac n d k)
   (define (helper i)
     (if (= i k)
@@ -1430,7 +1482,7 @@ golden-ratio
            (+ (d i) (helper (+ i 1))))))
   (helper 1))
 
-;; (b) Iterative
+;; (b) Iterative process:
 (define (cont-frac n d k)
   (define (iter i acc)
     (if (zero? i)
@@ -1439,24 +1491,26 @@ golden-ratio
                          (+ (d i) acc)))))
   (iter k 0))
 
-(define (always-one i) 1.0)
-(define (approx-gr k) (cont-frac always-one always-one k))
+;; Approximating the inverse golden ratio using `cont-frac`:
 
-;; When k = 11, the value is accurate to 4 decimal places.
-(approx-gr 01) ~> 1.0
-(approx-gr 02) ~> 0.5
-(approx-gr 03) ~> 0.6666666666666666
-(approx-gr 04) ~> 0.6000000000000001
-(approx-gr 05) ~> 0.625
-(approx-gr 06) ~> 0.6153846153846154
-(approx-gr 07) ~> 0.6190476190476191
-(approx-gr 08) ~> 0.6176470588235294
-(approx-gr 09) ~> 0.6181818181818182
-(approx-gr 10) ~> 0.6179775280898876
-(approx-gr 11) ~> 0.6180555555555556
+(define (always-one i) 1.0)
+(define (approx-igr k) (cont-frac always-one always-one k))
+
+;; When $k = 11$, the value is accurate to 4 decimal places:
+(approx-igr 01) ~> 1.0
+(approx-igr 02) ~> 0.5
+(approx-igr 03) ~> 0.6666666666666666
+(approx-igr 04) ~> 0.6000000000000001
+(approx-igr 05) ~> 0.625
+(approx-igr 06) ~> 0.6153846153846154
+(approx-igr 07) ~> 0.6190476190476191
+(approx-igr 08) ~> 0.6176470588235294
+(approx-igr 09) ~> 0.6181818181818182
+(approx-igr 10) ~> 0.6179775280898876
+(approx-igr 11) ~> 0.6180555555555556
 
 (define (round4 x) (* 1e-4 (truncate (* 1e4 x))))
-(round4 (approx-gr 11)) ~> (round4 (/ golden-ratio))
+(round4 (approx-igr 11)) ~> (round4 (/ golden-ratio))
 
 (Exercise ?1.38
   (use (?1.37 always-one cont-frac)))
@@ -1549,8 +1603,11 @@ golden-ratio
          (* b x)
          c))))
 
-(newtons-method (cubic -3 1 1) 1.0) ~> 1
-((cubic -3 1 1) 1) ~> 0
+;; `(newtons-method (cubic «a» «b» «c») 1.0)` approximates a zero of
+;; $x^3+ax^2+bx+c$:
+
+(define f (cubic -3 1 1))
+(f (newtons-method f 1.0)) ~> 0
 
 (Exercise ?1.41
   (use (:1.3.1 inc)))
@@ -1608,7 +1665,7 @@ golden-ratio
 (Exercise ?1.45
   (use (:1.3.3.2 fixed-point) (:1.3.4 average-damp) (?1.43 repeated)))
 
-;; We need to average-damp floor(log2(n)) times.
+;; We need to average-damp $\lfloor\log_2n\rfloor$ times.
 (define (nth-root x n)
   (fixed-point
    ((repeated average-damp
@@ -1647,9 +1704,9 @@ golden-ratio
     f)
    first-guess))
 
-;; This is slightly different from the original `fixed-point` implementation
-;; because it returns `guess` when it's good enough, not `next` (that is, the
-;; original always does one more improvement).
+;; This is slightly different from the original `fixed-point` because it returns
+;; `guess` when it's good enough, not `next` (so the original always does one
+;; more improvement).
 (fixed-point cos 1.0) ~> 0.7390893414033928
 
 ) ; end of SICP

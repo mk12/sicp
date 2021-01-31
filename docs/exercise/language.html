@@ -280,8 +280,8 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <h3 id="special-forms" class="anchor">
 <a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special forms
 </h3>
-<p><code>(capture-output <span class="ss">exp*</span> ...)</code> evaluates the given expressions and returns standard output captured in a string. The <code>=$&gt;</code> operator uses this internally, and it’s useful to invoke directly when you need to manipulate the string in some way.</p>
-<p><code>(hide-output <span class="ss">exp*</span> ...)</code> evaluates the given expressions while suppressing standard output. It returns the value of the last expression.</p>
+<p><code>(<span class="kw">capture-output</span> <span class="ss">exp*</span> ...)</code> evaluates the given expressions and returns standard output captured in a string. The <code>=$&gt;</code> operator uses this internally, and it’s useful to invoke directly when you need to manipulate the string in some way.</p>
+<p><code>(<span class="kw">hide-output</span> <span class="ss">exp*</span> ...)</code> evaluates the given expressions while suppressing standard output. It returns the value of the last expression.</p>
 <p><code>(<span class="kw">cons-stream</span> <span class="ss">a</span> <span class="ss">b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
 <p><code>(<span class="kw">with-eval</span> <span class="ss">eval</span> <span class="ss">env</span> <span class="ss">exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval</span> <span class="ss">exp*</span> <span class="ss">env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
 </main>
