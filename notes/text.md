@@ -575,19 +575,13 @@ Now we can do things like this:
 
 # 2: Building Abstractions with Data
 
-- Recap: we looked at computations processes and the role of procedures in program design.
-    - We saw primitive data (numbers), primitive operations (arithmetic operators), combinations, and abstractions.
-    - A procedure is a pattern for the local evolution of a process.
-    - We also saw higher-order procedures.
-- Now we are going to look at more complex data.
+- In [](@1) we wrote procedures that operated on simple numerical data.
+- In this chapter we are going to look at more complex data.
 
 > Just as the ability to define procedures enables us to deal with processes at a higher conceptual level than that of the primitive operations of the language, the ability to construct compound data objects enables us to deal with data at a higher conceptual level than that of the primitive data objects of the language. [@2]
 
-- Consider functions dealing with rational numbers: this becomes awkward if they can return only one number.
-- This is where compound data objects come in handy.
-- _Data abstraction_ is separating representation from use.
-- Data abstraction enables us to construct _abstraction barriers_ between different parts of the program.
-- We will look at closure, conventional interfaces, symbolic expressions, generic operations, and data-directed programming.
+- Consider functions dealing with rational numbers: only being able to return one number is awkward. This is where compound data objects become useful.
+- _Data abstraction_ separates representation from use. It enables us to construct _abstraction barriers_ between different parts of the program.
 
 ## 2.1: Introduction to Data Abstraction
 
