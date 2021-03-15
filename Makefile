@@ -33,7 +33,7 @@ heading_exceptions := \
 
 # HTML validation errors to ignore.
 validate_exceptions := \
-	'.*“mrow” not allowed as child of element “mo”.*'
+	'.*not allowed as child of element “mo”.*'
 
 .PHONY: all help test docs katex fmt lint lintss spell validate clean vscode
 
