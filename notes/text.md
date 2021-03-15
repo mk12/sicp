@@ -276,8 +276,7 @@ Like Fibonacci, the easy tree-recursive implementation involves a lot of redunda
 - We compare this using _order of growth_, a gross measure of the resources required by a process as the inputs becomes larger.
 - Let $n$ be a parameter that measures the size of a problem---it could be the input itself, the tolerance, the number of rows in the matrix, etc.
 - Let $R(n)$ be the amount of resources the process requires for a problem of size $n$. This could be time, space (amount of memory), number of registers used, etc.
-- We say that $R(n)$ has order of growth $Θ(f(n))$, or $R(n) = Θ(f(n))$,
-if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) ≤ R(n) ≤ Bf(n)$ for any sufficiently large value of $n$.
+- We say that $R(n)$ has order of growth $Θ(f(n))$, or $R(n) = Θ(f(n))$, if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) ≤ R(n) ≤ Bf(n)$ for any sufficiently large value of $n$.
 - The value $R(n)$ is sandwiched between $Af(n)$ and $Bf(n)$.
 - The linear recursive process for computing factorials had $Θ(n)$ time and $Θ(n)$ space (both linear), whereas the linear iterative process had $Θ(1)$ space (constant).
 - The order of growth is a crude description of the behavior of a process.

@@ -88,24 +88,23 @@
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Layered system
 </h3>
 <ul>
-<li>When we wrote the square root procedure, we used layers of abstraction. Someone else could have written <code>good-enough?</code>.</li>
+<li>When we wrote the square root procedure, we used layers of abstraction. Someone else could have written <code>good-enough?</code> for us without understanding the rest.</li>
 </ul>
 <blockquote>
 <p>So the crucial idea is that when we’re building things, we divorce the task of building things from the task of implementing the parts. And in a large system, of course, we have abstraction barriers like this at lots, and lots, and lots of levels. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/2b-compound-data/DrFkf-T-6Co.pdf#page=1" title="SICP Lecture 2B transcript, page 1">Abelson</a></span></p>
 </blockquote>
 <ul>
-<li>Now we will look at the same issues for data.</li>
-<li>There are means of combination for data as well, allowing us to combine primitive data into compound data.</li>
+<li>Now we will look at the same issues for data. There are means of combination for data as well, allowing us to combine primitive data into compound data.</li>
 <li>We will also see a methodology for abstraction with data.</li>
-<li>Key idea: build the system in layers, with abstraction barriers.</li>
+<li>The key idea is to build the system in layers, with abstraction barriers.</li>
 </ul>
 <h3 id="1.3" class="anchor">
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Rational number arithmetic
 </h3>
 <ul>
 <li>We already know how to express the arithmetic operators for fractions in math.</li>
-<li>Combining two fractions with addition, subtraction, multiplication, or division produces another fraction.</li>
-<li>The computations are easy—but how to we represent a rational number? They are not primitive numbers.</li>
+<li>Adding, subtracting, multiplying, or dividing two fractions produces another fraction.</li>
+<li>The computations are easy—but how to we represent a fraction?</li>
 <li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
 <li>We can implement a procedure for adding rationals like so:</li>
 </ul>
@@ -122,10 +121,12 @@
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Why do we need compound data?
 </h3>
 <ul>
-<li>Why bother with these data objects instead of just passing in four numbers? It doesn’t scale, and there is no abstraction.</li>
+<li>Why bother with these data objects instead of just passing in four numbers?
+<ul>
 <li>We would have to worry about all these temporary numbers.</li>
-<li>It’s confusing. We need abstraction.</li>
-<li>We need to create compound data objects for the same reason that we separate our program into procedures built on abstractions.</li>
+<li>It doesn’t scale. It’s confusing. We need abstraction.</li>
+</ul></li>
+<li>We need to create compound data objects for the same reason that we separate our programs into procedures built on abstractions.</li>
 </ul>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2
@@ -134,23 +135,18 @@
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Pairs
 </h3>
 <ul>
-<li>How do we actually make one of these “clouds”?</li>
-<li>We need a kind of glue to connect things.</li>
-<li>Lisp provides this: it is called <em>list structure</em>.</li>
-<li>The primitive <code>cons</code> allows us to construct <em>pairs</em>.</li>
-<li><code>cons</code> is obviously the <strong>cons</strong>tructor.</li>
-<li><code>car</code> and <code>cdr</code> are the selectors for pairs.</li>
-<li>For any <code>x</code> and <code>y</code>, <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code>.</li>
-<li>For any <code>x</code> and <code>y</code>, <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
-<li>We can represent conses with two boxes side by side with an arrow coming from each.</li>
-<li>This is called <em>box-and-pointer notation</em>.</li>
+<li>How do we make one of these “clouds”? We need a kind of glue to connect things.</li>
+<li>Lisp provides this: it is called <em>list structure</em>. It starts with the primitive procedure <code>cons</code>.</li>
+<li><code>cons</code> is obviously the <strong>cons</strong>tructor. <code>car</code> and <code>cdr</code> are the selectors for pairs.</li>
+<li>For any <code>x</code> and <code>y</code>, <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code>, and <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
+<li>We can represent conses with two boxes side by side with an arrow coming from each. This is called <em>box-and-pointer notation</em>.</li>
 </ul>
 <h3 id="2.2" class="anchor">
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Lowest terms
 </h3>
 <ul>
-<li>When we use the system to add a half and a quarter, it gives us six eights instead of three quarters. This isn’t what we want.</li>
-<li>This isn’t the problem of the addition procedure; the <code>make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
+<li>When we use the system to add a half and a quarter, it gives us six eighths instead of three quarters. This isn’t what we want.</li>
+<li>This isn’t the addition procedure’s problem; the <code>make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
 <li>We can use the greatest common divisor to fix this:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d)
@@ -164,8 +160,7 @@
 </h3>
 <ul>
 <li>The important thing with our rational arithmetic system is the abstraction layer.</li>
-<li>We have the rational arithmetic operators on one side and the pair constructor and selectors on the other.</li>
-<li>The procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code> are an abstraction barrier between the two.</li>
+<li>We have the rational arithmetic operators on one side and the pair constructor and selectors on the other. The abstraction barrier between the two is formed by the procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
 <li>We always want to separate <em>use</em> from <em>representation</em>.</li>
 <li>This methodology is called <em>data abstraction</em>.</li>
 </ul>
@@ -178,8 +173,8 @@
 <li>Is this talk of data abstraction just self-righteous BS?</li>
 <li>Maybe it would be marginally more efficient to skip the data abstraction!</li>
 <li>It goes back to naming. If you have the name of the spirit, you have control over it.</li>
-<li>One advantage: you might want to have alternative representations. If we use <code>cons</code> directly, we would have to reduce to lowest terms every time we make a rational number.</li>
-<li>With the data abstraction, we could even move the lowest terms stuff to the selectors—no other change in the code required.</li>
+<li>One advantage is the flexibility to use alternative representations.</li>
+<li>If we use <code>cons</code> directly, we would have to reduce to lowest terms every time we make a rational number. Using data abstraction, we can write the code once in the constructor.</li>
 <li>Data abstraction lets us postpone decisions.</li>
 </ul>
 <h3 id="2.5" class="anchor">
@@ -212,13 +207,12 @@
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Points and line segments
 </h3>
 <ul>
-<li>We could also use pairs to represent points on a plane.</li>
-<li>The constructor and accessors could use <code>cons</code>, <code>car</code>, and <code>cdr</code>, just like in the rational number system.</li>
-<li>We could use points (or vectors) as a building block to make line segments. This would be a multi-layered system.</li>
-<li>Segments, vectors, and pairs are all separated.</li>
+<li>We could also use pairs to represent points on a plane. The constructor and accessors could use <code>cons</code>, <code>car</code>, and <code>cdr</code>, just like in the rational number system.</li>
+<li>We could use points as a building block to make line segments.</li>
+<li>Now we have a multi-layered system: segments, points, and pairs are all separated.</li>
 <li>Without data abstraction, the procedure for calculating the length of a line segment is very hard to read; worse, it locks you into decisions about representation.</li>
-<li><code>cons</code> can combine anything, not just numbers. With line segments, we combine two pairs.</li>
-<li><em>Closure</em> means we can make pairs of pairs, not just pairs of numbers. We say that the means of combinations closes over the things that it makes.</li>
+<li><code>cons</code> can combine anything, not just numbers. With line segments, we combine pairs.</li>
+<li><em>Closure</em> means we can make pairs of pairs, not just pairs of numbers. We say that the means of combination <em>closes over</em> the things that it makes.</li>
 </ul>
 <h2 id="4" class="anchor">
 <a class="anchor__link link" href="#4" aria-hidden="true">#</a> Part 4
@@ -227,11 +221,11 @@
 <a class="anchor__link link" href="#4.1" aria-hidden="true">#</a> Abstract data and contracts
 </h3>
 <ul>
-<li>We’ve done a few simple examples. Now we’re going to talk about what it <em>means</em>, which is much harder.</li>
-<li>At the beginning, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).</li>
+<li>We’ve done a few examples. Now we’re going to discuss what it <em>means</em>—much harder.</li>
+<li>Earlier, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).</li>
 <li>We had defined a rational number representation in terms of <em>abstract data</em>.</li>
-<li>There’s a way of saying whether three procedures are suitable as a basis for rational number representation.</li>
 <li>We had a contract that the procedures have to fulfill: given a rational number <code>x</code> created with <code>(make-rat n d)</code>, we must have <code>(<span class="fu">=</span> (<span class="fu">/</span> (numer x) (denom x)) (<span class="fu">/</span> n d))</code>.</li>
+<li>This tells us whether three procedures are suitable as a basis for rational numbers.</li>
 </ul>
 <h3 id="4.2" class="anchor">
 <a class="anchor__link link" href="#4.2" aria-hidden="true">#</a> Implementation of pairs
@@ -239,7 +233,7 @@
 <ul>
 <li>Rational numbers <em>really</em> are just this contract, this axiom.</li>
 <li>They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.</li>
-<li>Pairs are the same: they happen to satisfy the contract that <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code> and <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
+<li>Pairs are similar: they happen to satisfy the contract that <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code> and <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
 <li>We can implement pairs with procedures. We don’t even need special primitives—all we need are lambdas:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> a b)
@@ -249,8 +243,7 @@
 (<span class="kw">define</span> (<span class="fu">car</span> x) (x <span class="cn">1</span>))
 (<span class="kw">define</span> (<span class="fu">cdr</span> x) (x <span class="cn">2</span>))</code></pre>
 <ul>
-<li>All we need to do is show that this satisfies the axiom.</li>
-<li>We can do that with the substitution model. It works.</li>
+<li>All we need to do is show that this satisfies the axiom. We can do that with the substitution model. It works.</li>
 <li>You couldn’t tell if <code>cons</code>, <code>car</code>, and <code>cdr</code> were implemented in this way or not.</li>
 </ul>
 <h3 id="4.3" class="anchor">

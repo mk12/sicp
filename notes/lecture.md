@@ -397,20 +397,19 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Layered system
 
-- When we wrote the square root procedure, we used layers of abstraction. Someone else could have written `good-enough?`.
+- When we wrote the square root procedure, we used layers of abstraction. Someone else could have written `good-enough?` for us without understanding the rest.
 
 > So the crucial idea is that when we're building things, we divorce the task of building things from the task of implementing the parts. And in a large system, of course, we have abstraction barriers like this at lots, and lots, and lots of levels. [@2b.p1]
 
-- Now we will look at the same issues for data.
-- There are means of combination for data as well, allowing us to combine primitive data into compound data.
+- Now we will look at the same issues for data. There are means of combination for data as well, allowing us to combine primitive data into compound data.
 - We will also see a methodology for abstraction with data.
-- Key idea: build the system in layers, with abstraction barriers.
+- The key idea is to build the system in layers, with abstraction barriers.
 
 ### Rational number arithmetic
 
 - We already know how to express the arithmetic operators for fractions in math.
-- Combining two fractions with addition, subtraction, multiplication, or division produces another fraction.
-- The computations are easy---but how to we represent a rational number? They are not primitive numbers.
+- Adding, subtracting, multiplying, or dividing two fractions produces another fraction.
+- The computations are easy---but how to we represent a fraction?
 - We need to apply the strategy of wishful thinking: let's imagine that we have procedures `make-rat`, `numer`, and `denom`.
 - We can implement a procedure for adding rationals like so:
 
@@ -427,30 +426,25 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Why do we need compound data?
 
-- Why bother with these data objects instead of just passing in four numbers? It doesn't scale, and there is no abstraction.
-- We would have to worry about all these temporary numbers.
-- It's confusing. We need abstraction.
-- We need to create compound data objects for the same reason that we separate our program into procedures built on abstractions.
+- Why bother with these data objects instead of just passing in four numbers?
+    - We would have to worry about all these temporary numbers.
+    - It doesn't scale. It's confusing. We need abstraction.
+- We need to create compound data objects for the same reason that we separate our programs into procedures built on abstractions.
 
 ## Part 2
 
 ### Pairs
 
-- How do we actually make one of these "clouds"?
-- We need a kind of glue to connect things.
-- Lisp provides this: it is called _list structure_.
-- The primitive `cons` allows us to construct _pairs_.
-- `cons` is obviously the **cons**tructor.
-- `car` and `cdr` are the selectors for pairs.
-- For any `x` and `y`, `(car (cons x y))` is `x`.
-- For any `x` and `y`, `(cdr (cons x y))` is `y`.
-- We can represent conses with two boxes side by side with an arrow coming from each.
-- This is called _box-and-pointer notation_.
+- How do we make one of these "clouds"? We need a kind of glue to connect things.
+- Lisp provides this: it is called _list structure_. It starts with the primitive procedure `cons`.
+- `cons` is obviously the **cons**tructor. `car` and `cdr` are the selectors for pairs.
+- For any `x` and `y`, `(car (cons x y))` is `x`, and `(cdr (cons x y))` is `y`.
+- We can represent conses with two boxes side by side with an arrow coming from each. This is called _box-and-pointer notation_.
 
 ### Lowest terms
 
-- When we use the system to add a half and a quarter, it gives us six eights instead of three quarters. This isn't what we want.
-- This isn't the problem of the addition procedure; the `make-rat` procedure should be responsible for reducing to lowest terms.
+- When we use the system to add a half and a quarter, it gives us six eighths instead of three quarters. This isn't what we want.
+- This isn't the addition procedure's problem; the `make-rat` procedure should be responsible for reducing to lowest terms.
 - We can use the greatest common divisor to fix this:
 
 ```
@@ -464,8 +458,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Abstraction layer
 
 - The important thing with our rational arithmetic system is the abstraction layer.
-- We have the rational arithmetic operators on one side and the pair constructor and selectors on the other.
-- The procedures `make-rat`, `numer`, and `denom` are an abstraction barrier between the two.
+- We have the rational arithmetic operators on one side and the pair constructor and selectors on the other. The abstraction barrier between the two is formed by the procedures `make-rat`, `numer`, and `denom`.
 - We always want to separate _use_ from _representation_.
 - This methodology is called _data abstraction_.
 
@@ -476,8 +469,8 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Is this talk of data abstraction just self-righteous BS?
 - Maybe it would be marginally more efficient to skip the data abstraction!
 - It goes back to naming. If you have the name of the spirit, you have control over it.
-- One advantage: you might want to have alternative representations. If we use `cons` directly, we would have to reduce to lowest terms every time we make a rational number.
-- With the data abstraction, we could even move the lowest terms stuff to the selectors---no other change in the code required.
+- One advantage is the flexibility to use alternative representations.
+- If we use `cons` directly, we would have to reduce to lowest terms every time we make a rational number. Using data abstraction, we can write the code once in the constructor.
 - Data abstraction lets us postpone decisions.
 
 ### Designing systems
@@ -501,29 +494,28 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Points and line segments
 
-- We could also use pairs to represent points on a plane.
-- The constructor and accessors could use `cons`, `car`, and `cdr`, just like in the rational number system.
-- We could use points (or vectors) as a building block to make line segments. This would be a multi-layered system.
-- Segments, vectors, and pairs are all separated.
+- We could also use pairs to represent points on a plane. The constructor and accessors could use `cons`, `car`, and `cdr`, just like in the rational number system.
+- We could use points as a building block to make line segments.
+- Now we have a multi-layered system: segments, points, and pairs are all separated.
 - Without data abstraction, the procedure for calculating the length of a line segment is very hard to read; worse, it locks you into decisions about representation.
-- `cons` can combine anything, not just numbers. With line segments, we combine two pairs.
-- _Closure_ means we can make pairs of pairs, not just pairs of numbers. We say that the means of combinations closes over the things that it makes.
+- `cons` can combine anything, not just numbers. With line segments, we combine pairs.
+- _Closure_ means we can make pairs of pairs, not just pairs of numbers. We say that the means of combination _closes over_ the things that it makes.
 
 ## Part 4
 
 ### Abstract data and contracts
 
-- We've done a few simple examples. Now we're going to talk about what it _means_, which is much harder.
-- At the beginning, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).
+- We've done a few  examples. Now we're going to discuss what it _means_---much harder.
+- Earlier, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).
 - We had defined a rational number representation in terms of _abstract data_.
-- There's a way of saying whether three procedures are suitable as a basis for rational number representation.
 - We had a contract that the procedures have to fulfill: given a rational number `x` created with `(make-rat n d)`, we must have `(= (/ (numer x) (denom x)) (/ n d))`.
+- This tells us whether three procedures are suitable as a basis for rational numbers.
 
 ### Implementation of pairs
 
 - Rational numbers _really_ are just this contract, this axiom.
 - They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.
-- Pairs are the same: they happen to satisfy the contract that `(car (cons x y))` is `x` and `(cdr (cons x y))` is `y`.
+- Pairs are similar: they happen to satisfy the contract that `(car (cons x y))` is `x` and `(cdr (cons x y))` is `y`.
 - We can implement pairs with procedures. We don't even need special primitives---all we need are lambdas:
 
 ```
@@ -535,8 +527,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 (define (cdr x) (x 2))
 ```
 
-- All we need to do is show that this satisfies the axiom.
-- We can do that with the substitution model. It works.
+- All we need to do is show that this satisfies the axiom. We can do that with the substitution model. It works.
 - You couldn't tell if `cons`, `car`, and `cdr` were implemented in this way or not.
 
 ### Conclusion

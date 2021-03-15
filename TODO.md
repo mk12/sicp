@@ -3,15 +3,15 @@
 - test in all browsers, without JS, without CSS
 - exercises appendix for core.ss etc.
 - deal with the OLD proofs, diagrams
-- en/em dashes in comments
+- en/em dashes in scheme file comments
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
 - make spellc.m interactive
 - perfection:
-    - text: 1.1, 1.2, 1.3, 2, 2.1*
-    - lecture: 1a, 1b, 2a
+    - text: 1.1, 1.2, 1.3, 2, 2.1
+    - lecture: 1a, 1b, 2a, 2b
     - exercise: 1.1, 1.2, 1.3
 - run HTML simplifier/minifier inside katex.ts just on the math
 + remove ` ; NOALIGN` from code blocks on website
