@@ -585,19 +585,29 @@ Now we can do things like this:
 
 ## 2.1: Introduction to Data Abstraction
 
-- We already know about procedural abstraction: the procedure is a black box, and we don't care how it is implemented internally.
+- We already know about [procedural abstraction](@1.1.8), which suppresses implementation details by treating procedures as black boxes.
 - Data abstractions allows us to isolate how a compound data object is used from the details of its actual representation.
 
 > That is, our programs should use data in such a way as to make no assumptions about the data that are not strictly necessary for performing the task at hand. [@2.1]
 
 - There is a concrete data representation behind the abstraction.
-- The interface between the two parts of the system is a set of procedures: selectors and constructors.
+- The interface is made up of procedures called _constructors_ and _selectors_.
 
 ### 2.1.1: Example: Arithmetic Operations for Rational Numbers
 
 - We want to add, subtract, multiply, divide, and test equality with our rational numbers.
-- We assume we have `(make-rat «n» «d»)`, `(number «x»)`, and `(denom «x»)` available as the constructor and selectors.
-- This is wishful thinking, and it is a good technique.
+- Assume we have `(make-rat «n» «d»)`, `(number «x»)`, and `(denom «x»)` available as the constructor and selectors. This is wishful thinking, and it is a good technique.
+- Here is the implementation for addition:
+
+```
+(define (add-rat x y)
+  (make-rat (+ (* (numer x) (denom y))
+               (* (numer y) (denom x)))
+            (* (denom x) (denom y))))
+```
+
+#### Pairs
+
 - A _pair_ is a concrete structure that we create with `cons`.
 - We extract the parts of the pair with `car` and `cdr`.
 
@@ -617,13 +627,24 @@ Now we can do things like this:
 
 - This is all the glue we need to implement all sorts of complex data structures.
 - Data objects constructed from pairs are _list-structured_ data.
-- To ensure that our rational numbers are always in lowest terms, we need `make-rat` to divide the numerator and the denominator by their greatest common divisor (GCD).
-
-#### Pairs
-<!-- DELETE -->
 
 #### Representing rational numbers
-<!-- DELETE -->
+
+- Now we can represent rational numbers:
+
+```
+(define (make-rat n d) (cons n d))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+```
+
+- To ensure that our rational numbers are always in lowest terms, we need `make-rat` to divide the numerator and the denominator by their greatest common divisor (GCD).
+
+```
+(define (make-rat n d)
+  (let ((g (gcd n d)))
+    (cons (/ n g) (/ d g))))
+```
 
 ::: exercises
 2.1
@@ -633,7 +654,7 @@ Now we can do things like this:
 
 > In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data. [@2.1.2]
 
-- The details on the other side of an abstraction barrier are irrelevant to the code on this side.
+- Details on the other side of an abstraction barrier are irrelevant to the code on this side.
 - This makes programs easier to maintain and modify.
 
 > Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations. [@2.1.2]
@@ -651,7 +672,7 @@ Now we can do things like this:
     3. We can select the denominator with `(denom x)`.
     4. For all values of `x`, `(/ (numer x) (denom x))` must equal $n/d$.
 - For pairs, it is even simpler: we need three operations, which we will call `cons`, `car`, and `cdr`, such that if `z` is `(cons x y)`, then `(car z)` is `x` and `(cdr z)` is `y`.
-- Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves and nothing else:
+- Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves:
 
 ```
 (define (cons x y)
@@ -663,7 +684,7 @@ Now we can do things like this:
 
 - This doesn't look like _data_, but it works.
 - This is how you implement pairs in the λ-calculus.
-- In real Lisp implementations, pairs are implemented directly, for reasons of efficiency---but they _could_ be implemented this way and you wouldn't be able to tell the difference.
+- In real Lisp implementations, pairs are implemented directly, for reasons of efficiency. But they _could_ be implemented this way and you wouldn't be able to tell the difference.
 
 > The ability to manipulate procedures as objects automatically provides the ability to represent compound data. [@2.1.3]
 
@@ -676,7 +697,7 @@ Now we can do things like this:
 ### 2.1.4: Extended Exercise: Interval Arithmetic
 
 - We want to design a system that allows us to manipulate inexact quantities with known precision (uncertainty).
-- To do this, we need arithmetic operations for combining intervals---ranges of possible values.
+- We need arithmetic operations for combining intervals (ranges of possible values).
 
 ::: exercises
 2.7-16
