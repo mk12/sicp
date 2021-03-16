@@ -15,6 +15,9 @@
 
 (Section :2.1.1 "Example: Arithmetic Operations for Rational Numbers")
 
+;; Assuming we have `make-rat`, `numer`, and `denom`, we can implement
+;; arithmetic operations for rational numbers:
+
 (define (add-rat x y)
   (make-rat (+ (* (numer x) (denom y))
                (* (numer y) (denom x)))
@@ -33,7 +36,8 @@
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
 
-;; Pairs
+;; A _pair_ is a compound-data primitive implemented by the procedures `cons`,
+;; `car`, and `cdr`:
 
 (define x (cons 1 2))
 (car x) => 1
@@ -44,7 +48,7 @@
 (car (car z)) => 1
 (car (cdr z)) => 3
 
-;; Representing rational numbers
+;; We can represent rational numbers using pairs:
 
 (define (make-rat n d) (cons n d))
 (define (numer x) (car x))
@@ -63,6 +67,8 @@
 (add-rat one-half one-third) => '(5 . 6)
 (mul-rat one-half one-third) => '(1 . 6)
 (add-rat one-third one-third) => '(6 . 9)
+
+;; We can change `make-rat` to reduce to lowest terms using the GCD:
 
 (define (make-rat n d)
   (let ((g (gcd n d)))
@@ -89,6 +95,8 @@
 (make-rat 5 -10) => '(-1 . 2)
 
 (Section :2.1.2 "Abstraction Barriers")
+
+;; Another way of reducing to lowest terms is to do it in the selectors:
 
 (define (make-rat n d) (cons n d))
 (define (numer x)
@@ -127,7 +135,8 @@
 (define (area rect)
   (* (width-rect rect) (height-rect rect)))
 
-;; Representation 1: two corners
+;; First representation: two corners.
+
 (define make-rect cons)
 (define p1-rect car)
 (define p2-rect cdr)
@@ -142,7 +151,8 @@
 (perimeter rect) => 16
 (area rect) => 15
 
-;; Representation 2: corner and dimensions
+;; Second representation: corner and dimensions.
+
 (define (make-rect p w h) (cons p (cons w h)))
 (define point-rect car)
 (define width-rect cadr)
@@ -153,6 +163,8 @@
 (area rect) => 15
 
 (Section :2.1.3 "What Is Meant by Data?")
+
+;; We can implement `cons`, `car`, and `cdr` with procedures alone:
 
 (define (cons x y)
   (define (dispatch m)
@@ -178,9 +190,13 @@
 
 (Exercise ?2.5)
 
-;; Due to the Fundamental Theorem of Arithmetic, 2^a*3^b will always produce a
-;; unique product given a unique pair of integers a and b.
+;; Due to the [fundamental theorem of arithmetic][ftoa], $2^a3^b$ will always
+;; produce a unique product given a unique pair of integers $a$ and $b$.
+;;
+;; [ftoa]: https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic
+
 (define (cons x y) (* (expt 2 x) (expt 3 y)))
+
 (define (count-divides a b)
   (define (count a n)
     (let ((q (/ a b)))
@@ -188,6 +204,7 @@
           (count q (+ n 1))
           n)))
   (count a 0))
+
 (define (car z) (count-divides z 2))
 (define (cdr z) (count-divides z 3))
 
@@ -196,13 +213,13 @@
 
 (Exercise ?2.6)
 
-;; Church numerals
 (define zero (lambda (f) (lambda (x) x)))
 (define (add1 n)
   (lambda (f) (lambda (x) (f ((n f) x)))))
 
 (define one (lambda (f) (lambda (x) (f x))))
 (define two (lambda (f) (lambda (x) (f (f x)))))
+
 (define (add a b)
   (lambda (f) (lambda (x) ((a f) ((b f) x)))))
 
@@ -248,10 +265,9 @@
 (Exercise ?2.8
   (use (?2.7 lower-bound make-interval upper-bound)))
 
-;; The minimum value the difference could be is the difference of the lower
-;; bound of the minuend and the upper bound of the subtrahend. The maximum
-;; value would be the difference of the upper bound of the minuend and the
-;; lower bound of the subtrahend.
+;; The difference between two intervals reaches a minimum at the minuend's lower
+;; bound minus the subtrahend's upper bound. It reaches a maximum at the
+;; minuend's upper bound minus the subtrahend's lower bound.
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (upper-bound y))
                  (- (upper-bound x) (lower-bound y))))
@@ -264,16 +280,20 @@
   (/ (- (upper-bound x) (lower-bound x)) 2))
 
 ;; Consider arbitrary intervals `x` and `y`:
+
 (define x1 (random 1000))
 (define x2 (random 1000))
 (define y1 (random 1000))
 (define y2 (random 1000))
+
 (define x (make-interval x1 x2))
 (define y (make-interval y1 y2))
+
 (width x) => (/ (- x2 x1) 2)
 (width y) => (/ (- y2 y1) 2)
 
 ;; The width of the sum is the sum of the widths:
+
 (width (add-interval x y))
 => (width (make-interval (+ x1 y1) (+ x2 y2)))
 => (/ (- (+ x2 y2) (+ x1 y1)) 2)
@@ -282,6 +302,7 @@
 => (+ (width x) (width y))
 
 ;; The width of the difference is also the sum of the widths:
+
 (width (sub-interval x y))
 => (width (make-interval (- x1 y2) (- x2 y1)))
 => (/ (- (- x2 y1) (- x1 y2)) 2)
@@ -289,26 +310,25 @@
 => (+ (/ (- x2 x1) 2) (/ (- y2 y1) 2))
 => (+ (width x) (width y))
 
-;; The width of a product or quotient is not a function only of the
-;; widths of the intervals being multiplied or divided. A counterexample:
+;; The width of a product or quotient is not a function of the widths of the
+;; intervals being multiplied or divided. Here is a counterexample:
 
 (define x (make-interval 0 10))
-(define y (make-interval 0 2))
+(define y (make-interval 4 6))
 (width x) => 5
 (width y) => 1
-(width (mul-interval x y)) => 10
-
-;; The same input widths, 5 and 1, can produce a different product width,
-;; therefore the product width is not a function of only the input widths:
+(width (mul-interval x y)) => 30
+(width (div-interval x y)) ~> 1.25
 
 (define x (make-interval -5 5))
 (define y (make-interval -1 1))
 (width x) => 5
 (width y) => 1
 (width (mul-interval x y)) => 5
+(width (div-interval x y)) ~> 5.0
 
-;; This also applies to divison since any division can be restated as a
-;; multiplication problem: (/ x y) becomes (* x (/ y)).
+;; In both cases the input widths are 5 and 1, but the product widths are
+;; different (30 and 5), as are the quotient widths (1.25 and 5).
 
 (Exercise ?2.10
   (use (:2.1.4 mul-interval) (?2.7 lower-bound make-interval upper-bound)))
@@ -356,6 +376,7 @@
   (average (lower-bound x) (upper-bound x)))
 (define (width x)
   (/ (- (upper-bound x) (lower-bound x)) 2))
+
 (define (make-center-percent c p)
   (make-center-width c (* c (/ p 100))))
 (define (percent x)
@@ -369,31 +390,31 @@
 (Exercise ?2.13
   (use (:2.1.4 mul-interval) (?2.12 make-center-percent percent)))
 
-;; Under the assumption of small percent tolerances, there is a simple formula
-;; for the approximate percent tolerance of the product of two intervals in
-;; terms of the tolerances of the factors: it is their sum. Assuming all numbers
-;; are positive, we have
-;;     [a,b] * [c,d] = [ac,bd].
-;; We can define a single interval in terms of its centre and percentage:
-;;     i = [c-cp/100,c+cp/100].
-;; Factoring out the centre gives us
-;;     i = [c(1-p/100),c(1+p/100)],
-;; And multiplying two intervals can now be written as
-;;     ij = [ci*cj(1-pi/100)(1-pj/100),ci*cj(1+pi/100)(1+pj/100)].
-;; We can expand the bracketed factors:
-;;       (1-pi/100)(1-pj/100)
-;;     = 1 - pi/100 - pj/100 + pi*pj/10000
-;;     = 1 - (pi+pj)/100 + pi*pj/10000.
-;;       (1+pi/100)(1+pj/100)
-;;     = 1 + pi/100 + pj/100 + pi*pj/10000
-;;     = 1 + (pi+pj)/100 + pi*pj/10000.
-;; We can substitute this back into the interval multiplication:
-;;     ij = [ci*cj(1-(pi+pj)/100+pi*pj/10000),ci*cj(1+(pi+pj)/100+pi*pj/10000)].
-;; Since pi and pj are small, we can drop the pi*pj/10000 terms:
-;;     ij = [ci*cj(1-(pi+pj)/100),ci*cj(1+(pi+pj)/100)].
-;; This is back into centre & percent form. The centre of the product interval
-;; is ci*cj, and its percentage uncertainty is pi + pj -- the sum. We can try it
-;; out to make sure:
+;; Under the assumption of small percentage tolerances, there is a simple
+;; formula for the approximate percent tolerance of the product of two intervals
+;; in terms of the tolerances of the factors: their sum. Consider two intervals
+;; $i$ and $j$, represented both in lower-upper bound form and in
+;; center-tolerance form:
+;;
+;; $$\begin{aligned}
+;; i &= [a_i,b_i] = [c_i(1-t_i),c_i(1+t_i)], \\
+;; j &= [a_j,b_j] = [c_j(1-t_j),c_j(1+t_j)].
+;; \end{aligned}$$
+;;
+;; Assuming all numbers are positive, their product is
+;;
+;; $$\begin{aligned}
+;; ij &= [a_ia_j,b_ib_j] \\
+;;    &= [c_ic_j(1-t_i)(1-t_j),c_ic_j(1+t_i)(1+t_j)] \\
+;;    &= [c_ic_j(1-t_i-t_j+t_it_j),c_ic_j(1+t_i+t_j+t_it_j)].
+;; \end{aligned}$$
+;;
+;; Since $t_i$ and $t_j$ are small, their product $t_it_j$ is negligible, so we
+;; can approximate:
+;;
+;; $$ij \approx [c_ic_j(1-(t_i+t_j)),c_ic_j(1+(t_i+t_j))]$$
+;;
+;; A simple test bears out this approximation:
 
 (define i (make-center-percent 30 1))
 (define j (make-center-percent 25 3))
@@ -416,7 +437,7 @@
      (add-interval (div-interval one r1)
                    (div-interval one r2)))))
 
-;; Lem is right. The uncertainty of the result is different for mathematically
+;; Lem is right. The resulting uncertainty is different for mathematically
 ;; equivalent expressions calculated by `par1` and `par2`:
 
 (define r1 (make-center-percent 10000 5))
@@ -425,8 +446,8 @@
 (percent (par2 r1 r2)) ~> 9.841433938087881
 
 ;; When we divide an interval by itself, we should get exactly one. Instead, we
-;; get an interval whose center is an approximation of one, and it still has a
-;; fair amount of uncertainty.
+;; get an interval whose center is approximately one, with a fair amount of
+;; uncertainty.
 
 (define i (make-center-percent 5000 2))
 (define j (make-center-percent 2500 1))
@@ -437,27 +458,26 @@
 
 (Exercise ?2.15)
 
-;; Yes, Eva is right. The interval calculation system produces different
-;; intervals for mathematically equivalent expressions. When the expressions are
-;; written in such a form that no uncertain variable is repeated, the
-;; uncertainty of the result is smaller, and this is the more correct value.
-;; This is because, when an uncertain variable is repeated, the interval
-;; arithmetic procedures have no way of knowing that they are dealing with the
-;; same value twice. They introduce uncertainty in multiple places as if the
-;; repetitions were separate measurements. For example, If we manipulate an
-;; algebraic expression by dividing a value by itself, we introduce error
-;; because the interval arithmetic division does not produce exactly one.
+;; Yes, Eva is right. When the expressions are written in such a form that no
+;; uncertain variable is repeated, the uncertainty of the result is smaller, and
+;; this is the more correct value. When an uncertain variable is repeated, the
+;; interval arithmetic procedures have no way of knowing that they are dealing
+;; with the same value twice, so they combine uncertainties as if they were
+;; separate measurements. For example, If we manipulate an algebraic expression
+;; by dividing a value by itself, we introduce error because the interval
+;; arithmetic division does not produce exactly one.
 
 (Exercise ?2.16)
 
 ;; In general, equivalent expressions may lead to different answers because
 ;; identical intervals are treated indepedently even if they represent the same
-;; measurement. This is called the dependency problem. For complicated
+;; measurement. This is called the [dependency problem][dp]. For complicated
 ;; functions, it is not always possible to eliminate repetitions of an interval
 ;; in the expression, so there is an unwanted expansion in the resulting
-;; intervals. It is not possible to write an interval arithmetic package that
-;; does not have this shortcoming. The best we can do is attempt to rewrite
-;; expressions so that intervals are not repeated (not always possible).
+;; intervals. It is impossible to completely avoid this shortcoming. The best we
+;; can do is attempt to rewrite expressions so that intervals are not repeated.
+;;
+;; [dp]: https://en.wikipedia.org/wiki/Interval_arithmetic#Dependency_problem
 
 (Section :2.2 "Hierarchical Data and the Closure Property")
 
