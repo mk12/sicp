@@ -336,7 +336,7 @@ static void postprocess_html(FILE *in, FILE *out) {
                     fputs(close_em, out);
                     p = n + strlen(close_em);
                     if ((*p == ':' || *p == ';')
-                        && (n[-1] == 'd' || n[-1] == 'r')) {
+                        && (n[-1] == 'd' || n[-1] == 'r' || n[-1] == 't')) {
                         fputs("&hairsp;", out);
                     }
                     continue;
