@@ -705,27 +705,21 @@ Now we can do things like this:
 ## 2.2: Hierarchical Data and the Closure Property
 
 - Pairs form a primitive "glue" for compound data objects.
-- We can visualize cons pairs with _box-and-pointer_ notation.
-- Each pair is a double box. Both the left box and the right box contain an arrow pointing to something else: either to a primitive data object, or to another cons pair.
-- The _closure property_ of cons is the ability to make pairs whose elements are pairs.
-- Closure allows us to create hierarchal structures.
+- We can visualize cons pairs with _box-and-pointer_ notation. Each pair is a double box, and both sides have an arrow pointing to a primitive data object, or to another cons pair.
+- The _closure property_ of cons is the ability to make pairs whose elements are pairs. This allows us to create hierarchal structures.
 - We have been using closure all along with combinations. Now, we are going to use closure for compound data.
 
 ### 2.2.1: Representing Sequences
 
-- Among the things we can build with pairs is a sequence.
-- A sequence is an ordered collection of data objects.
-- The `car` of each pair is the corresponding item in the chain, and the `cdr` of the pair is the next pair in the chain.
-- The `cdr` of the final pair is a special value, nil.
-- This sequence of nested conses is called a _list_.
-- We usually represent such lists by placing each element one after the other and enclosing the whole thing in parentheses.
+- One thing we can build with pairs is a _sequence_: an ordered collection of data objects.
+- This is a chain of pairs where each `car` points to a data value, and each `cdr` points to the next pair in the chain. The `cdr` of the final pair is a special value, `nil`.
+- This sequence of nested conses is called a _list_. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.
 - The procedure `car` gives us the first item; `cdr` gives us the sublist containing all items but the first; `cons` returns a list with an item added to the front.
-- The nil value can be thought of as an empty list.
+- The `nil` value can be thought of as an empty list.
 
 #### List operations
 
-- We can get at the nth item of the list by `cdr`ing one less than $n$ times, and then taking the `car`.
-- Scheme includes a primitive predicate `null?` which is true if its argument is the empty list.
+- We can get the nth item of a list by `cdr`ing $n-1$ times, and then taking the `car`.
 
 ```
 (define (list-ref items n)
@@ -734,6 +728,7 @@ Now we can do things like this:
       (list-ref (cdr items) (- n 1))))
 ```
 
+- Scheme includes a primitive predicate `null?` which is true if its argument is `nil`.
 - We often write recursive procedures that `cdr` all the way through the list.
 
 ```
@@ -758,8 +753,7 @@ Now we can do things like this:
 
 #### Mapping over lists
 
-- Useful operation: applying the same transformation to each element in a list, producing a new list.
-- This is a higher-order procedure called `map`.
+- The higher-order procedure `map` applies the same transformation to each element in a list, producing a new list.
 
 ```
 (define (map f xs)
@@ -769,9 +763,8 @@ Now we can do things like this:
             (map f (cdr xs)))))
 ```
 
-- Using map, we can do `(map abs (list -1 5 -3 0 2 -2))` and get back the list `(1 5 3 0 2 2)`.
-- Map establishes a higher level of abstraction for dealing with lists. It suppressive the recursive detail.
-- We think about the process differently when we use map.
+- For example, `(map abs (list -1 5 -3 0 2 -2))` gives the list `(1 5 3 0 2 2)`.
+- `map` establishes a higher level of abstraction for dealing with lists; it suppressive the recursive detail. We think about the process differently when we use `map`.
 
 > This abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. [@2.2.1]
 
@@ -781,10 +774,11 @@ Now we can do things like this:
 
 ### 2.2.2: Hierarchical Structures
 
-- We can represent lists whose elements themselves may also be lists. We can also think of them as _trees_.
+- We can represent lists whose elements themselves are also lists.
+- We can also think of these structures as _trees_.
 - Recursion is a natural tool for dealing with trees.
-- The primitive predicate `pair?` returns true if its argument is a pair (formed with cons).
-- We can count the number of leaves in a tree with this:
+- The primitive predicate `pair?` returns true if its argument is a pair.
+- We can count the number of leaves in a tree like so:
 
 ```
 (define (count-leaves x)
@@ -801,7 +795,7 @@ Now we can do things like this:
 #### Mapping over trees
 
 - We can deal with trees using `map` together with recursion.
-- This makes it possible to apply an operation to all the leaves in a tree, for example.
+- This allows us to apply an operation to all the leaves in a tree, for example.
 
 ::: exercises
 2.30-32
@@ -810,17 +804,15 @@ Now we can do things like this:
 ### 2.2.3: Sequences as Conventional Interfaces
 
 - Abstractions preserves the flexibility to experiment with alternative representations.
-- Another powerful design principle for working with data structures is the use of conventional interfaces.
+- The use of _conventional interfaces_ is another powerful design principle.
 - To make abstract operations for things other than numbers, we need to have a conventional style in which we manipulate data.
 
 #### Sequence operations
 
-- Key to organizing programs to reflect signal-flow structure: focus on the signals and represent them as lists.
-- To help, we can implement `filter` and `accumulate`.
-- Expressing programs as sequence operations helps us make program designs that are _modular_---made of relatively independent pieces that we can connect in flexible ways.
-- This is a strategy for controlling complexity.
-- A vast range of operations can be expressed as sequence operations, even if you don't realize it at first.
-- Sequences (here, they are lists) serve as a conventional interface for the modules of the program.
+- We want to organize programs to reflect signal-flow structure. To do this, we focus on the signals and represent them as lists, and implement sequence operations on them.
+- Expressing programs as sequence operations helps us make program designs that are _modular_---made of relatively independent pieces that we can connect in flexible ways. This is a strategy for controlling complexity.
+- A surprisingly vast range of operations can be expressed as sequence operations.
+- Sequences serve as a conventional interface for the modules of the program.
 
 ::: exercises
 2.33-39
@@ -828,9 +820,8 @@ Now we can do things like this:
 
 #### Nested mappings
 
-- For many computations, the sequence paradigm can be used where loops would otherwise be needed.
-- Sometimes we need to use _nested_ mappings, where each mapping maps to a second set of mappings.
-- We can use `mapcat` to flatten the nested mapping result into one list at the end.
+- For many computations, the sequence paradigm can be used instead of loops.
+- Sometimes we need _nested_ mappings, where each mapping maps to a second set of mappings. We can use `mapcat` to flatten the result into one list at the end.
 - The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!
 
 ```
@@ -849,8 +840,8 @@ Now we can do things like this:
 
 ### 2.2.4: Example: A Picture Language
 
-- We will use a simple language for drawing pictures.
-- The data objects are represented as procedures rather than as list structure.
+- In this section, we will create a simple language for drawing pictures.
+- The data objects are represented as procedures, not as list structure.
 
 #### The picture language
 
@@ -858,7 +849,13 @@ Now we can do things like this:
 - The painter draws an image transformed into a parallelogram.
 - We combine images with operations like `beside` and `below`.
 - We transform single images with operations like `flip-vert` and `flip-horiz`.
-- We can build up complexity easily because painters are closed under the language's means of combination (this is closure).
+- We can build up complexity easily thanks to closure: the painters are closed under the language's means of combination. For example:
+
+```
+(define (flipped-pairs painter)
+  (let ((painter2 (beside painter (flip-vert painter))))
+    (below painter2 painter2)))
+```
 
 ::: exercises
 2.44
@@ -866,8 +863,17 @@ Now we can do things like this:
 
 #### Higher-order operations
 
-- Just as we have higher-order procedures, we can have higher-order painting operations.
+- Just as we have higher-order procedures, we can have higher-order painter operations.
 - We can manipulate the painter operations rather than manipulating the painters directly.
+- Here is an example higher-order painter operation:
+
+```
+(define (square-of-four tl tr bl br)
+  (lambda (painter)
+    (let ((top (beside (tl painter) (tr painter)))
+          (bottom (beside (bl painter) (br painter))))
+      (below bottom top))))
+```
 
 ::: exercises
 2.45
@@ -875,10 +881,9 @@ Now we can do things like this:
 
 #### Frames
 
-- Painters paint their contents in frames.
-- A frame can be represented by three vectors: a position vector for one of the corners, and two vectors going along the edges.
-- We can use data abstraction to avoid being specific about how these vectors will actually be represented.
-- We will use coordinates in the unit square.
+- Painters paint their contents in _frames_.
+- A frame parallelogram can be represented by an origin vector and two edge vectors.
+- We will use coordinates in the unit square to specify images.
 - We can use basic vector operations to map an image coordinate into a pair of coordinates within the frame.
 
 ::: exercises
@@ -889,7 +894,7 @@ Now we can do things like this:
 
 - A painter is a procedure that takes a frame as an argument and draws its image transformed to fit in the frame.
 - The details of primitive painters depend on the characteristics of the graphics system.
-- Painters as procedures is a powerful abstraction barrier.
+- Representing painters as procedures creates a powerful abstraction barrier.
 
 ::: exercises
 2.48-49
@@ -897,8 +902,19 @@ Now we can do things like this:
 
 #### Transforming and combining painters
 
-- Operations on painters invoke the original painters with new frames drives from the argument frame.
+- Operations on painters invoke the original painters with new frames derived from the argument frame.
 - They are all based on the procedure `transform-painter`.
+
+```
+(define (transform-painter painter origin corner1 corner2)
+  (lambda (frame)
+    (let ((m (frame-coord-map frame)))
+      (let ((new-origin (m origin)))
+        (painter
+         (make-frame new-origin
+                     (sub-vect (m corner1) new-origin)
+                     (sub-vect (m corner2) new-origin)))))))
+```
 
 ::: exercises
 2.50-51
@@ -906,13 +922,13 @@ Now we can do things like this:
 
 #### Levels of language for robust design
 
-- The picture language uses abstraction with procedures and data.
-- Painters are the data abstraction.
+- The fundamental data abstractions in the picture language are painters. Representing them as procedures makes all the tools of procedural abstraction available to us.
 - This example also uses _stratified design_, the notion that a complex system should be structured as a sequence of levels.
 - Each time we start a new level, we treat the old complex things as primitive black boxes and combine them.
-- Stratified design helps make programs _robust_: small changes in a specification will likely mean small changes in the program.
 
-> In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it. [@2.2.4]
+::: highlight
+> Stratified design helps make programs _robust_, that is, it makes it likely that small changes in a specification will require correspondingly small changes in the program. ... In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it. [@2.2.4]
+:::
 
 ::: exercises
 2.52

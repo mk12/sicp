@@ -36,7 +36,7 @@
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
 
-;; A _pair_ is a compound-data primitive implemented by the procedures `cons`,
+;; A _pair_ is a compound data primitive implemented by the procedures `cons`,
 ;; `car`, and `cdr`:
 
 (define x (cons 1 2))
