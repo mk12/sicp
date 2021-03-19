@@ -91,8 +91,7 @@
 <li>There are a lot of different ways of building list structure.</li>
 <li>Lisp has a convention for representing a sequence as chained pairs, called a <em>list</em>.</li>
 <li>The <code>car</code> of the pair is the first item. The <code>cdr</code> of the pair is the rest of the sequence.</li>
-<li>The <code>cdr</code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>.</li>
-<li>The predicate <code>null?</code> checks if a list is empty (is nil).</li>
+<li>The <code>cdr</code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>. The predicate <code>null?</code> checks if a list is empty (is nil).</li>
 <li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested pairs.</li>
 </ul>
 <h3 id="1.3" class="anchor">
@@ -112,12 +111,12 @@
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Henderson Escher example
 </h3>
 <ul>
-<li>A language for describing self-similar, fractal-like figures.</li>
+<li>We will build a language for describing self-similar, fractal-like figures.</li>
 <li>This example will blur the line between procedures and data.</li>
-<li>There is only one primitive: a painter. A painter draws its image within a frame (a parallelogram).</li>
+<li>There is only one primitive: a painter. A painter draws its image within a frame.</li>
 <li>We have means of combination: <code>rotate</code>, <code>beside</code>, and <code>below</code>.</li>
-<li>Thanks to the closure property, we are able to build up complexity in this language quickly.</li>
-<li>A frame is defined by an origin vector and two side vectors.</li>
+<li>Thanks to the closure property, we can build up complexity in this language quickly.</li>
+<li>A frame is a parallelogram defined by an origin vector and two side vectors.</li>
 <li>All frames are based on transformations from the unit square.</li>
 <li>We can build primitive painters from lists of line segments.</li>
 <li>A painter is a procedure that takes a frame and draws its image within the frame.</li>
@@ -129,18 +128,16 @@
 <a class="anchor__link link" href="#3.1" aria-hidden="true">#</a> Importance of closure
 </h3>
 <ul>
-<li>This representation is nice because, once primitives are implemented in this way, the means of combination just fall out because you automatically get the closure property.</li>
-<li>The procedures <code>beside</code> and <code>below</code> are trivial to write.</li>
-<li>The operation <code>rotate</code> is similarly simple.</li>
+<li>Representing painters as procedures is nice because the means of combination just falls out, and you automatically get the closure property.</li>
+<li>The procedures <code>beside</code> and <code>below</code> are trivial to write. <code>rotate</code> is similarly simple.</li>
 <li>The real punchline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.</li>
-<li>We can write recursive painters without ever having purposely built recursion into the painting language.</li>
-<li>We can even write higher-order painters.</li>
+<li>We can write recursive painters without ever having purposely built recursion into the painting language. We can even write higher-order painters.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> The power of Lisp
 </h3>
 <ul>
-<li>The difference between merely implementing something in a language and embedding something in the language: you don’t lost the original power of the language.</li>
+<li>The difference between merely implementing something in a language and <em>embedding</em> something in the language: you don’t lose the original power of the language.</li>
 </ul>
 <div id="q1" class="highlight">
 <a class="highlight__link link" href="highlight.html#3a-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
@@ -155,20 +152,18 @@
 <a class="anchor__link link" href="#3.3" aria-hidden="true">#</a> Software engineering
 </h3>
 <ul>
-<li>We have been creating a sequence of layers of language.</li>
 <li>The methodology (or mythology) of software engineering is this: figure out your task, break it into three sub-tasks, and repeat for each sub-task. Work your way up to the top and you’ll end up with this beautiful edifice.</li>
 <li>Each of these nodes in the tree is supposed to fit perfectly into the whole thing.</li>
-<li>The Henderson example didn’t work like that.</li>
-<li>Instead, we had a sequence of layers of language. Each layer depends on the layers beneath it, but it can’t see their details because there is an abstraction barrier in the way.</li>
+<li>The Henderson example didn’t work like that. Instead, we had a sequence of layers of language. Each layer depended on the layers beneath it, but it couldn’t see their details because there was an abstraction barrier in the way.</li>
 </ul>
 <blockquote>
 <p>So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level. <span class="citation">—<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/3a-henderson-escher-example/PEwZL3H2oKg.pdf#page=16" title="SICP Lecture 3A transcript, page 16">Abelson</a></span></p>
 </blockquote>
 <ul>
 <li>With the top-down tree, each part does a specific task.</li>
-<li>In the Henderson example, we had a full range of linguistic power at each level. Each level does a whole range of things, not a single task.</li>
-<li>This makes the system more robust, meaning that changes are easy to make and the system can adapt to them.</li>
-<li>A small change in the top-down tree might cause the whole thing to fall down unless you reconstruct it.</li>
+<li>In the Henderson example, we had a full range of linguistic power at each level. Each level did a whole range of things, not a single task.</li>
+<li>This makes the system more robust: easier to adapt to changes.</li>
+<li>A small change in the top-down tree might cause the whole thing to fall down.</li>
 <li>We are talking about levels of language rather than a strict hierarchy. Each level has its own vocabulary.</li>
 </ul>
 <div id="q2" class="highlight">

@@ -554,8 +554,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - There are a lot of different ways of building list structure.
 - Lisp has a convention for representing a sequence as chained pairs, called a _list_.
 - The `car` of the pair is the first item. The `cdr` of the pair is the rest of the sequence.
-- The `cdr` of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as `()`.
-- The predicate `null?` checks if a list is empty (is nil).
+- The `cdr` of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as `()`. The predicate `null?` checks if a list is empty (is nil).
 - Lisp has a procedure called `list`, which is just an abbreviation for the nested pairs.
 
 ### Mapping lists
@@ -570,12 +569,12 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Henderson Escher example
 
-- A language for describing self-similar, fractal-like figures.
+- We will build a language for describing self-similar, fractal-like figures.
 - This example will blur the line between procedures and data.
-- There is only one primitive: a painter. A painter draws its image within a frame (a parallelogram).
+- There is only one primitive: a painter. A painter draws its image within a frame.
 - We have means of combination: `rotate`, `beside`, and `below`.
-- Thanks to the closure property, we are able to build up complexity in this language quickly.
-- A frame is defined by an origin vector and two side vectors.
+- Thanks to the closure property, we can build up complexity in this language quickly.
+- A frame is a parallelogram defined by an origin vector and two side vectors.
 - All frames are based on transformations from the unit square.
 - We can build primitive painters from lists of line segments.
 - A painter is a procedure that takes a frame and draws its image within the frame.
@@ -584,16 +583,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Importance of closure
 
-- This representation is nice because, once primitives are implemented in this way, the means of combination just fall out because you automatically get the closure property.
-- The procedures `beside` and `below` are trivial to write.
-- The operation `rotate` is similarly simple.
+- Representing painters as procedures is nice because the means of combination just falls out, and you automatically get the closure property.
+- The procedures `beside` and `below` are trivial to write. `rotate` is similarly simple.
 - The real punchline comes when you look at the means of abstraction. Since painters are just procedures, everything that Lisp supplies for procedures is automatically available to us in this painting language.
-- We can write recursive painters without ever having purposely built recursion into the painting language.
-- We can even write higher-order painters.
+- We can write recursive painters without ever having purposely built recursion into the painting language. We can even write higher-order painters.
 
 ### The power of Lisp
 
-- The difference between merely implementing something in a language and embedding something in the language: you don't lost the original power of the language.
+- The difference between merely implementing something in a language and _embedding_ something in the language: you don't lose the original power of the language.
 
 ::: highlight
 > Lisp is a lousy language for doing any particular problem. What it's good for is figuring out the right language that you want and embedding that in Lisp. That's the real power of this approach to design. [@3a.p14]
@@ -603,18 +600,16 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Software engineering
 
-- We have been creating a sequence of layers of language.
 - The methodology (or mythology) of software engineering is this: figure out your task, break it into three sub-tasks, and repeat for each sub-task. Work your way up to the top and you'll end up with this beautiful edifice.
 - Each of these nodes in the tree is supposed to fit perfectly into the whole thing.
-- The Henderson example didn't work like that.
-- Instead, we had a sequence of layers of language. Each layer depends on the layers beneath it, but it can't see their details because there is an abstraction barrier in the way.
+- The Henderson example didn't work like that. Instead, we had a sequence of layers of language. Each layer depended on the layers beneath it, but it couldn't see their details because there was an abstraction barrier in the way.
 
 > So what you have is, at each level, the objects that are being talked about are the things that were erected at the previous level. [@3a.p16]
 
 - With the top-down tree, each part does a specific task.
-- In the Henderson example, we had a full range of linguistic power at each level. Each level does a whole range of things, not a single task.
-- This makes the system more robust, meaning that changes are easy to make and the system can adapt to them.
-- A small change in the top-down tree might cause the whole thing to fall down unless you reconstruct it.
+- In the Henderson example, we had a full range of linguistic power at each level. Each level did a whole range of things, not a single task.
+- This makes the system more robust: easier to adapt to changes.
+- A small change in the top-down tree might cause the whole thing to fall down.
 - We are talking about levels of language rather than a strict hierarchy. Each level has its own vocabulary.
 
 ::: highlight
