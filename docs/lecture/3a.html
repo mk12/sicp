@@ -78,10 +78,9 @@
 <a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
 <ul>
-<li>Now we know about procedural abstract and data abstraction.</li>
+<li>Now we know about procedural abstraction and data abstraction.</li>
 <li>We can isolate the way data objects are <em>used</em> from the way that they are <em>represented</em>.</li>
 <li>We learned how to make pairs with <code>cons</code>, <code>car</code>, and <code>cdr</code>.</li>
-<li>We looked at examples: interval arithmetic and vectors.</li>
 <li>We can glue together arbitrary things with <code>cons</code>, not just numbers.</li>
 <li>We learned about closure: the things that we combine can themselves be combined. This allows us to build complexity.</li>
 </ul>
@@ -90,20 +89,20 @@
 </h3>
 <ul>
 <li>There are a lot of different ways of building list structure.</li>
-<li>Lisp has a particular convention for representing a sequence as chained pairs: a list.</li>
-<li>The car of the pair is the first item. The <code>cdr</code> of the pair is the rest of the sequence.</li>
+<li>Lisp has a convention for representing a sequence as chained pairs, called a <em>list</em>.</li>
+<li>The <code>car</code> of the pair is the first item. The <code>cdr</code> of the pair is the rest of the sequence.</li>
 <li>The <code>cdr</code> of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as <code>()</code>.</li>
 <li>The predicate <code>null?</code> checks if a list is empty (is nil).</li>
-<li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested conses.</li>
+<li>Lisp has a procedure called <code>list</code>, which is just an abbreviation for the nested pairs.</li>
 </ul>
 <h3 id="1.3" class="anchor">
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Mapping lists
 </h3>
 <ul>
-<li>It is common to write a procedure that does the same thing to each item in a list and returns a new list.</li>
-<li>The recursive strategy is to apply the operation to the car of the list, and then cons that onto the rest of the list which has already been mapped (wishful thinking).</li>
-<li>Rather than doing the recursive strategy manually each time, we use the higher-order procedure <code>map</code>.</li>
-<li>Thinking in terms of operations on aggregates is a powerful idea. We don’t worry about recursion or other details.</li>
+<li>It is common to write a procedure that does the same thing to each item in a list and returns a new list of transformed items.</li>
+<li>The recursive strategy is to apply the operation to the <code>car</code> of the list, and then <code>cons</code> that onto the rest of the list which has already been mapped (wishful thinking).</li>
+<li>Rather than doing this manually each time, we use the higher-order procedure <code>map</code>.</li>
+<li>Thinking in terms of operations on aggregates is a powerful idea. It liberates us from worrying about recursion or other details.</li>
 <li><code>for-each</code> is like map, but it doesn’t build up a new list. It is just for side-effects.</li>
 </ul>
 <h2 id="2" class="anchor">

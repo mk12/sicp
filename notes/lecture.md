@@ -439,7 +439,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Lisp provides this: it is called _list structure_. It starts with the primitive procedure `cons`.
 - `cons` is obviously the **cons**tructor. `car` and `cdr` are the selectors for pairs.
 - For any `x` and `y`, `(car (cons x y))` is `x`, and `(cdr (cons x y))` is `y`.
-- We can represent conses with two boxes side by side with an arrow coming from each. This is called _box-and-pointer notation_.
+- We can represent pairs with two boxes side by side with an arrow coming from each. This is called _box-and-pointer notation_.
 
 ### Lowest terms
 
@@ -543,28 +543,27 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Recap
 
-- Now we know about procedural abstract and data abstraction.
+- Now we know about procedural abstraction and data abstraction.
 - We can isolate the way data objects are _used_ from the way that they are _represented_.
 - We learned how to make pairs with `cons`, `car`, and `cdr`.
-- We looked at examples: interval arithmetic and vectors.
 - We can glue together arbitrary things with `cons`, not just numbers.
 - We learned about closure: the things that we combine can themselves be combined. This allows us to build complexity.
 
 ### Lists
 
 - There are a lot of different ways of building list structure.
-- Lisp has a particular convention for representing a sequence as chained pairs: a list.
-- The car of the pair is the first item. The `cdr` of the pair is the rest of the sequence.
+- Lisp has a convention for representing a sequence as chained pairs, called a _list_.
+- The `car` of the pair is the first item. The `cdr` of the pair is the rest of the sequence.
 - The `cdr` of the last pair has a special marker. This is the empty list, also called nil or null. It is printed as `()`.
 - The predicate `null?` checks if a list is empty (is nil).
-- Lisp has a procedure called `list`, which is just an abbreviation for the nested conses.
+- Lisp has a procedure called `list`, which is just an abbreviation for the nested pairs.
 
 ### Mapping lists
 
-- It is common to write a procedure that does the same thing to each item in a list and returns a new list.
-- The recursive strategy is to apply the operation to the car of the list, and then cons that onto the rest of the list which has already been mapped (wishful thinking).
-- Rather than doing the recursive strategy manually each time, we use the higher-order procedure `map`.
-- Thinking in terms of operations on aggregates is a powerful idea. We don't worry about recursion or other details.
+- It is common to write a procedure that does the same thing to each item in a list and returns a new list of transformed items.
+- The recursive strategy is to apply the operation to the `car` of the list, and then `cons` that onto the rest of the list which has already been mapped (wishful thinking).
+- Rather than doing this manually each time, we use the higher-order procedure `map`.
+- Thinking in terms of operations on aggregates is a powerful idea. It liberates us from worrying about recursion or other details.
 - `for-each` is like map, but it doesn't build up a new list. It is just for side-effects.
 
 ## Part 2
@@ -1264,7 +1263,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Before, all we needed to know about `cons` was that for all values of `x` and `y`, `(= x (car (cons x y)))` and `(= y (cdr (cons x y)))`. This says nothing about identity.
 - These no longer tell the whole story, now that we have mutators.
 - This raises a question: if you change the `car` of a pair, do all pairs that look the same also change?
-- Cons pairs now have an identity.
+- Pairs now have an identity.
 - When we have multiple names for the same object, they are called _aliases_. Changing one changes them all. Sometimes sharing is what we want.
 
 ::: highlight
@@ -1273,7 +1272,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Lambda calculus
 
-- Assignment and mutators are equally powerful. We can implement the cons mutators in terms of `set!`.
+- Assignment and mutators are equally powerful. We can implement the `cons` mutators in terms of `set!`.
 - We've already seen Alonzo Church's way of creating pairs just with lambda expressions:
 
 ```

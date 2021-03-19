@@ -705,15 +705,15 @@ Now we can do things like this:
 ## 2.2: Hierarchical Data and the Closure Property
 
 - Pairs form a primitive "glue" for compound data objects.
-- We can visualize cons pairs with _box-and-pointer_ notation. Each pair is a double box, and both sides have an arrow pointing to a primitive data object, or to another cons pair.
-- The _closure property_ of cons is the ability to make pairs whose elements are pairs. This allows us to create hierarchal structures.
+- We can visualize pairs with _box-and-pointer_ notation. Each pair is a double box, and both sides have an arrow pointing to a primitive data object, or to another pair.
+- The _closure property_ of `cons` is the ability to make pairs whose elements are pairs. This allows us to create hierarchal structures.
 - We have been using closure all along with combinations. Now, we are going to use closure for compound data.
 
 ### 2.2.1: Representing Sequences
 
 - One thing we can build with pairs is a _sequence_: an ordered collection of data objects.
 - This is a chain of pairs where each `car` points to a data value, and each `cdr` points to the next pair in the chain. The `cdr` of the final pair is a special value, `nil`.
-- This sequence of nested conses is called a _list_. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.
+- This sequence of nested pairs is called a _list_. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.
 - The procedure `car` gives us the first item; `cdr` gives us the sublist containing all items but the first; `cons` returns a list with an item added to the front.
 - The `nil` value can be thought of as an empty list.
 
@@ -1696,8 +1696,8 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - If a table was just a pointer to the first actual record, then when we wouldn't be able to write a mutator to add a record to the front.
     - We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
     - It would only change the parameter in $E_1$, not the value in the calling environment.
-    - We didn't need to worry about this with sets because a set was a cons of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
-    - We are essentially using a pointer; we are using one cell of the cons pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose.
+    - We didn't need to worry about this with sets because a set was a pair of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
+    - We are essentially using a pointer; we are using one cell of the pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose.
 - The `lookup` procedure returns the value associated with a key in a table, or `false` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
 

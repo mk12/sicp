@@ -125,7 +125,7 @@
 <li>We’ve made a simulation where objects and state changed in the computer match the objects and state changes in the world.</li>
 <li>We’re going to use agendas (priority queues) to organize time.</li>
 <li>We have a constructor <code>make-agenda</code>; selector <code>current-time</code> and <code>first-item</code>; predicate <code>empty-agenda?</code>; and mutators <code>add-to-agenda!</code> and <code>remove-first-item!</code>.</li>
-<li>We will represent it as a list a segments. Each segment is a time <code>cons</code>&thinsp;ed to a queue of tasks (procedures of no arguments).</li>
+<li>We will represent it as a list a segments. Each segment is a time <code>cons</code>&hairsp;ed to a queue of tasks (procedures of no arguments).</li>
 <li>To add a task, we either add it to the queue of the appropriate segment, or create a new segment with that time.</li>
 </ul>
 <h4 id="2.1.1" class="anchor">
@@ -134,7 +134,7 @@
 <ul>
 <li>We construct queues with <code>(make-queue)</code>.</li>
 <li>There are two mutators, <code>(insert-queue! q x)</code> and <code>(delete-queue! q)</code>; a selector, <code>(front-queue q)</code>; and a predicate, <code>(empty-queue? q)</code>.</li>
-<li>A queue is represented as a front pointer of a list <code>cons</code>&thinsp;ed to the rear pointer of the same list.</li>
+<li>A queue is represented as a front pointer of a list <code>cons</code>&hairsp;ed to the rear pointer of the same list.</li>
 <li>The mutators use <code>set-car!</code> and <code>set-cdr!</code>.</li>
 </ul>
 <h2 id="3" class="anchor">
@@ -147,7 +147,7 @@
 <li>Before, all we needed to know about <code>cons</code> was that for all values of <code>x</code> and <code>y</code>, <code>(<span class="fu">=</span> x (<span class="fu">car</span> (<span class="fu">cons</span> x y)))</code> and <code>(<span class="fu">=</span> y (<span class="fu">cdr</span> (<span class="fu">cons</span> x y)))</code>. This says nothing about identity.</li>
 <li>These no longer tell the whole story, now that we have mutators.</li>
 <li>This raises a question: if you change the <code>car</code> of a pair, do all pairs that look the same also change?</li>
-<li>Cons pairs now have an identity.</li>
+<li>Pairs now have an identity.</li>
 <li>When we have multiple names for the same object, they are called <em>aliases</em>. Changing one changes them all. Sometimes sharing is what we want.</li>
 </ul>
 <div id="q1" class="highlight">
@@ -160,7 +160,7 @@
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Lambda calculus
 </h3>
 <ul>
-<li>Assignment and mutators are equally powerful. We can implement the cons mutators in terms of <code>set!</code>.</li>
+<li>Assignment and mutators are equally powerful. We can implement the <code>cons</code> mutators in terms of <code>set!</code>.</li>
 <li>We’ve already seen Alonzo Church’s way of creating pairs just with lambda expressions:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)

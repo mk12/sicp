@@ -356,7 +356,7 @@ static void postprocess_html(FILE *in, FILE *out) {
                 fwrite(p, n - p, 1, out);
                 p = n;
                 if (isalpha(*p)) {
-                    fputs("&thinsp;", out);
+                    fputs("&hairsp;", out);
                 }
             }
         } else {
