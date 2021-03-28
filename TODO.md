@@ -14,6 +14,13 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2* (in ex 2.43)
++ bug, section number going ABOVE the title in narrow viewport
+    + happens in section 2.2 iPhone SE, due to "Hierarchical" being unsplittable
+    + also gaps like "building <blank line> abstractions with" because "building" fits but "abstractions" doesn't
+    + but float:right nice in some cases, like "Modeling with Mutable Data" where last line extends below the 3.3
+    + even with zero margin below .number (which I previously tuned carefully), can still have gaps for big chapter numbers (larger than chapter title font)
+    + test text/lecture/exercise on iPhone SE & at @media cutoff
+    + chose 410px since iPhone 8 Plus is 414 px
 + box-and-pointer, tree, environment diagrams
     x graphviz
     x https://github.com/asciitosvg/asciitosvg

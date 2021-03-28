@@ -206,6 +206,19 @@ h1 code, h2 code, h3 code, .toc__item code {
     line-height: 1;
 }
 
+/* Prevent weird wrapping/clearing of long words around numbers. */
+@media screen and (max-width: 410px) {
+    .number {
+        float: none;
+        margin: 0 0.1em 0 0;
+    }
+
+    .number--big {
+        display: block;
+        margin: -0.03em 0 0.1em 0;
+    }
+}
+
 .highlight {
     margin-top: 1em;
 }
