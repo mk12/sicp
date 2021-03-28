@@ -1,6 +1,6 @@
 /* Reset */
 
-html, body, blockquote, pre, p, ul, ol, li {
+html, body, blockquote, figure, pre, p, ul, ol, li {
     padding: 0;
     margin: 0;
 }
@@ -45,7 +45,7 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
-p, ul, ol, blockquote, pre { margin-top: 1em; }
+p, ul, ol, blockquote, pre, figure { margin-top: 1em; }
 p:first-child, li ul, li ol { margin-top: 0; }
 
 ul { margin-left: 1.05em; }
@@ -120,6 +120,9 @@ code {
     background: var(--block);
     padding: 2px 5px;
     border-radius: 6px;
+}
+
+code, .diagram {
     /* Fits 80 columns at max-width. */
     font: 0.8em Menlo, Consolas, monospace;
 }
@@ -153,6 +156,11 @@ h1 code, h2 code, h3 code, .toc__item code {
     scrollbar along the bottom. */
     padding: 15px 0;
     margin: -15px 0;
+}
+
+.diagram {
+    display: block;
+    margin: 0 auto;
 }
 
 .flat {
@@ -408,6 +416,21 @@ body {
 
 .circle-arrow {
     vertical-align: -3px;
+}
+
+.diagram {
+    overflow: visible;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: miter;
+}
+
+.diagram text {
+    stroke: none;
+    fill: currentColor;
+    white-space: pre;
 }
 
 .wizard {

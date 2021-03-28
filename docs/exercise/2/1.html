@@ -72,7 +72,6 @@
 <h2 id="2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.1.1" aria-hidden="true">#</a> <span class="number">2.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.1">Example: Arithmetic Operations for Rational Numbers<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<p>Assuming we have <code>make-rat</code>, <code>numer</code>, and <code>denom</code>, we can implement arithmetic operations for rational numbers:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (add-rat x y)
   (make-rat (<span class="fu">+</span> (<span class="fu">*</span> (numer x) (denom y))
                (<span class="fu">*</span> (numer y) (denom x)))
@@ -90,7 +89,7 @@
 (<span class="kw">define</span> (equal-rat? x y)
   (<span class="fu">=</span> (<span class="fu">*</span> (numer x) (denom y))
      (<span class="fu">*</span> (numer y) (denom x))))</code></pre>
-<p>A <em>pair</em> is a compound data primitive implemented by the procedures <code>cons</code>, <code>car</code>, and <code>cdr</code>:</p>
+<p>Pairs:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> <span class="cn">2</span>))
 (<span class="fu">car</span> x) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">cdr</span> x) <span class="op">=&gt;</span> <span class="cn">2</span>
@@ -99,7 +98,7 @@
 (<span class="kw">define</span> z (<span class="fu">cons</span> x y))
 (<span class="fu">car</span> (<span class="fu">car</span> z)) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">car</span> (<span class="fu">cdr</span> z)) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
-<p>We can represent rational numbers using pairs:</p>
+<p>Representing rational numbers:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
 (<span class="kw">define</span> (numer x) (<span class="fu">car</span> x))
 (<span class="kw">define</span> (denom x) (<span class="fu">cdr</span> x))
@@ -117,7 +116,7 @@
 (add-rat one-half one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> . <span class="cn">6</span>)
 (mul-rat one-half one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> . <span class="cn">6</span>)
 (add-rat one-third one-third) <span class="op">=&gt;</span> &#39;(<span class="cn">6</span> . <span class="cn">9</span>)</code></pre>
-<p>We can change <code>make-rat</code> to reduce to lowest terms using the GCD:</p>
+<p>Reducing to lowest terms:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d)
   (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
     (<span class="fu">cons</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))
@@ -144,7 +143,6 @@
 <h2 id="2.1.2" class="anchor">
 <a class="anchor__link link" href="#2.1.2" aria-hidden="true">#</a> <span class="number">2.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.2">Abstraction Barriers<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<p>Another way of reducing to lowest terms is to do it in the selectors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
 (<span class="kw">define</span> (numer x)
   (<span class="kw">let</span> ((g (<span class="fu">gcd</span> (<span class="fu">car</span> x) (<span class="fu">cdr</span> x))))
@@ -227,7 +225,6 @@ Imports:
 <h2 id="2.1.3" class="anchor">
 <a class="anchor__link link" href="#2.1.3" aria-hidden="true">#</a> <span class="number">2.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-14.html#%25_sec_2.1.3">What Is Meant by Data?<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<p>We can implement <code>cons</code>, <code>car</code>, and <code>cdr</code> with procedures alone:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">define</span> (dispatch m)
     (<span class="kw">cond</span> ((<span class="fu">=</span> m <span class="cn">0</span>) x)

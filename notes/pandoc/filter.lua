@@ -7,22 +7,18 @@ local vars = {}
 local S = nil  -- posix.sys.socket
 local U = nil  -- posix.unistd
 
--- Connection to the katex server.
+-- Connection to the render.ts server.
 local socket = nil
 
--- Pre-renders math with KaTeX.
-function render_math(el)
-    vars.math = true
+-- Makes a request to the render.ts server.
+function call_render_server(args)
     if not socket then
         S = require("posix.sys.socket")
         U = require("posix.unistd")
         socket = assert(S.socket(S.AF_UNIX, S.SOCK_STREAM, 0))
-        assert(S.connect(socket, {family = S.AF_UNIX, path = "katex.sock"}))
+        assert(S.connect(socket, {family = S.AF_UNIX, path = "render.sock"}))
     end
-    local request = el.text .. "\x00"
-    if el.mathtype == "DisplayMath" then
-        request = "display:" .. request
-    end
+    local request = table.concat(args, ":") .. "\x00"
     local i = 1
     while i < #request do
         i = assert(S.send(socket, request:sub(i))) + 1
@@ -39,15 +35,39 @@ function render_math(el)
     local response = table.concat(chunks)
     local error_prefix = "error:"
     if response:sub(1, #error_prefix) == error_prefix then
-        error("math error: " .. response:sub(#error_prefix + 1))
+        error("render.ts error: " .. response:sub(#error_prefix + 1))
+    end
+    return response
+end
+
+-- Closes the connection to render.ts, if it was opened.
+function close_socket()
+    if socket then
+        assert(U.close(socket))
+    end
+end
+
+-- Renders math with KaTeX.
+function render_math(el)
+    vars.math = true
+    local response
+    if el.mathtype == "DisplayMath" then
+        response = call_render_server({"katex", "display", el.text})
+    else
+        response = call_render_server({"katex", el.text})
     end
     return pandoc.RawInline("html", response)
 end
 
--- Closes the katex socket, if it was opened.
-function close_socket()
-    if socket then
-        assert(U.close(socket))
+-- Number of diagrams so far, used for prefixing IDs.
+local diagram_count = 0
+
+-- Renders diagrams with svgbob.
+function render_diagrams(el)
+    if el.classes[1] == "diagram" then
+        diagram_count = diagram_count + 1
+        local svg = call_render_server({"svgbob", diagram_count, el.text})
+        return pandoc.RawBlock("html", "<figure>" .. svg .. "</figure>")
     end
 end
 
@@ -518,6 +538,7 @@ end
 
 return {
     {Math = render_math},
+    {CodeBlock = render_diagrams},
     {Pandoc = close_socket},
     {Meta = read_meta},
     {Div = div},

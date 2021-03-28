@@ -15,9 +15,6 @@
 
 (Section :2.1.1 "Example: Arithmetic Operations for Rational Numbers")
 
-;; Assuming we have `make-rat`, `numer`, and `denom`, we can implement
-;; arithmetic operations for rational numbers:
-
 (define (add-rat x y)
   (make-rat (+ (* (numer x) (denom y))
                (* (numer y) (denom x)))
@@ -36,8 +33,7 @@
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
 
-;; A _pair_ is a compound data primitive implemented by the procedures `cons`,
-;; `car`, and `cdr`:
+;; Pairs:
 
 (define x (cons 1 2))
 (car x) => 1
@@ -48,7 +44,7 @@
 (car (car z)) => 1
 (car (cdr z)) => 3
 
-;; We can represent rational numbers using pairs:
+;; Representing rational numbers:
 
 (define (make-rat n d) (cons n d))
 (define (numer x) (car x))
@@ -68,7 +64,7 @@
 (mul-rat one-half one-third) => '(1 . 6)
 (add-rat one-third one-third) => '(6 . 9)
 
-;; We can change `make-rat` to reduce to lowest terms using the GCD:
+;; Reducing to lowest terms:
 
 (define (make-rat n d)
   (let ((g (gcd n d)))
@@ -95,8 +91,6 @@
 (make-rat 5 -10) => '(-1 . 2)
 
 (Section :2.1.2 "Abstraction Barriers")
-
-;; Another way of reducing to lowest terms is to do it in the selectors:
 
 (define (make-rat n d) (cons n d))
 (define (numer x)
@@ -163,8 +157,6 @@
 (area rect) => 15
 
 (Section :2.1.3 "What Is Meant by Data?")
-
-;; We can implement `cons`, `car`, and `cdr` with procedures alone:
 
 (define (cons x y)
   (define (dispatch m)
@@ -494,6 +486,8 @@ one-through-four => '(1 2 3 4)
 
 (Section :2.2.1.1 "List operations")
 
+;; Iterative `list-ref`:
+
 (define (list-ref items n)
   (if (= n 0)
       (car items)
@@ -502,7 +496,8 @@ one-through-four => '(1 2 3 4)
 (define squares (list 1 4 9 16 25))
 (list-ref squares 3) => 16
 
-;; Recursive
+;; Recursive `length`:
+
 (define (length items)
   (if (null? items)
       0
@@ -511,7 +506,8 @@ one-through-four => '(1 2 3 4)
 (define odds (list 1 3 5 7))
 (length odds) => 4
 
-;; Iterative
+;; Iterative `length`:
+
 (define (length items)
   (define (iter a count)
     (if (null? a)
@@ -520,6 +516,8 @@ one-through-four => '(1 2 3 4)
   (iter items 0))
 
 (length odds) => 4
+
+;; Recursive `append`:
 
 (define (append list1 list2)
   (if (null? list1)
@@ -553,6 +551,8 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.19)
 
+;; Generalizing `count-change` from [](:1.2.2.1) to work with any currency:
+
 (define us-coins (list 50 25 10 5 1))
 (define uk-coins (list 100 50 20 10 5 2 1 1/2))
 
@@ -572,16 +572,15 @@ one-through-four => '(1 2 3 4)
 
 (cc 20 uk-coins) => 293
 
-;; The order of the coin value list does not affect the answer produced by `cc`:
+;; The order of the coin list does not affect the answer produced by `cc`:
 
 (cc 100 us-coins) => 292
 (cc 100 (reverse us-coins)) => 292
 (cc 100 (list 5 50 1 25 10)) => 292
 
-;; This is because the cc algorithm does not assume the coin values are sorted
-;; in any particular order. It recurs on the `cdr` of the list, so it will
-;; always be able to reach the end of the list unless it reaches one of the
-;; other base cases first.
+;; The tree recursion will explore every possible combination. It makes no
+;; difference if you start with combinations that prefer fewer, larger coins, or
+;; with the combination that only uses pennies, or anything in between.
 
 (Exercise ?2.20)
 
@@ -634,11 +633,6 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.22
   (use (:1.1.4 square)))
 
-;; Louis's procedure reverses the order of the list because he is building up a
-;; new list in the reverse order that the original one was constructed. The
-;; first element to be consed onto the original list is its last element.
-;; Consing in reverse order produces a reversed list.
-
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
@@ -650,13 +644,11 @@ one-through-four => '(1 2 3 4)
 
 (square-list (list 1 2 3 4)) => '(16 9 4 1)
 
-;; When Louis interchanges the arguments to `cons`, it doesn't work because he
-;; is trying to cons a list onto a single element. This creates a list structure
-;; (in that it is made up of pairs), but this is not a sequence. Louis is trying
-;; to use cons to add an element to the end a sequence, but this is not
-;; possible. To add something to the end of a sequence, you must walk all the
-;; way to its end. He could use `append` instead of `cons` to achieve this, but
-;; this would end up being much less efficient than the recursive map.
+;; Louis's procedure reverses the order of the list because of the way he builds
+;; the result. His first iteration creates a pair whose `car` is `(square (car
+;; things))` and whose `cdr` is nil, and further recursions prepend to this
+;; list. So the last item of the result is the first item of the original list,
+;; and vice versa.
 
 (define (square-list items)
   (define (iter things answer)
@@ -668,6 +660,11 @@ one-through-four => '(1 2 3 4)
   (iter items '()))
 
 (square-list (list 1 2 3 4 5)) => '(((((() . 1) . 4) . 9) . 16) . 25)
+
+;; Interchanging the arguments to `cons` doesn't work because now each `cdr` is
+;; a number, not a pair. The result is not a proper list, so Scheme prints it in
+;; explicit `(car . cdr)` notation. It is essentially the same reversed list as
+;; before, just the roles of `car` and `cdr` have been swapped.
 
 (Exercise ?2.23)
 
@@ -704,20 +701,44 @@ one-through-four => '(1 2 3 4)
 (list 1 (list 2 (list 3 4))) => '(1 (2 (3 4)))
 
 ;; Box-and-pointer structure:
-; [*|*]--->[*|X]
-;  |        |
-;  v        \->[*|*]--->[*|X]
-;  1            |        |
-;               v        \->[*|*]--->[4|X]
-;               2            |
-;                            v
-;                            3
+;;
+;; ```diagram
+;;      .---+---.    .---+--+.
+;; ---->| * | *-+--->| * | / +
+;;      '-|-+---'    '-|-++--'
+;;        |            |
+;;        v            v
+;;      .---.      .---+---.    .---+--+.
+;;      | 1 |      | * | *-+--->| * | / |
+;;      '---'      '-|-+---'    '-|-++--'
+;;                   |            |
+;;                   v            v
+;;                 .---.      .---+---.    .---+--+.
+;;                 | 2 |      | * | *-+--->| * | / |
+;;                 '---'      '-|-+---'    '-|-++--'
+;;                              |            |
+;;                              v            v
+;;                            .---.        .---.
+;;                            | 3 |        | 4 |
+;;                            '---'        '---'
+;; ```
 
 ;; Tree interpretation:
-;  /\
-; 1 /\
-;  2 /\
-;   3 4
+;;
+;; ```diagram
+;;  "(1 (2 (3 4)))"
+;;        +
+;;       / \
+;;      /   \ "(2 (3 4))"
+;;           +
+;;     1    / \
+;;         /   \ "(3 4)"
+;;              +
+;;        2    / \
+;;            /   \
+;;
+;;           3     4
+;; ```
 
 (Exercise ?2.25)
 
@@ -747,7 +768,9 @@ one-through-four => '(1 2 3 4)
       (map deep-reverse (reverse x))
       x))
 
-(deep-reverse '((1 2) (3 4))) => '((4 3) (2 1))
+(define x '((1 2) (3 4)))
+(reverse x) => '((3 4) (1 2))
+(deep-reverse x) => '((4 3) (2 1))
 
 (Exercise ?2.28)
 
@@ -759,7 +782,9 @@ one-through-four => '(1 2 3 4)
         (else (cons (car t)
                     (fringe (cdr t))))))
 
-(fringe '((1 2) (3 4))) => '(1 2 3 4)
+(define x '((1 2) (3 4)))
+(fringe x) => '(1 2 3 4)
+(fringe (list x x)) => '(1 2 3 4 1 2 3 4)
 (fringe '((((5) 2) ((3 2) 9)))) => '(5 2 3 2 9)
 
 (Exercise ?2.29)
@@ -767,31 +792,37 @@ one-through-four => '(1 2 3 4)
 (define (make-mobile left right) (list left right))
 (define (make-branch length structure) (list length structure))
 
-;; (a) Selectors
+;; (a) Selectors:
+
 (define left-branch car)
 (define right-branch cadr)
 (define branch-length car)
 (define branch-structure cadr)
 
-;; (b) Total weight
+;; (b) Total weight:
+
 (define (mobile-weight mobile)
   (+ (branch-weight (left-branch mobile))
      (branch-weight (right-branch mobile))))
+
 (define (branch-weight branch)
   (let ((struct (branch-structure branch)))
     (if (number? struct)
         struct
         (mobile-weight struct))))
 
-;; (c) Balance
+;; (c) Balance:
+
 (define (torque branch)
   (* (branch-length branch)
      (branch-weight branch)))
+
 (define (mobile-balanced? mobile)
   (and (= (torque (left-branch mobile))
           (torque (right-branch mobile)))
        (branch-balanced? (left-branch mobile))
        (branch-balanced? (right-branch mobile))))
+
 (define (branch-balanced? branch)
   (let ((struct (branch-structure branch)))
     (or (number? struct)
@@ -802,6 +833,7 @@ one-through-four => '(1 2 3 4)
 
 (define make-mobile cons)
 (define make-branch cons)
+
 (define right-branch cdr)
 (define branch-structure cdr)
 
@@ -813,8 +845,7 @@ one-through-four => '(1 2 3 4)
         (else (cons (scale-tree (car tree) factor)
                     (scale-tree (cdr tree) factor)))))
 
-(scale-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
-=> '(10 (20 (30 40) 50) (60 70))
+(scale-tree '(1 (2 (3 4) 5) (6 7)) 10) => '(10 (20 (30 40) 50) (60 70))
 
 (define (scale-tree tree factor)
   (map (lambda (sub-tree)
@@ -823,8 +854,7 @@ one-through-four => '(1 2 3 4)
              (* sub-tree factor)))
        tree))
 
-(scale-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
-=> '(10 (20 (30 40) 50) (60 70))
+(scale-tree '(1 (2 (3 4) 5) (6 7)) 10) => '(10 (20 (30 40) 50) (60 70))
 
 (Exercise ?2.30
   (use (:1.1.4 square)))
@@ -832,7 +862,8 @@ one-through-four => '(1 2 3 4)
 (define tree '(1 (2 (3 4) 5) (6 7)))
 (define squared-tree '(1 (4 (9 16) 25) (36 49)))
 
-;; Without map
+;; Direct recursion:
+
 (define (square-tree t)
   (cond ((null? t) '())
         ((not (pair? t)) (square t))
@@ -841,7 +872,8 @@ one-through-four => '(1 2 3 4)
 
 (square-tree tree) => squared-tree
 
-;; With map
+;; Using `map`:
+
 (define (square-tree t)
   (map (lambda (t)
          (if (pair? t)
@@ -854,14 +886,19 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.31
   (use (:1.1.4 square) (?2.30 squared-tree tree)))
 
-;; Without map
+;; Direct recursion:
+
 (define (tree-map f t)
   (cond ((null? t) '())
         ((not (pair? t)) (f t))
         (else (cons (tree-map f (car t))
                     (tree-map f (cdr t))))))
 
-;; With map
+(define (square-tree tree) (tree-map square tree))
+(square-tree tree) => squared-tree
+
+;; Using `map`:
+
 (define (tree-map f t)
   (map (lambda (t)
          (if (pair? t)
@@ -874,6 +911,14 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.32)
 
+;; The set of all subsets, or powerset, is defined recursively for finite sets:
+;;
+;; - For the empty set, $\powerset{\varnothing}=\{\varnothing\}$.
+;; - Given a set $S$ and any $x$, $\powerset{S\cup\{x\}} = \powerset{S}
+;;   \cup \{R\cup\{x\} \mid R\in\powerset{S}\}$.
+;;
+;; This leads to the following implementation:
+
 (define (subsets s)
   (if (null? s)
       (list '())
@@ -883,17 +928,10 @@ one-through-four => '(1 2 3 4)
                 (map (lambda (set) (cons first-item set))
                      subsets-rest)))))
 
+(subsets '()) => '(())
+(subsets '(1)) => '(() (1))
+(subsets '(1 2)) => '(() (2) (1) (1 2))
 (subsets '(1 2 3)) => '(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))
-
-;; This works because we can define the powerset recursively like this:
-;;
-;; 1. The powerset of an empty set is {{}}.
-;; 2. Given a set S and its powerset P(S), the powerset of S' (the set formed by
-;;    adding the element x to S) is P(S'), and P(S') is equal to the union of
-;;    P(S) and {R union {x} | R in P(S)}.
-;;
-;; These form the base case and the natural recursion for the poweset procedure,
-;; and they are sufficient to construct the powerset of any set.
 
 (Section :2.2.3 "Sequences as Conventional Interfaces"
   (use (:1.1.4 square) (?1.19 fib)))
@@ -932,7 +970,6 @@ one-through-four => '(1 2 3 4)
 
 (filter odd? (list 1 2 3 4 5)) => '(1 3 5)
 
-;; Accumulate is like fold-right (not fold-left).
 (define (accumulate op initial xs)
   (if (null? xs)
       initial
@@ -997,7 +1034,10 @@ one-through-four => '(1 2 3 4)
               0
               coefs))
 
-(horner-eval 2 (list 1 3 0 5 0 1)) => 79
+(define x 2)
+(horner-eval x '(1 3 0 5 0 1))
+=> (+ 1 (* 3 x) (* 5 (expt x 3)) (expt x 5))
+=> 79
 
 (Exercise ?2.35
   (use (:2.2.3.1 accumulate enumerate-tree)))
@@ -1027,8 +1067,10 @@ one-through-four => '(1 2 3 4)
 
 (define (matrix-*-vector m v)
   (map (lambda (u) (dot-product u v)) m))
+
 (define (transpose mat)
   (accumulate-n cons '() mat))
+
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
     (map (lambda (r)
@@ -1039,6 +1081,7 @@ one-through-four => '(1 2 3 4)
 
 (define mat '((1 2 3) (4 5 6) (7 8 9)))
 (define identity '((1 0 0) (0 1 0) (0 0 1)))
+(matrix-*-vector mat (car identity)) => (map car mat)
 (matrix-*-matrix mat identity) => mat
 (matrix-*-matrix identity mat) => mat
 
@@ -1060,8 +1103,8 @@ one-through-four => '(1 2 3 4)
 (fold-right list '() (list 1 2 3)) => '(1 (2 (3 ())))
 (fold-left list '() (list 1 2 3)) => '(((() 1) 2) 3)
 
-;; If `op` satisfies the commutative property `(= (op x y) (op y x))`, then
-;; `fold-right` and `fold-left` will produce the same values for any sequence.
+;; For `fold-left` and `fold-right` to produce the same value on any sequence,
+;; `op` must satisfy the commutative property `(= (op x y) (op y x))`.
 
 (Exercise ?2.39
   (use (?2.38 fold-left fold-right)))
@@ -1187,22 +1230,20 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.43)
 
-;; The interchange makes the program run slowly because it evaluates the
-;; recursive call to queen-cols multiple times. Instead of doing the recursive
-;; call and then adjoining all possible new positions to each set of positions
-;; for the k-1 case, Louis Reasoner's procedure enumerates the interval for the
-;; possible new positions once and then for each one does the same recursive
-;; call to get the set of positions for the k-1 case. The original procedure
-;; evaluates the enumeration multiple times, which does not significantly affect
-;; performance. Evaluating the recursive call multiple times is wasteful. Louis
-;; Reasoner could still use the interchanged version if he bound the value of
-;; the recursive call in a let-binding surrounding the `flatmap` application.
+;; Interchanging the nested mappings slows down the program because the
+;; `queen-cols` recursion gets re-evaluated for every `enumerate-interval`
+;; result. If the recursive call was bound outside the mappings using `let`,
+;; then either nesting would be fine.
 ;;
-;; Assuming the original solution solves the puzzle in time T, Louis's
-;; program will take longer than T. Exactly how long is hard to say. If
-;; `queen-cols` did a constant amount of work outside the recursive call, it
-;; would be (8^8)T = 16,777,216T. But T includes more than just the tree of
-;; recursive calls, so it would be less than that.
+;; To quantify how much slower it is, we must analyze the time complexity of
+;; both solutions. Let's start with the original solution.
+;;
+
+;; <!-- Assuming the original solution solves the puzzle in time $T$, Louis's program
+;; will take longer. Exactly how long is hard to say. If `queen-cols` did a
+;; constant amount of work outside the recursive call, it would be $8^8T =
+;; 16,777,216\,T$. But $T$ includes more than just the tree of recursive calls,
+;; so it would be less than that. -->
 
 (Section :2.2.4 "Example: A Picture Language")
 

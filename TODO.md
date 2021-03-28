@@ -9,11 +9,29 @@
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
 - make spellc.m interactive
+- quotation issues, link to "on denoting" paper
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2
     - lecture: 1a, 1b, 2a, 2b, 3a
-    - exercise: 1.1, 1.2, 1.3, 2.1
-- run HTML simplifier/minifier inside katex.ts just on the math
+    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2* (in ex 2.43)
++ box-and-pointer, tree, environment diagrams
+    x graphviz
+    x https://github.com/asciitosvg/asciitosvg
+    + https://ivanceras.github.io/content/Svgbob.html
+    + install in deps.sh
+    x hashing (don't bother -- too complicated, don't for math)
+        x and for longevity, thats what checking in docs/ is for -- it would be easy to extract the SVG from there is svgbob became unavailable
+    + extend katex.ts (and rename?) for svgo, svgbob
+    + need to use "```svgbob", not "::: svgbob", since with div Pandoc will still parse the inside as Markdown
+    + svgo didn't eleminate <g>s until I added `multipass: true`
+    x can't use external <marker>s https://stackoverflow.com/q/9233279
+        x open bug https://bugs.chromium.org/p/chromium/issues/detail?id=109212
+    + update README
+    + max-width, viewBox scaling
+    + correct font size, adjust to be centred
+    + crop so that margins look right
+x run HTML simplifier/minifier inside katex.ts just on the math
+    x not worth it, only says 5% (by removing double quotes)
 + consistent backticks for car/cdr/cons
 + remove ` ; NOALIGN` from code blocks on website
 + fix landscape zooming on iPhone

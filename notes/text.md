@@ -709,13 +709,30 @@ Now we can do things like this:
 - The _closure property_ of `cons` is the ability to make pairs whose elements are pairs. This allows us to create hierarchal structures.
 - We have been using closure all along with combinations. Now, we are going to use closure for compound data.
 
+> The use of the word "closure" here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set. The Lisp community also (unfortunately) uses the word "closure" to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables. We do not use the word "closure" in this second sense in this book. [@2.2.fn6]
+
 ### 2.2.1: Representing Sequences
 
 - One thing we can build with pairs is a _sequence_: an ordered collection of data objects.
-- This is a chain of pairs where each `car` points to a data value, and each `cdr` points to the next pair in the chain. The `cdr` of the final pair is a special value, `nil`.
-- This sequence of nested pairs is called a _list_. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.
+- Sequences can be represented by chains of pairs where each `car` points to a value and each `cdr` points to the next pair. The final pair's `cdr` is a special value, `nil`.
+- For example, `(cons 1 (cons 2 (cons 3 (cons 4 nil))))` represents a sequence:
+
+```diagram
+     .---+---.    .---+---.    .---+---.    .---+--+.
+---->| * | *-+--->| * | *-+--->| * | *-+--->| * | / +
+     '-|-+---'    '-|-+---'    '-|-+---'    '-|-++--'
+       |            |            |            |
+       v            v            v            v
+     .---.        .---.        .---.        .---.
+     | 1 |        | 2 |        | 3 |        | 4 |
+     '---'        '---'        '---'        '---'
+```
+
+- This way of nesting pairs is called a _list_. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.
 - The procedure `car` gives us the first item; `cdr` gives us the sublist containing all items but the first; `cons` returns a list with an item added to the front.
 - The `nil` value can be thought of as an empty list.
+
+> In this book, we use _list_ to mean a chain of pairs terminated by the end-of-list marker. In contrast, the term _list structure_ refers to any data structure made out of pairs, not just to lists. [@2.2.fn8]
 
 #### List operations
 
@@ -813,6 +830,10 @@ Now we can do things like this:
 - Expressing programs as sequence operations helps us make program designs that are _modular_---made of relatively independent pieces that we can connect in flexible ways. This is a strategy for controlling complexity.
 - A surprisingly vast range of operations can be expressed as sequence operations.
 - Sequences serve as a conventional interface for the modules of the program.
+
+::: highlight
+>  One of the reasons for the success of Lisp as a programming language is that lists provide a standard medium for expressing ordered collections so that they can be manipulated using higher-order operations. The programming language APL owes much of its power and appeal to a similar choice. In APL all data are represented as arrays, and there is a universal and convenient set of generic operators for all sorts of array operations. [@2.2.fn15]
+:::
 
 ::: exercises
 2.33-39

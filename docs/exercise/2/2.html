@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SICP Section 2.2 Exercises</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
@@ -81,6 +83,7 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 <h3 id="2.2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a> <span class="number">2.2.1.1</span> List operations
 </h3>
+<p>Iterative <code>list-ref</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       (<span class="fu">car</span> items)
@@ -88,7 +91,7 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (<span class="kw">define</span> squares (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">9</span> <span class="cn">16</span> <span class="cn">25</span>))
 (<span class="fu">list-ref</span> squares <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">16</span></code></pre>
-<p>Recursive</p>
+<p>Recursive <code>length</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
   (<span class="kw">if</span> (<span class="fu">null?</span> items)
       <span class="cn">0</span>
@@ -96,7 +99,7 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 
 (<span class="kw">define</span> odds (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>))
 (<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
-<p>Iterative</p>
+<p>Iterative <code>length</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
   (<span class="kw">define</span> (iter a count)
     (<span class="kw">if</span> (<span class="fu">null?</span> a)
@@ -104,9 +107,9 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
         (iter (<span class="fu">cdr</span> a) (<span class="fu">+</span> <span class="cn">1</span> count))))
   (iter items <span class="cn">0</span>))
 
-(<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span>
-
-(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
+(<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
+<p>Recursive <code>append</code>:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
   (<span class="kw">if</span> (<span class="fu">null?</span> list1)
       list2
       (<span class="fu">cons</span> (<span class="fu">car</span> list1)
@@ -138,6 +141,7 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 <h3 id="ex2.19" class="anchor">
 <a class="anchor__link link" href="#ex2.19" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.19">Exercise 2.19<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>Generalizing <code>count-change</code> from <a href="../1/2.html#1.2.2.1">§&nbsp;1.2.2.1</a> to work with any currency:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> us-coins (<span class="fu">list</span> <span class="cn">50</span> <span class="cn">25</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">1</span>))
 (<span class="kw">define</span> uk-coins (<span class="fu">list</span> <span class="cn">100</span> <span class="cn">50</span> <span class="cn">20</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">2</span> <span class="cn">1</span> <span class="cn">1</span>/<span class="cn">2</span>))
 
@@ -156,11 +160,11 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 (<span class="kw">define</span> no-more? <span class="fu">null?</span>)
 
 (cc <span class="cn">20</span> uk-coins) <span class="op">=&gt;</span> <span class="cn">293</span></code></pre>
-<p>The order of the coin value list does not affect the answer produced by <code>cc</code>:</p>
+<p>The order of the coin list does not affect the answer produced by <code>cc</code>:</p>
 <pre><code class="blockcode">(cc <span class="cn">100</span> us-coins) <span class="op">=&gt;</span> <span class="cn">292</span>
 (cc <span class="cn">100</span> (<span class="fu">reverse</span> us-coins)) <span class="op">=&gt;</span> <span class="cn">292</span>
 (cc <span class="cn">100</span> (<span class="fu">list</span> <span class="cn">5</span> <span class="cn">50</span> <span class="cn">1</span> <span class="cn">25</span> <span class="cn">10</span>)) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
-<p>This is because the cc algorithm does not assume the coin values are sorted in any particular order. It recurs on the <code>cdr</code> of the list, so it will always be able to reach the end of the list unless it reaches one of the other base cases first.</p>
+<p>The tree recursion will explore every possible combination. It makes no difference if you start with combinations that prefer fewer, larger coins, or with the combination that only uses pennies, or anything in between.</p>
 <h3 id="ex2.20" class="anchor">
 <a class="anchor__link link" href="#ex2.20" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.20">Exercise 2.20<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -241,7 +245,6 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>Louis’s procedure reverses the order of the list because he is building up a new list in the reverse order that the original one was constructed. The first element to be consed onto the original list is its last element. Consing in reverse order produces a reversed list.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
   (<span class="kw">define</span> (iter things answer)
     (<span class="kw">if</span> (<span class="fu">null?</span> things)
@@ -252,7 +255,7 @@ Imports:
   (iter items &#39;()))
 
 (square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">16</span> <span class="cn">9</span> <span class="cn">4</span> <span class="cn">1</span>)</code></pre>
-<p>When Louis interchanges the arguments to <code>cons</code>, it doesn’t work because he is trying to cons a list onto a single element. This creates a list structure (in that it is made up of pairs), but this is not a sequence. Louis is trying to use cons to add an element to the end a sequence, but this is not possible. To add something to the end of a sequence, you must walk all the way to its end. He could use <code>append</code> instead of <code>cons</code> to achieve this, but this would end up being much less efficient than the recursive map.</p>
+<p>Louis’s procedure reverses the order of the list because of the way he builds the result. His first iteration creates a pair whose <code>car</code> is <code>(square (<span class="fu">car</span> things))</code> and whose <code>cdr</code> is nil, and further recursions prepend to this list. So the last item of the result is the first item of the original list, and vice versa.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
   (<span class="kw">define</span> (iter things answer)
     (<span class="kw">if</span> (<span class="fu">null?</span> things)
@@ -263,6 +266,7 @@ Imports:
   (iter items &#39;()))
 
 (square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(((((() . <span class="cn">1</span>) . <span class="cn">4</span>) . <span class="cn">9</span>) . <span class="cn">16</span>) . <span class="cn">25</span>)</code></pre>
+<p>Interchanging the arguments to <code>cons</code> doesn’t work because now each <code>cdr</code> is a number, not a pair. The result is not a proper list, so Scheme prints it in explicit <code>(<span class="fu">car</span> . <span class="fu">cdr</span>)</code> notation. It is essentially the same reversed list as before, just the roles of <code>car</code> and <code>cdr</code> have been swapped.</p>
 <h3 id="ex2.23" class="anchor">
 <a class="anchor__link link" href="#ex2.23" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.23">Exercise 2.23<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -298,19 +302,9 @@ Imports:
 </h3>
 <pre><code class="blockcode">(<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>)))</code></pre>
 <p>Box-and-pointer structure:</p>
-<pre><code class="blockcode"><span class="co">; [*|*]---&gt;[*|X]</span>
-<span class="co">;  |        |</span>
-<span class="co">;  v        \-&gt;[*|*]---&gt;[*|X]</span>
-<span class="co">;  1            |        |</span>
-<span class="co">;               v        \-&gt;[*|*]---&gt;[4|X]</span>
-<span class="co">;               2            |</span>
-<span class="co">;                            v</span>
-<span class="co">;                            3</span></code></pre>
+<figure><svg class="diagram" viewBox="0 0 458 328" style="max-width:458px"><defs><marker id="m1a" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0v4l4-2-4-2z"/></marker><marker id="m1c" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><circle cx="4" cy="4" r="2.5" stroke="none" fill="currentColor"/></marker></defs><rect x="50.286" y="100.571" width="36.571" height="36.571" rx="4.571"/><text x="64.286" y="123.429">1</text><rect x="150.857" y="192" width="36.571" height="36.571" rx="4.571"/><text x="164.857" y="214.857">2</text><rect x="251.429" y="283.429" width="36.571" height="36.571" rx="4.571"/><text x="265.429" y="306.286">3</text><rect x="370.286" y="283.429" width="36.571" height="36.571" rx="4.571"/><text x="384.286" y="306.286">4</text><path marker-end="url(#m1a)" d="M0 27.429h45.714"/><path marker-end="url(#m1c)" d="M68.571 54.857V27.429"/><path marker-end="url(#m1c)" d="M118.857 27.429h-13.714"/><path marker-end="url(#m1a)" d="M118.857 27.429h45.714"/><path marker-end="url(#m1c)" d="M187.429 54.857V27.429"/><path marker-end="url(#m1a)" d="M68.571 54.857v36.572"/><path marker-end="url(#m1a)" d="M187.429 54.857v36.572"/><path marker-end="url(#m1c)" d="M169.143 146.286v-27.429"/><path marker-end="url(#m1c)" d="M219.429 118.857h-13.715"/><path marker-end="url(#m1a)" d="M219.429 118.857h45.714"/><path marker-end="url(#m1c)" d="M288 146.286v-27.429"/><path marker-end="url(#m1a)" d="M169.143 146.286v36.571"/><path marker-end="url(#m1a)" d="M288 146.286v36.571"/><path marker-end="url(#m1c)" d="M269.714 237.714v-27.428"/><path marker-end="url(#m1c)" d="M320 210.286h-13.714"/><path marker-end="url(#m1a)" d="M320 210.286h45.714"/><path marker-end="url(#m1c)" d="M388.571 237.714v-27.428"/><path marker-end="url(#m1a)" d="M269.714 237.714v36.572"/><path marker-end="url(#m1a)" d="M388.571 237.714v36.572"/><path d="M54.857 9.143a4.571 4.571 0 0 0-4.571 4.571m0 0v27.429m4.571-32h64m-32 0v36.571m32-36.571a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.572-4.571a4.571 4.571 0 0 1-4.572 4.571m54.857-36.571a4.571 4.571 0 0 0-4.571 4.571m0 0v27.429m4.571-32h64m-32 0v36.571m27.429-36.571-13.714 27.428m18.285-27.428a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m-18.285-9.143-4.572 9.143m27.429-4.571a4.571 4.571 0 0 1-4.572 4.571m-82.285 54.857a4.571 4.571 0 0 0-4.572 4.572m0 0v27.428m4.572-32h64m-32 0v36.572m32-36.572a4.571 4.571 0 0 1 4.571 4.572m0 0v27.428m-73.143 0a4.571 4.571 0 0 0 4.572 4.572m0 0h64m4.571-4.572a4.571 4.571 0 0 1-4.571 4.572m54.857-36.572a4.571 4.571 0 0 0-4.572 4.572m0 0v27.428m4.572-32h64m-32 0v36.572m27.428-36.572L320 128m18.286-27.429a4.571 4.571 0 0 1 4.571 4.572m0 0v27.428m-73.143 0a4.571 4.571 0 0 0 4.572 4.572m0 0h64M320 128l-4.571 9.143m27.428-4.572a4.571 4.571 0 0 1-4.571 4.572M256 192a4.571 4.571 0 0 0-4.571 4.571m0 0V224M256 192h64m-32 0v36.571M320 192a4.571 4.571 0 0 1 4.571 4.571m0 0V224m-73.142 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.571-4.571a4.571 4.571 0 0 1-4.571 4.571M374.857 192a4.571 4.571 0 0 0-4.571 4.571m0 0V224m4.571-32h64m-32 0v36.571M434.286 192l-13.715 27.429M438.857 192a4.571 4.571 0 0 1 4.572 4.571m0 0V224m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m-18.286-9.142L416 228.571M443.429 224a4.571 4.571 0 0 1-4.572 4.571"/></svg></figure>
 <p>Tree interpretation:</p>
-<pre><code class="blockcode"><span class="co">;  /\</span>
-<span class="co">; 1 /\</span>
-<span class="co">;  2 /\</span>
-<span class="co">;   3 4</span></code></pre>
+<figure><svg class="diagram" viewBox="0 0 165 218" style="max-width:165px"><text x="36.857" y="105.143">1</text><text x="64.286" y="160">2</text><text x="91.714" y="214.857">3</text><text x="146.571" y="214.857">4</text><text x="9.429" y="13.714">(1 (2 (3 4)))</text><text x="100.857" y="68.571">(2 (3 4))</text><text x="128.286" y="123.429">(3 4)</text><path d="M68.571 27.429 45.714 73.143m22.857-45.714 54.858 109.714M96 82.286 73.143 128m50.286 9.143-22.858 45.714m22.858-45.714 22.857 45.714"/></svg></figure>
 <h3 id="ex2.25" class="anchor">
 <a class="anchor__link link" href="#ex2.25" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.25">Exercise 2.25<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -340,7 +334,9 @@ Imports:
       (<span class="fu">map</span> deep-reverse (<span class="fu">reverse</span> x))
       x))
 
-(deep-reverse &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;((<span class="cn">4</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">1</span>))</code></pre>
+(<span class="kw">define</span> x &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>)))
+(<span class="fu">reverse</span> x) <span class="op">=&gt;</span> &#39;((<span class="cn">3</span> <span class="cn">4</span>) (<span class="cn">1</span> <span class="cn">2</span>))
+(deep-reverse x) <span class="op">=&gt;</span> &#39;((<span class="cn">4</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">1</span>))</code></pre>
 <h3 id="ex2.28" class="anchor">
 <a class="anchor__link link" href="#ex2.28" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.28">Exercise 2.28<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -352,7 +348,9 @@ Imports:
         (<span class="kw">else</span> (<span class="fu">cons</span> (<span class="fu">car</span> t)
                     (fringe (<span class="fu">cdr</span> t))))))
 
-(fringe &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>))) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(<span class="kw">define</span> x &#39;((<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">3</span> <span class="cn">4</span>)))
+(fringe x) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
+(fringe (<span class="fu">list</span> x x)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
 (fringe &#39;((((<span class="cn">5</span>) <span class="cn">2</span>) ((<span class="cn">3</span> <span class="cn">2</span>) <span class="cn">9</span>)))) <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">2</span> <span class="cn">9</span>)</code></pre>
 <h3 id="ex2.29" class="anchor">
 <a class="anchor__link link" href="#ex2.29" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.29">Exercise 2.29<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -360,34 +358,37 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (make-mobile left right) (<span class="fu">list</span> left right))
 (<span class="kw">define</span> (make-branch <span class="fu">length</span> structure) (<span class="fu">list</span> <span class="fu">length</span> structure))</code></pre>
 <ol type="a">
-<li>Selectors</li>
+<li>Selectors:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> left-branch <span class="fu">car</span>)
 (<span class="kw">define</span> right-branch <span class="fu">cadr</span>)
 (<span class="kw">define</span> branch-length <span class="fu">car</span>)
 (<span class="kw">define</span> branch-structure <span class="fu">cadr</span>)</code></pre>
 <ol start="2" type="a">
-<li>Total weight</li>
+<li>Total weight:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (mobile-weight mobile)
   (<span class="fu">+</span> (branch-weight (left-branch mobile))
      (branch-weight (right-branch mobile))))
+
 (<span class="kw">define</span> (branch-weight branch)
   (<span class="kw">let</span> ((struct (branch-structure branch)))
     (<span class="kw">if</span> (<span class="fu">number?</span> struct)
         struct
         (mobile-weight struct))))</code></pre>
 <ol start="3" type="a">
-<li>Balance</li>
+<li>Balance:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (torque branch)
   (<span class="fu">*</span> (branch-length branch)
      (branch-weight branch)))
+
 (<span class="kw">define</span> (mobile-balanced? mobile)
   (<span class="kw">and</span> (<span class="fu">=</span> (torque (left-branch mobile))
           (torque (right-branch mobile)))
        (branch-balanced? (left-branch mobile))
        (branch-balanced? (right-branch mobile))))
+
 (<span class="kw">define</span> (branch-balanced? branch)
   (<span class="kw">let</span> ((struct (branch-structure branch)))
     (<span class="kw">or</span> (<span class="fu">number?</span> struct)
@@ -397,6 +398,7 @@ Imports:
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> make-mobile <span class="fu">cons</span>)
 (<span class="kw">define</span> make-branch <span class="fu">cons</span>)
+
 (<span class="kw">define</span> right-branch <span class="fu">cdr</span>)
 (<span class="kw">define</span> branch-structure <span class="fu">cdr</span>)</code></pre>
 <h3 id="2.2.2.1" class="anchor">
@@ -408,8 +410,7 @@ Imports:
         (<span class="kw">else</span> (<span class="fu">cons</span> (scale-tree (<span class="fu">car</span> tree) factor)
                     (scale-tree (<span class="fu">cdr</span> tree) factor)))))
 
-(scale-tree (<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="fu">list</span> <span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>)
-<span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))
+(scale-tree &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))
 
 (<span class="kw">define</span> (scale-tree tree factor)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (sub-tree)
@@ -418,8 +419,7 @@ Imports:
              (<span class="fu">*</span> sub-tree factor)))
        tree))
 
-(scale-tree (<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="fu">list</span> <span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>)
-<span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))</code></pre>
+(scale-tree &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="cn">6</span> <span class="cn">7</span>)) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> (<span class="cn">20</span> (<span class="cn">30</span> <span class="cn">40</span>) <span class="cn">50</span>) (<span class="cn">60</span> <span class="cn">70</span>))</code></pre>
 <h3 id="ex2.30" class="anchor">
 <a class="anchor__link link" href="#ex2.30" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.30">Exercise 2.30<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -440,7 +440,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> tree &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> <span class="cn">4</span>) <span class="cn">5</span>) (<span class="cn">6</span> <span class="cn">7</span>)))
 (<span class="kw">define</span> squared-tree &#39;(<span class="cn">1</span> (<span class="cn">4</span> (<span class="cn">9</span> <span class="cn">16</span>) <span class="cn">25</span>) (<span class="cn">36</span> <span class="cn">49</span>)))</code></pre>
-<p>Without map</p>
+<p>Direct recursion:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square-tree t)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> t) &#39;())
         ((<span class="fu">not</span> (<span class="fu">pair?</span> t)) (square t))
@@ -448,7 +448,7 @@ Imports:
                     (square-tree (<span class="fu">cdr</span> t))))))
 
 (square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
-<p>With map</p>
+<p>Using <code>map</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square-tree t)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (t)
          (<span class="kw">if</span> (<span class="fu">pair?</span> t)
@@ -486,13 +486,16 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>Without map</p>
+<p>Direct recursion:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (tree-map f t)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> t) &#39;())
         ((<span class="fu">not</span> (<span class="fu">pair?</span> t)) (f t))
         (<span class="kw">else</span> (<span class="fu">cons</span> (tree-map f (<span class="fu">car</span> t))
-                    (tree-map f (<span class="fu">cdr</span> t))))))</code></pre>
-<p>With map</p>
+                    (tree-map f (<span class="fu">cdr</span> t))))))
+
+(<span class="kw">define</span> (square-tree tree) (tree-map square tree))
+(square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
+<p>Using <code>map</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (tree-map f t)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (t)
          (<span class="kw">if</span> (<span class="fu">pair?</span> t)
@@ -505,6 +508,12 @@ Imports:
 <h3 id="ex2.32" class="anchor">
 <a class="anchor__link link" href="#ex2.32" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.32">Exercise 2.32<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
+<p>The set of all subsets, or powerset, is defined recursively for finite sets:</p>
+<ul>
+<li>For the empty set, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∅</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">{</mo><mi mathvariant="normal">∅</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\powerset{\varnothing}=\{\varnothing\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord amsrm">∅</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord amsrm">∅</span><span class="mclose">}</span></span></span></span>.</li>
+<li>Given a set <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span> and any <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi>S</mi><mo>∪</mo><mo stretchy="false">{</mo><mi>x</mi><mo stretchy="false">}</mo><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo>∪</mo><mo stretchy="false">{</mo><mi>R</mi><mo>∪</mo><mo stretchy="false">{</mo><mi>x</mi><mo stretchy="false">}</mo><mo>∣</mo><mi>R</mi><mo>∈</mo><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\powerset{S\cup\{x\}} = \powerset{S} \cup \{R\cup\{x\} \mid R\in\powerset{S}\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">x</span><span class="mclose">}</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">x</span><span class="mclose">}</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mclose">)</span><span class="mclose">}</span></span></span></span>.</li>
+</ul>
+<p>This leads to the following implementation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (subsets s)
   (<span class="kw">if</span> (<span class="fu">null?</span> s)
       (<span class="fu">list</span> &#39;())
@@ -514,13 +523,10 @@ Imports:
                 (<span class="fu">map</span> (<span class="kw">lambda</span> (set) (<span class="fu">cons</span> first-item set))
                      subsets-rest)))))
 
+(subsets &#39;()) <span class="op">=&gt;</span> &#39;(())
+(subsets &#39;(<span class="cn">1</span>)) <span class="op">=&gt;</span> &#39;(() (<span class="cn">1</span>))
+(subsets &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(() (<span class="cn">2</span>) (<span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>))
 (subsets &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(() (<span class="cn">3</span>) (<span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>))</code></pre>
-<p>This works because we can define the powerset recursively like this:</p>
-<ol type="1">
-<li>The powerset of an empty set is {{}}.</li>
-<li>Given a set S and its powerset P(S), the powerset of S’ (the set formed by adding the element x to S) is P(S’), and P(S’) is equal to the union of P(S) and {R union {x} | R in P(S)}.</li>
-</ol>
-<p>These form the base case and the natural recursion for the poweset procedure, and they are sufficient to construct the powerset of any set.</p>
 <h2 id="2.2.3" class="anchor">
 <a class="anchor__link link" href="#2.2.3" aria-hidden="true">#</a> <span class="number">2.2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.3">Sequences as Conventional Interfaces<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -601,9 +607,9 @@ Imports:
          (<span class="fu">cons</span> (<span class="fu">car</span> xs) (<span class="fu">filter</span> pred (<span class="fu">cdr</span> xs))))
         (<span class="kw">else</span> (<span class="fu">filter</span> pred (<span class="fu">cdr</span> xs)))))
 
-(<span class="fu">filter</span> <span class="fu">odd?</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span>)</code></pre>
-<p>Accumulate is like fold-right (not fold-left).</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (accumulate op initial xs)
+(<span class="fu">filter</span> <span class="fu">odd?</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span>)
+
+(<span class="kw">define</span> (accumulate op initial xs)
   (<span class="kw">if</span> (<span class="fu">null?</span> xs)
       initial
       (op (<span class="fu">car</span> xs)
@@ -695,7 +701,10 @@ Imports:
               <span class="cn">0</span>
               coefs))
 
-(horner-eval <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">3</span> <span class="cn">0</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">79</span></code></pre>
+(<span class="kw">define</span> x <span class="cn">2</span>)
+(horner-eval x &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">0</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">1</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">*</span> <span class="cn">3</span> x) (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">expt</span> x <span class="cn">3</span>)) (<span class="fu">expt</span> x <span class="cn">5</span>))
+<span class="op">=&gt;</span> <span class="cn">79</span></code></pre>
 <h3 id="ex2.35" class="anchor">
 <a class="anchor__link link" href="#ex2.35" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.35">Exercise 2.35<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -778,8 +787,10 @@ Imports:
 
 (<span class="kw">define</span> (matrix-*-vector m v)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (u) (dot-product u v)) m))
+
 (<span class="kw">define</span> (transpose mat)
   (accumulate-n <span class="fu">cons</span> &#39;() mat))
+
 (<span class="kw">define</span> (matrix-*-matrix m n)
   (<span class="kw">let</span> ((cols (transpose n)))
     (<span class="fu">map</span> (<span class="kw">lambda</span> (r)
@@ -790,6 +801,7 @@ Imports:
 
 (<span class="kw">define</span> mat &#39;((<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>) (<span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span>)))
 (<span class="kw">define</span> identity &#39;((<span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>) (<span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span>) (<span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span>)))
+(matrix-*-vector mat (<span class="fu">car</span> identity)) <span class="op">=&gt;</span> (<span class="fu">map</span> <span class="fu">car</span> mat)
 (matrix-*-matrix mat identity) <span class="op">=&gt;</span> mat
 (matrix-*-matrix identity mat) <span class="op">=&gt;</span> mat</code></pre>
 <h3 id="ex2.38" class="anchor">
@@ -824,7 +836,7 @@ Imports:
 (fold-left <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">1</span>/<span class="cn">6</span>
 (fold-right <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> ())))
 (fold-left <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(((() <span class="cn">1</span>) <span class="cn">2</span>) <span class="cn">3</span>)</code></pre>
-<p>If <code>op</code> satisfies the commutative property <code>(<span class="fu">=</span> (op x y) (op y x))</code>, then <code>fold-right</code> and <code>fold-left</code> will produce the same values for any sequence.</p>
+<p>For <code>fold-left</code> and <code>fold-right</code> to produce the same value on any sequence, <code>op</code> must satisfy the commutative property <code>(<span class="fu">=</span> (op x y) (op y x))</code>.</p>
 <h3 id="ex2.39" class="anchor">
 <a class="anchor__link link" href="#ex2.39" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.39">Exercise 2.39<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1075,8 +1087,13 @@ Imports:
 <h3 id="ex2.43" class="anchor">
 <a class="anchor__link link" href="#ex2.43" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_thm_2.43">Exercise 2.43<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<p>The interchange makes the program run slowly because it evaluates the recursive call to queen-cols multiple times. Instead of doing the recursive call and then adjoining all possible new positions to each set of positions for the k-1 case, Louis Reasoner’s procedure enumerates the interval for the possible new positions once and then for each one does the same recursive call to get the set of positions for the k-1 case. The original procedure evaluates the enumeration multiple times, which does not significantly affect performance. Evaluating the recursive call multiple times is wasteful. Louis Reasoner could still use the interchanged version if he bound the value of the recursive call in a let-binding surrounding the <code>flatmap</code> application.</p>
-<p>Assuming the original solution solves the puzzle in time T, Louis’s program will take longer than T. Exactly how long is hard to say. If <code>queen-cols</code> did a constant amount of work outside the recursive call, it would be (8^8)T = 16,777,216T. But T includes more than just the tree of recursive calls, so it would be less than that.</p>
+<p>Interchanging the nested mappings slows down the program because the <code>queen-cols</code> recursion gets re-evaluated for every <code>enumerate-interval</code> result. If the recursive call was bound outside the mappings using <code>let</code>, then either nesting would be fine.</p>
+<p>To quantify how much slower it is, we must analyze the time complexity of both solutions. Let’s start with the original solution.</p>
+<!-- Assuming the original solution solves the puzzle in time $T$, Louis's program
+will take longer. Exactly how long is hard to say. If `queen-cols` did a
+constant amount of work outside the recursive call, it would be $8^8T =
+16,777,216\,T$. But $T$ includes more than just the tree of recursive calls,
+so it would be less than that. -->
 <h2 id="2.2.4" class="anchor">
 <a class="anchor__link link" href="#2.2.4" aria-hidden="true">#</a> <span class="number">2.2.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4">Example: A Picture Language<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>

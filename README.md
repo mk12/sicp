@@ -120,9 +120,11 @@ To view the website, open [docs/index.html](docs/index.html) in your browser.
 
 ### Implementation
 
-The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, and math.
+The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
 
-The math is the most complicated, because [KaTeX][] is implemented in JavaScript, not Lua. Instead of invoking it directly, the Lua filter communicates over a Unix pipe with [katex.ts](notes/pandoc/katex.ts), a [Deno][] server that uses the KaTeX module. The filter uses [luaposix][] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
+To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses [luaposix][] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
+
+The render.ts server is a [Deno][] server implemented in [render.ts](notes/pandoc/render.ts). It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX][], and converts ASCII diagrams to SVG using [svgbob][] and [svgo][]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
 
 Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml].
 
@@ -223,6 +225,8 @@ See [LICENSE](LICENSE.md) for details.
 [static]: https://github.com/jgm/pandoc/issues/3986
 [Deno]: https://deno.land
 [KaTeX]: https://katex.org
+[svgbob]: https://github.com/ivanceras/svgbob
+[svgo]: https://github.com/svg/svgo
 [vnu]: https://validator.github.io/validator/
 [clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [skylighting]: https://github.com/jgm/skylighting

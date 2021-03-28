@@ -79,16 +79,26 @@
 <li>The <em>closure property</em> of <code>cons</code> is the ability to make pairs whose elements are pairs. This allows us to create hierarchal structures.</li>
 <li>We have been using closure all along with combinations. Now, we are going to use closure for compound data.</li>
 </ul>
+<blockquote>
+<p>The use of the word “closure” here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set. The Lisp community also (unfortunately) uses the word “closure” to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables. We do not use the word “closure” in this second sense in this book. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#footnote_Temp_154" title="SICP Chapter 2, Footnote 6">(Footnote&nbsp;2.6)</a></p>
+</blockquote>
 <h2 id="2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a> <span class="number">2.2.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.1">Representing Sequences<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
 <li>One thing we can build with pairs is a <em>sequence</em>: an ordered collection of data objects.</li>
-<li>This is a chain of pairs where each <code>car</code> points to a data value, and each <code>cdr</code> points to the next pair in the chain. The <code>cdr</code> of the final pair is a special value, <code>nil</code>.</li>
-<li>This sequence of nested pairs is called a <em>list</em>. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.</li>
+<li>Sequences can be represented by chains of pairs where each <code>car</code> points to a value and each <code>cdr</code> points to the next pair. The final pair’s <code>cdr</code> is a special value, <code>nil</code>.</li>
+<li>For example, <code>(<span class="fu">cons</span> <span class="cn">1</span> (<span class="fu">cons</span> <span class="cn">2</span> (<span class="fu">cons</span> <span class="cn">3</span> (<span class="fu">cons</span> <span class="cn">4</span> nil))))</code> represents a sequence:</li>
+</ul>
+<figure><svg class="diagram" viewBox="0 0 494 145" style="max-width:494px"><defs><marker id="m1a" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0v4l4-2-4-2z"/></marker><marker id="m1c" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><circle cx="4" cy="4" r="2.5" stroke="none" fill="currentColor"/></marker></defs><rect x="50.286" y="100.571" width="36.571" height="36.571" rx="4.571"/><text x="64.286" y="123.429">1</text><rect x="169.143" y="100.571" width="36.571" height="36.571" rx="4.571"/><text x="183.143" y="123.429">2</text><rect x="288" y="100.571" width="36.571" height="36.571" rx="4.571"/><text x="302" y="123.429">3</text><rect x="406.857" y="100.571" width="36.571" height="36.571" rx="4.571"/><text x="420.857" y="123.429">4</text><path marker-end="url(#m1a)" d="M0 27.429h45.714"/><path marker-end="url(#m1c)" d="M68.571 54.857V27.429"/><path marker-end="url(#m1c)" d="M118.857 27.429h-13.714"/><path marker-end="url(#m1a)" d="M118.857 27.429h45.714"/><path marker-end="url(#m1c)" d="M187.429 54.857V27.429"/><path marker-end="url(#m1c)" d="M237.714 27.429H224"/><path marker-end="url(#m1a)" d="M237.714 27.429h45.715"/><path marker-end="url(#m1c)" d="M306.286 54.857V27.429"/><path marker-end="url(#m1c)" d="M356.571 27.429h-13.714"/><path marker-end="url(#m1a)" d="M356.571 27.429h45.715"/><path marker-end="url(#m1c)" d="M425.143 54.857V27.429"/><path marker-end="url(#m1a)" d="M68.571 54.857v36.572"/><path marker-end="url(#m1a)" d="M187.429 54.857v36.572"/><path marker-end="url(#m1a)" d="M306.286 54.857v36.572"/><path marker-end="url(#m1a)" d="M425.143 54.857v36.572"/><path d="M54.857 9.143a4.571 4.571 0 0 0-4.571 4.571m0 0v27.429m4.571-32h64m-32 0v36.571m32-36.571a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.572-4.571a4.571 4.571 0 0 1-4.572 4.571m54.857-36.571a4.571 4.571 0 0 0-4.571 4.571m0 0v27.429m4.571-32h64m-32 0v36.571m32-36.571a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.572-4.571a4.571 4.571 0 0 1-4.572 4.571m54.857-36.571A4.571 4.571 0 0 0 288 13.714m0 0v27.429m4.571-32h64m-32 0v36.571m32-36.571a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.572-4.571a4.571 4.571 0 0 1-4.572 4.571m54.858-36.571a4.571 4.571 0 0 0-4.572 4.571m0 0v27.429m4.572-32h64m-32 0v36.571m27.428-36.571-13.714 27.428m18.286-27.428A4.571 4.571 0 0 1 480 13.714m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.572 4.571m0 0h64m-18.286-9.143-4.572 9.143M480 41.143a4.571 4.571 0 0 1-4.571 4.571"/></svg></figure>
+<ul>
+<li>This way of nesting pairs is called a <em>list</em>. We usually represent lists by placing each element one after the other and enclosing the whole thing in parentheses.</li>
 <li>The procedure <code>car</code> gives us the first item; <code>cdr</code> gives us the sublist containing all items but the first; <code>cons</code> returns a list with an item added to the front.</li>
 <li>The <code>nil</code> value can be thought of as an empty list.</li>
 </ul>
+<blockquote>
+<p>In this book, we use <em>list</em> to mean a chain of pairs terminated by the end-of-list marker. In contrast, the term <em>list structure</em> refers to any data structure made out of pairs, not just to lists. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#footnote_Temp_156" title="SICP Chapter 2, Footnote 8">(Footnote&nbsp;2.8)</a></p>
+</blockquote>
 <h3 id="2.2.1.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a> List operations
 </h3>
@@ -175,6 +185,12 @@
 <li>A surprisingly vast range of operations can be expressed as sequence operations.</li>
 <li>Sequences serve as a conventional interface for the modules of the program.</li>
 </ul>
+<div id="q1" class="highlight">
+<a class="highlight__link link" href="../highlight.html#2.2-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<blockquote>
+<p>One of the reasons for the success of Lisp as a programming language is that lists provide a standard medium for expressing ordered collections so that they can be manipulated using higher-order operations. The programming language APL owes much of its power and appeal to a similar choice. In APL all data are represented as arrays, and there is a universal and convenient set of generic operators for all sorts of array operations. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#footnote_Temp_183" title="SICP Chapter 2, Footnote 15">(Footnote&nbsp;2.15)</a></p>
+</blockquote>
+</div>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.33">2.33</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.34">2.34</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.35">2.35</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.36">2.36</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.37">2.37</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.38">2.38</a>, </li><li class="flat__item"><a href="../../exercise/2/2.html#ex2.39">2.39</a></li></ul></aside>
 <h3 id="2.2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.2.3.2" aria-hidden="true">#</a> Nested mappings
@@ -270,8 +286,8 @@
 <li>This example also uses <em>stratified design</em>, the notion that a complex system should be structured as a sequence of levels.</li>
 <li>Each time we start a new level, we treat the old complex things as primitive black boxes and combine them.</li>
 </ul>
-<div id="q1" class="highlight">
-<a class="highlight__link link" href="../highlight.html#2.2-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
+<div id="q2" class="highlight">
+<a class="highlight__link link" href="../highlight.html#2.2-q2" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
 <blockquote>
 <p>Stratified design helps make programs <em>robust</em>, that is, it makes it likely that small changes in a specification will require correspondingly small changes in the program. … In general, each level of a stratified design provides a different vocabulary for expressing the characteristics of the system, and a different kind of ability to change it. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%25_sec_2.2.4" title="SICP Section 2.2.4">(Section&nbsp;2.2.4)</a></p>
 </blockquote>

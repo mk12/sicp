@@ -11,7 +11,7 @@
 /spellc
 
 # Sockets
-katex.sock
+render.sock
 
 # Downloaded HTML files
 /sicp_html

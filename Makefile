@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
-DENOFLAGS := --unstable --allow-read --allow-write
+DENOFLAGS := --unstable --allow-read --allow-write --allow-run
 
 sicp_src := $(patsubst %,src/sicp/chapter-%.ss,1 2 3 4 5)
 
@@ -22,10 +22,10 @@ doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise)
 doc_assets := $(patsubst %,notes/assets/%.svg,\
 	arrows circle-left circle-right external github)
 doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
-	config.yml filter.lua katex.ts pagenav.html scheme.xml template.html)
+	config.yml filter.lua render.ts pagenav.html scheme.xml template.html)
 
-katex_src := notes/pandoc/katex.ts
-katex_sock := katex.sock
+render_src := notes/pandoc/render.ts
+render_sock := render.sock
 
 # Made-up headings that are allowed in chapter-*.ss.
 heading_exceptions := \
@@ -35,7 +35,7 @@ heading_exceptions := \
 validate_exceptions := \
 	'.*not allowed as child of element “mo”.*'
 
-.PHONY: all help test docs katex fmt lint lintss spell validate clean vscode
+.PHONY: all help test docs render fmt lint lintss spell validate clean vscode
 
 # Ordered from fastest to slowest, for early feedback.
 all: lint fmt spell docs validate test
@@ -46,9 +46,10 @@ help:
 	@echo "help      show this help message"
 	@echo "test      run tests in Chez, Guile, and Racket"
 	@echo "docs      build the website in docs/"
-	@echo "katex     run the katex server"
+	@echo "render    run the render.ts server"
 	@echo "fmt       format C and TypeScript code"
 	@echo "lint      lint all source files"
+	@echo "lintss    lint only Scheme code"
 	@echo "spell     spellcheck Markdown and Scheme files"
 	@echo "validate  validate generated HTML files"
 	@echo "clean     remove compilation artifacts"
@@ -60,7 +61,7 @@ test:
 
 docs: $(doc_html)
 
-$(doc_html): docgen $(doc_assets) $(doc_pandoc_aux) | $(katex_sock)
+$(doc_html): docgen $(doc_assets) $(doc_pandoc_aux) | $(render_sock)
 	./docgen $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -74,19 +75,19 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_4)): src/sicp/chapter-4.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
 
-katex:
-	deno run $(DENOFLAGS) $(katex_src) $(katex_sock)
+render:
+	deno run $(DENOFLAGS) $(render_src) $(render_sock)
 
-ifneq (,$(wildcard ./katex.sock))
-$(katex_sock): $(katex_src)
+ifneq (,$(wildcard ./render.sock))
+$(render_sock): $(render_src)
 	$(error \
-A server is already running on $(katex_sock), but it is using outdated code.\
+A server is already running on $(render_sock), but it is using outdated code.\
 Try again after terminating or restarting it)
 else
-.INTERMEDIATE: $(katex_sock)
-$(katex_sock):
-	deno run $(DENOFLAGS) $(katex_src) $@ &
-	deno run $(DENOFLAGS) $(katex_src) --wait $@
+.INTERMEDIATE: $(render_sock)
+$(render_sock):
+	deno run $(DENOFLAGS) $(render_src) $@ &
+	deno run $(DENOFLAGS) $(render_src) --wait $@
 endif
 
 fmt:
