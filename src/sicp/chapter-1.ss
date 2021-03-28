@@ -641,8 +641,8 @@ circumference ~> 62.8318
 ;;
 ;; Orders of growth:
 ;;
-;; - Steps: $\Theta(n^5)$ because there are 5 types of coins.
-;; - Space: $\Theta(n)$ because the maximum depth of the tree grows linearly.
+;; - Steps: $Θ(n^5)$ because there are 5 types of coins.
+;; - Space: $Θ(n)$ because the maximum depth of the tree grows linearly.
 ;;
 ;; Remember: for a tree-recursive process, space is proportional to the maximum
 ;; depth of the tree, and the number of steps is the number of leaves.
@@ -664,16 +664,15 @@ circumference ~> 62.8318
 ~> (p (p (p (p (sine 0.15)))))
 ~> (p (p (p (p (p (sine 0.05)))))) ; five times until theta <= 0.1
 
-;; (b) During the process, `p` is evaluated $k$ times such that
-;; $\theta/3^k\lt0.1$. Solving for $k$ gives $k = \log10\theta/\log3$, thus
-;; the number of steps for `sine` grows as $\Theta(\log n)$. The interpreter
-;; must maintain the stack for that number of calls to `p`, therefore the space
-;; complexity is also $\Theta(\log n)$.
+;; (b) During the process, `p` is evaluated $k$ times such that $θ/3^k\lt0.1$.
+;; Solving for $k$ gives $k = \log10θ/\log3$, thus the number of steps for
+;; `sine` grows as $Θ(\log n)$. The interpreter must maintain the stack for that
+;; number of calls to `p`, therefore the space complexity is also $Θ(\log n)$.
 
 (Section :1.2.4 "Exponentiation"
   (use (:1.1.4 square)))
 
-;; Recursive, naive: $\Theta(n)$ time, $\Theta(n)$ space.
+;; Recursive, naive: $Θ(n)$ time, $Θ(n)$ space.
 (define (expt b n)
   (if (= n 0)
       1
@@ -681,7 +680,7 @@ circumference ~> 62.8318
 
 (expt 2 5) => 32
 
-;; Iterative, naive: $\Theta(n)$ time, $\Theta(1)$ space.
+;; Iterative, naive: $Θ(n)$ time, $Θ(1)$ space.
 (define (expt b n)
   (define (iter counter prod)
     (if (= counter 0)
@@ -691,8 +690,7 @@ circumference ~> 62.8318
 
 (expt 2 5) => 32
 
-;; Recursive, successive squaring: $\Theta(\log n)$ time, $\Theta(\log n)$
-;; space.
+;; Recursive, successive squaring: $Θ(\log n)$ time, $Θ(\log n)$ space.
 (define (fast-expt b n)
   (cond ((= n 0) 1)
         ((even? n) (square (fast-expt b (/ n 2))))
@@ -703,7 +701,7 @@ circumference ~> 62.8318
 (Exercise ?1.16
   (use (:1.1.4 square)))
 
-;; Iterative, successive squaring: $\Theta(\log n)$ time, $\Theta(1)$ space.
+;; Iterative, successive squaring: $Θ(\log n)$ time, $Θ(1)$ space.
 (define (fast-expt b n)
   (define (iter a b n)
     (cond ((= n 0) a)
@@ -716,7 +714,7 @@ circumference ~> 62.8318
 
 (Exercise ?1.17)
 
-;; Recursive, naive: $\Theta(n)$ time, $\Theta(n)$ space.
+;; Recursive, naive: $Θ(n)$ time, $Θ(n)$ space.
 (define (* a b)
   (if (= b 0)
       0
@@ -728,7 +726,7 @@ circumference ~> 62.8318
 (define (double x) (+ x x))
 (define (halve x) (/ x 2))
 
-;; Recursive, successive doubling: $\Theta(\log n)$ time, $\Theta(\log n)$
+;; Recursive, successive doubling: $Θ(\log n)$ time, $Θ(\log n)$
 ;; space.
 (define (fast-* a b)
   (cond ((= b 0) 0)
@@ -740,7 +738,7 @@ circumference ~> 62.8318
 (Exercise ?1.18
   (use (?1.17 double halve)))
 
-;; Iterative, successive doubling: $\Theta(\log n)$ time, $\Theta(1)$ space.
+;; Iterative, successive doubling: $Θ(\log n)$ time, $Θ(1)$ space.
 (define (fast-* a b)
   (define (iter c a b)
     (cond ((= b 0) c)
@@ -770,7 +768,7 @@ circumference ~> 62.8318
 ;;
 ;; where $p' = p^2 + q^2$ and $q' = q^2 + 2pq$.
 
-;; Using this, we can implement `fib` with $\Theta(\log n)$ time complexity:
+;; Using this, we can implement `fib` with $Θ(\log n)$ time complexity:
 
 (define (fib n)
   (define (iter a b p q count)
@@ -793,7 +791,7 @@ circumference ~> 62.8318
 
 (Section :1.2.5 "Greatest Common Divisors")
 
-;; Euclid's Algorithm: $\Theta(\log n)$ time.
+;; Euclid's Algorithm: $Θ(\log n)$ time.
 (define (gcd a b)
   (if (= b 0)
       a
@@ -845,7 +843,7 @@ circumference ~> 62.8318
         (else (find-divisor n (+ test-divisor 1)))))
 (define (divides? a b) (= (remainder b a) 0))
 
-;; Trial division: $\Theta(\sqrt n)$ time.
+;; Trial division: $Θ(\sqrt n)$ time.
 (define (prime? n)
   (= n (smallest-divisor n)))
 
@@ -868,7 +866,7 @@ circumference ~> 62.8318
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
 
-;; Fermat test: $\Theta(\log n)$ time, probabilistic.
+;; Fermat test: $Θ(\log n)$ time, probabilistic.
 (define (fast-prime? n times)
   (or (= times 0)
       (and (fermat-test n)
@@ -939,9 +937,9 @@ circumference ~> 62.8318
 ; 1000033 *** .0011339187622070312
 ; 1000037 *** .0013699531555175781
 
-;; The data bears out the $\Theta(\sqrt n)$ prediction. The growth between
-;; powers of ten gets closer to $\sqrt{10}\approx3.16$ as $n$ gets larger. This
-;; result is compatible with the notion that programs on the machine run in time
+;; The data bears out the $Θ(\sqrt n)$ prediction. The growth between powers of
+;; ten gets closer to $\sqrt{10}\approx3.16$ as $n$ gets larger. This result is
+;; compatible with the notion that programs on the machine run in time
 ;; proportional to the number of steps required for the computation.
 
 (Exercise ?1.23
@@ -1022,9 +1020,9 @@ circumference ~> 62.8318
 ; 1000033 *** .004972934722900391
 ; 1000037 *** .0043179988861083984
 
-;; Since the Fermat test has $\Theta(\log n)$ growth, I expected the time to
-;; test primes near 1,000,000 to be only a bit greater than for primes near
-;; 1,000. The data bears this out: for each additional order of magnitude of the
+;; Since the Fermat test has $Θ(\log n)$ growth, I expected the time to test
+;; primes near 1,000,000 to be only a bit greater than for primes near 1,000.
+;; The data bears this out: for each additional order of magnitude of the
 ;; primes, the time required increases by a small, constant amount.
 ;; Specifically, primes that are 10 times larger take about 1 millisecond
 ;; longer. These results may be dependent on the choice of 100 as the second
@@ -1083,8 +1081,7 @@ circumference ~> 62.8318
 ;; as an explicit multiplication, the `expmod` combination is evaluated twice.
 ;; The interpreter has no way of knowing that they will have the same value.
 ;; This transforms a linear recursive process into a tree-recursive process. The
-;; time complexity of this tree-recursive process is $\Theta(\log 2^n)$, or
-;; $\Theta(n)$.
+;; time complexity of this tree-recursive process is $Θ(\log 2^n)$, or $Θ(n)$.
 
 (Exercise ?1.27
   (use (:1.2.6.1 prime?) (:1.2.6.2 expmod)))
@@ -1368,7 +1365,7 @@ circumference ~> 62.8318
 (define tolerance 0.001)
 (define (close-enough? x y) (< (abs (- x y)) tolerance))
 
-;; Half interval method: $\Theta(\log(\abs{a-b}/t))$ time where $t$ is
+;; Half interval method: $Θ(\log(\abs{a-b}/t))$ time where $t$ is
 ;; `tolerance`.
 (define (half-interval-method f a b)
   (let ((a-value (f a))

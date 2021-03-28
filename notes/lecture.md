@@ -948,9 +948,9 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We can represent a complex number in two ways:
     - real part and imaginary part (rectangular form);
     - magnitude and angle (polar form).
-- The rectangular form $x + iy$ and the polar form $re^{i\theta}$ are related:
-    - $x = r\cos\theta$ and $y = r\sin\theta$.
-    - $r = \sqrt{x^2 + y^2}$ and $\theta = \arctan(y,x)$.
+- The rectangular form $x + iy$ and the polar form $re^{iθ}$ are related:
+    - $x = r\cos θ$ and $y = r\sin θ$.
+    - $r = \sqrt{x^2 + y^2}$ and $θ = \arctan(y,x)$.
 - We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.
 - We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.
 
