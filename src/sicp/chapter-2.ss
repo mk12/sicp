@@ -1190,9 +1190,9 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.42
   (use (:2.2.3.1 enumerate-interval filter) (:2.2.3.2 flatmap)))
 
-(define make-position cons)
+(define make-position list)
 (define get-row car)
-(define get-col cdr)
+(define get-col cadr)
 
 (define empty-board '())
 (define (adjoin-position row col board)
@@ -1222,11 +1222,41 @@ one-through-four => '(1 2 3 4)
                  (queen-cols (- k 1))))))
   (queen-cols board-size))
 
-(queens 1) => '(((1 . 1)))
-(queens 2) => '()
-(queens 3) => '()
-(queens 4) => '(((3 . 4) (1 . 3) (4 . 2) (2 . 1))
-                ((2 . 4) (4 . 3) (1 . 2) (3 . 1)))
+(queens 0) => '(())
+(queens 1) => '(((1 1)))
+
+;; The number of solution for each board size matches [OEIS sequence
+;; A000170](https://oeis.org/A000170):
+
+(map (lambda (n) (length (queens n))) (enumerate-interval 0 8))
+=> '(1 1 0 0 2 10 4 40 92)
+
+;; Here is the first solution (out of 92) it gives for the eight-queens puzzle:
+
+(car (queens 8)) => '((4 8) (2 7) (7 6) (3 5) (6 4) (8 3) (5 2) (1 1))
+
+;; Plotting it on a chess board, we can see that no queen is under attack:
+;;
+;; ```diagram
+;;     1   2   3   4   5   6   7   8
+;;   +---+---+---+---+---+---+---+---+
+;; 1 | Q |   |   |   |   |   |   |   |
+;;   +---+---+---+---+---+---+---+---+
+;; 2 |   |   |   |   |   |   | Q |   |
+;;   +---+---+---+---+---+---+---+---+
+;; 3 |   |   |   |   | Q |   |   |   |
+;;   +---+---+---+---+---+---+---+---+
+;; 4 |   |   |   |   |   |   |   | Q |
+;;   +---+---+---+---+---+---+---+---+
+;; 5 |   | Q |   |   |   |   |   |   |
+;;   +---+---+---+---+---+---+---+---+
+;; 6 |   |   |   | Q |   |   |   |   |
+;;   +---+---+---+---+---+---+---+---+
+;; 7 |   |   |   |   |   | Q |   |   |
+;;   +---+---+---+---+---+---+---+---+
+;; 8 |   |   | Q |   |   |   |   |   |
+;;   +---+---+---+---+---+---+---+---+
+;; ```
 
 (Exercise ?2.43)
 
