@@ -1269,67 +1269,41 @@ one-through-four => '(1 2 3 4)
 ;; then either nesting would be fine.
 ;;
 ;; To quantify how much slower it is, we will analyze both solutions. Let $T_k$
-;; be the number of operations performed by `(queen-cols k 8)` using the
-;; original algorithm, and let $N_k$ be the number of results it returns. In the
-;; base case, $T_0=C_0$ for some constant $C_0$. For $k≥1$, we have
-;; $T_k=T_{k-1}+W_k$ where $T_{k-1}$ is due to the recursive call and $W_k$
-;; represents the other work done by `queen-cols`. $W_k$ includes $C_1$ constant
-;; work; $C_2$ for each of the $8N_{k-1}$ candidate boards it maps and filters;
-;; and $C_3$ in `safe?` for each of the $k$ positions in all the boards. Putting
-;; this together, we have
+;; and $T'_k$ be the number of operations performed by `(queen-cols k 8)` using
+;; the original program and Louis's program, respectively, and let $N_k$ be the
+;; number of results it returns. In the base case, $T_0=T'_0=C_0$ for some
+;; constant $C_0$. For $k≥1$, we have $T_k=T_{k-1}+W_k$ where $T_{k-1}$ is due
+;; to the recursive call and $W_k$ represents the other work done by
+;; `queen-cols`. Since Louis's program repeats the recursive call, it takes
+;; $T'_k=8T'_{k-1}+W_k$ operations. $W_k$ includes $C_1$ constant work; $C_2$
+;; for each of the $8N_{k-1}$ candidate boards it maps and filters; and $C_3$ in
+;; `safe?` for each of the $k$ positions in all the boards. Put together, we
+;; have
 ;;
 ;; $$W_k = C_1 + (C_2 + C_3k)8N_{k-1}.$$
-;;
-;; Louis's program performs $T'_k=T'_{k-1}+W'_k$ operations. The key difference
-;; is that the recursive call is repeated eight times:
-;;
-;; $$W'_k = C_1 + (C_2 + 8C_3k)8N_{k-1}.$$
 ;;
 ;; Let's implement these equations in Scheme:
 
 (define C0) (define C1) (define C2) (define C3)
 
-(define (T k W) (if (= k 0) C0 (+ (T (- k 1) W) (W k))))
+(define (T k) (if (= k 0) C0 (+ (T (- k 1)) (W k))))
+(define (T-louis k) (if (= k 0) C0 (+ (* 8 (T-louis (- k 1))) (W k))))
+
+(define (W k) (+ C1 (* (+ C2 (* C3 k)) 8 (N (- k 1)))))
 (define (N k) (length (queen-cols k 8)))
 
-(define (W-original k) (+ C1 (* (+ C2 (* C3 k)) 8 (N (- k 1)))))
-(define (W-louis k) (+ C1 (* (+ C2 (* 8 C3 k)) 8 (N (- k 1)))))
-
-;; To estimate how long Louis's program will take to solve the puzzle relative
-;; to the original program, all we have to do is divide $T'_8$ by $T_8$:
+;; To estimate how much slower Louis's program is, all we have to do is choose
+;; reasonable values for the constants and then divide $T'_8$ by $T_8$:
 
 (define (louis-slowdown v0 v1 v2 v3)
   (set! C0 v0) (set! C1 v1) (set! C2 v2) (set! C3 v3)
-  (inexact (/ (T 8 W-louis) (T 8 W-original))))
+  (inexact (/ (T-louis 8) (T 8))))
 
-(louis-slowdown 1 3 10 15) ~> 7.026885854434575
+(louis-slowdown 1 1 1 1) ~> 1598.2301736709533
+(louis-slowdown 1 3 10 15) ~> 1355.8443654944654
+(louis-slowdown 0 5 10 5) ~> 1667.9916268313882
 
-;; And use that to
-
-;; <!--
-;; (N 0) => 1
-;; (N 1) => 8
-;; (N 2) => 42
-;; (N 3) => 140
-;; (N 4) => 344
-;; (N 5) => 568
-;; (N 6) => 550
-;; (N 7) => 312
-;;
-;; Now, we can expand the total operation count:
-;;
-;; $$\begin{aligned} T_8 &= T_7 + W_8 \\
-;;     &= T_0 + \sum_{k=1}^8W_k \\
-;;     &= C_0 + 8C_1 + 8C_2\sum_{k=0}^7N_k + 8C_3\sum_{k=0}^7kN_k
-;; \end{aligned}$$
-;;
-;; We can express this formula in code:
-;;
-;; Assuming the original solution solves the puzzle in time $T$, Louis's program
-;; will take longer. Exactly how long is hard to say. If `queen-cols` did a
-;; constant amount of work outside the recursive call, it would be $8^8T =
-;; 16,777,216\,T$. But $T$ includes more than just the tree of recursive calls,
-;; so it would be less than that. -->
+;; Louis's program is slower than the original by three orders of magnitude.
 
 (Section :2.2.4 "Example: A Picture Language")
 
