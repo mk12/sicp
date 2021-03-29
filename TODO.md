@@ -11,10 +11,14 @@
 - make spellc.m interactive
 - quotation issues, link to "on denoting" paper
 - perfection:
-    - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2
+    - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
-    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2* (in ex 2.43)
-- fix linter.c for UTF-8 (had error with exactly 80 chars, but had theta)
+    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
+x make diagrams self-contained (otherwise disabling CSS, they are a mess)
+    x noticed math renders twice with CSS disabled
+    x https://gendignoux.com/blog/2020/05/23/katex.html
+    x given I can't even make math look like (can't hide the HTML one without css), there's no point in going to all this effort with the diagrams
++ fix linter.c for UTF-8 (had error with exactly 80 chars, but had theta)
 + fix linter.c for ```diagram blocks
 + bug, section number going ABOVE the title in narrow viewport
     + happens in section 2.2 iPhone SE, due to "Hierarchical" being unsplittable
