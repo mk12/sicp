@@ -1215,11 +1215,11 @@ one-through-four => '(1 2 3 4)
       (list empty-board)
       (filter safe?
               (flatmap
-                (lambda (rest-of-queens)
-                  (map (lambda (new-row)
+               (lambda (rest-of-queens)
+                 (map (lambda (new-row)
                         (adjoin-position new-row k rest-of-queens))
                       (enumerate-interval 1 board-size)))
-                (queen-cols (- k 1) board-size)))))
+               (queen-cols (- k 1) board-size)))))
 
 (define (queens board-size)
   (queen-cols board-size board-size))
@@ -1280,6 +1280,42 @@ one-through-four => '(1 2 3 4)
 ;;
 ;; $$W_k = C_1 + (C_2 + C_3k)8N_{k-1}.$$
 ;;
+;; Louis's program performs $T'_k=T'_{k-1}+W'_k$ operations. The key difference
+;; is that the recursive call is repeated eight times:
+;;
+;; $$W'_k = C_1 + (C_2 + 8C_3k)8N_{k-1}.$$
+;;
+;; Let's implement these equations in Scheme:
+
+(define C0) (define C1) (define C2) (define C3)
+
+(define (T k W) (if (= k 0) C0 (+ (T (- k 1) W) (W k))))
+(define (N k) (length (queen-cols k 8)))
+
+(define (W-original k) (+ C1 (* (+ C2 (* C3 k)) 8 (N (- k 1)))))
+(define (W-louis k) (+ C1 (* (+ C2 (* 8 C3 k)) 8 (N (- k 1)))))
+
+;; To estimate how long Louis's program will take to solve the puzzle relative
+;; to the original program, all we have to do is divide $T'_8$ by $T_8$:
+
+(define (louis-slowdown v0 v1 v2 v3)
+  (set! C0 v0) (set! C1 v1) (set! C2 v2) (set! C3 v3)
+  (inexact (/ (T 8 W-louis) (T 8 W-original))))
+
+(louis-slowdown 1 3 10 15) ~> 7.026885854434575
+
+;; And use that to
+
+;; <!--
+;; (N 0) => 1
+;; (N 1) => 8
+;; (N 2) => 42
+;; (N 3) => 140
+;; (N 4) => 344
+;; (N 5) => 568
+;; (N 6) => 550
+;; (N 7) => 312
+;;
 ;; Now, we can expand the total operation count:
 ;;
 ;; $$\begin{aligned} T_8 &= T_7 + W_8 \\
@@ -1288,27 +1324,8 @@ one-through-four => '(1 2 3 4)
 ;; \end{aligned}$$
 ;;
 ;; We can express this formula in code:
-
-(define (N k) (length (queen-cols k 8)))
-
-(define (original C0 C1 C2 C3)
-  (+ C0
-     (* 8 C1)
-     (* 8 C2)
-     (* 8 C3))
-
-;; And use that to 
-
-(N 0) => 1
-(N 1) => 8
-(N 2) => 42
-(N 3) => 140
-(N 4) => 344
-(N 5) => 568
-(N 6) => 550
-(N 7) => 312
-
-;; <!-- Assuming the original solution solves the puzzle in time $T$, Louis's program
+;;
+;; Assuming the original solution solves the puzzle in time $T$, Louis's program
 ;; will take longer. Exactly how long is hard to say. If `queen-cols` did a
 ;; constant amount of work outside the recursive call, it would be $8^8T =
 ;; 16,777,216\,T$. But $T$ includes more than just the tree of recursive calls,
