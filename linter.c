@@ -29,7 +29,8 @@ static const char MARKDOWN_CODE_START_PREFIX[] = "```";
 static const char MARKDOWN_CODE_END[] = "```\n";
 
 // Bit flags specifying indentation rules for an operator. The indentation of a
-// line is determined by the last unclosed paren's operator.
+// line is determined by the operator belonging to the most recent (as of the
+// start of the line) open paren that remains unclosed.
 enum IndentRules {
     // By default, operands must line up with the operator:
     //
@@ -177,7 +178,7 @@ enum ImportBlock {
 enum {
     // Bitmask for (ID NAME ...) blocks.
     IB_MASK_INSIDE = IB_SEC_USE_ARG | IB_PASTE_ARG,
-    // Bitmask for blocks that contain IB_MASK_ARG.
+    // Bitmask for blocks that contain IB_MASK_INSIDE.
     IB_MASK_OUTSIDE = IB_SEC_USE | IB_PASTE,
 };
 
@@ -298,6 +299,18 @@ struct State {
     char last_import_name[MAX_COLUMNS];
 };
 
+// Returns the number of UTF-8 code points in the line.
+static int count_utf8(const char *line, int line_len) {
+    const unsigned char *p = (const unsigned char *)line;
+    int count = 0;
+    for (int i = 0; i < line_len; i++) {
+        if (p[i] < 0x80 || p[i] > 0xbf) {
+            count++;
+        }
+    }
+    return count;
+}
+
 // Emits a failure message for the current line given a zero-based column and
 // printf-style format string and arguments.
 static void fail(struct State *state, int column, const char *format, ...) {
@@ -327,8 +340,9 @@ static bool lint_line(struct State *state, const char *line, int line_len) {
         return true;
     }
     state->prev_blanks = 0;
-    if (line_len - 1 > MAX_COLUMNS) {
-        fail(state, MAX_COLUMNS - 1, "line too long: %d > %d", line_len,
+    const int utf8_len = count_utf8(line, line_len) - 1;  // omit the newline
+    if (utf8_len > MAX_COLUMNS) {
+        fail(state, MAX_COLUMNS - 1, "line too long: %d > %d", utf8_len,
              MAX_COLUMNS);
     }
     if (line[line_len - 2] == ' ') {
