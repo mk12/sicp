@@ -21,8 +21,12 @@ static const char NO_ALIGN_COMMENT[] = "; NOALIGN\n";
 static const char MARKDOWN_SCHEME_START_1[] = "```scheme\n";
 static const char MARKDOWN_SCHEME_START_2[] = "```\n";
 
-// Line in a Markdown file indicating the end of Scheme code.
-static const char MARKDOWN_SCHEME_END[] = "```\n";
+// Line prefix in a Markdown file that starts a code block. We need to recognize
+// these to avoid treating the ending "```" as MARKDOWN_SCHEME_START_2.
+static const char MARKDOWN_CODE_START_PREFIX[] = "```";
+
+// Line in a Markdown file indicating the end of a code block.
+static const char MARKDOWN_CODE_END[] = "```\n";
 
 // Bit flags specifying indentation rules for an operator. The indentation of a
 // line is determined by the last unclosed paren's operator.
@@ -635,17 +639,27 @@ static int lint(const char *filename) {
     size_t cap = 0;
     ssize_t len;
     if (strcmp(file_extension(filename), "md") == 0) {
-        enum { TEXT, SCHEME } mode = TEXT;
+        enum { TEXT, NON_SCHEME, SCHEME } mode = TEXT;
         while ((len = getline(&line, &cap, fp)) != -1) {
             switch (mode) {
             case TEXT:
                 if (strncmp(line, MARKDOWN_SCHEME_START_1, len) == 0
                     || strncmp(line, MARKDOWN_SCHEME_START_2, len) == 0) {
                     mode = SCHEME;
+                } else if (strncmp(line, MARKDOWN_CODE_START_PREFIX,
+                                   sizeof MARKDOWN_CODE_START_PREFIX - 1)
+                           == 0) {
+                    mode = NON_SCHEME;
+                }
+                break;
+            case NON_SCHEME:
+                if (strncmp(line, MARKDOWN_CODE_END, len) == 0) {
+                    mode = TEXT;
+                    break;
                 }
                 break;
             case SCHEME:
-                if (strncmp(line, MARKDOWN_SCHEME_END, len) == 0) {
+                if (strncmp(line, MARKDOWN_CODE_END, len) == 0) {
                     mode = TEXT;
                     break;
                 }

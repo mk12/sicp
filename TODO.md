@@ -14,6 +14,7 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2* (in ex 2.43)
++ fix linter.c for ```diagram blocks
 + bug, section number going ABOVE the title in narrow viewport
     + happens in section 2.2 iPhone SE, due to "Hierarchical" being unsplittable
     + also gaps like "building <blank line> abstractions with" because "building" fits but "abstractions" doesn't
