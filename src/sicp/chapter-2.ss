@@ -1299,9 +1299,9 @@ one-through-four => '(1 2 3 4)
   (set! C0 v0) (set! C1 v1) (set! C2 v2) (set! C3 v3)
   (inexact (/ (T-louis 8) (T 8))))
 
-(louis-slowdown 1 1 1 1) ~> 1598.2301736709533
+(louis-slowdown 1 1 01 01) ~> 1598.2301736709533
 (louis-slowdown 1 3 10 15) ~> 1355.8443654944654
-(louis-slowdown 0 5 10 5) ~> 1667.9916268313882
+(louis-slowdown 0 5 10 05) ~> 1667.9916268313882
 
 ;; Louis's program is slower than the original by three orders of magnitude.
 
@@ -1388,7 +1388,6 @@ one-through-four => '(1 2 3 4)
   (use (?2.46 add-vect scale-vect xcor-vect ycor-vect)
        (?2.47 edge1-frame edge2-frame origin-frame)))
 
-;; This is a curried procedure.
 (define (frame-coord-map frame)
   (lambda (v)
     (add-vect
@@ -1412,18 +1411,26 @@ one-through-four => '(1 2 3 4)
   (make-vect (* s (xcor-vect v))
              (* s (ycor-vect v))))
 
+(add-vect (make-vect 1 2) (make-vect 3 4)) => (make-vect 4 6)
+(sub-vect (make-vect 1 2) (make-vect 3 4)) => (make-vect -2 -2)
+(scale-vect 2 (make-vect 1 2)) => (make-vect 2 4)
+
 (Exercise ?2.47)
 
-;; First representation
+;; First representation:
+
 (define (make-frame origin edge1 edge2)
   (list origin edge1 edge2))
+
 (define origin-frame car)
 (define edge1-frame cadr)
 (define edge2-frame caddr)
 
-;; Second representation
+;; Second representation:
+
 (define (make-frame origin edge1 edge2)
   (cons origin (cons edge1 edge2)))
+
 (define origin-frame car)
 (define edge1-frame cadr)
 (define edge2-frame cddr)
@@ -1453,7 +1460,7 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.49
   (use (:2.2.4.4 segments->painter) (?2.46 make-vect) (?2.48 make-segment)))
 
-;; (a) The painter that draws the outline of the designated frame
+;; (a) The painter that draws the outline of the designated frame:
 (define outline
   (segments->painter
    (list (make-segment (make-vect 0 0) (make-vect 1 0))
@@ -1461,14 +1468,15 @@ one-through-four => '(1 2 3 4)
          (make-segment (make-vect 0 0) (make-vect 0 1))
          (make-segment (make-vect 1 0) (make-vect 1 1)))))
 
-;; (b) The painter that draws an "X" by connecting opposite corners of the frame
+;; (b) The painter that draws an "X" by connecting opposite corners of the
+;; frame:
 (define x
   (segments->painter
    (list (make-segment (make-vect 0 0) (make-vect 1 1))
          (make-segment (make-vect 0 1) (make-vect 1 0)))))
 
 ;; (c) The painter that draws a diamond shape by connecting the midpoints of the
-;; sides of the frame
+;; sides of the frame:
 (define diamond
   (segments->painter
    (list (make-segment (make-vect 0.5 0.0) (make-vect 1.0 0.5))
@@ -1476,7 +1484,7 @@ one-through-four => '(1 2 3 4)
          (make-segment (make-vect 0.0 0.5) (make-vect 0.5 0.0))
          (make-segment (make-vect 0.5 1.0) (make-vect 1.0 0.5)))))
 
-;; (d) The wave painter
+;; (d) The `wave` painter:
 (define wave-segments
   (list (make-segment (make-vect 0.46 0.00) (make-vect 0.37 0.22))
         (make-segment (make-vect 0.37 0.22) (make-vect 0.46 0.34))
@@ -1585,7 +1593,7 @@ one-through-four => '(1 2 3 4)
   (use (:2.2.4.5 beside rotate90 transform-painter) (?2.46 make-vect)
        (?2.50 rotate270)))
 
-;; Method 1: Analogous to the `beside` procedure
+;; Analogous to the `beside` procedure:
 (define (below painter1 painter2)
   (let ((split-point (make-vect 0 0.5)))
     (let ((paint-bottom
@@ -1604,7 +1612,7 @@ one-through-four => '(1 2 3 4)
         (paint-bottom frame)
         (paint-top frame)))))
 
-;; Method 2: In terms of `beside` and rotations
+;; In terms of `beside` and rotations:
 (define (below painter1 painter2)
   (rotate90
    (beside (rotate270 painter1)
@@ -1616,7 +1624,7 @@ one-through-four => '(1 2 3 4)
        (?2.46 make-vect) (?2.48 make-segment) (?2.49 wave-segments)
        (?2.50 flip-horiz) (?2.51 below)))
 
-;; (a) I changed `wave` to add a smile.
+;; (a) I changed `wave` to add a smile:
 (define smile-segments
   (list (make-segment (make-vect 0.46 0.13) (make-vect 0.46 0.17))
         (make-segment (make-vect 0.46 0.24) (make-vect 0.50 0.27))
@@ -1625,8 +1633,8 @@ one-through-four => '(1 2 3 4)
 (define wave
   (segments->painter (append wave-segments smile-segments)))
 
-;; (b) I changed `corner-split` to use only one copy of `up-split` and
-;; `right-split` images instead of two.
+;; (b) I changed `corner-split` to use only one copy of the `up-split` and
+;; `right-split` images instead of two:
 (define (corner-split painter n)
   (if (= n 0)
       painter
@@ -1636,7 +1644,7 @@ one-through-four => '(1 2 3 4)
         (beside (below painter up)
                 (below right corner)))))
 
-;; (c) I changed `square-limit` to orient the corners differently.
+;; (c) I changed `square-limit` to orient the corners differently:
 (define (square-limit painter n)
   (let ((quarter (corner-split painter n)))
     (let ((flipped (flip-horiz quarter)))
