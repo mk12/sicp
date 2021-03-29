@@ -1209,18 +1209,20 @@ one-through-four => '(1 2 3 4)
                  (helper (cdr rest-of-queens) (+ cols-apart 1))))))
     (helper (cdr positions) 1)))
 
+;; I've moved `queen-cols` to the top level so that [](?2.43) can access it.
+(define (queen-cols k board-size)
+  (if (= k 0)
+      (list empty-board)
+      (filter safe?
+              (flatmap
+                (lambda (rest-of-queens)
+                  (map (lambda (new-row)
+                        (adjoin-position new-row k rest-of-queens))
+                      (enumerate-interval 1 board-size)))
+                (queen-cols (- k 1) board-size)))))
+
 (define (queens board-size)
-  (define (queen-cols k)
-    (if (= k 0)
-        (list empty-board)
-        (filter safe?
-                (flatmap
-                 (lambda (rest-of-queens)
-                   (map (lambda (new-row)
-                          (adjoin-position new-row k rest-of-queens))
-                        (enumerate-interval 1 board-size)))
-                 (queen-cols (- k 1))))))
-  (queen-cols board-size))
+  (queen-cols board-size board-size))
 
 (queens 0) => '(())
 (queens 1) => '(((1 1)))
@@ -1258,16 +1260,53 @@ one-through-four => '(1 2 3 4)
 ;;   +---+---+---+---+---+---+---+---+
 ;; ```
 
-(Exercise ?2.43)
+(Exercise ?2.43
+  (use (?2.42 queen-cols)))
 
 ;; Interchanging the nested mappings slows down the program because the
 ;; `queen-cols` recursion gets re-evaluated for every `enumerate-interval`
 ;; result. If the recursive call was bound outside the mappings using `let`,
 ;; then either nesting would be fine.
 ;;
-;; To quantify how much slower it is, we must analyze the time complexity of
-;; both solutions. Let's start with the original solution.
+;; To quantify how much slower it is, we will analyze both solutions. Let $T_k$
+;; be the number of operations performed by `(queen-cols k 8)` using the
+;; original algorithm, and let $N_k$ be the number of results it returns. In the
+;; base case, $T_0=C_0$ for some constant $C_0$. For $k≥1$, we have
+;; $T_k=T_{k-1}+W_k$ where $T_{k-1}$ is due to the recursive call and $W_k$
+;; represents the other work done by `queen-cols`. $W_k$ includes $C_1$ constant
+;; work; $C_2$ for each of the $8N_{k-1}$ candidate boards it maps and filters;
+;; and $C_3$ in `safe?` for each of the $k$ positions in all the boards. Putting
+;; this together, we have
 ;;
+;; $$W_k = C_1 + (C_2 + C_3k)8N_{k-1}.$$
+;;
+;; Now, we can expand the total operation count:
+;;
+;; $$\begin{aligned} T_8 &= T_7 + W_8 \\
+;;     &= T_0 + \sum_{k=1}^8W_k \\
+;;     &= C_0 + 8C_1 + 8C_2\sum_{k=0}^7N_k + 8C_3\sum_{k=0}^7kN_k
+;; \end{aligned}$$
+;;
+;; We can express this formula in code:
+
+(define (N k) (length (queen-cols k 8)))
+
+(define (original C0 C1 C2 C3)
+  (+ C0
+     (* 8 C1)
+     (* 8 C2)
+     (* 8 C3))
+
+;; And use that to 
+
+(N 0) => 1
+(N 1) => 8
+(N 2) => 42
+(N 3) => 140
+(N 4) => 344
+(N 5) => 568
+(N 6) => 550
+(N 7) => 312
 
 ;; <!-- Assuming the original solution solves the puzzle in time $T$, Louis's program
 ;; will take longer. Exactly how long is hard to say. If `queen-cols` did a

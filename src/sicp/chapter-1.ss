@@ -664,7 +664,7 @@ circumference ~> 62.8318
 ~> (p (p (p (p (sine 0.15)))))
 ~> (p (p (p (p (p (sine 0.05)))))) ; five times until theta <= 0.1
 
-;; (b) During the process, `p` is evaluated $k$ times such that $θ/3^k\lt0.1$.
+;; (b) During the process, `p` is evaluated $k$ times such that $θ/3^k<0.1$.
 ;; Solving for $k$ gives $k = \log10θ/\log3$, thus the number of steps for
 ;; `sine` grows as $Θ(\log n)$. The interpreter must maintain the stack for that
 ;; number of calls to `p`, therefore the space complexity is also $Θ(\log n)$.
