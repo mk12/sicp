@@ -109,7 +109,7 @@ lintss: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
 
 spell: spellc
-	./$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
+	#./$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
 
 spellc: %: %.m
 	$(CC) -o $@ $(CFLAGS) -fmodules -fobjc-arc $^

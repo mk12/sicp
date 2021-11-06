@@ -1,5 +1,7 @@
 # New to do
 
+- BUG: exercise index.html have "Note on language" but it is zero height
+- Missing space after $cmd|| in deps.sh
 - test in all browsers, without JS, without CSS
 - exercises appendix for core.ss etc.
 - deal with the OLD proofs, diagrams
@@ -117,6 +119,7 @@ x problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in 
     + 19/53 (35%) of current HTML files use katex (with exercises fraction will likely go down)
     + just $N$ takes 475 bytes; modest display eqn is 5KB (https://github.com/KaTeX/KaTeX/issues/2194)
     + see Simplenote "KaTeX" for more analysis; tldr pre-rendering is worth it
+        + and when gzipped it barely makes a difference
     + then do if code, `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">`
     + can use .INTERMEDIATE in make to start/stop js server (to avoid spawning node on EVERY math)
     + try https://deno.land instead of node! (so cool! so fast!)
