@@ -79,7 +79,8 @@ get_platform() {
 
 check() {
     say "checking programs"
-    for cmd in chez guile racket pandoc deno svgbob vnu clang-format; do
+    for cmd in chez guile racket pandoc deno svgbob vnu shellcheck clang-format
+    do
         installed $cmd|| warn "$cmd not installed"
     done
     say "checking pandoc lua version"
@@ -116,6 +117,9 @@ install() {
     if ask "install dependencies for buiding docs?"; then
         install_${platform}_docs
     fi
+    if ask "install other development tools?"; then
+        install_${platform}_other
+    fi
 }
 
 install_macos_prep() {
@@ -131,8 +135,7 @@ install_macos_scheme() {
 install_macos_docs() {
     lua="lua@$lua_version"
     lua_dir=$(brew --prefix $lua)
-    install_macos_formulas \
-        pandoc "$lua:$lua_dir/bin/lua" luarocks deno vnu clang-format
+    install_macos_formulas pandoc "$lua:$lua_dir/bin/lua" luarocks deno
     if "$lua_dir/bin/lua" -l posix <<< "" &> /dev/null; then
         say_already_installed luaposix
     else
@@ -152,6 +155,10 @@ install_macos_docs() {
             warn "svgbob executable not found; is ~/.cargo/bin in your PATH?"
         fi
     fi
+}
+
+install_macos_other() {
+    install_macos_formulas vnu clang-format shellcheck
 }
 
 install_macos_formulas() {

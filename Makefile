@@ -35,26 +35,31 @@ heading_exceptions := \
 validate_exceptions := \
 	'.*not allowed as child of element “mo”.*'
 
+define usage
+Targets:
+	all        Build and test everything
+	help       Show this help message
+	test       Run tests in Chez, Guile, and Racket
+	docs       Build the website in docs/
+	render     Run the render.ts server
+	fmt        Format C and TypeScript code
+	lint       Lint all source files
+	lintss     Lint only Scheme code
+	spell      Spellcheck Markdown and Scheme files
+	validate   Validate generated HTML files
+	clean      Remove compilation artifacts
+	vscode     Install vscode tasks
+	sicp_html  Download SICP HTML files
+endef
+
 .PHONY: all help test docs render fmt lint lintss spell validate clean vscode
 
 # Ordered from fastest to slowest, for early feedback.
 all: lint fmt spell docs validate test
 
 help:
-	@echo "Targets:"
-	@echo "all       build and test everything"
-	@echo "help      show this help message"
-	@echo "test      run tests in Chez, Guile, and Racket"
-	@echo "docs      build the website in docs/"
-	@echo "render    run the render.ts server"
-	@echo "fmt       format C and TypeScript code"
-	@echo "lint      lint all source files"
-	@echo "lintss    lint only Scheme code"
-	@echo "spell     spellcheck Markdown and Scheme files"
-	@echo "validate  validate generated HTML files"
-	@echo "clean     remove compilation artifacts"
-	@echo "vscode    install vscode tasks"
-	@echo "sicp_html download SICP HTML files"
+	$(info $(usage))
+	@:
 
 test:
 	./run.sh all
