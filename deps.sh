@@ -1,27 +1,10 @@
 #!/bin/bash
-# shellcheck disable=SC2059
 
 set -eufo pipefail
 
 readonly lua_version=5.3
 platform=
 warned=false
-
-red="\x1b[31;1m"
-green="\x1b[32;1;1m"
-yellow="\x1b[33;1m"
-blue="\x1b[34m"
-magenta="\x1b[35;1m"
-reset="\x1b[0m"
-
-if ! [[ -t 1 && -t 2 ]] || [[ -n ${NO_COLOR+x} ]]; then
-    red=
-    green=
-    yellow=
-    blue=
-    magenta=
-    reset=
-fi
 
 usage() {
     cat <<EOS
@@ -34,16 +17,16 @@ EOS
 }
 
 say() {
-    printf "$blue> $*$reset\n" "$*"
+    echo "*** $*"
 }
 
 run() {
-    printf "$green> %s$reset\n" "$*"
+    echo "> $*"
     "$@"
 }
 
 ask() {
-    printf "$magenta> $1 [y/N]$reset " "$1"
+    echo "*** $* [y/N] "
     read -r
     case $REPLY in
         y|Y) ;;
@@ -52,12 +35,12 @@ ask() {
 }
 
 warn() {
-    printf "${yellow}warning:$reset %s\n" "$*"
+    echo "warning: $*" >&2
     warned=true
 }
 
 die() {
-    printf "${red}error:$reset %s\n" "$*" >&2
+    echo "error: $*" >&2
     exit 1
 }
 
@@ -81,7 +64,7 @@ check() {
     say "checking programs"
     for cmd in chez guile racket pandoc deno svgbob vnu shellcheck clang-format
     do
-        installed $cmd|| warn "$cmd not installed"
+        installed $cmd || warn "$cmd not installed"
     done
     say "checking pandoc lua version"
     if installed pandoc; then
@@ -94,10 +77,7 @@ check() {
     if get_platform; then
         check_$platform
     else
-        warn "skipping some check not supported on platform $platform"
-    fi
-    if [[ $warned == true ]]; then
-        return 1
+        warn "skipping some checks (unsupported platform: $platform)"
     fi
 }
 
@@ -109,7 +89,7 @@ check_macos() {
 }
 
 install() {
-    get_platform || die "unsupported platform $platform"
+    get_platform || die "unsupported platform: $platform"
     install_${platform}_prep
     if ask "install all supported schemes?"; then
         install_${platform}_scheme
@@ -180,3 +160,7 @@ case ${1:-} in
     check|install) "$1" ;;
     *) die "$1: invalid command" ;;
 esac
+
+if [[ $warned == true ]]; then
+    exit 1
+fi
