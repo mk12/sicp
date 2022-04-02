@@ -130,7 +130,7 @@ Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax forma
 
 Pandoc assembles the result using [template.html](notes/pandoc/template.html). The template embeds SVGs from [notes/assets](notes/assets) rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
 
-Finally, `docgen`, post-processes the HTML and writes it in [docs/](docs).
+Finally, `docgen` post-processes the HTML and writes it in [docs/](docs).
 
 The pages are styled by [style.css](docs/style.css). It follows the [BEM naming guide][bem].
 
