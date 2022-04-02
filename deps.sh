@@ -26,7 +26,7 @@ run() {
 }
 
 ask() {
-    echo "*** $* [y/N] "
+    echo -n "*** $* [y/N] "
     read -r
     case $REPLY in
         y|Y) ;;

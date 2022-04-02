@@ -83,7 +83,7 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
 render:
 	deno run $(DENOFLAGS) $(render_src) $(render_sock)
 
-ifneq (,$(wildcard ./render.sock))
+ifneq (,$(wildcard $(render_sock)))
 $(render_sock): $(render_src)
 	$(error \
 A server is already running on $(render_sock), but it is using outdated code.\
