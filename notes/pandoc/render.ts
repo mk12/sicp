@@ -1,6 +1,6 @@
 // Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
-import { exists } from "https://deno.land/std/fs/mod.ts";
+import { iterateReader, writeAll } from "https://deno.land/std/streams/mod.ts";
 import { dirname, resolve } from "https://deno.land/std/path/mod.ts";
 import katex from "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.mjs";
 import { optimize } from "https://cdn.jsdelivr.net/gh/lumeland/svgo@v3.0.1/mod.js";
@@ -64,23 +64,22 @@ async function cleanup(): Promise<void> {
 }
 
 // Termination signals that we want to handle.
-const SIGNUMS = [
-  Deno.Signal.SIGHUP,
-  Deno.Signal.SIGINT,
-  Deno.Signal.SIGTERM,
-];
+const SIGNALS = [
+  { name: "SIGHUP", number: 1 },
+  { name: "SIGINT", number: 2 },
+  { name: "SIGTERM", number: 15 },
+] as const;
 
-// Upon receiving one of the signals in SIGNUMS, throws ExitError.
-function handleSignals(): Promise<never> {
-  return Promise.race(SIGNUMS.map((sig) =>
-    (async () => {
-      await Deno.signal(sig);
+// Adds listeners that exit upon receiving any of the signals in SIGNALS.
+function addSignalListeners(): void {
+  for (const { name, number } of SIGNALS) {
+    Deno.addSignalListener(name, () => {
       // Simulate the exit status for this signal. Really we should re-raise and
       // let the default handler exit, but the only way to do this seems to be
       // `Deno.kill(Deno.pid, sig)`, and I can't get that to work properly.
-      throw new ExitError(128 + sig);
-    })()
-  ));
+      Deno.exit(128 + number);
+    });
+  }
 }
 
 // A simple request parser.
@@ -118,7 +117,7 @@ async function serve(listener: Deno.Listener): Promise<void> {
 
   async function handle(conn: Deno.Conn): Promise<void> {
     let buffer = "";
-    for await (const chunk of Deno.iter(conn)) {
+    for await (const chunk of iterateReader(conn)) {
       const requests = decoder.decode(chunk).split("\x00");
       requests[0] = buffer + requests[0];
       buffer = requests.pop()!;
@@ -133,7 +132,7 @@ async function serve(listener: Deno.Listener): Promise<void> {
         } else {
           response = ERROR_PREFIX + "invalid request";
         }
-        await Deno.writeAll(conn, encoder.encode(response + "\x00"));
+        await writeAll(conn, encoder.encode(response + "\x00"));
       }
     }
   }
@@ -217,7 +216,7 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
     stdin: "piped",
     stdout: "piped",
   });
-  await Deno.writeAll(p.stdin, new TextEncoder().encode(diagram));
+  await writeAll(p.stdin, new TextEncoder().encode(diagram));
   p.stdin.close();
   const [status, stdout] = await Promise.all([
     p.status(),
@@ -227,7 +226,7 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
   if (status.code !== 0) {
     return ERROR_PREFIX + `svgbob exited with code ${status.code}`;
   }
-  let markers = new Set<string>();
+  const markers = new Set<string>();
   const unopt = new TextDecoder().decode(stdout)
     .replace(
       /width="([0-9.]+)" height="([0-9.]+)"/,
@@ -318,17 +317,40 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
   return opt.data;
 }
 
+// Returns true if the file exists.
+async function exists(path: string): Promise<boolean> {
+  try {
+    await Deno.lstat(path);
+    return true;
+  } catch (err) {
+    if (err instanceof Deno.errors.NotFound) {
+      return false;
+    }
+    throw err;
+  }
+}
+
 // Waits for the given file to be created (if it doesn't already exist).
 async function waitForFile(path: string): Promise<void> {
-  if (await exists(path)) {
-    return;
-  }
   const absolute = resolve(path);
-  for await (const event of Deno.watchFs(dirname(path), { recursive: false })) {
-    if (event.kind === "modify" && event.paths.includes(absolute)) {
-      return;
-    }
-  }
+  await Promise.race([
+    (async () => {
+      if (await exists(path)) {
+        return;
+      }
+      // Wait forever.
+      return new Promise((_) => {});
+    })(),
+    (async () => {
+      for await (
+        const event of Deno.watchFs(dirname(path), { recursive: false })
+      ) {
+        if (event.kind === "modify" && event.paths.includes(absolute)) {
+          return;
+        }
+      }
+    })(),
+  ]);
 }
 
 // Throws ExitError(0) when the given file is removed.
@@ -371,6 +393,7 @@ server, choose a different socket filename.
 }
 
 async function main() {
+  addSignalListeners();
   const args = [...Deno.args];
   if (args.includes("-h") || args.includes("--help")) {
     usage(console.log);
@@ -390,10 +413,7 @@ async function main() {
   }
   let exitCode = 0;
   try {
-    await Promise.race([
-      handleSignals(),
-      startServer(socketFile),
-    ]);
+    await startServer(socketFile);
   } catch (ex) {
     if (ex instanceof ExitError) {
       exitCode = ex.code;
