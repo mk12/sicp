@@ -2,7 +2,7 @@
 
 set -eufo pipefail
 
-readonly lua_version=5.3
+readonly lua_version=5.4
 platform=
 warned=false
 
@@ -83,7 +83,9 @@ check() {
 
 check_macos() {
     say "checking lua libraries"
-    if ! "$(brew --prefix lua@5.3)/bin/lua" -l posix <<< "" &> /dev/null; then
+    lua="lua@$lua_version"
+    lua_dir=$(brew --prefix $lua)
+    if ! "$lua_dir/bin/lua" -l posix <<< "" &> /dev/null; then
         warn "luaposix not installed"
     fi
 }
@@ -109,7 +111,7 @@ install_macos_prep() {
 }
 
 install_macos_scheme() {
-    install_macos_formulas chezscheme:chez guile racket
+    install_macos_formulas chezscheme:chez guile minimal-racket:racket
 }
 
 install_macos_docs() {
