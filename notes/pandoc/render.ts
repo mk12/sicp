@@ -1,7 +1,10 @@
 // Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
-import { iterateReader, writeAll } from "https://deno.land/std/streams/mod.ts";
-import { dirname, resolve } from "https://deno.land/std/path/mod.ts";
+import {
+  iterateReader,
+  writeAll,
+} from "https://deno.land/std@0.134.0/streams/mod.ts";
+import { dirname, resolve } from "https://deno.land/std@0.133.0/path/mod.ts";
 import katex from "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.mjs";
 import { optimize } from "https://cdn.jsdelivr.net/gh/lumeland/svgo@v3.0.1/mod.js";
 
@@ -139,11 +142,13 @@ async function serve(listener: Deno.Listener): Promise<void> {
 
   // In order to serve clients concurrently, we do _not_ await handle(conn).
   for await (const conn of listener) {
-    handle(conn).catch((ex) => {
-      console.error(`${ERROR} ${ex}`);
-    }).finally(() => {
-      conn.close();
-    });
+    handle(conn)
+      .catch((ex) => {
+        console.error(`${ERROR} ${ex}`);
+      })
+      .finally(() => {
+        conn.close();
+      });
   }
 }
 
@@ -174,27 +179,27 @@ function renderKatex(tex: string, displayMode: boolean): string {
 
 // SVG markers used by svgbob.
 const SVGBOB_MARKERS = {
-  "arrow": `
+  arrow: `
 <marker id="" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
   <polygon points="0,0 0,4 4,2 0,0"></polygon>
 </marker>`,
 
-  "diamond": `
+  diamond: `
 <marker id="" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
   <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
 </marker>`,
 
-  "circle": `
+  circle: `
 <marker id="" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
   <circle cx="4" cy="4" r="2.5" stroke="none" fill="currentColor"></circle>
 </marker>`,
 
-  "open_circle": `
+  open_circle: `
 <marker id="" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
   <circle cx="4" cy="4" r="2" stroke-width="1.5" style="fill: var(--bg);"></circle>
 </marker>`,
 
-  "big_open_circle": `
+  big_open_circle: `
 <marker id="" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
   <circle cx="4" cy="4" r="3" style="fill: var(--bg);"></circle>
 </marker>`,
@@ -218,31 +223,26 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
   });
   await writeAll(p.stdin, new TextEncoder().encode(diagram));
   p.stdin.close();
-  const [status, stdout] = await Promise.all([
-    p.status(),
-    p.output(),
-  ]);
+  const [status, stdout] = await Promise.all([p.status(), p.output()]);
   p.close();
   if (status.code !== 0) {
     return ERROR_PREFIX + `svgbob exited with code ${status.code}`;
   }
   const markers = new Set<string>();
-  const unopt = new TextDecoder().decode(stdout)
-    .replace(
-      /width="([0-9.]+)" height="([0-9.]+)"/,
-      (_, w, h) => {
-        w = Math.ceil(w);
-        // svgbob seems to add extra padding on the bottom.
-        h = Math.ceil(h) - 20;
-        return `viewBox="0 0 ${w} ${h}" style="max-width: ${w}px;"`;
-      },
-    )
+  const unopt = new TextDecoder()
+    .decode(stdout)
+    .replace(/width="([0-9.]+)" height="([0-9.]+)"/, (_, w, h) => {
+      w = Math.ceil(w);
+      // svgbob seems to add extra padding on the bottom.
+      h = Math.ceil(h) - 20;
+      return `viewBox="0 0 ${w} ${h}" style="max-width: ${w}px;"`;
+    })
     .replace(/<style[\s\S]*<\/style>/, "")
     .replace(/<rect class="backdrop".*?<\/rect>/, "")
-    .replace(
-      /class="([^"]+)"/g,
-      (_, classes) =>
-        classes.split(" ").map((cl: string) => {
+    .replace(/class="([^"]+)"/g, (_, classes) =>
+      classes
+        .split(" ")
+        .map((cl: string) => {
           let match;
           if (cl === "broken") {
             return `stroke-dasharray="8"`;
@@ -253,8 +253,8 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
             markers.add(match[1]);
             return `marker-end="url(#${markerId(number, match[1])})"`;
           }
-        }).join(" "),
-    )
+        })
+        .join(" "))
     // Must do this after replacing all the classes.
     .replace(/^<svg /, `<svg class="diagram" `)
     .replace(/<defs>[\s\S]*<\/defs>/, () => {
@@ -332,25 +332,29 @@ async function exists(path: string): Promise<boolean> {
 
 // Waits for the given file to be created (if it doesn't already exist).
 async function waitForFile(path: string): Promise<void> {
-  const absolute = resolve(path);
-  await Promise.race([
-    (async () => {
-      if (await exists(path)) {
+  let alreadyExists = false;
+  const check = (async () => {
+    if (await exists(path)) {
+      alreadyExists = true;
+    }
+  })();
+  const watcher = Deno.watchFs(dirname(path), { recursive: false });
+  const watch = (async () => {
+    const absolute = resolve(path);
+    for await (const event of watcher) {
+      if (event.kind === "modify" && event.paths.includes(absolute)) {
         return;
       }
-      // Wait forever.
-      return new Promise((_) => {});
-    })(),
-    (async () => {
-      for await (
-        const event of Deno.watchFs(dirname(path), { recursive: false })
-      ) {
-        if (event.kind === "modify" && event.paths.includes(absolute)) {
-          return;
-        }
-      }
-    })(),
-  ]);
+    }
+  })();
+  await Promise.race([check, watch]);
+  if (alreadyExists) {
+    // Close the watcher, otherwise the program hangs in that promise.
+    watcher.close();
+  } else {
+    // The file doesn't exist yet, so keep waiting on the watcher.
+    await watch;
+  }
 }
 
 // Throws ExitError(0) when the given file is removed.
@@ -367,12 +371,14 @@ async function whileFileExists(path: string): Promise<never> {
 // exists, or if it is removed while the server is running.
 async function startServer(socketFile: string): Promise<void> {
   if (await exists(socketFile)) {
-    console.error(`
+    console.error(
+      `
 ${ERROR} ${socketFile} already exists!
 There must be another server running. To terminate it, run 'rm ${socketFile}'.
 To find it, run 'pgrep -f ${socketFile}'. To leave it running and start a second
 server, choose a different socket filename.
-`.trim());
+`.trim(),
+    );
     throw new ExitError(1);
   }
   filesToRemove.push(socketFile);
@@ -386,10 +392,7 @@ server, choose a different socket filename.
   await Deno.fsync(parent.rid);
   parent.close();
   console.log(`${SCRIPT_NAME}: listening on ${socketFile}`);
-  return Promise.race([
-    serve(listener),
-    whileFileExists(socketFile),
-  ]);
+  return Promise.race([serve(listener), whileFileExists(socketFile)]);
 }
 
 async function main() {
@@ -409,7 +412,8 @@ async function main() {
   }
   const socketFile = args[0];
   if (waitIdx >= 0) {
-    return waitForFile(socketFile);
+    await waitForFile(socketFile);
+    return;
   }
   let exitCode = 0;
   try {
