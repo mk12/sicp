@@ -90,6 +90,7 @@ A server is already running on $(render_sock), but it is using outdated code.\
 Try again after terminating or restarting it)
 else
 .INTERMEDIATE: $(render_sock)
+$(render_sock): DENOFLAGS += --no-check
 $(render_sock):
 	deno run $(DENOFLAGS) $(render_src) $@ &
 	deno run $(DENOFLAGS) $(render_src) --wait $@
