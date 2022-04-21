@@ -903,9 +903,10 @@ static void render_toc_item(struct TocRenderer *tr, FILE *out, int depth,
     assert(tr->depth == depth);
     fprintf(out,
             "<li class=\"toc__item\">"
+            "<span class=\"toc__label\">%.*s</span>"
             // Put a space between <span> and <a> so that they don't run
             // together in alternative stylesheets like Safari Reader.
-            "<span class=\"toc__label\">%.*s</span> "
+            " "
             "<a href=\"%s\">%.*s</a>",
             heading.label.len, heading.label.data, href, heading.title.len,
             heading.title.data);
@@ -1681,11 +1682,12 @@ static bool gen_exercise_index(const char *output) {
         copy_md(&scan, proc.in);
     }
     struct Heading language = parse_md_heading(scan.line);
+    assert(language.title.data);
     assert(!language.label.data);
-    close_md(&scan);
     struct TocRenderer tr = new_toc_renderer();
     render_toc_start(&tr, proc.in);
     render_toc_item(&tr, proc.in, 1, language, HREF(LANGUAGE));
+    close_md(&scan);
     for (int i = 0; i < NUM_CHAPTERS; i++) {
         struct SchemeScanner scan;
         if (!init_ss(&scan, SCHEME_FILES[i])) {
