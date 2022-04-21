@@ -1,5 +1,9 @@
 # New to do
 
+- fix Makefile/render.ts deadlocks
+- add luarocks path
+- remove html-math-method in config.yml
+- add `wrap: none` to fix assert in docgen
 - BUG: exercise index.html have "Note on language" but it is zero height
 - Missing space after $cmd|| in deps.sh
 - test in all browsers, without JS, without CSS
