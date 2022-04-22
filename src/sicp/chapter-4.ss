@@ -1429,7 +1429,7 @@
 (define (try a b) (if (= a 0) 1 b))
 
 ;; With lazy evaluation, this would return 1 instead of raising an error.
-(try 0 (/ 1 0)) =!> "/"
+(try 0 (/ 1 0)) =!> ""
 
 (define (unless condition usual-value exceptional-value)
   (if condition exceptional-value usual-value))
