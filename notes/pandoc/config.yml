@@ -1,6 +1,5 @@
 from: markdown
 to: html5
-standalone: true
 wrap: none
 highlight-style: pygments
 template: notes/pandoc/template.html

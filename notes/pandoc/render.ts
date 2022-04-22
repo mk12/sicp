@@ -41,6 +41,8 @@ The protocol is as follows:
 }
 
 // Helper to satisfy the typechecker.
+//
+// deno-lint-ignore no-explicit-any
 function hasKey<T>(obj: T, key: any): key is keyof T {
   return key in obj;
 }
