@@ -39,8 +39,7 @@ run_guile() {
 
 run_racket() {
     ln -sf racket.ss src/compat/active.ss
-    plt-r6rs --compile ++path . "$main"
-    plt-r6rs ++path . "$main" "$@"
+    PLTCOLLECTS="$(pwd):" racket "$main" "$@"
 }
 
 if [[ $# -eq 0 ]]; then

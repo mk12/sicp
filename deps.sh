@@ -76,6 +76,10 @@ check() {
     do
         installed $cmd || warn "$cmd not installed"
     done
+    say "checking racket r6rs"
+    if ! racket -I r6rs -e '' &> /dev/null; then
+        warn "racket r6rs not installed"
+    fi
     say "checking pandoc lua version"
     if installed pandoc; then
         v=$(pandoc --lua-filter <(echo 'print(_VERSION)') <<< '' \
@@ -117,6 +121,9 @@ install_macos_prep() {
 
 install_macos_scheme() {
     install_macos_formulas chezscheme:chez guile minimal-racket:racket
+    if ! racket -I r6rs -e '' &> /dev/null; then
+        raco pkg install --auto --no-docs r6rs-lib
+    fi
 }
 
 install_macos_docs() {
