@@ -240,8 +240,10 @@ circumference ~> 62.8318
 ;; small fraction of the guess.
 
 (define (good-enough? g1 g2)
-  ;; Note: unlike `infinite?`, the negation of `finite?` catches NaN.
-  (or (not (finite? g2))
+  ;; Note: In some Schemes, division of the smallest representable number
+  ;; produces zero. In others, it produces NaN.
+  (or (zero? g2)
+      (nan? g2)
       (< (/ (abs (- g2 g1)) g1)
          0.001)))
 (define (sqrt-iter guess x)
@@ -256,7 +258,7 @@ circumference ~> 62.8318
 ;;
 ;; The results for small numbers are much better. For zero, it works because
 ;; even though the `guess` change is always a 50% reduction, it eventually gets
-;; so small that it becomes NaN, and the algorithm terminates.
+;; so small that it becomes zero or NaN, and the algorithm terminates.
 
 (sqrt 0) ~> 0
 (sqrt 1e-20) ~> 1e-10
