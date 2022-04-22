@@ -2,6 +2,7 @@ SHELL := /bin/bash
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
 DENOFLAGS := --unstable --allow-read --allow-write --allow-run
+lua_version := 5.4
 
 sicp_src := $(patsubst %,src/sicp/chapter-%.ss,1 2 3 4 5)
 
@@ -52,7 +53,8 @@ Targets:
 	sicp_html  Download SICP HTML files
 endef
 
-.PHONY: all help test docs render fmt lint lintss spell validate clean vscode
+.PHONY: all help test docs lua_env render fmt lint lintss spell validate clean \
+	vscode sicp_html
 
 # Ordered from fastest to slowest, for early feedback.
 all: lint fmt spell docs validate test
@@ -66,7 +68,7 @@ test:
 
 docs: $(doc_html)
 
-$(doc_html): docgen $(doc_assets) $(doc_pandoc_aux) | $(render_sock)
+$(doc_html): docgen $(doc_assets) $(doc_pandoc_aux) | lua_env $(render_sock)
 	./docgen $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -79,6 +81,13 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_2)): src/sicp/chapter-2.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_4)): src/sicp/chapter-4.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
+
+# This target ensures that we shell out only if needed, and at most once.
+lua_env:
+	$(eval export LUA_PATH := \
+		$$(shell luarocks path --lua-version=$(lua_version) --lr-path))
+	$(eval export LUA_CPATH := \
+		$$(shell luarocks path --lua-version=$(lua_version) --lr-cpath))
 
 render:
 	deno run $(DENOFLAGS) $(render_src) $(render_sock)

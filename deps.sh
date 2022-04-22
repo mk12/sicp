@@ -48,6 +48,16 @@ installed() {
     command -v "$1" &> /dev/null || return 1
 }
 
+set_luarocks_env() {
+    eval "$(luarocks --lua-version=$lua_version path)"
+}
+
+pandoc_lua_library_installed() {
+    if ! pandoc --lua-filter <(echo "require(\"$1\")") <<< '' &> /dev/null; then
+        return 1
+    fi
+}
+
 say_already_installed() {
     say "note: $1 is already installed"
 }
@@ -74,19 +84,14 @@ check() {
             warn "pandoc is built with lua $v; expected lua $lua_version"
         fi
     fi
-    if get_platform; then
-        check_$platform
-    else
-        warn "skipping some checks (unsupported platform: $platform)"
-    fi
-}
-
-check_macos() {
     say "checking lua libraries"
-    lua="lua@$lua_version"
-    lua_dir=$(brew --prefix $lua)
-    if ! "$lua_dir/bin/lua" -l posix <<< "" &> /dev/null; then
-        warn "luaposix not installed"
+    if installed pandoc && installed luarocks; then
+        set_luarocks_env
+        if ! pandoc_lua_library_installed posix; then
+            warn "luaposix not installed"
+        fi
+    else
+        warn "cannot check lua libraries: need pandoc and luarocks"
     fi
 }
 
@@ -118,10 +123,11 @@ install_macos_docs() {
     lua="lua@$lua_version"
     lua_dir=$(brew --prefix $lua)
     install_macos_formulas pandoc "$lua:$lua_dir/bin/lua" luarocks deno
-    if "$lua_dir/bin/lua" -l posix <<< "" &> /dev/null; then
+    set_luarocks_env
+    if pandoc_lua_library_installed posix; then
         say_already_installed luaposix
     else
-        run luarocks --lua-dir="$lua_dir" install luaposix
+        run luarocks --lua-dir="$lua_dir" --local install luaposix
     fi
     if installed svgbob; then
         say_already_installed svgbob

@@ -195,7 +195,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 
 - [Chez Scheme][], [Guile][], and [Racket][]: Scheme implementations.
 - [Pandoc][]: Used to build the website. Must be dynamically linked to libc.
-- [Lua][] and [luaposix][]: Used in the Pandoc filter.
+- [LuaRocks][] and [luaposix][]: Used in the Pandoc filter.
 - [Deno][]: Used to run a server that pre-renders math with [KaTeX][].
 - [vnu][]: Used to validate HTML files.
 - [clang-format][]: Used to format C files.
@@ -220,7 +220,7 @@ See [LICENSE](LICENSE.md) for details.
 [Racket]: http://racket-lang.org
 [Pandoc]: https://pandoc.org
 [Pandoc Markdown]: https://pandoc.org/MANUAL.html#pandocs-markdown
-[Lua]: https://www.lua.org
+[LuaRocks]: https://luarocks.org
 [luaposix]: https://github.com/luaposix/luaposix
 [static]: https://github.com/jgm/pandoc/issues/3986
 [Deno]: https://deno.land

@@ -1,7 +1,5 @@
 # New to do
 
-- fix Makefile/render.ts deadlocks
-- add luarocks path
 - test in all browsers, without JS, without CSS
 - exercises appendix for core.ss etc.
 - deal with the OLD proofs, diagrams
@@ -16,6 +14,8 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
++ add luarocks path
++ fix Makefile/render.ts deadlocks
 + BUG: exercise index.html have "Note on language" `<li>` but it is empty
 + remove html-math-method in config.yml
 + add `wrap: none` to fix assert in docgen
