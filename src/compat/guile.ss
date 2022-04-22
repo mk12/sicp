@@ -23,14 +23,9 @@
     ((_ (name x) e* ...) (define-syntax name (lambda (x) e* ...)))
     ((_ e* ...) (define-syntax e* ...))))
 
+;; I can't get syntax locations to work in Guile.
 (define (syntax->location s)
-  (let ((props (syntax-source s)))
-    (if props
-        (values (source-property props 'filename)
-                (+ 1 (source-property props 'line)) ; convert to 1-based
-                (source-property props 'column))
-        ;; Guile doesn't store source properties for individual atoms.
-        (values "unknown" 0 0))))
+  (values "unknown" 0 0))
 
 (define (format . args)
   (apply guile-format #f args))
