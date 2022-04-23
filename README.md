@@ -12,6 +12,7 @@ Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Sc
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 
+<!-- TODO -->
 Racket produces artifacts in `compiled/` directories. To remove them, run `make clean`.
 
 ### Structure
@@ -160,6 +161,8 @@ Run `make lintss` to verify these rules.
 
 ## Editor support
 
+Run `make clangd` to create compile_commands.json for C/C++ LSP support.
+
 Run `make vscode` to set up tasks for VS Code:
 
 - `test`: Run all tests using Chez Scheme.
@@ -196,7 +199,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 - [Chez Scheme][], [Guile][], and [Racket][]: Scheme implementations.
 - [Pandoc][]: Used to build the website. Must be dynamically linked to libc.
 - [LuaRocks][] and [luaposix][]: Used in the Pandoc filter.
-- [Deno][]: Used to run a server that pre-renders math with [KaTeX][].
+- [Deno][]: Used to run a server that renders math and diagrams.
 - [vnu][]: Used to validate HTML files.
 - [clang-format][]: Used to format C files.
 

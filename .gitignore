@@ -15,3 +15,7 @@ render.sock
 
 # Downloaded HTML files
 /sicp_html
+
+# Editor config
+.vscode
+compile_commands.json

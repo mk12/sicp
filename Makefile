@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
+OBJCFLAGS := -fmodules -fobjc-arc
 DENOFLAGS := --unstable --allow-read --allow-write --allow-run
 lua_version := 5.4
 
@@ -50,11 +51,12 @@ Targets:
 	validate   Validate generated HTML files
 	clean      Remove compilation artifacts
 	vscode     Install vscode tasks
+	clangd     Write compile_commands.json
 	sicp_html  Download SICP HTML files
 endef
 
 .PHONY: all help test docs lua_env render fmt lint lintss spell validate clean \
-	vscode sicp_html
+	vscode clangd sicp_html
 
 # Ordered from fastest to slowest, for early feedback.
 all: lint fmt spell docs validate test
@@ -124,10 +126,10 @@ lintss: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
 
 spell: spellc
-	#./$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
+	./$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
 
 spellc: %: %.m
-	$(CC) -o $@ $(CFLAGS) -fmodules -fobjc-arc $^
+	$(CC) -o $@ $(CFLAGS) $(OBJCFLAGS) $^
 
 validate:
 	find docs -type f -name "*.html" \
@@ -142,6 +144,35 @@ vscode: .vscode/tasks.json
 .vscode/%.json: %.json
 	mkdir -p .vscode
 	cp $< $@
+
+clangd: compile_commands.json
+
+define COMPILE_COMMANDS
+[
+	{
+		"directory": "$(CURDIR)",
+		"file": "docgen.c",
+		"output": "docgen",
+		"command": "clang $(CFLAGS) docgen.c"
+	},
+	{
+		"directory": "$(CURDIR)",
+		"file": "linter.c",
+		"output": "linter",
+		"command": "clang $(CFLAGS) linter.c"
+	},
+	{
+		"directory": "$(CURDIR)",
+		"file": "spellc.m",
+		"output": "spellc",
+		"command": "clang $(CFLAGS) $(OBJCFLAGS) spellc.m"
+	}
+]
+endef
+export COMPILE_COMMANDS
+
+compile_commands.json:
+	echo "$$COMPILE_COMMANDS" > $@
 
 # Download SICP HTML files locally. Useful for development.
 sicp_url_prefix := \
