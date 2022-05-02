@@ -2,8 +2,7 @@
 /src/compat/active.ss
 
 # Racket bytecode
-*.dep
-*.zo
+compiled/
 
 # Binaries
 /docgen
@@ -18,4 +17,7 @@ render.sock
 
 # Editor config
 .vscode
+
+# clangd
 compile_commands.json
+.cache

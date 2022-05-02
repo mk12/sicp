@@ -12,7 +12,6 @@ Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Sc
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 
-<!-- TODO -->
 Racket produces artifacts in `compiled/` directories. To remove them, run `make clean`.
 
 ### Structure

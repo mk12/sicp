@@ -38,6 +38,7 @@ run_guile() {
 
 run_racket() {
     ln -sf racket.ss src/compat/active.ss
+    PLTCOLLECTS="$(pwd):" raco make -v "$main"
     PLTCOLLECTS="$(pwd):" racket "$main" "$@"
 }
 
