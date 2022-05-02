@@ -14,6 +14,7 @@
                 syntax-source with-output-to-string usleep)
           (only (ice-9 threads)
                 call-with-new-thread join-thread lock-mutex unlock-mutex)
+          (system syntax)
           (prefix (only (guile) format) guile-)
           (prefix (only (ice-9 threads) make-mutex) guile-))
 
@@ -23,9 +24,16 @@
     ((_ (name x) e* ...) (define-syntax name (lambda (x) e* ...)))
     ((_ e* ...) (define-syntax e* ...))))
 
-;; I can't get syntax locations to work in Guile.
 (define (syntax->location s)
-  (values "unknown" 0 0))
+  (let* ((s (if (pair? s) (car s) s))
+         (props (syntax-sourcev s)))
+    (if props
+        (values (vector-ref props 0)
+                (vector-ref props 1) ; convert to 1-based
+                (vector-ref props 2))
+        ;; Older versions of Guile don't store source properties for individual
+        ;; atoms.
+        (values "unknown" 0 0))))
 
 (define (format . args)
   (apply guile-format #f args))

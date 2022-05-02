@@ -176,22 +176,6 @@ The `test` and `lint` tasks parse results into the Problems view, which you can 
 
 Test failures do not show line numbers in Guile.
 
-### Mutating quoted lists
-
-The Scheme implementation must support mutating quoted lists:
-
-```scheme
-(define x '(a b))
-(set-car! x 'c)
-
-(write x)      ; (c b)
-(write '(a b)) ; (a b)
-```
-
-This works in Chez Scheme and Racket. It also works in Guile, but only the interpreter, not the compiler. When compiled with Guile, the line `(write '(a b))` above produces the bizarre result `(c b)`, because the `set-car!` call modified the interned representation of `'(a b)`.
-
-`./run.sh guile` takes care of passing `--no-auto-compile` to ensure the interpreter is used.
-
 ## Dependencies
 
 Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only) `./deps.sh install` to install them.

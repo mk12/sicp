@@ -33,8 +33,7 @@ run_chezd() {
 
 run_guile() {
     ln -sf guile.ss src/compat/active.ss
-    # For info about --no-auto-compile, see "Known issues" in README.md.
-    guile --no-auto-compile --r6rs -L . -x .ss "$main" "$@"
+    guile -q --r6rs -L . -x .ss -l src/compat/guile-init.ss "$main" "$@"
 }
 
 run_racket() {

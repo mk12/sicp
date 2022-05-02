@@ -508,15 +508,20 @@
 
 (Section :3.3.1 "Mutable List Structure")
 
-(define x '((a b) c d))
-(define y '(e f))
+(define x)
+(define y)
 
+;; Note: We must build new cons cells rather than quoting like `'((a b) c d)`
+;; because quoted forms are immutable and some Schemes enforce this.
+(define (reset!)
+  (set! x (list (list 'a 'b) 'c 'd))
+  (set! y (list 'e 'f)))
+
+(reset!)
 (set-car! x y)
 x => (cons y (cdr x)) => '((e f) c d)
 
-(define x '((a b) c d))
-(define y '(e f))
-
+(reset!)
 (set-cdr! x y)
 x => (cons (car x) y) => '((a b) e f)
 
@@ -588,7 +593,7 @@ w => '(a b c d)
 ;; the list, setting the `cdr` of each pair to point to the previous pair
 ;; instead of the next. For the very first pair, it sets the `cdr` to null.
 
-(define v '(a b c d))
+(define v (list 'a 'b 'c 'd))
 ; v->[*|*]->[*|*]->[*|*]->[*|X]
 ;     |      |      |      |
 ;     V      V      V      V
