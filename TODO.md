@@ -1,8 +1,7 @@
 # New to do
 
 - test in all browsers, without JS, without CSS
-- exercises appendix for core.ss etc.
-- deal with the OLD proofs, diagrams
+- exercises: add appendix for core.ss etc.
 - en/em dashes in scheme file comments
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
@@ -14,6 +13,9 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
++ guile line numbers
++ don't mutate quoted lists, then use guile compilation
++ deal with the OLD proofs, diagrams
 + add luarocks path
 + fix Makefile/render.ts deadlocks
 + BUG: exercise index.html have "Note on language" `<li>` but it is empty

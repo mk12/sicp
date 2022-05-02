@@ -240,11 +240,10 @@
 
 ;; Converts a syntax object to a list of syntax objects.
 ;; https://www.scheme.com/csug8/syntax.html#./syntax:s6
-(define syntax->list
-  (lambda (ls)
-    (syntax-case ls ()
-      (() '())
-      ((x . r) (cons #'x (syntax->list #'r))))))
+(define (syntax->list ls)
+  (syntax-case ls ()
+    (() '())
+    ((x . r) (cons #'x (syntax->list #'r)))))
 
 ;; Returns a list of the adjacent pairs of elements in `xs` For example, given
 ;; the list `(a b c d)` it returns `((a . b) (b . c) (c . d))`.
