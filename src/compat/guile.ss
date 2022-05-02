@@ -14,7 +14,7 @@
                 syntax-source with-output-to-string usleep)
           (only (ice-9 threads)
                 call-with-new-thread join-thread lock-mutex unlock-mutex)
-          (system syntax)
+          (only (system syntax) syntax-sourcev)
           (prefix (only (guile) format) guile-)
           (prefix (only (ice-9 threads) make-mutex) guile-))
 
@@ -25,15 +25,19 @@
     ((_ e* ...) (define-syntax e* ...))))
 
 (define (syntax->location s)
-  (let* ((s (if (pair? s) (car s) s))
-         (props (syntax-sourcev s)))
-    (if props
-        (values (vector-ref props 0)
-                (vector-ref props 1) ; convert to 1-based
-                (vector-ref props 2))
-        ;; Older versions of Guile don't store source properties for individual
-        ;; atoms.
-        (values "unknown" 0 0))))
+  ;; For some reason Guile 3.0.8 drops source information for lists in syntax
+  ;; objects. To work around this, we get the source location of the first atom
+  ;; instead, and fake the column number assuming the atom is on the same line.
+  (let loop ((s s) (col-delta 0))
+    (if (pair? s)
+        (loop (car s) (- col-delta 1))
+        (let ((source (syntax-sourcev s)))
+          (if source
+              (values (vector-ref source 0)
+                      (+ 1 (vector-ref source 1))
+                      (+ 1 col-delta (vector-ref source 2)))
+              ;; In some rare cases there is no syntax information.
+              (values "unknown" 0 0))))))
 
 (define (format . args)
   (apply guile-format #f args))

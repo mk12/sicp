@@ -170,12 +170,6 @@ Run `make vscode` to set up tasks for VS Code:
 
 The `test` and `lint` tasks parse results into the Problems view, which you can advance through with <kbd>F8</kbd>.
 
-## Known issues
-
-### Line numbers
-
-Test failures do not show line numbers in Guile.
-
 ## Dependencies
 
 Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only) `./deps.sh install` to install them.
