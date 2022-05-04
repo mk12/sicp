@@ -38,8 +38,7 @@ run_guile() {
 
 run_racket() {
     ln -sf racket.ss src/compat/active.ss
-    PLTCOLLECTS="$(pwd):" raco make -v "$main"
-    PLTCOLLECTS="$(pwd):" racket "$main" "$@"
+    PLTCOLLECTS="$(pwd):" racket --make "$main" "$@"
 }
 
 if [[ $# -eq 0 ]]; then

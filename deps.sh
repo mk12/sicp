@@ -45,15 +45,11 @@ die() {
 }
 
 installed() {
-    command -v "$1" &> /dev/null || return 1
+    command -v "$1" &> /dev/null
 }
 
-racket_pkg_installed() {
-    raco pkg show -la "$1" | awk -v pkg="$1" '
-BEGIN { status = 1; }
-$1 == pkg { status = 0; }
-END { exit status; }
-'
+racket_file_installed() {
+    [[ -z "$(racket -I "$1" -e '' 2>&1)" ]]
 }
 
 set_luarocks_env() {
@@ -85,12 +81,12 @@ check() {
         installed "$cmd" || warn "$cmd not installed"
     done
     say "checking racket packages"
-    if installed raco; then
-        for pkg in r6rs-lib compiler-lib; do
-            racket_pkg_installed "$pkg" || warn "$pkg not installed"
+    if installed racket; then
+        for x in compiler-lib:compiler/sig.rkt r6rs-lib:r6rs; do
+            racket_file_installed "${x#*:}" || warn "${x%:*} not installed"
         done
     else
-        warn "cannot check racket packages: need raco"
+        warn "cannot check racket packages: need racket"
     fi
     say "checking pandoc lua version"
     if installed pandoc; then
@@ -135,9 +131,9 @@ install_macos_prep() {
 
 install_macos_scheme() {
     install_macos_formulas chezscheme:chez guile minimal-racket:racket
-    for pkg in r6rs-lib compiler-lib; do
-        if ! racket_pkg_installed "$pkg"; then
-            raco pkg install --auto --no-docs "$pkg"
+    for x in compiler-lib:compiler/sig.rkt r6rs-lib:r6rs; do
+        if ! racket_file_installed "${x#*:}"; then
+            raco pkg install --auto --no-docs "${x%:*}"
         fi
     done
 }
