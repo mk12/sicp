@@ -26,6 +26,8 @@ words
     supertype
     tabler
     vnu
+    CCth
+    supertypes
 blocks
     07b97a28e478dc1c
     14792bbe9437ea8a
