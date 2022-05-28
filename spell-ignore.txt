@@ -1,0 +1,72 @@
+errors
+    Consider rewriting as ‘,"’
+    Consider rewriting as ‘’,’
+    If this is an ordinary number, consider
+    The first word of a sentence should be capitalized
+    The quoted material may be punctuated incorrectly
+    This may be a sentence fragment
+words
+    Abelson
+    Haumann
+    Kuna
+    Paweł
+    Perlis
+    Sussman
+    conses
+    consing
+    corecursion
+    desugars
+    indeterminates
+    integerized
+    integerizing
+    luaposix
+    mutexes
+    noninfringement
+    skylighting
+    supertype
+    tabler
+    vnu
+blocks
+    07b97a28e478dc1c
+    14792bbe9437ea8a
+    431634165fef1130
+    54ca74de7697149e
+    da2db6ed16d5c7e0
+    ee3105c7edb86378
+    f8756381627f7370
+    fddbd8df1da85f35
+phrases
+    04aa147212cc4e58
+    06430e6c88dd925c
+    075221d779908ada
+    0ca4ef2b9ea03c84
+    132f347f08bda2dc
+    1584480f2af38f50
+    173a98e3fb50ede5
+    27a06190ee1f6efb
+    3902e0729e7d80e0
+    43a647857079aa45
+    4d59aaf5ff9de024
+    579c39a881d95041
+    5d57a1fc209add8b
+    6c59779781ad610f
+    6cc5a69e86ac6fbe
+    76e301bea89320d5
+    83a84bda5d616929
+    a89ed3d7fbe46522
+    a9a9830f7b756ea3
+    acf3a3e92669aa36
+    aeb7cd203a53b835
+    beb3b8947d1a64d1
+    bfe161bde0d47a33
+    c727ece995264a22
+    c7daee857a0dc5d1
+    d38917ad00055e36
+    d72d5f50fe3ba97c
+    dc7dc0140942f368
+    f1814ee4ad4769ea
+    f1c38aa17d8e84df
+    faa92fcf419fbcf0
+    fd064f487f8dc8bd
+subphrases
+    000000000b87784c
