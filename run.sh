@@ -38,7 +38,7 @@ run_guile() {
 
 run_racket() {
     ln -sf racket.ss src/compat/active.ss
-    PLTCOLLECTS="$(pwd):" racket --make "$main" "$@"
+    racket --search . --make "$main" "$@"
 }
 
 if [[ $# -eq 0 ]]; then
