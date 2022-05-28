@@ -828,11 +828,9 @@ static char *strip_markdown(char *s) {
             break;
         // Link targets.
         case ']':
-            if (p[1] == ' ') {
-                *s++ = *p++;
-                break;
-            }
             p++;
+            if (!*p) goto end;
+            if (*p == ' ') break;
             if (*p == '[')
                 delim = ']';
             else if (*p == '(')
