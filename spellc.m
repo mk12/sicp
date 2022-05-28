@@ -331,7 +331,7 @@ static void add_hash(struct SortedHashVec *vec, Hash hash) {
     if (dst == -1) {
         return;
     }
-    for (int i = vec->len; i > dst; i++) {
+    for (int i = vec->len; i > dst; i--) {
         vec->hashes[i] = vec->hashes[i - 1];
     }
     vec->len++;
@@ -485,6 +485,18 @@ static void print_comma_separated(NSArray<NSString *> *words) {
     }
 }
 
+// Prompts the user to enter a single charcter, and eats the newline.
+static int get_reply() {
+    int ch = getchar();
+    if (ch != EOF && ch != '\n') {
+        for (;;) {
+            char next = getchar();
+            if (next == EOF || next == '\n') break;
+        }
+    }
+    return ch;
+}
+
 // Checks spelling and grammar in a string, printing error messages to stdout.
 // Returns false to quit.
 static bool check_block(struct State *state, struct Source src,
@@ -591,13 +603,14 @@ static bool check_block(struct State *state, struct Source src,
         }
         printf("or (q)uit? ");
         for (;;) {
-            int reply = getchar();
+            int reply = get_reply();
             if (reply == EOF || reply == 'q') {
                 return false;
             }
             if (reply == 'b') {
                 add_hash(&state->ignore->blocks, hash_range(str, full_range));
                 // Return early since all errors in the block are ignored.
+                putchar('\n');
                 return true;
             }
             if (reply == 'p') {
@@ -622,17 +635,18 @@ static bool check_block(struct State *state, struct Source src,
                     if (reply == 's') {
                         NSValue *value = detail[NSGrammarRange];
                         if (!value) continue;
-                        printf("ignore ");
+                        printf("... ignore ");
                         subrange = add_ranges(range, value.rangeValue);
                         print_text_range(str, subrange);
                     } else if (reply == 'e') {
-                        printf("ignore (");
+                        printf("... ignore [");
                         description = detail[NSGrammarUserDescription];
                         fputs(description.UTF8String, stdout);
-                        printf(")");
+                        printf("]");
                     }
                     printf("? ");
-                    int yes = getchar();
+                    int yes = get_reply();
+                    if (yes == EOF || yes == 'q') return false;
                     if (tolower(yes) != 'y') continue;
                     if (reply == 's') {
                         add_hash(&state->ignore->subphrases,
@@ -641,6 +655,7 @@ static bool check_block(struct State *state, struct Source src,
                         [state->ignore->errors addObject:description];
                     }
                 }
+                break;
             }
             printf("==> invalid choice, try again: ");
         }
@@ -1041,7 +1056,10 @@ Pass the -i flag to interactively add to spell-ignore.txt.\n\
         if (result & CHECK_QUIT) break;
     }
     if (options.interactive) {
-        if (!write_ignore_file(&ignore, IGNORE_PATH)) status = 1;
+        if (!write_ignore_file(&ignore, IGNORE_PATH)) return 1;
+        // Don't return 1 for spelling errors in interactive mode, since it's
+        // expected to see them and the user successfully modified the file.
+        return 0;
     }
     return status;
 }
