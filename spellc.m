@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -13,113 +14,41 @@
 @import Foundation.NSString;
 @import Foundation.NSTextCheckingResult;
 
-// Calculates the length of an array.
-#define ARRAY_LEN(a) (sizeof a / sizeof a[0])
-
-// We ignore spelling errors for these words.
-static NSArray<NSString *> *ignored_words() {
-    return @[
-        @"conses",
-        @"consing",
-        @"desugars",
-        @"Haumann",
-        @"Kuna",
-        @"luaposix",
-        @"noninfringement",
-        @"Paweł",
-        @"skylighting",
-        @"tabler",
-        @"vnu",
-        @"supertype",
-        @"integerized",
-        @"integerizing",
-        @"indeterminates",
-        @"mutexes",
-        @"corecursion",
-    ];
-}
-
-// We ignore grammatical errors whose descriptions contain any of these strings.
-static const char *const IGNORED_GRAMMAR[] = {
-    "Consider rewriting as ‘,\"’",
-    "If this is an ordinary number, consider",
-    "The first word of a sentence should be capitalized",
-    "This may be a sentence fragment",
-};
-static const int N_IGNORED_GRAMMAR = ARRAY_LEN(IGNORED_GRAMMAR);
-
 // Hash of a string.
 typedef uint64_t Hash;
 
-// We ignore errors about blocks hashing to any of these values. A block is an
-// input to check_string: single lines for Markdown files and several lines
-// combined together for Scheme files.
-static const Hash IGNORED_BLOCKS[] = {
-    0x07b97a28e478dc1c,  // "Declarative is what is, imperative is how to."
-    0x14792bbe9437ea8a,  // ... "pattern variables and their matched values."
-    0x431634165fef1130,  // "enumerate leaves" ...
-    0xda2db6ed16d5c7e0,  // "So what you have is, at each level," ...
-    0xee3105c7edb86378,  // "enumerate interval" ...
-    0xf8756381627f7370,  // "If the body contains more than one" ...
-    0xfddbd8df1da85f35,  // "A number CC is a fixed point of a function if CC."
+// Sorted vector of hashes.
+struct SortedHashVec {
+    // Pointer to the array of hashes.
+    Hash *hashes;
+    // Length of the array.
+    int len;
+    // Capacity of the array.
+    int cap;
 };
-static const int N_IGNORED_BLOCKS = ARRAY_LEN(IGNORED_BLOCKS);
 
-// We ignore errors about phrases hashing to any of these values. A phrase is
-// the full range for an error, usually a single word for a spelling error and a
-// full sentence for a grammatical error.
-static const Hash IGNORED_PHRASES[] = {
-    0x04aa147212cc4e58,  // "Example: Counting change"
-    0x06430e6c88dd925c,  // "Abstraction layer"
-    0x075221d779908ada,  // "Why am I the same?"
-    0x0ca4ef2b9ea03c84,  // "They are modeled to our permanent satisfaction" ...
-    0x132f347f08bda2dc,  // "Computation provides a framework" ...
-    0x1584480f2af38f50,  // "Complex number arithmetic"
-    0x173a98e3fb50ede5,  // "The words of English are ambiguous:" ...
-    0x27a06190ee1f6efb,  // ... "which you can advance through with F8."
-    0x3902e0729e7d80e0,  // "operations on aggregates"
-    0x43a647857079aa45,  // "The Fermat test"
-    0x4d59aaf5ff9de024,  // "Environments, frames, and bindings"
-    0x579c39a881d95041,  // "Avoiding mutable state"
-    0x5d57a1fc209add8b,  // "Environment model"
-    0x6c59779781ad610f,  // "Normal-order evaluation"
-    0x6cc5a69e86ac6fbe,  // "An example of normal-order procedure application:"
-    0x76e301bea89320d5,  // ... "The square root of" ...
-    0x83a84bda5d616929,  // "Editor support"
-    0xa89ed3d7fbe46522,  // "LaTeX math: inline CC, display CC."
-    0xa9a9830f7b756ea3,  // "Website source:"
-    0xacf3a3e92669aa36,  // "Before submitting a PR, run CC."
-    0xaeb7cd203a53b835,  // ... "taking up 3 MB (!)."
-    0xbeb3b8947d1a64d1,  // "The LHS is what you compare your expression to."
-    0xbfe161bde0d47a33,  // "GitHub mark"
-    0xc727ece995264a22,  // "Not so with the Fermat test."
-    0xc7daee857a0dc5d1,  // "What's in your hands, I think and hope" ...
-    0xd38917ad00055e36,  // ... "are the things that were erected" ...
-    0xd72d5f50fe3ba97c,  // "Fibonacci sequence"
-    0xdc7dc0140942f368,  // "Each rule is of the form CC."
-    0xf1814ee4ad4769ea,  // "SICP derivative work"
-    0xf1c38aa17d8e84df,  // "Simplification process"
-    0xfaa92fcf419fbcf0,  // "For more information, see the website."
-    0xfd064f487f8dc8bd,  // "Original work"
+// An empty SortedHashVec.
+#define EMPTY_VEC ((struct SortedHashVec){NULL, 0, 0})
+
+// Information parsed from spell-ignore.txt.
+struct Ignore {
+    // We ignore grammatical errors whose descriptions contain any of these
+    // substrings.
+    NSMutableArray<NSString *> *errors;
+    // We ignore spelling errors for these words.
+    NSMutableArray<NSString *> *words;
+    // We ignore errors about blocks hashing to any of these values. A block is
+    // an input to check_string: single lines for Markdown files and several
+    // lines combined together for Scheme files.
+    struct SortedHashVec blocks;
+    // We ignore errors about phrases hashing to any of these values. A phrase
+    // is the full range for an error, usually a single word for a spelling
+    // error and a full sentence for a grammatical error.
+    struct SortedHashVec phrases;
+    // We ignore errors about subphrases hashing to any of these values. A
+    // subphrase is a part of a phrase that a grammatical error singles out.
+    struct SortedHashVec subphrases;
 };
-static const int N_IGNORED_PHRASES = ARRAY_LEN(IGNORED_PHRASES);
-
-// We ignore errors about subphrases hashing to any of these values. A subphrase
-// is a part of a phrase that a grammatical error singles out.
-static const Hash IGNORED_SUBPHRASES[] = {
-    0x000000000b87784c,  // "---"
-};
-static const int N_IGNORED_SUBPHRASES = ARRAY_LEN(IGNORED_SUBPHRASES);
-
-// Returns true if the given array of hashes is sorted.
-static bool hashes_are_sorted(const Hash *array, int n) {
-    for (int i = 1; i < n; i++) {
-        if (array[i - 1] >= array[i]) {
-            return false;
-        }
-    }
-    return true;
-}
 
 // The djb2 hashing algorithm.
 static Hash hash_string(const char *s, int n) {
@@ -130,38 +59,295 @@ static Hash hash_string(const char *s, int n) {
     return h;
 }
 
+// Parser for spell-ignore.txt.
+struct Parser {
+    // Used only for error messages.
+    const char *path;
+    // Input stream.
+    FILE *in;
+    // Line buffer.
+    char buf[128];
+    // Current 1-based line number.
+    int lineno;
+    // Set to true at the end of a section.
+    bool eos;
+    // Set to true at the end of a file.
+    bool eof;
+};
+
+// Initializes the parser. Returns true on success.
+static bool init_parser(struct Parser *p, const char *path) {
+    FILE *in = fopen(path, "r");
+    if (!in) {
+        perror(path);
+        return false;
+    }
+    p->path = path;
+    p->in = in;
+    p->lineno = 0;
+    p->eos = false;
+    p->eof = false;
+    return true;
+}
+
+// Closes the parser.
+static void close_parser(struct Parser *p) {
+    fclose(p->in);
+    p->in = NULL;
+}
+
+// Prints a parsing error given a printf-style format string and arguments.
+static void parse_error(struct Parser *p, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    fprintf(stderr, "%s:%d: ", p->path, p->lineno);
+    vfprintf(stderr, format, args);
+    putc('\n', stderr);
+    va_end(args);
+}
+
+// Helper function for when getc(p->in) returns EOF.
+static bool check_eof(struct Parser *p) {
+    if (ferror(p->in)) {
+        perror(p->path);
+        return false;
+    }
+    p->eos = true;
+    p->eof = true;
+    return true;
+}
+
+// Parses a line (terminated by '\n' or by EOF) into p->buf and null terminates.
+// Returns true on success. Prints an error and returns false on failure.
+static bool parse_line(struct Parser *p) {
+    p->lineno++;
+    char c;
+    size_t i = 0;
+    while ((c = getc(p->in)) != '\n') {
+        if (c == EOF) {
+            if (!check_eof(p)) return false;
+            break;
+        }
+        if (i >= sizeof p->buf - 1) {
+            parse_error(p, "buffer too small");
+            return false;
+        }
+        p->buf[i++] = c;
+    }
+    p->buf[i++] = '\0';
+    return true;
+}
+
+// Like parse_line, but requires a four-space indent and does not store it.
+static bool parse_entry(struct Parser *p) {
+    for (int i = 0; i < 4; i++) {
+        char c = getc(p->in);
+        if (c == EOF) {
+            if (!check_eof(p)) return false;
+            if (i == 0) return true;
+        }
+        if (c != ' ') {
+            if (i == 0) {
+                ungetc(c, p->in);
+                p->eos = true;
+                return true;
+            }
+            parse_error(p, "expected 4 space indent");
+            return false;
+        }
+    }
+    return parse_line(p);
+}
+
+// Parses an array of string entries.
+static bool parse_array(struct Parser *p, NSMutableArray<NSString *> *strings) {
+    for (;;) {
+        if (!parse_entry(p)) return false;
+        if (p->eos) break;
+        [strings addObject:@(p->buf)];
+    }
+    return true;
+}
+
+// Parses a single hex digit.
+static bool parse_hex(struct Parser *p, char hex, int *out) {
+    if (hex >= '0' && hex <= '9') {
+        *out = hex - '0';
+        return true;
+    }
+    if (hex >= 'a' && hex <= 'f') {
+        *out = hex - 'a' + 10;
+        return true;
+    }
+    parse_error(p, "%c: invalid hex digit", hex);
+    return false;
+}
+
+// Parses an array of hash entries.
+static bool parse_hashes(struct Parser *p, struct SortedHashVec *out) {
+    int len = 0;
+    int cap = 32;
+    Hash *hashes = malloc(cap * sizeof(Hash));
+    Hash prev = 0;
+    for (;;) {
+        if (!parse_entry(p)) return false;
+        if (p->eos) break;
+        if (len >= cap) {
+            cap *= 2;
+            hashes = realloc(hashes, cap * sizeof(Hash));
+        }
+        Hash hash = 0;
+        char *ptr = p->buf;
+        while (*ptr) {
+            int bin;
+            if (!parse_hex(p, *ptr++, &bin)) return false;
+            hash = (hash << 4) | bin;
+        }
+        if (hash <= prev) {
+            parse_error(p, "hashes are not sorted");
+            return false;
+        }
+        prev = hash;
+        hashes[len++] = hash;
+    }
+    out->hashes = hashes;
+    out->len = len;
+    out->cap = cap;
+    return true;
+}
+
+// Parses spell-ignore.txt. Returns true on success.
+static bool parse_file(struct Parser *p, struct Ignore *out) {
+    out->errors = [[NSMutableArray alloc] init];
+    out->words = [[NSMutableArray alloc] init];
+    out->blocks = EMPTY_VEC;
+    out->phrases = EMPTY_VEC;
+    out->subphrases = EMPTY_VEC;
+    for (;;) {
+        if (!parse_line(p)) return false;
+        if (p->eof) break;
+        p->eos = false;
+        if (strcmp(p->buf, "errors") == 0) {
+            if (!parse_array(p, out->errors)) return false;
+        } else if (strcmp(p->buf, "words") == 0) {
+            if (!parse_array(p, out->words)) return false;
+        } else if (strcmp(p->buf, "blocks") == 0) {
+            if (!parse_hashes(p, &out->blocks)) return false;
+        } else if (strcmp(p->buf, "phrases") == 0) {
+            if (!parse_hashes(p, &out->phrases)) return false;
+        } else if (strcmp(p->buf, "subphrases") == 0) {
+            if (!parse_hashes(p, &out->subphrases)) return false;
+        } else {
+            parse_error(p, "%s: invalid section", p->buf);
+            return false;
+        }
+    }
+    return true;
+}
+
+// Inverse of parse_array.
+static void write_array(FILE *out, NSArray<NSString *> *array) {
+    for (NSString *string in array) {
+        fprintf(out, "    %s\n", [string UTF8String]);
+    }
+}
+
+// Inverse of parse_hex.
+static void write_hex(FILE *out, int bin) {
+    assert(bin >= 0 && bin <= 15);
+    if (bin < 10) {
+        putc('0' + bin, out);
+    } else {
+        putc('a' + bin - 10, out);
+    }
+}
+
+// Inverse of parse_hashes.
+static void write_hashes(FILE *out, struct SortedHashVec vec) {
+    for (int i = 0; i < vec.len; i++) {
+        fputs("    ", out);
+        for (int j = sizeof(Hash) * 8 - 4; j >= 0; j -= 4) {
+            write_hex(out, (vec.hashes[i] >> j) & 0xf);
+        }
+        putc('\n', out);
+    }
+}
+
+// Inverse of parse_file.
+static bool write_ignore_file(const struct Ignore *ignore, const char *path) {
+    FILE *file = fopen(path, "w");
+    if (!file) {
+        perror(path);
+        return false;
+    }
+    fprintf(file, "errors\n");
+    write_array(file, ignore->errors);
+    fprintf(file, "words\n");
+    write_array(file, ignore->words);
+    fprintf(file, "blocks\n");
+    write_hashes(file, ignore->blocks);
+    fprintf(file, "phrases\n");
+    write_hashes(file, ignore->phrases);
+    fprintf(file, "subphrases\n");
+    write_hashes(file, ignore->subphrases);
+    return true;
+}
+
 // Hashes the given range in the string.
 static Hash hash_range(const char *str, NSRange range) {
     return hash_string(str + range.location, range.length);
 }
 
-// Returns true if array (length n) contains hash h.
-static bool contains_hash(const Hash *array, int n, Hash hash) {
+// Returns -1 if hash occurs in vec, otherwise returns the index where hash
+// should be inserted into vec.
+static int find_hash(struct SortedHashVec vec, Hash hash) {
     // Binary search.
     int lo = 0;
-    int hi = n;
+    int hi = vec.len;
     while (lo < hi) {
         int mid = (lo + hi) / 2;
-        Hash h = array[mid];
-        if (hash == h) return true;
+        Hash h = vec.hashes[mid];
+        if (hash == h) return -1;
         if (hash < h)
             hi = mid;
         else
             lo = mid + 1;
     }
-    return false;
+    return lo;
+}
+
+// Returns true if vec contains hash h.
+static bool contains_hash(struct SortedHashVec vec, Hash hash) {
+    return find_hash(vec, hash) == -1;
+}
+
+// Adds a hash to a SortedHashVec in the correct position.
+static void add_hash(struct SortedHashVec *vec, Hash hash) {
+    if (vec->len >= vec->cap) {
+        vec->cap *= 2;
+        vec->hashes = realloc(vec->hashes, vec->cap * sizeof(Hash));
+    }
+    int dst = find_hash(*vec, hash);
+    if (dst == -1) {
+        return;
+    }
+    for (int i = vec->len; i > dst; i++) {
+        vec->hashes[i] = vec->hashes[i - 1];
+    }
+    vec->len++;
+    vec->hashes[dst] = hash;
 }
 
 // Returns true if we should skip all errors for the given block.
-static bool should_skip_block(const char *str, NSRange range) {
-    return contains_hash(IGNORED_BLOCKS, N_IGNORED_BLOCKS,
-                         hash_range(str, range));
+static bool should_skip_block(const struct Ignore *ignore, const char *str,
+                              NSRange range) {
+    return contains_hash(ignore->blocks, hash_range(str, range));
 }
 
 // Returns true if we should skip all errors for the given phrase.
-static bool should_skip_phrase(const char *str, NSRange range) {
-    return contains_hash(IGNORED_PHRASES, N_IGNORED_PHRASES,
-                         hash_range(str, range));
+static bool should_skip_phrase(const struct Ignore *ignore, const char *str,
+                               NSRange range) {
+    return contains_hash(ignore->phrases, hash_range(str, range));
 }
 
 // Given a range r2 relative to r1, returns r2 as an absolute range.
@@ -172,12 +358,11 @@ static NSRange add_ranges(NSRange r1, NSRange r2) {
 
 // Returns true if we should skip a particular grammatical error about the given
 // subphrase (subrange_value) within a phrase (range).
-static bool should_skip_subphrase(const char *str, NSRange range,
-                                  NSValue *subrange_value,
+static bool should_skip_subphrase(const struct Ignore *ignore, const char *str,
+                                  NSRange range, NSValue *subrange_value,
                                   NSString *description) {
-    const char *c_description = description.UTF8String;
-    for (int i = 0; i < N_IGNORED_GRAMMAR; i++) {
-        if (strstr(c_description, IGNORED_GRAMMAR[i]) != NULL) {
+    for (NSString *error in ignore->errors) {
+        if ([description containsString:error]) {
             return true;
         }
     }
@@ -185,8 +370,7 @@ static bool should_skip_subphrase(const char *str, NSRange range,
         return false;
     }
     NSRange subrange = add_ranges(range, subrange_value.rangeValue);
-    return contains_hash(IGNORED_SUBPHRASES, N_IGNORED_SUBPHRASES,
-                         hash_range(str, subrange));
+    return contains_hash(ignore->subphrases, hash_range(str, subrange));
 }
 
 // Wrapper around NSSpellChecker that stores the document tag.
@@ -195,22 +379,31 @@ struct SpellChecker {
     int tag;
 };
 
+// Updates the spell checker's ignored words.
+static void update_ignored_words(struct SpellChecker spell,
+                                 const struct Ignore *ignore) {
+    [spell.checker setIgnoredWords:ignore->words
+            inSpellDocumentWithTag:spell.tag];
+}
+
 // Options to the program.
 struct Options {
     // Instead of spellchecking, print the result of converting Markdown to
     // plain text (the spellchecking input).
     bool print_plain;
-    // Print hashes after spellchecker errors. These can be used to modify this
-    // program to ignore those specific errors.
+    // Print hashes after spellchecker errors, used in spell-ignore.txt.
     bool print_hashes;
+    // Prompt on each error for adding an entry to spell-ignore.txt.
+    bool interactive;
 };
 
 // State for spell checking.
 struct State {
     struct SpellChecker spell;
     struct Options options;
-    // Cumulative status, set to 1 if there are any errors.
-    int status;
+    struct Ignore *ignore;
+    // True if there were any errors.
+    bool failed;
     // The file being scanned.
     const char *path;
     FILE *file;
@@ -223,7 +416,8 @@ struct State {
 
 // Initializes spell checker state for the given file. Returns true on success.
 static bool init_state(struct State *state, struct SpellChecker spell,
-                       struct Options options, const char *path) {
+                       struct Options options, struct Ignore *ignore,
+                       const char *path) {
     FILE *file = fopen(path, "r");
     if (!file) {
         perror(path);
@@ -231,7 +425,8 @@ static bool init_state(struct State *state, struct SpellChecker spell,
     }
     state->spell = spell;
     state->options = options;
-    state->status = 0;
+    state->ignore = ignore;
+    state->failed = false;
     state->path = path;
     state->file = file;
     state->lineno = 0;
@@ -265,13 +460,39 @@ struct Source {
     int last;
 };
 
+// Prints the source location of an error.
+static void print_location(const struct State *state, struct Source src) {
+    fputs(state->path, stdout);
+    if (src.first == src.last) {
+        printf(":%d: ", src.first);
+    } else {
+        printf(":%d-%d: ", src.first, src.last);
+    }
+}
+
+// Prints a range of str surrounded by curly quotes.
+static void print_text_range(const char *str, NSRange range) {
+    printf("“%.*s”", (int)range.length, str + range.location);
+}
+
+// Prints a list of words separated by commas, each enclosed in curly quotes.
+static void print_comma_separated(NSArray<NSString *> *words) {
+    bool comma = false;
+    for (NSString *word in words) {
+        if (comma) printf(", ");
+        printf("“%s”", word.UTF8String);
+        comma = true;
+    }
+}
+
 // Checks spelling and grammar in a string, printing error messages to stdout.
-static void check_block(struct State *state, struct Source src,
+// Returns false to quit.
+static bool check_block(struct State *state, struct Source src,
                         const char *str) {
     NSString *ns_str = @(str);
     NSRange full_range = NSMakeRange(0, ns_str.length);
-    if (should_skip_block(str, full_range)) {
-        return;
+    if (should_skip_block(state->ignore, str, full_range)) {
+        return true;
     }
     NSArray<NSTextCheckingResult *> *results =
         [state->spell.checker checkString:ns_str
@@ -284,16 +505,16 @@ static void check_block(struct State *state, struct Source src,
                                 wordCount:NULL];
     for (NSTextCheckingResult *result in results) {
         NSRange range = result.range;
-        if (should_skip_phrase(str, range)) {
+        if (should_skip_phrase(state->ignore, str, range)) {
             continue;
         }
-        NSString *replacement = NULL;
+        NSArray<NSString *> *guesses = NULL;
         NSArray<NSDictionary<NSString *, id> *> *grammarDetails = NULL;
         uint64_t grammarSkip = 0;
         switch (result.resultType) {
         case NSTextCheckingTypeSpelling:
-            replacement = [state->spell.checker
-                correctionForWordRange:range
+            guesses = [state->spell.checker
+                   guessesForWordRange:range
                               inString:ns_str
                               language:state->spell.checker.language
                 inSpellDocumentWithTag:state->spell.tag];
@@ -306,7 +527,8 @@ static void check_block(struct State *state, struct Source src,
                 index++;
                 NSValue *subrange = detail[NSGrammarRange];
                 NSString *description = detail[NSGrammarUserDescription];
-                if (should_skip_subphrase(str, range, subrange, description)) {
+                if (should_skip_subphrase(state->ignore, str, range, subrange,
+                                          description)) {
                     skips++;
                     grammarSkip |= UINT64_C(1) << index;
                 }
@@ -318,49 +540,113 @@ static void check_block(struct State *state, struct Source src,
         default:
             assert(false);
         }
-        state->status = 1;
-        fputs(state->path, stdout);
-        if (src.first == src.last) {
-            printf(":%d: ", src.first);
-        } else {
-            printf(":%d-%d: ", src.first, src.last);
-        }
-        printf("“%.*s”", (int)range.length, str + range.location);
-        if (replacement) {
-            printf(" (did you mean “%s”?)", replacement.UTF8String);
+        state->failed = true;
+        print_location(state, src);
+        print_text_range(str, range);
+        if (guesses) {
+            printf(" (guesses: ");
+            print_comma_separated(guesses);
+            printf(")");
         }
         if (state->options.print_hashes) {
-            printf(" [block = 0x%016llx]", hash_range(str, full_range));
+            printf(" [block = %016llx]", hash_range(str, full_range));
         }
         if (grammarDetails) {
             if (state->options.print_hashes) {
-                printf(" [phrase = 0x%016llx]", hash_range(str, range));
+                printf(" [phrase = %016llx]", hash_range(str, range));
             }
             int index = -1;
             for (NSDictionary<NSString *, id> *detail in grammarDetails) {
                 index++;
-                if ((grammarSkip & (UINT64_C(1) << index)) != 0) {
-                    continue;
-                }
+                if ((grammarSkip & (UINT64_C(1) << index)) != 0) continue;
                 printf("\n    ");
                 NSValue *value = detail[NSGrammarRange];
                 NSRange subrange;
                 if (value) {
                     subrange = add_ranges(range, value.rangeValue);
-                    printf("“%.*s”", (int)subrange.length,
-                           str + subrange.location);
+                    print_text_range(str, subrange);
                 }
                 NSString *description = detail[NSGrammarUserDescription];
-                if (value) fputs(": ", stdout);
+                if (value) printf(": ");
                 fputs(description.UTF8String, stdout);
                 if (value && state->options.print_hashes) {
-                    printf(" [subphrase = 0x%016llx]",
-                           hash_range(str, subrange));
+                    printf(" [subphrase = %016llx]", hash_range(str, subrange));
                 }
             }
         }
         putchar('\n');
+        if (!state->options.interactive) {
+            continue;
+        }
+        printf("==> ignore (b)lock, (p)hrase, ");
+        switch (result.resultType) {
+        case NSTextCheckingTypeSpelling:
+            printf("(w)ord, ");
+            break;
+        case NSTextCheckingTypeGrammar:
+            printf("(s)ubphrase, (e)rror, ");
+            break;
+        default:
+            assert(false);
+        }
+        printf("or (q)uit? ");
+        for (;;) {
+            int reply = getchar();
+            if (reply == EOF || reply == 'q') {
+                return false;
+            }
+            if (reply == 'b') {
+                add_hash(&state->ignore->blocks, hash_range(str, full_range));
+                // Return early since all errors in the block are ignored.
+                return true;
+            }
+            if (reply == 'p') {
+                add_hash(&state->ignore->phrases, hash_range(str, range));
+                break;
+            }
+            if (result.resultType == NSTextCheckingTypeSpelling
+                && reply == 'w') {
+                [state->ignore->words
+                    addObject:[ns_str substringWithRange:result.range]];
+                update_ignored_words(state->spell, state->ignore);
+                break;
+            }
+            if (result.resultType == NSTextCheckingTypeGrammar
+                && (reply == 's' || reply == 'e')) {
+                int index = -1;
+                for (NSDictionary<NSString *, id> *detail in grammarDetails) {
+                    index++;
+                    if ((grammarSkip & (UINT64_C(1) << index)) != 0) continue;
+                    NSRange subrange;
+                    NSString *description;
+                    if (reply == 's') {
+                        NSValue *value = detail[NSGrammarRange];
+                        if (!value) continue;
+                        printf("ignore ");
+                        subrange = add_ranges(range, value.rangeValue);
+                        print_text_range(str, subrange);
+                    } else if (reply == 'e') {
+                        printf("ignore (");
+                        description = detail[NSGrammarUserDescription];
+                        fputs(description.UTF8String, stdout);
+                        printf(")");
+                    }
+                    printf("? ");
+                    int yes = getchar();
+                    if (tolower(yes) != 'y') continue;
+                    if (reply == 's') {
+                        add_hash(&state->ignore->subphrases,
+                                 hash_range(str, subrange));
+                    } else if (reply == 'e') {
+                        [state->ignore->errors addObject:description];
+                    }
+                }
+            }
+            printf("==> invalid choice, try again: ");
+        }
+        putchar('\n');
     }
+    return true;
 }
 
 // Current mode within a Markdown file.
@@ -401,7 +687,7 @@ static enum Mode next_mode(enum Mode old, const char *line) {
         if (startswith(line, "```")) {
             return M_CODE_BLOCK_START;
         };
-        if (strcmp(line, "\n") == 0) {
+        if (strcmp(line, "$$\n") == 0) {
             return M_DISPLAY_MATH_START;
         }
         if (strcmp(line, "::: exercises\n") == 0) {
@@ -438,12 +724,11 @@ static enum Mode next_mode(enum Mode old, const char *line) {
     }
 }
 
-// Converts a line of Markdown to plain text, inline. Returns a pointer into s
-// indicating the beginning (e.g. would go past the hashes in headings), or NULL
-// if this line has no content that should be spellchecked.
+// Converts a line of Markdown to plain text, inline. Returns a pointer into
+// s indicating the beginning (e.g. would go past the hashes in headings),
+// or NULL if this line has no content that should be spellchecked.
 static char *strip_markdown(char *s) {
     // Skip link definitions, display math, and divs.
-    // TODO: handle all $$ cases (not on own lines).
     if (s[0] == '[' || (s[0] == '$' && s[1] == '$') || startswith(s, ":::")) {
         return NULL;
     }
@@ -608,8 +893,8 @@ end:
     return start;
 }
 
-// Spellchecks a Markdown file.
-static void check_markdown(struct State *state) {
+// Spellchecks a Markdown file. Returns false to quit.
+static bool check_markdown(struct State *state) {
     enum Mode mode = M_NORMAL;
     while (scan(state)) {
         mode = next_mode(mode, state->line);
@@ -622,13 +907,19 @@ static void check_markdown(struct State *state) {
             fputs(plain, stdout);
         } else {
             struct Source src = {.first = state->lineno, .last = state->lineno};
-            check_block(state, src, plain);
+            if (!check_block(state, src, plain)) {
+                return false;
+            }
         }
     }
+    return true;
 }
 
-// Spellchecks the comments in a Scheme file.
-static void check_scheme(struct State *state) { assert(false); }
+// Spellchecks the comments in a Scheme file. Returns false to quit.
+static bool check_scheme(struct State *state) {
+    // TODO!
+    assert(false);
+}
 
 // Supported file types.
 enum FileType {
@@ -637,7 +928,8 @@ enum FileType {
     FT_SCHEME,
 };
 
-// Returns the file type based on the path's extension, or FT_NONE on failure.
+// Returns the file type based on the path's extension, or FT_NONE on
+// failure.
 static enum FileType detect_filetype(const char *path) {
     const char *dot = strrchr(path, '.');
     if (!(dot && dot[1] && dot[2])) {
@@ -652,44 +944,51 @@ static enum FileType detect_filetype(const char *path) {
     return FT_NONE;
 }
 
-// Spellchecks a single file. Returns 0 on success.
-static int check(struct SpellChecker spell, struct Options options,
-                 const char *path) {
+// Bitfield for the check function.
+typedef int CheckResult;
+#define CHECK_FAIL 0x1
+#define CHECK_QUIT 0x2
+
+// Spellchecks a single file.
+static CheckResult check(struct SpellChecker spell, struct Options options,
+                         struct Ignore *ignore, const char *path) {
     enum FileType ft = detect_filetype(path);
     if (ft == FT_NONE) {
         fprintf(stderr, "%s: invalid file type\n", path);
-        return 1;
+        return CHECK_FAIL;
     }
     struct State state;
-    if (!init_state(&state, spell, options, path)) {
-        return 1;
+    if (!init_state(&state, spell, options, ignore, path)) {
+        return CHECK_FAIL;
     }
+    int result = 0;
     switch (ft) {
     case FT_MARKDOWN:
-        check_markdown(&state);
+        if (!check_markdown(&state)) result |= CHECK_QUIT;
         break;
     case FT_SCHEME:
-        check_scheme(&state);
+        if (!check_scheme(&state)) result |= CHECK_QUIT;
         break;
     case FT_NONE:
         assert(false);
     }
     close_state(&state);
-    return state.status;
+    if (state.failed) result |= CHECK_FAIL;
+    return result;
 }
 
+static const char IGNORE_PATH[] = "spell-ignore.txt";
+
 int main(int argc, char **argv) {
-    assert(hashes_are_sorted(IGNORED_BLOCKS, N_IGNORED_BLOCKS));
-    assert(hashes_are_sorted(IGNORED_PHRASES, N_IGNORED_PHRASES));
-    assert(hashes_are_sorted(IGNORED_SUBPHRASES, N_IGNORED_SUBPHRASES));
     if (argc == 1) {
         fprintf(stderr, "\
-usage: %s [-p | -d | -x] FILE ...\n\
+usage: %s [-p | -d | -x | -i] FILE ...\n\
 \n\
 Spellchecks Markdown (.md) or Scheme (.ss) files using NSSpellChecker.\n\
 Pass the -p flag to print the file as plain text without spellchecking,\n\
 or the -d flag to show a diff from the input to the plain text.\n\
 Pass the -x flag to print hashes that can be used for ignoring errors.\n\
+Pass the -i flag to interactively add to spell-ignore.txt.\n\
 ",
                 argv[0]);
         return 1;
@@ -700,8 +999,8 @@ Pass the -x flag to print hashes that can be used for ignoring errors.\n\
             return 1;
         }
         char cmd[256];
-        // Note: git diff does not work with process substitution or /dev/stdin,
-        // but it does work with "-" to mean stdin.
+        // Note: git diff does not work with process substitution or
+        // /dev/stdin, but it does work with "-" to mean stdin.
         snprintf(cmd, sizeof cmd, "%s -p '%s' | git diff --no-index '%s' -",
                  argv[0], argv[2], argv[2]);
         // Repeat /bin/bash for argv[0].
@@ -719,18 +1018,30 @@ Pass the -x flag to print hashes that can be used for ignoring errors.\n\
     } else if (strcmp(argv[1], "-x") == 0) {
         options.print_hashes = true;
         idx++;
+    } else if (strcmp(argv[1], "-i") == 0) {
+        options.interactive = true;
+        idx++;
     }
+    struct Parser parser;
+    if (!init_parser(&parser, IGNORE_PATH)) return 1;
+    struct Ignore ignore;
+    if (!parse_file(&parser, &ignore)) return 1;
+    close_parser(&parser);
     struct SpellChecker spell = {
         .checker = [NSSpellChecker sharedSpellChecker],
         .tag = [NSSpellChecker uniqueSpellDocumentTag],
     };
     spell.checker.language = @"en_US";
     spell.checker.automaticallyIdentifiesLanguages = NO;
-    [spell.checker setIgnoredWords:ignored_words()
-            inSpellDocumentWithTag:spell.tag];
+    update_ignored_words(spell, &ignore);
     int status = 0;
     for (; idx < argc; idx++) {
-        status |= check(spell, options, argv[idx]);
+        CheckResult result = check(spell, options, &ignore, argv[idx]);
+        if (result & CHECK_FAIL) status = 1;
+        if (result & CHECK_QUIT) break;
+    }
+    if (options.interactive) {
+        if (!write_ignore_file(&ignore, IGNORE_PATH)) status = 1;
     }
     return status;
 }
