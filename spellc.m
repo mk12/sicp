@@ -245,10 +245,13 @@ static bool parse_file(struct Parser *p, struct Ignore *out) {
     return true;
 }
 
+// A 4-space indent string.
+#define INDENT "    "
+
 // Inverse of parse_array.
 static void write_array(FILE *out, NSArray<NSString *> *array) {
     for (NSString *string in array) {
-        fprintf(out, "    %s\n", [string UTF8String]);
+        fprintf(out, INDENT "%s\n", [string UTF8String]);
     }
 }
 
@@ -265,7 +268,7 @@ static void write_hex(FILE *out, int bin) {
 // Inverse of parse_hashes.
 static void write_hashes(FILE *out, struct SortedHashVec vec) {
     for (int i = 0; i < vec.len; i++) {
-        fputs("    ", out);
+        fputs(INDENT, out);
         for (int j = sizeof(Hash) * 8 - 4; j >= 0; j -= 4) {
             write_hex(out, (vec.hashes[i] >> j) & 0xf);
         }
@@ -328,9 +331,7 @@ static void add_hash(struct SortedHashVec *vec, Hash hash) {
         vec->hashes = realloc(vec->hashes, vec->cap * sizeof(Hash));
     }
     int dst = find_hash(*vec, hash);
-    if (dst == -1) {
-        return;
-    }
+    if (dst == -1) return;
     for (int i = vec->len; i > dst; i--) {
         vec->hashes[i] = vec->hashes[i - 1];
     }
@@ -362,13 +363,9 @@ static bool should_skip_subphrase(const struct Ignore *ignore, const char *str,
                                   NSRange range, NSValue *subrange_value,
                                   NSString *description) {
     for (NSString *error in ignore->errors) {
-        if ([description containsString:error]) {
-            return true;
-        }
+        if ([description containsString:error]) return true;
     }
-    if (!subrange_value) {
-        return false;
-    }
+    if (!subrange_value) return false;
     NSRange subrange = add_ranges(range, subrange_value.rangeValue);
     return contains_hash(ignore->subphrases, hash_range(str, subrange));
 }
@@ -446,12 +443,30 @@ static void close_state(struct State *state) {
 
 // Scans a line from the file. Returns false on error or EOF.
 static bool scan(struct State *state) {
-    if (!state->file) {
-        return false;
-    }
+    if (!state->file) return false;
     state->len = getline(&state->line, &state->cap, state->file);
     state->lineno++;
     return state->len != -1;
+}
+
+// ANSI color escape codes.
+static const char *C_RESET = "\x1b[0m";
+static const char *C_BOLD = "\x1b[1m";
+static const char *C_RED = "\x1b[31m";
+static const char *C_GREEN = "\x1b[32m";
+static const char *C_BLUE = "\x1b[34m";
+static const char *C_GRAY = "\x1b[90m";
+
+// Disables color output if NO_COLOR is set or not printing to a tty.
+static void setup_color(void) {
+    if (getenv("NO_COLOR") || !isatty(1) || !isatty(2)) {
+        C_RESET = "";
+        C_BOLD = "";
+        C_RED = "";
+        C_GREEN = "";
+        C_BLUE = "";
+        C_GRAY = "";
+    }
 }
 
 // An inclusive range of lines, for reporting in error messages.
@@ -462,17 +477,18 @@ struct Source {
 
 // Prints the source location of an error.
 static void print_location(const struct State *state, struct Source src) {
-    fputs(state->path, stdout);
+    printf("%s%s%s", C_BOLD, state->path, C_RESET);
     if (src.first == src.last) {
-        printf(":%d: ", src.first);
+        printf(":%d", src.first);
     } else {
-        printf(":%d-%d: ", src.first, src.last);
+        printf(":%d-%d", src.first, src.last);
     }
 }
 
 // Prints a range of str surrounded by curly quotes.
 static void print_text_range(const char *str, NSRange range) {
-    printf("“%.*s”", (int)range.length, str + range.location);
+    printf("%s“%.*s”%s", C_GREEN, (int)range.length, str + range.location,
+           C_RESET);
 }
 
 // Prints a list of words separated by commas, each enclosed in curly quotes.
@@ -480,13 +496,19 @@ static void print_comma_separated(NSArray<NSString *> *words) {
     bool comma = false;
     for (NSString *word in words) {
         if (comma) printf(", ");
-        printf("“%s”", word.UTF8String);
+        printf("%s“%s”%s", C_GREEN, word.UTF8String, C_RESET);
         comma = true;
     }
 }
 
+// Prints a hash annotation in square brackets.
+static void print_hash_annotation(const char *name, const char *str,
+                                  NSRange range) {
+    printf(" %s[%s = %016llx]%s", C_RED, name, hash_range(str, range), C_RESET);
+}
+
 // Prompts the user to enter a single charcter, and eats the newline.
-static int get_reply() {
+static int get_reply(void) {
     int ch = getchar();
     if (ch != EOF && ch != '\n') {
         for (;;) {
@@ -497,15 +519,26 @@ static int get_reply() {
     return ch;
 }
 
+// Returns true if r occurs in the list of n ranges.
+static bool has_range(NSRange *ranges, int n, NSRange r) {
+    for (int i = 0; i < n; i++) {
+        if (NSEqualRanges(ranges[i], r)) return true;
+    }
+    return false;
+}
+
+// Return value for (possibly) interactive routines.
+enum Action {
+    NONE,
+    QUIT,
+};
+
 // Checks spelling and grammar in a string, printing error messages to stdout.
-// Returns false to quit.
-static bool check_block(struct State *state, struct Source src,
-                        const char *str) {
+static enum Action check_block(struct State *state, struct Source src,
+                               const char *str) {
     NSString *ns_str = @(str);
     NSRange full_range = NSMakeRange(0, ns_str.length);
-    if (should_skip_block(state->ignore, str, full_range)) {
-        return true;
-    }
+    if (should_skip_block(state->ignore, str, full_range)) return NONE;
     NSArray<NSTextCheckingResult *> *results =
         [state->spell.checker checkString:ns_str
                                     range:full_range
@@ -515,16 +548,30 @@ static bool check_block(struct State *state, struct Source src,
                    inSpellDocumentWithTag:state->spell.tag
                               orthography:NULL
                                 wordCount:NULL];
+    bool printed_block = false;
+    NSRange grammar_subranges[16];
+    int n_grammar_subranges = 0;
+    for (NSTextCheckingResult *result in results) {
+        if (result.resultType != NSTextCheckingTypeGrammar) continue;
+        for (NSDictionary<NSString *, id> *detail in result.grammarDetails) {
+            assert(n_grammar_subranges < 16);
+            grammar_subranges[n_grammar_subranges++] = add_ranges(
+                result.range, ((NSValue *)detail[NSGrammarRange]).rangeValue);
+        }
+    }
     for (NSTextCheckingResult *result in results) {
         NSRange range = result.range;
-        if (should_skip_phrase(state->ignore, str, range)) {
-            continue;
-        }
+        if (should_skip_phrase(state->ignore, str, range)) continue;
         NSArray<NSString *> *guesses = NULL;
         NSArray<NSDictionary<NSString *, id> *> *grammarDetails = NULL;
         uint64_t grammarSkip = 0;
         switch (result.resultType) {
         case NSTextCheckingTypeSpelling:
+            // Skip spelling errors that are merely restating a grammatical
+            // error. This happens with errors like to/too where it reports both
+            // a grammatical error and a spelling error.
+            if (has_range(grammar_subranges, n_grammar_subranges, range))
+                continue;
             guesses = [state->spell.checker
                    guessesForWordRange:range
                               inString:ns_str
@@ -545,72 +592,80 @@ static bool check_block(struct State *state, struct Source src,
                     grammarSkip |= UINT64_C(1) << index;
                 }
             }
-            if (skips == (int)grammarDetails.count) {
-                continue;
-            }
+            if (skips == (int)grammarDetails.count) continue;
             break;
         default:
             assert(false);
         }
         state->failed = true;
-        print_location(state, src);
+        if (!printed_block) {
+            print_location(state, src);
+            printf("\n%sblock%s ", C_GRAY, C_RESET);
+            NSRange block_range = full_range;
+            if (str[block_range.length - 1] == '\n') block_range.length--;
+            print_text_range(str, block_range);
+            if (state->options.print_hashes)
+                print_hash_annotation("block", str, full_range);
+            putchar('\n');
+            printed_block = true;
+        }
+        printf(INDENT "%sphrase%s ", C_GRAY, C_RESET);
         print_text_range(str, range);
-        if (guesses) {
-            printf(" (guesses: ");
-            print_comma_separated(guesses);
-            printf(")");
-        }
-        if (state->options.print_hashes) {
-            printf(" [block = %016llx]", hash_range(str, full_range));
-        }
-        if (grammarDetails) {
-            if (state->options.print_hashes) {
-                printf(" [phrase = %016llx]", hash_range(str, range));
+        if (result.resultType == NSTextCheckingTypeSpelling) {
+            printf(": bad spelling");
+            if (guesses) {
+                printf(" (guesses: ");
+                print_comma_separated(guesses);
+                putchar(')');
             }
+        }
+        if (state->options.print_hashes)
+            print_hash_annotation("phrase", str, range);
+        putchar('\n');
+        if (grammarDetails) {
             int index = -1;
             for (NSDictionary<NSString *, id> *detail in grammarDetails) {
                 index++;
                 if ((grammarSkip & (UINT64_C(1) << index)) != 0) continue;
-                printf("\n    ");
+                printf(INDENT INDENT);
                 NSValue *value = detail[NSGrammarRange];
                 NSRange subrange;
                 if (value) {
+                    printf("%ssubphrase%s ", C_GRAY, C_RESET);
                     subrange = add_ranges(range, value.rangeValue);
                     print_text_range(str, subrange);
+                    printf(": ");
                 }
                 NSString *description = detail[NSGrammarUserDescription];
-                if (value) printf(": ");
                 fputs(description.UTF8String, stdout);
-                if (value && state->options.print_hashes) {
-                    printf(" [subphrase = %016llx]", hash_range(str, subrange));
-                }
+                if (value && state->options.print_hashes)
+                    print_hash_annotation("subphrase", str, subrange);
+                putchar('\n');
             }
         }
-        putchar('\n');
-        if (!state->options.interactive) {
-            continue;
-        }
-        printf("==> ignore (b)lock, (p)hrase, ");
+        if (!state->options.interactive) continue;
+        printf("==> ignore %1$s(b)%2$slock, %1$s(p)%2$shrase, ", C_BLUE,
+               C_RESET);
         switch (result.resultType) {
         case NSTextCheckingTypeSpelling:
-            printf("(w)ord, ");
+            printf("%1$s(w)%2$sord, ", C_BLUE, C_RESET);
             break;
         case NSTextCheckingTypeGrammar:
-            printf("(s)ubphrase, (e)rror, ");
+            printf("%1$s(s)%2$subphrase, %1$s(e)%2$srror, ", C_BLUE, C_RESET);
             break;
         default:
             assert(false);
         }
-        printf("(N)ext, or (q)uit? ");
+        printf("%1$s(N)%2$sext, or %1$s(q)%2$suit? ", C_BLUE, C_RESET);
         for (;;) {
             int reply = get_reply();
-            if (reply == EOF || reply == 'q') return false;
+            if (reply == EOF || reply == 'q') return QUIT;
             if (reply == 'n' || reply == '\n') break;
             if (reply == 'b') {
                 add_hash(&state->ignore->blocks, hash_range(str, full_range));
                 // Return early since all errors in the block are ignored.
                 putchar('\n');
-                return true;
+                return NONE;
             }
             if (reply == 'p') {
                 add_hash(&state->ignore->phrases, hash_range(str, range));
@@ -638,14 +693,14 @@ static bool check_block(struct State *state, struct Source src,
                         subrange = add_ranges(range, value.rangeValue);
                         print_text_range(str, subrange);
                     } else if (reply == 'e') {
-                        printf("... ignore [");
+                        printf("... ignore %s“", C_RED);
                         description = detail[NSGrammarUserDescription];
                         fputs(description.UTF8String, stdout);
-                        printf("]");
+                        printf("”%s", C_RESET);
                     }
-                    printf("? ");
+                    printf("? (y/N) ");
                     int yes = get_reply();
-                    if (yes == EOF || yes == 'q') return false;
+                    if (yes == EOF || yes == 'q') return QUIT;
                     if (tolower(yes) != 'y') continue;
                     if (reply == 's') {
                         add_hash(&state->ignore->subphrases,
@@ -658,9 +713,9 @@ static bool check_block(struct State *state, struct Source src,
             }
             printf("==> invalid choice, try again: ");
         }
-        putchar('\n');
     }
-    return true;
+    if (printed_block) putchar('\n');
+    return NONE;
 }
 
 // Current mode within a Markdown file.
@@ -698,42 +753,26 @@ static enum Mode next_mode(enum Mode old, const char *line) {
     case M_DISPLAY_MATH_END:
     case M_EXERCISE_DIV_END:
     case M_HTML_PRE_END:
-        if (startswith(line, "```")) {
-            return M_CODE_BLOCK_START;
-        };
-        if (strcmp(line, "$$\n") == 0) {
-            return M_DISPLAY_MATH_START;
-        }
-        if (strcmp(line, "::: exercises\n") == 0) {
-            return M_EXERCISE_DIV_START;
-        }
-        if (startswith(line, "<pre>")) {
-            return M_HTML_PRE_START;
-        }
+        if (startswith(line, "```")) return M_CODE_BLOCK_START;
+        if (strcmp(line, "$$\n") == 0) return M_DISPLAY_MATH_START;
+        if (strcmp(line, "::: exercises\n") == 0) return M_EXERCISE_DIV_START;
+        if (startswith(line, "<pre>")) return M_HTML_PRE_START;
         return M_NORMAL;
     case M_CODE_BLOCK_START:
     case M_CODE_BLOCK:
-        if (strcmp(line, "```\n") == 0) {
-            return M_CODE_BLOCK_END;
-        };
+        if (strcmp(line, "```\n") == 0) return M_CODE_BLOCK_END;
         return M_CODE_BLOCK;
     case M_DISPLAY_MATH_START:
     case M_DISPLAY_MATH:
-        if (strcmp(line, "$$\n") == 0) {
-            return M_DISPLAY_MATH_END;
-        };
+        if (strcmp(line, "$$\n") == 0) return M_DISPLAY_MATH_END;
         return M_DISPLAY_MATH;
     case M_EXERCISE_DIV_START:
     case M_EXERCISE_DIV:
-        if (strcmp(line, ":::\n") == 0) {
-            return M_EXERCISE_DIV_END;
-        };
+        if (strcmp(line, ":::\n") == 0) return M_EXERCISE_DIV_END;
         return M_EXERCISE_DIV;
     case M_HTML_PRE_START:
     case M_HTML_PRE:
-        if (strcmp(line, "</code></pre>\n") == 0) {
-            return M_HTML_PRE_END;
-        };
+        if (strcmp(line, "</code></pre>\n") == 0) return M_HTML_PRE_END;
         return M_HTML_PRE;
     }
 }
@@ -850,9 +889,7 @@ static char *strip_markdown(char *s) {
                 while (*p && *p != ';') p++;
                 if (!*p) goto end;
                 p++;
-                if (startswith(p, "ed ")) {
-                    p += 2;
-                }
+                if (startswith(p, "ed ")) p += 2;
             } else {
                 *s++ = *p++;
             }
@@ -905,32 +942,38 @@ end:
     return start;
 }
 
-// Spellchecks a Markdown file. Returns false to quit.
-static bool check_markdown(struct State *state) {
-    enum Mode mode = M_NORMAL;
-    while (scan(state)) {
-        mode = next_mode(mode, state->line);
-        if (mode != M_NORMAL) {
-            continue;
-        }
-        char *plain = strip_markdown(state->line);
-        if (!plain) continue;
-        if (state->options.print_plain) {
-            fputs(plain, stdout);
-        } else {
-            struct Source src = {.first = state->lineno, .last = state->lineno};
-            if (!check_block(state, src, plain)) {
-                return false;
-            }
-        }
+// Feeds a line of Markdown (not hard wrapped, so it is an entire block, e.g. a
+// paragraph, list item, etc.) to the spell checker.
+static enum Action feed_block(enum Mode *mode, struct State *state) {
+    *mode = next_mode(*mode, state->line);
+    if (*mode != M_NORMAL) return NONE;
+    char *plain = strip_markdown(state->line);
+    if (!plain) return NONE;
+    if (state->options.print_plain) {
+        fputs(plain, stdout);
+    } else {
+        struct Source src = {.first = state->lineno, .last = state->lineno};
+        if (check_block(state, src, plain) == QUIT) return QUIT;
     }
-    return true;
+    return NONE;
 }
 
-// Spellchecks the comments in a Scheme file. Returns false to quit.
-static bool check_scheme(struct State *state) {
-    // TODO!
-    assert(false);
+// Spellchecks a Markdown file.
+static enum Action check_markdown(struct State *state) {
+    enum Mode mode = M_NORMAL;
+    while (scan(state)) {
+        if (feed_block(&mode, state) == QUIT) return QUIT;
+    }
+    return NONE;
+}
+
+// Spellchecks the comments in a Scheme file.
+static enum Action check_scheme(struct State *state) {
+    enum Mode md_mode = M_NORMAL;
+    enum { CODE, PROSE } ss_mode = CODE;
+    while (scan(state)) {
+    }
+    return NONE;
 }
 
 // Supported file types.
@@ -944,15 +987,9 @@ enum FileType {
 // failure.
 static enum FileType detect_filetype(const char *path) {
     const char *dot = strrchr(path, '.');
-    if (!(dot && dot[1] && dot[2])) {
-        return FT_NONE;
-    }
-    if (strcmp(dot, ".md") == 0) {
-        return FT_MARKDOWN;
-    }
-    if (strcmp(dot, ".ss") == 0) {
-        return FT_SCHEME;
-    }
+    if (!(dot && dot[1] && dot[2])) return FT_NONE;
+    if (strcmp(dot, ".md") == 0) return FT_MARKDOWN;
+    if (strcmp(dot, ".ss") == 0) return FT_SCHEME;
     return FT_NONE;
 }
 
@@ -970,28 +1007,26 @@ static CheckResult check(struct SpellChecker spell, struct Options options,
         return CHECK_FAIL;
     }
     struct State state;
-    if (!init_state(&state, spell, options, ignore, path)) {
-        return CHECK_FAIL;
-    }
-    int result = 0;
+    if (!init_state(&state, spell, options, ignore, path)) return CHECK_FAIL;
+    enum Action action;
     switch (ft) {
     case FT_MARKDOWN:
-        if (!check_markdown(&state)) result |= CHECK_QUIT;
+        action = check_markdown(&state);
         break;
     case FT_SCHEME:
-        if (!check_scheme(&state)) result |= CHECK_QUIT;
+        action = check_scheme(&state);
         break;
     case FT_NONE:
         assert(false);
     }
     close_state(&state);
-    if (state.failed) result |= CHECK_FAIL;
-    return result;
+    return state.failed * CHECK_FAIL | (action == QUIT) * CHECK_QUIT;
 }
 
 static const char IGNORE_PATH[] = "spell-ignore.txt";
 
 int main(int argc, char **argv) {
+    setup_color();
     if (argc == 1) {
         fprintf(stderr, "\
 usage: %s [-p | -d | -x | -i] FILE ...\n\
