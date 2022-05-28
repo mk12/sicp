@@ -601,12 +601,11 @@ static bool check_block(struct State *state, struct Source src,
         default:
             assert(false);
         }
-        printf("or (q)uit? ");
+        printf("(N)ext, or (q)uit? ");
         for (;;) {
             int reply = get_reply();
-            if (reply == EOF || reply == 'q') {
-                return false;
-            }
+            if (reply == EOF || reply == 'q') return false;
+            if (reply == 'n' || reply == '\n') break;
             if (reply == 'b') {
                 add_hash(&state->ignore->blocks, hash_range(str, full_range));
                 // Return early since all errors in the block are ignored.
