@@ -7,12 +7,13 @@
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
-- make spellc.m interactive
 - quotation issues, link to "on denoting" paper
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
++ spellc implement check_scheme
++ make spellc.m interactive
 + guile line numbers
 + don't mutate quoted lists, then use guile compilation
 + deal with the OLD proofs, diagrams

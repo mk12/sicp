@@ -376,7 +376,7 @@ struct SpellChecker {
     int tag;
 };
 
-// Updates the spell checker's ignored words.
+// Updates the spellchecker's ignored words.
 static void update_ignored_words(struct SpellChecker spell,
                                  const struct Ignore *ignore) {
     [spell.checker setIgnoredWords:ignore->words
@@ -394,7 +394,7 @@ struct Options {
     bool interactive;
 };
 
-// State for spell checking.
+// State for spellchecking.
 struct State {
     struct SpellChecker spell;
     struct Options options;
@@ -411,7 +411,7 @@ struct State {
     size_t cap;
 };
 
-// Initializes spell checker state for the given file. Returns true on success.
+// Initializes spellchecker state for the given file. Returns true on success.
 static bool init_state(struct State *state, struct SpellChecker spell,
                        struct Options options, struct Ignore *ignore,
                        const char *path) {
@@ -601,9 +601,7 @@ static enum Action check_block(struct State *state, struct Source src,
         if (!printed_block) {
             print_location(state, src);
             printf("\n%sblock%s ", C_GRAY, C_RESET);
-            NSRange block_range = full_range;
-            if (str[block_range.length - 1] == '\n') block_range.length--;
-            print_text_range(str, block_range);
+            print_text_range(str, full_range);
             if (state->options.print_hashes)
                 print_hash_annotation("block", str, full_range);
             putchar('\n');
@@ -777,9 +775,10 @@ static enum Mode next_mode(enum Mode old, const char *line) {
     }
 }
 
-// Converts a line of Markdown to plain text, inline. Returns a pointer into
-// s indicating the beginning (e.g. would go past the hashes in headings),
-// or NULL if this line has no content that should be spellchecked.
+// Converts a line of Markdown to plain text, inline. Returns a pointer into s
+// indicating the beginning (e.g. would go past the hashes in headings), or NULL
+// if this line has no content that should be spellchecked. Does not include the
+// trailing newline.
 static char *strip_markdown(char *s) {
     // Skip link definitions, display math, and divs.
     if (s[0] == '[' || (s[0] == '$' && s[1] == '$') || startswith(s, ":::")) {
@@ -816,6 +815,10 @@ static char *strip_markdown(char *s) {
     char delim;
     while (*p) {
         switch (*p) {
+        // End of the line.
+        case '\n':
+            assert(p[1] == '\0');
+            goto end;
         // Escaped backticks, dollar signs, etc.
         case '\\':
             p++;
@@ -938,41 +941,126 @@ static char *strip_markdown(char *s) {
         }
     }
 end:
+    if (s == start) return NULL;
     *s = '\0';
     return start;
 }
 
 // Feeds a line of Markdown (not hard wrapped, so it is an entire block, e.g. a
-// paragraph, list item, etc.) to the spell checker.
-static enum Action feed_block(enum Mode *mode, struct State *state) {
-    *mode = next_mode(*mode, state->line);
+// paragraph, list item, etc.) to the spellchecker.
+static enum Action feed_block(enum Mode *mode, struct State *state, char *block,
+                              struct Source src) {
+    *mode = next_mode(*mode, block);
     if (*mode != M_NORMAL) return NONE;
-    char *plain = strip_markdown(state->line);
-    if (!plain) return NONE;
+    char *plain = strip_markdown(block);
     if (state->options.print_plain) {
-        fputs(plain, stdout);
-    } else {
-        struct Source src = {.first = state->lineno, .last = state->lineno};
-        if (check_block(state, src, plain) == QUIT) return QUIT;
+        puts(plain ? plain : "");
+        return NONE;
     }
-    return NONE;
+    if (!plain) return NONE;
+    return check_block(state, src, plain);
 }
 
 // Spellchecks a Markdown file.
 static enum Action check_markdown(struct State *state) {
     enum Mode mode = M_NORMAL;
     while (scan(state)) {
-        if (feed_block(&mode, state) == QUIT) return QUIT;
+        struct Source src = {.first = state->lineno, .last = state->lineno};
+        if (feed_block(&mode, state, state->line, src) == QUIT) return QUIT;
     }
+    return NONE;
+}
+
+// Reads Scheme code, buffering hard-wrapped comments to form whole Markdown
+// blocks and forwards them to spellchecking.
+struct Scheme {
+    // Buffer accumulating the Markdown block from comments.
+    char *buf;
+    // Length of the buffer, not including the null terminator.
+    int len;
+    // Capacity of the buffer.
+    int cap;
+    // Source range corresponding to the buffer.
+    struct Source src;
+    // Current Markdown mode.
+    enum Mode mode;
+};
+
+// Initializes the Scheme buffer.
+static void init_scheme(struct Scheme *scheme) {
+    scheme->len = 0;
+    scheme->cap = 128;
+    scheme->buf = malloc(scheme->cap);
+    scheme->src.first = -1;
+    scheme->src.last = -1;
+    scheme->mode = M_NORMAL;
+}
+
+// Frees memory used by the Scheme buffer.
+static void free_scheme(struct Scheme *scheme) {
+    free(scheme->buf);
+    scheme->buf = NULL;
+}
+
+// Flushes the buffered block to spellchecking.
+static enum Action flush_scheme(struct Scheme *scheme, struct State *state) {
+    if (scheme->len == 0) return NONE;
+    scheme->buf[scheme->len] = '\0';
+    assert(scheme->src.first != -1);
+    assert(scheme->src.last != -1);
+    enum Action action =
+        feed_block(&scheme->mode, state, scheme->buf, scheme->src);
+    scheme->len = 0;
+    // Add extra line breaks for readability, since we never process the
+    // non-comment lines in between comments as blank Markdown lines.
+    if (state->options.print_plain) putchar('\n');
+    return action;
+}
+
+// Appends the given string to the buffer. Must end in a newline.
+static void append_scheme(struct Scheme *scheme, const char *str, int n) {
+    assert(str[n - 1] == '\n');
+    int new_len = scheme->len + n;
+    if (scheme->cap <= new_len) {
+        while (scheme->cap <= new_len) scheme->cap *= 2;
+        scheme->buf = realloc(scheme->buf, scheme->cap);
+    }
+    // Overwrite the previous newline with a space because the spellchecker does
+    // not handle embedded newlines (it would treat the text before and after
+    // the newline as completely distinct phrases).
+    if (scheme->len > 0) {
+        assert(scheme->buf[scheme->len - 1] == '\n');
+        scheme->buf[scheme->len - 1] = ' ';
+    }
+    memcpy(scheme->buf + scheme->len, str, n);
+    scheme->len = new_len;
+}
+
+// Feeds a line of Scheme to the comment buffer.
+static enum Action feed_scheme(struct Scheme *scheme, struct State *state) {
+    if (!startswith(state->line, ";; ")) {
+        return flush_scheme(scheme, state);
+    }
+    char *line = state->line + 3;
+    int len = state->len - 3;
+    bool lone = startswith(line, "```");
+    if (lone && flush_scheme(scheme, state) == QUIT) return QUIT;
+    if (scheme->len == 0) scheme->src.first = state->lineno;
+    append_scheme(scheme, line, len);
+    scheme->src.last = state->lineno;
+    if (lone && flush_scheme(scheme, state) == QUIT) return QUIT;
     return NONE;
 }
 
 // Spellchecks the comments in a Scheme file.
 static enum Action check_scheme(struct State *state) {
-    enum Mode md_mode = M_NORMAL;
-    enum { CODE, PROSE } ss_mode = CODE;
+    struct Scheme scheme;
+    init_scheme(&scheme);
     while (scan(state)) {
+        if (feed_scheme(&scheme, state) == QUIT) return QUIT;
     }
+    if (flush_scheme(&scheme, state) == QUIT) return QUIT;
+    free_scheme(&scheme);
     return NONE;
 }
 
