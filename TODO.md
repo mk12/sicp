@@ -12,6 +12,8 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
+- watch.sh script
++ make vscode should set up deno
 + spellc implement check_scheme
 + make spellc.m interactive
 + guile line numbers

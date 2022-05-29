@@ -50,7 +50,7 @@ Targets:
 	spell      Spellcheck Markdown and Scheme files
 	validate   Validate generated HTML files
 	clean      Remove compilation artifacts
-	vscode     Install vscode tasks
+	vscode     Set up VS Code support
 	clangd     Write compile_commands.json
 	sicp_html  Download SICP HTML files
 endef
@@ -139,10 +139,9 @@ clean:
 	find src -type d -name compiled -exec rm -rf {} +
 	-rm -rf *.dSYM
 
-vscode: .vscode/tasks.json
+vscode: $(patsubst %,.vscode/%.json,settings tasks) clangd
 
-.vscode/%.json: %.json
-	mkdir -p .vscode
+.vscode/%.json: .vscode/%.default.json
 	cp $< $@
 
 clangd: compile_commands.json
