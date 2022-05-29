@@ -36,7 +36,7 @@ The protocol is as follows:
 * Responses contain HTML, or "error:" followed by an error message.
 * KATEX request: "katex:", (then optionally "display:"), and then TeX input.
 * SVGBOB request: "svgbob:", the diagram number, ":", and then ASCII art text.
-`.trim(),
+`.trim()
   );
 }
 
@@ -79,10 +79,12 @@ const SIGNALS = [
 function addSignalListeners(): void {
   for (const { name, number } of SIGNALS) {
     Deno.addSignalListener(name, () => {
-      // Simulate the exit status for this signal. Really we should re-raise and
-      // let the default handler exit, but the only way to do this seems to be
-      // `Deno.kill(Deno.pid, sig)`, and I can't get that to work properly.
-      Deno.exit(128 + number);
+      cleanup().finally(() => {
+        // Simulate the exit status for this signal. Really we should re-raise and
+        // let the default handler exit, but the only way to do this seems to be
+        // `Deno.kill(Deno.pid, sig)`, and I can't get that to work properly.
+        Deno.exit(128 + number);
+      });
     });
   }
 }
@@ -175,7 +177,7 @@ function renderKatex(tex: string, displayMode: boolean): string {
   // https://www.w3.org/TR/MathML3/chapter6.html#interf.html
   return html.replace(
     '<math xmlns="http://www.w3.org/1998/Math/MathML">',
-    "<math>",
+    "<math>"
   );
 }
 
@@ -256,7 +258,8 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
             return `marker-end="url(#${markerId(number, match[1])})"`;
           }
         })
-        .join(" "))
+        .join(" ")
+    )
     // Must do this after replacing all the classes.
     .replace(/^<svg /, `<svg class="diagram" `)
     .replace(/<defs>[\s\S]*<\/defs>/, () => {
@@ -379,7 +382,7 @@ ${ERROR} ${socketFile} already exists!
 There must be another server running. To terminate it, run 'rm ${socketFile}'.
 To find it, run 'pgrep -f ${socketFile}'. To leave it running and start a second
 server, choose a different socket filename.
-`.trim(),
+`.trim()
     );
     throw new ExitError(1);
   }
