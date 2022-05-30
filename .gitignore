@@ -9,8 +9,9 @@ compiled/
 /linter
 /spellc
 
-# Sockets
-render.sock
+# Special files
+*.sock
+*.fifo
 
 # Downloaded HTML files
 /sicp_html

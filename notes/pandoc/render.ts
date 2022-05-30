@@ -4,7 +4,6 @@ import {
   iterateReader,
   writeAll,
 } from "https://deno.land/std@0.134.0/streams/mod.ts";
-import { dirname, resolve } from "https://deno.land/std@0.133.0/path/mod.ts";
 import katex from "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.mjs";
 import { optimize } from "https://cdn.jsdelivr.net/gh/lumeland/svgo@v3.0.1/mod.js";
 
@@ -22,13 +21,13 @@ function usage(write: (s: string) => void) {
   write(
     `
 usage: deno run --unstable --allow-read --allow-write --allow-run
-       ${SCRIPT_NAME} [--help | --wait] SOCKET_FILE
+       ${SCRIPT_NAME} [--help] SOCKET [FIFO]
 
 Runs a server that renders KaTeX math and svgbob diagrams.
 
-The server listens on the Unix domain socket SOCKET_FILE (stream-oriented).
-The server automatically exits if SOCKET_FILE is removed.
-When run with the --wait flag, blocks until a server is started on SOCKET_FILE.
+It creates and listens on the Unix domain socket SOCKET (stream-oriented).
+It automatically exits if SOCKET is removed.
+If FIFO is given, it signals FIFO (writes 0 bytes) when the server is ready.
 
 The protocol is as follows:
 
@@ -80,9 +79,9 @@ function addSignalListeners(): void {
   for (const { name, number } of SIGNALS) {
     Deno.addSignalListener(name, () => {
       cleanup().finally(() => {
-        // Simulate the exit status for this signal. Really we should re-raise and
-        // let the default handler exit, but the only way to do this seems to be
-        // `Deno.kill(Deno.pid, sig)`, and I can't get that to work properly.
+        // Simulate the exit status for this signal. Really we should re-raise
+        // and let the default handler exit, but the only way to do this seems
+        // to be `Deno.kill(Deno.pid, sig)`, and I can't get that to work.
         Deno.exit(128 + number);
       });
     });
@@ -335,33 +334,6 @@ async function exists(path: string): Promise<boolean> {
   }
 }
 
-// Waits for the given file to be created (if it doesn't already exist).
-async function waitForFile(path: string): Promise<void> {
-  let alreadyExists = false;
-  const check = (async () => {
-    if (await exists(path)) {
-      alreadyExists = true;
-    }
-  })();
-  const watcher = Deno.watchFs(dirname(path), { recursive: false });
-  const watch = (async () => {
-    const absolute = resolve(path);
-    for await (const event of watcher) {
-      if (event.kind === "modify" && event.paths.includes(absolute)) {
-        return;
-      }
-    }
-  })();
-  await Promise.race([check, watch]);
-  if (alreadyExists) {
-    // Close the watcher, otherwise the program hangs in that promise.
-    watcher.close();
-  } else {
-    // The file doesn't exist yet, so keep waiting on the watcher.
-    await watch;
-  }
-}
-
 // Throws ExitError(0) when the given file is removed.
 async function whileFileExists(path: string): Promise<never> {
   for await (const event of Deno.watchFs(path)) {
@@ -372,32 +344,55 @@ async function whileFileExists(path: string): Promise<never> {
   throw Error("watchFs stopped!");
 }
 
-// Starts the server on socketFile. Throws ExitError if socketFile already
-// exists, or if it is removed while the server is running.
-async function startServer(socketFile: string): Promise<void> {
-  if (await exists(socketFile)) {
+// If fifo is provided, signals it by opening it for writing and closing it.
+async function maybeSignalFifo(fifo?: string): Promise<void> {
+  if (fifo == undefined) {
+    return;
+  }
+  try {
+    (await Deno.open(fifo, { write: true })).close();
+  } catch (ex) {
+    if (ex instanceof Deno.errors.NotFound) {
+      console.error(
+        `
+${ERROR} ${fifo} does not exist!
+Try running 'mkfifo ${fifo}' first before starting the server.
+`.trim()
+      );
+      throw new ExitError(1);
+    }
+    throw ex;
+  }
+}
+
+// Wraps a promise so that it never resolves.
+async function neverResolve(promise: Promise<void>): Promise<void> {
+  await promise;
+  return Promise.race([]);
+}
+
+// Starts the server on socket and signals fifo if provided. Throws ExitError if
+// socket already exists, or if it is removed while the server is running.
+async function startServer(socket: string, fifo?: string): Promise<void> {
+  if (await exists(socket)) {
     console.error(
       `
-${ERROR} ${socketFile} already exists!
-There must be another server running. To terminate it, run 'rm ${socketFile}'.
-To find it, run 'pgrep -f ${socketFile}'. To leave it running and start a second
+${ERROR} ${socket} already exists!
+There must be another server running. To terminate it, run 'rm ${socket}'.
+To find it, run 'pgrep -f ${socket}'. To leave it running and start a second
 server, choose a different socket filename.
 `.trim()
     );
     throw new ExitError(1);
   }
-  filesToRemove.push(socketFile);
-  const listener = Deno.listen({ transport: "unix", path: socketFile });
-  // The listen call creates socketFile, but for some reason it does not cause a
-  // watchFs event in waitForFile. To force one, we touch the file and commit
-  // the change with fsync (also ensuring whileFileExists starts up-to-date).
-  const now = new Date();
-  await Deno.utime(socketFile, now, now);
-  const parent = await Deno.open(dirname(socketFile));
-  await Deno.fsync(parent.rid);
-  parent.close();
-  console.log(`${SCRIPT_NAME}: listening on ${socketFile}`);
-  return Promise.race([serve(listener), whileFileExists(socketFile)]);
+  filesToRemove.push(socket);
+  const listener = Deno.listen({ transport: "unix", path: socket });
+  console.log(`${SCRIPT_NAME}: listening on ${socket}`);
+  return Promise.race([
+    neverResolve(maybeSignalFifo(fifo)),
+    whileFileExists(socket),
+    serve(listener),
+  ]);
 }
 
 async function main() {
@@ -407,22 +402,13 @@ async function main() {
     usage(console.log);
     return;
   }
-  const waitIdx = args.indexOf("--wait");
-  if (waitIdx >= 0) {
-    args.splice(waitIdx, 1);
-  }
-  if (args.length != 1) {
+  if (args.length == 0 || args.length > 2) {
     usage(console.error);
     Deno.exit(1);
   }
-  const socketFile = args[0];
-  if (waitIdx >= 0) {
-    await waitForFile(socketFile);
-    return;
-  }
   let exitCode = 0;
   try {
-    await startServer(socketFile);
+    await startServer(args[0], args[1]);
   } catch (ex) {
     if (ex instanceof ExitError) {
       exitCode = ex.code;

@@ -5,16 +5,14 @@ set -eufo pipefail
 render_pid=
 entr_pid=
 
-run_render() {
-    deno run --no-check --unstable --allow-read --allow-write --allow-run \
-        notes/pandoc/render.ts render.sock "$@"
-}
-
 ensure_render() {
     [[ -S render.sock ]] && return
-    run_render &
+    mkfifo render.fifo
+    deno run --unstable --allow-{read,write,run} notes/pandoc/render.ts \
+        render.{sock,fifo} &
     render_pid=$!
-    run_render --wait
+    : < render.fifo
+    rm render.fifo
 }
 
 restart() {

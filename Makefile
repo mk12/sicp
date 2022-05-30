@@ -28,6 +28,7 @@ doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
 
 render_src := notes/pandoc/render.ts
 render_sock := render.sock
+render_fifo := render.fifo
 
 # Made-up headings that are allowed in chapter-*.ss.
 heading_exceptions := \
@@ -100,11 +101,12 @@ $(render_sock): $(render_src)
 A server is already running on $(render_sock), but it is using outdated code.\
 Try again after terminating or restarting it)
 else
-.INTERMEDIATE: $(render_sock)
-$(render_sock): DENOFLAGS += --no-check
-$(render_sock):
-	deno run $(DENOFLAGS) $(render_src) $@ &
-	deno run $(DENOFLAGS) $(render_src) --wait $@
+.INTERMEDIATE: $(render_sock) $(render_fifo)
+$(render_sock): $(render_fifo)
+	deno run $(DENOFLAGS) $(render_src) $@ $< &
+	< $<
+$(render_fifo):
+	mkfifo $@
 endif
 
 fmt:

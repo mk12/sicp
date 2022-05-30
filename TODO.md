@@ -12,7 +12,9 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
-- watch.sh script
++ remove deno --no-check if it's the default now (Makefile and watch.sh)
++ fifo or something instead of --wait for render.sock
++ watch.sh script
 + make vscode should set up deno
 + spellc implement check_scheme
 + make spellc.m interactive
