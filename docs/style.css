@@ -487,20 +487,24 @@ body {
 .fu { color: #0060d5; }
 .cn { color: #307a06; }
 .co, .er { color: #c0392b; }
-.yl { color: #986801; } /* .yl used in language.html */
+.yl, .sc { color: #986801; } /* .yl used in language.html */
 
 @media (prefers-color-scheme: dark) {
     .kw { color: #c678dd; }
     .fu { color: #61afef; }
     .cn { color: #98c379; }
     .co, .er { color: #e7727b; }
-    .yl { color: #e5c07b; }
+    .yl, .sc { color: #e5c07b; }
 }
 
-/* .op (=> ~>), .al (=$>), .er (=!>) */
+/* .op (=> ~>, =$>), .er (=!>) */
 .op { color: var(--subdued); }
 .op, .er { font-weight: bold; }
 
+/* console output */
+.sc { font-style: italic; }
+
+/* metavariables */
 .ss {
     font-style: italic;
     text-decoration: underline;

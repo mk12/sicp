@@ -85,15 +85,23 @@
 <pre><code class="blockcode">(<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> b <span class="cn">2</span>)
 
-(<span class="fu">list</span> a b) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)
-(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="op">=&gt;</span> &#39;(a b)
-(<span class="fu">list</span> <span class="cn">&#39;a</span> b) <span class="op">=&gt;</span> &#39;(a <span class="cn">2</span>)</code></pre>
+(<span class="fu">list</span> a b)
+<span class="sc">(1 2)</span>
+
+(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)
+<span class="sc">(a b)</span>
+
+(<span class="fu">list</span> <span class="cn">&#39;a</span> b)
+<span class="sc">(a 2)</span></code></pre>
 <ul>
 <li>Now that we have quotation, we will use <code>&#39;()</code> for the empty list instead of <code>nil</code>.</li>
 <li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
-<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">eq?</span> <span class="cn">&#39;a</span> <span class="cn">&#39;a</span>) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>)
+<span class="sc">#f</span>
+
+(<span class="fu">eq?</span> <span class="cn">&#39;a</span> <span class="cn">&#39;a</span>)
+<span class="sc">#t</span></code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.53">2.53</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.54">2.54</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.55">2.55</a></li></ul></aside>
 <h2 id="2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>

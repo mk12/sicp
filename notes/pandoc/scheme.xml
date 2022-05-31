@@ -412,6 +412,7 @@
         <DetectSpaces/>
         <DetectChar attribute="Normal" context="hash" char="#" lookAhead="1"/>
         <DetectChar attribute="Comment" context="Comment" char=";"/>
+        <DetectChar attribute="Console" context="Console" char="→"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
         <DetectChar attribute="RawHtml" context="RawHtml" char="‹"/>
         <DetectChar attribute="Meta" context="Meta" char="«"/>
@@ -425,6 +426,8 @@
         <RegExpr attribute="Symbol" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~-]++"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">
+      </context>
+      <context name="Console" attribute="Console" lineEndContext="#pop">
       </context>
       <context name="hash" attribute="Normal" lineEndContext="#stay">
         <Detect2Chars attribute="Boolean" context="#pop" char="#" char1="t"/>
@@ -471,6 +474,7 @@
       <itemData name="Symbol"      defStyleNum="dsConstant"/>
       <itemData name="Escape"      defStyleNum="dsComment"/>
       <itemData name="Comment"     defStyleNum="dsComment"/>
+      <itemData name="Console"     defStyleNum="dsSpecialChar"/>
       <itemData name="Meta"        defStyleNum="dsSpecialString"/>
     </itemDatas>
   </highlighting>

@@ -404,10 +404,14 @@ static void postprocess_html(FILE *in, FILE *out) {
                 }
             }
         } else {
-            // We're in a code block. Deal with metavariables and pastes. While
-            // these two steps really should be interleaved, it doesn't matter
-            // because we never use them together (specifically, we use
-            // metavariables in code within .md files, and pastes in .ss files).
+            // We're in a code block. Deal with console output, metavariables,
+            // and pastes. We don't need to interleave them because they are
+            // never used together.
+            const char *open_console = "<span class=\"sc\">→ ";
+            while ((n = strstr(p, open_console))) {
+                fwrite(p, n - p + strlen(open_console) - strlen("→ "), 1, out);
+                p = n + strlen(open_console);
+            }
             const char *open_meta = "<span class=\"ss\">«";
             while ((n = strstr(p, open_meta))) {
                 fwrite(p, n - p + strlen(open_meta) - strlen("«"), 1, out);

@@ -478,7 +478,8 @@ Now we will take it a bit further.
 We can use `half-interval-method` to approximate $\pi$ as a root of $\sin x=0$:
 
 ```
-(half-interval-method sin 2.0 4.0) ~> 3.14111328125
+(half-interval-method sin 2.0 4.0)
+→ 3.14111328125
 ```
 
 #### Finding fixed points of functions
@@ -503,7 +504,8 @@ We can use `half-interval-method` to approximate $\pi$ as a root of $\sin x=0$:
 We can use `fixed-point` to approximate the fixed point of the cosine function:
 
 ```
-(fixed-point cos 1.0) ~> 0.7390822985224023
+(fixed-point cos 1.0)
+→ 0.7390822985224023
 ```
 
 ::: exercises
@@ -522,8 +524,11 @@ Passing procedures as arguments gives us expressive power. Returning procedures 
 If we use `average-damp` on `square`, we get a procedure that calculates the sum of the numbers from 1 to $n$:
 
 ```
-((average-damp square) 10) => 55
-(+ 1 2 3 4 5 6 7 8 9 10) => 55
+((average-damp square) 10)
+→ 55
+
+(+ 1 2 3 4 5 6 7 8 9 10)
+→ 55
 ```
 
 ::: highlight
@@ -553,7 +558,7 @@ Now we can do things like this:
 (define (cube x) (* x x x))
 (define dx 0.00001)
 ((deriv cube) 5)
-=> 75.00014999664018
+→ 75.00014999664018
 ```
 
 #### Abstractions and first-class procedures
@@ -612,16 +617,21 @@ Now we can do things like this:
 
 ```
 (define x (cons 1 2))
+
 (car x)
-=> 1
+→ 1
+
 (cdr x)
-=> 2
+→ 2
+
 (define y (cons 3 4))
 (define z (cons x y))
+
 (car (car z))
-=> 1
+→ 1
+
 (car (cdr z))
-=> 3
+→ 3
 ```
 
 - This is all the glue we need to implement all sorts of complex data structures.
@@ -971,17 +981,25 @@ Now we can do things like this:
 (define a 1)
 (define b 2)
 
-(list a b) => '(1 2)
-(list 'a 'b) => '(a b)
-(list 'a b) => '(a 2)
+(list a b)
+→ (1 2)
+
+(list 'a 'b)
+→ (a b)
+
+(list 'a b)
+→ (a 2)
 ```
 
 - Now that we have quotation, we will use `'()` for the empty list instead of `nil`.
 - We need another primitive now: `eq?`. This checks if two symbols are the same.
 
 ```
-(eq? 'a 'b) => #f
-(eq? 'a 'a) => #t
+(eq? 'a 'b)
+→ #f
+
+(eq? 'a 'a)
+→ #t
 ```
 
 ::: exercises
