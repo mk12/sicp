@@ -41,6 +41,11 @@ cleanup() {
     done
 }
 
+if [[ "$(uname -s)" != Darwin ]]; then
+    echo "error: this script only works on macOS" >&2
+    exit 1
+fi
+
 cd "$(dirname "$0")"
 trap 'cleanup' EXIT
 ensure_render
