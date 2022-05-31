@@ -368,9 +368,15 @@ static void postprocess_html(FILE *in, FILE *out) {
                     const char *end = strstr(p, "</code>");
                     assert(end);
                     // Deal with metavariables.
-                    while ((n = strstr(p, "<span class=\"sc\">")) && n < end) {
+                    const char *open_meta = "<span class=\"ss\">«";
+                    while ((n = strstr(p, open_meta)) && n < end) {
+                        fwrite(p, n - p + strlen(open_meta) - strlen("«"), 1,
+                               out);
+                        p = n + strlen(open_meta);
+                        n = strstr(p, "»");
+                        assert(n);
                         fwrite(p, n - p, 1, out);
-                        p = n + strlen("<span class=\"sc\">«</span>");
+                        p = n + strlen("»");
                     }
                     n = end + strlen("</code>");
                     fwrite(p, n - p, 1, out);
@@ -402,9 +408,14 @@ static void postprocess_html(FILE *in, FILE *out) {
             // these two steps really should be interleaved, it doesn't matter
             // because we never use them together (specifically, we use
             // metavariables in code within .md files, and pastes in .ss files).
-            while ((n = strstr(p, "<span class=\"sc\">"))) {
+            const char *open_meta = "<span class=\"ss\">«";
+            while ((n = strstr(p, open_meta))) {
+                fwrite(p, n - p + strlen(open_meta) - strlen("«"), 1, out);
+                p = n + strlen(open_meta);
+                n = strstr(p, "»");
+                assert(n);
                 fwrite(p, n - p, 1, out);
-                p = n + strlen("<span class=\"sc\">«</span>");
+                p = n + strlen("»");
             }
             const int open_len = strlen("‹");
             const int close_len = strlen("›");

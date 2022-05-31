@@ -414,7 +414,7 @@
         <DetectChar attribute="Comment" context="Comment" char=";"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
         <DetectChar attribute="RawHtml" context="RawHtml" char="‹"/>
-        <DetectChar attribute="MetaBracket" context="Meta" char="«"/>
+        <DetectChar attribute="Meta" context="Meta" char="«"/>
         <keyword attribute="Boolean" context="#stay" String="booleans"/>
         <keyword attribute="Assert" context="#stay" String="asserts"/>
         <StringDetect attribute="ErrorAssert" context="#stay" String="=!>"/>
@@ -455,7 +455,7 @@
       </context>
       <!-- Used for meta-variables, e.g. (lamdbda («name») «body») -->
       <context name="Meta" attribute="Meta" lineEndContext="#stay">
-        <DetectChar attribute="MetaBracket" context="#pop" char="»"/>
+        <DetectChar attribute="Meta" context="#pop" char="»"/>
       </context>
     </contexts>
     <itemDatas>
@@ -471,7 +471,6 @@
       <itemData name="Symbol"      defStyleNum="dsConstant"/>
       <itemData name="Escape"      defStyleNum="dsComment"/>
       <itemData name="Comment"     defStyleNum="dsComment"/>
-      <itemData name="MetaBracket" defStyleNum="dsSpecialChar"/>
       <itemData name="Meta"        defStyleNum="dsSpecialString"/>
     </itemDatas>
   </highlighting>
