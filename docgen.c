@@ -294,6 +294,28 @@ static bool wait_pandoc(struct PandocProc *proc) {
     return success;
 }
 
+// Like strstr, but searches for n needles in parallel, favoring the one that
+// occurs earliest. Returns a pointer into haystack and stores the needle
+// address in found. Returns NULL if none was found.
+static char *multi_strstr(const char *haystack, const char **found, int n,
+                          ...) {
+    va_list args;
+    va_start(args, n);
+    char *h = NULL;
+    const char *f = NULL;
+    for (int i = 0; i < n; i++) {
+        const char *fi = va_arg(args, const char *);
+        char *hi = strstr(haystack, fi);
+        if (hi && (!h || hi < h)) {
+            h = hi;
+            f = fi;
+        }
+    }
+    va_end(args);
+    *found = f;
+    return h;
+}
+
 // Post-processes HTML, removing unwanted tags and classes in inline code and
 // code blocks (there is no option to prevent Pandoc from producing these). Also
 // deletes "«" and "»", and converts "‹" and "›" to "<" and ">". The Markdown
@@ -323,46 +345,63 @@ static void postprocess_html(FILE *in, FILE *out) {
             }
         }
         const char *n;
-        if (p == line) {
+        if (startswith(line, "<pre><code")) {
+            // Hardcoded <pre><code> in exercise.md.
+        } else if (p == line) {
             // We're not in a code block. Deal with inline stuff.
+            const char *open_code = "<code";
             const char *close_em = "</em>";
-            while ((n = strstr(p, "<code")) || (n = strstr(p, close_em))) {
-                if (n - 5 >= line && startswith(n - 5, "<pre>")) {
-                    // Hardcoded <pre><code> in exercise.md.
-                    break;
-                }
+            const char *spaced_en_dash = " – ";
+            const char *quote_period = "”.";
+            const char *quote_comma = "”,";
+            const char *found;
+            while (
+                (n = multi_strstr(p, &found, 5, open_code, close_em,
+                                  spaced_en_dash, quote_period, quote_comma))) {
                 fwrite(p, n - p, 1, out);
-                if (n[0] == '<' && n[1] == '/') {
+                p = n + strlen(found);
+                if (found == open_code) {
+                    fputs("<code>", out);
+                    p = strchr(n, '>');
+                    assert(p);
+                    p++;
+                    const char *end = strstr(p, "</code>");
+                    assert(end);
+                    // Deal with metavariables.
+                    while ((n = strstr(p, "<span class=\"sc\">")) && n < end) {
+                        fwrite(p, n - p, 1, out);
+                        p = n + strlen("<span class=\"sc\">«</span>");
+                    }
+                    n = end + strlen("</code>");
+                    fwrite(p, n - p, 1, out);
+                    p = n;
+                    // For words partially made up of code, like `cons`ing.
+                    if (isalpha(*p)) {
+                        fputs("&hairsp;", out);
+                    }
+                } else if (found == close_em) {
                     fputs(close_em, out);
-                    p = n + strlen(close_em);
                     if ((*p == ':' || *p == ';')
                         && (n[-1] == 'd' || n[-1] == 'r' || n[-1] == 't')) {
                         fputs("&hairsp;", out);
                     }
                     continue;
-                }
-                fputs("<code>", out);
-                p = strchr(n, '>');
-                assert(p);
-                p++;
-                const char *end = strstr(p, "</code>");
-                assert(end);
-                // Deal with metavariables.
-                while ((n = strstr(p, "<span class=\"sc\">")) && n < end) {
-                    fwrite(p, n - p, 1, out);
-                    p = n + strlen("<span class=\"sc\">«</span>");
-                }
-                n = end + strlen("</code>");
-                fwrite(p, n - p, 1, out);
-                p = n;
-                if (isalpha(*p)) {
-                    fputs("&hairsp;", out);
+                } else if (found == spaced_en_dash) {
+                    // Replace an open-set en dash with a closed-set em dash.
+                    fputs("—", out);
+                } else if (found == quote_period) {
+                    fputs(".<span class=\"tuck\">”</span>", out);
+                } else if (found == quote_comma) {
+                    fputs(",<span class=\"tuck\">”</span>", out);
+                } else {
+                    assert(false);
                 }
             }
         } else {
             // We're in a code block. Deal with metavariables and pastes. While
             // these two steps really should be interleaved, it doesn't matter
-            // because we never use them together.
+            // because we never use them together (specifically, we use
+            // metavariables in code within .md files, and pastes in .ss files).
             while ((n = strstr(p, "<span class=\"sc\">"))) {
                 fwrite(p, n - p, 1, out);
                 p = n + strlen("<span class=\"sc\">«</span>");

@@ -12,17 +12,17 @@ These notes are based on the second edition of <cite>[Structure and Interpretati
 
 ## Foreword
 
-> To appreciate programming as an intellectual activity in its own right you must turn to computer programming; you must read and write computer programs---many of them. [@foreword]
+> To appreciate programming as an intellectual activity in its own right you must turn to computer programming; you must read and write computer programs -- many of them. [@foreword]
 
 ::: highlight
 > Every computer program is a model, hatched in the mind, of a real or mental process. These processes, arising from human experience and thought, are huge in number, intricate in detail, and at any time only partially understood. They are modeled to our permanent satisfaction rarely by our computer programs. Thus even though our programs are carefully handcrafted discrete collections of symbols, mosaics of interlocking functions, they continually evolve: we change them as our perception of the model deepens, enlarges, generalizes until the model ultimately attains a metastable place within still another model with which we struggle. The source of the exhilaration associated with computer programming is the continual unfolding within the mind and on the computer of mechanisms expressed as programs and the explosion of perception they generate. [@foreword]
 :::
 
-> Since large programs grow from small ones, it is crucial that we develop an arsenal of standard program structures of whose correctness we have become sure---we call them idioms---and learn to combine them into larger structures using organizational techniques of proven value. [@foreword]
+> Since large programs grow from small ones, it is crucial that we develop an arsenal of standard program structures of whose correctness we have become sure -- we call them idioms -- and learn to combine them into larger structures using organizational techniques of proven value. [@foreword]
 
-> The computers are never large enough or fast enough. Each breakthrough in hardware technology leads to more massive programming enterprises, new organizational principles, and an enrichment of abstract models. Every reader should ask himself periodically "Toward what end, toward what end?"---but do not ask it too often lest you pass up the fun of programming for the constipation of bittersweet philosophy. [@foreword]
+> The computers are never large enough or fast enough. Each breakthrough in hardware technology leads to more massive programming enterprises, new organizational principles, and an enrichment of abstract models. Every reader should ask himself periodically "Toward what end, toward what end?" -- but do not ask it too often lest you pass up the fun of programming for the constipation of bittersweet philosophy. [@foreword]
 
-> Lisp is for building organisms---imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place. [@foreword]
+> Lisp is for building organisms -- imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place. [@foreword]
 
 > It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures. [@foreword]
 
@@ -78,7 +78,7 @@ Programming deals with procedures and data (which are almost the same thing in L
     1. Evaluate the subexpressions of the combination.
     2. Apply the procedure (value of leftmost subexpression, the operator) to the arguments (values of other subexpressions, the operands).
 - Before evaluating a combination, we must first evaluate each element inside it.
-- Evaluation is recursive in nature---one of its steps is invoking itself.
+- Evaluation is recursive in nature -- one of its steps is invoking itself.
 - The evaluation of a combination can be represented with a tree.
 - Recursion is a powerful technique for dealing with hierarchical, tree-like objects.
 - To end the recursion, we stipulate the following:
@@ -89,7 +89,7 @@ Programming deals with procedures and data (which are almost the same thing in L
 - Exceptions such as these are _special forms_. Each one has its own evaluation rule.
 
 ::: highlight
-> In the words of Alan Perlis, "Syntactic sugar causes cancer of the semicolon." [@1.1.fn11]
+> In the words of Alan Perlis, "Syntactic sugar causes cancer of the semicolon". [@1.1.fn11]
 :::
 
 ### 1.1.4: Compound Procedures
@@ -119,7 +119,7 @@ An example of procedure application:
 
 #### Applicative order versus normal order
 
-- That example used _applicative order_: evaluate all the subexpressions first, then apply the procedure to the arguments.
+- The [example above](@1.1.5) used _applicative order_: evaluate all the subexpressions first, then apply the procedure to the arguments.
 - With _normal order_, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.
 
 An example of normal-order procedure application:
@@ -142,7 +142,7 @@ An example of normal-order procedure application:
 - We do _case analysis_ in Scheme using `cond`.
 - `cond` expressions work by testing each predicate. The consequent expression of the first clause with a true predicate is returned, and the other clauses are ignored.
 - A predicate is an expression that evaluates to true or false.
-- The symbol `else` can be used as the last clause---it will always evaluate to true.
+- The symbol `else` can be used as the last clause -- it will always evaluate to true.
 - The `if` conditional can be used when there are only two cases.
 - Logical values can be combined with `and`, `or`, and `not`. The first two are special forms, not procedures, because they have short-circuiting behavior.
 
@@ -154,7 +154,7 @@ An example of normal-order procedure application:
 
 > But there is an important difference between mathematical functions and computer procedures. Procedures must be effective. [@1.1.7]
 
-- In mathematics, you can define square roots by saying, "the square root of $x$ is the nonnegative $y$ such that $y^2 = x$". This is not a procedure.
+- In mathematics, you can define square roots by saying, "The square root of $x$ is the nonnegative $y$ such that $y^2 = x$". This is not a procedure.
 - Mathematical functions describe things (declarative knowledge); procedures describe how to do things (imperative knowledge).
 - Declarative is _what is_, imperative is _how to_.
 
@@ -274,7 +274,7 @@ Like Fibonacci, the easy tree-recursive implementation involves a lot of redunda
 
 - Different processes consume different amounts of computational resources.
 - We compare this using _order of growth_, a gross measure of the resources required by a process as the inputs becomes larger.
-- Let $n$ be a parameter that measures the size of a problem---it could be the input itself, the tolerance, the number of rows in the matrix, etc.
+- Let $n$ be a parameter that measures the size of a problem -- it could be the input itself, the tolerance, the number of rows in the matrix, etc.
 - Let $R(n)$ be the amount of resources the process requires for a problem of size $n$. This could be time, space (amount of memory), number of registers used, etc.
 - We say that $R(n)$ has order of growth $Θ(f(n))$, or $R(n) = Θ(f(n))$, if there are positive constants $A$ and $B$ independent of $n$ such that $Af(n) ≤ R(n) ≤ Bf(n)$ for any sufficiently large value of $n$.
 - The value $R(n)$ is sandwiched between $Af(n)$ and $Bf(n)$.
@@ -353,7 +353,7 @@ The test works like this:
 - Most familiar algorithms compute an answer that is guaranteed to be correct.
 - Not so with the Fermat test. If $n$ passes the Fermat test for one random value of $a$, all we know is that there is a better than 50% chance of $n$ being prime.
 - A _probabilistic algorithm_ does not always give a correct result, but you can prove that the chance of error becomes arbitrarily small.
-- We can make the probability error in our primality test as small as we like simply by running more Fermat tests---except for Carmichael numbers.
+- We can make the probability error in our primality test as small as we like simply by running more Fermat tests -- except for Carmichael numbers.
 
 ::: highlight
 > Numbers that fool the Fermat test are called Carmichael numbers, and little is known about them other than that they are extremely rare. ... In testing primality of very large numbers chosen at random, the chance of stumbling upon a value that fools the Fermat test is less than the chance that cosmic radiation will cause the computer to make an error in carrying out a "correct" algorithm. Considering an algorithm to be inadequate for the first reason but not for the second illustrates the difference between mathematics and engineering. [@1.2.fn47]
@@ -536,7 +536,7 @@ The square-root procedure we wrote earlier was a special case of _Newton's metho
 
 $$x ↦ x - \frac{f(x)}{f'(x)}.$$
 
-Newton's method converges very quickly---much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small $dx$ for this:
+Newton's method converges very quickly -- much faster than the half-interval method in favorable cases. We need a procedure to transform a function into its derivative (a new procedure). We can use a small $dx$ for this:
 
 $$f'(x) = \frac{f(x+dx) - f(x)}{dx}.$$
 
@@ -755,7 +755,7 @@ Now we can do things like this:
       (+ 1 (length (cdr items)))))
 ```
 
-- We can build up lists to return by `cons`&thinsp;ing them up.
+- We can build up lists to return by `cons`ing them up _r_:.
 
 ```
 (define (append list1 list2)
@@ -827,7 +827,7 @@ Now we can do things like this:
 #### Sequence operations
 
 - We want to organize programs to reflect signal-flow structure. To do this, we focus on the signals and represent them as lists, and implement sequence operations on them.
-- Expressing programs as sequence operations helps us make program designs that are _modular_---made of relatively independent pieces that we can connect in flexible ways. This is a strategy for controlling complexity.
+- Expressing programs as sequence operations helps us make program designs that are _modular_ -- made of relatively independent pieces that we can connect in flexible ways. This is a strategy for controlling complexity.
 - A surprisingly vast range of operations can be expressed as sequence operations.
 - Sequences serve as a conventional interface for the modules of the program.
 
@@ -957,28 +957,32 @@ Now we can do things like this:
 
 ## 2.3: Symbolic Data
 
-- So far we have constructed compound data from numbers only.
-- Now, we will work with arbitrary symbols.
+- So far our compound data has been made up of numbers.
+- Now, we will start working with arbitrary symbols.
 
 ### 2.3.1: Quotation
 
-- Lists containing symbols look just like expressions (code).
-- We need to _quote_ data objects to manipulate symbols.
-- To make the list `(a b)`, we can't just do `(list a b)` because this will evaluate `a` and `b`.
-- This is just like natural language. If I say, "Say your name," you will say the _value_ of "your name". If I instead say, "Say 'your name,'" you will literally say the words "your name".
-- To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.
-- Here is the difference between symbols and their values:
+- Lists with symbols look just like Lisp code, except we _quote_ them.
+- To quote in Lisp, we use the special form `(quote «exp»)`, or the shorthand `'«exp»`.
+- For example, `'x` evaluates to the symbol "x" instead of the variable `x`'s value.
+- This is like just natural language. If I say, "Say your name", you will say your name. If I instead say, "Say 'your name'", you will literally say the words "your name".
 
 ```
 (define a 1)
 (define b 2)
-(list a b)   ; => (1 2)
-(list 'a 'b) ; => (a b)
-(list 'a b)  ; => (a 2)
+
+(list a b) => '(1 2)
+(list 'a 'b) => '(a b)
+(list 'a b) => '(a 2)
 ```
 
-- We can write lists directly with quotation rather than using `cons` or list, and we can represent the empty list with `'()`.
-- We need one more primitive now: `eq?`. This tests to see if two symbols are the same.
+- Now that we have quotation, we will use `'()` for the empty list instead of `nil`.
+- We need another primitive now: `eq?`. This checks if two symbols are the same.
+
+```
+(eq? 'a 'b) => #f
+(eq? 'a 'a) => #t
+```
 
 ::: exercises
 2.53-55
@@ -986,32 +990,39 @@ Now we can do things like this:
 
 ### 2.3.2: Example: Symbolic Differentiation
 
-- Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.
-- We will worry about representation later (data abstraction).
+- Let's design a procedure that computes the derivative of an algebraic expression.
+- This will demonstrate both symbol manipulation and data abstraction.
+
+> Symbolic differentiation is of special historical significance in Lisp. It was one of the motivating examples behind the development of a computer language for symbol manipulation. [@2.3.2]
 
 #### The differentiation program with abstract data
 
 - To start, we will only consider addition and multiplication.
-- We need the constant rule, the sum rule, and the product rule.
-- We will assume we already have these procedures:
+- We need three differentiation rules: constant, sum, and product.
+- Let's assume we already have these procedures:
 
 ```
-(variable? e)
-(same-variable? v1 v2)
-(sum? e)
-(addend e)
-(augend e)
-(make-sum a1 a2)
-(product? e)
-(multiplier e)
-(multiplicand e)
-(make-product m1 m2)
+;; Variables
+(variable? «e»)
+(same-variable? «v1» «v2»)
+
+;; Sums
+(sum? «e»)
+(addend «e»)
+(augend «e»)
+(make-sum «a1» «a2»)
+
+;; Products
+(product? «e»)
+(multiplier «e»)
+(multiplicand «e»)
+(make-product «m1» «m2»)
 ```
 
 #### Representing algebraic expressions
 
 - There are many ways we could represent algebraic expressions.
-- The most straightforward is in parenthesized Polish notation: Lisp syntax.
+- The most straightforward way is parenthesized Polish notation: Lisp syntax.
 - We can simplify the answers just like we did in the rational number example: by changing the constructors.
 - Simplifying the way a human would is hard, partly because the most "simplified" form is sometimes subjective.
 
@@ -1023,6 +1034,7 @@ Now we can do things like this:
 
 There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:
 
+<!-- TODO sentences -->
 - `union-set`: new set containing all items of given sets
 - `intersection-set`: new set containing only the items that all given sets share
 - `element-of-set?`: predicate for an item's presence in a set
@@ -1076,7 +1088,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - The key must be unique.
 - The simplest, least efficient method is to use a set of records represented by an unordered list. This provides $Θ(n)$ access.
 - For "random access", meaning $Θ(1)$ access time complexity, trees are usually used.
-- Data abstraction is important here---you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
+- Data abstraction is important here -- you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.
 
 ::: exercises
 2.66
@@ -1118,7 +1130,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.
 - We erect abstraction barriers to control complexity.
-- This still isn't powerful enough---it doesn't always make sense to speak of the "underlying representation".
+- This still isn't powerful enough -- it doesn't always make sense to speak of the "underlying representation".
 - We might want to deal with multiple representations.
 - For example, complex numbers can be represented in rectangular form or in polar form.
 - We need abstraction barriers that isolate representation from use _and_ others that isolate design choices.
@@ -1182,10 +1194,10 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 - The key idea in [](@2.4.3): link specific data operations to multiple representations using generic procedures.
 - We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.
-- We have seen several different arithmetic packages---primitive numbers, rational numbers, intervals, and complex numbers.
+- We have seen several different arithmetic packages -- primitive numbers, rational numbers, intervals, and complex numbers.
 - We will use data-directed techniques to write procedures that work on all of these data structures.
 - This will require many abstraction barriers.
-- The result will be additive (modular)---easy to add new types.
+- The result will be additive (modular) -- easy to add new types.
 
 ### 2.5.1: Generic Arithmetic Operations
 
@@ -1239,7 +1251,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Large numbers of interrelated types conflicts with modularity.
 
 ::: highlight
-> Developing a useful, general framework for expressing the relations among different types of entities (what philosophers call "ontology") seems intractably difficult. The main difference between the confusion that existed ten years ago and the confusion that exists now is that now a variety of inadequate ontological theories have been embodied in a plethora of correspondingly inadequate programming languages. For example, much of the complexity of object-oriented programming languages---and the subtle and confusing differences among contemporary object-oriented languages---centers on the treatment of generic operations on interrelated types. [@2.5.fn52]
+> Developing a useful, general framework for expressing the relations among different types of entities (what philosophers call "ontology") seems intractably difficult. The main difference between the confusion that existed ten years ago and the confusion that exists now is that now a variety of inadequate ontological theories have been embodied in a plethora of correspondingly inadequate programming languages. For example, much of the complexity of object-oriented programming languages -- and the subtle and confusing differences among contemporary object-oriented languages -- centers on the treatment of generic operations on interrelated types. [@2.5.fn52]
 :::
 
 ::: exercises
@@ -1249,7 +1261,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 ### 2.5.3: Example: Symbolic Algebra
 
 - The manipulation of symbolic algebraic expressions is hard.
-- We can view them as hierarchical structures---a tree of operators applied to operands.
+- We can view them as hierarchical structures -- a tree of operators applied to operands.
 - A complete system would be exceedingly complex.
 - We will just look at the arithmetic of polynomials.
 
@@ -1264,7 +1276,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - We will only do addition and multiplication.
 - Both operands must have the same indeterminate.
 - The _poly_ data structure consists of a variable (the indeterminate) and a list of terms.
-- Our system works with polynomials with polynomial coefficients "for free" because of data-directed recursion---because we are using generic procedures.
+- Our system works with polynomials with polynomial coefficients "for free" because of data-directed recursion -- because we are using generic procedures.
 
 #### Representing term lists
 
@@ -1486,7 +1498,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Reasoning about programs that use assignment is much more difficult for this reason.
 - The concepts of "sameness" and "change" chase each other around in circles; it is hard to formally define them.
 - If we have `(define peter-acc (make-account 100))`, there is a big difference between defining `paul-acc` in the same way and defining it with `(define paul-acc peter-acc)`.
-- In the first case, they have distinct accounts. In the second, both refer to the same account---this is called _aliasing_.
+- In the first case, they have distinct accounts. In the second, both refer to the same account -- this is called _aliasing_.
 - As long as we never modify objects, we can regard them to be precisely the totality of their pieces.
 - This is no longer valid in the presence of change, because "identity" is something different from the pieces.
 - A bank account is still "the same" account after a withdrawal. Conversely, two distinct accounts with the same balance are "different".
@@ -1702,7 +1714,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - A simple list representation is inefficient because we have to scan to get to one end.
 - Scanning a list takes $Θ(n)$ operations.
 - A simply modification lets us implement all the operations with $Θ(1)$ time complexity: keep a pointer to the end as well.
-- A queue is a pair formed by `cons`&thinsp;ing the front-pointer and the rear-pointer of a normal list.
+- A queue is a pair formed by `cons`ing the front-pointer and the rear-pointer of a normal list.
 
 ::: exercises
 3.21-23
@@ -1717,7 +1729,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
     - If a table was just a pointer to the first actual record, then when we wouldn't be able to write a mutator to add a record to the front.
     - We would need to change the table to point to the new front, but  `set!` on a formal parameter doesn't work as desired.
     - It would only change the parameter in $E_1$, not the value in the calling environment.
-    - We didn't need to worry about this with sets because a set was a pair of two pointers a therefore we could mutate the `car` and `cdr`---but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
+    - We didn't need to worry about this with sets because a set was a pair of two pointers a therefore we could mutate the `car` and `cdr` -- but we couldn't change the set _itself_, since it was effectively a pointer to the pair, _copied_ on application.
     - We are essentially using a pointer; we are using one cell of the pair. Some schemes provide `box`, `unbox`, and `set-box!` for this purpose.
 - The `lookup` procedure returns the value associated with a key in a table, or `false` if it cannot be found.
 - It uses `assoc`, which returns the whole record rather than just the associated value.
@@ -1850,7 +1862,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 
 #### Representing connectors
 
-- A connector is a procedural object with local state variables---again, just like a wire.
+- A connector is a procedural object with local state variables -- again, just like a wire.
 - Each time the connector's value is set, it remembers the informant. This could be a constraint, or a symbol like `'user`.
 - `for-each-except` is used to notify all _other_ constraints.
 
@@ -1877,7 +1889,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 - Two such expressions executed concurrently on the same `balance` variable could have their three steps interleaved.
 - The general problem is that, when concurrent processes share a state variable, they may try to change it at the same time.
 
-> To quote some graffiti seen on a Cambridge building wall: "Time is a device that was invented to keep everything from happening at once." [@3.4.fn35]
+> To quote some graffiti seen on a Cambridge building wall: "Time is a device that was invented to keep everything from happening at once". [@3.4.fn35]
 
 #### Correct behavior of concurrent programs
 
@@ -2516,7 +2528,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 4.22-24
 :::
 
-## 4.2: Variations on a Scheme --- Lazy Evaluation
+## 4.2: Variations on a Scheme  --  Lazy Evaluation
 
 - We can experiment with different language design just by modifying the evaluator.
 - This is often how new languages are invented. It's easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.
@@ -2648,7 +2660,7 @@ There are a number of possible ways we could represent sets. A set is a collecti
 4.32-34
 :::
 
-## 4.3: Variations on a Scheme --- Nondeterministic Computing
+## 4.3: Variations on a Scheme  --  Nondeterministic Computing
 
 - _Nondeterministic computing_
 

@@ -115,6 +115,7 @@ blockquote {
 .citation {
     color: var(--subdued);
     font-size: 0.9em;
+    white-space: nowrap;
 }
 
 code {
@@ -126,6 +127,11 @@ code {
 code, .diagram {
     /* Fits 80 columns at max-width. */
     font: 0.8em Menlo, Consolas, monospace;
+}
+
+blockquote code {
+    /* TODO: revisit this. */
+    background: var(--active);
 }
 
 .blockcode {
@@ -175,6 +181,10 @@ h1 code, h2 code, h3 code, .toc__item code {
 
 .nowrap {
     white-space: nowrap;
+}
+
+.tuck {
+    margin-left: -0.15em;
 }
 
 /* Specific styles */

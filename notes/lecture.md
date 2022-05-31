@@ -13,7 +13,7 @@ These notes are based on the [MIT OpenCourseWare video lectures][ocw] given in J
 - It's not about computers in the same way that astronomy isn't about telescopes.
 - The ancient Egyptians began geometry using surveying instruments. We now know that the essence of geometry is much bigger than the act of using these primitive tools.
 - We often conflate the essence of a field with its tools.
-- In a thousand years, they will look back on us in a similar way to how we look at the ancient Egyptians: "They were playing around with these digital computers, but that was only the beginning of the much broader ideas about computation."
+- In a thousand years, they will look back on us in a similar way to how we look at the ancient Egyptians: "They were playing around with these digital computers, but that was only the beginning of the much broader ideas about computation".
 
 ### Declarative vs. imperative
 
@@ -54,7 +54,7 @@ Imperative instructions (how-to knowledge): approximate the square root of $x$ w
 
 ### Techniques for managing complexity
 
-**Black box abstraction**: Take something and build a box around it. The important thing is that you don't care what is going on inside the box---it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
+**Black box abstraction**: Take something and build a box around it. The important thing is that you don't care what is going on inside the box -- it's not important. Black-box abstraction _suppresses detail_. This allows you to go on and build bigger boxes.
 
 - Primitive objects: primitive procedures, primitive data.
 - Means of combination: procedure composition, construction of compound data.
@@ -92,7 +92,7 @@ The process of interpreting Lisp in Lisp is like a giant wheel of two processes,
 - Nested combinations can be modeled as trees.
 - Parentheses are just a way to write trees as a linear sequence of characters.
 
-**Means of abstraction**: This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure---it is a _special form_. We can also define procedures this way:
+**Means of abstraction**: This is accomplished in Lisp with `define`. Defining something gives a name to an expression. We write this the same way as a regular combination, but `define` is not a procedure -- it is a _special form_. We can also define procedures this way:
 
 ```
 (define (square x) (* x x))
@@ -409,7 +409,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 - We already know how to express the arithmetic operators for fractions in math.
 - Adding, subtracting, multiplying, or dividing two fractions produces another fraction.
-- The computations are easy---but how to we represent a fraction?
+- The computations are easy -- but how to we represent a fraction?
 - We need to apply the strategy of wishful thinking: let's imagine that we have procedures `make-rat`, `numer`, and `denom`.
 - We can implement a procedure for adding rationals like so:
 
@@ -505,7 +505,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Abstract data and contracts
 
-- We've done a few  examples. Now we're going to discuss what it _means_---much harder.
+- We've done a few  examples. Now we're going to discuss what it _means_ -- much harder.
 - Earlier, we assumed the constructors and selectors for rational numbers existed (without knowing about pairs).
 - We had defined a rational number representation in terms of _abstract data_.
 - We had a contract that the procedures have to fulfill: given a rational number `x` created with `(make-rat n d)`, we must have `(= (/ (numer x) (denom x)) (/ n d))`.
@@ -516,7 +516,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Rational numbers _really_ are just this contract, this axiom.
 - They might be realized as pairs in a particular implementation, but that has nothing to do with what pairs really are.
 - Pairs are similar: they happen to satisfy the contract that `(car (cons x y))` is `x` and `(cdr (cons x y))` is `y`.
-- We can implement pairs with procedures. We don't even need special primitives---all we need are lambdas:
+- We can implement pairs with procedures. We don't even need special primitives -- all we need are lambdas:
 
 ```
 (define (cons a b)
@@ -674,7 +674,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Conclusion
 
-- Quotation stops and says, "I'm talking about this expression itself."
+- Quotation stops and says, "I'm talking about this expression itself".
 - We can write languages that are not only embedded in Lisp, that are completely different, using quotation.
 - Quotation gives us tremendous power.
 
@@ -905,7 +905,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We shouldn't try to think about it all at once. Instead, we make a modular system where we can focus on one part at a time.
 - As long as we know what a procedure application is supposed to do, we can use it without thinking how it will work.
 
-> The key to this---very good programming and very good design---is to know what not to think about. [@4a.p16]
+> The key to this -- very good programming and very good design -- is to know what not to think about. [@4a.p16]
 
 ### Dictionaries
 
@@ -959,7 +959,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We could expose rectangular and polar functions but still use on particular representation under the hood. This isn't really new.
 - What if we want _both_ representations? Data abstraction allows us to postpone the representation decision, but we don't want to make a decision at all!
 - We need a vertical barrier between rectangular and polar forms.
-- The selectors for complex numbers---`real-part`, `imag-part`, `magnitude`, and `angle`---must be generic operators.
+- The selectors for complex numbers -- `real-part`, `imag-part`, `magnitude`, and `angle` -- must be generic operators.
 - For this to work, we need _typed data_. We need to tag our data objects with labels telling us the type of their contents.
 - We can simply `cons` the symbol `'rectangular` or `'polar` to the complex number data.
 - The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.
@@ -982,7 +982,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - Instead of writing these generic procedures manually, we should just use a table directly.
 - We introduce two new procedures: `(put key1 key2 value)` and `(get key1 key2)`. This is a map, or associative list.
 - Now we just need to use `put` to insert our specific procedures into the table, and the rest will be automated.
-- We wouldn't even have to name our procedures---we could just pass a lambda expression as the last argument.
+- We wouldn't even have to name our procedures -- we could just pass a lambda expression as the last argument.
 - It is the procedures that go in the table, not their names.
 - The key procedure in this whole system is `operate`:
 
@@ -1037,7 +1037,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - We built a system that has decentralized control.
 - We don't have to worry about how operations are actually performed.
 - This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.
-- The true complexity comes in with _coercion_---when you add a complex and a rational, who worries about converting what?
+- The true complexity comes in with _coercion_ -- when you add a complex and a rational, who worries about converting what?
 
 # 5A: Assignment, State, and Side-Effects
 
@@ -1070,7 +1070,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.
 - This isn't the case when we have assignment. The same expression can lead to different answers because it depends on time.
 - The substitution model completely breaks down. It is static.
-- We need a new model of computation for this "bad thing." We had better have a good reason for introducing assignment.
+- We need a new model of computation for this "bad thing". We had better have a good reason for introducing assignment.
 
 ### Identity
 
@@ -1195,7 +1195,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 - If we want to understand the program well and we want small changes in the world to lead to small changes in the program, we would like isomorphisms between the world and the model.
 - For most things, objects and assignment are not the right way to think. We should only use them if we need them.
 - Sometimes, though, they are essential.
-- It can also improve modularity greatly---consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can't decompose certain problems very well.
+- It can also improve modularity greatly -- consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can't decompose certain problems very well.
 
 # 5B: Computational Objects
 
@@ -1427,7 +1427,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Eight queens puzzle
 
 - Solving this typically uses a _backtracking search_, navigating up and down the tree of possibilities until we get to the bottom (all queens placed).
-- This is unnecessary---it's inordinately concerned with _time_.
+- This is unnecessary -- it's inordinately concerned with _time_.
 - A simpler way is to employ _wishful thinking_ and go from $k$ columns to $k+1$ columns.
 
 ```
@@ -1449,7 +1449,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Streams are not lists
 
-- By now you should be suspicious---what's the catch?
+- By now you should be suspicious -- what's the catch?
 - Problem: Find the second prime between 10,000 and 1,000,000.
 - Stream solution: enumerate 10,000 to 1,000,000 → filter `prime?` → take 2nd.
 - This is ridiculously inefficient. Our earlier programs (before streams) were ugly because they mixed all the operations up, but because of this they were efficient.

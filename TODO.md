@@ -2,17 +2,23 @@
 
 - test in all browsers, without JS, without CSS
 - exercises: add appendix for core.ss etc.
-- en/em dashes in scheme file comments
 - HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
 - quotation issues, link to "on denoting" paper
+- fix inline code in blockquotes background
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
     - lecture: 1a, 1b, 2a, 2b, 3a
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
+- use of `=>` etc. in text/lecture (already discussed below)
++ use ` -- ` for em dashes in .md and .ss
+x use a lua writer instead of postprocessing html
+    x doesn't seem to be a way to run syntax highlighting this way
++ automatically move punctuation inside quotation mark with negative space (.tuck)
 + remove deno --no-check if it's the default now (Makefile and watch.sh)
+    + put DENO_FUTURE_CHECK=1 in .profile
 + fifo or something instead of --wait for render.sock
 + watch.sh script
 + make vscode should set up deno
@@ -77,6 +83,7 @@ x html minifier
 x reconsider → in lecture 6a
     x it's fine
 + automatic `&thinsp;` after code, `&hairsp;` between italic "r" and colon
+    + May 2022: wasted time thinking this was broken when it (the entity) just doesn't show up in Safari dev tools
 + decide on bold/italic for technicaly terms
     + just using _em_ for everything, simplest
 + fix bug in postprocess (not all inline code is scheme class)
