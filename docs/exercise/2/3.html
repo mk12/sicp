@@ -383,7 +383,7 @@ Imports:
 <ol start="2" type="a">
 <li>Standard algebraic notation</li>
 </ol>
-<p>This doesn’t always work, but it’s a start. Actually doing it properly is complicated – it would be much easier to implement it from scratch rather than just changing the constructors and selectors.</p>
+<p>This doesn’t always work, but it’s a start. Actually doing it properly is complicated—it would be much easier to implement it from scratch rather than just changing the constructors and selectors.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (sum? expr)
   (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">memq</span> &#39;+ (<span class="fu">cdr</span> expr))))
 

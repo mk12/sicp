@@ -70,15 +70,18 @@
 <h2 id="3.3.1" class="anchor">
 <a class="anchor__link link" href="#3.3.1" aria-hidden="true">#</a> <span class="number">3.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_sec_3.3.1">Mutable List Structure<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="kw">define</span> x &#39;((a b) c d))
-(<span class="kw">define</span> y &#39;(e f))
+<pre><code class="blockcode">(<span class="kw">define</span> x)
+(<span class="kw">define</span> y)</code></pre>
+<p>Note: We must build new cons cells rather than quoting like <code>&#39;((a b) c d)</code> because quoted forms are immutable and some Schemes enforce this.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (reset!)
+  (<span class="kw">set!</span> x (<span class="fu">list</span> (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="cn">&#39;c</span> <span class="cn">&#39;d</span>))
+  (<span class="kw">set!</span> y (<span class="fu">list</span> <span class="cn">&#39;e</span> <span class="cn">&#39;f</span>)))
 
+(reset!)
 (<span class="fu">set-car!</span> x y)
 x <span class="op">=&gt;</span> (<span class="fu">cons</span> y (<span class="fu">cdr</span> x)) <span class="op">=&gt;</span> &#39;((e f) c d)
 
-(<span class="kw">define</span> x &#39;((a b) c d))
-(<span class="kw">define</span> y &#39;(e f))
-
+(reset!)
 (<span class="fu">set-cdr!</span> x y)
 x <span class="op">=&gt;</span> (<span class="fu">cons</span> (<span class="fu">car</span> x) y) <span class="op">=&gt;</span> &#39;((a b) e f)</code></pre>
 <h3 id="ex3.12" class="anchor">
@@ -157,7 +160,7 @@ Imports:
           (loop temp x))))
   (loop x &#39;()))</code></pre>
 <p>In general, <code>mystery</code> reverses the list <code>x</code>. It does this by walking through the list, setting the <code>cdr</code> of each pair to point to the previous pair instead of the next. For the very first pair, it sets the <code>cdr</code> to null.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> v &#39;(a b c d))
+<pre><code class="blockcode">(<span class="kw">define</span> v (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span> <span class="cn">&#39;c</span> <span class="cn">&#39;d</span>))
 <span class="co">; v-&gt;[*|*]-&gt;[*|*]-&gt;[*|*]-&gt;[*|X]</span>
 <span class="co">;     |      |      |      |</span>
 <span class="co">;     V      V      V      V</span>
@@ -538,7 +541,7 @@ Imports:
 <h3 id="ex3.22" class="anchor">
 <a class="anchor__link link" href="#ex3.22" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_thm_3.22">Exercise 3.22<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<p>It’s interesting how I ended up using <code>dispatch</code> like you would use the <code>this</code> keyword in object-oriented languages. Another interesting point is the application of procedures in <code>dispatch</code>. For procedures that take arguments other than the queue itself, like for insertion, we have to return the procedure that can then be applied to the argument(s). In this case, the rest of the operations take no other arguments. It might be more consistent to return a procedure of zero arguments – then we would need double parentheses, like <code>((my-queue <span class="cn">&#39;front-queue</span>))</code> – but this seems a bit strange. Instead, we apply the procedure right away in <code>dispatch</code> and pass on the return value.</p>
+<p>It’s interesting how I ended up using <code>dispatch</code> like you would use the <code>this</code> keyword in object-oriented languages. Another interesting point is the application of procedures in <code>dispatch</code>. For procedures that take arguments other than the queue itself, like for insertion, we have to return the procedure that can then be applied to the argument(s). In this case, the rest of the operations take no other arguments. It might be more consistent to return a procedure of zero arguments—then we would need double parentheses, like <code>((my-queue <span class="cn">&#39;front-queue</span>))</code>—but this seems a bit strange. Instead, we apply the procedure right away in <code>dispatch</code> and pass on the return value.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-queue)
   (<span class="kw">let</span> ((front-ptr &#39;())
         (rear-ptr &#39;()))

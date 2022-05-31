@@ -749,7 +749,7 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li><p>Lous is wrong – moving the clause for procedure applications further up will break evaluation. For example, it will treat <code>(<span class="kw">define</span> x <span class="cn">3</span>)</code> as an application of the operator <code>define</code> to the operands <code>x</code> and <code>3</code>. This is because <code>application?</code> is implemented simply as <code>pair?</code>. We assume a pair is an application after ruling out all the special forms.</p></li>
+<li><p>Lous is wrong—moving the clause for procedure applications further up will break evaluation. For example, it will treat <code>(<span class="kw">define</span> x <span class="cn">3</span>)</code> as an application of the operator <code>define</code> to the operands <code>x</code> and <code>3</code>. This is because <code>application?</code> is implemented simply as <code>pair?</code>. We assume a pair is an application after ruling out all the special forms.</p></li>
 <li><p>We can change the syntax so that applications start with <code>call</code>:</p></li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (application? exp) (tagged-list? exp <span class="cn">&#39;call</span>))
@@ -2320,7 +2320,7 @@ Imports:
 <span class="co">;     &lt;e3&gt;))</span></code></pre>
 <p>Environment after:</p>
 <pre><code class="blockcode"><span class="co">; global env &lt;-- E1 [&lt;vars] &lt;-- E2 [u, v]</span></code></pre>
-<p>There is an extra frame due to the <code>let</code> expression, which gets transformed into a <code>lambda</code>. This extra frame can never make a difference in the behavior of a correct program, since the new <code>let</code> scope completely encloses the body. If one of the internal definitions shadows a parameter, say <code>x</code>, then <code>(<span class="kw">set!</span> x <span class="cn">1</span>)</code> would have different effects in the two cases – but not in any way that could be detected, because there is no code between the two scopes.</p>
+<p>There is an extra frame due to the <code>let</code> expression, which gets transformed into a <code>lambda</code>. This extra frame can never make a difference in the behavior of a correct program, since the new <code>let</code> scope completely encloses the body. If one of the internal definitions shadows a parameter, say <code>x</code>, then <code>(<span class="kw">set!</span> x <span class="cn">1</span>)</code> would have different effects in the two cases—but not in any way that could be detected, because there is no code between the two scopes.</p>
 <p>We can avoid the extra frame by instead making the following transformation:</p>
 <pre><code class="blockcode"><span class="co">; (lambda &lt;vars&gt;</span>
 <span class="co">;   (define u &#39;*unassigned*)</span>

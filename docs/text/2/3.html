@@ -70,61 +70,70 @@
 <span class="number">2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html">Symbolic Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
-<li>So far we have constructed compound data from numbers only.</li>
-<li>Now, we will work with arbitrary symbols.</li>
+<li>So far our compound data has been made up of numbers.</li>
+<li>Now, we will start working with arbitrary symbols.</li>
 </ul>
 <h2 id="2.3.1" class="anchor">
 <a class="anchor__link link" href="#2.3.1" aria-hidden="true">#</a> <span class="number">2.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.1">Quotation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>Lists containing symbols look just like expressions (code).</li>
-<li>We need to <em>quote</em> data objects to manipulate symbols.</li>
-<li>To make the list <code>(a b)</code>, we can’t just do <code>(<span class="fu">list</span> a b)</code> because this will evaluate <code>a</code> and <code>b</code>.</li>
-<li>This is just like natural language. If I say, “Say your name,” you will say the <em>value</em> of “your name”. If I instead say, “Say ‘your name,’” you will literally say the words “your name”.</li>
-<li>To quote in Lisp, we place a single quotation mark at the beginning of the object to be quoted.</li>
-<li>Here is the difference between symbols and their values:</li>
+<li>Lists with symbols look just like Lisp code, except we <em>quote</em> them.</li>
+<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span> <span class="ss">exp</span>)</code>, or the shorthand <code>&#39;<span class="ss">exp</span></code>.</li>
+<li>For example, <code>'x</code> evaluates to the symbol “x” instead of the variable <code>x</code>’s value.</li>
+<li>This is like just natural language. If I say, “Say your name,<span class="tuck">”</span> you will say your name. If I instead say, “Say ‘your name’,<span class="tuck">”</span> you will literally say the words “your name.<span class="tuck">”</span></li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> b <span class="cn">2</span>)
-(<span class="fu">list</span> a b)   <span class="co">; =&gt; (1 2)</span>
-(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="co">; =&gt; (a b)</span>
-(<span class="fu">list</span> <span class="cn">&#39;a</span> b)  <span class="co">; =&gt; (a 2)</span></code></pre>
+
+(<span class="fu">list</span> a b) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)
+(<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="op">=&gt;</span> &#39;(a b)
+(<span class="fu">list</span> <span class="cn">&#39;a</span> b) <span class="op">=&gt;</span> &#39;(a <span class="cn">2</span>)</code></pre>
 <ul>
-<li>We can write lists directly with quotation rather than using <code>cons</code> or list, and we can represent the empty list with <code>&#39;()</code>.</li>
-<li>We need one more primitive now: <code>eq?</code>. This tests to see if two symbols are the same.</li>
+<li>Now that we have quotation, we will use <code>&#39;()</code> for the empty list instead of <code>nil</code>.</li>
+<li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
+<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">eq?</span> <span class="cn">&#39;a</span> <span class="cn">&#39;a</span>) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.53">2.53</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.54">2.54</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.55">2.55</a></li></ul></aside>
 <h2 id="2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>Consider a procedure that performs symbolic differentiation of algebraic expressions. We need symbols for this.</li>
-<li>We will worry about representation later (data abstraction).</li>
+<li>Let’s design a procedure that computes the derivative of an algebraic expression.</li>
+<li>This will demonstrate both symbol manipulation and data abstraction.</li>
 </ul>
+<blockquote>
+<p>Symbolic differentiation is of special historical significance in Lisp. It was one of the motivating examples behind the development of a computer language for symbol manipulation. <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2" title="SICP Section 2.3.2">(Section&nbsp;2.3.2)</a></p>
+</blockquote>
 <h3 id="2.3.2.1" class="anchor">
 <a class="anchor__link link" href="#2.3.2.1" aria-hidden="true">#</a> The differentiation program with abstract data
 </h3>
 <ul>
 <li>To start, we will only consider addition and multiplication.</li>
-<li>We need the constant rule, the sum rule, and the product rule.</li>
-<li>We will assume we already have these procedures:</li>
+<li>We need three differentiation rules: constant, sum, and product.</li>
+<li>Let’s assume we already have these procedures:</li>
 </ul>
-<pre><code class="blockcode">(variable? e)
-(same-variable? v1 v2)
-(sum? e)
-(addend e)
-(augend e)
-(make-sum a1 a2)
-(product? e)
-(multiplier e)
-(multiplicand e)
-(make-product m1 m2)</code></pre>
+<pre><code class="blockcode"><span class="co">;; Variables</span>
+(variable? <span class="ss">e</span>)
+(same-variable? <span class="ss">v1</span> <span class="ss">v2</span>)
+
+<span class="co">;; Sums</span>
+(sum? <span class="ss">e</span>)
+(addend <span class="ss">e</span>)
+(augend <span class="ss">e</span>)
+(make-sum <span class="ss">a1</span> <span class="ss">a2</span>)
+
+<span class="co">;; Products</span>
+(product? <span class="ss">e</span>)
+(multiplier <span class="ss">e</span>)
+(multiplicand <span class="ss">e</span>)
+(make-product <span class="ss">m1</span> <span class="ss">m2</span>)</code></pre>
 <h3 id="2.3.2.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2.2" aria-hidden="true">#</a> Representing algebraic expressions
 </h3>
 <ul>
 <li>There are many ways we could represent algebraic expressions.</li>
-<li>The most straightforward is in parenthesized Polish notation: Lisp syntax.</li>
+<li>The most straightforward way is parenthesized Polish notation: Lisp syntax.</li>
 <li>We can simplify the answers just like we did in the rational number example: by changing the constructors.</li>
 <li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
 </ul>
@@ -133,6 +142,7 @@
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:</p>
+<!-- TODO sentences -->
 <ul>
 <li><code>union-set</code>: new set containing all items of given sets</li>
 <li><code>intersection-set</code>: new set containing only the items that all given sets share</li>
@@ -185,7 +195,7 @@
 <li>In a data-management system, each record is identified by a key.</li>
 <li>The key must be unique.</li>
 <li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> access.</li>
-<li>For “random access”, meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
+<li>For “random access,<span class="tuck">”</span> meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
 <li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.66">2.66</a></li></ul></aside>

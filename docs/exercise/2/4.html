@@ -425,7 +425,7 @@ Imports:
 (<span class="kw">define</span> (operator expr) (<span class="fu">car</span> expr))
 (<span class="kw">define</span> (operands expr) (<span class="fu">cdr</span> expr))</code></pre>
 <ol type="a">
-<li>Above, we wrote the <code>deriv</code> procedure as a data-directed type dispatch. It dispatches on the operator, which is the <code>car</code> of an expression. We can’t assimilate atomic types like numbers and variables (which are symbols) into this dispatch because they don’t have an identifying tag in the <code>car</code> – they have no <code>car</code> or <code>cdr</code> at all. If we really wanted to, we could assimilate them by dispatching not on the operator, but on <code>(type expr)</code> like this:</li>
+<li>Above, we wrote the <code>deriv</code> procedure as a data-directed type dispatch. It dispatches on the operator, which is the <code>car</code> of an expression. We can’t assimilate atomic types like numbers and variables (which are symbols) into this dispatch because they don’t have an identifying tag in the <code>car</code>—they have no <code>car</code> or <code>cdr</code> at all. If we really wanted to, we could assimilate them by dispatching not on the operator, but on <code>(type expr)</code> like this:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (type expr)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">&#39;number</span>)

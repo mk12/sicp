@@ -69,7 +69,7 @@
 </h1>
 <pre><code class="blockcode">(<span class="kw">define</span> (try a b) (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b))</code></pre>
 <p>With lazy evaluation, this would return 1 instead of raising an error.</p>
-<pre><code class="blockcode">(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) <span class="er">=!&gt;</span> <span class="cn">&quot;/&quot;</span>
+<pre><code class="blockcode">(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)) <span class="er">=!&gt;</span> <span class="cn">&quot;&quot;</span>
 
 (<span class="kw">define</span> (unless <span class="fu">condition</span> usual-value exceptional-value)
   (<span class="kw">if</span> <span class="fu">condition</span> exceptional-value usual-value))</code></pre>
@@ -1158,7 +1158,7 @@ Imports:
   (<span class="kw">define</span> (choose n k) (<span class="fu">list-ref</span> (<span class="fu">list-ref</span> pascal (<span class="fu">-</span> n k)) k))
   (choose <span class="cn">7</span> <span class="cn">2</span>))
 <span class="op">=&gt;</span> <span class="cn">21</span></code></pre>
-<p>This example takes advantage of the extra laziness of lazy lists. With the streams from Chapter 3, it would display “012345” instead of “5”.</p>
+<p>This example takes advantage of the extra laziness of lazy lists. With the streams from Chapter 3, it would display “012345” instead of “5.<span class="tuck">”</span></p>
 <pre><code class="blockcode">(<span class="kw">with-eval</span> actual-value env
   (<span class="kw">define</span> (from n) (<span class="fu">cons</span> (<span class="fu">display</span> n) (from (<span class="fu">+</span> n <span class="cn">1</span>))))
   (<span class="kw">define</span> display-ints (from <span class="cn">0</span>))
