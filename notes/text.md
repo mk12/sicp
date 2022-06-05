@@ -755,7 +755,7 @@ Now we can do things like this:
       (+ 1 (length (cdr items)))))
 ```
 
-- We can build up lists to return by `cons`ing them up _r_:.
+- We can build up lists to return by `cons`ing them up:
 
 ```
 (define (append list1 list2)
