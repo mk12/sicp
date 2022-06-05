@@ -30,6 +30,7 @@ restart() {
             input=src/sicp/chapter-$n.ss
             ;;
     esac
+    input="$input"$'\n'"docs/style.css"
     entr -ns "make '$output' && open -g '$output'" <<< "$input" &
     entr_pid=$!
 }
