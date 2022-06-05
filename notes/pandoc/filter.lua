@@ -368,7 +368,7 @@ end
 local text_url_base =
     "https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H"
 local lecture_url_base =
-    "https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures"
+    "https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005"
 
 -- Citation info for the frontmatter sections.
 local frontmatter_info = {
@@ -451,26 +451,26 @@ end
 -- For each lecture, the speaker (A for Abelson, B for Sussman) and the path to
 -- the transcript PDF relative to lecture_url_base.
 local lectures = {
-    ["1a"] = { speaker = "A", path = "1a-overview-and-introduction-to-lisp/-J_xL4IGhJA.pdf" },
-    ["1b"] = { speaker = "S", path = "1b-procedures-and-processes-substitution-model/V_7mmwpgJHU.pdf" },
-    ["2a"] = { speaker = "S", path = "2a-higher-order-procedures/eJeMOEiHv8c.pdf" },
-    ["2b"] = { speaker = "A", path = "2b-compound-data/DrFkf-T-6Co.pdf" },
-    ["3a"] = { speaker = "A", path = "3a-henderson-escher-example/PEwZL3H2oKg.pdf" },
-    ["3b"] = { speaker = "S", path = "3b-symbolic-differentiation-quotation/bV87UzKMRtE.pdf" },
-    ["4a"] = { speaker = "S", path = "4a-pattern-matching-and-rule-based-substitution/fXQ1SwKjDg.pdf" },
-    ["4b"] = { speaker = "A", path = "4b-generic-operators/OscT4N2qq7o.pdf" },
-    ["5a"] = { speaker = "S", path = "5a-assignment-state-and-side-effects/dO1aqPBJCPg.pdf" },
-    ["5b"] = { speaker = "S", path = "5b-computational-objects/yedzRWhi-9E.pdf" },
-    ["6a"] = { speaker = "A", path = "6a-streams-part-1/JkGKLILLy0I.pdf" },
-    ["6b"] = { speaker = "A", path = "6b-streams-part-2/qp05AtXbOP0.pdf" },
-    ["7a"] = { speaker = "S", path = "7a-metacircular-evaluator-part-1/aAlR3cezPJg.pdf" },
-    ["7b"] = { speaker = "S", path = "7b-metacircular-evaluator-part-2/QVEOq5k6Xi0.pdf" },
-    ["8a"] = { speaker = "A", path = "8a-logic-programming-part-1/rCqMiPk1BJE.pdf" },
-    ["8b"] = { speaker = "A", path = "8b-logic-programming-part-2/GReBwkGFZcs.pdf" },
-    ["9a"] = { speaker = "S", path = "9a-register-machines/cIc8ZBMcqAc.pdf" },
-    ["9b"] = { speaker = "A", path = "9b-explicit-control-evaluator/Z8-qWEEwTCk.pdf" },
-    ["10a"] = { speaker = "A", path = "10a-compilation/TqO6V3qR9Ws.pdf" },
-    ["10b"] = { speaker = "S", path = "10b-storage-allocation-and-garbage-collection/AbK4bZhUk48.pdf" },
+    ["1a"] = { speaker = "A", path = "4da40a0c0b8066031d6f1b93b7fe8588_-J_xL4IGhJA.pdf" },
+    ["1b"] = { speaker = "S", path = "c4d1f16f3b0cb1e702defba51ba0f9ed_V_7mmwpgJHU.pdf" },
+    ["2a"] = { speaker = "S", path = "32465b886efeca0f6edafaed2f0586c3_eJeMOEiHv8c.pdf" },
+    ["2b"] = { speaker = "A", path = "2fb7874c262b32016f3635d8143326ff_DrFkf-T-6Co.pdf" },
+    ["3a"] = { speaker = "A", path = "453216e53b2225221a756bf42bfdcd3d_PEwZL3H2oKg.pdf" },
+    ["3b"] = { speaker = "S", path = "20ace20264e0b891145a184405f6ef10_bV87UzKMRtE.pdf" },
+    ["4a"] = { speaker = "S", path = "6ac1de7c1a6862dab0992e7d2e45a766_fXQ1SwKjDg.pdf" },
+    ["4b"] = { speaker = "A", path = "b31a4b69d5162b24879fa9318c2ef884_OscT4N2qq7o.pdf" },
+    ["5a"] = { speaker = "S", path = "16ee3e36a574a5d66e45961725170e73_dO1aqPBJCPg.pdf" },
+    ["5b"] = { speaker = "S", path = "e2dd7fe7a875819f96a33bf59f8a38ba_yedzRWhi-9E.pdf" },
+    ["6a"] = { speaker = "A", path = "d196a566ea0e1f1ea0d866431de4560c_JkGKLILLy0I.pdf" },
+    ["6b"] = { speaker = "A", path = "449fc46f264e5f94d2151e42b5fb7b60_qp05AtXbOP0.pdf" },
+    ["7a"] = { speaker = "S", path = "0b41187e21dfe262000f4d3adac855b1_aAlR3cezPJg.pdf" },
+    ["7b"] = { speaker = "S", path = "771092351b136b40083a0f5d147ed2b9_QVEOq5k6Xi0.pdf" },
+    ["8a"] = { speaker = "A", path = "147df578d3f2f520318ee63d2f64a54e_rCqMiPk1BJE.pdf" },
+    ["8b"] = { speaker = "A", path = "f4784e2d396f83a7d2a0af9cb8925d3c_GReBwkGFZcs.pdf" },
+    ["9a"] = { speaker = "S", path = "8b955a3bffbbe00a8aa32576b43695dc_cIc8ZBMcqAc.pdf" },
+    ["9b"] = { speaker = "A", path = "72af89dc6655dbce058b68ea42edebf8_Z8-qWEEwTCk.pdf" },
+    ["10a"] = { speaker = "A", path = "9dfa296596372438318a4315c5a53a0e_TqO6V3qR9Ws.pdf" },
+    ["10b"] = { speaker = "S", path = "a087f7372af7b42f1252ba55ad781557_AbK4bZhUk48.pdf" },
 }
 
 -- Returns citation information for a given [@id].

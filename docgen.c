@@ -1137,9 +1137,8 @@ static const char TEXT_URL_BASE[] =
 
 // Base URL for the online SICP video lectures.
 static const char LECTURE_URL_BASE[] =
-    "https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/"
-    "6-001-structure-and-interpretation-of-computer-programs-spring-2005/"
-    "video-lectures";
+    "https://ocw.mit.edu/courses/"
+    "6-001-structure-and-interpretation-of-computer-programs-spring-2005";
 
 // Returns the page number to use in the online SICP textbook URL for a given
 // sector in text.md. Only takes into account the chapter and section.
@@ -1153,8 +1152,8 @@ static int text_url_num(Sector s) {
     return 8 + chapter + (int[]){0, 3, 8, 13, 17}[chapter - 1] + section;
 }
 
-// Writes into buf the SICP video lecture URL suffix (after LECTURE_URL_BASE and
-// a slash) for a given lecture heading.
+// Writes into buf the SICP video lecture URL suffix (after LECTURE_URL_BASE
+// followed by "/resources/") for a given lecture heading.
 static void level_url_suffix(struct Heading heading, char *buf, int size) {
     assert(size > 0);
     assert(heading.label.data);
@@ -1629,7 +1628,7 @@ static bool gen_lecture_highlight(const char *output) {
             struct Span label = tolower_s(scan.heading.label, buf, sizeof buf);
             char suffix[SZ_HEADING];
             level_url_suffix(scan.heading, suffix, sizeof suffix);
-            render_heading(proc.in, 2, label, scan.heading, "%s/%s",
+            render_heading(proc.in, 2, label, scan.heading, "%s/resources/%s",
                            LECTURE_URL_BASE, suffix);
             // fallthrough
         case HL_START_NTH:;

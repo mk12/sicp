@@ -623,42 +623,39 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Recap
 
 ::: highlight
->  In order to make a system that's robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. [@3b.p1]
+> In order to make a system that's robust, it has to be insensitive to small changes, that is, a small change in the problem should lead to only a small change in the solution. There ought to be a continuity. The space of solutions ought to be continuous in this space of problems. [@3b.p1]
 :::
 
-- Don't solve a particular problem at each level; solve a class of problems in the neighborhood of the particular problem by building a language suited to them.
+- Don't solve a particular problem at each level: solve a class of problems in the neighborhood of the particular problem by building a language suited to them.
 - We've seen the power of embedding languages.
-- We are going to confuse the distinction between procedures and data even more badly.
+- We're going to confuse the distinction between procedures and data even more badly!
 
 ### Derivatives and integrals
 
-- Instead of doing a numerical approximation of the derivative, we want to apply the rules of calculus to algebraic expressions.
-- Producing derivatives of arbitrary expressions is easy; producing integrals, the inverse operation, is hard.
+- Instead of computing a numerical approximation of the derivative, we want to apply the rules of calculus to algebraic expressions.
+- Producing derivatives are easy. Producing integrals, the inverse operation, is hard.
 - Why is it easy to go one way but not the other? Because the rules for differentiation are reduction rules.
-- Big problems turn into multiple simpler problems.
 
 ### Differentiation procedure
 
-- The reduction rules of differentiation are appropriate for recursion.
-- We can write the rules as a case analysis.
-- But, we need to be able to _represent_ the expressions.
-- The differentiation procedure that takes an _expression_ as an argument is different from the one that takes a function.
+- We can write the rules of differentiation as a case analysis that uses recursion.
+- But first, we need to be able to represent the expressions.
+- Taking an expression as an argument is very different from taking a function.
 - You can't open up a function. You can only get answers from it.
-- An expression is an object representing the algebraic expression that defines a function.
-- We can write the procedure `deriv` using a lot of wishful thinking.
+- An expression is data representing the algebraic expression that defines a function.
+- We can write the procedure `deriv` using lots of wishful thinking.
 
 ### Expression representation
 
-- To represent sums, products, quotients, etc., why not use the same language we're writing the program in?
-- We can just use list structure.
+- To represent sums, products, quotients, etc., why not use the same language we're writing the program in? We can just use list structure.
 - There are more built-in predicates we haven't seen yet: `atom?` and `eq?`.
 
 ### Quotation
 
-- We are also introducing _quotation_. The words of English are ambiguous: _say your name_ is different from _say "your name"_.
+- We are also introducing _quotation_. The words of English are ambiguous, so we need punctuation: "say your name" is different from "say 'your name'".
 - The notation in Lisp is to precede the expression with a single quotation mark.
 - Quotation makes a language more complex because we can no longer substitute equals for equals (see Bertrand Russell's "On Denoting").
-- The names `car` and `cdr` have survived (originally the address register and the decrement register) because we can do things like `cadddr` and `cadar`.
+- The names `car` and `cdr` have survived (originally referring to the address register and the decrement register) because we can use shorthands like `cadddr` and `cadar`.
 
 ## Part 2
 
