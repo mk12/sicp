@@ -2851,10 +2851,10 @@ Imports:
 <span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (rem q2 (rem q1 q2))) <span class="co">; 2nd recursion</span>
 <span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (make-polynomial <span class="cn">&#39;x</span> &#39;()))
 <span class="op">=&gt;</span> (rem q1 q2)
-<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1458</span>/<span class="cn">169</span>) (<span class="cn">1</span> <span class="cn">-2916</span>/<span class="cn">169</span>) (<span class="cn">0</span> <span class="cn">1458</span>/<span class="cn">169</span>)))</code></pre>
+<span class="op">=&gt;</span> (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">2</span> <span class="cn">1458/169</span>) (<span class="cn">1</span> <span class="cn">-2916/169</span>) (<span class="cn">0</span> <span class="cn">1458/169</span>)))</code></pre>
 <p>This remainder polynomial has noninteger coefficients, so the final GCD returned also has noninteger coefficients. However, if we look closely at the GCD of <code>q1</code> and <code>q2</code>, it is clear that we can factor out 1458/169:</p>
 <pre><code class="blockcode">(mul (greatest-common-divisor q1 q2)
-     (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">0</span> <span class="cn">169</span>/<span class="cn">1458</span>))))
+     (make-polynomial <span class="cn">&#39;x</span> &#39;((<span class="cn">0</span> <span class="cn">169/1458</span>))))
 <span class="op">=&gt;</span> p1</code></pre>
 <h3 id="ex2.96" class="anchor">
 <a class="anchor__link link" href="#ex2.96" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.96">Exercise 2.96<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>

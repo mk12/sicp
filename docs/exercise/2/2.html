@@ -143,7 +143,7 @@ one-through-four <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <
 </h3>
 <p>Generalizing <code>count-change</code> from <a href="../1/2.html#1.2.2.1">§&nbsp;1.2.2.1</a> to work with any currency:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> us-coins (<span class="fu">list</span> <span class="cn">50</span> <span class="cn">25</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">1</span>))
-(<span class="kw">define</span> uk-coins (<span class="fu">list</span> <span class="cn">100</span> <span class="cn">50</span> <span class="cn">20</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">2</span> <span class="cn">1</span> <span class="cn">1</span>/<span class="cn">2</span>))
+(<span class="kw">define</span> uk-coins (<span class="fu">list</span> <span class="cn">100</span> <span class="cn">50</span> <span class="cn">20</span> <span class="cn">10</span> <span class="cn">5</span> <span class="cn">2</span> <span class="cn">1</span> <span class="cn">1/2</span>))
 
 (<span class="kw">define</span> (cc amount coins)
   (<span class="kw">cond</span> ((<span class="fu">=</span> amount <span class="cn">0</span>) <span class="cn">1</span>)
@@ -832,8 +832,8 @@ Imports:
               (<span class="fu">cdr</span> rest))))
   (iter init xs))
 
-(fold-right <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">3</span>/<span class="cn">2</span>
-(fold-left <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">1</span>/<span class="cn">6</span>
+(fold-right <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">3/2</span>
+(fold-left <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">1/6</span>
 (fold-right <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> (<span class="cn">2</span> (<span class="cn">3</span> ())))
 (fold-left <span class="fu">list</span> &#39;() (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(((() <span class="cn">1</span>) <span class="cn">2</span>) <span class="cn">3</span>)</code></pre>
 <p>For <code>fold-left</code> and <code>fold-right</code> to produce the same value on any sequence, <code>op</code> must satisfy the commutative property <code>(<span class="fu">=</span> (op x y) (op y x))</code>.</p>

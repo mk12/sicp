@@ -1240,7 +1240,7 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
   <span class="co">;; Maintains the invariants a = 2^x, b = 3*2^(x-1).</span>
   (<span class="kw">define</span> (iter x a b)
     (<span class="kw">cond</span> ((divisible? (<span class="fu">-</span> n (<span class="fu">-</span> b <span class="cn">2</span>)) a)
-           (<span class="fu">list</span> x (<span class="fu">+</span> x (<span class="fu">/</span> (<span class="fu">+</span> n <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">-3</span>/<span class="cn">2</span> a)) a) <span class="cn">1</span>)))
+           (<span class="fu">list</span> x (<span class="fu">+</span> x (<span class="fu">/</span> (<span class="fu">+</span> n <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">-3/2</span> a)) a) <span class="cn">1</span>)))
           (<span class="kw">else</span> (iter (<span class="fu">+</span> x <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>) (<span class="fu">*</span> b <span class="cn">2</span>)))))
   (<span class="kw">let</span> ((x (<span class="fu">log</span> (<span class="fu">+</span> n <span class="cn">2</span>) <span class="cn">2</span>)))
     (<span class="kw">cond</span> ((<span class="fu">integer?</span> x) (<span class="fu">list</span> (<span class="fu">exact</span> x) (<span class="fu">exact</span> x)))
