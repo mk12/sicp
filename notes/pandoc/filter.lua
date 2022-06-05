@@ -85,13 +85,13 @@ local highlight_fwd = false
 -- True if the page has a backward reference from notes to highlights.
 local highlight_bwd = false
 
--- Processes "::: exercises" and "::: highlight" divs.
-function div(el)
+-- Renders "::: exercises" and processes "::: highlight" divs.
+function render_exercises_and_process_highlights(el)
     assert(#el.classes == 1, "bad number of classes")
     if el.classes[1] == "exercises" then
-        return exercises_div(el)
+        return render_exercises_div(el)
     elseif el.classes[1] == "highlight" then
-        return highlight_div(el)
+        return process_highlight_div(el)
     end
     error("bad div class: " .. el.classes[1])
 end
@@ -99,7 +99,7 @@ end
 local last_exercise_range_end
 
 -- Converts a "::: exercises" div to a list of exercise links.
-function exercises_div(el)
+function render_exercises_div(el)
     assert(#el.content == 1, "bad div size: " .. #el.content)
     assert(el.content[1].t == "Para", "bad tag: " .. el.content[1].t)
     local range = pandoc.utils.stringify(el)
@@ -132,7 +132,7 @@ function exercises_div(el)
 end
 
 -- Styles and links blockquotes marked with the "::: highlight" div
-function highlight_div(el)
+function process_highlight_div(el)
     assert(#el.content == 1, "bad div size: " .. #el.content)
     assert(el.content[1].t == "BlockQuote", "bad tag: " .. el.content[1].t)
     local aria, href, content
@@ -273,7 +273,7 @@ end
 -- Converts links like [](:1.2.3), [](1a), and [](?1.23) -- textbook sections,
 -- lectures, and exercises respectively. If the link content [] is empty, sets
 -- it automatically to § 1.2.3, Lecture 1A, Exercise 1.23, etc.
-function internal_link(el)
+function link_cross_references(el)
     local sigil = el.target:sub(1, 1)
     local num = el.target:sub(2)
     local prefix
@@ -306,7 +306,7 @@ end
 
 -- Adds the scheme class to CodeBlock elements. Also links IDs in (paste ...)
 -- blocks to the corresponding section/exercise, and removes "NOALIGN" comments.
-function code_block(el)
+function process_code_block(el)
     if #el.classes > 0 then
         return
     end
@@ -351,7 +351,7 @@ end
 
 -- Adds the scheme class to all Code elements within el. We do this, rather than
 -- transforming every Code in the document, to avoid applying it in headings.
-function walk_inline_code(el)
+function process_inline_code_in_block(el)
     return pandoc.walk_block(el, {Code = function(el)
         -- Only highlight inline code if it has a parenthesis (procedure
         -- application) or guillemet for meta-variables. Otherwise notes with
@@ -522,7 +522,7 @@ function citation_info(id)
 end
 
 -- Formats citations at the end of blockquotes.
-function format_citation(el)
+function render_citation(el)
     assert(#el.citations == 1)
     local info = citation_info(el.citations[1].id)
     local html
@@ -536,25 +536,28 @@ function format_citation(el)
     return pandoc.RawInline("html", html)
 end
 
+-- A note on naming: "render" means produce raw HTML, while "process" means
+-- change in some way but retain Pandoc data structures. This makes it easier to
+-- tell why filters have to be run in a particular order.
 return {
-    -- First, render math and diagrams with the render.ts server.
+    -- Render math and diagrams with the render.ts server.
     {Math = render_math},
     {CodeBlock = render_diagrams},
     -- Close the server connection when we're done.
     {Pandoc = close_socket},
     -- Read metadata needed for rendering special divs.
     {Meta = read_meta},
-    -- Render special divs (exercises and highlights).
-    {Div = div},
-    -- Write metadata. This includes some info discovered while rendering divs.
+    -- Handle special divs (exercises and highlights).
+    {Div = render_exercises_and_process_highlights},
+    -- Write metadata. This includes some info discovered while processing divs.
     {Meta = write_meta},
-    -- Render links, code blocks, and inline code.
-    {Link = internal_link},
-    {CodeBlock = code_block},
-    {Para = walk_inline_code},
-    {BulletList = walk_inline_code},
-    {OrderedList = walk_inline_code},
-    {Table = walk_inline_code},
+    -- Handle links, code blocks, and inline code.
+    {Link = link_cross_references},
+    {CodeBlock = process_code_block},
+    {Para = process_inline_code_in_block},
+    {BulletList = process_inline_code_in_block},
+    {OrderedList = process_inline_code_in_block},
+    {Table = process_inline_code_in_block},
     -- Render citations of the SICP text or lectures.
-    {Cite = format_citation},
+    {Cite = render_citation},
 }
