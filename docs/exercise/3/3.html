@@ -235,21 +235,21 @@ z2 <span class="op">=&gt;</span> &#39;((a b) a b)
          (count-pairs (<span class="fu">cdr</span> x))
          <span class="cn">1</span>)))</code></pre>
 <p>The procedure <code>count-pairs</code> is wrong because it assumes there is no sharing. The lists below named <code>N-M</code> have <code>N</code> pairs, but they use sharing so that <code>count-pairs</code> think they have <code>M</code> pairs.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> one<span class="cn">-1</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> &#39;()))
-(<span class="kw">define</span> two<span class="cn">-2</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> <span class="cn">&#39;b</span> &#39;())))
-(<span class="kw">define</span> two<span class="cn">-3</span> (<span class="fu">cons</span> one<span class="cn">-1</span> one<span class="cn">-1</span>))
-(<span class="kw">define</span> three<span class="cn">-3</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> &#39;()))))
-(<span class="kw">define</span> three<span class="cn">-4</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> one<span class="cn">-1</span> one<span class="cn">-1</span>)))
-(<span class="kw">define</span> three<span class="cn">-5</span> (<span class="fu">cons</span> two<span class="cn">-2</span> two<span class="cn">-2</span>))
-(<span class="kw">define</span> three<span class="cn">-7</span> (<span class="fu">cons</span> two<span class="cn">-3</span> two<span class="cn">-3</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> one-1 (<span class="fu">cons</span> <span class="cn">&#39;a</span> &#39;()))
+(<span class="kw">define</span> two-2 (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> <span class="cn">&#39;b</span> &#39;())))
+(<span class="kw">define</span> two-3 (<span class="fu">cons</span> one-1 one-1))
+(<span class="kw">define</span> three-3 (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> <span class="cn">&#39;a</span> &#39;()))))
+(<span class="kw">define</span> three-4 (<span class="fu">cons</span> <span class="cn">&#39;a</span> (<span class="fu">cons</span> one-1 one-1)))
+(<span class="kw">define</span> three-5 (<span class="fu">cons</span> two-2 two-2))
+(<span class="kw">define</span> three-7 (<span class="fu">cons</span> two-3 two-3))
 
-(count-pairs one<span class="cn">-1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(count-pairs two<span class="cn">-2</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
-(count-pairs two<span class="cn">-3</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(count-pairs three<span class="cn">-3</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(count-pairs three<span class="cn">-4</span>) <span class="op">=&gt;</span> <span class="cn">4</span>
-(count-pairs three<span class="cn">-5</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
-(count-pairs three<span class="cn">-7</span>) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
+(count-pairs one-1) <span class="op">=&gt;</span> <span class="cn">1</span>
+(count-pairs two-2) <span class="op">=&gt;</span> <span class="cn">2</span>
+(count-pairs two-3) <span class="op">=&gt;</span> <span class="cn">3</span>
+(count-pairs three-3) <span class="op">=&gt;</span> <span class="cn">3</span>
+(count-pairs three-4) <span class="op">=&gt;</span> <span class="cn">4</span>
+(count-pairs three-5) <span class="op">=&gt;</span> <span class="cn">5</span>
+(count-pairs three-7) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3 id="ex3.17" class="anchor">
 <a class="anchor__link link" href="#ex3.17" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_thm_3.17">Exercise 3.17<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -305,13 +305,13 @@ Imports:
                     <span class="cn">1</span>))))
     (iter x)))
 
-(count-pairs one<span class="cn">-1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(count-pairs two<span class="cn">-2</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
-(count-pairs two<span class="cn">-3</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
-(count-pairs three<span class="cn">-3</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(count-pairs three<span class="cn">-4</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(count-pairs three<span class="cn">-5</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(count-pairs three<span class="cn">-7</span>) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
+(count-pairs one-1) <span class="op">=&gt;</span> <span class="cn">1</span>
+(count-pairs two-2) <span class="op">=&gt;</span> <span class="cn">2</span>
+(count-pairs two-3) <span class="op">=&gt;</span> <span class="cn">2</span>
+(count-pairs three-3) <span class="op">=&gt;</span> <span class="cn">3</span>
+(count-pairs three-4) <span class="op">=&gt;</span> <span class="cn">3</span>
+(count-pairs three-5) <span class="op">=&gt;</span> <span class="cn">3</span>
+(count-pairs three-7) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
 <h3 id="ex3.18" class="anchor">
 <a class="anchor__link link" href="#ex3.18" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%25_thm_3.18">Exercise 3.18<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -740,26 +740,26 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (lookup key<span class="cn">-1</span> key<span class="cn">-2</span> table)
-  (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key<span class="cn">-1</span> (<span class="fu">cdr</span> table))))
+<pre><code class="blockcode">(<span class="kw">define</span> (lookup key-1 key-2 table)
+  (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> table))))
     (<span class="kw">if</span> subtable
-        (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key<span class="cn">-2</span> (<span class="fu">cdr</span> subtable))))
+        (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key-2 (<span class="fu">cdr</span> subtable))))
           (<span class="kw">if</span> record
               (<span class="fu">cdr</span> record)
               <span class="cn">#f</span>))
         <span class="cn">#f</span>)))
 
-(<span class="kw">define</span> (insert! key<span class="cn">-1</span> key<span class="cn">-2</span> value table)
-  (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key<span class="cn">-1</span> (<span class="fu">cdr</span> table))))
+(<span class="kw">define</span> (insert! key-1 key-2 value table)
+  (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> table))))
     (<span class="kw">if</span> subtable
-        (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key<span class="cn">-2</span> (<span class="fu">cdr</span> subtable))))
+        (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key-2 (<span class="fu">cdr</span> subtable))))
           (<span class="kw">if</span> record
               (<span class="fu">set-cdr!</span> record value)
               (<span class="fu">set-cdr!</span> subtable
-                        (<span class="fu">cons</span> (<span class="fu">cons</span> key<span class="cn">-2</span> value)
+                        (<span class="fu">cons</span> (<span class="fu">cons</span> key-2 value)
                               (<span class="fu">cdr</span> subtable)))))
         (<span class="fu">set-cdr!</span> table
-                  (<span class="fu">cons</span> (<span class="fu">list</span> key<span class="cn">-1</span> (<span class="fu">cons</span> key<span class="cn">-2</span> value))
+                  (<span class="fu">cons</span> (<span class="fu">list</span> key-1 (<span class="fu">cons</span> key-2 value))
                         (<span class="fu">cdr</span> table))))))
 
 (<span class="kw">define</span> t (make-table))
@@ -790,23 +790,23 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-table)
   (<span class="kw">let</span> ((local-table (<span class="fu">list</span> <span class="cn">&#39;*table*</span>)))
-    (<span class="kw">define</span> (lookup key<span class="cn">-1</span> key<span class="cn">-2</span>)
-      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key<span class="cn">-1</span> (<span class="fu">cdr</span> local-table))))
+    (<span class="kw">define</span> (lookup key-1 key-2)
+      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> local-table))))
         (<span class="kw">if</span> subtable
-            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key<span class="cn">-2</span> (<span class="fu">cdr</span> subtable))))
+            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key-2 (<span class="fu">cdr</span> subtable))))
               (<span class="kw">if</span> record (<span class="fu">cdr</span> record) <span class="cn">#f</span>))
             <span class="cn">#f</span>)))
-    (<span class="kw">define</span> (insert! key<span class="cn">-1</span> key<span class="cn">-2</span> value)
-      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key<span class="cn">-1</span> (<span class="fu">cdr</span> local-table))))
+    (<span class="kw">define</span> (insert! key-1 key-2 value)
+      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> local-table))))
         (<span class="kw">if</span> subtable
-            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key<span class="cn">-2</span> (<span class="fu">cdr</span> subtable))))
+            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key-2 (<span class="fu">cdr</span> subtable))))
               (<span class="kw">if</span> record
                   (<span class="fu">set-cdr!</span> record value)
                   (<span class="fu">set-cdr!</span> subtable
-                            (<span class="fu">cons</span> (<span class="fu">cons</span> key<span class="cn">-2</span> value)
+                            (<span class="fu">cons</span> (<span class="fu">cons</span> key-2 value)
                                   (<span class="fu">cdr</span> subtable)))))
             (<span class="fu">set-cdr!</span> local-table
-                      (<span class="fu">cons</span> (<span class="fu">list</span> key<span class="cn">-1</span> (<span class="fu">cons</span> key<span class="cn">-2</span> value))
+                      (<span class="fu">cons</span> (<span class="fu">list</span> key-1 (<span class="fu">cons</span> key-2 value))
                             (<span class="fu">cdr</span> local-table))))))
     (<span class="kw">define</span> (reset!)
       (<span class="fu">set-cdr!</span> local-table &#39;()))
@@ -831,23 +831,23 @@ Imports:
           ((same-key? key (<span class="fu">caar</span> records)) (<span class="fu">car</span> records))
           (<span class="kw">else</span> (<span class="fu">assoc</span> key (<span class="fu">cdr</span> records)))))
   (<span class="kw">let</span> ((local-table (<span class="fu">list</span> <span class="cn">&#39;*table*</span>)))
-    (<span class="kw">define</span> (lookup key<span class="cn">-1</span> key<span class="cn">-2</span>)
-      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key<span class="cn">-1</span> (<span class="fu">cdr</span> local-table))))
+    (<span class="kw">define</span> (lookup key-1 key-2)
+      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> local-table))))
         (<span class="kw">if</span> subtable
-            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key<span class="cn">-2</span> (<span class="fu">cdr</span> subtable))))
+            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key-2 (<span class="fu">cdr</span> subtable))))
               (<span class="kw">if</span> record (<span class="fu">cdr</span> record) <span class="cn">#f</span>))
             <span class="cn">#f</span>)))
-    (<span class="kw">define</span> (insert! key<span class="cn">-1</span> key<span class="cn">-2</span> value)
-      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key<span class="cn">-1</span> (<span class="fu">cdr</span> local-table))))
+    (<span class="kw">define</span> (insert! key-1 key-2 value)
+      (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> local-table))))
         (<span class="kw">if</span> subtable
-            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key<span class="cn">-2</span> (<span class="fu">cdr</span> subtable))))
+            (<span class="kw">let</span> ((record (<span class="fu">assoc</span> key-2 (<span class="fu">cdr</span> subtable))))
               (<span class="kw">if</span> record
                   (<span class="fu">set-cdr!</span> record value)
                   (<span class="fu">set-cdr!</span> subtable
-                            (<span class="fu">cons</span> (<span class="fu">cons</span> key<span class="cn">-2</span> value)
+                            (<span class="fu">cons</span> (<span class="fu">cons</span> key-2 value)
                                   (<span class="fu">cdr</span> subtable)))))
             (<span class="fu">set-cdr!</span> local-table
-                      (<span class="fu">cons</span> (<span class="fu">list</span> key<span class="cn">-1</span> (<span class="fu">cons</span> key<span class="cn">-2</span> value))
+                      (<span class="fu">cons</span> (<span class="fu">list</span> key-1 (<span class="fu">cons</span> key-2 value))
                             (<span class="fu">cdr</span> local-table))))))
     (<span class="kw">define</span> (dispatch m)
       (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;lookup-proc</span>) lookup)
@@ -1464,8 +1464,8 @@ Imports:
                       name (simulation-time the-agenda) (get-signal wire))))))
 
 (reset)
-(<span class="kw">define</span> input<span class="cn">-1</span> (make-wire))
-(<span class="kw">define</span> input<span class="cn">-2</span> (make-wire))
+(<span class="kw">define</span> input-1 (make-wire))
+(<span class="kw">define</span> input-2 (make-wire))
 (<span class="kw">define</span> sum (make-wire))
 (<span class="kw">define</span> carry (make-wire))
 
@@ -1473,11 +1473,11 @@ Imports:
 <span class="op">=$&gt;</span> [<span class="cn">&quot;sum 0 New-value = 0&quot;</span>]
 (probe <span class="cn">&#39;carry</span> carry)
 <span class="op">=$&gt;</span> [<span class="cn">&quot;carry 0 New-value = 0&quot;</span>]
-(half-adder input<span class="cn">-1</span> input<span class="cn">-2</span> sum carry)
-(set-signal! input<span class="cn">-1</span> <span class="cn">1</span>)
+(half-adder input-1 input-2 sum carry)
+(set-signal! input-1 <span class="cn">1</span>)
 (propagate)
 <span class="op">=$&gt;</span> [<span class="cn">&quot;sum 8 New-value = 1&quot;</span>]
-(set-signal! input<span class="cn">-2</span> <span class="cn">1</span>)
+(set-signal! input-2 <span class="cn">1</span>)
 (propagate)
 <span class="op">=$&gt;</span> [<span class="cn">&quot;carry 11 New-value = 1&quot;</span>
      <span class="cn">&quot;sum 16 New-value = 0&quot;</span>]</code></pre>
@@ -1566,16 +1566,16 @@ Imports:
 <p>This is an incorrect state. To fix it, we’d have to flip <code>a</code> on and off. Therefore, we must execute actions right after adding them to ensure the circuit is in a stable state.</p>
 <p>Let’s trace through the previous example without calling actions when they are added. Nothing is printed when we call <code>probe</code> because the probe action is not called immediately. Nothing is printed when we propagate setting <code>input-1</code> to 1 either: it flows through the OR gate, but not through the AND gate because the latter does not know its other input is 1 (that would have required propagating the 0 from <code>input-2</code> through the other AND &amp; NOT gates). Finally, when we set <code>input-2</code> to 1 and propagate, it flows through the circuit leaving <code>sum</code> at 0 (still no printing), but changing <code>carry</code> to 1 (which becomes the only thing printed).</p>
 <pre><code class="blockcode">(reset)
-(<span class="kw">define</span> input<span class="cn">-1</span> (make-bad-wire))
-(<span class="kw">define</span> input<span class="cn">-2</span> (make-bad-wire))
+(<span class="kw">define</span> input-1 (make-bad-wire))
+(<span class="kw">define</span> input-2 (make-bad-wire))
 (<span class="kw">define</span> sum (make-bad-wire))
 (<span class="kw">define</span> carry (make-bad-wire))
 (probe <span class="cn">&#39;sum</span> sum) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
 (probe <span class="cn">&#39;carry</span> carry) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
-(half-adder input<span class="cn">-1</span> input<span class="cn">-2</span> sum carry)
-(set-signal! input<span class="cn">-1</span> <span class="cn">1</span>)
+(half-adder input-1 input-2 sum carry)
+(set-signal! input-1 <span class="cn">1</span>)
 (propagate) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
-(set-signal! input<span class="cn">-2</span> <span class="cn">1</span>)
+(set-signal! input-2 <span class="cn">1</span>)
 (propagate) <span class="op">=$&gt;</span> [<span class="cn">&quot;carry 11 New-value = 1&quot;</span>]</code></pre>
 <h3 id="3.3.4.5" class="anchor">
 <a class="anchor__link link" href="#3.3.4.5" aria-hidden="true">#</a> <span class="number">3.3.4.5</span> Implementing the agenda

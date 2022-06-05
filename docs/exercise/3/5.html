@@ -1086,15 +1086,15 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (ln<span class="cn">-2</span>-summands n)
-  (<span class="kw">cons-stream</span> (<span class="fu">/</span> <span class="cn">1.0</span> n) (negate-stream (ln<span class="cn">-2</span>-summands (<span class="fu">+</span> n <span class="cn">1</span>)))))
-(<span class="kw">define</span> ln<span class="cn">-2</span>-stream
-  (partial-sums (ln<span class="cn">-2</span>-summands <span class="cn">1</span>)))</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> (ln-2-summands n)
+  (<span class="kw">cons-stream</span> (<span class="fu">/</span> <span class="cn">1.0</span> n) (negate-stream (ln-2-summands (<span class="fu">+</span> n <span class="cn">1</span>)))))
+(<span class="kw">define</span> ln-2-stream
+  (partial-sums (ln-2-summands <span class="cn">1</span>)))</code></pre>
 <p>This converges fairly slowly on its own:</p>
-<pre><code class="blockcode">(stream-ref ln<span class="cn">-2</span>-stream <span class="cn">10</span>) <span class="op">~&gt;</span> <span class="cn">0.7365440115440116</span></code></pre>
+<pre><code class="blockcode">(stream-ref ln-2-stream <span class="cn">10</span>) <span class="op">~&gt;</span> <span class="cn">0.7365440115440116</span></code></pre>
 <p>The accelerated sequence converges much faster:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> accel-ln<span class="cn">-2</span>-stream (accelerated-sequence euler-transform ln<span class="cn">-2</span>-stream))
-(stream-ref accel-ln<span class="cn">-2</span>-stream <span class="cn">8</span>) <span class="op">~&gt;</span> (<span class="fu">log</span> <span class="cn">2</span>)</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> accel-ln-2-stream (accelerated-sequence euler-transform ln-2-stream))
+(stream-ref accel-ln-2-stream <span class="cn">8</span>) <span class="op">~&gt;</span> (<span class="fu">log</span> <span class="cn">2</span>)</code></pre>
 <h3 id="3.5.3.2" class="anchor">
 <a class="anchor__link link" href="#3.5.3.2" aria-hidden="true">#</a> <span class="number">3.5.3.2</span> Infinite streams of pairs
 </h3>
@@ -1152,8 +1152,8 @@ Imports:
                            (interleave s2 (stream-cdr s1))))))
 
 (<span class="kw">define</span> integer-pairs (pairs integers integers))
-(<span class="kw">define</span> first<span class="cn">-10</span>-pairs (stream-take integer-pairs <span class="cn">10</span>))
-first<span class="cn">-10</span>-pairs <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
+(<span class="kw">define</span> first-10-pairs (stream-take integer-pairs <span class="cn">10</span>))
+first-10-pairs <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
 <h3 id="ex3.66" class="anchor">
 <a class="anchor__link link" href="#ex3.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.66">Exercise 3.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1213,7 +1213,7 @@ f(<span class="cn">14</span>) <span class="fu">=</span> (<span class="cn">4</spa
 ...</code></pre>
 <p>The next row (where the first number in the pair is incremented once) always gets updated half as often as the previous row. In general,</p>
 <pre><code class="blockcode">f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span>) <span class="fu">=</span> (x,x)<span class="co">;</span>
-f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span> <span class="fu">+</span> <span class="cn">2</span>^(x<span class="cn">-1</span>) <span class="fu">+</span> (k <span class="fu">-</span> <span class="cn">1</span>)<span class="cn">2</span>^x) <span class="fu">=</span> (x,x+k), k <span class="fu">&gt;</span> <span class="cn">0.</span></code></pre>
+f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span> <span class="fu">+</span> <span class="cn">2</span>^(x-1) <span class="fu">+</span> (k <span class="fu">-</span> <span class="cn">1</span>)<span class="cn">2</span>^x) <span class="fu">=</span> (x,x+k), k <span class="fu">&gt;</span> <span class="cn">0.</span></code></pre>
 <p>We can write a function to find the index of a given pair:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (pair-&gt;index pair)
   (<span class="kw">let*</span> ((x (<span class="fu">car</span> pair))
@@ -1227,7 +1227,7 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
 (pair-&gt;index &#39;(<span class="cn">99</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> <span class="cn">950737950171172051122527404030</span>
 (pair-&gt;index &#39;(<span class="cn">100</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">100</span>) <span class="cn">2</span>)</code></pre>
 <p>We can confirm that it’s correct for small indices:</p>
-<pre><code class="blockcode">(<span class="fu">map</span> pair-&gt;index first<span class="cn">-10</span>-pairs) <span class="op">=&gt;</span> (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)
+<pre><code class="blockcode">(<span class="fu">map</span> pair-&gt;index first-10-pairs) <span class="op">=&gt;</span> (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)
 (stream-ref integer-pairs <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
 (<span class="kw">define</span> random-pair-fst (<span class="fu">+</span> <span class="cn">1</span> (random <span class="cn">5</span>)))
 (<span class="kw">define</span> random-pair (<span class="fu">list</span> random-pair-fst (<span class="fu">+</span> random-pair-fst (random <span class="cn">46</span>))))
@@ -1246,7 +1246,7 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
     (<span class="kw">cond</span> ((<span class="fu">integer?</span> x) (<span class="fu">list</span> (<span class="fu">exact</span> x) (<span class="fu">exact</span> x)))
           (<span class="kw">else</span> (iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)))))
 
-(<span class="fu">map</span> index-&gt;pair (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)) <span class="op">=&gt;</span> first<span class="cn">-10</span>-pairs
+(<span class="fu">map</span> index-&gt;pair (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)) <span class="op">=&gt;</span> first-10-pairs
 (index-&gt;pair <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
 (index-&gt;pair random-index) <span class="op">=&gt;</span> random-pair</code></pre>
 <h3 id="ex3.67" class="anchor">
@@ -1512,9 +1512,9 @@ Imports:
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (a-weight p) (<span class="fu">apply</span> <span class="fu">+</span> p))
 (<span class="kw">define</span> a-stream (weighted-pairs integers integers a-weight))
-(<span class="kw">define</span> a<span class="cn">-10</span> (stream-take a-stream <span class="cn">10</span>))
-a<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))
-(<span class="fu">map</span> a-weight a<span class="cn">-10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">7</span>)</code></pre>
+(<span class="kw">define</span> a-10 (stream-take a-stream <span class="cn">10</span>))
+a-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))
+(<span class="fu">map</span> a-weight a-10) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">7</span>)</code></pre>
 <ol start="2" type="a">
 <li>Pairs of positive integers (i, j) with i &lt;= j, where neither i nor j is divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.</li>
 </ol>
@@ -1529,9 +1529,9 @@ a<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="c
             (<span class="fu">not</span> (<span class="kw">or</span> (divisible? x <span class="cn">2</span>) (divisible? x <span class="cn">3</span>) (divisible? x <span class="cn">5</span>))))
           integers)))
     (weighted-pairs filtered filtered b-weight)))
-(<span class="kw">define</span> b<span class="cn">-10</span> (stream-take b-stream <span class="cn">10</span>))
-b<span class="cn">-10</span> <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">7</span>) (<span class="cn">1</span> <span class="cn">11</span>) (<span class="cn">1</span> <span class="cn">13</span>) (<span class="cn">1</span> <span class="cn">17</span>) (<span class="cn">1</span> <span class="cn">19</span>) (<span class="cn">1</span> <span class="cn">23</span>) (<span class="cn">1</span> <span class="cn">29</span>) (<span class="cn">1</span> <span class="cn">31</span>) (<span class="cn">7</span> <span class="cn">7</span>))
-(<span class="fu">map</span> b-weight b<span class="cn">-10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">58</span> <span class="cn">90</span> <span class="cn">106</span> <span class="cn">138</span> <span class="cn">154</span> <span class="cn">186</span> <span class="cn">234</span> <span class="cn">250</span> <span class="cn">280</span>)</code></pre>
+(<span class="kw">define</span> b-10 (stream-take b-stream <span class="cn">10</span>))
+b-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">7</span>) (<span class="cn">1</span> <span class="cn">11</span>) (<span class="cn">1</span> <span class="cn">13</span>) (<span class="cn">1</span> <span class="cn">17</span>) (<span class="cn">1</span> <span class="cn">19</span>) (<span class="cn">1</span> <span class="cn">23</span>) (<span class="cn">1</span> <span class="cn">29</span>) (<span class="cn">1</span> <span class="cn">31</span>) (<span class="cn">7</span> <span class="cn">7</span>))
+(<span class="fu">map</span> b-weight b-10) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">58</span> <span class="cn">90</span> <span class="cn">106</span> <span class="cn">138</span> <span class="cn">154</span> <span class="cn">186</span> <span class="cn">234</span> <span class="cn">250</span> <span class="cn">280</span>)</code></pre>
 <h3 id="ex3.71" class="anchor">
 <a class="anchor__link link" href="#ex3.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.71">Exercise 3.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2034,7 +2034,7 @@ Imports:
 </ul>
 </aside>
 <p>Solves y’’ - ay’ - by = 0.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (solve<span class="cn">-2</span>nd a b y0 dy0 dt)
+<pre><code class="blockcode">(<span class="kw">define</span> (solve-2nd a b y0 dy0 dt)
   (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
   (<span class="kw">define</span> dy (integral (<span class="kw">delay</span> ddy) dy0 dt))
   (<span class="kw">define</span> ddy (add-streams (scale-stream dy a)
@@ -2067,7 +2067,7 @@ Imports:
 </ul>
 </aside>
 <p>Solves y’’ = f(y’, y).</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (solve<span class="cn">-2</span>nd f y0 dy0 dt)
+<pre><code class="blockcode">(<span class="kw">define</span> (solve-2nd f y0 dy0 dt)
   (<span class="kw">define</span> y (integral (<span class="kw">delay</span> dy) y0 dt))
   (<span class="kw">define</span> dy (integral (<span class="kw">delay</span> ddy) dy0 dt))
   (<span class="kw">define</span> ddy (stream-map f dy y))

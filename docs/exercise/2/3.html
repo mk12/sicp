@@ -611,14 +611,14 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (tree-&gt;list<span class="cn">-1</span> tree)
+<pre><code class="blockcode">(<span class="kw">define</span> (tree-&gt;list-1 tree)
   (<span class="kw">if</span> (<span class="fu">null?</span> tree)
       &#39;()
-      (<span class="fu">append</span> (tree-&gt;list<span class="cn">-1</span> (left-branch tree))
+      (<span class="fu">append</span> (tree-&gt;list-1 (left-branch tree))
               (<span class="fu">cons</span> (entry tree)
-                    (tree-&gt;list<span class="cn">-1</span> (right-branch tree))))))
+                    (tree-&gt;list-1 (right-branch tree))))))
 
-(<span class="kw">define</span> (tree-&gt;list<span class="cn">-2</span> tree)
+(<span class="kw">define</span> (tree-&gt;list-2 tree)
   (<span class="kw">define</span> (copy-to-list tree result-list)
     (<span class="kw">if</span> (<span class="fu">null?</span> tree)
         result-list
@@ -635,18 +635,18 @@ Imports:
 (<span class="kw">define</span> t4 &#39;(<span class="cn">3</span> (<span class="cn">1</span> () ()) (<span class="cn">7</span> (<span class="cn">5</span> () ()) (<span class="cn">9</span> () (<span class="cn">11</span> () ())))))
 (<span class="kw">define</span> t5 &#39;(<span class="cn">5</span> (<span class="cn">3</span> (<span class="cn">1</span> () ()) ()) (<span class="cn">9</span> (<span class="cn">7</span> () ()) (<span class="cn">11</span> () ()))))
 
-(tree-&gt;list<span class="cn">-1</span> t1)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t1)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-1</span> t2)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t2)
+(tree-&gt;list-1 t1)
+<span class="op">=&gt;</span> (tree-&gt;list-2 t1)
+<span class="op">=&gt;</span> (tree-&gt;list-1 t2)
+<span class="op">=&gt;</span> (tree-&gt;list-2 t2)
 <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span>)
 
-(tree-&gt;list<span class="cn">-1</span> t3)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t3)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-1</span> t4)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t4)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-1</span> t5)
-<span class="op">=&gt;</span> (tree-&gt;list<span class="cn">-2</span> t5)
+(tree-&gt;list-1 t3)
+<span class="op">=&gt;</span> (tree-&gt;list-2 t3)
+<span class="op">=&gt;</span> (tree-&gt;list-1 t4)
+<span class="op">=&gt;</span> (tree-&gt;list-2 t4)
+<span class="op">=&gt;</span> (tree-&gt;list-1 t5)
+<span class="op">=&gt;</span> (tree-&gt;list-2 t5)
 <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">9</span> <span class="cn">11</span>)</code></pre>
 <ol type="a">
 <li><p>Yes, the two procedures produce the same result for every tree. Also, from this sample input, it seems that they always produce a sorted list, which means that different trees (balanced or otherwise) representing the same set get transformed into the same list.</p></li>
@@ -738,8 +738,8 @@ Imports:
           ((<span class="fu">&gt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
            (<span class="fu">cons</span> (<span class="fu">car</span> l2) (union-list l1 (<span class="fu">cdr</span> l2))))))
   (list-&gt;tree
-   (union-list (tree-&gt;list<span class="cn">-2</span> set1)
-               (tree-&gt;list<span class="cn">-2</span> set2))))
+   (union-list (tree-&gt;list-2 set1)
+               (tree-&gt;list-2 set2))))
 
 (<span class="kw">define</span> (intersection-set set1 set2)
   (<span class="kw">define</span> (intersection-list l1 l2)
@@ -752,8 +752,8 @@ Imports:
           ((<span class="fu">&gt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
            (intersection-list l1 (<span class="fu">cdr</span> l2)))))
   (list-&gt;tree
-   (intersection-list (tree-&gt;list<span class="cn">-2</span> set1)
-                      (tree-&gt;list<span class="cn">-2</span> set2))))
+   (intersection-list (tree-&gt;list-2 set1)
+                      (tree-&gt;list-2 set2))))
 
 (<span class="kw">define</span> t1 &#39;(<span class="cn">1</span> () ()))
 (<span class="kw">define</span> t2 &#39;(<span class="cn">2</span> () ()))
@@ -856,15 +856,15 @@ Imports:
       (<span class="fu">cadddr</span> tree)))</code></pre>
 <p>The decoding procedure</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (decode bits tree)
-  (<span class="kw">define</span> (decode<span class="cn">-1</span> bits current-branch)
+  (<span class="kw">define</span> (decode-1 bits current-branch)
     (<span class="kw">if</span> (<span class="fu">null?</span> bits)
         &#39;()
         (<span class="kw">let</span> ((next-branch (choose-branch (<span class="fu">car</span> bits) current-branch)))
           (<span class="kw">if</span> (leaf? next-branch)
               (<span class="fu">cons</span> (symbol-leaf next-branch)
-                    (decode<span class="cn">-1</span> (<span class="fu">cdr</span> bits) tree))
-              (decode<span class="cn">-1</span> (<span class="fu">cdr</span> bits) next-branch)))))
-  (decode<span class="cn">-1</span> bits tree))
+                    (decode-1 (<span class="fu">cdr</span> bits) tree))
+              (decode-1 (<span class="fu">cdr</span> bits) next-branch)))))
+  (decode-1 bits tree))
 
 (<span class="kw">define</span> (choose-branch bit branch)
   (<span class="kw">cond</span> ((<span class="fu">=</span> bit <span class="cn">0</span>) (left-branch branch))
