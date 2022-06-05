@@ -5,14 +5,19 @@
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
-- quotation issues, link to "on denoting" paper
 - fix inline code in blockquotes background
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b
-    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
+    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3*
+- don't highlight inside quoted list e.g. in '(this is a list)
+    - diff color than numbers?
+- fix dot after math wrapping
++ highlight 1/2 as number
++ quotation issues, link to "on denoting" paper
 + HTML tables (Exercise 2.60)
     + remove .odd, style="text-align:left;", etc.
+    + tables shouldn't make mobile page scroll
 + use of `=>` etc. in text/lecture (already discussed below)
     + use `→` which is converted to the `.sc` class
 + highlight decode-1 as one symbol (added Identifier regex)
