@@ -662,18 +662,17 @@ Then, we learned how to use higher-order procedures to represent general methods
 ### Simplifying expressions
 
 - The expressions we get from the `deriv` procedure are ugly.
-- Nothing is simplified, and it is hard to read.
-- There is nothing wrong with the rules. The solution is to change the representation to add a simplification step.
+- Nothing is simplified, and it's hard to read.
+- The solution is to change the representation to add a simplification step.
 
 > So the way we might solve this problem is ... change the representation ... it's one of the pieces of artillery we have in our war against complexity. [@3b.p10]
 
-- We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions (list structure).
+- We have an abstraction barrier between the rules of differentiation and the representation of algebraic expressions.
 
 ### Conclusion
 
 - Quotation stops and says, "I'm talking about this expression itself".
-- We can write languages that are not only embedded in Lisp, that are completely different, using quotation.
-- Quotation gives us tremendous power.
+- We can write languages that are not only embedded in Lisp, but that are completely different, using quotation. Quotation gives us tremendous power.
 
 # 4A: Pattern Matching and Rule-Based Substitution
 
