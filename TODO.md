@@ -2,20 +2,25 @@
 
 - test in all browsers, without JS, without CSS
 - exercises: add appendix for core.ss etc.
-- HTML tables (Exercise 2.60)
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
 - quotation issues, link to "on denoting" paper
 - fix inline code in blockquotes background
 - perfection:
-    - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3*
-    - lecture: 1a, 1b, 2a, 2b, 3a
+    - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3
+    - lecture: 1a, 1b, 2a, 2b, 3a, 3b*
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2
-- use of `=>` etc. in text/lecture (already discussed below)
++ HTML tables (Exercise 2.60)
+    + remove .odd, style="text-align:left;", etc.
++ use of `=>` etc. in text/lecture (already discussed below)
+    + use `→` which is converted to the `.sc` class
++ highlight decode-1 as one symbol (added Identifier regex)
 + use ` -- ` for em dashes in .md and .ss
 x use a lua writer instead of postprocessing html
     x doesn't seem to be a way to run syntax highlighting this way
+    x actually yes, just pandoc.write the code block itself!
+    x hard to pass options, meta, doesn't handle the guilemets in inline code somehow
 + automatically move punctuation inside quotation mark with negative space (.tuck)
 + remove deno --no-check if it's the default now (Makefile and watch.sh)
     + put DENO_FUTURE_CHECK=1 in .profile

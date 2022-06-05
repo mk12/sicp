@@ -121,52 +121,121 @@
 <li>We need three differentiation rules: constant, sum, and product.</li>
 <li>Let’s assume we already have these procedures:</li>
 </ul>
-<pre><code class="blockcode"><span class="co">;; Variables</span>
-(variable? <span class="ss">e</span>)
-(same-variable? <span class="ss">v1</span> <span class="ss">v2</span>)
-
-<span class="co">;; Sums</span>
-(sum? <span class="ss">e</span>)
-(addend <span class="ss">e</span>)
-(augend <span class="ss">e</span>)
-(make-sum <span class="ss">a1</span> <span class="ss">a2</span>)
-
-<span class="co">;; Products</span>
-(product? <span class="ss">e</span>)
-(multiplier <span class="ss">e</span>)
-(multiplicand <span class="ss">e</span>)
-(make-product <span class="ss">m1</span> <span class="ss">m2</span>)</code></pre>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(variable? e)</code></td>
+<td>Is <code>e</code> a variable?</td>
+</tr>
+<tr>
+<td><code>(same-variable? v1 v2)</code></td>
+<td>Are <code>v1</code>&hairsp;and <code>v2</code> the same variable?</td>
+</tr>
+<tr>
+<td><code>(sum? e)</code></td>
+<td>Is <code>e</code> a sum?</td>
+</tr>
+<tr>
+<td><code>(addend e)</code></td>
+<td>Addend of the sum <code>e</code></td>
+</tr>
+<tr>
+<td><code>(augend e)</code></td>
+<td>Augend of the sum <code>e</code></td>
+</tr>
+<tr>
+<td><code>(make-sum a1 a2)</code></td>
+<td>Construct the sum of <code>a1</code> and <code>a2</code></td>
+</tr>
+<tr>
+<td><code>(product? e)</code></td>
+<td>Is <code>e</code> a product?</td>
+</tr>
+<tr>
+<td><code>(multiplier e)</code></td>
+<td>Multiplier of the product <code>e</code></td>
+</tr>
+<tr>
+<td><code>(multiplicand e)</code></td>
+<td>Multiplicand of the product <code>e</code></td>
+</tr>
+<tr>
+<td><code>(make-product m1 m2)</code></td>
+<td>Construct the product of <code>m1</code> and <code>m2</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Then, we can express the differentiation rules like so:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (deriv exp var)
+  (<span class="kw">cond</span> ((<span class="fu">number?</span> exp) <span class="cn">0</span>)
+        ((variable? exp)
+         (<span class="kw">if</span> (same-variable? exp var) <span class="cn">1</span> <span class="cn">0</span>))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+          (make-product (multiplier exp)
+                        (deriv (multiplicand exp) var))
+          (make-product (deriv (multiplier exp) var)
+                        (multiplicand exp))))
+        (<span class="kw">else</span>
+         (<span class="fu">error</span> <span class="cn">&quot;unknown expression type&quot;</span> exp))))</code></pre>
 <h3 id="2.3.2.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2.2" aria-hidden="true">#</a> Representing algebraic expressions
 </h3>
 <ul>
 <li>There are many ways we could represent algebraic expressions.</li>
 <li>The most straightforward way is parenthesized Polish notation: Lisp syntax.</li>
-<li>We can simplify the answers just like we did in the rational number example: by changing the constructors.</li>
-<li>Simplifying the way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
+<li>We can simplify answers in the constructor just like in the <a href="1.html#2.1.1.2">rational number example</a>.</li>
+<li>Simplifying the same way a human would is hard, partly because the most “simplified” form is sometimes subjective.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.56">2.56</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.57">2.57</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.58">2.58</a></li></ul></aside>
 <h2 id="2.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>There are a number of possible ways we could represent sets. A set is a collection of distinct objects. Our sets need to work with the following operations:</p>
-<!-- TODO sentences -->
-<ul>
-<li><code>union-set</code>: new set containing all items of given sets</li>
-<li><code>intersection-set</code>: new set containing only the items that all given sets share</li>
-<li><code>element-of-set?</code>: predicate for an item’s presence in a set</li>
-<li><code>adjoin-set</code>: new set containing one new item</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(element-of-set? x s)</code></td>
+<td>Is <code>x</code> a member of the set <code>s</code>?</td>
+</tr>
+<tr>
+<td><code>(adjoin-set x s)</code></td>
+<td>Set containing <code>x</code> and the elements of set <code>s</code></td>
+</tr>
+<tr>
+<td><code>(union-set s t)</code></td>
+<td>Set of elements that occur in either <code>s</code> or <code>t</code></td>
+</tr>
+<tr>
+<td><code>(intersection-set s t)</code></td>
+<td>Set of elements that occur in both <code>s</code> and <code>t</code></td>
+</tr>
+</tbody>
+</table>
 <h3 id="2.3.3.1" class="anchor">
 <a class="anchor__link link" href="#2.3.3.1" aria-hidden="true">#</a> Sets as unordered lists
 </h3>
 <ul>
 <li>One method is to just use lists. Each time we add a new element, we have to check to make sure it isn’t already in the set.</li>
-<li>This isn’t very efficient.</li>
-<li>The time complexity of <code>element-of-set?</code> (and therefore for <code>adjoin-set</code>) is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>.</li>
-<li>For union and intersection, it’s <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>.</li>
-<li>If we don’t eliminate duplicates, most operations are faster.</li>
-<li>On the other hand, the sets grow in size rapidly, which may cause an overall decrease in performance.</li>
+<li>This isn’t very efficient. <code>element-of-set?</code> and <code>adjoin-set</code> are <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>, while <code>union-set</code> and <code>intersection-set</code> are <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>.</li>
+<li>We can make <code>adjoin-set</code> <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> if we allow duplicates, but then the list can grow rapidly, which may cause an overall decrease in performance.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.59">2.59</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.60">2.60</a></li></ul></aside>
 <h3 id="2.3.3.2" class="anchor">
@@ -174,25 +243,20 @@
 </h3>
 <ul>
 <li>A more efficient representation is a sorted list.</li>
-<li>We will only consider sets of numbers to keep things simple.</li>
-<li>Now, scanning the entire list in <code>element-of-set?</code> is a worst-case scenario. Most of the time we won’t have to.</li>
-<li>On average we should expect to scan about half of the set.</li>
-<li>This is still <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>; however, intersection gets much faster. Instead of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>, it is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>.</li>
+<li>To keep things simple, we will only consider sets of numbers.</li>
+<li>Now, scanning the entire list in <code>element-of-set?</code> is a worst-case scenario. On average we should expect to scan half of the list.</li>
+<li>This is still <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>, but now we can make <code>union-set</code> and <code>intersection-set</code> <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> too.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.61">2.61</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.62">2.62</a></li></ul></aside>
 <h3 id="2.3.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3.3" aria-hidden="true">#</a> Sets as binary trees
 </h3>
 <ul>
-<li>An even more efficient representation: binary trees.</li>
-<li>Each node contains an element of the set.</li>
-<li>The left branch contains smaller numbers, and the right branch contains larger numbers.</li>
-<li>The same set can be represented by a tree in many ways.</li>
-<li>If the tree is balanced, each subtree is about half the size of the original tree.</li>
-<li>This allows us to do <code>element-of-set?</code> in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\log(n))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span> time.</li>
-<li>We will use the following list structure to represent trees: each node is the list <code>(number left-subtree right-subtree)</code>.</li>
-<li>Efficiency hinges on the tree being balanced.</li>
-<li>We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red-black trees).</li>
+<li>An even more efficient representation is a binary tree where left branches contain smaller numbers and right branches contain larger numbers.</li>
+<li>The same set can be represented by such a tree in many ways.</li>
+<li>If the tree is <em>balanced</em>, each subtree is about half the size of the original tree. This allows us to implement <code>element-of-set?</code> in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\log(n))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span> time.</li>
+<li>We’ll represent each node by <code>(<span class="fu">list</span> number left-subtree right-subtree)</code>.</li>
+<li>Efficiency hinges on the tree being balanced. We can write a procedure to balance trees, or we could use a difference data structure (B-trees or red–black trees).</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.63">2.63</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.64">2.64</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.65">2.65</a></li></ul></aside>
 <h3 id="2.3.3.4" class="anchor">
@@ -200,49 +264,71 @@
 </h3>
 <ul>
 <li>The techniques discussed for sets show up again and again in information retrieval.</li>
-<li>In a data-management system, each record is identified by a key.</li>
-<li>The key must be unique.</li>
-<li>The simplest, least efficient method is to use a set of records represented by an unordered list. This provides <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> access.</li>
-<li>For “random access,<span class="tuck">”</span> meaning <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> access time complexity, trees are usually used.</li>
-<li>Data abstraction is important here—you could begin by using unordered lists, and then change the constructor and selectors to use a tree representation.</li>
+<li>In a data management system, each record is identified by a unique key.</li>
+<li>The simplest, least efficient method is to use an unordered list with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> access.</li>
+<li>For fast “random access,<span class="tuck">”</span> trees are usually used.</li>
+<li>Using data abstraction, we can start with unordered lists and then later change the constructors and selectors to use a tree representation.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.66">2.66</a></li></ul></aside>
 <h2 id="2.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>We can represent data as sequences of ones and zeros (bits).</li>
-<li>Codes like ASCII are fixed-length. Each symbol is represented by the same number of bits.</li>
-<li>On the other hand, Morse code is variable-length. Since <em>e</em> is the most common letter, it is represented by a single dot.</li>
-<li>The issue with variable-length is that you must have a way of knowing when you’ve reached the end of a symbol.</li>
-<li>Morse code uses a temporal pause. Prefix codes, like Huffman encoding, ensure that no code for a symbol is a prefix of the code for another symbol. This eliminates any ambiguity.</li>
-<li>A Huffman code can be represented as a binary tree with a symbol and its weight (relative frequency) at each leaf.</li>
-<li>Each non-leaf node has a weight (sum of all below) and the set of all the symbols below it. The root node has the set of all the symbols in the tree.</li>
-<li>Each left branch is a zero, and each right branch is a one.</li>
+<li>A <em>code</em> is a system for converting information (such as text) into another form.</li>
+<li>ASCII is a <em>fixed-length</em> code: each symbol uses the same number of bits.</li>
+<li>Morse code is <em>variable-length</em>: since “e” is the most common letter, it uses a single dot.</li>
+<li>The problem with variable-length codes is that you must have a way of knowing when you’ve reached the end of a symbol. Morse code uses a temporal pause.</li>
+<li>Prefix codes, like Huffman encoding, ensure that no code for a symbol is a prefix of the code for another symbol. This eliminates any ambiguity.</li>
+<li>A Huffman code can be represented as a binary tree where each leaf contains a symbol and its weight (relative frequency), and each internal node stores the set of symbols and the sum of weights below it. Zero means “go left,<span class="tuck">”</span> one means “go right.<span class="tuck">”</span></li>
 </ul>
 <h3 id="2.3.4.1" class="anchor">
 <a class="anchor__link link" href="#2.3.4.1" aria-hidden="true">#</a> Generating Huffman trees
 </h3>
-<ul>
-<li>Huffman gave an algorithm for constructing the best code for a given set of symbols and their relative frequencies.</li>
-<li>Begin with all the nodes as leaves, then form a node branching off to the two least frequent symbols.</li>
-<li>Repeat until there is only one node left, the root node.</li>
-</ul>
+<p>Huffman gave an algorithm for constructing the best code for a given set of symbols and their relative frequencies:</p>
+<ol type="1">
+<li>Begin with all symbols and their weights as isolated leaves.</li>
+<li>Form an internal node branching off to the two least frequent symbols.</li>
+<li>Repeat until all nodes are connected.</li>
+</ol>
 <h3 id="2.3.4.2" class="anchor">
 <a class="anchor__link link" href="#2.3.4.2" aria-hidden="true">#</a> Representing Huffman trees
 </h3>
 <ul>
-<li>Leaves are represented by the list beginning with the symbol <code>leaf</code> and with two more elements: the symbol and the weight.</li>
-<li>Trees are represented by the list <code>(left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
+<li>Leaves are represented by <code>(<span class="fu">list</span> <span class="cn">&#39;leaf</span> symbol weight)</code>.</li>
+<li>Internal nodes are represented by <code>(<span class="fu">list</span> left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
 </ul>
 <h3 id="2.3.4.3" class="anchor">
 <a class="anchor__link link" href="#2.3.4.3" aria-hidden="true">#</a> The decoding procedure
 </h3>
-<!-- DELETE -->
+<p>The following procedure decodes a list of bits using a Huffman tree:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (decode bits tree)
+  (<span class="kw">define</span> (decode-1 bits current-branch)
+    (<span class="kw">if</span> (<span class="fu">null?</span> bits)
+        &#39;()
+        (<span class="kw">let</span> ((next-branch
+               (choose-branch (<span class="fu">car</span> bits) current-branch)))
+          (<span class="kw">if</span> (leaf? next-branch)
+              (<span class="fu">cons</span> (symbol-leaf next-branch)
+                    (decode-1 (<span class="fu">cdr</span> bits) tree))
+              (decode-1 (<span class="fu">cdr</span> bits) next-branch)))))
+  (decode-1 bits tree))
+
+(<span class="kw">define</span> (choose-branch bit branch)
+  (<span class="kw">cond</span> ((<span class="fu">=</span> bit <span class="cn">0</span>) (left-branch branch))
+        ((<span class="fu">=</span> bit <span class="cn">1</span>) (right-branch branch))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;bad bit&quot;</span> bit))))</code></pre>
 <h3 id="2.3.4.4" class="anchor">
 <a class="anchor__link link" href="#2.3.4.4" aria-hidden="true">#</a> Sets of weighted elements
 </h3>
-<!-- DELETE -->
+<ul>
+<li>Since the <a href="#2.3.4.1">tree-generating algorithm</a> requires repeatedly finding the smallest item in a set, we should represent a set of leaves and trees as a list ordered by weight.</li>
+<li>The implementation of <code>adjoin-set</code> is similar to <a href="../../exercise/2/3.html#ex2.61">Exercise&nbsp;2.61</a>, except that we compare items by weight, and the element being added is never already in the set:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-set x set)
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (<span class="fu">list</span> x))
+        ((<span class="fu">&lt;</span> (weight x) (weight (<span class="fu">car</span> set))) (<span class="fu">cons</span> x set))
+        (<span class="kw">else</span> (<span class="fu">cons</span> (<span class="fu">car</span> set)
+                    (adjoin-set x (<span class="fu">cdr</span> set))))))</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.67">2.67</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.68">2.68</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.69">2.69</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.70">2.70</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.71">2.71</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.72">2.72</a></li></ul></aside>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
