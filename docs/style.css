@@ -1,6 +1,6 @@
 /* Reset */
 
-html, body, aside, blockquote, figure, pre, p, ul, ol, li {
+html, body, aside, blockquote, figure, pre, p, ul, ol, li, table, thead, tbody, tr, td, th {
     padding: 0;
     margin: 0;
 }
@@ -45,7 +45,7 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
-p, ul, ol, blockquote, pre, figure { margin-top: 1em; }
+p, ul, ol, blockquote, pre, figure, table { margin-top: 1em; }
 p:first-child, li ul, li ol { margin-top: 0; }
 
 ul { margin-left: 1.05em; }
@@ -148,6 +148,42 @@ h1 code, h2 code, h3 code, .toc__item code {
     background: inherit;
     font-size: inherit;
     font-weight: inherit;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border-top: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+th {
+    font-weight: normal;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+td, th {
+    padding: 0 10px 2px;
+    vertical-align: baseline;
+}
+
+tr:first-child td, tr:first-child th {
+    padding-top: 4px;
+}
+
+tr:last-child td, tr:last-child th {
+    padding-bottom: 4px;
+}
+
+td:first-child, th:first-child {
+    padding-left: 0;
+}
+
+td:last-child, th:last-child {
+    padding-right: 0;
 }
 
 .katex {

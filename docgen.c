@@ -354,10 +354,16 @@ static void postprocess_html(FILE *in, FILE *out) {
             const char *spaced_en_dash = " – ";
             const char *quote_period = "”.";
             const char *quote_comma = "”,";
+            const char *tr_odd = "<tr class=\"odd\">";
+            const char *tr_even = "<tr class=\"even\">";
+            const char *tr_header = "<tr class=\"header\">";
+            const char *th_left = "<th style=\"text-align: left;\">";
+            const char *td_left = "<td style=\"text-align: left;\">";
             const char *found;
-            while (
-                (n = multi_strstr(p, &found, 5, open_code, close_em,
-                                  spaced_en_dash, quote_period, quote_comma))) {
+            while ((n = multi_strstr(p, &found, 10, open_code, close_em,
+                                     spaced_en_dash, quote_period, quote_comma,
+                                     tr_odd, tr_even, tr_header, th_left,
+                                     td_left))) {
                 fwrite(p, n - p, 1, out);
                 p = n + strlen(found);
                 if (found == open_code) {
@@ -399,6 +405,13 @@ static void postprocess_html(FILE *in, FILE *out) {
                     fputs(".<span class=\"tuck\">”</span>", out);
                 } else if (found == quote_comma) {
                     fputs(",<span class=\"tuck\">”</span>", out);
+                } else if (found == tr_odd || found == tr_even
+                           || found == tr_header) {
+                    fputs("<tr>", out);
+                } else if (found == th_left) {
+                    fputs("<th>", out);
+                } else if (found == td_left) {
+                    fputs("<td>", out);
                 } else {
                     assert(false);
                 }

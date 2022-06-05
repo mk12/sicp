@@ -537,16 +537,24 @@ function format_citation(el)
 end
 
 return {
+    -- First, render math and diagrams with the render.ts server.
     {Math = render_math},
     {CodeBlock = render_diagrams},
+    -- Close the server connection when we're done.
     {Pandoc = close_socket},
+    -- Read metadata needed for rendering special divs.
     {Meta = read_meta},
+    -- Render special divs (exercises and highlights).
     {Div = div},
+    -- Write metadata. This includes some info discovered while rendering divs.
     {Meta = write_meta},
+    -- Render links, code blocks, and inline code.
     {Link = internal_link},
     {CodeBlock = code_block},
     {Para = walk_inline_code},
     {BulletList = walk_inline_code},
     {OrderedList = walk_inline_code},
-    {Cite = format_citation}
+    {Table = walk_inline_code},
+    -- Render citations of the SICP text or lectures.
+    {Cite = format_citation},
 }

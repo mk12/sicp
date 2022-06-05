@@ -156,8 +156,8 @@
 <ul>
 <li>The <a href="#1.1.5">example above</a> used <em>applicative order</em>&hairsp;: evaluate all the subexpressions first, then apply the procedure to the arguments.</li>
 <li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
+<li>An example of normal-order procedure application:</li>
 </ul>
-<p>An example of normal-order procedure application:</p>
 <pre><code class="blockcode">(f <span class="cn">5</span>)
 (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
 (<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
