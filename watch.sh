@@ -45,7 +45,10 @@ choose_output() {
             inputs+=("src/sicp/chapter-$n.ss")
             ;;
     esac
-    inputs+=("docs/style.css")
+    inputs+=(
+        "docgen.c"
+        "docs/style.css"
+    )
     while read -r file; do
         inputs+=("$file")
     done < <(find notes/pandoc -type f -not -name render.ts)
