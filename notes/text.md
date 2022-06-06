@@ -2574,7 +2574,7 @@ The following procedure decodes a list of bits using a Huffman tree:
 4.22-24
 :::
 
-## 4.2: Variations on a Scheme  --  Lazy Evaluation
+## 4.2: Variations on a Scheme -- Lazy Evaluation
 
 - We can experiment with different language design just by modifying the evaluator.
 - This is often how new languages are invented. It's easy to iterate on a high level evaluator, and it also allows stealing features from the underlying language.
@@ -2706,7 +2706,7 @@ The following procedure decodes a list of bits using a Huffman tree:
 4.32-34
 :::
 
-## 4.3: Variations on a Scheme  --  Nondeterministic Computing
+## 4.3: Variations on a Scheme -- Nondeterministic Computing
 
 - _Nondeterministic computing_
 
