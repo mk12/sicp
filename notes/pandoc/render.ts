@@ -35,7 +35,7 @@ The protocol is as follows:
 * Responses contain HTML, or "error:" followed by an error message.
 * KATEX request: "katex:", (then optionally "display:"), and then TeX input.
 * SVGBOB request: "svgbob:", the diagram number, ":", and then ASCII art text.
-`.trim()
+`.trim(),
   );
 }
 
@@ -181,7 +181,7 @@ function renderKatex(tex: string, displayMode: boolean): string {
   // https://www.w3.org/TR/MathML3/chapter6.html#interf.html
   return html.replace(
     '<math xmlns="http://www.w3.org/1998/Math/MathML">',
-    "<math>"
+    "<math>",
   );
 }
 
@@ -262,8 +262,7 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
             return `marker-end="url(#${markerId(number, match[1])})"`;
           }
         })
-        .join(" ")
-    )
+        .join(" "))
     // Must do this after replacing all the classes.
     .replace(/^<svg /, `<svg class="diagram" `)
     .replace(/<defs>[\s\S]*<\/defs>/, () => {
@@ -362,7 +361,7 @@ async function maybeSignalFifo(fifo?: string): Promise<void> {
         `
 ${ERROR} ${fifo} does not exist!
 Try running 'mkfifo ${fifo}' first before starting the server.
-`.trim()
+`.trim(),
       );
       throw new ExitError(1);
     }
@@ -386,7 +385,7 @@ ${ERROR} ${socket} already exists!
 There must be another server running. To terminate it, run 'rm ${socket}'.
 To find it, run 'pgrep -f ${socket}'. To leave it running and start a second
 server, choose a different socket filename.
-`.trim()
+`.trim(),
     );
     throw new ExitError(1);
   }
