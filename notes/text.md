@@ -287,7 +287,7 @@ Like Fibonacci, the easy tree-recursive implementation involves a lot of redunda
 
 ### 1.2.4: Exponentiation
 
-One way to calculate $b$ to the [$n$th]{.nowrap} power is via the following recursive definition:
+One way to calculate $b$ to the $n$th power is via the following recursive definition:
 
 $$b^0 = 1, \qquad b^n = b * b^{n-1}.$$
 
@@ -295,7 +295,7 @@ A faster method is to use successive squaring:
 
 $$
 b^n = \begin{cases}
-\left(b^{n/2}\right)^2 & \text{if $n$ is even,} \\
+\left(b^{n/2}\right)^2, & \text{if $n$ is even,} \\
 b * b^{n-1}, & \text{if $n$ is odd.}
 \end{cases}
 $$
@@ -321,7 +321,7 @@ $$
 
 - This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.
 - This is called _Euclid's Algorithm_.
-- Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair $(a,b)$, then $\min\{a,b\} ≥ \text{Fib}(k)$.
+- Lamé's Theorem: If Euclid's Algorithm requires $k$ steps to compute the GCD of some pair $(a,b)$, then $\min\{a,b\} ≥ \Fib(k)$.
 
 ::: exercises
 1.20
@@ -338,7 +338,7 @@ $$
 
 The Fermat test is a $Θ(log(n))$ primality test based on Fermat's Little Theorem:
 
-> If $n$ is a prime number and $a$ is any positive integer less than $n$, then $a$ raised to the [$n$th]{.nowrap} power is congruent to $a$ modulo $n$. [@1.2.6]
+> If $n$ is a prime number and $a$ is any positive integer less than $n$, then $a$ raised to the $n$th power is congruent to $a$ modulo $n$. [@1.2.6]
 
 The test works like this:
 

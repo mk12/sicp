@@ -162,7 +162,12 @@ function renderKatex(tex: string, displayMode: boolean): string {
     html = katex.renderToString(tex, {
       displayMode,
       throwOnError: true,
-      strict: "error",
+      // Trust htmlExtension, in particular \htmlClass{...}{...}.
+      trust: true,
+      // Since htmlExtension is incompatible with strict mode, we have to
+      // explicitly ingore errors for it.
+      strict: (errorCode: string) =>
+        errorCode == "htmlExtension" ? "ignore" : "error",
       macros: {
         "\\abs": "\\left\\lvert #1\\right\\rvert",
         "\\powerset": "\\mathcal{P}(#1)",

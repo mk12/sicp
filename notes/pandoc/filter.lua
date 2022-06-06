@@ -47,6 +47,33 @@ function close_socket()
     end
 end
 
+-- Moves punctuation after math into the math element to avoid wrapping.
+function move_punctuation_in_math(inlines)
+    -- Iterate in reverse to avoid problems with shifting indices.
+    for i = #inlines-1, 1, -1 do
+        local x, y = inlines[i], inlines[i+1]
+        if x.t == "Math" and y.t == "Str" then
+            -- If the math is part of a hyphenated word, leave it. It's fine to
+            -- break aronud a hyphen.
+            if y.text:sub(1, 1) ~= "-" then
+                if not (
+                    y.text == "." or y.text == "," or y.text == ":"
+                    or y.text == ")" or y.text == "th"
+                ) then
+                    io.stderr:write(
+                        PANDOC_SCRIPT_FILE .. ": unexpected text after math: $"
+                        .. x.text .. "$" .. y.text .. "\n"
+                    )
+                    assert(false)
+                end
+                x.text = x.text .. "\\htmlClass{math-punctuation}{" .. y.text .. "}"
+                inlines:remove(i+1)
+            end
+        end
+    end
+    return inlines
+end
+
 -- Renders math with KaTeX.
 function render_math(el)
     vars.math = true
@@ -540,6 +567,8 @@ end
 -- change in some way but retain Pandoc data structures. This makes it easier to
 -- tell why filters have to be run in a particular order.
 return {
+    -- Before rendering math, handle punctuation after it.
+    {Inlines = move_punctuation_in_math},
     -- Render math and diagrams with the render.ts server.
     {Math = render_math},
     {CodeBlock = render_diagrams},

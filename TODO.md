@@ -12,7 +12,7 @@
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3*
 - don't highlight inside quoted list e.g. in '(this is a list)
     - diff color than numbers?
-- fix dot after math wrapping
++ fix dot after math wrapping
 + highlight 1/2 as number
 + quotation issues, link to "on denoting" paper
 + HTML tables (Exercise 2.60)
