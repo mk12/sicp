@@ -66,7 +66,7 @@ function move_punctuation_in_math(inlines)
                     )
                     assert(false)
                 end
-                x.text = x.text .. "\\htmlClass{math-punctuation}{" .. y.text .. "}"
+                x.text = x.text .. "\\htmlClass{math-punctuation}{\\text{" .. y.text .. "}}"
                 inlines:remove(i+1)
             end
         end
