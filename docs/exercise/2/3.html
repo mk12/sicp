@@ -65,13 +65,14 @@
 </nav>
 <main id="main">
 <h1>
-<span class="number">2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html">Symbolic Data<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<span class="number">2.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html">Symbolic Data<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="2.3.1" class="anchor">
-<a class="anchor__link link" href="#2.3.1" aria-hidden="true">#</a> <span class="number">2.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.1">Quotation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.3.1" aria-hidden="true">#</a> <span class="number">2.3.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.1">Quotation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> b <span class="cn">2</span>)
+
 (<span class="fu">list</span> a b) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)
 (<span class="fu">list</span> <span class="cn">&#39;a</span> <span class="cn">&#39;b</span>) <span class="op">=&gt;</span> &#39;(a b)
 (<span class="fu">list</span> <span class="cn">&#39;a</span> b) <span class="op">=&gt;</span> &#39;(a <span class="cn">2</span>)
@@ -87,7 +88,7 @@
 (<span class="fu">memq</span> <span class="cn">&#39;apple</span> &#39;(pear banana prune)) <span class="op">=&gt;</span> <span class="cn">#f</span>
 (<span class="fu">memq</span> <span class="cn">&#39;apple</span> &#39;(x (apple sauce) y apple pear)) <span class="op">=&gt;</span> &#39;(apple pear)</code></pre>
 <h3 id="ex2.53" class="anchor">
-<a class="anchor__link link" href="#ex2.53" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.53">Exercise 2.53<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.53" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.53">Exercise 2.53<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -112,7 +113,7 @@ Imports:
 (<span class="fu">memq</span> <span class="cn">&#39;red</span> &#39;((red shoes) (blue socks))) <span class="op">=&gt;</span> <span class="cn">#f</span>
 (<span class="fu">memq</span> <span class="cn">&#39;red</span> &#39;(red shoes blue socks)) <span class="op">=&gt;</span> &#39;(red shoes blue socks)</code></pre>
 <h3 id="ex2.54" class="anchor">
-<a class="anchor__link link" href="#ex2.54" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.54">Exercise 2.54<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.54" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.54">Exercise 2.54<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">equal?</span> list1 list2)
   (<span class="kw">let</span> ((null1 (<span class="fu">null?</span> list1))
@@ -125,11 +126,11 @@ Imports:
 (<span class="fu">equal?</span> &#39;(this is a <span class="fu">list</span>) &#39;(this is a <span class="fu">list</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (<span class="fu">equal?</span> &#39;(this is a <span class="fu">list</span>) &#39;(this (is a) <span class="fu">list</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex2.55" class="anchor">
-<a class="anchor__link link" href="#ex2.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p><code>''abracadabra</code> is a shorthand for <code>(<span class="kw">quote</span> (<span class="kw">quote</span> abracadabra))</code>. This is the same as <code>&#39;(<span class="kw">quote</span> abracadabra)</code>, and it evaluates to a list with two symbols: <code>(<span class="kw">quote</span> abracadabra)</code>. Taking the car of this gives you the first item, which is the symbol <code>quote</code>. This is what the interpreter prints.</p>
 <h2 id="2.3.2" class="anchor">
-<a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
@@ -191,7 +192,7 @@ Imports:
 (deriv &#39;(<span class="fu">*</span> x y) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">&#39;y</span>
 (deriv &#39;(<span class="fu">*</span> (<span class="fu">*</span> x y) (<span class="fu">+</span> x <span class="cn">3</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> x y) (<span class="fu">*</span> y (<span class="fu">+</span> x <span class="cn">3</span>)))</code></pre>
 <h3 id="ex2.56" class="anchor">
-<a class="anchor__link link" href="#ex2.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.56">Exercise 2.56<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.56">Exercise 2.56<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -270,7 +271,7 @@ Imports:
 
 (deriv &#39;(<span class="fu">*</span> <span class="cn">3</span> (** x <span class="cn">5</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">5</span> (** x <span class="cn">4</span>)))</code></pre>
 <h3 id="ex2.57" class="anchor">
-<a class="anchor__link link" href="#ex2.57" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.57">Exercise 2.57<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.57" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.57">Exercise 2.57<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -321,7 +322,7 @@ Imports:
 
 (deriv &#39;(<span class="fu">*</span> x y (<span class="fu">+</span> x <span class="cn">3</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> &#39;(<span class="fu">+</span> (<span class="fu">*</span> x y) (<span class="fu">*</span> y (<span class="fu">+</span> x <span class="cn">3</span>)))</code></pre>
 <h3 id="ex2.58" class="anchor">
-<a class="anchor__link link" href="#ex2.58" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.58">Exercise 2.58<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.58" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.58">Exercise 2.58<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -403,7 +404,7 @@ Imports:
 
 (deriv &#39;(x <span class="fu">+</span> <span class="cn">3</span> <span class="fu">*</span> (x <span class="fu">+</span> y <span class="fu">+</span> <span class="cn">2</span>)) <span class="cn">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <h2 id="2.3.3" class="anchor">
-<a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="2.3.3.1" class="anchor">
 <a class="anchor__link link" href="#2.3.3.1" aria-hidden="true">#</a> <span class="number">2.3.3.1</span> Sets as unordered lists
@@ -439,7 +440,7 @@ Imports:
 (intersection-set &#39;(<span class="cn">2</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span>)
 (intersection-set &#39;(<span class="cn">2</span> <span class="cn">1</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">1</span>)</code></pre>
 <h3 id="ex2.59" class="anchor">
-<a class="anchor__link link" href="#ex2.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.59">Exercise 2.59<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.59">Exercise 2.59<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -471,7 +472,7 @@ Imports:
 (union-set &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) &#39;()) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)
 (union-set &#39;(<span class="cn">1</span> <span class="cn">2</span>) &#39;(<span class="cn">2</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)</code></pre>
 <h3 id="ex2.60" class="anchor">
-<a class="anchor__link link" href="#ex2.60" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.60">Exercise 2.60<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.60" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.60">Exercise 2.60<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>If we allow duplicates, we only need to change <code>adjoin-set</code> and <code>union-set</code>. <code>element-of-set?</code> and <code>intersection-set</code> stay the same.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> adjoin-set <span class="fu">cons</span>)
@@ -524,7 +525,7 @@ Imports:
 (intersection-set &#39;(<span class="cn">2</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span>)
 (intersection-set &#39;(<span class="cn">1</span> <span class="cn">2</span>) &#39;(<span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)</code></pre>
 <h3 id="ex2.61" class="anchor">
-<a class="anchor__link link" href="#ex2.61" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.61">Exercise 2.61<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.61" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.61">Exercise 2.61<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (adjoin-set x set)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (<span class="fu">list</span> x))
@@ -537,7 +538,7 @@ Imports:
 (adjoin-set <span class="cn">2</span> &#39;(<span class="cn">1</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span>)
 (adjoin-set <span class="cn">2</span> &#39;(<span class="cn">1</span> <span class="cn">3</span>)) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)</code></pre>
 <h3 id="ex2.62" class="anchor">
-<a class="anchor__link link" href="#ex2.62" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.62">Exercise 2.62<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.62" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.62">Exercise 2.62<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> set1) set2)
@@ -588,7 +589,7 @@ Imports:
 (element-of-set? <span class="cn">1</span> &#39;(<span class="cn">1</span> () ())) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (element-of-set? <span class="cn">1</span> &#39;(<span class="cn">2</span> (<span class="cn">1</span> () ()) (<span class="cn">3</span> () ()))) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h3 id="ex2.63" class="anchor">
-<a class="anchor__link link" href="#ex2.63" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.63">Exercise 2.63<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.63" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.63">Exercise 2.63<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -653,7 +654,7 @@ Imports:
 <li><p>The second procedure performs one cons operation for each node of the tree, so it has order of growth O(n). The first procedure uses <code>append</code>, which is O(n). In the worst case, we would have n <code>append</code> steps for each of the n nodes, meaning O(n^2). However, assuming the tree is balanced, the number of <code>append</code> steps is cut in half on each recursive application. We have that for each of the n steps, and so the order of growth is O(n*log(n)).</p></li>
 </ol>
 <h3 id="ex2.64" class="anchor">
-<a class="anchor__link link" href="#ex2.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.64">Exercise 2.64<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.64">Exercise 2.64<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -701,7 +702,7 @@ Imports:
 <li>The procedure <code>list-&gt;tree</code> only needs to visit each element in the list once, and it applies cons for each one, so it has O(n) time complexity. Just because it is tree-recursive does not imply O(n^2) or O(log(n)) or any other specific order of growth.</li>
 </ol>
 <h3 id="ex2.65" class="anchor">
-<a class="anchor__link link" href="#ex2.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.65">Exercise 2.65<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.65">Exercise 2.65<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -786,7 +787,7 @@ Imports:
 
 (lookup <span class="cn">&#39;c</span> &#39;((a flour) (b water) (c salt))) <span class="op">=&gt;</span> &#39;(c salt)</code></pre>
 <h3 id="ex2.66" class="anchor">
-<a class="anchor__link link" href="#ex2.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.66">Exercise 2.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.66">Exercise 2.66<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -830,7 +831,7 @@ Imports:
 
 (lookup <span class="cn">3</span> &#39;((<span class="cn">2</span> water) ((<span class="cn">1</span> flour) () ()) ((<span class="cn">3</span> salt) () ()))) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> salt)</code></pre>
 <h2 id="2.3.4" class="anchor">
-<a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <p>Representing Huffman trees</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-leaf symbol weight) (<span class="fu">list</span> <span class="cn">&#39;leaf</span> symbol weight))
@@ -885,7 +886,7 @@ Imports:
         (adjoin-set (make-leaf (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))
                     (make-leaf-set (<span class="fu">cdr</span> pairs))))))</code></pre>
 <h3 id="ex2.67" class="anchor">
-<a class="anchor__link link" href="#ex2.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.67">Exercise 2.67<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.67">Exercise 2.67<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -918,7 +919,7 @@ Imports:
 (decode sample-message sample-tree) <span class="op">=&gt;</span> &#39;(A D A B B C A)
 (decode &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span>) sample-tree) <span class="er">=!&gt;</span> <span class="cn">&quot;bit should be 0 or 1: 2&quot;</span></code></pre>
 <h3 id="ex2.68" class="anchor">
-<a class="anchor__link link" href="#ex2.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.68">Exercise 2.68<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.68">Exercise 2.68<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -977,7 +978,7 @@ Imports:
 (encode &#39;(A D A B B C A) sample-tree) <span class="op">=&gt;</span> sample-message
 (encode &#39;(Z) sample-tree) <span class="er">=!&gt;</span> <span class="cn">&quot;symbol not in tree: Z&quot;</span></code></pre>
 <h3 id="ex2.69" class="anchor">
-<a class="anchor__link link" href="#ex2.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.69">Exercise 2.69<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.69">Exercise 2.69<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1025,7 +1026,7 @@ Imports:
 (encode-symbol <span class="cn">&#39;C</span> abcd-tree) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span>)
 (encode-symbol <span class="cn">&#39;D</span> abcd-tree) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)</code></pre>
 <h3 id="ex2.70" class="anchor">
-<a class="anchor__link link" href="#ex2.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.70">Exercise 2.70<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.70">Exercise 2.70<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1068,7 +1069,7 @@ encoded-song
      <span class="cn">1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)</code></pre>
 <p>The encoding requires 87 bits. There are eight symbols, so a fixed-length code would require log(8)/log(2) = 3 bits per symbol. The song has a total of 36 symbols, so the fixed-length coded message would need at least 108 bits. The variable-length encoding saves about 19% storage.</p>
 <h3 id="ex2.71" class="anchor">
-<a class="anchor__link link" href="#ex2.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.71">Exercise 2.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.71">Exercise 2.71<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1126,7 +1127,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> tree (generate-huffman-tree (alphabet-frequencies <span class="cn">1</span>)))
 (encode-symbol <span class="cn">1</span> tree) <span class="op">=&gt;</span> &#39;()</code></pre>
 <h3 id="ex2.72" class="anchor">
-<a class="anchor__link link" href="#ex2.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.72">Exercise 2.72<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.72">Exercise 2.72<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>The number of steps required to encode the most frequent symbol in the alphabet of n symbols with <code>encode-symbol</code> grows as O(n). The procedure only looks down one branch, and so it must apply the procedure <code>element-of-set?</code> once. This procedure has linear time complexity with respect to the number of elements in the set, since it is represented as an unordered list. For the least frequent symbol, the number of steps grows as O(n^2). At each of n nodes through the depth of the tree, we have at most n comparisons when checking if the symbol is in the set. (If the tree were balanced, it would be Θ(n*log(n)), but we didn’t talk about that at all for Huffman trees.)</p>
 </main>

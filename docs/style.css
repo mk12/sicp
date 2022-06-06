@@ -200,6 +200,12 @@ tr:last-child td {
     margin: -15px 0;
 }
 
+/* To avoid wrapping punctuation after inline math, we move it into the math but
+style it to look the same as body text. */
+.math-punctuation {
+    font: 20px Helvetica, Arial, sans-serif;
+}
+
 .diagram {
     display: block;
     margin: 0 auto;

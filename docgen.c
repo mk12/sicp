@@ -889,10 +889,9 @@ static void render_heading(FILE *out, int level, struct Span id,
         va_end(args);
         fprintf(
             out,
-            // &#65279; is the "zero width no-break space" entity. We put this
-            // at the start of the span to prevent the external icon from
-            // wrapping onto the next line by itself.
-            "<a class=\"link\" href=\"%s\">%.*s<span class=\"nowrap\">&#65279;"
+            // Both the .nowrap class and the &NoBreak; entity (U+2060) are
+            // required to prevent the external icon from wrapping.
+            "<a class=\"link\" href=\"%s\">%.*s<span class=\"nowrap\">&NoBreak;"
             "<svg class=\"external\" width=\"24\" height=\"24\""
             " aria-hidden=\"true\"><use xlink:href=\"#external\"/>"
             "</svg></span></a>",

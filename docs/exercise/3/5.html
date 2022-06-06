@@ -65,10 +65,10 @@
 </nav>
 <main id="main">
 <h1>
-<span class="number">3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html">Streams<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<span class="number">3.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html">Streams<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="3.5.1" class="anchor">
-<a class="anchor__link link" href="#3.5.1" aria-hidden="true">#</a> <span class="number">3.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.1">Streams Are Delayed Lists<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.1" aria-hidden="true">#</a> <span class="number">3.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.1">Streams Are Delayed Lists<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> (stream-ref s n)
   (<span class="kw">if</span> (<span class="fu">zero?</span> n)
@@ -169,7 +169,7 @@ Imports:
       result)))</code></pre>
 <p>We would then define <code>(<span class="kw">delay</span> EXPR)</code> to be <code>(memo-proc (<span class="kw">lambda</span> () EXPR))</code>.</p>
 <h3 id="ex3.50" class="anchor">
-<a class="anchor__link link" href="#ex3.50" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.50">Exercise 3.50<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.50" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.50">Exercise 3.50<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -201,7 +201,7 @@ Imports:
       (<span class="kw">cons-stream</span> (<span class="fu">apply</span> f (<span class="fu">map</span> stream-car ss))
                    (<span class="fu">apply</span> stream-map f (<span class="fu">map</span> stream-cdr ss)))))</code></pre>
 <h3 id="ex3.51" class="anchor">
-<a class="anchor__link link" href="#ex3.51" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.51">Exercise 3.51<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.51" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.51">Exercise 3.51<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -243,7 +243,7 @@ Imports:
 (stream-ref x <span class="cn">7</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;6&quot;</span> <span class="cn">&quot;7&quot;</span>]
 (stream-ref x <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3 id="ex3.52" class="anchor">
-<a class="anchor__link link" href="#ex3.52" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.52">Exercise 3.52<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.52" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.52">Exercise 3.52<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -290,7 +290,7 @@ sum <span class="op">=&gt;</span> <span class="cn">136</span>
 (display-stream z) <span class="op">=$&gt;</span> [<span class="cn">&quot;10&quot;</span> <span class="cn">&quot;15&quot;</span> <span class="cn">&quot;45&quot;</span> <span class="cn">&quot;55&quot;</span> <span class="cn">&quot;105&quot;</span> <span class="cn">&quot;120&quot;</span> <span class="cn">&quot;190&quot;</span> <span class="cn">&quot;210&quot;</span>]</code></pre>
 <p>Yes, responses would differ if <code>delay</code> did not use memoization. The stream <code>seq</code> would get its <code>cdr</code> evaluated multiple times, and it would be different each time because <code>sum</code> keeps increasing. Instead of 1, 6, 10, 120, it would be 1, 6, 15, 162. Displaying <code>z</code> would only show 15. The rest of <code>seq</code> gets generated using a much higher <code>sum</code>, none of which are divisible by 5.</p>
 <h2 id="3.5.2" class="anchor">
-<a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.2">Infinite Streams<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.2">Infinite Streams<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -439,7 +439,7 @@ Imports:
   (iter primes))
 (stream-ref primes <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">233</span></code></pre>
 <h3 id="ex3.53" class="anchor">
-<a class="anchor__link link" href="#ex3.53" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.53">Exercise 3.53<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.53" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.53">Exercise 3.53<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -468,7 +468,7 @@ Imports:
 <p>It produces all powers of two, just like <code>double</code> in Section 3.5.2.1. This can be seen from the fact that <code>x * 2</code> (scaling a stream by 2) is the same as <code>x + x</code> (adding a stream to itself).</p>
 <pre><code class="blockcode">(stream-take s <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">8</span> <span class="cn">16</span> <span class="cn">32</span> <span class="cn">64</span> <span class="cn">128</span> <span class="cn">256</span> <span class="cn">512</span>)</code></pre>
 <h3 id="ex3.54" class="anchor">
-<a class="anchor__link link" href="#ex3.54" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.54">Exercise 3.54<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.54" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.54">Exercise 3.54<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -501,7 +501,7 @@ Imports:
   (<span class="kw">cons-stream</span> <span class="cn">1</span> (mul-streams factorials (integers-starting-from <span class="cn">2</span>))))
 (stream-take factorials <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span> <span class="cn">24</span> <span class="cn">120</span>)</code></pre>
 <h3 id="ex3.55" class="anchor">
-<a class="anchor__link link" href="#ex3.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.55">Exercise 3.55<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.55">Exercise 3.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -545,7 +545,7 @@ Imports:
   self)
 (stream-take (partial-sums integers) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">6</span> <span class="cn">10</span> <span class="cn">15</span> <span class="cn">21</span> <span class="cn">28</span> <span class="cn">36</span> <span class="cn">45</span> <span class="cn">55</span>)</code></pre>
 <h3 id="ex3.56" class="anchor">
-<a class="anchor__link link" href="#ex3.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.56">Exercise 3.56<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.56">Exercise 3.56<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -601,11 +601,11 @@ Imports:
 
 (stream-take S <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span> <span class="cn">12</span>)</code></pre>
 <h3 id="ex3.57" class="anchor">
-<a class="anchor__link link" href="#ex3.57" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.57">Exercise 3.57<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.57" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.57">Exercise 3.57<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>See proofs.pdf for the proof that the number of additions when computing the nth Fibonacci number using <code>fibs</code> from Section 3.5.2.1 would be exponentially greater if <code>delay</code> is implemented without memoization.</p>
 <h3 id="ex3.58" class="anchor">
-<a class="anchor__link link" href="#ex3.58" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.58">Exercise 3.58<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.58" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.58">Exercise 3.58<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -632,7 +632,7 @@ Imports:
 (stream-take (expand <span class="cn">3</span> <span class="cn">8</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> <span class="cn">7</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)
 (<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">3</span> <span class="cn">8</span>)) <span class="op">~&gt;</span> <span class="cn">0.375</span></code></pre>
 <h3 id="ex3.59" class="anchor">
-<a class="anchor__link link" href="#ex3.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.59">Exercise 3.59<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.59">Exercise 3.59<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -699,7 +699,7 @@ Imports:
 
 (eval-series exp-series <span class="cn">1.0</span> <span class="cn">15</span>) <span class="op">~&gt;</span> <span class="cn">2.7182818285</span></code></pre>
 <h3 id="ex3.60" class="anchor">
-<a class="anchor__link link" href="#ex3.60" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.60">Exercise 3.60<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.60" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.60">Exercise 3.60<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -755,7 +755,7 @@ Imports:
              <span class="cn">15</span>)
 <span class="op">=&gt;</span> <span class="cn">1.0</span></code></pre>
 <h3 id="ex3.61" class="anchor">
-<a class="anchor__link link" href="#ex3.61" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.61">Exercise 3.61<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.61" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.61">Exercise 3.61<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -808,7 +808,7 @@ Imports:
                  (invert-unit-series (scale-stream s (<span class="fu">/</span> constant)))
                  (<span class="fu">/</span> constant))))))</code></pre>
 <h3 id="ex3.62" class="anchor">
-<a class="anchor__link link" href="#ex3.62" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.62">Exercise 3.62<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.62" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.62">Exercise 3.62<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -864,7 +864,7 @@ Imports:
 
 (eval-series tangent-series (<span class="fu">atan</span> <span class="cn">0.123</span>) <span class="cn">10</span>) <span class="op">~&gt;</span> <span class="cn">0.123</span></code></pre>
 <h2 id="3.5.3" class="anchor">
-<a class="anchor__link link" href="#3.5.3" aria-hidden="true">#</a> <span class="number">3.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.3">Exploiting the Stream Paradigm<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.3" aria-hidden="true">#</a> <span class="number">3.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.3">Exploiting the Stream Paradigm<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="3.5.3.1" class="anchor">
 <a class="anchor__link link" href="#3.5.3.1" aria-hidden="true">#</a> <span class="number">3.5.3.1</span> Formulating iterations as stream processes
@@ -968,7 +968,7 @@ Imports:
 <pre><code class="blockcode">(stream-ref (accelerated-sequence euler-transform pi-stream) <span class="cn">10</span>)
 <span class="op">=&gt;</span> +nan<span class="cn">.0</span></code></pre>
 <h3 id="ex3.63" class="anchor">
-<a class="anchor__link link" href="#ex3.63" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.63">Exercise 3.63<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.63" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.63">Exercise 3.63<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1000,7 +1000,7 @@ Imports:
                (sqrt-stream x))))</code></pre>
 <p>This implementation is less efficient because it doesn’t take advantage of memoization. It improves the first guess to get the second item, but then it must do that all over again in the recursive call to improve the second gues when it calls <code>(sqrt-stream x)</code>. If our implementation of <code>delay</code> didn’t use the optimization provided by <code>memo-proc</code>, then there would be no difference in efficiency between the original procedure and this one.</p>
 <h3 id="ex3.64" class="anchor">
-<a class="anchor__link link" href="#ex3.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.64">Exercise 3.64<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.64">Exercise 3.64<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1042,7 +1042,7 @@ Imports:
 (<span class="fu">sqrt</span> <span class="cn">2</span> <span class="cn">0.1</span>) <span class="op">~&gt;</span> <span class="cn">1.4166666666666665</span>
 (<span class="fu">sqrt</span> <span class="cn">2</span> <span class="cn">0.0001</span>) <span class="op">~&gt;</span> <span class="cn">1.4142135623746899</span></code></pre>
 <h3 id="ex3.65" class="anchor">
-<a class="anchor__link link" href="#ex3.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.65">Exercise 3.65<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.65">Exercise 3.65<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1155,7 +1155,7 @@ Imports:
 (<span class="kw">define</span> first-10-pairs (stream-take integer-pairs <span class="cn">10</span>))
 first-10-pairs <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
 <h3 id="ex3.66" class="anchor">
-<a class="anchor__link link" href="#ex3.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.66">Exercise 3.66<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.66">Exercise 3.66<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1250,7 +1250,7 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
 (index-&gt;pair <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
 (index-&gt;pair random-index) <span class="op">=&gt;</span> random-pair</code></pre>
 <h3 id="ex3.67" class="anchor">
-<a class="anchor__link link" href="#ex3.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.67">Exercise 3.67<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.67">Exercise 3.67<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1311,7 +1311,7 @@ Imports:
 (stream-take (pairs integers integers) <span class="cn">10</span>)
 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
 <h3 id="ex3.68" class="anchor">
-<a class="anchor__link link" href="#ex3.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.68">Exercise 3.68<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.68">Exercise 3.68<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1354,7 +1354,7 @@ Imports:
    (pairs (stream-cdr s) (stream-cdr t))))</code></pre>
 <p>No, this will not work: there will be an infinite loop. The recursive call <code>(pairs (stream-cdr s) (stream-cdr t))</code> is not delayed by a <code>cons-stream</code>, so the procedure will never return.</p>
 <h3 id="ex3.69" class="anchor">
-<a class="anchor__link link" href="#ex3.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.69">Exercise 3.69<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.69">Exercise 3.69<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1435,7 +1435,7 @@ Imports:
 
 (stream-car pythagorean-triples) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)</code></pre>
 <h3 id="ex3.70" class="anchor">
-<a class="anchor__link link" href="#ex3.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.70">Exercise 3.70<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.70">Exercise 3.70<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1533,7 +1533,7 @@ a-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class=
 b-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">7</span>) (<span class="cn">1</span> <span class="cn">11</span>) (<span class="cn">1</span> <span class="cn">13</span>) (<span class="cn">1</span> <span class="cn">17</span>) (<span class="cn">1</span> <span class="cn">19</span>) (<span class="cn">1</span> <span class="cn">23</span>) (<span class="cn">1</span> <span class="cn">29</span>) (<span class="cn">1</span> <span class="cn">31</span>) (<span class="cn">7</span> <span class="cn">7</span>))
 (<span class="fu">map</span> b-weight b-10) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">58</span> <span class="cn">90</span> <span class="cn">106</span> <span class="cn">138</span> <span class="cn">154</span> <span class="cn">186</span> <span class="cn">234</span> <span class="cn">250</span> <span class="cn">280</span>)</code></pre>
 <h3 id="ex3.71" class="anchor">
-<a class="anchor__link link" href="#ex3.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.71">Exercise 3.71<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.71">Exercise 3.71<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1592,7 +1592,7 @@ Imports:
 
 (stream-take ramanujan-numbers <span class="cn">6</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1729</span> <span class="cn">4104</span> <span class="cn">13832</span> <span class="cn">20683</span> <span class="cn">32832</span> <span class="cn">39312</span>)</code></pre>
 <h3 id="ex3.72" class="anchor">
-<a class="anchor__link link" href="#ex3.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.72">Exercise 3.72<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.72">Exercise 3.72<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1684,7 +1684,7 @@ Imports:
                               int)))
   int)</code></pre>
 <h3 id="ex3.73" class="anchor">
-<a class="anchor__link link" href="#ex3.73" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.73">Exercise 3.73<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.73" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.73">Exercise 3.73<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1733,7 +1733,7 @@ Imports:
 <pre><code class="blockcode">(stream-take (RC1 ones <span class="cn">0</span>) <span class="cn">10</span>)
 <span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">5.5</span> <span class="cn">6.0</span> <span class="cn">6.5</span> <span class="cn">7.0</span> <span class="cn">7.5</span> <span class="cn">8.0</span> <span class="cn">8.5</span> <span class="cn">9.0</span> <span class="cn">9.5</span>)</code></pre>
 <h3 id="ex3.74" class="anchor">
-<a class="anchor__link link" href="#ex3.74" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.74">Exercise 3.74<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.74" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.74">Exercise 3.74<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1796,7 +1796,7 @@ Imports:
 
 (stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
 <h3 id="ex3.75" class="anchor">
-<a class="anchor__link link" href="#ex3.75" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.75">Exercise 3.75<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.75" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.75">Exercise 3.75<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1846,7 +1846,7 @@ Imports:
 (<span class="kw">define</span> test-result &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>))
 (stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
 <h3 id="ex3.76" class="anchor">
-<a class="anchor__link link" href="#ex3.76" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.76">Exercise 3.76<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.76" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.76">Exercise 3.76<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1903,7 +1903,7 @@ Imports:
 
 (stream-take (smooth-zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
 <h2 id="3.5.4" class="anchor">
-<a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.4" aria-hidden="true">#</a> <span class="number">3.5.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.4">Streams and Delayed Evaluation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -1954,7 +1954,7 @@ Imports:
 <p>When f(y) = y and y0 = 1, the solution is e.</p>
 <pre><code class="blockcode">(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
 <h3 id="ex3.77" class="anchor">
-<a class="anchor__link link" href="#ex3.77" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.77">Exercise 3.77<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.77" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.77">Exercise 3.77<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2005,7 +2005,7 @@ Imports:
 (<span class="kw">paste</span> (<a href=#3.5.4>:3.5.4</a> solve))
 (stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
 <h3 id="ex3.78" class="anchor">
-<a class="anchor__link link" href="#ex3.78" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.78">Exercise 3.78<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.78" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.78">Exercise 3.78<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2041,7 +2041,7 @@ Imports:
                            (scale-stream y b)))
   y)</code></pre>
 <h3 id="ex3.79" class="anchor">
-<a class="anchor__link link" href="#ex3.79" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.79">Exercise 3.79<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.79" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.79">Exercise 3.79<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2073,7 +2073,7 @@ Imports:
   (<span class="kw">define</span> ddy (stream-map f dy y))
   y)</code></pre>
 <h3 id="ex3.80" class="anchor">
-<a class="anchor__link link" href="#ex3.80" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.80">Exercise 3.80<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.80" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.80">Exercise 3.80<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2135,7 +2135,7 @@ Imports:
 (<span class="fu">map</span> three-decimals (stream-take (<span class="fu">cdr</span> v-and-i) <span class="cn">9</span>))
 <span class="op">=&gt;</span> &#39;(<span class="cn">&quot;0.000&quot;</span> <span class="cn">&quot;1.000&quot;</span> <span class="cn">&quot;1.900&quot;</span> <span class="cn">&quot;2.660&quot;</span> <span class="cn">&quot;3.249&quot;</span> <span class="cn">&quot;3.646&quot;</span> <span class="cn">&quot;3.841&quot;</span> <span class="cn">&quot;3.834&quot;</span> <span class="cn">&quot;3.636&quot;</span>)</code></pre>
 <h2 id="3.5.5" class="anchor">
-<a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a> <span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a> <span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -2208,7 +2208,7 @@ Imports:
 <p>This is deterministic because the <code>random-init</code> seed is fixed.</p>
 <pre><code class="blockcode">(stream-ref pi <span class="cn">999</span>) <span class="op">~&gt;</span> <span class="cn">3.149183286488868</span></code></pre>
 <h3 id="ex3.81" class="anchor">
-<a class="anchor__link link" href="#ex3.81" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.81">Exercise 3.81<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.81" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.81">Exercise 3.81<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2278,7 +2278,7 @@ Imports:
 (<span class="kw">define</span> reqs (cycle &#39;((generate) (reset <span class="cn">7</span>) (generate) (generate) (reset <span class="cn">0</span>))))
 (stream-take (random-numbers reqs) <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">262145</span> <span class="cn">7</span> <span class="cn">1835015</span> <span class="cn">58720487</span> <span class="cn">0</span>)</code></pre>
 <h3 id="ex3.82" class="anchor">
-<a class="anchor__link link" href="#ex3.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.82">Exercise 3.82<span class="nowrap">﻿<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex3.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.82">Exercise 3.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
