@@ -379,16 +379,26 @@ end
 -- Adds the scheme class to all Code elements within el. We do this, rather than
 -- transforming every Code in the document, to avoid applying it in headings.
 function process_inline_code_in_block(el)
-    return pandoc.walk_block(el, {Code = function(el)
-        -- Only highlight inline code if it has a parenthesis (procedure
-        -- application) or guillemet for meta-variables. Otherwise notes with
-        -- lots of bits of code is too noisy, and also blue functions by
-        -- themselves end up looking like links.
-        if #el.classes == 0 and el.text:find("%(") or el.text:find("«") then
-            el.classes = {"scheme"}
-            return el
+    return pandoc.walk_block(el, {
+        Code = function(el)
+            -- Honor explicit request to disable highlighting.
+            if #el.classes == 1 and el.classes[1] == "nohl" then
+                el.classes = nil
+                return el
+            end
+            -- Only highlight inline code if it has a parenthesis (procedure
+            -- application) or guillemet for meta-variables or is double quoting
+            -- (for consistency in Exercise 2.55). Otherwise notes with lots of
+            -- bits of code is too noisy, and also blue functions by themselves
+            -- end up looking like links.
+            if #el.classes == 0 and (
+                el.text:find("%(") or el.text:find("«") or el.text:sub(1, 2) == "''"
+            ) and el.text ~= "'()" then
+                el.classes = {"scheme"}
+                return el
+            end
         end
-    end })
+    })
 end
 
 -- These correspond to definitions in docgen.c.

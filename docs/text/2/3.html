@@ -78,7 +78,7 @@
 </h2>
 <ul>
 <li>Lists with symbols look just like Lisp code, except we <em>quote</em> them.</li>
-<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span> <span class="ss">exp</span>)</code>, or the shorthand <code>&#39;<span class="ss">exp</span></code>.</li>
+<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span><span class="vs"> «exp»</span>)</code>, or the shorthand <code>&#39;<span class="ss">exp</span></code>.</li>
 <li>For example, <code>'x</code> evaluates to the symbol “x” instead of the variable <code>x</code>’s value.</li>
 <li>This is like just natural language. If I say, “Say your name,<span class="tuck">”</span> you will say your name. If I instead say, “Say ‘your name’,<span class="tuck">”</span> you will literally say the words “your name.<span class="tuck">”</span></li>
 </ul>
@@ -94,7 +94,7 @@
 (<span class="fu">list</span> <span class="vs">&#39;a</span> b)
 <span class="sc">→ (a 2)</span></code></pre>
 <ul>
-<li>Now that we have quotation, we will use <code><span class="vs">&#39;()</span></code> for the empty list instead of <code>nil</code>.</li>
+<li>Now that we have quotation, we will use <code>'()</code> for the empty list instead of <code>nil</code>.</li>
 <li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
 <pre><code class="blockcode">(<span class="fu">eq?</span> <span class="vs">&#39;a</span> <span class="vs">&#39;b</span>)

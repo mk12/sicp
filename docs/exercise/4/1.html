@@ -239,7 +239,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
   (<span class="kw">cond</span> ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
-        ((quoted? exp) (text-of-quotation exp))
+        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (text-of-quotation exp))
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
@@ -247,14 +247,14 @@ Imports:
                                        (lambda-body exp)
                                        env))
         ((begin? exp) (eval-sequence (begin-actions exp) env))
-        ((cond? exp) (<span class="fu">eval</span> (cond-&gt;if exp) env))
+        ((cond? exp) (eval (cond-&gt;if exp) env))
         ((application? exp)
-         (<span class="fu">apply</span> (<span class="fu">eval</span> (operator exp) env)
+         (apply (eval (operator exp) env)
                 (list-of-values (operands exp) env)))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;eval</span> <span class="cn">&quot;unknown expression type&quot;</span> exp))))
+        (else (error &#39;eval &quot;unknown expression type&quot; exp))))
 
-(<span class="kw">define</span> (<span class="fu">apply</span> proc args)
-  (<span class="kw">cond</span> ((primitive-procedure? proc)
+(define (apply proc args)
+  (cond ((primitive-procedure? proc)
          (apply-primitive-procedure proc args))
         ((compound-procedure? proc)
          (eval-sequence
@@ -262,49 +262,49 @@ Imports:
           (extend-environment (procedure-parameters proc)
                               args
                               (procedure-environment proc))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;apply</span> <span class="cn">&quot;unknown procedure type&quot;</span> proc))))
+        (else (error &#39;apply &quot;unknown procedure type&quot; proc))))
 
-(<span class="kw">define</span> (list-of-values exps env)
-  (<span class="kw">if</span> (no-operands? exps)
-      <span class="vs">&#39;()</span>
-      (<span class="fu">cons</span> (<span class="fu">eval</span> (first-operand exps) env)
+(define (list-of-values exps env)
+  (if (no-operands? exps)
+      &#39;()
+      (cons (eval (first-operand exps) env)
             (list-of-values (rest-operands exps) env))))
 
-(<span class="kw">define</span> (eval-if exp env)
-  (<span class="kw">if</span> (true? (<span class="fu">eval</span> (if-predicate exp) env))
-      (<span class="fu">eval</span> (if-consequent exp) env)
-      (<span class="fu">eval</span> (if-alternative exp) env)))
+(define (eval-if exp env)
+  (if (true? (eval (if-predicate exp) env))
+      (eval (if-consequent exp) env)
+      (eval (if-alternative exp) env)))
 
-(<span class="kw">define</span> (eval-sequence exps env)
-  (<span class="kw">cond</span> ((last-exp? exps) (<span class="fu">eval</span> (first-exp exps) env))
-        (<span class="kw">else</span> (<span class="fu">eval</span> (first-exp exps) env)
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env))
+        (else (eval (first-exp exps) env)
               (eval-sequence (rest-exps exps) env))))
 
-(<span class="kw">define</span> (eval-assignment exp env)
+(define (eval-assignment exp env)
   (set-variable-value! (assignment-variable exp)
-                       (<span class="fu">eval</span> (assignment-value exp) env)
+                       (eval (assignment-value exp) env)
                        env))
 
-(<span class="kw">define</span> (eval-definition exp env)
+(define (eval-definition exp env)
   (define-variable! (definition-variable exp)
-                    (<span class="fu">eval</span> (definition-value exp) env)
+                    (eval (definition-value exp) env)
                     env))
 
-(<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="cn">1</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="cn">&quot;hi&quot;</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span>
-(<span class="fu">eval</span> &#39;<span class="vs">&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-(<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unbound variable: x&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(define x 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(set! x 2)</span> env)
-(<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(if &quot;truthy&quot; &quot;yes&quot; &quot;no&quot;)</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;yes&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">&#39;((lambda () &quot;hi&quot;))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span></code></pre>
+(define env (make-environment))
+(eval 1 env) =&gt; 1
+(eval &quot;hi&quot; env) =&gt; &quot;hi&quot;
+(eval &#39;&#39;a env) =&gt; &#39;a
+(eval &#39;x env) =!&gt; &quot;unbound variable: x&quot;
+(eval &#39;(define x 1) env)
+(eval &#39;x env) =&gt; 1
+(eval &#39;(set! x 2) env)
+(eval &#39;x env) =&gt; 2
+(eval &#39;(if &quot;truthy&quot; &quot;yes&quot; &quot;no&quot;) env) =&gt; &quot;yes&quot;
+(eval &#39;(cond (else 1)) env) =&gt; 1
+(eval &#39;(begin 1 2 3) env) =&gt; 3
+(eval &#39;((lambda () &quot;hi&quot;)) env) =&gt; &quot;hi&quot;
+(eval &#39;((lambda (x y) y) 1 2) env) =&gt; 2
+(eval #\a env) =!&gt; &quot;unknown expression type&quot;</code></pre>
 <h3 id="ex4.1" class="anchor">
 <a class="anchor__link link" href="#ex4.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.1">Exercise 4.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -506,64 +506,64 @@ Imports:
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> (self-evaluating? exp) (<span class="kw">or</span> (<span class="fu">boolean?</span> exp) (<span class="fu">number?</span> exp) (<span class="fu">string?</span> exp)))
 (<span class="kw">define</span> (variable? exp) (<span class="fu">symbol?</span> exp))
-(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">&#39;quote</span>))
-(<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
-(<span class="kw">define</span> (tagged-list? exp tag) (<span class="kw">and</span> (<span class="fu">pair?</span> exp) (<span class="fu">eq?</span> (<span class="fu">car</span> exp) tag)))
-(<span class="kw">define</span> (assignment? exp) (tagged-list? exp <span class="vs">&#39;set!</span>))
-(<span class="kw">define</span> (assignment-variable exp) (<span class="fu">cadr</span> exp))
-(<span class="kw">define</span> (assignment-value exp) (<span class="fu">caddr</span> exp))
-(<span class="kw">define</span> (make-assignment var val) (<span class="fu">list</span> <span class="vs">&#39;set!</span> var val))
+(<span class="kw">define</span> (<span class="kw">quote</span><span class="vs">d? exp</span>) (tagged-list? exp &#39;<span class="kw">quote</span>))
+(define (text-of-quotation exp) (cadr exp))
+(define (tagged-list? exp tag) (and (pair? exp) (eq? (car exp) tag)))
+(define (assignment? exp) (tagged-list? exp &#39;set!))
+(define (assignment-variable exp) (cadr exp))
+(define (assignment-value exp) (caddr exp))
+(define (make-assignment var val) (list &#39;set! var val))
 
-(<span class="kw">define</span> (definition? exp) (tagged-list? exp <span class="vs">&#39;define</span>))
-(<span class="kw">define</span> (definition-variable exp)
-  (<span class="kw">if</span> (<span class="fu">symbol?</span> (<span class="fu">cadr</span> exp))
-      (<span class="fu">cadr</span> exp)
-      (<span class="fu">caadr</span> exp)))
-(<span class="kw">define</span> (definition-value exp)
-  (<span class="kw">if</span> (<span class="fu">symbol?</span> (<span class="fu">cadr</span> exp))
-      (<span class="fu">caddr</span> exp)
-      (make-lambda (<span class="fu">cdadr</span> exp) (<span class="fu">cddr</span> exp))))
-(<span class="kw">define</span> (make-definition variable value) (<span class="fu">list</span> <span class="vs">&#39;define</span> variable value))
-(<span class="kw">define</span> (make-lambda-definition name parameters body)
-  (<span class="fu">cons</span> <span class="vs">&#39;define</span> (<span class="fu">cons</span> (<span class="fu">cons</span> name parameters) body)))
-(<span class="kw">define</span> (lambda? exp) (tagged-list? exp <span class="vs">&#39;lambda</span>))
-(<span class="kw">define</span> (lambda-parameters exp) (<span class="fu">cadr</span> exp))
-(<span class="kw">define</span> (lambda-body exp) (<span class="fu">cddr</span> exp))
-(<span class="kw">define</span> (make-lambda parameters body) (<span class="fu">cons</span> <span class="vs">&#39;lambda</span> (<span class="fu">cons</span> parameters body)))
+(define (definition? exp) (tagged-list? exp &#39;define))
+(define (definition-variable exp)
+  (if (symbol? (cadr exp))
+      (cadr exp)
+      (caadr exp)))
+(define (definition-value exp)
+  (if (symbol? (cadr exp))
+      (caddr exp)
+      (make-lambda (cdadr exp) (cddr exp))))
+(define (make-definition variable value) (list &#39;define variable value))
+(define (make-lambda-definition name parameters body)
+  (cons &#39;define (cons (cons name parameters) body)))
+(define (lambda? exp) (tagged-list? exp &#39;lambda))
+(define (lambda-parameters exp) (cadr exp))
+(define (lambda-body exp) (cddr exp))
+(define (make-lambda parameters body) (cons &#39;lambda (cons parameters body)))
 
-(<span class="kw">define</span> (if? exp) (tagged-list? exp <span class="vs">&#39;if</span>))
-(<span class="kw">define</span> (if-predicate exp) (<span class="fu">cadr</span> exp))
-(<span class="kw">define</span> (if-consequent exp) (<span class="fu">caddr</span> exp))
-(<span class="kw">define</span> (if-alternative exp)
-  (<span class="kw">if</span> (<span class="fu">not</span> (<span class="fu">null?</span> (<span class="fu">cdddr</span> exp)))
-      (<span class="fu">cadddr</span> exp)
-      <span class="cn">#f</span>))
-(<span class="kw">define</span> (make-if predicate consequent alternative)
-  (<span class="fu">list</span> <span class="vs">&#39;if</span> predicate consequent alternative))
+(define (if? exp) (tagged-list? exp &#39;if))
+(define (if-predicate exp) (cadr exp))
+(define (if-consequent exp) (caddr exp))
+(define (if-alternative exp)
+  (if (not (null? (cdddr exp)))
+      (cadddr exp)
+      #f))
+(define (make-if predicate consequent alternative)
+  (list &#39;if predicate consequent alternative))
 
-(<span class="kw">define</span> (begin? exp) (tagged-list? exp <span class="vs">&#39;begin</span>))
-(<span class="kw">define</span> (begin-actions exp) (<span class="fu">cdr</span> exp))
-(<span class="kw">define</span> (make-begin actions) (<span class="fu">cons</span> <span class="vs">&#39;begin</span> actions))
+(define (begin? exp) (tagged-list? exp &#39;begin))
+(define (begin-actions exp) (cdr exp))
+(define (make-begin actions) (cons &#39;begin actions))
 
-(<span class="kw">define</span> (last-exp? seq) (<span class="fu">null?</span> (<span class="fu">cdr</span> seq)))
-(<span class="kw">define</span> (first-exp seq) (<span class="fu">car</span> seq))
-(<span class="kw">define</span> (rest-exps seq) (<span class="fu">cdr</span> seq))
-(<span class="kw">define</span> (sequence-&gt;exp seq)
-  (<span class="kw">cond</span> ((<span class="fu">null?</span> seq) seq)
+(define (last-exp? seq) (null? (cdr seq)))
+(define (first-exp seq) (car seq))
+(define (rest-exps seq) (cdr seq))
+(define (sequence-&gt;exp seq)
+  (cond ((null? seq) seq)
         ((last-exp? seq) (first-exp seq))
-        (<span class="kw">else</span> (make-begin seq))))
-(<span class="kw">define</span> (make-begin seq) (<span class="fu">cons</span> <span class="vs">&#39;begin</span> seq))
+        (else (make-begin seq))))
+(define (make-begin seq) (cons &#39;begin seq))
 
-(<span class="kw">define</span> (application? exp) (<span class="fu">pair?</span> exp))
-(<span class="kw">define</span> (operator exp) (<span class="fu">car</span> exp))
-(<span class="kw">define</span> (operands exp) (<span class="fu">cdr</span> exp))
-(<span class="kw">define</span> (no-operands? ops) (<span class="fu">null?</span> ops))
-(<span class="kw">define</span> (first-operand ops) (<span class="fu">car</span> ops))
-(<span class="kw">define</span> (rest-operands ops) (<span class="fu">cdr</span> ops))
+(define (application? exp) (pair? exp))
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+(define (no-operands? ops) (null? ops))
+(define (first-operand ops) (car ops))
+(define (rest-operands ops) (cdr ops))
 
-(sequence-&gt;exp <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
-(sequence-&gt;exp <span class="vs">&#39;(1)</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(sequence-&gt;exp <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(begin 1 2)</span></code></pre>
+(sequence-&gt;exp &#39;()) =&gt; &#39;()
+(sequence-&gt;exp &#39;(1)) =&gt; 1
+(sequence-&gt;exp &#39;(1 2)) =&gt; &#39;(begin 1 2)</code></pre>
 <h3 id="4.1.2.1" class="anchor">
 <a class="anchor__link link" href="#4.1.2.1" aria-hidden="true">#</a> <span class="number">4.1.2.1</span> Derived expressions
 </h3>
@@ -973,7 +973,7 @@ Imports:
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="cn">1</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="cn">&quot;hi&quot;</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span>
-(<span class="fu">eval</span> &#39;<span class="vs">&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
+(<span class="fu">eval</span> <span class="vs">&#39;&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
 (<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unbound variable: x&quot;</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(define x 1)</span> env)
 (<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
@@ -2254,7 +2254,7 @@ Imports:
            (iter (<span class="fu">cdr</span> body) (<span class="fu">cons</span> (<span class="fu">car</span> body) defines)))
           ((<span class="fu">null?</span> defines) body)
           (<span class="kw">else</span> (<span class="kw">let</span> ((params (revmap definition-variable defines <span class="vs">&#39;()</span>))
-                      (args (<span class="fu">map</span> (<span class="kw">lambda</span> (d) &#39;<span class="vs">&#39;*unassigned*</span>) defines))
+                      (args (<span class="fu">map</span> (<span class="kw">lambda</span> (d) <span class="vs">&#39;&#39;*unassigned*</span>) defines))
                       (body (revmap (<span class="kw">lambda</span> (d)
                                       (make-assignment (definition-variable d)
                                                        (definition-value d)))
@@ -2430,7 +2430,7 @@ Imports:
 (<span class="kw">define</span> (letrec-&gt;let exp)
   (<span class="kw">let</span> ((vars (<span class="fu">map</span> binding-variable (letrec-bindings exp)))
         (vals (<span class="fu">map</span> binding-value (letrec-bindings exp))))
-    (make-let (<span class="fu">map</span> (<span class="kw">lambda</span> (var) (<span class="fu">list</span> var &#39;<span class="vs">&#39;*unassigned*</span>)) vars)
+    (make-let (<span class="fu">map</span> (<span class="kw">lambda</span> (var) (<span class="fu">list</span> var <span class="vs">&#39;&#39;*unassigned*</span>)) vars)
               (<span class="fu">append</span> (<span class="fu">map</span> make-assignment vars vals)
                       (letrec-actions exp)))))
 
@@ -2647,7 +2647,7 @@ Imports:
 
 (<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((quoted? exp) (analyze-quoted exp))
+        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (analyze-<span class="kw">quote</span><span class="vs">d exp</span>))
         ((variable? exp) (analyze-variable exp))
         ((assignment? exp) (analyze-assignment exp))
         ((definition? exp) (analyze-definition exp))
@@ -2656,67 +2656,67 @@ Imports:
         ((begin? exp) (analyze-sequence (begin-actions exp)))
         ((cond? exp) (analyze (cond-&gt;if exp)))
         ((application? exp) (analyze-application exp))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;analyze</span> <span class="cn">&quot;unknown expression type&quot;</span> exp))))
+        (else (error &#39;analyze &quot;unknown expression type&quot; exp))))
 
-(<span class="kw">define</span> (analyze-self-evaluating exp)
-  (<span class="kw">lambda</span> (env) exp))
+(define (analyze-self-evaluating exp)
+  (lambda (env) exp))
 
-(<span class="kw">define</span> (analyze-quoted exp)
-  (<span class="kw">let</span> ((qval (text-of-quotation exp)))
-    (<span class="kw">lambda</span> (env) qval)))
+(define (analyze-<span class="kw">quote</span><span class="vs">d exp</span>)
+  (let ((qval (text-of-quotation exp)))
+    (lambda (env) qval)))
 
-(<span class="kw">define</span> (analyze-variable exp)
-  (<span class="kw">lambda</span> (env) (lookup-variable-value exp env)))
+(define (analyze-variable exp)
+  (lambda (env) (lookup-variable-value exp env)))
 
-(<span class="kw">define</span> (analyze-assignment exp)
-  (<span class="kw">let</span> ((var (assignment-variable exp))
+(define (analyze-assignment exp)
+  (let ((var (assignment-variable exp))
         (vproc (analyze (assignment-value exp))))
-    (<span class="kw">lambda</span> (env)
+    (lambda (env)
       (set-variable-value! var (vproc env) env))))
 
-(<span class="kw">define</span> (analyze-definition exp)
-  (<span class="kw">let</span> ((var (definition-variable exp))
+(define (analyze-definition exp)
+  (let ((var (definition-variable exp))
         (vproc (analyze (definition-value exp))))
-    (<span class="kw">lambda</span> (env)
+    (lambda (env)
       (define-variable! var (vproc env) env))))
 
-(<span class="kw">define</span> (analyze-if exp)
-  (<span class="kw">let</span> ((pproc (analyze (if-predicate exp)))
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate exp)))
         (cproc (analyze (if-consequent exp)))
         (aproc (analyze (if-alternative exp))))
-    (<span class="kw">lambda</span> (env)
-      (<span class="kw">if</span> (true? (pproc env))
+    (lambda (env)
+      (if (true? (pproc env))
           (cproc env)
           (aproc env)))))
 
-(<span class="kw">define</span> (analyze-lambda exp)
-  (<span class="kw">let</span> ((vars (lambda-parameters exp))
+(define (analyze-lambda exp)
+  (let ((vars (lambda-parameters exp))
         (bproc (analyze-sequence (lambda-body exp))))
-    (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))
+    (lambda (env) (make-procedure vars bproc env))))
 
-(<span class="kw">define</span> (analyze-sequence exps)
-  (<span class="kw">define</span> (sequentially proc1 proc2)
-    (<span class="kw">lambda</span> (env) (proc1 env) (proc2 env)))
-  (<span class="kw">define</span> (loop first-proc rest-procs)
-    (<span class="kw">if</span> (<span class="fu">null?</span> rest-procs)
+(define (analyze-sequence exps)
+  (define (sequentially proc1 proc2)
+    (lambda (env) (proc1 env) (proc2 env)))
+  (define (loop first-proc rest-procs)
+    (if (null? rest-procs)
         first-proc
-        (loop (sequentially first-proc (<span class="fu">car</span> rest-procs))
-              (<span class="fu">cdr</span> rest-procs))))
-  (<span class="kw">let</span> ((procs (<span class="fu">map</span> analyze exps)))
-    (<span class="kw">if</span> (<span class="fu">null?</span> procs)
-        (<span class="fu">error</span> <span class="vs">&#39;analyze</span> <span class="cn">&quot;empty sequence&quot;</span>)
-        (loop (<span class="fu">car</span> procs) (<span class="fu">cdr</span> procs)))))
+        (loop (sequentially first-proc (car rest-procs))
+              (cdr rest-procs))))
+  (let ((procs (map analyze exps)))
+    (if (null? procs)
+        (error &#39;analyze &quot;empty sequence&quot;)
+        (loop (car procs) (cdr procs)))))
 
-(<span class="kw">define</span> (analyze-application exp)
-  (<span class="kw">let</span> ((fproc (analyze (operator exp)))
-        (aprocs (<span class="fu">map</span> analyze (operands exp))))
-    (<span class="kw">lambda</span> (env)
+(define (analyze-application exp)
+  (let ((fproc (analyze (operator exp)))
+        (aprocs (map analyze (operands exp))))
+    (lambda (env)
       (execute-application
        (fproc env)
-       (<span class="fu">map</span> (<span class="kw">lambda</span> (aproc) (aproc env))
+       (map (lambda (aproc) (aproc env))
             aprocs)))))
-(<span class="kw">define</span> (execute-application proc args)
-  (<span class="kw">cond</span> ((primitive-procedure? proc)
+(define (execute-application proc args)
+  (cond ((primitive-procedure? proc)
          (apply-primitive-procedure proc args))
         ((compound-procedure? proc)
          ((procedure-body proc)
@@ -2724,23 +2724,23 @@ Imports:
            (procedure-parameters proc)
            args
            (procedure-environment proc))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;execute-application</span> <span class="cn">&quot;unknown procedure type&quot;</span> proc))))
+        (else (error &#39;execute-application &quot;unknown procedure type&quot; proc))))
 
-(<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="cn">1</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="cn">&quot;hi&quot;</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span>
-(<span class="fu">eval</span> &#39;<span class="vs">&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-(<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unbound variable: x&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(define x 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(set! x 2)</span> env)
-(<span class="fu">eval</span> <span class="vs">&#39;x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(if &quot;truthy&quot; &quot;yes&quot; &quot;no&quot;)</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;yes&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">&#39;((lambda () &quot;hi&quot;))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span></code></pre>
+(define env (make-environment))
+(eval 1 env) =&gt; 1
+(eval &quot;hi&quot; env) =&gt; &quot;hi&quot;
+(eval &#39;&#39;a env) =&gt; &#39;a
+(eval &#39;x env) =!&gt; &quot;unbound variable: x&quot;
+(eval &#39;(define x 1) env)
+(eval &#39;x env) =&gt; 1
+(eval &#39;(set! x 2) env)
+(eval &#39;x env) =&gt; 2
+(eval &#39;(if &quot;truthy&quot; &quot;yes&quot; &quot;no&quot;) env) =&gt; &quot;yes&quot;
+(eval &#39;(cond (else 1)) env) =&gt; 1
+(eval &#39;(begin 1 2 3) env) =&gt; 3
+(eval &#39;((lambda () &quot;hi&quot;)) env) =&gt; &quot;hi&quot;
+(eval &#39;((lambda (x y) y) 1 2) env) =&gt; 2
+(eval #\a env) =!&gt; &quot;unknown expression type&quot;</code></pre>
 <h3 id="ex4.22" class="anchor">
 <a class="anchor__link link" href="#ex4.22" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.22">Exercise 4.22<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2913,7 +2913,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((quoted? exp) (analyze-quoted exp))
+        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (analyze-<span class="kw">quote</span><span class="vs">d exp</span>))
         ((variable? exp) (analyze-variable exp))
         ((assignment? exp) (analyze-assignment exp))
         ((definition? exp) (analyze-definition exp))
@@ -2923,7 +2923,7 @@ Imports:
         ((cond? exp) (analyze (cond-&gt;if exp)))
         ((let? exp) (analyze-let exp))
         ((application? exp) (analyze-application exp))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;analyze</span> <span class="cn">&quot;unknown expression type&quot;</span> exp))))</code></pre>
+        (else (error &#39;analyze &quot;unknown expression type&quot; exp))))</code></pre>
 <p>Paste everything except <code>analyze</code>:</p>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.1.7>:4.1.7</a> analyze-application analyze-assignment analyze-definition
                analyze-if analyze-lambda analyze-sequence <span class="fu">eval</span>

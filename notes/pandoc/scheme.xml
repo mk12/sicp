@@ -410,12 +410,13 @@
     <contexts>
       <context name="Default" attribute="Normal" lineEndContext="#stay">
         <DetectSpaces/>
-        <DetectChar attribute="Normal" context="hash" char="#" lookAhead="1"/>
+        <DetectChar attribute="Normal" context="hash" char="#" lookAhead="true"/>
         <DetectChar attribute="Comment" context="Comment" char=";"/>
         <DetectChar attribute="Console" context="Console" char="→"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
         <DetectChar attribute="RawHtml" context="RawHtml" char="‹"/>
         <DetectChar attribute="Meta" context="Meta" char="«"/>
+        <StringDetect attribute="Normal" context="openQuote1" String="(quote" lookAhead="true"/>
         <Detect2Chars attribute="Quoted" context="quoted1" char="'" char1="("/>
         <keyword attribute="Boolean" context="#stay" String="booleans"/>
         <keyword attribute="Assert" context="#stay" String="asserts"/>
@@ -424,7 +425,7 @@
         <keyword attribute="Function" context="#stay" String="functions"/>
         <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++(\.|/)?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+"/>
         <RegExpr attribute="ModuleId" context="#stay" String="[:?][0-9.]++"/>
-        <RegExpr attribute="Quoted" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]++"/>
+        <RegExpr attribute="Quoted" context="#stay" String="'['a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]++"/>
         <RegExpr attribute="Normal" context="#stay" String="[a-zA-Z][a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]*+"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">
@@ -463,6 +464,16 @@
         <DetectChar attribute="Meta" context="#pop" char="»"/>
       </context>
       <!-- Highlight quoted lists as data -->
+      <context name="openQuote1" attribute="Normal" lineEndContext="#stay">
+        <DetectChar attribute="Normal" context="openQuote2" char="("/>
+      </context>
+      <context name="openQuote2" attribute="Normal" lineEndContext="#stay">
+        <StringDetect attribute="Macro" context="quoted0" String="quote"/>
+      </context>
+      <context name="quoted0" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted1" char="("/>
+        <DetectChar attribute="Normal" context="#pop" char=")"/>
+      </context>
       <context name="quoted1" attribute="Quoted" lineEndContext="#stay">
         <DetectChar attribute="Quoted" context="quoted2" char="("/>
         <DetectChar attribute="Quoted" context="#pop" char=")"/>
