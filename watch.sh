@@ -2,44 +2,71 @@
 
 set -eufo pipefail
 
-render_pid=
-entr_pid=
+entr_pid1=
+entr_pid2=
 
-ensure_render() {
-    [[ -S render.sock ]] && return
+inputs=
+output=docs/index.html
+
+refresh() {
+    make "$output" && open -g "$output"
+}
+
+restart_render() {
+    rm -f render.sock
     mkfifo render.fifo
     deno run --unstable --allow-{read,write,run} notes/pandoc/render.ts \
         render.{sock,fifo} &
-    render_pid=$!
     : < render.fifo
     rm render.fifo
 }
 
-restart() {
-    [[ -n "$entr_pid" ]] && kill "$entr_pid"
-    output=$(find docs -type f -name "*.html" | fzf)
-    [[ -z "$output" ]] && exit
+# Make functions work in entr.
+export SHELL=/bin/bash
+export output
+export -f refresh restart_render
+
+choose_output() {
+    new_output=$(find docs -type f -name "*.html" | fzf)
+    output=${new_output:-$output}
+    inputs=()
     case ${output#docs/} in
-        index.html) input=notes/index.md ;;
-        text/*) input=notes/text.md ;;
-        lecture/*) input=notes/lecture.md ;;
-        exercise/index.html|exercise/language.html) input=notes/exercise.md ;;
+        index.html)
+            inputs+=("notes/index.md") ;;
+        text/*)
+            inputs+=("notes/text.md") ;;
+        lecture/*)
+            inputs+=("notes/lecture.md") ;;
+        exercise/index.html|exercise/language.html)
+            inputs+=("notes/exercise.md") ;;
         exercise/*)
             n=${output#docs/exercise/}
             n=${n%%/*}
-            input=src/sicp/chapter-$n.ss
+            inputs+=("src/sicp/chapter-$n.ss")
             ;;
     esac
-    input="$input"$'\n'"docs/style.css"
-    entr -ns "make '$output' && open -g '$output'" <<< "$input" &
-    entr_pid=$!
+    inputs+=("docs/style.css")
+    while read -r file; do
+        inputs+=("$file")
+    done < <(find notes/pandoc -type f -not -name render.ts)
+}
+
+watch() {
+    [[ -n "$entr_pid1" ]] && kill "$entr_pid1"
+    [[ -n "$entr_pid2" ]] && kill "$entr_pid2"
+    printf '%s\n' "${inputs[@]}" | entr -ns 'refresh' &
+    entr_pid1=$!
+    echo notes/pandoc/render.ts | entr -nsp 'restart_render && refresh' &
+    entr_pid2=$!
 }
 
 cleanup() {
-    for pid in "$render_pid" "$entr_pid"; do
-        [[ -z "$pid" ]] && continue
-        kill "$pid" || :
+    for pid in "$entr_pid1" "$entr_pid2"; do
+        if [[ -n "$pid" ]] && kill -s 0 "$pid"; then
+            kill "$pid" || :
+        fi
     done
+    rm -f render.sock
 }
 
 if [[ "$(uname -s)" != Darwin ]]; then
@@ -48,10 +75,10 @@ if [[ "$(uname -s)" != Darwin ]]; then
 fi
 
 cd "$(dirname "$0")"
-trap 'cleanup' EXIT
-ensure_render
-
+trap cleanup EXIT
+restart_render
 while :; do
-    restart
+    choose_output
+    watch
     read -r -n1
 done
