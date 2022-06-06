@@ -212,13 +212,13 @@ Imports:
 <span class="co">;                                                  +----&gt; parameters: amount</span>
 <span class="co">;                                                               body: ...</span>
 
-((acc <span class="cn">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span></code></pre>
-<p>First we evaluate <code>(acc <span class="cn">&#39;deposit</span>)</code>. We create E2 to bind <code>m</code> to the symbol <code>deposit</code>, and then we evaluate the body of <code>acc</code>, which is the same as the body of <code>dispatch</code>. The enclosing environment of E2 is E1, because that is pointed to by the procedure. This application returns the value of <code>deposit</code> from E1. Now we evaluate <code>((#&lt;deposit&gt; <span class="cn">40</span>)</code>. We create E3 to bind <code>amount</code> to the value 40, and the enclosing environment is E1 (pointed to by the procedure <code>deposit</code>). This finally assigns 90 to <code>balance</code> in E1, and then returns that value.</p>
+((acc <span class="vs">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span></code></pre>
+<p>First we evaluate <code>(acc <span class="vs">&#39;deposit</span>)</code>. We create E2 to bind <code>m</code> to the symbol <code>deposit</code>, and then we evaluate the body of <code>acc</code>, which is the same as the body of <code>dispatch</code>. The enclosing environment of E2 is E1, because that is pointed to by the procedure. This application returns the value of <code>deposit</code> from E1. Now we evaluate <code>((#&lt;deposit&gt; <span class="cn">40</span>)</code>. We create E3 to bind <code>amount</code> to the value 40, and the enclosing environment is E1 (pointed to by the procedure <code>deposit</code>). This finally assigns 90 to <code>balance</code> in E1, and then returns that value.</p>
 <pre><code class="blockcode"><span class="co">; E2 [m: deposit]--+</span>
 <span class="co">;                  +----&gt; E1 [balance:90, ...]</span>
 <span class="co">; E3 [amount: 40]--+</span>
 
-((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span></code></pre>
+((acc <span class="vs">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span></code></pre>
 <p>This is almost the same, except the procedure returns the <code>withdraw</code> procedures instead. I am reusing the names E2 and E3 because they have been used and are no longer relevant, since nothing poitns to them.</p>
 <pre><code class="blockcode"><span class="co">; E2 [m: withdraw]--+</span>
 <span class="co">;                   +---&gt; E1 [balance: 30, ...]</span>

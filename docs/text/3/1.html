@@ -156,8 +156,8 @@
     (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
     balance)
   (<span class="kw">define</span> (dispatch m)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
-          ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) withdraw)
+          ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) deposit)
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown request: MAKE-ACCOUNT&quot;</span> m))))
   dispatch)</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/1.html#ex3.1">3.1</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.2">3.2</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.3">3.3</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.4">3.4</a></li></ul></aside>

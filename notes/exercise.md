@@ -125,7 +125,7 @@ Starting in [](:2), many modules use [data-directed programming](@2.4.3) to disp
 
 (using rectangular-pkg polar-pkg)
 
-; tests go here
+; Tests go here.
 ```
 
 The `using` procedure defined in [](:2.4.3) resets the global table and installs the given packages. There is no automatic tracking of dependencies, so `using` calls must list everything explicitly. This package system is not part of the language, but it's worth explaining here because so many modules use it.
@@ -156,7 +156,7 @@ It can also be chained to assert that several expressions are equal, while ensur
 When `(fact 3) => (fact 5)` fails, the output looks like this:
 
 <pre><code class="blockcode"><!--
---><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(fact 3)</span>
 => <span class="cn">6</span>
 
@@ -179,7 +179,7 @@ Like `=>`, it can be chained. Each item is compared to the previous one, not to 
 When `(* 4 (atan 1)) ~> 3.14` fails, the output looks like this:
 
 <pre><code class="blockcode"><!--
---><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(* 4 (atan 1))</span>
 => <span class="cn">3.141592653589793</span>
 
@@ -204,7 +204,7 @@ The right-hand side must be a list. Although square brackets are interchangeable
 When `(+ 1 1) =?> [(* 1 1) "two"]` fails, the output looks like this:
 
 <pre><code class="blockcode"><!--
---><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 1)</span>
 => <span class="cn">2</span>
 
@@ -242,14 +242,14 @@ Newlines occurring at the beginning, end, or after another newline are ignored:
 When `(display "pong\nping") =$> ["ping" "pong"]` fails, the output looks like this:
 
 <pre><code class="blockcode"><!--
---><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
-=$> [<span class="yl">"pong"</span>
-     <span class="yl">"ping"</span>]
+=$> [<span class="vs">"pong"</span>
+     <span class="vs">"ping"</span>]
 
 right:
-=$> [<span class="yl">"ping"</span>
-     <span class="yl">"pong"</span>]
+=$> [<span class="vs">"ping"</span>
+     <span class="vs">"pong"</span>]
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
@@ -267,7 +267,7 @@ The assertion passes if the right-hand side occurs as a substring in the represe
 When `(+ 1 2) =!> "disaster"` fails, the output looks like this:
 
 <pre><code class="blockcode"><!--
---><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
 => <span class="cn">3</span>
 
@@ -280,7 +280,7 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 When `(error 'foo "catastrophe" 1) =!> "disaster"` fails, the output looks like this:
 
 <pre><code class="blockcode"><!--
---><span class="bo">path/to/file.ss:123:1: assertion failed</span>
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 =!> <span class="co">foo: catastrophe: 1</span>
 

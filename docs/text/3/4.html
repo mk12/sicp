@@ -140,9 +140,9 @@
 <li>Suppose we want to swap the balances in two bank accounts:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (exchange acc1 acc2)
-  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="cn">&#39;balance</span>) (acc2 <span class="cn">&#39;balance</span>))))
-    ((acc1 <span class="cn">&#39;withdraw</span>) diff)
-    ((acc2 <span class="cn">&#39;deposit</span>) diff)))</code></pre>
+  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="vs">&#39;balance</span>) (acc2 <span class="vs">&#39;balance</span>))))
+    ((acc1 <span class="vs">&#39;withdraw</span>) diff)
+    ((acc2 <span class="vs">&#39;deposit</span>) diff)))</code></pre>
 <ul>
 <li>Serializing deposits and withdrawals themselves is not enough to ensure correctness.</li>
 <li>The exchange comprises four individually serialized steps, and these may interleave with a concurrent process.</li>

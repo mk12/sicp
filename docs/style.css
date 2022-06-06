@@ -45,6 +45,9 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
+strong { font-weight: bold; }
+em { font-style: italic; }
+
 p, ul, ol, blockquote, pre, figure, table { margin-top: 1em; }
 p:first-child, li ul, li ol { margin-top: 0; }
 
@@ -524,25 +527,25 @@ body {
 
 /* Code highlighting */
 
-.kw { color: #a626a4; }
-.fu { color: #0060d5; }
-.cn { color: #307a06; }
-.co, .er { color: #c0392b; }
-.yl, .sc { color: #986801; } /* .yl used in language.html */
+.kw { color: #a626a4; } /* special forms */
+.fu { color: #0060d5; } /* functions */
+.cn { color: #307a06; } /* constants */
+.co, .er { color: #c0392b; } /* comments, errors */
+.vs { color: #986801; } /* quoted */
+.sc { color: #6d6d6d; } /* console output */
+.op { color: #888; } /* assertion arrows */
 
 @media (prefers-color-scheme: dark) {
     .kw { color: #c678dd; }
     .fu { color: #61afef; }
     .cn { color: #98c379; }
     .co, .er { color: #e7727b; }
-    .yl, .sc { color: #e5c07b; }
+    .vs { color: #e5c07b; }
+    .sc { color: #959595; }
+    .op { color: #888; }
 }
 
-/* .op (=> ~>, =$>), .er (=!>) */
-.op { color: var(--subdued); }
 .op, .er { font-weight: bold; }
-
-/* console output */
 .sc { font-style: italic; }
 
 /* metavariables */
@@ -551,5 +554,3 @@ body {
     text-decoration: underline;
     text-underline-offset: 2px;
 }
-
-.bo { font-weight: bold; } /* .bo used in language.html */

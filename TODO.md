@@ -10,8 +10,9 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3*
-- don't highlight inside quoted list e.g. in '(this is a list)
-    - diff color than numbers?
++ highlight inside quoted list e.g. in '(this is a list)
+    + diff color than numbers?
+    x don't bother quasiquote, too hard
 + fix dot after math wrapping
 + highlight 1/2 as number
 + quotation issues, link to "on denoting" paper

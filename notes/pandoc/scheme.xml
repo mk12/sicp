@@ -416,6 +416,7 @@
         <DetectChar attribute="String" context="String" char="&quot;"/>
         <DetectChar attribute="RawHtml" context="RawHtml" char="‹"/>
         <DetectChar attribute="Meta" context="Meta" char="«"/>
+        <Detect2Chars attribute="Quoted" context="quoted1" char="'" char1="("/>
         <keyword attribute="Boolean" context="#stay" String="booleans"/>
         <keyword attribute="Assert" context="#stay" String="asserts"/>
         <StringDetect attribute="ErrorAssert" context="#stay" String="=!>"/>
@@ -423,8 +424,8 @@
         <keyword attribute="Function" context="#stay" String="functions"/>
         <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++(\.|/)?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+"/>
         <RegExpr attribute="ModuleId" context="#stay" String="[:?][0-9.]++"/>
-        <RegExpr attribute="Symbol" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~-]++"/>
-        <RegExpr attribute="Normal" context="#stay" String="[a-zA-Z][a-zA-Z0-9!$%*/:&lt;=&gt;?^_~-]*+"/>
+        <RegExpr attribute="Quoted" context="#stay" String="'[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]++"/>
+        <RegExpr attribute="Normal" context="#stay" String="[a-zA-Z][a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]*+"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">
       </context>
@@ -461,6 +462,66 @@
       <context name="Meta" attribute="Meta" lineEndContext="#stay">
         <DetectChar attribute="Meta" context="#pop" char="»"/>
       </context>
+      <!-- Highlight quoted lists as data -->
+      <context name="quoted1" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted2" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted2" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted3" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted3" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted4" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted4" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted5" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted5" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted6" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted6" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted7" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted7" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted8" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted8" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted9" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted9" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted10" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted10" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted11" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted11" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted12" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted12" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted13" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted13" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted14" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted14" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="quoted15" char="("/>
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
+      <context name="quoted15" attribute="Quoted" lineEndContext="#stay">
+        <DetectChar attribute="Quoted" context="#pop" char=")"/>
+      </context>
     </contexts>
     <itemDatas>
       <itemData name="Normal"      defStyleNum="dsNormal"/>
@@ -472,7 +533,7 @@
       <itemData name="Number"      defStyleNum="dsConstant"/>
       <itemData name="Character"   defStyleNum="dsConstant"/>
       <itemData name="String"      defStyleNum="dsConstant"/>
-      <itemData name="Symbol"      defStyleNum="dsConstant"/>
+      <itemData name="Quoted"      defStyleNum="dsVerbatimString"/>
       <itemData name="Escape"      defStyleNum="dsComment"/>
       <itemData name="Comment"     defStyleNum="dsComment"/>
       <itemData name="Console"     defStyleNum="dsSpecialChar"/>

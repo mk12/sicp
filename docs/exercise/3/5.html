@@ -87,7 +87,7 @@
 (<span class="kw">define</span> (display-stream s) (stream-for-each display-line s))
 (<span class="kw">define</span> (display-line x) (<span class="fu">newline</span>) (<span class="fu">display</span> x))</code></pre>
 <p><code>cons-stream</code> is defined in src/lang/sicp.ss.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> the-empty-stream &#39;())
+<pre><code class="blockcode">(<span class="kw">define</span> the-empty-stream <span class="vs">&#39;()</span>)
 (<span class="kw">define</span> stream-null? <span class="fu">null?</span>)
 (<span class="kw">define</span> (stream-car s) (<span class="fu">car</span> s))
 (<span class="kw">define</span> (stream-cdr s) (<span class="fu">force</span> (<span class="fu">cdr</span> s)))</code></pre>
@@ -322,7 +322,7 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (stream-take s n)
-  (<span class="kw">cond</span> ((<span class="fu">zero?</span> n) &#39;())
+  (<span class="kw">cond</span> ((<span class="fu">zero?</span> n) <span class="vs">&#39;()</span>)
         (<span class="kw">else</span> (<span class="fu">cons</span> (stream-car s) (stream-take (stream-cdr s) (<span class="fu">-</span> n <span class="cn">1</span>))))))
 
 (<span class="kw">define</span> (integers-starting-from n)
@@ -336,7 +336,7 @@ Imports:
 
 (<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
 (<span class="kw">define</span> fibs (fibgen <span class="cn">0</span> <span class="cn">1</span>))
-(stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">8</span> <span class="cn">13</span> <span class="cn">21</span> <span class="cn">34</span>)
+(stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(0 1 1 2 3 5 8 13 21 34)</span>
 
 (<span class="kw">define</span> (sieve s)
   (<span class="kw">cons-stream</span>
@@ -415,11 +415,11 @@ Imports:
 
 (<span class="kw">define</span> integers
   (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams ones integers)))
-(stream-take integers <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span>)
+(stream-take integers <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3 4 5 6 7 8 9 10)</span>
 
 (<span class="kw">define</span> fibs
   (<span class="kw">cons-stream</span> <span class="cn">0</span> (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams (stream-cdr fibs) fibs))))
-(stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">0</span> <span class="cn">1</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">8</span> <span class="cn">13</span> <span class="cn">21</span> <span class="cn">34</span>)
+(stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(0 1 1 2 3 5 8 13 21 34)</span>
 
 (<span class="kw">define</span> (scale-stream stream factor)
   (stream-map (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) stream))
@@ -427,7 +427,7 @@ Imports:
 
 (<span class="kw">define</span> double
   (<span class="kw">cons-stream</span> <span class="cn">1</span> (scale-stream double <span class="cn">2</span>)))
-(stream-take double <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">8</span> <span class="cn">16</span> <span class="cn">32</span> <span class="cn">64</span> <span class="cn">128</span> <span class="cn">256</span> <span class="cn">512</span>)
+(stream-take double <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 4 8 16 32 64 128 256 512)</span>
 
 (<span class="kw">define</span> primes
   (<span class="kw">cons-stream</span> <span class="cn">2</span> (stream-filter prime? (integers-starting-from <span class="cn">3</span>))))
@@ -466,7 +466,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> s (<span class="kw">cons-stream</span> <span class="cn">1</span> (add-streams s s)))</code></pre>
 <p>It produces all powers of two, just like <code>double</code> in Section 3.5.2.1. This can be seen from the fact that <code>x * 2</code> (scaling a stream by 2) is the same as <code>x + x</code> (adding a stream to itself).</p>
-<pre><code class="blockcode">(stream-take s <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">8</span> <span class="cn">16</span> <span class="cn">32</span> <span class="cn">64</span> <span class="cn">128</span> <span class="cn">256</span> <span class="cn">512</span>)</code></pre>
+<pre><code class="blockcode">(stream-take s <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 4 8 16 32 64 128 256 512)</span></code></pre>
 <h3 id="ex3.54" class="anchor">
 <a class="anchor__link link" href="#ex3.54" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.54">Exercise 3.54<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -499,7 +499,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (mul-streams s1 s2) (stream-map <span class="fu">*</span> s1 s2))
 (<span class="kw">define</span> factorials
   (<span class="kw">cons-stream</span> <span class="cn">1</span> (mul-streams factorials (integers-starting-from <span class="cn">2</span>))))
-(stream-take factorials <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span> <span class="cn">24</span> <span class="cn">120</span>)</code></pre>
+(stream-take factorials <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 6 24 120)</span></code></pre>
 <h3 id="ex3.55" class="anchor">
 <a class="anchor__link link" href="#ex3.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.55">Exercise 3.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -543,7 +543,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (partial-sums s)
   (<span class="kw">define</span> self (<span class="kw">cons-stream</span> (stream-car s) (add-streams self (stream-cdr s))))
   self)
-(stream-take (partial-sums integers) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">3</span> <span class="cn">6</span> <span class="cn">10</span> <span class="cn">15</span> <span class="cn">21</span> <span class="cn">28</span> <span class="cn">36</span> <span class="cn">45</span> <span class="cn">55</span>)</code></pre>
+(stream-take (partial-sums integers) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 3 6 10 15 21 28 36 45 55)</span></code></pre>
 <h3 id="ex3.56" class="anchor">
 <a class="anchor__link link" href="#ex3.56" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.56">Exercise 3.56<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -599,7 +599,7 @@ Imports:
                         (merge (scale-stream S <span class="cn">3</span>)
                                (scale-stream S <span class="cn">5</span>)))))
 
-(stream-take S <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span> <span class="cn">12</span>)</code></pre>
+(stream-take S <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3 4 5 6 8 9 10 12)</span></code></pre>
 <h3 id="ex3.57" class="anchor">
 <a class="anchor__link link" href="#ex3.57" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.57">Exercise 3.57<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -627,9 +627,9 @@ Imports:
    (<span class="fu">quotient</span> (<span class="fu">*</span> num radix) den)
    (expand (<span class="fu">remainder</span> (<span class="fu">*</span> num radix) den) den radix)))</code></pre>
 <p>This procedure produces the stream of digits in the base given by <code>radix</code> that represent the quotient of <code>num</code> and <code>den</code>. It does it without using floating-point operations.</p>
-<pre><code class="blockcode">(stream-take (expand <span class="cn">1</span> <span class="cn">7</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">4</span> <span class="cn">2</span> <span class="cn">8</span> <span class="cn">5</span> <span class="cn">7</span> <span class="cn">1</span> <span class="cn">4</span> <span class="cn">2</span> <span class="cn">8</span>)
+<pre><code class="blockcode">(stream-take (expand <span class="cn">1</span> <span class="cn">7</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 4 2 8 5 7 1 4 2 8)</span>
 (<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">7</span>)) <span class="op">~&gt;</span> <span class="cn">0.14285714285714285</span>
-(stream-take (expand <span class="cn">3</span> <span class="cn">8</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> <span class="cn">7</span> <span class="cn">5</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>)
+(stream-take (expand <span class="cn">3</span> <span class="cn">8</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(3 7 5 0 0 0 0 0 0 0)</span>
 (<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">3</span> <span class="cn">8</span>)) <span class="op">~&gt;</span> <span class="cn">0.375</span></code></pre>
 <h3 id="ex3.59" class="anchor">
 <a class="anchor__link link" href="#ex3.59" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.59">Exercise 3.59<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -802,7 +802,7 @@ Imports:
 <p>Note: <code>invert-series</code> requires a nonzero constant term.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (invert-series s)
   (<span class="kw">let</span> ((constant (stream-car s)))
-    (<span class="kw">cond</span> ((<span class="fu">=</span> constant <span class="cn">0</span>) (<span class="fu">error</span> <span class="cn">&#39;invert-series</span> <span class="cn">&quot;division by zero&quot;</span> s))
+    (<span class="kw">cond</span> ((<span class="fu">=</span> constant <span class="cn">0</span>) (<span class="fu">error</span> <span class="vs">&#39;invert-series</span> <span class="cn">&quot;division by zero&quot;</span> s))
           ((<span class="fu">=</span> constant <span class="cn">1</span>) (invert-unit-series s))
           (<span class="kw">else</span> (scale-stream
                  (invert-unit-series (scale-stream s (<span class="fu">/</span> constant)))
@@ -857,7 +857,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (div-series s1 s2)
   (<span class="kw">let</span> ((den-constant (stream-car s2)))
-    (<span class="kw">cond</span> ((<span class="fu">zero?</span> den-constant) (<span class="fu">error</span> <span class="cn">&#39;div-series</span> <span class="cn">&quot;division by zero&quot;</span> s1 s2))
+    (<span class="kw">cond</span> ((<span class="fu">zero?</span> den-constant) (<span class="fu">error</span> <span class="vs">&#39;div-series</span> <span class="cn">&quot;division by zero&quot;</span> s1 s2))
           (<span class="kw">else</span> (mul-series s1 (invert-series s2))))))
 
 (<span class="kw">define</span> tangent-series (div-series sine-series cosine-series))
@@ -1153,7 +1153,7 @@ Imports:
 
 (<span class="kw">define</span> integer-pairs (pairs integers integers))
 (<span class="kw">define</span> first-10-pairs (stream-take integer-pairs <span class="cn">10</span>))
-first-10-pairs <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
+first-10-pairs <span class="op">=&gt;</span> <span class="vs">&#39;((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))</span></code></pre>
 <h3 id="ex3.66" class="anchor">
 <a class="anchor__link link" href="#ex3.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.66">Exercise 3.66<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1223,12 +1223,12 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
                       (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> k) <span class="cn">1</span>))
                    <span class="cn">2</span>)))))
 
-(pair-&gt;index &#39;(<span class="cn">1</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> <span class="cn">197</span>
-(pair-&gt;index &#39;(<span class="cn">99</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> <span class="cn">950737950171172051122527404030</span>
-(pair-&gt;index &#39;(<span class="cn">100</span> <span class="cn">100</span>)) <span class="op">=&gt;</span> (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">100</span>) <span class="cn">2</span>)</code></pre>
+(pair-&gt;index <span class="vs">&#39;(1 100)</span>) <span class="op">=&gt;</span> <span class="cn">197</span>
+(pair-&gt;index <span class="vs">&#39;(99 100)</span>) <span class="op">=&gt;</span> <span class="cn">950737950171172051122527404030</span>
+(pair-&gt;index <span class="vs">&#39;(100 100)</span>) <span class="op">=&gt;</span> (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">100</span>) <span class="cn">2</span>)</code></pre>
 <p>We can confirm that it’s correct for small indices:</p>
 <pre><code class="blockcode">(<span class="fu">map</span> pair-&gt;index first-10-pairs) <span class="op">=&gt;</span> (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)
-(stream-ref integer-pairs <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
+(stream-ref integer-pairs <span class="cn">197</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 100)</span>
 (<span class="kw">define</span> random-pair-fst (<span class="fu">+</span> <span class="cn">1</span> (random <span class="cn">5</span>)))
 (<span class="kw">define</span> random-pair (<span class="fu">list</span> random-pair-fst (<span class="fu">+</span> random-pair-fst (random <span class="cn">46</span>))))
 (<span class="kw">define</span> random-index (pair-&gt;index random-pair))
@@ -1247,7 +1247,7 @@ f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span
           (<span class="kw">else</span> (iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)))))
 
 (<span class="fu">map</span> index-&gt;pair (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)) <span class="op">=&gt;</span> first-10-pairs
-(index-&gt;pair <span class="cn">197</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1</span> <span class="cn">100</span>)
+(index-&gt;pair <span class="cn">197</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 100)</span>
 (index-&gt;pair random-index) <span class="op">=&gt;</span> random-pair</code></pre>
 <h3 id="ex3.67" class="anchor">
 <a class="anchor__link link" href="#ex3.67" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.67">Exercise 3.67<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1309,7 +1309,7 @@ Imports:
      (pairs (stream-cdr s) (stream-cdr t))))))
 
 (stream-take (pairs integers integers) <span class="cn">10</span>)
-<span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">2</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))</code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;((1 1) (1 2) (2 1) (1 3) (2 2) (1 4) (3 1) (1 5) (2 3) (1 6))</span></code></pre>
 <h3 id="ex3.68" class="anchor">
 <a class="anchor__link link" href="#ex3.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.68">Exercise 3.68<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1433,7 +1433,7 @@ Imports:
      (<span class="fu">=</span> (<span class="fu">+</span> (square (<span class="fu">car</span> x)) (square (<span class="fu">cadr</span> x))) (square (<span class="fu">caddr</span> x))))
    (triples integers integers integers)))
 
-(stream-car pythagorean-triples) <span class="op">=&gt;</span> &#39;(<span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span>)</code></pre>
+(stream-car pythagorean-triples) <span class="op">=&gt;</span> <span class="vs">&#39;(3 4 5)</span></code></pre>
 <h3 id="ex3.70" class="anchor">
 <a class="anchor__link link" href="#ex3.70" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.70">Exercise 3.70<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1513,8 +1513,8 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (a-weight p) (<span class="fu">apply</span> <span class="fu">+</span> p))
 (<span class="kw">define</span> a-stream (weighted-pairs integers integers a-weight))
 (<span class="kw">define</span> a-10 (stream-take a-stream <span class="cn">10</span>))
-a-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">3</span>) (<span class="cn">2</span> <span class="cn">2</span>) (<span class="cn">1</span> <span class="cn">4</span>) (<span class="cn">2</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">5</span>) (<span class="cn">2</span> <span class="cn">4</span>) (<span class="cn">3</span> <span class="cn">3</span>) (<span class="cn">1</span> <span class="cn">6</span>))
-(<span class="fu">map</span> a-weight a-10) <span class="op">=&gt;</span> &#39;(<span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">6</span> <span class="cn">7</span>)</code></pre>
+a-10 <span class="op">=&gt;</span> <span class="vs">&#39;((1 1) (1 2) (1 3) (2 2) (1 4) (2 3) (1 5) (2 4) (3 3) (1 6))</span>
+(<span class="fu">map</span> a-weight a-10) <span class="op">=&gt;</span> <span class="vs">&#39;(2 3 4 4 5 5 6 6 6 7)</span></code></pre>
 <ol start="2" type="a">
 <li>Pairs of positive integers (i, j) with i &lt;= j, where neither i nor j is divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.</li>
 </ol>
@@ -1530,8 +1530,8 @@ a-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class=
           integers)))
     (weighted-pairs filtered filtered b-weight)))
 (<span class="kw">define</span> b-10 (stream-take b-stream <span class="cn">10</span>))
-b-10 <span class="op">=&gt;</span> &#39;((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">1</span> <span class="cn">7</span>) (<span class="cn">1</span> <span class="cn">11</span>) (<span class="cn">1</span> <span class="cn">13</span>) (<span class="cn">1</span> <span class="cn">17</span>) (<span class="cn">1</span> <span class="cn">19</span>) (<span class="cn">1</span> <span class="cn">23</span>) (<span class="cn">1</span> <span class="cn">29</span>) (<span class="cn">1</span> <span class="cn">31</span>) (<span class="cn">7</span> <span class="cn">7</span>))
-(<span class="fu">map</span> b-weight b-10) <span class="op">=&gt;</span> &#39;(<span class="cn">10</span> <span class="cn">58</span> <span class="cn">90</span> <span class="cn">106</span> <span class="cn">138</span> <span class="cn">154</span> <span class="cn">186</span> <span class="cn">234</span> <span class="cn">250</span> <span class="cn">280</span>)</code></pre>
+b-10 <span class="op">=&gt;</span> <span class="vs">&#39;((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))</span>
+(<span class="fu">map</span> b-weight b-10) <span class="op">=&gt;</span> <span class="vs">&#39;(10 58 90 106 138 154 186 234 250 280)</span></code></pre>
 <h3 id="ex3.71" class="anchor">
 <a class="anchor__link link" href="#ex3.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.71">Exercise 3.71<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1590,7 +1590,7 @@ Imports:
 (<span class="kw">define</span> ramanujan-numbers
   (analyze (weighted-pairs integers integers weight)))
 
-(stream-take ramanujan-numbers <span class="cn">6</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">1729</span> <span class="cn">4104</span> <span class="cn">13832</span> <span class="cn">20683</span> <span class="cn">32832</span> <span class="cn">39312</span>)</code></pre>
+(stream-take ramanujan-numbers <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1729 4104 13832 20683 32832 39312)</span></code></pre>
 <h3 id="ex3.72" class="anchor">
 <a class="anchor__link link" href="#ex3.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.72">Exercise 3.72<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1653,9 +1653,9 @@ Imports:
   (analyze (weighted-pairs integers integers weight)))
 
 (stream-take thrice-square-sums <span class="cn">3</span>)
-<span class="op">=&gt;</span> &#39;((<span class="cn">325</span> (<span class="cn">1</span> <span class="cn">18</span>) (<span class="cn">6</span> <span class="cn">17</span>) (<span class="cn">10</span> <span class="cn">15</span>))
-     (<span class="cn">425</span> (<span class="cn">5</span> <span class="cn">20</span>) (<span class="cn">8</span> <span class="cn">19</span>) (<span class="cn">13</span> <span class="cn">16</span>))
-     (<span class="cn">650</span> (<span class="cn">5</span> <span class="cn">25</span>) (<span class="cn">11</span> <span class="cn">23</span>) (<span class="cn">17</span> <span class="cn">19</span>)))</code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;((325 (1 18) (6 17) (10 15))</span>
+<span class="vs">     (425 (5 20) (8 19) (13 16))</span>
+<span class="vs">     (650 (5 25) (11 23) (17 19)))</span></code></pre>
 <h3 id="3.5.3.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> <span class="number">3.5.3.3</span> Streams as signals
 </h3>
@@ -1731,7 +1731,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> RC1 (RC <span class="cn">5</span> <span class="cn">1</span> <span class="cn">0.5</span>))</code></pre>
 <p>Calculate the stream of voltages given a constant i = 1 amp and v0 = 0 V.</p>
 <pre><code class="blockcode">(stream-take (RC1 ones <span class="cn">0</span>) <span class="cn">10</span>)
-<span class="op">=&gt;</span> &#39;(<span class="cn">5</span> <span class="cn">5.5</span> <span class="cn">6.0</span> <span class="cn">6.5</span> <span class="cn">7.0</span> <span class="cn">7.5</span> <span class="cn">8.0</span> <span class="cn">8.5</span> <span class="cn">9.0</span> <span class="cn">9.5</span>)</code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;(5 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0 9.5)</span></code></pre>
 <h3 id="ex3.74" class="anchor">
 <a class="anchor__link link" href="#ex3.74" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.74">Exercise 3.74<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1785,8 +1785,8 @@ Imports:
    (make-zero-crossings (stream-cdr input-stream) (stream-car input-stream))))
 (<span class="kw">define</span> (zero-crossings sense-data) (make-zero-crossings sense-data <span class="cn">0</span>))
 
-(<span class="kw">define</span> test-data (cycle &#39;(<span class="cn">1</span> <span class="cn">2</span> <span class="cn">-1</span> <span class="cn">-2</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">2</span> <span class="cn">4</span> <span class="cn">5</span>)))
-(<span class="kw">define</span> test-result &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">-1</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span>))
+(<span class="kw">define</span> test-data (cycle <span class="vs">&#39;(1 2 -1 -2 0 -1 0 2 4 5)</span>))
+(<span class="kw">define</span> test-result <span class="vs">&#39;(0 0 -1 0 1 -1 1 0 0 0)</span>)
 (stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
 <p>My implementation based on Eva Lu Ator’s suggestion</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (zero-crossings sense-data)
@@ -1843,7 +1843,7 @@ Imports:
      (make-zero-crossings (stream-cdr input-stream) value avpt))))
 (<span class="kw">define</span> (zero-crossings sense-data) (make-zero-crossings sense-data <span class="cn">0</span> <span class="cn">0</span>))
 
-(<span class="kw">define</span> test-result &#39;(<span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">-1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span>))
+(<span class="kw">define</span> test-result <span class="vs">&#39;(0 0 0 -1 0 0 0 1 0 0)</span>)
 (stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
 <h3 id="ex3.76" class="anchor">
 <a class="anchor__link link" href="#ex3.76" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.76">Exercise 3.76<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -2131,9 +2131,9 @@ Imports:
 <p>Calculate the stream of vC (capacitor voltage) and iL (inductor current) given initial values iL0 = 0 amps and vC0 = 10 volts.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> v-and-i (RLC1 <span class="cn">10</span> <span class="cn">0</span>))
 (<span class="fu">map</span> three-decimals (stream-take (<span class="fu">car</span> v-and-i) <span class="cn">9</span>))
-<span class="op">=&gt;</span> &#39;(<span class="cn">&quot;10.000&quot;</span> <span class="cn">&quot;10.000&quot;</span> <span class="cn">&quot;9.500&quot;</span> <span class="cn">&quot;8.550&quot;</span> <span class="cn">&quot;7.220&quot;</span> <span class="cn">&quot;5.596&quot;</span> <span class="cn">&quot;3.772&quot;</span> <span class="cn">&quot;1.852&quot;</span> <span class="cn">&quot;-0.065&quot;</span>)
+<span class="op">=&gt;</span> <span class="vs">&#39;(&quot;10.000&quot; &quot;10.000&quot; &quot;9.500&quot; &quot;8.550&quot; &quot;7.220&quot; &quot;5.596&quot; &quot;3.772&quot; &quot;1.852&quot; &quot;-0.065&quot;)</span>
 (<span class="fu">map</span> three-decimals (stream-take (<span class="fu">cdr</span> v-and-i) <span class="cn">9</span>))
-<span class="op">=&gt;</span> &#39;(<span class="cn">&quot;0.000&quot;</span> <span class="cn">&quot;1.000&quot;</span> <span class="cn">&quot;1.900&quot;</span> <span class="cn">&quot;2.660&quot;</span> <span class="cn">&quot;3.249&quot;</span> <span class="cn">&quot;3.646&quot;</span> <span class="cn">&quot;3.841&quot;</span> <span class="cn">&quot;3.834&quot;</span> <span class="cn">&quot;3.636&quot;</span>)</code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;(&quot;0.000&quot; &quot;1.000&quot; &quot;1.900&quot; &quot;2.660&quot; &quot;3.249&quot; &quot;3.646&quot; &quot;3.841&quot; &quot;3.834&quot; &quot;3.636&quot;)</span></code></pre>
 <h2 id="3.5.5" class="anchor">
 <a class="anchor__link link" href="#3.5.5" aria-hidden="true">#</a> <span class="number">3.5.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_sec_3.5.5">Modularity of Functional Programs and Modularity of Objects<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -2267,16 +2267,16 @@ Imports:
         the-empty-stream
         (<span class="kw">let*</span> ((request (stream-car s))
                (operation (<span class="fu">car</span> request))
-               (value (<span class="kw">cond</span> ((<span class="fu">eq?</span> operation <span class="cn">&#39;reset</span>) (<span class="fu">cadr</span> request))
-                            ((<span class="fu">eq?</span> operation <span class="cn">&#39;generate</span>) (rand-update prev))
-                            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;random-numbers</span>
+               (value (<span class="kw">cond</span> ((<span class="fu">eq?</span> operation <span class="vs">&#39;reset</span>) (<span class="fu">cadr</span> request))
+                            ((<span class="fu">eq?</span> operation <span class="vs">&#39;generate</span>) (rand-update prev))
+                            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;random-numbers</span>
                                          <span class="cn">&quot;unknown request&quot;</span>
                                          request)))))
           (<span class="kw">cons-stream</span> value (iter (stream-cdr s) value)))))
   (iter request-stream random-init))
 
-(<span class="kw">define</span> reqs (cycle &#39;((generate) (reset <span class="cn">7</span>) (generate) (generate) (reset <span class="cn">0</span>))))
-(stream-take (random-numbers reqs) <span class="cn">5</span>) <span class="op">=&gt;</span> &#39;(<span class="cn">262145</span> <span class="cn">7</span> <span class="cn">1835015</span> <span class="cn">58720487</span> <span class="cn">0</span>)</code></pre>
+(<span class="kw">define</span> reqs (cycle <span class="vs">&#39;((generate) (reset 7) (generate) (generate) (reset 0))</span>))
+(stream-take (random-numbers reqs) <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(262145 7 1835015 58720487 0)</span></code></pre>
 <h3 id="ex3.82" class="anchor">
 <a class="anchor__link link" href="#ex3.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-24.html#%25_thm_3.82">Exercise 3.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>

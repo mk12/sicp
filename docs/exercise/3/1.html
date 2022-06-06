@@ -119,17 +119,17 @@
     (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
     balance)
   (<span class="kw">define</span> (dispatch m)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
-          ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) withdraw)
+          ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) deposit)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
   dispatch)
 
 (<span class="kw">define</span> acc (make-account <span class="cn">100</span>))
-((acc <span class="cn">&#39;withdraw</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">50</span>
-((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Insufficient funds&quot;</span>
-((acc <span class="cn">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
-((acc <span class="cn">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span>
-((acc <span class="cn">&#39;floof</span>)) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown request: floof&quot;</span></code></pre>
+((acc <span class="vs">&#39;withdraw</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">50</span>
+((acc <span class="vs">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Insufficient funds&quot;</span>
+((acc <span class="vs">&#39;deposit</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
+((acc <span class="vs">&#39;withdraw</span>) <span class="cn">60</span>) <span class="op">=&gt;</span> <span class="cn">30</span>
+((acc <span class="vs">&#39;floof</span>)) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown request: floof&quot;</span></code></pre>
 <h3 id="ex3.1" class="anchor">
 <a class="anchor__link link" href="#ex3.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.1">Exercise 3.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -147,18 +147,18 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (make-monitored f)
   (<span class="kw">let</span> ((n-calls <span class="cn">0</span>))
     (<span class="kw">lambda</span> (x)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> x <span class="cn">&#39;how-many-calls?</span>) n-calls)
-            ((<span class="fu">eq?</span> x <span class="cn">&#39;reset-count</span>) (<span class="kw">set!</span> n-calls <span class="cn">0</span>))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> x <span class="vs">&#39;how-many-calls?</span>) n-calls)
+            ((<span class="fu">eq?</span> x <span class="vs">&#39;reset-count</span>) (<span class="kw">set!</span> n-calls <span class="cn">0</span>))
             (<span class="kw">else</span> (<span class="kw">set!</span> n-calls (<span class="fu">+</span> n-calls <span class="cn">1</span>))
                   (f x))))))
 
 (<span class="kw">define</span> s (make-monitored <span class="fu">sqrt</span>))
 (s <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
-(s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(s <span class="vs">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
 (s <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
-(s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
-(s <span class="cn">&#39;reset-count</span>)
-(s <span class="cn">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">0</span></code></pre>
+(s <span class="vs">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
+(s <span class="vs">&#39;reset-count</span>)
+(s <span class="vs">&#39;how-many-calls?</span>) <span class="op">=&gt;</span> <span class="cn">0</span></code></pre>
 <h3 id="ex3.3" class="anchor">
 <a class="anchor__link link" href="#ex3.3" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.3">Exercise 3.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -172,15 +172,15 @@
     balance)
   (<span class="kw">define</span> (dispatch p m)
     (<span class="kw">if</span> (<span class="fu">eq?</span> p password)
-        (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
-              ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
-              (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m)))
+        (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) withdraw)
+              ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) deposit)
+              (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m)))
         (<span class="kw">lambda</span> (x) <span class="cn">&quot;Incorrect password&quot;</span>)))
   dispatch)
 
-(<span class="kw">define</span> acc (make-account <span class="cn">100</span> <span class="cn">&#39;secret-password</span>))
-((acc <span class="cn">&#39;secret-password</span> <span class="cn">&#39;withdraw</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">60</span>
-((acc <span class="cn">&#39;some-other-password</span> <span class="cn">&#39;deposit</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span></code></pre>
+(<span class="kw">define</span> acc (make-account <span class="cn">100</span> <span class="vs">&#39;secret-password</span>))
+((acc <span class="vs">&#39;secret-password</span> <span class="vs">&#39;withdraw</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">60</span>
+((acc <span class="vs">&#39;some-other-password</span> <span class="vs">&#39;deposit</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span></code></pre>
 <h3 id="ex3.4" class="anchor">
 <a class="anchor__link link" href="#ex3.4" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.4">Exercise 3.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -195,9 +195,9 @@
   (<span class="kw">let</span> ((consecutive-wrong <span class="cn">0</span>))
     (<span class="kw">define</span> (dispatch p m)
       (<span class="kw">if</span> (<span class="fu">eq?</span> p password)
-          (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="cn">&#39;withdraw</span>) withdraw)
-                ((<span class="fu">eq?</span> m <span class="cn">&#39;deposit</span>) deposit)
-                (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m)))
+          (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) withdraw)
+                ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) deposit)
+                (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m)))
           (<span class="kw">lambda</span> (x)
             (<span class="kw">set!</span> consecutive-wrong (<span class="fu">+</span> consecutive-wrong <span class="cn">1</span>))
             (<span class="kw">if</span> (<span class="fu">&gt;</span> consecutive-wrong <span class="cn">7</span>)
@@ -207,15 +207,15 @@
 
 (<span class="kw">define</span> (call-the-cops) <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span>)
 
-(<span class="kw">define</span> acc (make-account <span class="cn">&#39;right</span> <span class="cn">100</span>))
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="cn">&#39;wrong</span> <span class="cn">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span></code></pre>
+(<span class="kw">define</span> acc (make-account <span class="vs">&#39;right</span> <span class="cn">100</span>))
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span></code></pre>
 <h2 id="3.1.2" class="anchor">
 <a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a> <span class="number">3.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -319,17 +319,17 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> rand
   (<span class="kw">let</span> ((x random-init))
     (<span class="kw">lambda</span> (message)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> message <span class="cn">&#39;generate</span>)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> message <span class="vs">&#39;generate</span>)
              (<span class="kw">set!</span> x (rand-update x))
              x)
-            ((<span class="fu">eq?</span> message <span class="cn">&#39;reset</span>)
+            ((<span class="fu">eq?</span> message <span class="vs">&#39;reset</span>)
              (<span class="kw">lambda</span> (new-x)
                (<span class="kw">set!</span> x new-x)))
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&#39;rand</span> <span class="cn">&quot;message not recognized&quot;</span> message))))))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;rand</span> <span class="cn">&quot;message not recognized&quot;</span> message))))))
 
-(<span class="fu">number?</span> (rand <span class="cn">&#39;generate</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(rand <span class="cn">&#39;reset</span>)
-(<span class="fu">number?</span> (rand <span class="cn">&#39;generate</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+(<span class="fu">number?</span> (rand <span class="vs">&#39;generate</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(rand <span class="vs">&#39;reset</span>)
+(<span class="fu">number?</span> (rand <span class="vs">&#39;generate</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h2 id="3.1.3" class="anchor">
 <a class="anchor__link link" href="#3.1.3" aria-hidden="true">#</a> <span class="number">3.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_sec_3.1.3">The Costs of Introducing Assignment<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -401,13 +401,13 @@ Imports:
 <p>Distinct accounts:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))
 (<span class="kw">define</span> paul-acc (make-account <span class="cn">100</span>))
-((peter-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
-((paul-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span></code></pre>
+((peter-acc <span class="vs">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+((paul-acc <span class="vs">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span></code></pre>
 <p>Joint account:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))
 (<span class="kw">define</span> paul-acc peter-acc)
-((peter-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
-((paul-acc <span class="cn">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">50</span></code></pre>
+((peter-acc <span class="vs">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+((paul-acc <span class="vs">&#39;withdraw</span>) <span class="cn">25</span>) <span class="op">=&gt;</span> <span class="cn">50</span></code></pre>
 <h3 id="3.1.3.2" class="anchor">
 <a class="anchor__link link" href="#3.1.3.2" aria-hidden="true">#</a> <span class="number">3.1.3.2</span> Pitfalls of imperative programming
 </h3>
@@ -460,13 +460,13 @@ Imports:
   (<span class="kw">lambda</span> (p m)
     (pp-acc (<span class="kw">if</span> (<span class="fu">eq?</span> p new-password) password <span class="cn">#f</span>) m)))
 
-(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span> <span class="cn">&#39;open-sesame</span>))
-(<span class="kw">define</span> paul-acc (make-joint peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;rosebud</span>))
-((peter-acc <span class="cn">&#39;rosebud</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((paul-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
-((paul-acc <span class="cn">&#39;rosebud</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">80</span>
-((peter-acc <span class="cn">&#39;open-sesame</span> <span class="cn">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">70</span></code></pre>
+(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span> <span class="vs">&#39;open-sesame</span>))
+(<span class="kw">define</span> paul-acc (make-joint peter-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;rosebud</span>))
+((peter-acc <span class="vs">&#39;rosebud</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((paul-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((peter-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
+((paul-acc <span class="vs">&#39;rosebud</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">80</span>
+((peter-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">70</span></code></pre>
 <h3 id="ex3.8" class="anchor">
 <a class="anchor__link link" href="#ex3.8" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-20.html#%25_thm_3.8">Exercise 3.8<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>

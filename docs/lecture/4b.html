@@ -162,9 +162,9 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â
 <li>This is what happens when we try to extract the real part of a complex number in polar form:</li>
 </ul>
 <pre><code class="blockcode">(real-part z)
-(operate <span class="cn">&#39;real-part</span> z)
-((get <span class="cn">&#39;polar</span> <span class="cn">&#39;real-part</span>) (contents z))
-(real-part-polar &#39;(<span class="cn">1</span> . <span class="cn">2</span>))
+(operate <span class="vs">&#39;real-part</span> z)
+((get <span class="vs">&#39;polar</span> <span class="vs">&#39;real-part</span>) (contents z))
+(real-part-polar <span class="vs">&#39;(1 . 2)</span>)
 (<span class="fu">*</span> <span class="cn">1</span> (<span class="fu">cos</span> <span class="cn">2</span>))
 <span class="cn">-0.4161468365</span></code></pre>
 <ul>
