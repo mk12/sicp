@@ -101,11 +101,11 @@
                                        (lambda-body exp)
                                        env))
         ((begin? exp) (eval-sequence (begin-actions exp) env))
-        ((cond? exp) (eval (cond-&gt;if exp) env))
+        ((cond? exp) (<span class="fu">eval</span> (cond-&gt;if exp) env))
         ((application? exp)
-         (apply (eval (operator exp) env)
+         (<span class="fu">apply</span> (<span class="fu">eval</span> (operator exp) env)
                 (list-of-values (operands exp) env)))
-        (else (error &quot;Unknown expression type: EVAL&quot; exp))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: EVAL&quot;</span> exp))))</code></pre>
 <h3 id="4.1.1.2" class="anchor">
 <a class="anchor__link link" href="#4.1.1.2" aria-hidden="true">#</a> <code>Apply</code>
 </h3>
@@ -149,11 +149,11 @@
 <li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="kw">quote</span><span class="vs">d? exp</span>) (tagged-list? exp &#39;<span class="kw">quote</span>))
-(define (text-of-quotation exp) (cadr exp))
-(define (tagged-list? exp tag)
-  (if (pair? exp)
-      (eq? (car exp) tag)
-      false))</code></pre>
+(<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
+(<span class="kw">define</span> (tagged-list? exp tag)
+  (<span class="kw">if</span> (<span class="fu">pair?</span> exp)
+      (<span class="fu">eq?</span> (<span class="fu">car</span> exp) tag)
+      <span class="cn">false</span>))</code></pre>
 <h3 id="4.1.2.1" class="anchor">
 <a class="anchor__link link" href="#4.1.2.1" aria-hidden="true">#</a> Derived expressions
 </h3>
@@ -387,7 +387,7 @@
         ((begin? exp) (analyze-sequence (begin-actions exp)))
         ((cond? exp) (analyze (cond-&gt;if exp)))
         ((application? exp) (analyze-application exp))
-        (else (error &quot;Unknown expression type: ANALYZE&quot; exp))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: ANALYZE&quot;</span> exp))))</code></pre>
 <ul>
 <li>Here is one of the helper procedures, <code>analyze-lambda</code>. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.</li>
 </ul>

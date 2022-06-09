@@ -255,7 +255,7 @@ Imports:
   (iter items <span class="vs">&#39;()</span>))
 
 (square-list (<span class="fu">list</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> <span class="vs">&#39;(16 9 4 1)</span></code></pre>
-<p>Louis’s procedure reverses the order of the list because of the way he builds the result. His first iteration creates a pair whose <code>car</code> is <code>(square (<span class="fu">car</span> things))</code> and whose <code>cdr</code> is nil, and further recursions prepend to this list. So the last item of the result is the first item of the original list, and vice versa.</p>
+<p>Louis’s procedure reverses the order of the list because of the way he builds the result. His first iteration creates a pair whose <code>car</code> is <code>(square (<span class="fu">car</span> things))</code> and whose <code>cdr</code> is the empty list, and further recursions prepend to this list. So the last item of the result is the first item of the original list, and vice versa.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
   (<span class="kw">define</span> (iter things answer)
     (<span class="kw">if</span> (<span class="fu">null?</span> things)

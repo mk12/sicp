@@ -65,7 +65,7 @@
 </nav>
 <main id="main">
 <h1>
-<span class="number">4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html">Variations on a Scheme — Lazy Evaluation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<span class="number">4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html">Variations on a Scheme—Lazy Evaluation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <pre><code class="blockcode">(<span class="kw">define</span> (try a b) (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b))</code></pre>
 <p>With lazy evaluation, this would return 1 instead of raising an error.</p>
@@ -1242,29 +1242,29 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="kw">quote</span><span class="vs">d-&gt;lazy x</span>)
-  (cond ((pair? x) (list &#39;cons (<span class="kw">quote</span><span class="vs">d-&gt;lazy (car x)</span>) (<span class="kw">quote</span><span class="vs">d-&gt;lazy (cdr x)</span>)))
-        ;; Note: We can&#39;t simply move the `eval` call inside `<span class="kw">quote</span><span class="vs">d-&gt;lazy` and</span>
-<span class="vs">        ;; then omit it in this branch, since we might have recursed into a cons</span>
-<span class="vs">        ;; structure. We need this &quot;dumb-quote&quot; escape hatch.</span>
-<span class="vs">        (else (list &#39;dumb-quote x))</span>))
+  (cond ((pair? x) (<span class="fu">list</span> <span class="vs">&#39;cons</span> (<span class="kw">quote</span><span class="vs">d-&gt;lazy (car x)</span>) (<span class="kw">quote</span><span class="vs">d-&gt;lazy (cdr x)</span>)))
+        <span class="co">;; Note: We can&#39;t simply move the `eval` call inside `quoted-&gt;lazy` and</span>
+        <span class="co">;; then omit it in this branch, since we might have recursed into a cons</span>
+        <span class="co">;; structure. We need this &quot;dumb-quote&quot; escape hatch.</span>
+        (<span class="kw">else</span> (<span class="fu">list</span> <span class="vs">&#39;dumb-quote</span> x))))
 
-(define (lazy-<span class="kw">quote</span><span class="vs">-pkg</span>)
-  (put &#39;eval &#39;<span class="kw">quote</span>
-<span class="vs">       (lambda (exp env) (eval (quoted-&gt;lazy (text-of-quotation exp)) env))</span>)
-  (put &#39;eval &#39;dumb-<span class="kw">quote</span>
-<span class="vs">       (lambda (exp env) (text-of-quotation exp))</span>))
+(<span class="kw">define</span> (lazy-quote-pkg)
+  (put <span class="vs">&#39;eval</span> <span class="vs">&#39;quote</span>
+       (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (<span class="kw">quote</span><span class="vs">d-&gt;lazy (text-of-quotation exp)</span>) env)))
+  (put <span class="vs">&#39;eval</span> <span class="vs">&#39;dumb-quote</span>
+       (<span class="kw">lambda</span> (exp env) (text-of-quotation exp))))
 
-(define env (make-environment lazy-list-env))
+(<span class="kw">define</span> env (make-environment lazy-list-env))
 
 (using eval-pkg lazy-eval-pkg)
-(actual-value &#39;&#39;() env) =&gt; &#39;()
-(actual-value &#39;&#39;a env) =&gt; &#39;a
-(actual-value &#39;(car &#39;(a b c)) env) =!&gt; &quot;apply: unknown procedure type&quot;
+(actual-value &#39;<span class="vs">&#39;()</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(actual-value <span class="vs">&#39;&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
+(actual-value <span class="vs">&#39;(car &#39;(a b c))</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span>
 
-(using eval-pkg lazy-eval-pkg lazy-<span class="kw">quote</span><span class="vs">-pkg</span>)
-(actual-value &#39;&#39;() env) =&gt; &#39;()
-(actual-value &#39;&#39;a env) =&gt; &#39;a
-(actual-value &#39;(car &#39;(a b c)) env) =&gt; &#39;a</code></pre>
+(using eval-pkg lazy-eval-pkg lazy-quote-pkg)
+(actual-value &#39;<span class="vs">&#39;()</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(actual-value <span class="vs">&#39;&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
+(actual-value <span class="vs">&#39;(car &#39;(a b c))</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span></code></pre>
 <h3 id="ex4.34" class="anchor">
 <a class="anchor__link link" href="#ex4.34" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.34">Exercise 4.34<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>

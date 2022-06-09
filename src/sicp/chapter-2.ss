@@ -646,9 +646,9 @@ one-through-four => '(1 2 3 4)
 
 ;; Louis's procedure reverses the order of the list because of the way he builds
 ;; the result. His first iteration creates a pair whose `car` is `(square (car
-;; things))` and whose `cdr` is nil, and further recursions prepend to this
-;; list. So the last item of the result is the first item of the original list,
-;; and vice versa.
+;; things))` and whose `cdr` is the empty list, and further recursions prepend
+;; to this list. So the last item of the result is the first item of the
+;; original list, and vice versa.
 
 (define (square-list items)
   (define (iter things answer)
@@ -1698,10 +1698,13 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.55)
 
-;; `''abracadabra` is a shorthand for `(quote (quote abracadabra))`. This is the
-;; same as `'(quote abracadabra)`, and it evaluates to a list with two symbols:
-;; `(quote abracadabra)`{.nohl}. Taking the car of this gives you the first
-;; item, which is the symbol `quote`. This is what the interpreter prints.
+;; This happens because the Lisp reader expands each `'«exp»` to `(quote «exp»)`
+;; before evaluation, so `''abracadabra` evaluates to a list of two symbols:
+
+(car ''abracadabra)
+=> (car (quote (quote abracadabra)))
+=> (car '(quote abracadabra))
+=> 'quote
 
 (Section :2.3.2 "Example: Symbolic Differentiation")
 
@@ -1821,7 +1824,7 @@ one-through-four => '(1 2 3 4)
 
 (paste (:2.3.2 deriv))
 
-;; (a) Fully parenthesized binary infix form
+;; (a) Fully parenthesized infix form:
 
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
@@ -1848,30 +1851,33 @@ one-through-four => '(1 2 3 4)
 
 (deriv '(x + (3 * (x + (y + 2)))) 'x) => 4
 
-;; (b) Standard algebraic notation
+;; (b) Standard algebraic notation:
 
-;; This doesn't always work, but it's a start. Actually doing it properly is
-;; complicated -- it would be much easier to implement it from scratch rather
-;; than just changing the constructors and selectors.
-
-(define (sum? expr)
-  (and (pair? expr) (memq '+ (cdr expr))))
-
-(define (addend expr)
-  (define (until-plus expr)
-    (if (eq? '+ (car expr))
-        '()
-        (cons (car expr) (until-plus (cdr expr)))))
-  (if (eq? '+ (cadr expr))
+(define (has op expr)
+  (and (pair? expr) (memq op expr)))
+(define (unwrap expr)
+  (if (and (pair? expr) (null? (cdr expr)))
       (car expr)
-      (until-plus expr)))
+      expr))
+(define (before op expr)
+  (define (iter expr)
+    (if (eq? op (car expr))
+        '()
+        (cons (car expr) (iter (cdr expr)))))
+  (unwrap (iter expr)))
+(define (after op expr)
+  (unwrap (cdr (memq op expr))))
 
-(define (augend expr)
-  (if (null? (cdddr expr))
-      (caddr expr)
-      (cddr expr)))
+(define (sum? expr) (has '+ expr))
+(define (addend expr) (before '+ expr))
+(define (augend expr) (after '+ expr))
+
+(define (product? expr) (and (not (sum? expr)) (has '* expr)))
+(define (multiplier expr) (before '* expr))
+(define (multiplicand expr) (after '* expr))
 
 (deriv '(x + 3 * (x + y + 2)) 'x) => 4
+(deriv '(3 * (x + y * 2) + x + 1) 'x) => 4
 
 (Section :2.3.3 "Example: Representing Sets")
 

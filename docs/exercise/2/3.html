@@ -128,7 +128,11 @@ Imports:
 <h3 id="ex2.55" class="anchor">
 <a class="anchor__link link" href="#ex2.55" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<p><code><span class="vs">&#39;&#39;abracadabra</span></code> is a shorthand for <code>(<span class="kw">quote</span><span class="vs"> (quote abracadabra)</span>)</code>. This is the same as <code><span class="vs">&#39;(quote abracadabra)</span></code>, and it evaluates to a list with two symbols: <code>(quote abracadabra)</code>. Taking the car of this gives you the first item, which is the symbol <code>quote</code>. This is what the interpreter prints.</p>
+<p>This happens because the Lisp reader expands each <code>&#39;<span class="ss">exp</span></code> to <code>(<span class="kw">quote</span><span class="vs"> </span><span class="ss">exp</span>)</code> before evaluation, so <code>''abracadabra</code> evaluates to a list of two symbols:</p>
+<pre><code class="blockcode">(<span class="fu">car</span> <span class="vs">&#39;&#39;abracadabra</span>)
+<span class="op">=&gt;</span> (<span class="fu">car</span> (<span class="kw">quote</span><span class="vs"> (quote abracadabra)</span>))
+<span class="op">=&gt;</span> (<span class="fu">car</span> <span class="vs">&#39;(quote abracadabra)</span>)
+<span class="op">=&gt;</span> <span class="vs">&#39;quote</span></code></pre>
 <h2 id="2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -355,7 +359,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.3.2>:2.3.2</a> deriv))</code></pre>
 <ol type="a">
-<li>Fully parenthesized binary infix form</li>
+<li>Fully parenthesized infix form:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-sum a1 a2)
   (<span class="kw">cond</span> ((=number? a1 <span class="cn">0</span>) a2)
@@ -382,27 +386,33 @@ Imports:
 
 (deriv <span class="vs">&#39;(x + (3 * (x + (y + 2))))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <ol start="2" type="a">
-<li>Standard algebraic notation</li>
+<li>Standard algebraic notation:</li>
 </ol>
-<p>This doesn’t always work, but it’s a start. Actually doing it properly is complicated—it would be much easier to implement it from scratch rather than just changing the constructors and selectors.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum? expr)
-  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">memq</span> <span class="vs">&#39;+</span> (<span class="fu">cdr</span> expr))))
-
-(<span class="kw">define</span> (addend expr)
-  (<span class="kw">define</span> (until-plus expr)
-    (<span class="kw">if</span> (<span class="fu">eq?</span> <span class="vs">&#39;+</span> (<span class="fu">car</span> expr))
-        <span class="vs">&#39;()</span>
-        (<span class="fu">cons</span> (<span class="fu">car</span> expr) (until-plus (<span class="fu">cdr</span> expr)))))
-  (<span class="kw">if</span> (<span class="fu">eq?</span> <span class="vs">&#39;+</span> (<span class="fu">cadr</span> expr))
+<pre><code class="blockcode">(<span class="kw">define</span> (has op expr)
+  (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">memq</span> op expr)))
+(<span class="kw">define</span> (unwrap expr)
+  (<span class="kw">if</span> (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">null?</span> (<span class="fu">cdr</span> expr)))
       (<span class="fu">car</span> expr)
-      (until-plus expr)))
+      expr))
+(<span class="kw">define</span> (before op expr)
+  (<span class="kw">define</span> (iter expr)
+    (<span class="kw">if</span> (<span class="fu">eq?</span> op (<span class="fu">car</span> expr))
+        <span class="vs">&#39;()</span>
+        (<span class="fu">cons</span> (<span class="fu">car</span> expr) (iter (<span class="fu">cdr</span> expr)))))
+  (unwrap (iter expr)))
+(<span class="kw">define</span> (after op expr)
+  (unwrap (<span class="fu">cdr</span> (<span class="fu">memq</span> op expr))))
 
-(<span class="kw">define</span> (augend expr)
-  (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdddr</span> expr))
-      (<span class="fu">caddr</span> expr)
-      (<span class="fu">cddr</span> expr)))
+(<span class="kw">define</span> (sum? expr) (has <span class="vs">&#39;+</span> expr))
+(<span class="kw">define</span> (addend expr) (before <span class="vs">&#39;+</span> expr))
+(<span class="kw">define</span> (augend expr) (after <span class="vs">&#39;+</span> expr))
 
-(deriv <span class="vs">&#39;(x + 3 * (x + y + 2))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
+(<span class="kw">define</span> (product? expr) (<span class="kw">and</span> (<span class="fu">not</span> (sum? expr)) (has <span class="vs">&#39;*</span> expr)))
+(<span class="kw">define</span> (multiplier expr) (before <span class="vs">&#39;*</span> expr))
+(<span class="kw">define</span> (multiplicand expr) (after <span class="vs">&#39;*</span> expr))
+
+(deriv <span class="vs">&#39;(x + 3 * (x + y + 2))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span>
+(deriv <span class="vs">&#39;(3 * (x + y * 2) + x + 1)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <h2 id="2.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
