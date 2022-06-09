@@ -123,6 +123,8 @@ lint: lintss
 	<(grep '^(\(Chapter\|Section\)' $(sicp_src) \
 		| sed 's/^.*"\(.*\)".*$$/\1/;' | sort) \
 	| grep -v '^$(heading_exceptions)$$' | grep '^'
+	# Ensure special characters used for syntax highlighting are stripped.
+	! grep -qRE '«|»|‹|›' docs
 
 lintss: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
