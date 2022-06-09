@@ -425,7 +425,7 @@
         <keyword attribute="Function" context="#stay" String="functions"/>
         <RegExpr attribute="Number" context="#stay" String="-?+([0-9]++(\.|/)?+[0-9]*+|\.[0-9]++)(e[+-]?+[0-9]++)?+"/>
         <RegExpr attribute="ModuleId" context="#stay" String="[:?][0-9.]++"/>
-        <RegExpr attribute="Quoted" context="#stay" String="'['a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]++"/>
+        <RegExpr attribute="Quoted" context="#stay" String="'++[a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]++"/>
         <RegExpr attribute="Normal" context="#stay" String="[a-zA-Z][a-zA-Z0-9!$%*/:&lt;=&gt;?^_~+-]*+"/>
       </context>
       <context name="Comment" attribute="Comment" lineEndContext="#pop">
@@ -469,6 +469,7 @@
       </context>
       <context name="openQuote2" attribute="Normal" lineEndContext="#stay">
         <StringDetect attribute="Macro" context="quoted0" String="quote"/>
+        <DetectChar attribute="Normal" context="#pop#pop" char=")"/>
       </context>
       <context name="quoted0" attribute="Quoted" lineEndContext="#stay">
         <DetectChar attribute="Meta" context="Meta" char="«"/>

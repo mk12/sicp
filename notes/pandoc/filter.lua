@@ -387,13 +387,14 @@ function process_inline_code_in_block(el)
                 return el
             end
             -- Only highlight inline code if it has a parenthesis (procedure
-            -- application) or guillemet for meta-variables or is double quoting
-            -- (for consistency in Exercise 2.55). Otherwise notes with lots of
-            -- bits of code is too noisy, and also blue functions by themselves
-            -- end up looking like links.
-            if #el.classes == 0 and (
-                el.text:find("%(") or el.text:find("«") or el.text:sub(1, 2) == "''"
-            ) and el.text ~= "'()" then
+            -- application) or guillemet for meta-variables. Otherwise notes
+            -- with lots of bits of code is too noisy, and also blue functions
+            -- by themselves end up looking like links.
+            if (
+                #el.classes == 0
+                and (el.text:find("%(") or el.text:find("«"))
+                and el.text ~= "'()"
+            ) then
                 el.classes = {"scheme"}
                 return el
             end
