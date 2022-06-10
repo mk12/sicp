@@ -1855,16 +1855,19 @@ one-through-four => '(1 2 3 4)
 
 (define (has op expr)
   (and (pair? expr) (memq op expr)))
+
 (define (unwrap expr)
   (if (and (pair? expr) (null? (cdr expr)))
       (car expr)
       expr))
+
 (define (before op expr)
   (define (iter expr)
     (if (eq? op (car expr))
         '()
         (cons (car expr) (iter (cdr expr)))))
   (unwrap (iter expr)))
+
 (define (after op expr)
   (unwrap (cdr (memq op expr))))
 
@@ -1926,27 +1929,26 @@ one-through-four => '(1 2 3 4)
 
 (Exercise ?2.60)
 
-;; If we allow duplicates, we only need to change `adjoin-set` and `union-set`.
-;; `element-of-set?` and `intersection-set` stay the same.
+;; To allow duplicates, we only need to change `adjoin-set` and `union-set`:
 
 (define adjoin-set cons)
 (define union-set append)
 
-;; Efficiency:
+;; To compare the efficiency of each representation, let $n$ be the number of
+;; unique elements in the set, and let $k$ be the duplication factor (so the
+;; list contains $kn$ elements in total).
 ;;
-;; +------------------+----------+--------+
-;; | Function         | no dupes | dupes  |
-;; +------------------+----------+--------+
-;; | element-of-set   | O(n)     | O(n)   |
-;; | adjoin-set       | O(n)     | O(1)   |
-;; | union-set        | O(n^2)   | O(n)   |
-;; | intersection-set | O(n^2)   | O(n^2) |
-;; +------------------+----------+--------+
-;;
-;; It looks like it is always more efficient with duplicates. However, the `n`
-;; values become much larger with duplicates for obvious reasons. For small sets
-;; and many operator applications, keeping duplicates is better. For large sets
-;; and fewer operator applications, eliminating duplicates is better.
+;; Procedure           Non-duplicate  Duplicate
+;; ------------------  -------------  ---------
+;; `adjoin-set`        $Θ(n)$         $O(1)$
+;; `union-set`         $Θ(n^2)$       $O(kn)$
+;; `element-of-set?`   $Θ(n)$         $O(kn)$
+;; `intersection-set`  $Θ(n^2)$       $O((kn)^2)$
+
+;; Which representation is more efficient depends on $k$. If it's small, meaning
+;; duplicates are rare, then allowing duplicates is more efficient. For general
+;; purpose use, it's best to disallow duplicates because $k$ is unbounded and we
+;; cannot predict it.
 
 (Section :2.3.3.2 "Sets as ordered lists")
 
