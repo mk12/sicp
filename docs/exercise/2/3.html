@@ -524,7 +524,7 @@ Imports:
 </tr>
 </tbody>
 </table>
-<p>Which representation is more efficient depends on <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">k\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> If it’s small, meaning duplicates are rare, then allowing duplicates is more efficient. For general purpose use, it’s best to disallow duplicates because <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> is unbounded and we cannot predict it.</p>
+<p>Which representation is more efficient depends on <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">k\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> If it’s small, meaning inserting a duplicate is rare, then allowing duplicates is more efficient. For general use, it’s best to disallow duplicates because <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> is unbounded and we cannot predict it.</p>
 <h3 id="2.3.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.3.2" aria-hidden="true">#</a> <span class="number">2.3.3.2</span> Sets as ordered lists
 </h3>
@@ -655,30 +655,22 @@ Imports:
                             (copy-to-list (right-branch tree)
                                           result-list)))))
   (copy-to-list tree <span class="vs">&#39;()</span>))</code></pre>
-<p>Unbalanced (t1) and balanced (t2) trees representing the set {1,2,3,4,5,6}.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> t1 <span class="vs">&#39;(1 () (2 () (3 () (4 () (5 () (6 () ()))))))</span>)
-(<span class="kw">define</span> t2 <span class="vs">&#39;(4 (2 (1 () ()) (3 () ())) (5 () (6 () ())))</span>)</code></pre>
-<p>Trees from Figure 2.16, representing the set {1,3,5,7,9,11}.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> t3 <span class="vs">&#39;(7 (3 (1 () ()) (5 () ())) (9 () (11 () ())))</span>)
-(<span class="kw">define</span> t4 <span class="vs">&#39;(3 (1 () ()) (7 (5 () ()) (9 () (11 () ()))))</span>)
-(<span class="kw">define</span> t5 <span class="vs">&#39;(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ())))</span>)
-
-(tree-&gt;list-1 t1)
+<p>Here are the trees from Figure 2.16, all representing the set <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>5</mn><mo separator="true">,</mo><mn>7</mn><mo separator="true">,</mo><mn>9</mn><mo separator="true">,</mo><mn>11</mn><mo stretchy="false">}</mo><mtext>:</mtext></mrow><annotation encoding="application/x-tex">\{1,3,5,7,9,11\}\htmlClass{math-punctuation}{\text{:}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">7</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">9</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mord">1</span><span class="mclose">}</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">:</span></span></span></span></span></span></p>
+<pre><code class="blockcode">(<span class="kw">define</span> t1 <span class="vs">&#39;(7 (3 (1 () ()) (5 () ())) (9 () (11 () ())))</span>)
+(<span class="kw">define</span> t2 <span class="vs">&#39;(3 (1 () ()) (7 (5 () ()) (9 () (11 () ()))))</span>)
+(<span class="kw">define</span> t3 <span class="vs">&#39;(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ())))</span>)</code></pre>
+<ol type="a">
+<li>Yes, the two procedures produce the same result for every tree. In particular, they produce the ordered list representation of the set. The first performs an in-order traversal and appends intermediate results (left to right), while the second performs a reverse in-order traversal and prepends elements to the result (right to left).</li>
+</ol>
+<pre><code class="blockcode">(tree-&gt;list-1 t1)
 <span class="op">=&gt;</span> (tree-&gt;list-2 t1)
 <span class="op">=&gt;</span> (tree-&gt;list-1 t2)
 <span class="op">=&gt;</span> (tree-&gt;list-2 t2)
-<span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3 4 5 6)</span>
-
-(tree-&gt;list-1 t3)
+<span class="op">=&gt;</span> (tree-&gt;list-1 t3)
 <span class="op">=&gt;</span> (tree-&gt;list-2 t3)
-<span class="op">=&gt;</span> (tree-&gt;list-1 t4)
-<span class="op">=&gt;</span> (tree-&gt;list-2 t4)
-<span class="op">=&gt;</span> (tree-&gt;list-1 t5)
-<span class="op">=&gt;</span> (tree-&gt;list-2 t5)
 <span class="op">=&gt;</span> <span class="vs">&#39;(1 3 5 7 9 11)</span></code></pre>
-<ol type="a">
-<li><p>Yes, the two procedures produce the same result for every tree. Also, from this sample input, it seems that they always produce a sorted list, which means that different trees (balanced or otherwise) representing the same set get transformed into the same list.</p></li>
-<li><p>The second procedure performs one cons operation for each node of the tree, so it has order of growth O(n). The first procedure uses <code>append</code>, which is O(n). In the worst case, we would have n <code>append</code> steps for each of the n nodes, meaning O(n^2). However, assuming the tree is balanced, the number of <code>append</code> steps is cut in half on each recursive application. We have that for each of the n steps, and so the order of growth is O(n*log(n)).</p></li>
+<ol start="2" type="a">
+<li>The first procedure does linear work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for a balanced tree. The second procedure does constant work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for any tree whether balanced or not. The second procedure is more efficient.</li>
 </ol>
 <h3 id="ex2.64" class="anchor">
 <a class="anchor__link link" href="#ex2.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.64">Exercise 2.64<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -714,19 +706,16 @@ Imports:
              (right-tree (<span class="fu">car</span> right-result))
              (remaining-elts (<span class="fu">cdr</span> right-result)))
         (<span class="fu">cons</span> (make-tree this-entry left-tree right-tree)
-              remaining-elts))))</code></pre>
+              remaining-elts))))
+
+(list-&gt;tree <span class="vs">&#39;(1 3 5 7 9 11)</span>)
+<span class="op">=&gt;</span> <span class="vs">&#39;(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))</span></code></pre>
 <ol type="a">
-<li>The procedure <code>partial-tree</code> accepts a list <code>elts</code> and a number <code>n</code> as arguments. It returns a new list which is like <code>elts</code> but has the first <code>n</code> elements replaced by a tree representing that sublist. It does this by recursively calling <code>partial-tree</code> on first and second half of the <code>n</code> elements, then creating a tree with those subtrees (the <code>car</code> of the recursive application) and with the middle value (the n/2th element of <code>elts</code>) as the node value.</li>
+<li>The procedure <code>partial-tree</code> works by partitioning the first <code>n</code> elements of <code>elts</code> around a central element and recursively producing left and right subtrees. It uses truncated division to work when <code>n</code> is even or odd. It passes on the list of remaining elements to avoid re-traversing the list. Here is the tree it produces for the example:</li>
 </ol>
-<pre><code class="blockcode">(list-&gt;tree <span class="vs">&#39;(1 3 5 7 9 11)</span>)
-<span class="op">=&gt;</span> <span class="vs">&#39;(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))</span>
-<span class="co">;   5</span>
-<span class="co">;  / \</span>
-<span class="co">; 1   9</span>
-<span class="co">; \  /\</span>
-<span class="co">; 3 7 11</span></code></pre>
+<figure><svg class="diagram" viewBox="0 0 128 127" style="max-width:128px"><text x="55.143" y="13.714">5</text><path d="M54.857 18.286 36.571 54.857M64 18.286l18.286 36.571"/><text x="27.714" y="68.571">1</text><text x="82.571" y="68.571">9</text><path d="m36.571 73.143 13.715 27.428m32-27.428-13.715 27.428m22.858-27.428 13.714 27.428"/><text x="46" y="123.429">3</text><text x="64.286" y="123.429">7</text><text x="100.857" y="123.429">11</text></svg></figure>
 <ol start="2" type="a">
-<li>The procedure <code>list-&gt;tree</code> only needs to visit each element in the list once, and it applies cons for each one, so it has O(n) time complexity. Just because it is tree-recursive does not imply O(n^2) or O(log(n)) or any other specific order of growth.</li>
+<li>The procedure <code>list-&gt;tree</code> does constant work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">Θ(n)\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
 </ol>
 <h3 id="ex2.65" class="anchor">
 <a class="anchor__link link" href="#ex2.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.65">Exercise 2.65<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -736,6 +725,22 @@ Imports:
 Imports:
 </h4>
 <ul class="flat">
+<li class="flat__item">
+<a href="#2.3.3.2">2.3.3.2</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>intersection-set</code>,
+</li>
+</ul>
+</li>
+<li class="flat__item">
+<a href="#ex2.62">Ex 2.62</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>union-set</code>,
+</li>
+</ul>
+</li>
 <li class="flat__item">
 <a href="#ex2.63">Ex 2.63</a>
 <ul class="flat">
@@ -754,53 +759,31 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>The <code>tree-&gt;list-2</code> conversion, the union/intersection on ordered lists, and the <code>list-&gt;tree</code> conversion are all O(n), so combined they are still O(n).</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
-  (<span class="kw">define</span> (union-list l1 l2)
-    (<span class="kw">cond</span> ((<span class="fu">null?</span> l1) l2)
-          ((<span class="fu">null?</span> l2) l1)
-          ((<span class="fu">=</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
-           (<span class="fu">cons</span> (<span class="fu">car</span> l1) (union-list (<span class="fu">cdr</span> l1) (<span class="fu">cdr</span> l2))))
-          ((<span class="fu">&lt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
-           (<span class="fu">cons</span> (<span class="fu">car</span> l1) (union-list (<span class="fu">cdr</span> l1) l2)))
-          ((<span class="fu">&gt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
-           (<span class="fu">cons</span> (<span class="fu">car</span> l2) (union-list l1 (<span class="fu">cdr</span> l2))))))
-  (list-&gt;tree
-   (union-list (tree-&gt;list-2 set1)
-               (tree-&gt;list-2 set2))))
+<p>We can convert the balanced binary tree to an ordered list, use the <code>union-set</code> and <code>intersection-set</code> we already implemented for ordered lists, and then convert back to a tree. This is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> because each step is linear.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (union-tree set1 set2)
+  (list-&gt;tree (union-set (tree-&gt;list-2 set1) (tree-&gt;list-2 set2))))
 
-(<span class="kw">define</span> (intersection-set set1 set2)
-  (<span class="kw">define</span> (intersection-list l1 l2)
-    (<span class="kw">cond</span> ((<span class="fu">null?</span> l1) <span class="vs">&#39;()</span>)
-          ((<span class="fu">null?</span> l2) <span class="vs">&#39;()</span>)
-          ((<span class="fu">=</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
-           (<span class="fu">cons</span> (<span class="fu">car</span> l1) (intersection-list (<span class="fu">cdr</span> l1) (<span class="fu">cdr</span> l2))))
-          ((<span class="fu">&lt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
-           (intersection-list (<span class="fu">cdr</span> l1) l2))
-          ((<span class="fu">&gt;</span> (<span class="fu">car</span> l1) (<span class="fu">car</span> l2))
-           (intersection-list l1 (<span class="fu">cdr</span> l2)))))
-  (list-&gt;tree
-   (intersection-list (tree-&gt;list-2 set1)
-                      (tree-&gt;list-2 set2))))
+(<span class="kw">define</span> (intersection-tree set1 set2)
+  (list-&gt;tree (intersection-set (tree-&gt;list-2 set1) (tree-&gt;list-2 set2))))
 
 (<span class="kw">define</span> t1 <span class="vs">&#39;(1 () ())</span>)
 (<span class="kw">define</span> t2 <span class="vs">&#39;(2 () ())</span>)
 (<span class="kw">define</span> t23 <span class="vs">&#39;(2 () (3 () ()))</span>)
 (<span class="kw">define</span> t123 <span class="vs">&#39;(2 (1 () ()) (3 () ()))</span>)
 
-(union-set <span class="vs">&#39;()</span> t123) <span class="op">=&gt;</span> t123
-(union-set t123 <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> t123
-(union-set t123 t123) <span class="op">=&gt;</span> t123
-(union-set t1 t23) <span class="op">=&gt;</span> t123
-(union-set t2 t23) <span class="op">=&gt;</span> t23
-(union-set t23 t123) <span class="op">=&gt;</span> t123
+(union-tree <span class="vs">&#39;()</span> t123) <span class="op">=&gt;</span> t123
+(union-tree t123 <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> t123
+(union-tree t123 t123) <span class="op">=&gt;</span> t123
+(union-tree t1 t23) <span class="op">=&gt;</span> t123
+(union-tree t2 t23) <span class="op">=&gt;</span> t23
+(union-tree t23 t123) <span class="op">=&gt;</span> t123
 
-(intersection-set <span class="vs">&#39;()</span> t123) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
-(intersection-set t123 <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
-(intersection-set t1 t123) <span class="op">=&gt;</span> t1
-(intersection-set t2 t123) <span class="op">=&gt;</span> t2
-(intersection-set t123 t123) <span class="op">=&gt;</span> t123
-(intersection-set t23 t123) <span class="op">=&gt;</span> t23</code></pre>
+(intersection-tree <span class="vs">&#39;()</span> t123) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(intersection-tree t123 <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(intersection-tree t1 t123) <span class="op">=&gt;</span> t1
+(intersection-tree t2 t123) <span class="op">=&gt;</span> t2
+(intersection-tree t123 t123) <span class="op">=&gt;</span> t123
+(intersection-tree t23 t123) <span class="op">=&gt;</span> t23</code></pre>
 <h3 id="2.3.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.3.4" aria-hidden="true">#</a> <span class="number">2.3.3.4</span> Sets and information retrieval
 </h3>
@@ -812,7 +795,7 @@ Imports:
 
 (<span class="kw">define</span> key <span class="fu">car</span>)
 
-(lookup <span class="vs">&#39;c</span> <span class="vs">&#39;((a flour) (b water) (c salt))</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(c salt)</span></code></pre>
+(lookup <span class="cn">3</span> <span class="vs">&#39;((1 flour) (2 water) (3 salt))</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(3 salt)</span></code></pre>
 <h3 id="ex2.66" class="anchor">
 <a class="anchor__link link" href="#ex2.66" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.66">Exercise 2.66<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -860,7 +843,9 @@ Imports:
 <h2 id="2.3.4" class="anchor">
 <a class="anchor__link link" href="#2.3.4" aria-hidden="true">#</a> <span class="number">2.3.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.4">Example: Huffman Encoding Trees<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<p>Representing Huffman trees</p>
+<h3 id="2.3.4.1" class="anchor">
+<a class="anchor__link link" href="#2.3.4.1" aria-hidden="true">#</a> <span class="number">2.3.4.1</span> Representing Huffman trees
+</h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-leaf symbol weight) (<span class="fu">list</span> <span class="vs">&#39;leaf</span> symbol weight))
 (<span class="kw">define</span> (leaf? object) (<span class="fu">eq?</span> (<span class="fu">car</span> object) <span class="vs">&#39;leaf</span>))
 (<span class="kw">define</span> symbol-leaf <span class="fu">cadr</span>)
@@ -882,7 +867,33 @@ Imports:
   (<span class="kw">if</span> (leaf? tree)
       (weight-leaf tree)
       (<span class="fu">cadddr</span> tree)))</code></pre>
-<p>The decoding procedure</p>
+<h3 id="2.3.4.2" class="anchor">
+<a class="anchor__link link" href="#2.3.4.2" aria-hidden="true">#</a> <span class="number">2.3.4.2</span> The decoding procedure
+</h3>
+<aside class="imports">
+<h4>
+Imports:
+</h4>
+<ul class="flat">
+<li class="flat__item">
+<a href="#2.3.4.1">2.3.4.1</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>leaf?</code>
+</li>
+<li class="flat__item nowrap">
+<code>left-branch</code>
+</li>
+<li class="flat__item nowrap">
+<code>right-branch</code>
+</li>
+<li class="flat__item nowrap">
+<code>symbol-leaf</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (decode bits tree)
   (<span class="kw">define</span> (decode-1 bits current-branch)
     (<span class="kw">if</span> (<span class="fu">null?</span> bits)
@@ -898,7 +909,27 @@ Imports:
   (<span class="kw">cond</span> ((<span class="fu">=</span> bit <span class="cn">0</span>) (left-branch branch))
         ((<span class="fu">=</span> bit <span class="cn">1</span>) (right-branch branch))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;choose-branch</span> <span class="cn">&quot;bit should be 0 or 1&quot;</span> bit))))</code></pre>
-<p>Sets of weighted elements</p>
+<h3 id="2.3.4.3" class="anchor">
+<a class="anchor__link link" href="#2.3.4.3" aria-hidden="true">#</a> <span class="number">2.3.4.3</span> Sets of weighted elements
+</h3>
+<aside class="imports">
+<h4>
+Imports:
+</h4>
+<ul class="flat">
+<li class="flat__item">
+<a href="#2.3.4.1">2.3.4.1</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>make-leaf</code>
+</li>
+<li class="flat__item nowrap">
+<code>weight</code>
+</li>
+</ul>
+</li>
+</ul>
+</aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (adjoin-set x set)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (<span class="fu">list</span> x))
         ((<span class="fu">&lt;</span> (weight x) (weight (<span class="fu">car</span> set)))
@@ -921,16 +952,21 @@ Imports:
 </h4>
 <ul class="flat">
 <li class="flat__item">
-<a href="#2.3.4">2.3.4</a>
+<a href="#2.3.4.1">2.3.4.1</a>
 <ul class="flat">
-<li class="flat__item nowrap">
-<code>decode</code>
-</li>
 <li class="flat__item nowrap">
 <code>make-code-tree</code>
 </li>
 <li class="flat__item nowrap">
-<code>make-leaf</code>
+<code>make-leaf</code>,
+</li>
+</ul>
+</li>
+<li class="flat__item">
+<a href="#2.3.4.2">2.3.4.2</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>decode</code>
 </li>
 </ul>
 </li>
@@ -941,9 +977,11 @@ Imports:
                   (make-code-tree (make-leaf <span class="vs">&#39;B</span> <span class="cn">2</span>)
                                   (make-code-tree (make-leaf <span class="vs">&#39;D</span> <span class="cn">1</span>)
                                                   (make-leaf <span class="vs">&#39;C</span> <span class="cn">1</span>)))))
-(<span class="kw">define</span> sample-message <span class="vs">&#39;(0 1 1 0 0 1 0 1 0 1 1 1 0)</span>)
 
-(decode sample-message sample-tree) <span class="op">=&gt;</span> <span class="vs">&#39;(A D A B B C A)</span>
+(<span class="kw">define</span> sample-message <span class="vs">&#39;(0 1 1 0 0 1 0 1 0 1 1 1 0)</span>)
+(<span class="kw">define</span> sample-decoded <span class="vs">&#39;(A D A B B C A)</span>)
+
+(decode sample-message sample-tree) <span class="op">=&gt;</span> sample-decoded
 (decode <span class="vs">&#39;(0 1 2)</span> sample-tree) <span class="er">=!&gt;</span> <span class="cn">&quot;bit should be 0 or 1: 2&quot;</span></code></pre>
 <h3 id="ex2.68" class="anchor">
 <a class="anchor__link link" href="#ex2.68" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.68">Exercise 2.68<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -954,7 +992,15 @@ Imports:
 </h4>
 <ul class="flat">
 <li class="flat__item">
-<a href="#2.3.4">2.3.4</a>
+<a href="#2.3.3.1">2.3.3.1</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>element-of-set?</code>,
+</li>
+</ul>
+</li>
+<li class="flat__item">
+<a href="#2.3.4.1">2.3.4.1</a>
 <ul class="flat">
 <li class="flat__item nowrap">
 <code>leaf?</code>
@@ -974,10 +1020,10 @@ Imports:
 <a href="#ex2.67">Ex 2.67</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>sample-message</code>
+<code>sample-decoded</code>
 </li>
 <li class="flat__item nowrap">
-<code>sample-tree</code>
+<code>sample-messagesample-tree</code>
 </li>
 </ul>
 </li>
@@ -997,12 +1043,7 @@ Imports:
          (<span class="fu">cons</span> <span class="cn">1</span> (encode-symbol symbol (right-branch tree))))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;encode-symbol</span> <span class="cn">&quot;symbol not in tree&quot;</span> symbol))))
 
-(<span class="kw">define</span> (element-of-set? x set)
-  (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> set))
-       (<span class="kw">or</span> (<span class="fu">eq?</span> x (<span class="fu">car</span> set))
-           (element-of-set? x (<span class="fu">cdr</span> set)))))
-
-(encode <span class="vs">&#39;(A D A B B C A)</span> sample-tree) <span class="op">=&gt;</span> sample-message
+(encode sample-decoded sample-tree) <span class="op">=&gt;</span> sample-message
 (encode <span class="vs">&#39;(Z)</span> sample-tree) <span class="er">=!&gt;</span> <span class="cn">&quot;symbol not in tree: Z&quot;</span></code></pre>
 <h3 id="ex2.69" class="anchor">
 <a class="anchor__link link" href="#ex2.69" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.69">Exercise 2.69<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1013,21 +1054,21 @@ Imports:
 </h4>
 <ul class="flat">
 <li class="flat__item">
-<a href="#2.3.4">2.3.4</a>
+<a href="#2.3.4.1">2.3.4.1</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>make-code-tree</code>
-</li>
-<li class="flat__item nowrap">
-<code>make-leaf-set</code>,
+<code>make-code-tree</code>,
 </li>
 </ul>
 </li>
 <li class="flat__item">
-<a href="2.html#ex2.38">Ex 2.38</a>
+<a href="#2.3.4.3">2.3.4.3</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>fold-left</code>,
+<code>adjoin-set</code>
+</li>
+<li class="flat__item nowrap">
+<code>make-leaf-set</code>,
 </li>
 </ul>
 </li>
@@ -1045,7 +1086,11 @@ Imports:
   (successive-merge (make-leaf-set pairs)))
 
 (<span class="kw">define</span> (successive-merge set)
-  (fold-left make-code-tree (<span class="fu">car</span> set) (<span class="fu">cdr</span> set)))
+  (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdr</span> set))
+      (<span class="fu">car</span> set)
+      (successive-merge
+       (adjoin-set (make-code-tree (<span class="fu">car</span> set) (<span class="fu">cadr</span> set))
+                   (<span class="fu">cddr</span> set)))))
 
 (<span class="kw">define</span> abcd-tree (generate-huffman-tree <span class="vs">&#39;((A 5) (B 10) (C 2) (D 1))</span>))
 (encode-symbol <span class="vs">&#39;A</span> abcd-tree) <span class="op">=&gt;</span> <span class="vs">&#39;(0 1)</span>
@@ -1080,7 +1125,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> rock-tree
   (generate-huffman-tree
-   <span class="vs">&#39;((a 2) (get 2) (sha 3) (wah 1) (boom 1) (job 2) (na 16) (yip 9))</span>))
+   <span class="vs">&#39;((a 2) (boom 1) (get 2) (job 2) (na 16) (sha 3) (yip 9) (wah 1))</span>))
 
 (<span class="kw">define</span> song
   <span class="vs">&#39;(get a job sha na na na na na na na na</span>
@@ -1089,12 +1134,12 @@ Imports:
 <span class="vs">    sha boom)</span>)
 
 (<span class="kw">define</span> encoded-song (encode song rock-tree))
-(<span class="fu">length</span> encoded-song) <span class="op">=&gt;</span> <span class="cn">87</span>
+(<span class="fu">length</span> encoded-song) <span class="op">=&gt;</span> <span class="cn">84</span>
 encoded-song
-<span class="op">=&gt;</span> <span class="vs">&#39;(0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0</span>
-<span class="vs">     0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0</span>
-<span class="vs">     1 0 1 0 0 1 0 0 0 0 0 0 0)</span></code></pre>
-<p>The encoding requires 87 bits. There are eight symbols, so a fixed-length code would require log(8)/log(2) = 3 bits per symbol. The song has a total of 36 symbols, so the fixed-length coded message would need at least 108 bits. The variable-length encoding saves about 19% storage.</p>
+<span class="op">=&gt;</span> <span class="vs">&#39;(1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 1 1 1</span>
+<span class="vs">     1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1</span>
+<span class="vs">     1 1 0 1 1 0 1 1)</span></code></pre>
+<p>This encoding requires 84 bits. A fixed-length code for the eight-symbol alphabet would require <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mo><mi>log</mi><mo>⁡</mo></mo><mn>2</mn></msub><mn>8</mn><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\log_2 8 = 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93858em;vertical-align:-0.24414em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.20696799999999996em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span></span></span></span> bits per symbol, and the song uses 36 symbols, so the fixed-length coded message would need at least <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><mo>×</mo><mn>36</mn><mo>=</mo><mn>108</mn></mrow><annotation encoding="application/x-tex">3 \times 36 = 108</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">6</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mord">8</span></span></span></span> bits. Using the variable-length encoding saves about 22% storage.</p>
 <h3 id="ex2.71" class="anchor">
 <a class="anchor__link link" href="#ex2.71" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.71">Exercise 2.71<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1121,21 +1166,10 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>We have a Huffman tree for an alphabet of n symbols. The relative frequency of the nth symbol is 2^(n-1). For n = 5, we have the following tree:</p>
-<pre><code class="blockcode"><span class="co">;         *</span>
-<span class="co">;        /\</span>
-<span class="co">;       * 16</span>
-<span class="co">;      /\</span>
-<span class="co">;     * 8</span>
-<span class="co">;    /\</span>
-<span class="co">;   * 4</span>
-<span class="co">;  /\</span>
-<span class="co">; 1 2</span></code></pre>
-<p>For n = 10, the tree looks like this (right is left; down is right):</p>
-<pre><code class="blockcode"><span class="co">;  *----*----*---*---*---*---*--*--*--1</span>
-<span class="co">;  |    |    |   |   |   |   |  |  |</span>
-<span class="co">; 512  256  128  64  32  16  8  4  2</span></code></pre>
-<p>In general, the most frequent symbol requires one bit and the least frequent symbol requires n-1 bits.</p>
+<p>Given an alphabet of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span> symbols whose relative frequencies are consecutive powers of two, the Huffman tree will have a diagonal shape with every right branch going to a leaf. Here are the trees with leaf weights shown for 5 and 10 symbols:</p>
+<figure><svg class="diagram" viewBox="0 0 256 218" style="max-width:256px"><text x="64.286" y="68.571">16</text><text x="55.143" y="86.857">8</text><text x="46" y="105.143">4</text><text x="9.429" y="123.429">1</text><text x="36.857" y="123.429">2</text><text x="219.714" y="68.571">512</text><text x="210.571" y="86.857">256</text><text x="201.429" y="105.143">128</text><text x="192.286" y="123.429">64</text><text x="183.143" y="141.714">32</text><text x="174" y="160">16</text><text x="164.857" y="178.286">8</text><text x="155.714" y="196.571">4</text><text x="119.143" y="214.857">1</text><text x="146.571" y="214.857">2</text><text x="36.857" y="13.714">n=5</text><text x="192.286" y="13.714">n=10</text><path d="M54.857 36.571 27.429 91.429m27.428-54.858L64 54.857m-18.286 0 9.143 18.286m-18.286 0 9.143 18.286m-18.285 0-9.143 18.285m9.143-18.285 9.142 18.285m173.715-73.143-54.857 109.715m54.857-109.715 9.143 18.286m-18.286 0 9.143 18.286m-18.286 0 9.143 18.286m-18.286 0L192 109.714m-18.286 0L182.857 128m-18.286 0 9.143 18.286m-18.285 0L128 201.143m27.429-54.857 9.142 18.285m-18.285 0 9.143 18.286m-18.286 0 9.143 18.286"/></svg></figure>
+<p>The tree forms this way because the merging algorithm ends up accumulating everything into one tree. At each stage, the weight of the tree is less than the weight of the next leaf. For example, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>&lt;</mo><mn>4</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">1+2&lt;4\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">4</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> and in general <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mn>0</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><msup><mn>2</mn><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mn>2</mn><mi>k</mi></msup><mo>−</mo><mn>1</mn><mo>&lt;</mo><msup><mn>2</mn><mi>k</mi></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">2^0+\cdots+2^{k-1}=2^k-1&lt;2^k\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8491079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.932438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.849108em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></p>
+<p>In this encoding, the most frequent symbol requires one bit and the least frequent symbol requires <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> bits. We can verify this for a random <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mtext>:</mtext></mrow><annotation encoding="application/x-tex">n\htmlClass{math-punctuation}{\text{:}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">:</span></span></span></span></span></span></p>
 <pre><code class="blockcode">(<span class="kw">define</span> (alphabet-frequencies n)
   (<span class="kw">define</span> (helper i)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> i n)
@@ -1148,15 +1182,16 @@ Imports:
 
 (<span class="kw">define</span> n (<span class="fu">+</span> <span class="cn">2</span> (random <span class="cn">25</span>)))
 (<span class="kw">define</span> tree (generate-huffman-tree (alphabet-frequencies n)))
-(<span class="fu">length</span> (encode-symbol <span class="cn">1</span> tree)) <span class="op">=&gt;</span> <span class="cn">1</span>
+
+(encode-symbol <span class="cn">1</span> tree) <span class="op">=&gt;</span> <span class="vs">&#39;(1)</span>
 (<span class="fu">length</span> (encode-symbol n tree)) <span class="op">=&gt;</span> (<span class="fu">-</span> n <span class="cn">1</span>)</code></pre>
-<p>Special case: when n = 1, it takes n - 1 = 0 bits, not 1 bit:</p>
+<p>In the special case where <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">n=1\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> the lone symbol requires zero bits:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> tree (generate-huffman-tree (alphabet-frequencies <span class="cn">1</span>)))
 (encode-symbol <span class="cn">1</span> tree) <span class="op">=&gt;</span> <span class="vs">&#39;()</span></code></pre>
 <h3 id="ex2.72" class="anchor">
 <a class="anchor__link link" href="#ex2.72" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.72">Exercise 2.72<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<p>The number of steps required to encode the most frequent symbol in the alphabet of n symbols with <code>encode-symbol</code> grows as O(n). The procedure only looks down one branch, and so it must apply the procedure <code>element-of-set?</code> once. This procedure has linear time complexity with respect to the number of elements in the set, since it is represented as an unordered list. For the least frequent symbol, the number of steps grows as O(n^2). At each of n nodes through the depth of the tree, we have at most n comparisons when checking if the symbol is in the set. (If the tree were balanced, it would be Θ(n*log(n)), but we didn’t talk about that at all for Huffman trees.)</p>
+<p>The <code>encode-symbol</code> procedure from <a href="#ex2.68">Exercise&nbsp;2.68</a> grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> in the best case, when taking the first left branch to a leaf, and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> in the worst case, when visiting every non-leaf node. Assuming a tree as described in <a href="#ex2.71">Exercise&nbsp;2.71</a>, it is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for the most frequent symbol due to scanning the left branch’s symbols first, and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> for the least frequent symbol as this is the worst case just described.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

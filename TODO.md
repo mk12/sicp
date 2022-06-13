@@ -10,6 +10,16 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3*
++ subsubsections (x.y.z.w) in code
+    + should be real, i.e. `make lint` ensures they are present in text.md
+    + but no need to put all of them. e.g. text 1.1.5 has "Applicative order versus normal order", but exercise 1.1.5 just makes these sentences with a colon at the end since adding 1.1.5.{1,2} would just clutter things and require duplicating the imports
+    + rules of thumb: use x.y.z.w if (1) there is an exercise in between so you have to do this to get out of the exercise, or (2) the sections are long or (3) significantly different, i.e. not all importing everything from the previous one
+    + actually decided to use it in :2.4.3 because it only required a couple imports, and it's nice to be more modular and realize which things are independent
+    + in general trying to do it more, but not e.g. in :2.1.1 (rational numbers) because it would cause a cycle
++ gaps between `;;` paragraphs?
+    + gaps con: we use comments to switch between code/prose, makes no sense to switch back to code for a blank line within prose
+    + pro gaps: can be more symmetrical
+    + decision: add gap only if otherwise there is improper nesting, i.e. the `^;;$` binds two parts together too tightly in a way that is inconsistent with the surroundings
 + highlight inside quoted list e.g. in '(this is a list)
     + diff color than numbers?
     x don't bother quasiquote, too hard
@@ -123,7 +133,7 @@ x reconsider → in lecture 6a
 + figure out the whole lua module symbol stuff
 + fix exercise link for 1.7.1, 1.7.2
 x decide on styling for exercise headings (tabular numbers makes external link look bad)
-    x only looked bad when they were lined up without any body
+    x only looked bad when they were lined up without any content between them
 + implement use-block styling
 x links between text & exercise sections
     x no, too confusing
@@ -142,6 +152,7 @@ x problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in 
 + attribute some citations to Alan Perlis, etc.
 + do citations for inline quotes and block quotes, linking to SICP website (need it for highlights since chapter heading is not specific enough!)
 + section 1.2.6 prevent $n$th from breaking apart
+    + at first used [$n$th]{.nowrap}, later removed it and automated "th" the same as punctuation after math
 + attribute lecture quotes to Abelson/Sussman
 + use ellipses without square brackets in quotes
 + pre-rendered math (https://github.com/jgm/pandoc/issues/6651)
@@ -185,6 +196,7 @@ x problem: subsubsections like 1.2.3.1 do not have right-labels in text, but in 
 + italicize output or just use ; => comments
     + e.g. lecure 5a pt3, text 2.1.1
     + decided to use `=> 123` like in exercises BUT: always at start of line, never inlined into previous, AND not in cases where each line of the code block is showing a reduction
+    + (note: later on changed this, see "→" above)
 + fix soureCode C thing (just removed C code since it was inaccurate; &x is not box since it does not allocate) (https://github.com/jgm/pandoc/issues/4386)
 + reconsider inline code single-word highlighting
     + nice for parity, but:
@@ -239,7 +251,7 @@ x use contextual class names instead of SVG file name based
 x use ul in navs
     x if I could use display:contents, ul would be a cinch
     x it's 90%+ but with accessibility bugs ... the very reason to use it
-    x going to stick with plain <a>s for simplcity and less bloat
+    x going to stick with plain <a>s for simplicity and less bloat
 + fixup lecture.md blurb wording
 + redo pixel-perfect vertical-align
 + make highlights links go directly to textbook/lecture

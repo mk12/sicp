@@ -722,7 +722,7 @@ one-through-four => '(1 2 3 4)
 ;;                            | 3 |        | 4 |
 ;;                            '---'        '---'
 ;; ```
-
+;;
 ;; Tree interpretation:
 ;;
 ;; ```diagram
@@ -1944,11 +1944,11 @@ one-through-four => '(1 2 3 4)
 ;; `union-set`         $Θ(n^2)$       $O(kn)$
 ;; `element-of-set?`   $Θ(n)$         $O(kn)$
 ;; `intersection-set`  $Θ(n^2)$       $O((kn)^2)$
-
+;;
 ;; Which representation is more efficient depends on $k$. If it's small, meaning
-;; duplicates are rare, then allowing duplicates is more efficient. For general
-;; purpose use, it's best to disallow duplicates because $k$ is unbounded and we
-;; cannot predict it.
+;; inserting a duplicate is rare, then allowing duplicates is more efficient.
+;; For general use, it's best to disallow duplicates because $k$ is unbounded
+;; and we cannot predict it.
 
 (Section :2.3.3.2 "Sets as ordered lists")
 
@@ -2060,40 +2060,30 @@ one-through-four => '(1 2 3 4)
                                           result-list)))))
   (copy-to-list tree '()))
 
-;; Unbalanced (t1) and balanced (t2) trees representing the set {1,2,3,4,5,6}.
-(define t1 '(1 () (2 () (3 () (4 () (5 () (6 () ())))))))
-(define t2 '(4 (2 (1 () ()) (3 () ())) (5 () (6 () ()))))
+;; Here are the trees from Figure 2.16, all representing the set
+;; $\{1,3,5,7,9,11\}$:
+(define t1 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
+(define t2 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
+(define t3 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
 
-;; Trees from Figure 2.16, representing the set {1,3,5,7,9,11}.
-(define t3 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
-(define t4 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
-(define t5 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
+;; (a) Yes, the two procedures produce the same result for every tree. In
+;; particular, they produce the ordered list representation of the set. The
+;; first performs an in-order traversal and appends intermediate results (left
+;; to right), while the second performs a reverse in-order traversal and
+;; prepends elements to the result (right to left).
 
 (tree->list-1 t1)
 => (tree->list-2 t1)
 => (tree->list-1 t2)
 => (tree->list-2 t2)
-=> '(1 2 3 4 5 6)
-
-(tree->list-1 t3)
+=> (tree->list-1 t3)
 => (tree->list-2 t3)
-=> (tree->list-1 t4)
-=> (tree->list-2 t4)
-=> (tree->list-1 t5)
-=> (tree->list-2 t5)
 => '(1 3 5 7 9 11)
 
-;; (a) Yes, the two procedures produce the same result for every tree. Also,
-;; from this sample input, it seems that they always produce a sorted list,
-;; which means that different trees (balanced or otherwise) representing the
-;; same set get transformed into the same list.
-
-;; (b) The second procedure performs one cons operation for each node of the
-;; tree, so it has order of growth O(n). The first procedure uses `append`,
-;; which is O(n). In the worst case, we would have n `append` steps for each of
-;; the n nodes, meaning O(n^2). However, assuming the tree is balanced, the
-;; number of `append` steps is cut in half on each recursive application. We
-;; have that for each of the n steps, and so the order of growth is O(n*log(n)).
+;; (b) The first procedure does linear work at each node, so it grows as
+;; $Θ(n\log n)$ for a balanced tree. The second procedure does constant work at
+;; each node, so it grows as $Θ(n)$ for any tree whether balanced or not. The
+;; second procedure is more efficient.
 
 (Exercise ?2.64
   (use (:2.3.3.3 make-tree)))
@@ -2116,79 +2106,60 @@ one-through-four => '(1 2 3 4)
         (cons (make-tree this-entry left-tree right-tree)
               remaining-elts))))
 
-;; (a) The procedure `partial-tree` accepts a list `elts` and a number `n` as
-;; arguments. It returns a new list which is like `elts` but has the first `n`
-;; elements replaced by a tree representing that sublist. It does this by
-;; recursively calling `partial-tree` on first and second half of the `n`
-;; elements, then creating a tree with those subtrees (the `car` of the
-;; recursive application) and with the middle value (the n/2th element of
-;; `elts`) as the node value.
-
 (list->tree '(1 3 5 7 9 11))
 => '(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
-;   5
-;  / \
-; 1   9
-; \  /\
-; 3 7 11
 
-;; (b) The procedure `list->tree` only needs to visit each element in the list
-;; once, and it applies cons for each one, so it has O(n) time complexity. Just
-;; because it is tree-recursive does not imply O(n^2) or O(log(n)) or any other
-;; specific order of growth.
+;; (a) The procedure `partial-tree` works by partitioning the first `n` elements
+;; of `elts` around a central element and recursively producing left and right
+;; subtrees. It uses truncated division to work when `n` is even or odd. It
+;; passes on the list of remaining elements to avoid re-traversing the list.
+;; Here is the tree it produces for the example:
+;;
+;; ```diagram
+;;       5
+;;      / \
+;;     /   \
+;;    1     9
+;;     \   / \
+;;      + +   +
+;;      3 7   11
+;; ```
+;;
+;; (b) The procedure `list->tree` does constant work at each node, so it grows
+;; as $Θ(n)$.
 
 (Exercise ?2.65
-  (use (?2.63 tree->list-2) (?2.64 list->tree)))
+  (use (:2.3.3.2 intersection-set) (?2.62 union-set) (?2.63 tree->list-2)
+       (?2.64 list->tree)))
 
-;; The `tree->list-2` conversion, the union/intersection on ordered lists, and
-;; the `list->tree` conversion are all O(n), so combined they are still O(n).
+;; We can convert the balanced binary tree to an ordered list, use the
+;; `union-set` and `intersection-set` we already implemented for ordered lists,
+;; and then convert back to a tree. This is $Θ(n)$ because each step is linear.
 
-(define (union-set set1 set2)
-  (define (union-list l1 l2)
-    (cond ((null? l1) l2)
-          ((null? l2) l1)
-          ((= (car l1) (car l2))
-           (cons (car l1) (union-list (cdr l1) (cdr l2))))
-          ((< (car l1) (car l2))
-           (cons (car l1) (union-list (cdr l1) l2)))
-          ((> (car l1) (car l2))
-           (cons (car l2) (union-list l1 (cdr l2))))))
-  (list->tree
-   (union-list (tree->list-2 set1)
-               (tree->list-2 set2))))
+(define (union-tree set1 set2)
+  (list->tree (union-set (tree->list-2 set1) (tree->list-2 set2))))
 
-(define (intersection-set set1 set2)
-  (define (intersection-list l1 l2)
-    (cond ((null? l1) '())
-          ((null? l2) '())
-          ((= (car l1) (car l2))
-           (cons (car l1) (intersection-list (cdr l1) (cdr l2))))
-          ((< (car l1) (car l2))
-           (intersection-list (cdr l1) l2))
-          ((> (car l1) (car l2))
-           (intersection-list l1 (cdr l2)))))
-  (list->tree
-   (intersection-list (tree->list-2 set1)
-                      (tree->list-2 set2))))
+(define (intersection-tree set1 set2)
+  (list->tree (intersection-set (tree->list-2 set1) (tree->list-2 set2))))
 
 (define t1 '(1 () ()))
 (define t2 '(2 () ()))
 (define t23 '(2 () (3 () ())))
 (define t123 '(2 (1 () ()) (3 () ())))
 
-(union-set '() t123) => t123
-(union-set t123 '()) => t123
-(union-set t123 t123) => t123
-(union-set t1 t23) => t123
-(union-set t2 t23) => t23
-(union-set t23 t123) => t123
+(union-tree '() t123) => t123
+(union-tree t123 '()) => t123
+(union-tree t123 t123) => t123
+(union-tree t1 t23) => t123
+(union-tree t2 t23) => t23
+(union-tree t23 t123) => t123
 
-(intersection-set '() t123) => '()
-(intersection-set t123 '()) => '()
-(intersection-set t1 t123) => t1
-(intersection-set t2 t123) => t2
-(intersection-set t123 t123) => t123
-(intersection-set t23 t123) => t23
+(intersection-tree '() t123) => '()
+(intersection-tree t123 '()) => '()
+(intersection-tree t1 t123) => t1
+(intersection-tree t2 t123) => t2
+(intersection-tree t123 t123) => t123
+(intersection-tree t23 t123) => t23
 
 (Section :2.3.3.4 "Sets and information retrieval")
 
@@ -2200,7 +2171,7 @@ one-through-four => '(1 2 3 4)
 
 (define key car)
 
-(lookup 'c '((a flour) (b water) (c salt))) => '(c salt)
+(lookup 3 '((1 flour) (2 water) (3 salt))) => '(3 salt)
 
 (Exercise ?2.66
   (use (:2.3.3.3 entry left-branch right-branch) (:2.3.3.4 key)))
@@ -2220,7 +2191,7 @@ one-through-four => '(1 2 3 4)
 
 (Section :2.3.4 "Example: Huffman Encoding Trees")
 
-;; Representing Huffman trees
+(Section :2.3.4.1 "Representing Huffman trees")
 
 (define (make-leaf symbol weight) (list 'leaf symbol weight))
 (define (leaf? object) (eq? (car object) 'leaf))
@@ -2244,7 +2215,8 @@ one-through-four => '(1 2 3 4)
       (weight-leaf tree)
       (cadddr tree)))
 
-;; The decoding procedure
+(Section :2.3.4.2 "The decoding procedure"
+  (use (:2.3.4.1 leaf? left-branch right-branch symbol-leaf)))
 
 (define (decode bits tree)
   (define (decode-1 bits current-branch)
@@ -2262,7 +2234,8 @@ one-through-four => '(1 2 3 4)
         ((= bit 1) (right-branch branch))
         (else (error 'choose-branch "bit should be 0 or 1" bit))))
 
-;; Sets of weighted elements
+(Section :2.3.4.3 "Sets of weighted elements"
+  (use (:2.3.4.1 make-leaf weight)))
 
 (define (adjoin-set x set)
   (cond ((null? set) (list x))
@@ -2279,21 +2252,24 @@ one-through-four => '(1 2 3 4)
                     (make-leaf-set (cdr pairs))))))
 
 (Exercise ?2.67
-  (use (:2.3.4 decode make-code-tree make-leaf)))
+  (use (:2.3.4.1 make-code-tree make-leaf) (:2.3.4.2 decode)))
 
 (define sample-tree
   (make-code-tree (make-leaf 'A 4)
                   (make-code-tree (make-leaf 'B 2)
                                   (make-code-tree (make-leaf 'D 1)
                                                   (make-leaf 'C 1)))))
-(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
-(decode sample-message sample-tree) => '(A D A B B C A)
+(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+(define sample-decoded '(A D A B B C A))
+
+(decode sample-message sample-tree) => sample-decoded
 (decode '(0 1 2) sample-tree) =!> "bit should be 0 or 1: 2"
 
 (Exercise ?2.68
-  (use (:2.3.4 leaf? left-branch right-branch symbols)
-       (?2.67 sample-message sample-tree)))
+  (use (:2.3.3.1 element-of-set?)
+       (:2.3.4.1 leaf? left-branch right-branch symbols)
+       (?2.67 sample-decoded sample-messagesample-tree)))
 
 (define (encode message tree)
   (if (null? message)
@@ -2309,23 +2285,22 @@ one-through-four => '(1 2 3 4)
          (cons 1 (encode-symbol symbol (right-branch tree))))
         (else (error 'encode-symbol "symbol not in tree" symbol))))
 
-(define (element-of-set? x set)
-  (and (not (null? set))
-       (or (eq? x (car set))
-           (element-of-set? x (cdr set)))))
-
-(encode '(A D A B B C A) sample-tree) => sample-message
+(encode sample-decoded sample-tree) => sample-message
 (encode '(Z) sample-tree) =!> "symbol not in tree: Z"
 
 (Exercise ?2.69
-  (use (:2.3.4 make-code-tree make-leaf-set) (?2.38 fold-left)
+  (use (:2.3.4.1 make-code-tree) (:2.3.4.3 adjoin-set make-leaf-set)
        (?2.68 encode-symbol)))
 
 (define (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
 
 (define (successive-merge set)
-  (fold-left make-code-tree (car set) (cdr set)))
+  (if (null? (cdr set))
+      (car set)
+      (successive-merge
+       (adjoin-set (make-code-tree (car set) (cadr set))
+                   (cddr set)))))
 
 (define abcd-tree (generate-huffman-tree '((A 5) (B 10) (C 2) (D 1))))
 (encode-symbol 'A abcd-tree) => '(0 1)
@@ -2338,7 +2313,7 @@ one-through-four => '(1 2 3 4)
 
 (define rock-tree
   (generate-huffman-tree
-   '((a 2) (get 2) (sha 3) (wah 1) (boom 1) (job 2) (na 16) (yip 9))))
+   '((a 2) (boom 1) (get 2) (job 2) (na 16) (sha 3) (yip 9) (wah 1))))
 
 (define song
   '(get a job sha na na na na na na na na
@@ -2347,37 +2322,47 @@ one-through-four => '(1 2 3 4)
     sha boom))
 
 (define encoded-song (encode song rock-tree))
-(length encoded-song) => 87
+(length encoded-song) => 84
 encoded-song
-=> '(0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 0 0 1 0 0
-     0 0 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
-     1 0 1 0 0 1 0 0 0 0 0 0 0)
+=> '(1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 1 1 1
+     1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+     1 1 0 1 1 0 1 1)
 
-;; The encoding requires 87 bits. There are eight symbols, so a fixed-length
-;; code would require log(8)/log(2) = 3 bits per symbol. The song has a total of
-;; 36 symbols, so the fixed-length coded message would need at least 108 bits.
-;; The variable-length encoding saves about 19% storage.
+;; This encoding requires 84 bits. A fixed-length code for the eight-symbol
+;; alphabet would require $\log_2 8 = 3$ bits per symbol, and the song uses 36
+;; symbols, so the fixed-length coded message would need at least $3 \times 36 =
+;; 108$ bits. Using the variable-length encoding saves about 22% storage.
 
 (Exercise ?2.71
   (use (?2.68 encode-symbol) (?2.69 generate-huffman-tree)))
 
-;; We have a Huffman tree for an alphabet of n symbols. The relative frequency
-;; of the nth symbol is 2^(n-1). For n = 5, we have the following tree:
-;         *
-;        /\
-;       * 16
-;      /\
-;     * 8
-;    /\
-;   * 4
-;  /\
-; 1 2
-;; For n = 10, the tree looks like this (right is left; down is right):
-;  *----*----*---*---*---*---*--*--*--1
-;  |    |    |   |   |   |   |  |  |
-; 512  256  128  64  32  16  8  4  2
-;; In general, the most frequent symbol requires one bit and the least frequent
-;; symbol requires n-1 bits.
+;; Given an alphabet of $n$ symbols whose relative frequencies are consecutive
+;; powers of two, the Huffman tree will have a diagonal shape with every right
+;; branch going to a leaf. Here are the trees with leaf weights shown for 5 and
+;; 10 symbols:
+;;
+;; ```diagram
+;;     "n=5"            "n=10"
+;;
+;;      /\               /\
+;;     /\ 16            /\ 512
+;;    /\ 8             /\ 256
+;;   /\ 4             /\ 128
+;;  1  2             /\ 64
+;;                  /\ 32
+;;                 /\ 16
+;;                /\ 8
+;;               /\ 4
+;;              1  2
+;; ```
+;;
+;; The tree forms this way because the merging algorithm ends up accumulating
+;; everything into one tree. At each stage, the weight of the tree is less than
+;; the weight of the next leaf. For example, $1+2<4$, and in general
+;; $2^0+\cdots+2^{k-1}=2^k-1<2^k$.
+;;
+;; In this encoding, the most frequent symbol requires one bit and the least
+;; frequent symbol requires $n-1$ bits. We can verify this for a random $n$:
 
 (define (alphabet-frequencies n)
   (define (helper i)
@@ -2391,24 +2376,23 @@ encoded-song
 
 (define n (+ 2 (random 25)))
 (define tree (generate-huffman-tree (alphabet-frequencies n)))
-(length (encode-symbol 1 tree)) => 1
+
+(encode-symbol 1 tree) => '(1)
 (length (encode-symbol n tree)) => (- n 1)
 
-;; Special case: when n = 1, it takes n - 1 = 0 bits, not 1 bit:
+;; In the special case where $n=1$, the lone symbol requires zero bits:
+
 (define tree (generate-huffman-tree (alphabet-frequencies 1)))
 (encode-symbol 1 tree) => '()
 
 (Exercise ?2.72)
 
-;; The number of steps required to encode the most frequent symbol in the
-;; alphabet of n symbols with `encode-symbol` grows as O(n). The procedure only
-;; looks down one branch, and so it must apply the procedure `element-of-set?`
-;; once. This procedure has linear time complexity with respect to the number of
-;; elements in the set, since it is represented as an unordered list. For the
-;; least frequent symbol, the number of steps grows as O(n^2). At each of n
-;; nodes through the depth of the tree, we have at most n comparisons when
-;; checking if the symbol is in the set. (If the tree were balanced, it would be
-;; Θ(n*log(n)), but we didn't talk about that at all for Huffman trees.)
+;; The `encode-symbol` procedure from [](?2.68) grows as $Θ(1)$ in the best
+;; case, when taking the first left branch to a leaf, and $Θ(n^2)$ in the worst
+;; case, when visiting every non-leaf node. Assuming a tree as described in
+;; [](?2.71), it is $Θ(n)$ for the most frequent symbol due to scanning the left
+;; branch's symbols first, and $Θ(n^2)$ for the least frequent symbol as this is
+;; the worst case just described.
 
 (Section :2.4 "Multiple Representations for Abstract Data")
 

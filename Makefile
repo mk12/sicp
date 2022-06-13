@@ -32,7 +32,7 @@ render_fifo := render.fifo
 
 # Made-up headings that are allowed in chapter-*.ss.
 heading_exceptions := \
-	A sample simulation\|One-dimensional tables\|Primitive procedures
+	A sample simulation|One-dimensional tables|Primitive procedures
 
 # HTML validation errors to ignore.
 validate_exceptions := \
@@ -118,11 +118,12 @@ lint: lintss
 	find . -type f -name "*.ts" | xargs deno lint --unstable
 	# Ensure all headings in the code appear in text.md.
 	! comm -13 \
-	<(grep '^#' notes/text.md \
-		| sed -E 's/^#+ ([0-9.]+: )?//' | sort) \
-	<(grep '^(\(Chapter\|Section\)' $(sicp_src) \
-		| sed 's/^.*"\(.*\)".*$$/\1/;' | sort) \
-	| grep -v '^$(heading_exceptions)$$' | grep '^'
+	<(grep -E '^#' notes/text.md \
+		| sed -E 's/^#+ //' | sort) \
+	<(grep -Eh '^\((Chapter|Section)' $(sicp_src) \
+		| sed -E -e 's/^\(.+ :(.+) "(.+)".*$$/\1: \2/' \
+			-e 's/^([0-9]+\.){3}[0-9]+: //' | sort) \
+	| grep -Ev '^$(heading_exceptions)$$' | grep -E '^'
 	# Ensure special characters used for syntax highlighting are stripped.
 	! grep -qRE '«|»|‹|›' docs
 

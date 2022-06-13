@@ -418,14 +418,14 @@ circumference ~> 62.8318
 (define (k n) (* 5 n n))
 
 ;; `(f n)` computes $2n$, since `(A 0 n) => (* 2 n)`.
-
+;;
 ;; `(g n)` computes $2^n$, since
 ;; `(A 1 n) => (A 0 (A 1 (- n 1))) => (f (g (- n 1)))`.
-
+;;
 ;; `(h n)` computes ${^{n}2}$
 ;; ([tetration](https://en.wikipedia.org/wiki/Tetration)):
 ;; `(A 2 n) => (A 1 (A 2 (- n 1))) => (g (h (- n 1)))`.
-
+;;
 ;; `(k n)` computes $5n^2$, as stated in the exercise.
 
 (Section :1.2.2 "Tree Recursion")
@@ -769,7 +769,7 @@ circumference ~> 62.8318
 ;; \end{aligned}$$
 ;;
 ;; where $p' = p^2 + q^2$ and $q' = q^2 + 2pq$.
-
+;;
 ;; Using this, we can implement `fib` with $Θ(\log n)$ time complexity:
 
 (define (fib n)
