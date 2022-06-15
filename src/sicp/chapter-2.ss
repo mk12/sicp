@@ -2356,7 +2356,7 @@ encoded-song
 ;;              1  2
 ;; ```
 ;;
-;; The tree forms this way because the merging algorithm ends up accumulating
+;; The tree looks like this because the merging algorithm ends up accumulating
 ;; everything into one tree. At each stage, the weight of the tree is less than
 ;; the weight of the next leaf. For example, $1+2<4$, and in general
 ;; $2^0+\cdots+2^{k-1}=2^k-1<2^k$.

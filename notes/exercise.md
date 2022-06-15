@@ -1,6 +1,6 @@
 These are my solutions to the exercises in <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>. The code is written in a language based on [R6RS Scheme][] that provides lightweight modules and assertions, allowing each section to explicitly declare its dependencies and run unit tests. The language is described more in the [next section][].
 
-This project supports three Scheme implementations: [Chez Scheme][], [Guile][], and [Racket][]. For each one there is a [compatibility shim][] exposing some features that are not part of R6RS under a common interface. In my experience, Chez has the best performance and debugger while Racket has the best error messages. There are [known issues][] with some implementations: notably, Guile only works when compilation is disabled.
+This project supports three Scheme implementations: [Chez Scheme][], [Guile][], and [Racket][]. For each one there is a [compatibility shim][] exposing some features that are not part of R6RS under a common interface. In my experience, Chez has the best performance and debugger while Racket has the best error messages.
 
 These webpages are [generated][] directly from source code.
 
@@ -12,7 +12,6 @@ These webpages are [generated][] directly from source code.
 [Guile]: https://www.gnu.org/software/guile/ "GNU Guile"
 [Racket]: http://racket-lang.org "Racket programming language"
 [compatibility shim]: https://github.com/mk12/sicp/blob/master/src/compat
-[known issues]: https://github.com/mk12/sicp#known-issues
 [generated]: https://github.com/mk12/sicp#website
 
 # Note on the Language
@@ -125,7 +124,7 @@ Starting in [](:2), many modules use [data-directed programming](@2.4.3) to disp
 
 (using rectangular-pkg polar-pkg)
 
-; Tests go here.
+;; Tests go here.
 ```
 
 The `using` procedure defined in [](:2.4.3) resets the global table and installs the given packages. There is no automatic tracking of dependencies, so `using` calls must list everything explicitly. This package system is not part of the language, but it's worth explaining here because so many modules use it.

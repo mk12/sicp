@@ -1174,17 +1174,10 @@ The following procedure decodes a list of bits using a Huffman tree:
 
 ## 2.4: Multiple Representations for Abstract Data
 
-- Data abstraction lets use write specify programs that work independently of the chosen representation for data objects.
-- We erect abstraction barriers to control complexity.
-- This still isn't powerful enough -- it doesn't always make sense to speak of the "underlying representation".
-- We might want to deal with multiple representations.
-- For example, complex numbers can be represented in rectangular form or in polar form.
-- We need abstraction barriers that isolate representation from use _and_ others that isolate design choices.
-- We want to permit multiple design choices to coexist.
-- This is important for modularity.
-- We will construct _generic procedures_, which can operate on data that may be represented in more than one way.
-- We will accomplish this with _type tags_. We will also discuss _data-directed_ programming.
-- We now have horizontal abstraction barriers, separating higher-level from lower-level, and vertical ones, separately alternative representations.
+- Data abstraction lets us write programs that work independently of the chosen representation for data objects. This helps control complexity.
+- But it's not powerful enough: sometimes we want not just an abstracted underlying representation, but multiple representations.
+- In addition to horizontal abstraction barriers, separating high-level from low-level, we need vertical abstraction barriers, allowing multiple design choices to coexist.
+- We'll do this by constructing _generic procedures_, which can operate on data that may be represented in more than one way.
 
 ### 2.4.1: Representations for Complex Numbers
 
