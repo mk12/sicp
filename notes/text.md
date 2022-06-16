@@ -474,7 +474,7 @@ Now we will take it a bit further.
            (error "values are not of opposite sign" a b)))))
 ```
 
-We can use `half-interval-method` to approximate $\pi$ as a root of $\sin x=0$:
+We can use `half-interval-method` to approximate $\pi$ as a root of $\sin x = 0$:
 
 ```
 (half-interval-method sin 2.0 4.0)
@@ -1181,10 +1181,26 @@ The following procedure decodes a list of bits using a Huffman tree:
 
 ### 2.4.1: Representations for Complex Numbers
 
-- This system will perform arithmetic operations on complex numbers represented in rectangular form _or_ polar form.
-- Different representations are appropriate for different operations.
-- We have four selectors: `real-part`, `imag-part`, `magnitude`, and `angle`.
-- We have two constructors: `make-from-real-img` and `make-from-mag-ang`.
+- We can represent a complex number $z=x+yi=re^{iθ}$ as a list in two ways: in rectangular form $(x,y)$ or in polar form $(r,θ)$.
+- Rectangular form is convenient for addition and substraction, while polar form is convenient for multiplication and division.
+- Our goal is to implement all the operations to work with either representation:
+
+```
+(define (add-complex z1 z2)
+  (make-from-real-imag (+ (real-part z1) (real-part z2))
+                       (+ (imag-part z1) (imag-part z2))))
+(define (sub-complex z1 z2)
+  (make-from-real-imag (- (real-part z1) (real-part z2))
+                       (- (imag-part z1) (imag-part z2))))
+(define (mul-complex z1 z2)
+  (make-from-mag-ang (* (magnitude z1) (magnitude z2))
+                     (+ (angle z1) (angle z2))))
+(define (div-complex z1 z2)
+  (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
+                     (- (angle z1) (angle z2))))
+```
+
+- We can implement the constructors and selectors to use rectangular form or polar form, but how do we allow both?
 
 ### 2.4.2: Tagged Data
 

@@ -1568,7 +1568,7 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Explicit `delay`
 
-- Let's say we want to solve $y'=y^2,\;y(0)=1$ using the step $dt=0.001$.
+- Let's say we want to solve $y' = y^2,\; y(0) = 1$ using the step $dt = 0.001$.
 - We'd like to write a stream program to solve this:
 
 ```

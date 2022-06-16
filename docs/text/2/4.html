@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SICP Section 2.4 Notes</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
   <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
@@ -77,10 +79,24 @@
 <a class="anchor__link link" href="#2.4.1" aria-hidden="true">#</a> <span class="number">2.4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.1">Representations for Complex Numbers<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>This system will perform arithmetic operations on complex numbers represented in rectangular form <em>or</em> polar form.</li>
-<li>Different representations are appropriate for different operations.</li>
-<li>We have four selectors: <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>.</li>
-<li>We have two constructors: <code>make-from-real-img</code> and <code>make-from-mag-ang</code>.</li>
+<li>We can represent a complex number <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>z</mi><mo>=</mo><mi>x</mi><mo>+</mo><mi>y</mi><mi>i</mi><mo>=</mo><mi>r</mi><msup><mi>e</mi><mrow><mi>i</mi><mi>θ</mi></mrow></msup></mrow><annotation encoding="application/x-tex">z=x+yi=re^{iθ}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.849108em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span></span></span></span></span></span></span></span></span> as a list in two ways: in rectangular form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span> or in polar form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>r</mi><mo separator="true">,</mo><mi>θ</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">(r,θ)\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
+<li>Rectangular form is convenient for addition and substraction, while polar form is convenient for multiplication and division.</li>
+<li>Our goal is to implement all the operations to work with either representation:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-complex z1 z2)
+  (make-from-real-imag (<span class="fu">+</span> (real-part z1) (real-part z2))
+                       (<span class="fu">+</span> (imag-part z1) (imag-part z2))))
+(<span class="kw">define</span> (sub-complex z1 z2)
+  (make-from-real-imag (<span class="fu">-</span> (real-part z1) (real-part z2))
+                       (<span class="fu">-</span> (imag-part z1) (imag-part z2))))
+(<span class="kw">define</span> (mul-complex z1 z2)
+  (make-from-mag-ang (<span class="fu">*</span> (magnitude z1) (magnitude z2))
+                     (<span class="fu">+</span> (angle z1) (angle z2))))
+(<span class="kw">define</span> (div-complex z1 z2)
+  (make-from-mag-ang (<span class="fu">/</span> (magnitude z1) (magnitude z2))
+                     (<span class="fu">-</span> (angle z1) (angle z2))))</code></pre>
+<ul>
+<li>We can implement the constructors and selectors to use rectangular form or polar form, but how do we allow both?</li>
 </ul>
 <h2 id="2.4.2" class="anchor">
 <a class="anchor__link link" href="#2.4.2" aria-hidden="true">#</a> <span class="number">2.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.2">Tagged Data<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
