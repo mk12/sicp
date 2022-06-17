@@ -102,14 +102,35 @@
 <a class="anchor__link link" href="#2.4.2" aria-hidden="true">#</a> <span class="number">2.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.2">Tagged Data<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>One way to view data abstraction: principle of least commitment.</li>
-<li>We waited until the last minute to choose the concrete representation, retaining maximum flexibility.</li>
-<li>We can take it even further: let’s use <em>both</em>!</li>
-<li>To include both in the same system, we need some way of distinguishing between them.</li>
-<li>We will use a symbol as a type tag.</li>
-<li>Each generic selector uses case analysis to check the tag of its argument and dispatches the appropriate procedure.</li>
-<li>Our general mechanism for interfacing separate representations: in a specific implementation, the data object is an untyped pair. The generic selectors dispatch on the tag and strip off the tag before passing the data to the appropriate procedure.</li>
+<li>One way to view data abstraction is as the “principle of least commitment.<span class="tuck">”</span> We waited until the last minute to choose a concrete representation, retaining maximum flexibility.</li>
+<li>We can take it even further and avoid committing to a single representation at all.</li>
+<li>To do this, we need some way of distinguishing between representations. We will do this with a <em>type tag</em> <code>'rectangular</code> or <code>'polar</code>.</li>
+<li>Each generic selector will strip off the type tag and use case analysis to pass the untyped data object to the appropriate specific selector.</li>
 </ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (attach-tag type-tag contents)
+  (<span class="fu">cons</span> type-tag contents))
+(<span class="kw">define</span> (type-tag datum)
+  (<span class="kw">if</span> (<span class="fu">pair?</span> datum)
+      (<span class="fu">car</span> datum)
+      (<span class="fu">error</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum)))
+(<span class="kw">define</span> (contents datum)
+  (<span class="kw">if</span> (<span class="fu">pair?</span> datum)
+      (<span class="fu">cdr</span> datum)
+      (<span class="fu">error</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum)))
+
+(<span class="kw">define</span> (rectangular? z)
+  (<span class="fu">eq?</span> (type-tag z) <span class="vs">&#39;rectangular</span>))
+(<span class="kw">define</span> (polar? z)
+  (<span class="fu">eq?</span> (type-tag z) <span class="vs">&#39;polar</span>))</code></pre>
+<ul>
+<li>For example, here is how we implement the generic <code>real-part</code>:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (real-part z)
+  (<span class="kw">cond</span> ((rectangular? z) 
+         (real-part-rectangular (contents z)))
+        ((polar? z)
+         (real-part-polar (contents z)))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;unknown type&quot;</span> z))))</code></pre>
 <h2 id="2.4.3" class="anchor">
 <a class="anchor__link link" href="#2.4.3" aria-hidden="true">#</a> <span class="number">2.4.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.3">Data-Directed Programming and Additivity<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>

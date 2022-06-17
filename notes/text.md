@@ -1204,13 +1204,39 @@ The following procedure decodes a list of bits using a Huffman tree:
 
 ### 2.4.2: Tagged Data
 
-- One way to view data abstraction: principle of least commitment.
-- We waited until the last minute to choose the concrete representation, retaining maximum flexibility.
-- We can take it even further: let's use _both_!
-- To include both in the same system, we need some way of distinguishing between them.
-- We will use a symbol as a type tag.
-- Each generic selector uses case analysis to check the tag of its argument and dispatches the appropriate procedure.
-- Our general mechanism for interfacing separate representations: in a specific implementation, the data object is an untyped pair. The generic selectors dispatch on the tag and strip off the tag before passing the data to the appropriate procedure.
+- One way to view data abstraction is as the "principle of least commitment". We waited until the last minute to choose a concrete representation, retaining maximum flexibility.
+- We can take it even further and avoid committing to a single representation at all.
+- To do this, we need some way of distinguishing between representations. We will do this with a _type tag_ `'rectangular` or `'polar`.
+- Each generic selector will strip off the type tag and use case analysis to pass the untyped data object to the appropriate specific selector.
+
+```
+(define (attach-tag type-tag contents)
+  (cons type-tag contents))
+(define (type-tag datum)
+  (if (pair? datum)
+      (car datum)
+      (error "bad tagged datum" datum)))
+(define (contents datum)
+  (if (pair? datum)
+      (cdr datum)
+      (error "bad tagged datum" datum)))
+
+(define (rectangular? z)
+  (eq? (type-tag z) 'rectangular))
+(define (polar? z)
+  (eq? (type-tag z) 'polar))
+```
+
+- For example, here is how we implement the generic `real-part`:
+
+```
+(define (real-part z)
+  (cond ((rectangular? z) 
+         (real-part-rectangular (contents z)))
+        ((polar? z)
+         (real-part-polar (contents z)))
+        (else (error "unknown type" z))))
+```
 
 ### 2.4.3: Data-Directed Programming and Additivity
 
