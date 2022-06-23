@@ -680,19 +680,14 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Recap
 
-- We wrote a program to differentiate expressions that had a highly stylized behavior and structure.
-- We used quotation to represent symbolic math expressions.
-- Why did we have to translate the rules of differential calculus into the language of the computer?
-- Our program was a conditional dispatch on the type of the expression.
-- Is there some other, more clear way of writing this program?
+- [Last time](@3b) we wrote a program to differentiate symbolic mathematical expressions represented using quotation.
+- To implement the differentiation rules, we wrote them in a highly stylized form based on conditional dispatch on the types of expressions.
+- Why did we have to translate the rules of differential calculus into the language of the computer? Is there some other, more clear way of writing this program?
 
 ### Rules
 
 - We follow rules to differentiate expressions. What is a rule, exactly?
-- A rule has a left-hand side and a right-hand side.
-    - You compare your expression to the LHS.
-    - The RHS gives the replacement expression.
-- A rule is an arrow from a _pattern_ to a _skeleton_.
+- A rule has a _pattern_ on the left and a _skeleton_ on the right.
 - We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.
 - We want to build a language that allows us to directly express these rules. We will work bottom-up, like before.
 
@@ -718,11 +713,11 @@ Then, we learned how to use higher-order procedures to represent general methods
 ```
 
 - It could be prettier, but that doesn't matter. What matters is that we are writing rules directly in our language.
-- `deriv-rules` is simply a list of rules.
-- Each rule has the form `(LHS RHS)`. `LHS` is a pattern; `RHS` is a skeleton.
-- The forms beginning with question marks in the LHS are called _pattern variables_. We have invented them for our language.
-- The forms beginning with colons in the RHS are called _substitution objects_. They are skeleton evaluations.
-- Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:
+- `deriv-rules` is a list of rules. Each rule has the form `(«pattern» «skeleton»)`.
+- We have invented two concepts for our language:
+  - The forms beginning with question marks are called _pattern variables_.
+  - The forms beginning with colons are called _substitution objects_.
+- Once we have this language, we can reuse it for other things. For example, we can write rules for algebraic simplification:
 
 ```
 (define algebra-rules
@@ -737,25 +732,25 @@ Then, we learned how to use higher-order procedures to represent general methods
 
 ### Syntax
 
-#### Patterns
+Patterns:
 
-- `foo` _matches_ exactly `foo`.
-- `(f a b)` _matches_ a list of three elements with first, second, and third elements being `f`, `a`, and `b`, respectively.
-- `(? x)` _matches_ anything, and calls it `x`.
-- `(?c x)` _matches_ a constant, and calls it `x`.
-- `(?v x)` _matches_ a variable, and calls it `x`.
+- `foo` matches exactly the symbol `foo`.
+- `(a b)` matches a list whose first element matches the pattern `a` and whose second element matches the pattern `b`. This generalizes to lists of any length.
+- `(? x)` matches anything, and binds it to `x`.
+- `(?c x)` matches a constant, and binds it to `x`.
+- `(?v x)` matches a variable, and binds it to `x`.
 
-#### Skeletons
+Skeletons:
 
-- `foo` _instantiates_ to exactly `foo`.
-- `(f a b)` _instantiates_ to a list of three elements, the results of instantiating each of `f`, `a`, and `b`.
-- `(: x)` _instantiates_ to the value of `x` in the pattern matched.
+- `foo` instantiates to exactly the symbol `foo`.
+- `(a b)` instantiates to a list whose first element is the instantiation of `a` and whose second element is the instantiation of `b`. This generalizes to lists of any length.
+- `(: x)` instantiates to the value bound to `x` in the pattern.
 
 ### Simplification process
 
 - We can imagine the rules as a deck of cards, each one with a pattern and a skeleton.
 - The patterns feed into the matcher, and the skeletons feed into the instantiator.
-- The matcher passes a dictionary to the instantiator. This consists of the pattern variables and their matched values.
+- The matcher gives the instantiator a mapping from pattern variables to values.
 - The output of the instantiator goes back into the matcher.
 - All of the rules must be tried on the expression, and on all its subexpressions. We can stop when it no longer changes.
 - If you don't write your rules carefully, there is a danger of going into an infinite loop.

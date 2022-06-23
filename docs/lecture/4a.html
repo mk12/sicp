@@ -74,23 +74,16 @@
 <a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Recap
 </h3>
 <ul>
-<li>We wrote a program to differentiate expressions that had a highly stylized behavior and structure.</li>
-<li>We used quotation to represent symbolic math expressions.</li>
-<li>Why did we have to translate the rules of differential calculus into the language of the computer?</li>
-<li>Our program was a conditional dispatch on the type of the expression.</li>
-<li>Is there some other, more clear way of writing this program?</li>
+<li><a href="3b.html">Last time</a> we wrote a program to differentiate symbolic mathematical expressions represented using quotation.</li>
+<li>To implement the differentiation rules, we wrote them in a highly stylized form based on conditional dispatch on the types of expressions.</li>
+<li>Why did we have to translate the rules of differential calculus into the language of the computer? Is there some other, more clear way of writing this program?</li>
 </ul>
 <h3 id="1.2" class="anchor">
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Rules
 </h3>
 <ul>
 <li>We follow rules to differentiate expressions. What is a rule, exactly?</li>
-<li>A rule has a left-hand side and a right-hand side.
-<ul>
-<li>You compare your expression to the LHS.</li>
-<li>The RHS gives the replacement expression.</li>
-</ul></li>
-<li>A rule is an arrow from a <em>pattern</em> to a <em>skeleton</em>.</li>
+<li>A rule has a <em>pattern</em> on the left and a <em>skeleton</em> on the right.</li>
 <li>We match the source expression to the pattern, and following the rule, we instantiate the skeleton to get the target expression.</li>
 <li>We want to build a language that allows us to directly express these rules. We will work bottom-up, like before.</li>
 </ul>
@@ -116,11 +109,13 @@
 <span class="vs">        (dd (: x) (: v)))))</span>)</code></pre>
 <ul>
 <li>It could be prettier, but that doesn’t matter. What matters is that we are writing rules directly in our language.</li>
-<li><code>deriv-rules</code> is simply a list of rules.</li>
-<li>Each rule has the form <code>(LHS RHS)</code>. <code>LHS</code> is a pattern; <code>RHS</code> is a skeleton.</li>
-<li>The forms beginning with question marks in the LHS are called <em>pattern variables</em>. We have invented them for our language.</li>
-<li>The forms beginning with colons in the RHS are called <em>substitution objects</em>. They are skeleton evaluations.</li>
-<li>Once we have this language, we can use it for many things. Here is an example, for algebraic simplification:</li>
+<li><code>deriv-rules</code> is a list of rules. Each rule has the form <code>(<span class="ss">pattern</span> <span class="ss">skeleton</span>)</code>.</li>
+<li>We have invented two concepts for our language:
+<ul>
+<li>The forms beginning with question marks are called <em>pattern variables</em>.</li>
+<li>The forms beginning with colons are called <em>substitution objects</em>.</li>
+</ul></li>
+<li>Once we have this language, we can reuse it for other things. For example, we can write rules for algebraic simplification:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> algebra-rules
   <span class="vs">&#39;((((? op) (?c e1) (?c e2))</span>
@@ -133,23 +128,19 @@
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Syntax
 </h3>
-<h4 id="1.4.1" class="anchor">
-<a class="anchor__link link" href="#1.4.1" aria-hidden="true">#</a> Patterns
-</h4>
+<p>Patterns:</p>
 <ul>
-<li><code>foo</code> <em>matches</em> exactly <code>foo</code>.</li>
-<li><code>(f a b)</code> <em>matches</em> a list of three elements with first, second, and third elements being <code>f</code>, <code>a</code>, and <code>b</code>, respectively.</li>
-<li><code>(? x)</code> <em>matches</em> anything, and calls it <code>x</code>.</li>
-<li><code>(?c x)</code> <em>matches</em> a constant, and calls it <code>x</code>.</li>
-<li><code>(?v x)</code> <em>matches</em> a variable, and calls it <code>x</code>.</li>
+<li><code>foo</code> matches exactly the symbol <code>foo</code>.</li>
+<li><code>(a b)</code> matches a list whose first element matches the pattern <code>a</code> and whose second element matches the pattern <code>b</code>. This generalizes to lists of any length.</li>
+<li><code>(? x)</code> matches anything, and binds it to <code>x</code>.</li>
+<li><code>(?c x)</code> matches a constant, and binds it to <code>x</code>.</li>
+<li><code>(?v x)</code> matches a variable, and binds it to <code>x</code>.</li>
 </ul>
-<h4 id="1.4.2" class="anchor">
-<a class="anchor__link link" href="#1.4.2" aria-hidden="true">#</a> Skeletons
-</h4>
+<p>Skeletons:</p>
 <ul>
-<li><code>foo</code> <em>instantiates</em> to exactly <code>foo</code>.</li>
-<li><code>(f a b)</code> <em>instantiates</em> to a list of three elements, the results of instantiating each of <code>f</code>, <code>a</code>, and <code>b</code>.</li>
-<li><code>(: x)</code> <em>instantiates</em> to the value of <code>x</code> in the pattern matched.</li>
+<li><code>foo</code> instantiates to exactly the symbol <code>foo</code>.</li>
+<li><code>(a b)</code> instantiates to a list whose first element is the instantiation of <code>a</code> and whose second element is the instantiation of <code>b</code>. This generalizes to lists of any length.</li>
+<li><code>(: x)</code> instantiates to the value bound to <code>x</code> in the pattern.</li>
 </ul>
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Simplification process
@@ -157,7 +148,7 @@
 <ul>
 <li>We can imagine the rules as a deck of cards, each one with a pattern and a skeleton.</li>
 <li>The patterns feed into the matcher, and the skeletons feed into the instantiator.</li>
-<li>The matcher passes a dictionary to the instantiator. This consists of the pattern variables and their matched values.</li>
+<li>The matcher gives the instantiator a mapping from pattern variables to values.</li>
 <li>The output of the instantiator goes back into the matcher.</li>
 <li>All of the rules must be tried on the expression, and on all its subexpressions. We can stop when it no longer changes.</li>
 <li>If you don’t write your rules carefully, there is a danger of going into an infinite loop.</li>
