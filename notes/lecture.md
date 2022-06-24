@@ -759,7 +759,7 @@ Skeletons:
 
 ### Matcher
 
-- The matcher takes an expression, a pattern, and a pattern as input. It outputs another, augmented dictionary.
+- The matcher takes an expression, a pattern, and a dictionary as input. It outputs another, augmented dictionary.
 
 ```
 (define (match pat exp dict)
@@ -787,15 +787,13 @@ Skeletons:
                        dict)))))
 ```
 
-- The `else` clause recursion is very important.
-- We examine two trees simultaneously: the tree of the expression, and that of the pattern.
-- Consider this pattern: `(+ (* (? x) (? y)) (? y))`. We could draw this as a tree.
-- The expression matching it, `(+ (* 3 x)) x)`, has a very similar tree structure.
+- Consider the pattern `(+ (* (? x) (? y)) (? y))`. We could draw this as a tree.
+- The expression matching it, `(+ (* 3 x) x)`, has a very similar tree structure.
 - We want to traverse both trees simultaneously and compare them.
-- The matcher can fail at any point. The first clause checks this and propagates the failure. (This could be done more efficiently in continuation-passing style.)
+- The matcher can fail at any point. The first clause checks and propagates the failure.
 - If the pattern is an atom, we make sure the expression is the same atom.
 - If the pattern is an arbitrary expression variable like `(? x)`, we simply add the expression to the dictionary.
-- If it is an arbitrary constant or variable, we make sure it is the correct one before adding to the dictionary.
+- If the pattern is an arbitrary constant or variable, we make sure the expression is the correct one before adding to the dictionary.
 
 ### Instantiator
 
@@ -813,9 +811,9 @@ Skeletons:
 ```
 
 - We do a recursive tree walk on the skeleton.
-- It is simpler than the matcher because the parts of the tree can be instantiated independently (we don't change the dictionary).
-- The only reason we have the internal procedure is to avoid passing the same `dict` on every recursive call.
-- The skeleton evaluation forms like `(: x)` use `evaluate`:
+- It's simpler than the matcher because the parts of the tree can be instantiated independently (we don't change the dictionary).
+- The only reason for `loop` is to avoid passing `dict` through every recursive call.
+- The skeleton evaluation forms like `(: x)` using `evaluate`:
 
 ```
 (define (evaluate form dict)
@@ -827,24 +825,23 @@ Skeletons:
                      (cdr form)))))
 ```
 
-- Atoms (variable names) are simply looked up in the dictionary.
-- For more complicated expressions, we lookup and evaluate the `car` of the form (the operator) and apply it to the result of looking up everything from the `cdr` (the operands).
-- This is magic. We don't know everything going on with `apply` and `eval` yet. We will later.
+- For atoms (variable names) we simply look them up in the dictionary.
+- For more complicated expressions, we lookup and evaluate the `car` (operator) and apply it to the result of looking up everything from the `cdr` (operands).
+- This is magic. We don't haven't learned about `apply` and `eval` yet. We will later.
 
 ## Part 3
 
 ### Plan
 
 - We've seen the two halves of the rule system: the matcher and the instantiator.
-- Now we will create the control structure by which the rules are applied to the expressions.
+- Now we'll create the control structure by which rules are applied to expressions.
 - We want to apply all of the rules to every node.
-- We call the basic idea _garbage in, garbage out_ (GIGO).
+- We call the basic idea "garbage in, garbage out".
 
 ### Simplifier
 
-- We want to be able to evaluate `(simplifier rules)` and get a procedure that simplifies expressions according to the rules:
-- For `deriv-rules`, this would be `(define dsimp (simplifier deriv-rules))`.
-- This is the `simplifier` procedure:
+- We want to be able to evaluate `(simplifier rules)` and get a procedure that simplifies expressions according to `rules`.
+- For example, we could then write `(define dsimp (simplifier deriv-rules))`.
 
 ```
 (define (simplifier the-rules)
@@ -875,7 +872,7 @@ Skeletons:
 
 - The procedures `simplify-exp` and `simplify-parts` call each other recursively.
 - Since the `exp` in `simplify-exp` can be either atomic or compound, this naturally recurses through a tree of expressions.
-- We could have just used one procedure, using `map`:
+- We could have just written one procedure, using `map`:
 
 ```
 (define (simplify-exp exp)
@@ -886,17 +883,19 @@ Skeletons:
 ```
 
 - This is a different idiom; it works the same way, but you think about it a bit differently.
-- It is better because otherwise we are basically reinventing the wheel by hiding a definition of `map` in one of our procedures. It is best to extract those common patterns.
-- The `try-rules` procedure scans the rules and tries each one. It returns the original expression if none matched.
-- When a rule's pattern matches, `try-rules` instantiates the skeleton and tries to simplify that further.
+- It's better because otherwise we are basically reinventing the wheel by hiding a definition of `map` in one of our procedures. It is best to extract those common patterns.
+- The `try-rules` procedure scans the rules and tries them one by one. It returns the original expression if none matched.
+- When there's a match, it instantiates the skeleton and tries to simplify that further.
 
 ### Complexity
 
 - The pattern of recursions here is very complicated.
 - We shouldn't try to think about it all at once. Instead, we make a modular system where we can focus on one part at a time.
-- As long as we know what a procedure application is supposed to do, we can use it without thinking how it will work.
+- As long as we know what a procedure application is supposed to do, we can use it without thinking about how it will work.
 
+::: highlight
 > The key to this -- very good programming and very good design -- is to know what not to think about. [@4a.p16]
+:::
 
 ### Dictionaries
 
@@ -916,9 +915,8 @@ Skeletons:
     (if (null? v) var (cadr v))))
 ```
 
-- When extending the dictionary, we check if the name is already present in the dictionary.
-- If not, we add it. If it is, but has the same value, we return the dictionary unchanged.
-- If we are trying to give it a different value, we fail.
+- When extending the dictionary, we check if the name is already present.
+- It it's not present, we add it. If it's present but has the same value, we do nothing. Otherwise it has a conflicting value, and we fail.
 
 # 4B: Generic Operators
 
