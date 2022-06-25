@@ -101,7 +101,7 @@ Imports:
   (make-from-mag-ang
    (<span class="fu">/</span> (magnitude z1) (magnitude z2))
    (<span class="fu">-</span> (angle z1) (angle z2))))</code></pre>
-<p>Ben’s representation (rectangular form)</p>
+<p>Ben’s representation (rectangular form):</p>
 <pre><code class="blockcode">(<span class="kw">define</span> real-part <span class="fu">car</span>)
 (<span class="kw">define</span> imag-part <span class="fu">cdr</span>)
 (<span class="kw">define</span> (magnitude z)
@@ -113,12 +113,13 @@ Imports:
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a)) (<span class="fu">*</span> r (<span class="fu">sin</span> a))))</code></pre>
 <p>Rectangular form can give exact answers for addition and subtraction.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">5</span> <span class="cn">1</span>) (make-from-real-imag <span class="cn">6</span> <span class="cn">2</span>)))
+<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
-z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">11</span> <span class="cn">3</span>)
+(real-part z1) <span class="op">=&gt;</span> <span class="cn">4</span>
+(imag-part z1) <span class="op">=&gt;</span> <span class="cn">6</span>
 (magnitude z2) <span class="op">~&gt;</span> <span class="cn">30</span>
 (angle z2) <span class="op">~&gt;</span> <span class="cn">3</span></code></pre>
-<p>Alyssa’s representation (polar form)</p>
+<p>Alyssa’s representation (polar form):</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (<span class="fu">*</span> (magnitude z) (<span class="fu">cos</span> (angle z))))
 (<span class="kw">define</span> (imag-part z) (<span class="fu">*</span> (magnitude z) (<span class="fu">sin</span> (angle z))))
 (<span class="kw">define</span> magnitude <span class="fu">car</span>)
@@ -132,7 +133,8 @@ z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">11</span>
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
 (real-part z1) <span class="op">~&gt;</span> <span class="cn">4</span>
 (imag-part z1) <span class="op">~&gt;</span> <span class="cn">6</span>
-z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <span class="cn">3</span>)</code></pre>
+(magnitude z2) <span class="op">=&gt;</span> <span class="cn">30</span>
+(angle z2) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
 <h2 id="2.4.2" class="anchor">
 <a class="anchor__link link" href="#2.4.2" aria-hidden="true">#</a> <span class="number">2.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_sec_2.4.2">Tagged Data<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -163,7 +165,7 @@ Imports:
       (<span class="fu">error</span> <span class="vs">&#39;contents</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum)))
 (<span class="kw">define</span> (rectangular? z) (<span class="fu">eq?</span> (type-tag z) <span class="vs">&#39;rectangular</span>))
 (<span class="kw">define</span> (polar? z) (<span class="fu">eq?</span> (type-tag z) <span class="vs">&#39;polar</span>))</code></pre>
-<p>Ben’s representation (rectangular form)</p>
+<p>Ben’s representation (rectangular form):</p>
 <pre><code class="blockcode">(<span class="kw">define</span> real-part-rectangular <span class="fu">car</span>)
 (<span class="kw">define</span> imag-part-rectangular <span class="fu">cdr</span>)
 (<span class="kw">define</span> (magnitude-rectangular z)
@@ -178,7 +180,7 @@ Imports:
   (attach-tag <span class="vs">&#39;rectangular</span>
               (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a))
                     (<span class="fu">*</span> r (<span class="fu">sin</span> a)))))</code></pre>
-<p>Alyssa’s representation (polar form)</p>
+<p>Alyssa’s representation (polar form):</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part-polar z)
   (<span class="fu">*</span> (magnitude-polar z) (<span class="fu">cos</span> (angle-polar z))))
 (<span class="kw">define</span> (imag-part-polar z)
@@ -191,7 +193,7 @@ Imports:
                     (<span class="fu">atan</span> b a))))
 (<span class="kw">define</span> (make-from-mag-ang-polar r a)
   (attach-tag <span class="vs">&#39;polar</span> (<span class="fu">cons</span> r a)))</code></pre>
-<p>Generic selectors</p>
+<p>Generic selectors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part z)
   (<span class="kw">cond</span> ((rectangular? z)
          (real-part-rectangular (contents z)))
@@ -216,10 +218,10 @@ Imports:
         ((polar? z)
          (angle-polar (contents z)))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;angle</span> <span class="cn">&quot;unknown type&quot;</span> z))))</code></pre>
-<p>Generic constructors</p>
+<p>Generic constructors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> make-from-real-imag make-from-real-imag-rectangular)
 (<span class="kw">define</span> make-from-mag-ang make-from-mag-ang-polar)</code></pre>
-<p>Generic operators</p>
+<p>Generic operations:</p>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.4.1>:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Now we can get exact answers for all operations:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
@@ -272,7 +274,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>Note: The textbook calls these procedures <code>install-rectangular-package</code> and <code>install-polar-package</code>. I use <code>rectangular-pkg</code> and <code>polar-pkg</code> since there are many of these procedures and the long names tend to bloat import lists.</p>
+<p>Note: The textbook calls these procedures <code>install-rectangular-package</code> and <code>install-polar-package</code>. I shorten them to <code>rectangular-pkg</code> and <code>polar-pkg</code> since there are many of these procedures and the long names tend to bloat import lists.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (rectangular-pkg)
   <span class="co">;; Internal procedures</span>
   (<span class="kw">define</span> real-part <span class="fu">car</span>)
@@ -319,9 +321,9 @@ Imports:
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;polar</span>
        (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span>
-       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
-
-(<span class="kw">define</span> (apply-generic op . args)
+       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
+<p>Helpers to apply generic operations:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (apply-generic op . args)
   (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
          (proc (get op type-tags)))
     (<span class="kw">if</span> proc
@@ -333,24 +335,24 @@ Imports:
     (<span class="kw">if</span> proc
         (<span class="fu">apply</span> proc args)
         (<span class="fu">error</span> op <span class="cn">&quot;no method for type&quot;</span> op type))))</code></pre>
-<p>Generic selectors</p>
+<p>Generic selectors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">&#39;real-part</span> z))
 (<span class="kw">define</span> (imag-part z) (apply-generic <span class="vs">&#39;imag-part</span> z))
 (<span class="kw">define</span> (magnitude z) (apply-generic <span class="vs">&#39;magnitude</span> z))
 (<span class="kw">define</span> (angle z) (apply-generic <span class="vs">&#39;angle</span> z))</code></pre>
-<p>Generic constructors</p>
+<p>Generic constructors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag a b)
   (apply-specific <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span> a b))
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (apply-specific <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span> r a))</code></pre>
-<p>Generic operators</p>
+<p>Generic operations:</p>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.4.1>:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
-<p>Helper function to run installers on a clean slate.</p>
+<p>Helper procedure to run installers with a clean slate:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (using . installers)
   (reset)
-  (<span class="fu">for-each</span> (<span class="kw">lambda</span> (f) (f)) installers))
-
-(using rectangular-pkg polar-pkg)
+  (<span class="fu">for-each</span> (<span class="kw">lambda</span> (f) (f)) installers))</code></pre>
+<p>Putting it all together:</p>
+<pre><code class="blockcode">(using rectangular-pkg polar-pkg)
 
 (<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
@@ -422,17 +424,17 @@ Imports:
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
         ((variable? expr) (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
         (<span class="kw">else</span> (apply-specific <span class="vs">&#39;deriv</span> (operator expr) (operands expr) var))))
-(<span class="kw">define</span> (operator expr) (<span class="fu">car</span> expr))
-(<span class="kw">define</span> (operands expr) (<span class="fu">cdr</span> expr))</code></pre>
+(<span class="kw">define</span> operator <span class="fu">car</span>)
+(<span class="kw">define</span> operands <span class="fu">cdr</span>)</code></pre>
 <ol type="a">
-<li>Above, we wrote the <code>deriv</code> procedure as a data-directed type dispatch. It dispatches on the operator, which is the <code>car</code> of an expression. We can’t assimilate atomic types like numbers and variables (which are symbols) into this dispatch because they don’t have an identifying tag in the <code>car</code>—they have no <code>car</code> or <code>cdr</code> at all. If we really wanted to, we could assimilate them by dispatching not on the operator, but on <code>(type expr)</code> like this:</li>
+<li>We rewrote <code>deriv</code> to dispatch based on the operator of the expression. However, it still uses explicit case analysis for numbers and variables. We can’t assimilate those into the data-directed dispatch because they have nothing that can be used as a type tag. Scheme only provides predicates like <code>number?</code>, not a procedure like <code>(type expr)</code> that could return <code>'number</code>. We can write our own, but this just moves the case anaylsis somewhere else:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (type expr)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="vs">&#39;number</span>)
         ((variable? expr) <span class="vs">&#39;variable</span>)
         (<span class="kw">else</span> (operator expr))))</code></pre>
 <ol start="2" type="a">
-<li>Packages for sum and product differentiation</li>
+<li>Packages for sum and product differentiation:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (sum-pkg)
   (<span class="kw">define</span> (deriv-sum terms var)
@@ -452,7 +454,7 @@ Imports:
                             (multiplicand product))))
   (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;*</span> deriv-product))</code></pre>
 <ol start="3" type="a">
-<li>Package for power differentiation</li>
+<li>Package for power differentiation:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (power-pkg)
   <span class="co">;; Note: We can&#39;t reuse these procedures from Exercise 2.56 because those ones</span>
@@ -468,8 +470,9 @@ Imports:
      (deriv (base power) var)))
   (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;**</span> deriv-power))</code></pre>
 <ol start="4" type="a">
-<li>If we wanted to instead use <code>(get (operator expr) <span class="vs">&#39;deriv</span>)</code> to get the appropriate procedure, we have to change the order of the arguments given to <code>put</code> in the package installation procedures.</li>
+<li>If we wanted to index the procedures in the opposite way, we would simply need to swap the first two arguments to <code>put</code> in all the package installation procedures.</li>
 </ol>
+<p>Let’s test the new system:</p>
 <pre><code class="blockcode">(using sum-pkg product-pkg power-pkg)
 
 (deriv <span class="vs">&#39;(+ x 3)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
@@ -484,6 +487,20 @@ Imports:
 Imports:
 </h4>
 <ul class="flat">
+<li class="flat__item">
+<a href="#2.4.2">2.4.2</a>
+<ul class="flat">
+<li class="flat__item nowrap">
+<code>attach-tag</code>
+</li>
+<li class="flat__item nowrap">
+<code>contents</code>
+</li>
+<li class="flat__item nowrap">
+<code>type-tag</code>,
+</li>
+</ul>
+</li>
 <li class="flat__item">
 <a href="#2.4.3">2.4.3</a>
 <ul class="flat">
@@ -506,27 +523,20 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>Each division must implement the <code>get-record</code> procedure. This gets dispatched based on the division symbol, i.e. the type tag on the file. We have chosen the structure <code>(division . records)</code>, where the <code>car</code> is the type information and the <code>cdr</code> is the division-specific set of records.</li>
+<li>Each division should tag their file with a symbol such as <code>'marketing</code>, and install an implementation of <code>get-record</code> that deals with their internal record structure.</li>
 </ol>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-file division records) (<span class="fu">cons</span> division records))
-(<span class="kw">define</span> file-division <span class="fu">car</span>)
-(<span class="kw">define</span> file-records <span class="fu">cdr</span>)
-
-(<span class="kw">define</span> (get-record file employee-name)
-  (apply-specific
-   <span class="vs">&#39;get-record</span> (file-division file) (file-records file) employee-name))</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> (get-record file employee-name)
+  (<span class="kw">let*</span> ((tag (type-tag file))
+         (record
+          (apply-specific <span class="vs">&#39;get-record</span> tag (contents file) employee-name)))
+    (<span class="kw">and</span> record (attach-tag tag record))))</code></pre>
 <ol start="2" type="a">
-<li>The record must also be tagged with the division symbol.</li>
+<li>Since our generic <code>get-record</code> reattaches the division tag to the returned record, there is no need for divisions to tag records or do anything special. They just need to install an implementation of <code>get-salary</code>.</li>
 </ol>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-record division set)
-  (<span class="fu">cons</span> division set))
-(<span class="kw">define</span> record-division <span class="fu">car</span>)
-(<span class="kw">define</span> record-set <span class="fu">cdr</span>)
-
-(<span class="kw">define</span> (get-salary record)
-  (apply-specific <span class="vs">&#39;get-salary</span> (record-division record) (record-set record)))</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> (get-salary record)
+  (apply-specific <span class="vs">&#39;get-salary</span> (type-tag record) (contents record)))</code></pre>
 <ol start="3" type="a">
-<li>This procedure imposes no additional requirements on implementations.</li>
+<li>Procedure to find an employee’s record across all files:</li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (find-employee-record employee-name files)
   (<span class="kw">if</span> (<span class="fu">null?</span> files)
@@ -534,32 +544,38 @@ Imports:
       (<span class="kw">or</span> (get-record (<span class="fu">car</span> files) employee-name)
           (find-employee-record employee-name (<span class="fu">cdr</span> files)))))</code></pre>
 <ol start="4" type="a">
-<li>They must install <code>'get-record</code> and <code>'get-salary</code> generic procedures into the data-directed dispatch system. These procedures must use the division’s name as their dispatch key.</li>
+<li>When they take over a new company, they must tag its file and install implementations of <code>get-record</code> and <code>get-salary</code> for it.</li>
 </ol>
-<p>Example: Files for marketing and sales divisions</p>
+<p>Here is an example of a company with two divisions:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> files
-  (<span class="fu">list</span> (make-file <span class="vs">&#39;marketing</span>
-                   <span class="vs">&#39;(some (very) ((weird)) format)</span>)
-        (make-file <span class="vs">&#39;sales</span>
-                   `((<span class="cn">&quot;Joe&quot;</span> ,(make-record <span class="vs">&#39;sales</span> <span class="vs">&#39;(40)</span>))
-                     (<span class="cn">&quot;Jane&quot;</span> ,(make-record <span class="vs">&#39;sales</span> <span class="vs">&#39;(50)</span>))))))
+  (<span class="fu">list</span> (attach-tag <span class="vs">&#39;marketing</span>
+                    <span class="vs">&#39;(&quot;Alice&quot; &quot;Bob&quot;)</span>)
+        (attach-tag <span class="vs">&#39;sales</span>
+                    <span class="vs">&#39;((&quot;Joe&quot; 40) (&quot;Jane&quot; 60))</span>)))
 
 (<span class="kw">define</span> (company-pkg)
-  (<span class="kw">define</span> (get-record-marketing records name) <span class="cn">#f</span>)
+  (<span class="kw">define</span> (get-record-marketing records name)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> records) <span class="cn">#f</span>)
+          ((<span class="fu">equal?</span> (<span class="fu">car</span> records) name) name)
+          (<span class="kw">else</span> (get-record-marketing (<span class="fu">cdr</span> records) name))))
+  (<span class="kw">define</span> (get-salary-marketing record) <span class="cn">50</span>)
   (<span class="kw">define</span> (get-record-sales records name)
     (<span class="kw">cond</span> ((<span class="fu">null?</span> records) <span class="cn">#f</span>)
-          ((<span class="fu">equal?</span> (<span class="fu">caar</span> records) name) (<span class="fu">cadar</span> records))
+          ((<span class="fu">equal?</span> (<span class="fu">caar</span> records) name) (<span class="fu">car</span> records))
           (<span class="kw">else</span> (get-record-sales (<span class="fu">cdr</span> records) name))))
-  (<span class="kw">define</span> (get-salary-sales record) (<span class="fu">car</span> record))
+  (<span class="kw">define</span> get-salary-sales <span class="fu">cadr</span>)
   (put <span class="vs">&#39;get-record</span> <span class="vs">&#39;marketing</span> get-record-marketing)
+  (put <span class="vs">&#39;get-salary</span> <span class="vs">&#39;marketing</span> get-salary-marketing)
   (put <span class="vs">&#39;get-record</span> <span class="vs">&#39;sales</span> get-record-sales)
   (put <span class="vs">&#39;get-salary</span> <span class="vs">&#39;sales</span> get-salary-sales))
 
 (using company-pkg)
 
-(find-employee-record <span class="cn">&quot;Bob&quot;</span> files) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(find-employee-record <span class="cn">&quot;Nobody&quot;</span> files) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(get-salary (find-employee-record <span class="cn">&quot;Alice&quot;</span> files)) <span class="op">=&gt;</span> <span class="cn">50</span>
+(get-salary (find-employee-record <span class="cn">&quot;Bob&quot;</span> files)) <span class="op">=&gt;</span> <span class="cn">50</span>
 (get-salary (find-employee-record <span class="cn">&quot;Joe&quot;</span> files)) <span class="op">=&gt;</span> <span class="cn">40</span>
-(get-salary (find-employee-record <span class="cn">&quot;Jane&quot;</span> files)) <span class="op">=&gt;</span> <span class="cn">50</span></code></pre>
+(get-salary (find-employee-record <span class="cn">&quot;Jane&quot;</span> files)) <span class="op">=&gt;</span> <span class="cn">60</span></code></pre>
 <h3 id="2.4.3.1" class="anchor">
 <a class="anchor__link link" href="#2.4.3.1" aria-hidden="true">#</a> <span class="number">2.4.3.1</span> Message passing
 </h3>
@@ -621,28 +637,44 @@ Imports:
 <h3 id="ex2.76" class="anchor">
 <a class="anchor__link link" href="#ex2.76" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-17.html#%25_thm_2.76">Exercise 2.76<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<ol type="1">
-<li>Generic operations with explicit dispatch</li>
-</ol>
 <ul>
-<li>Types: After implementing specific procedures for the new type, you must add a new clause to the dispatcher of all the generic operations (time consuming and error-prone).</li>
-<li>Operations: After implementing a new specific procedure for each existing type, you must write a generic operation procedure with explicit dispatch.</li>
-</ul>
-<ol start="2" type="1">
-<li>Data-directed style</li>
-</ol>
+<li>Generic operations with explicit dispatch
 <ul>
-<li>Types: It’s easy: you just need to write new specific procedures and install them into the system with their identifying dispatch type.</li>
-<li>Operations: After implementing a new specific procedure in each of the package installer procedures, you must write a procedure invoking <code>apply-generic</code>.</li>
-</ul>
-<ol start="3" type="1">
-<li>Message-passing style</li>
-</ol>
+<li><em>New type</em>
 <ul>
-<li>Types: Simply create a new type that responds to the same message.</li>
-<li>Operations: Write a specific procedure for all existing types so that they respond to the new message.</li>
+<li>Add a new clause to all generic procedures.</li>
+</ul></li>
+<li><em>New operation</em>
+<ul>
+<li>Write a generic procedure that handles all types.</li>
+</ul></li>
+</ul></li>
+<li>Data-directed style
+<ul>
+<li><em>New type</em>
+<ul>
+<li>Install implementations of every operation.</li>
+</ul></li>
+<li><em>New operation</em>
+<ul>
+<li>Install implementations for every type.</li>
+<li>Write a wrapper that invokes <code>apply-generic</code>.</li>
+</ul></li>
+</ul></li>
+<li>Message-passing style
+<ul>
+<li><em>New type</em>
+<ul>
+<li>Write a procedure that handles all operations.</li>
+</ul></li>
+<li><em>New operation</em>
+<ul>
+<li>Add a new clause to the method dispatch of all types.</li>
+</ul></li>
+</ul></li>
 </ul>
-<p>Message passing is best when adding types often and operations rarely. Generic operations with explicit dispatch are best when adding types rarely and operations often. Data-directed style works well in both scenarios, and also allows dispatching on all arguments (unlike message passing).</p>
+<p>All three styles allow adding new types and operations, but they are optimized for different use cases. Generic operations with explicit dispatch is best when mostly adding new operations, while message passing is best when mostly adding new types. In each case, you can implement the new functionality in a self-contained piece of code, whereas using the other system requires editing many disparate pieces of code.</p>
+<p>The data-directed style is best when adding a mix of types and operations, since it works equally well for both. It can also be used all the time instead of the other two systems. Its main drawback is the complexity of global mutable state (discussed more in <a href="../3/index.html">Chapter&nbsp;3</a>) used for the table. Without knowing the contents of the table, you cannot be sure what will happen when invoking a generic procedure in the data-directed style.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

@@ -1157,7 +1157,7 @@ circumference ~> 62.8318
 ;;
 ;; $$\sum_{n=a}^b f(n) = f(a) + \dots + f(b).$$
 ;;
-;; We can do the same in Lisp using a higher-order procedure:
+;; We can do the same in Scheme using a higher-order procedure:
 
 (define (sum term a next b)
   (if (> a b)

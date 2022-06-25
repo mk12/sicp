@@ -2269,7 +2269,7 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.68
   (use (:2.3.3.1 element-of-set?)
        (:2.3.4.1 leaf? left-branch right-branch symbols)
-       (?2.67 sample-decoded sample-messagesample-tree)))
+       (?2.67 sample-decoded sample-message sample-tree)))
 
 (define (encode message tree)
   (if (null? message)
@@ -2416,7 +2416,7 @@ encoded-song
    (/ (magnitude z1) (magnitude z2))
    (- (angle z1) (angle z2))))
 
-;; Ben's representation (rectangular form)
+;; Ben's representation (rectangular form):
 (define real-part car)
 (define imag-part cdr)
 (define (magnitude z)
@@ -2429,13 +2429,14 @@ encoded-song
   (cons (* r (cos a)) (* r (sin a))))
 
 ;; Rectangular form can give exact answers for addition and subtraction.
-(define z1 (add-complex (make-from-real-imag 5 1) (make-from-real-imag 6 2)))
+(define z1 (add-complex (make-from-real-imag 1 2) (make-from-real-imag 3 4)))
 (define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
-z1 => (make-from-real-imag 11 3)
+(real-part z1) => 4
+(imag-part z1) => 6
 (magnitude z2) ~> 30
 (angle z2) ~> 3
 
-;; Alyssa's representation (polar form)
+;; Alyssa's representation (polar form):
 (define (real-part z) (* (magnitude z) (cos (angle z))))
 (define (imag-part z) (* (magnitude z) (sin (angle z))))
 (define magnitude car)
@@ -2450,7 +2451,8 @@ z1 => (make-from-real-imag 11 3)
 (define z2 (mul-complex (make-from-mag-ang 5 1) (make-from-mag-ang 6 2)))
 (real-part z1) ~> 4
 (imag-part z1) ~> 6
-z2 => (make-from-mag-ang 30 3)
+(magnitude z2) => 30
+(angle z2) => 3
 
 (Section :2.4.2 "Tagged Data"
   (use (:1.1.4 square)))
@@ -2468,7 +2470,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (rectangular? z) (eq? (type-tag z) 'rectangular))
 (define (polar? z) (eq? (type-tag z) 'polar))
 
-;; Ben's representation (rectangular form)
+;; Ben's representation (rectangular form):
 (define real-part-rectangular car)
 (define imag-part-rectangular cdr)
 (define (magnitude-rectangular z)
@@ -2484,7 +2486,7 @@ z2 => (make-from-mag-ang 30 3)
               (cons (* r (cos a))
                     (* r (sin a)))))
 
-;; Alyssa's representation (polar form)
+;; Alyssa's representation (polar form):
 (define (real-part-polar z)
   (* (magnitude-polar z) (cos (angle-polar z))))
 (define (imag-part-polar z)
@@ -2498,7 +2500,7 @@ z2 => (make-from-mag-ang 30 3)
 (define (make-from-mag-ang-polar r a)
   (attach-tag 'polar (cons r a)))
 
-;; Generic selectors
+;; Generic selectors:
 (define (real-part z)
   (cond ((rectangular? z)
          (real-part-rectangular (contents z)))
@@ -2524,11 +2526,11 @@ z2 => (make-from-mag-ang 30 3)
          (angle-polar (contents z)))
         (else (error 'angle "unknown type" z))))
 
-;; Generic constructors
+;; Generic constructors:
 (define make-from-real-imag make-from-real-imag-rectangular)
 (define make-from-mag-ang make-from-mag-ang-polar)
 
-;; Generic operators
+;; Generic operations:
 (paste (:2.4.1 add-complex div-complex mul-complex sub-complex))
 
 ;; Now we can get exact answers for all operations:
@@ -2542,8 +2544,9 @@ z2 => (make-from-mag-ang 30 3)
        (:3.3.3.3 get put reset)))
 
 ;; Note: The textbook calls these procedures `install-rectangular-package` and
-;; `install-polar-package`. I use `rectangular-pkg` and `polar-pkg` since there
-;; are many of these procedures and the long names tend to bloat import lists.
+;; `install-polar-package`. I shorten them to `rectangular-pkg` and `polar-pkg`
+;; since there are many of these procedures and the long names tend to bloat
+;; import lists.
 
 (define (rectangular-pkg)
   ;; Internal procedures
@@ -2593,6 +2596,8 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
+;; Helpers to apply generic operations:
+
 (define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
@@ -2606,25 +2611,27 @@ z2 => (make-from-mag-ang 30 3)
         (apply proc args)
         (error op "no method for type" op type))))
 
-;; Generic selectors
+;; Generic selectors:
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
 
-;; Generic constructors
+;; Generic constructors:
 (define (make-from-real-imag a b)
   (apply-specific 'make-from-real-imag 'rectangular a b))
 (define (make-from-mag-ang r a)
   (apply-specific 'make-from-mag-ang 'polar r a))
 
-;; Generic operators
+;; Generic operations:
 (paste (:2.4.1 add-complex div-complex mul-complex sub-complex))
 
-;; Helper function to run installers on a clean slate.
+;; Helper procedure to run installers with a clean slate:
 (define (using . installers)
   (reset)
   (for-each (lambda (f) (f)) installers))
+
+;; Putting it all together:
 
 (using rectangular-pkg polar-pkg)
 
@@ -2643,22 +2650,22 @@ z2 => (make-from-mag-ang 30 3)
   (cond ((number? expr) 0)
         ((variable? expr) (if (same-variable? expr var) 1 0))
         (else (apply-specific 'deriv (operator expr) (operands expr) var))))
-(define (operator expr) (car expr))
-(define (operands expr) (cdr expr))
+(define operator car)
+(define operands cdr)
 
-;; (a) Above, we wrote the `deriv` procedure as a data-directed type dispatch.
-;; It dispatches on the operator, which is the `car` of an expression. We can't
-;; assimilate atomic types like numbers and variables (which are symbols) into
-;; this dispatch because they don't have an identifying tag in the `car` -- they
-;; have no `car` or `cdr` at all. If we really wanted to, we could assimilate
-;; them by dispatching not on the operator, but on `(type expr)` like this:
+;; (a) We rewrote `deriv` to dispatch based on the operator of the expression.
+;; However, it still uses explicit case analysis for numbers and variables. We
+;; can't assimilate those into the data-directed dispatch because they have
+;; nothing that can be used as a type tag. Scheme only provides predicates like
+;; `number?`, not a procedure like `(type expr)` that could return `'number`. We
+;; can write our own, but this just moves the case anaylsis somewhere else:
 
 (define (type expr)
   (cond ((number? expr) 'number)
         ((variable? expr) 'variable)
         (else (operator expr))))
 
-;; (b) Packages for sum and product differentiation
+;; (b) Packages for sum and product differentiation:
 
 (define (sum-pkg)
   (define (deriv-sum terms var)
@@ -2678,7 +2685,7 @@ z2 => (make-from-mag-ang 30 3)
                             (multiplicand product))))
   (put 'deriv '* deriv-product))
 
-;; (c) Package for power differentiation
+;; (c) Package for power differentiation:
 
 (define (power-pkg)
   ;; Note: We can't reuse these procedures from Exercise 2.56 because those ones
@@ -2694,9 +2701,11 @@ z2 => (make-from-mag-ang 30 3)
      (deriv (base power) var)))
   (put 'deriv '** deriv-power))
 
-;; (d) If we wanted to instead use `(get (operator expr) 'deriv)` to get the
-;; appropriate procedure, we have to change the order of the arguments given to
-;; `put` in the package installation procedures.
+;; (d) If we wanted to index the procedures in the opposite way, we would simply
+;; need to swap the first two arguments to `put` in all the package installation
+;; procedures.
+
+;; Let's test the new system:
 
 (using sum-pkg product-pkg power-pkg)
 
@@ -2706,32 +2715,27 @@ z2 => (make-from-mag-ang 30 3)
 (deriv '(* 3 (** x 5)) 'x) => '(* 3 (* 5 (** x 4)))
 
 (Exercise ?2.74
-  (use (:2.4.3 apply-specific using) (:3.3.3.3 put)))
+  (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 apply-specific using) 
+       (:3.3.3.3 put)))
 
-;; (a) Each division must implement the `get-record` procedure. This gets
-;; dispatched based on the division symbol, i.e. the type tag on the file. We
-;; have chosen the structure `(division . records)`, where the `car` is the type
-;; information and the `cdr` is the division-specific set of records.
-
-(define (make-file division records) (cons division records))
-(define file-division car)
-(define file-records cdr)
+;; (a) Each division should tag their file with a symbol such as `'marketing`,
+;; and install an implementation of `get-record` that deals with their internal
+;; record structure.
 
 (define (get-record file employee-name)
-  (apply-specific
-   'get-record (file-division file) (file-records file) employee-name))
+  (let* ((tag (type-tag file))
+         (record
+          (apply-specific 'get-record tag (contents file) employee-name)))
+    (and record (attach-tag tag record))))
 
-;; (b) The record must also be tagged with the division symbol.
-
-(define (make-record division set)
-  (cons division set))
-(define record-division car)
-(define record-set cdr)
+;; (b) Since our generic `get-record` reattaches the division tag to the
+;; returned record, there is no need for divisions to tag records or do anything
+;; special. They just need to install an implementation of `get-salary`.
 
 (define (get-salary record)
-  (apply-specific 'get-salary (record-division record) (record-set record)))
+  (apply-specific 'get-salary (type-tag record) (contents record)))
 
-;; (c) This procedure imposes no additional requirements on implementations.
+;; (c) Procedure to find an employee's record across all files:
 
 (define (find-employee-record employee-name files)
   (if (null? files)
@@ -2739,35 +2743,40 @@ z2 => (make-from-mag-ang 30 3)
       (or (get-record (car files) employee-name)
           (find-employee-record employee-name (cdr files)))))
 
-;; (d) They must install `'get-record` and `'get-salary` generic procedures into
-;; the data-directed dispatch system. These procedures must use the division's
-;; name as their dispatch key.
+;; (d) When they take over a new company, they must tag its file and install
+;; implementations of `get-record` and `get-salary` for it.
 
-;; Example: Files for marketing and sales divisions
+;; Here is an example of a company with two divisions:
 
 (define files
-  (list (make-file 'marketing
-                   '(some (very) ((weird)) format))
-        (make-file 'sales
-                   `(("Joe" ,(make-record 'sales '(40)))
-                     ("Jane" ,(make-record 'sales '(50)))))))
+  (list (attach-tag 'marketing
+                    '("Alice" "Bob"))
+        (attach-tag 'sales
+                    '(("Joe" 40) ("Jane" 60)))))
 
 (define (company-pkg)
-  (define (get-record-marketing records name) #f)
+  (define (get-record-marketing records name)
+    (cond ((null? records) #f)
+          ((equal? (car records) name) name)
+          (else (get-record-marketing (cdr records) name))))
+  (define (get-salary-marketing record) 50)
   (define (get-record-sales records name)
     (cond ((null? records) #f)
-          ((equal? (caar records) name) (cadar records))
+          ((equal? (caar records) name) (car records))
           (else (get-record-sales (cdr records) name))))
-  (define (get-salary-sales record) (car record))
+  (define get-salary-sales cadr)
   (put 'get-record 'marketing get-record-marketing)
+  (put 'get-salary 'marketing get-salary-marketing)
   (put 'get-record 'sales get-record-sales)
   (put 'get-salary 'sales get-salary-sales))
 
 (using company-pkg)
 
-(find-employee-record "Bob" files) => #f
+(find-employee-record "Nobody" files) => #f
+(get-salary (find-employee-record "Alice" files)) => 50
+(get-salary (find-employee-record "Bob" files)) => 50
 (get-salary (find-employee-record "Joe" files)) => 40
-(get-salary (find-employee-record "Jane" files)) => 50
+(get-salary (find-employee-record "Jane" files)) => 60
 
 (Section :2.4.3.1 "Message passing"
   (use (:1.1.4 square)))
@@ -2801,29 +2810,36 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.76)
 
-;; 1. Generic operations with explicit dispatch
-;; - Types: After implementing specific procedures for the new type, you must
-;;   add a new clause to the dispatcher of all the generic operations (time
-;;   consuming and error-prone).
-;; - Operations: After implementing a new specific procedure for each existing
-;;   type, you must write a generic operation procedure with explicit dispatch.
+;; - Generic operations with explicit dispatch
+;;     - _New type_
+;;         - Add a new clause to all generic procedures.
+;;     - _New operation_
+;;         - Write a generic procedure that handles all types.
+;; - Data-directed style
+;;     - _New type_
+;;         - Install implementations of every operation.
+;;     - _New operation_
+;;         - Install implementations for every type.
+;;         - Write a wrapper that invokes `apply-generic`.
+;; - Message-passing style
+;;     - _New type_
+;;         - Write a procedure that handles all operations.
+;;     - _New operation_
+;;         - Add a new clause to the method dispatch of all types.
 ;;
-;; 2. Data-directed style
-;; - Types: It's easy: you just need to write new specific procedures and
-;;   install them into the system with their identifying dispatch type.
-;; - Operations: After implementing a new specific procedure in each of the
-;;   package installer procedures, you must write a procedure invoking
-;;   `apply-generic`.
+;; All three styles allow adding new types and operations, but they are
+;; optimized for different use cases. Generic operations with explicit dispatch
+;; is best when mostly adding new operations, while message passing is best when
+;; mostly adding new types. In each case, you can implement the new
+;; functionality in a self-contained piece of code, whereas using the other
+;; system requires editing many disparate pieces of code.
 ;;
-;; 3. Message-passing style
-;; - Types: Simply create a new type that responds to the same message.
-;; - Operations: Write a specific procedure for all existing types so that they
-;;   respond to the new message.
-;;
-;; Message passing is best when adding types often and operations rarely.
-;; Generic operations with explicit dispatch are best when adding types rarely
-;; and operations often. Data-directed style works well in both scenarios, and
-;; also allows dispatching on all arguments (unlike message passing).
+;; The data-directed style is best when adding a mix of types and operations,
+;; since it works equally well for both. It can also be used all the time
+;; instead of the other two systems. Its main drawback is the complexity of
+;; global mutable state (discussed more in [](:3)) used for the table. Without
+;; knowing the contents of the table, you cannot be sure what will happen when
+;; invoking a generic procedure in the data-directed style.
 
 (Section :2.5 "Systems with Generic Operations")
 
