@@ -2441,9 +2441,9 @@ encoded-song
 (define (imag-part z) (* (magnitude z) (sin (angle z))))
 (define magnitude car)
 (define angle cdr)
-(define (make-from-real-imag a b)
-  (cons (sqrt (+ (square a) (square b)))
-        (atan b a)))
+(define (make-from-real-imag x y)
+  (cons (sqrt (+ (square x) (square y)))
+        (atan y x)))
 (define make-from-mag-ang cons)
 
 ;; Polar form can give exact answers for multiplication and division.
@@ -2479,8 +2479,8 @@ encoded-song
 (define (angle-rectangular z)
   (atan (imag-part-rectangular z)
         (real-part-rectangular z)))
-(define (make-from-real-imag-rectangular a b)
-  (attach-tag 'rectangular (cons a b)))
+(define (make-from-real-imag-rectangular x y)
+  (attach-tag 'rectangular (cons x y)))
 (define (make-from-mag-ang-rectangular r a)
   (attach-tag 'rectangular
               (cons (* r (cos a))
@@ -2493,10 +2493,10 @@ encoded-song
   (* (magnitude-polar z) (sin (angle-polar z))))
 (define magnitude-polar car)
 (define angle-polar cdr)
-(define (make-from-real-imag-polar a b)
+(define (make-from-real-imag-polar x y)
   (attach-tag 'polar
-              (cons (sqrt (+ (square a) (square b)))
-                    (atan b a))))
+              (cons (sqrt (+ (square x) (square y)))
+                    (atan y x))))
 (define (make-from-mag-ang-polar r a)
   (attach-tag 'polar (cons r a)))
 
@@ -2568,7 +2568,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle '(rectangular) angle)
   (put 'make-from-real-imag 'rectangular
-       (lambda (a b) (tag (make-from-real-imag a b))))
+       (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
@@ -2581,9 +2581,9 @@ z2 => (make-from-mag-ang 30 3)
     (* (magnitude z) (cos (angle z))))
   (define (imag-part z)
     (* (magnitude z) (sin (angle z))))
-  (define (make-from-real-imag a b)
-    (cons (sqrt (+ (square a) (square b)))
-          (atan b a)))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
 
   ;; Interface to the rest of the system
   (define (tag x) (attach-tag 'polar x))
@@ -2592,7 +2592,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'magnitude '(polar) magnitude)
   (put 'angle '(polar) angle)
   (put 'make-from-real-imag 'polar
-       (lambda (a b) (tag (make-from-real-imag a b))))
+       (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
@@ -2618,8 +2618,8 @@ z2 => (make-from-mag-ang 30 3)
 (define (angle z) (apply-generic 'angle z))
 
 ;; Generic constructors:
-(define (make-from-real-imag a b)
-  (apply-specific 'make-from-real-imag 'rectangular a b))
+(define (make-from-real-imag x y)
+  (apply-specific 'make-from-real-imag 'rectangular x y))
 (define (make-from-mag-ang r a)
   (apply-specific 'make-from-mag-ang 'polar r a))
 
@@ -2715,7 +2715,7 @@ z2 => (make-from-mag-ang 30 3)
 (deriv '(* 3 (** x 5)) 'x) => '(* 3 (* 5 (** x 4)))
 
 (Exercise ?2.74
-  (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 apply-specific using) 
+  (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 apply-specific using)
        (:3.3.3.3 put)))
 
 ;; (a) Each division should tag their file with a symbol such as `'marketing`,
@@ -2781,12 +2781,12 @@ z2 => (make-from-mag-ang 30 3)
 (Section :2.4.3.1 "Message passing"
   (use (:1.1.4 square)))
 
-(define (make-from-real-imag a b)
+(define (make-from-real-imag x y)
   (lambda (op)
-    (cond ((eq? op 'real-part) a)
-          ((eq? op 'imag-part) b)
-          ((eq? op 'magnitude) (sqrt (+ (square a) (square b))))
-          ((eq? op 'angle) (atan b a))
+    (cond ((eq? op 'real-part) x)
+          ((eq? op 'imag-part) y)
+          ((eq? op 'magnitude) (sqrt (+ (square x) (square y))))
+          ((eq? op 'angle) (atan y x))
           (else (error 'make-from-real-imag "unknown op" op)))))
 
 (define (apply-generic op arg) (arg op))
@@ -2886,12 +2886,12 @@ z2 => (make-from-mag-ang 30 3)
   (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
   (put 'div '(complex complex) (lambda (z1 z2) (tag (div-complex z1 z2))))
   (put 'make-from-real-imag 'complex
-       (lambda (a b) (tag (make-from-real-imag a b))))
+       (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
-(define (make-complex-from-real-imag a b)
-  (apply-specific 'make-from-real-imag 'complex a b))
+(define (make-complex-from-real-imag x y)
+  (apply-specific 'make-from-real-imag 'complex x y))
 (define (make-complex-from-mag-ang r a)
   (apply-specific 'make-from-mag-ang 'complex r a))
 
@@ -2922,30 +2922,30 @@ z2 => (make-from-mag-ang 30 3)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle))
 
-;; This works because all four procedures were already defined in Section 2.4.3
-;; to use `apply-generic`. This means (1) they will dispatch to the new
-;; procedures when given complex inputs, and (2) the new procedures will
-;; dispatch on the inner representation (rectangular or polar).
+;; This works because these selectors were defined in [](:2.4.3) using
+;; `apply-generic`, so now they will dispatch back to themselves when given a
+;; data object tagged `'complex`. In other words, we are telling the system to
+;; strip off the type tag and try again.
 
 (using complex-pkg complex-components-pkg)
 
-;; The object shown in Figure 2.24.
 (define z (make-complex-from-real-imag 3 4))
 
 (magnitude z)
 => (magnitude '(complex rectangular 3 . 4))
-=> (apply-generic 'magnitude '(complex rectangular 3 . 4))
+=> (apply-generic 'magnitude '(complex rectangular 3 . 4))    ; 1st call
 => (apply (get 'magnitude '(complex)) '((rectangular 3 . 4)))
 => (magnitude '(rectangular 3 . 4))
-=> (apply-generic 'magnitude '(rectangular 3 . 4))
+=> (apply-generic 'magnitude '(rectangular 3 . 4))            ; 2nd call
 => (apply (get 'magnitude '(rectangular)) '((3 . 4)))
 => (sqrt (+ (square 3) (square 4)))
 => (sqrt (+ 9 16))
 => (sqrt 25)
 => 5
 
-;; `apply-generic` is invoked twice: once on the 'complex object and once on the
-;; inner 'rectangular object. Each invocation strips off one type tag.
+;; In this example, `apply-generic` is invoked twice: once on the outer
+;; `'complex` object and again on the inner `'rectangular` object. Each
+;; invocation strips off one type tag.
 
 (Exercise ?2.78
   (use (:2.4.3 using) (:3.3.3.3 get put)))
@@ -3435,7 +3435,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle '(rectangular) angle)
   (put 'make-from-real-imag 'rectangular
-       (lambda (a b) (tag (make-from-real-imag a b))))
+       (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
@@ -3447,16 +3447,16 @@ z2 => (make-from-mag-ang 30 3)
     (mul (magnitude z) (cosine (angle z))))
   (define (imag-part z)
     (mul (magnitude z) (sine (angle z))))
-  (define (make-from-real-imag a b)
-    (cons (square-root (add (square a) (square b)))
-          (atan2 b a)))
+  (define (make-from-real-imag x y)
+    (cons (square-root (add (square x) (square y)))
+          (atan2 y x)))
   (define (tag x) (attach-tag 'polar x))
   (put 'real-part '(polar) real-part)
   (put 'imag-part '(polar) imag-part)
   (put 'magnitude '(polar) magnitude)
   (put 'angle '(polar) angle)
   (put 'make-from-real-imag 'polar
-       (lambda (a b) (tag (make-from-real-imag a b))))
+       (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
@@ -3481,7 +3481,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
   (put 'div '(complex complex) (lambda (z1 z2) (tag (div-complex z1 z2))))
   (put 'make-from-real-imag 'complex
-       (lambda (a b) (tag (make-from-real-imag a b))))
+       (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 

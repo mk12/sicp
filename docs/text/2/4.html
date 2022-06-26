@@ -126,7 +126,7 @@
 <li>For example, here is how we implement the generic <code>real-part</code>:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part z)
-  (<span class="kw">cond</span> ((rectangular? z) 
+  (<span class="kw">cond</span> ((rectangular? z)
          (real-part-rectangular (contents z)))
         ((polar? z)
          (real-part-polar (contents z)))
@@ -191,7 +191,7 @@
              (square (imag-part z)))))
   (<span class="kw">define</span> (angle z)
     (<span class="fu">atan</span> (imag-part z) (real-part z)))
-  (<span class="kw">define</span> (make-from-mag-ang r a) 
+  (<span class="kw">define</span> (make-from-mag-ang r a)
     (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a)) (<span class="fu">*</span> r (<span class="fu">sin</span> a))))
 
   <span class="co">;; Interface to the rest of the system</span>
@@ -200,9 +200,9 @@
   (put <span class="vs">&#39;imag-part</span> <span class="vs">&#39;(rectangular)</span> imag-part)
   (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular)</span> magnitude)
   (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(rectangular)</span> angle)
-  (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span> 
+  (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;rectangular</span> 
+  (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;rectangular</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a))))
   <span class="vs">&#39;done</span>)</code></pre>
 <ul>

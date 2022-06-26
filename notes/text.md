@@ -1231,7 +1231,7 @@ The following procedure decodes a list of bits using a Huffman tree:
 
 ```
 (define (real-part z)
-  (cond ((rectangular? z) 
+  (cond ((rectangular? z)
          (real-part-rectangular (contents z)))
         ((polar? z)
          (real-part-polar (contents z)))
@@ -1270,7 +1270,7 @@ Angle             `angle-polar`      `angle-rectangular`
              (square (imag-part z)))))
   (define (angle z)
     (atan (imag-part z) (real-part z)))
-  (define (make-from-mag-ang r a) 
+  (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
 
   ;; Interface to the rest of the system
@@ -1279,9 +1279,9 @@ Angle             `angle-polar`      `angle-rectangular`
   (put 'imag-part '(rectangular) imag-part)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle '(rectangular) angle)
-  (put 'make-from-real-imag 'rectangular 
+  (put 'make-from-real-imag 'rectangular
        (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-mag-ang 'rectangular 
+  (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 ```
@@ -1360,7 +1360,7 @@ Angle             `angle-polar`      `angle-rectangular`
 ```
 (define (install-scheme-number-package)
   (define (tag x)
-    (attach-tag 'scheme-number x))    
+    (attach-tag 'scheme-number x))
   (put 'add '(scheme-number scheme-number)
        (lambda (x y) (tag (+ x y))))
   (put 'sub '(scheme-number scheme-number)
@@ -1471,9 +1471,9 @@ Angle             `angle-polar`      `angle-rectangular`
 
   ;; Interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
-  (put 'add '(polynomial polynomial) 
+  (put 'add '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 p2))))
-  (put 'mul '(polynomial polynomial) 
+  (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))

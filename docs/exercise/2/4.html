@@ -124,9 +124,9 @@ Imports:
 (<span class="kw">define</span> (imag-part z) (<span class="fu">*</span> (magnitude z) (<span class="fu">sin</span> (angle z))))
 (<span class="kw">define</span> magnitude <span class="fu">car</span>)
 (<span class="kw">define</span> angle <span class="fu">cdr</span>)
-(<span class="kw">define</span> (make-from-real-imag a b)
-  (<span class="fu">cons</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square a) (square b)))
-        (<span class="fu">atan</span> b a)))
+(<span class="kw">define</span> (make-from-real-imag x y)
+  (<span class="fu">cons</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square x) (square y)))
+        (<span class="fu">atan</span> y x)))
 (<span class="kw">define</span> make-from-mag-ang <span class="fu">cons</span>)</code></pre>
 <p>Polar form can give exact answers for multiplication and division.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
@@ -174,8 +174,8 @@ Imports:
 (<span class="kw">define</span> (angle-rectangular z)
   (<span class="fu">atan</span> (imag-part-rectangular z)
         (real-part-rectangular z)))
-(<span class="kw">define</span> (make-from-real-imag-rectangular a b)
-  (attach-tag <span class="vs">&#39;rectangular</span> (<span class="fu">cons</span> a b)))
+(<span class="kw">define</span> (make-from-real-imag-rectangular x y)
+  (attach-tag <span class="vs">&#39;rectangular</span> (<span class="fu">cons</span> x y)))
 (<span class="kw">define</span> (make-from-mag-ang-rectangular r a)
   (attach-tag <span class="vs">&#39;rectangular</span>
               (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a))
@@ -187,10 +187,10 @@ Imports:
   (<span class="fu">*</span> (magnitude-polar z) (<span class="fu">sin</span> (angle-polar z))))
 (<span class="kw">define</span> magnitude-polar <span class="fu">car</span>)
 (<span class="kw">define</span> angle-polar <span class="fu">cdr</span>)
-(<span class="kw">define</span> (make-from-real-imag-polar a b)
+(<span class="kw">define</span> (make-from-real-imag-polar x y)
   (attach-tag <span class="vs">&#39;polar</span>
-              (<span class="fu">cons</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square a) (square b)))
-                    (<span class="fu">atan</span> b a))))
+              (<span class="fu">cons</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square x) (square y)))
+                    (<span class="fu">atan</span> y x))))
 (<span class="kw">define</span> (make-from-mag-ang-polar r a)
   (attach-tag <span class="vs">&#39;polar</span> (<span class="fu">cons</span> r a)))</code></pre>
 <p>Generic selectors:</p>
@@ -295,7 +295,7 @@ Imports:
   (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular)</span> magnitude)
   (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(rectangular)</span> angle)
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span>
-       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;rectangular</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
@@ -308,9 +308,9 @@ Imports:
     (<span class="fu">*</span> (magnitude z) (<span class="fu">cos</span> (angle z))))
   (<span class="kw">define</span> (imag-part z)
     (<span class="fu">*</span> (magnitude z) (<span class="fu">sin</span> (angle z))))
-  (<span class="kw">define</span> (make-from-real-imag a b)
-    (<span class="fu">cons</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square a) (square b)))
-          (<span class="fu">atan</span> b a)))
+  (<span class="kw">define</span> (make-from-real-imag x y)
+    (<span class="fu">cons</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square x) (square y)))
+          (<span class="fu">atan</span> y x)))
 
   <span class="co">;; Interface to the rest of the system</span>
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;polar</span> x))
@@ -319,7 +319,7 @@ Imports:
   (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(polar)</span> magnitude)
   (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(polar)</span> angle)
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;polar</span>
-       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
 <p>Helpers to apply generic operations:</p>
@@ -341,8 +341,8 @@ Imports:
 (<span class="kw">define</span> (magnitude z) (apply-generic <span class="vs">&#39;magnitude</span> z))
 (<span class="kw">define</span> (angle z) (apply-generic <span class="vs">&#39;angle</span> z))</code></pre>
 <p>Generic constructors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag a b)
-  (apply-specific <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span> a b))
+<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag x y)
+  (apply-specific <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span> x y))
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (apply-specific <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span> r a))</code></pre>
 <p>Generic operations:</p>
@@ -594,12 +594,12 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag a b)
+<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag x y)
   (<span class="kw">lambda</span> (op)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="vs">&#39;real-part</span>) a)
-          ((<span class="fu">eq?</span> op <span class="vs">&#39;imag-part</span>) b)
-          ((<span class="fu">eq?</span> op <span class="vs">&#39;magnitude</span>) (<span class="fu">sqrt</span> (<span class="fu">+</span> (square a) (square b))))
-          ((<span class="fu">eq?</span> op <span class="vs">&#39;angle</span>) (<span class="fu">atan</span> b a))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="vs">&#39;real-part</span>) x)
+          ((<span class="fu">eq?</span> op <span class="vs">&#39;imag-part</span>) y)
+          ((<span class="fu">eq?</span> op <span class="vs">&#39;magnitude</span>) (<span class="fu">sqrt</span> (<span class="fu">+</span> (square x) (square y))))
+          ((<span class="fu">eq?</span> op <span class="vs">&#39;angle</span>) (<span class="fu">atan</span> y x))
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-from-real-imag</span> <span class="cn">&quot;unknown op&quot;</span> op)))))
 
 (<span class="kw">define</span> (apply-generic op arg) (arg op))

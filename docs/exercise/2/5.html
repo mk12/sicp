@@ -198,12 +198,12 @@ Imports:
   (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
   (put <span class="vs">&#39;div</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;complex</span>
-       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;complex</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
-(<span class="kw">define</span> (make-complex-from-real-imag a b)
-  (apply-specific <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;complex</span> a b))
+(<span class="kw">define</span> (make-complex-from-real-imag x y)
+  (apply-specific <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;complex</span> x y))
 (<span class="kw">define</span> (make-complex-from-mag-ang r a)
   (apply-specific <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;complex</span> r a))
 
@@ -290,23 +290,23 @@ Imports:
   (put <span class="vs">&#39;imag-part</span> <span class="vs">&#39;(complex)</span> imag-part)
   (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(complex)</span> magnitude)
   (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(complex)</span> angle))</code></pre>
-<p>This works because all four procedures were already defined in Section 2.4.3 to use <code>apply-generic</code>. This means (1) they will dispatch to the new procedures when given complex inputs, and (2) the new procedures will dispatch on the inner representation (rectangular or polar).</p>
-<pre><code class="blockcode">(using complex-pkg complex-components-pkg)</code></pre>
-<p>The object shown in Figure 2.24.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">3</span> <span class="cn">4</span>))
+<p>This works because these selectors were defined in <a href="4.html#2.4.3">§&nbsp;2.4.3</a> using <code>apply-generic</code>, so now they will dispatch back to themselves when given a data object tagged <code>'complex</code>. In other words, we are telling the system to strip off the type tag and try again.</p>
+<pre><code class="blockcode">(using complex-pkg complex-components-pkg)
+
+(<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">3</span> <span class="cn">4</span>))
 
 (magnitude z)
 <span class="op">=&gt;</span> (magnitude <span class="vs">&#39;(complex rectangular 3 . 4)</span>)
-<span class="op">=&gt;</span> (apply-generic <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(complex rectangular 3 . 4)</span>)
+<span class="op">=&gt;</span> (apply-generic <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(complex rectangular 3 . 4)</span>)    <span class="co">; 1st call</span>
 <span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(complex)</span>) <span class="vs">&#39;((rectangular 3 . 4))</span>)
 <span class="op">=&gt;</span> (magnitude <span class="vs">&#39;(rectangular 3 . 4)</span>)
-<span class="op">=&gt;</span> (apply-generic <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular 3 . 4)</span>)
+<span class="op">=&gt;</span> (apply-generic <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular 3 . 4)</span>)            <span class="co">; 2nd call</span>
 <span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular)</span>) <span class="vs">&#39;((3 . 4))</span>)
 <span class="op">=&gt;</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square <span class="cn">3</span>) (square <span class="cn">4</span>)))
 <span class="op">=&gt;</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> <span class="cn">9</span> <span class="cn">16</span>))
 <span class="op">=&gt;</span> (<span class="fu">sqrt</span> <span class="cn">25</span>)
 <span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
-<p><code>apply-generic</code> is invoked twice: once on the ’complex object and once on the inner ’rectangular object. Each invocation strips off one type tag.</p>
+<p>In this example, <code>apply-generic</code> is invoked twice: once on the outer <code>'complex</code> object and again on the inner <code>'rectangular</code> object. Each invocation strips off one type tag.</p>
 <h3 id="ex2.78" class="anchor">
 <a class="anchor__link link" href="#ex2.78" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.78">Exercise 2.78<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1455,7 +1455,7 @@ Imports:
   (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular)</span> magnitude)
   (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(rectangular)</span> angle)
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span>
-       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;rectangular</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
@@ -1467,16 +1467,16 @@ Imports:
     (mul (magnitude z) (cosine (angle z))))
   (<span class="kw">define</span> (imag-part z)
     (mul (magnitude z) (sine (angle z))))
-  (<span class="kw">define</span> (make-from-real-imag a b)
-    (<span class="fu">cons</span> (square-root (add (square a) (square b)))
-          (atan2 b a)))
+  (<span class="kw">define</span> (make-from-real-imag x y)
+    (<span class="fu">cons</span> (square-root (add (square x) (square y)))
+          (atan2 y x)))
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;polar</span> x))
   (put <span class="vs">&#39;real-part</span> <span class="vs">&#39;(polar)</span> real-part)
   (put <span class="vs">&#39;imag-part</span> <span class="vs">&#39;(polar)</span> imag-part)
   (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(polar)</span> magnitude)
   (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(polar)</span> angle)
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;polar</span>
-       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
@@ -1501,7 +1501,7 @@ Imports:
   (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
   (put <span class="vs">&#39;div</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;complex</span>
-       (<span class="kw">lambda</span> (a b) (tag (make-from-real-imag a b))))
+       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;complex</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
 <p>Note: The implementation of <code>drop</code> will still use the old implementation of <code>equ?</code>, which uses an older <code>apply-generic</code> without coercion.</p>

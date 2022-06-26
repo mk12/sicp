@@ -1,6 +1,7 @@
 # New to do
 
 - test in all browsers, without JS, without CSS
+- favicon
 - exercises: add appendix for core.ss etc.
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
@@ -9,7 +10,7 @@
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
-    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4
+    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 + subsubsections (x.y.z.w) in code
     + should be real, i.e. `make lint` ensures they are present in text.md
     + but no need to put all of them. e.g. text 1.1.5 has "Applicative order versus normal order", but exercise 1.1.5 just makes these sentences with a colon at the end since adding 1.1.5.{1,2} would just clutter things and require duplicating the imports
