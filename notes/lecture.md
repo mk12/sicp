@@ -924,31 +924,30 @@ Skeletons:
 
 ### Limits of data abstraction
 
-- So far, we've talked a lot about data abstraction.
-- We've had these horizontal abstract barriers that separate use from representation.
+- So far, we've talked a lot about data abstraction. We've had these horizontal abstraction barriers that separate use from representation.
 - This is powerful, but not sufficient for really complex systems.
 - The problem is that sometimes we to use need multiple, incompatible representations.
 - We want some kind of vertical barrier in addition to the horizontal barriers.
-- We want _generic operators_. What these operators precisely do depends on the data format it is looking at.
-- It should be easy to add new data types to the system, so that the generic operators work on them, too, with minimal changes.
+- We want _generic operators_ that work on multiple data representations.
+- It should be easy to add new data types to the system, so that the generic operators work on them too with minimal changes.
 
 ### Complex number arithmetic
 
-- We can represent a complex number in two ways:
-    - real part and imaginary part (rectangular form);
-    - magnitude and angle (polar form).
-- The rectangular form $x + iy$ and the polar form $re^{iθ}$ are related:
-    - $x = r\cos θ$ and $y = r\sin θ$.
-    - $r = \sqrt{x^2 + y^2}$ and $θ = \arctan(y,x)$.
-- We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.
-- We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.
+- We can represent a complex number rectangular form or in polar form.
+- The rectangular form $x + yi$ and the polar form $re^{iθ}$ are related:
+$$\begin{aligned}
+x &= r\cos θ, & r &= \sqrt{x^2+y^2}, \\
+y &= r\sin θ, & θ &= \arctan(y, x).
+\end{aligned}$$
+- Adding is easy in rectangular form: just add up the real and imaginary parts.
+- Multiplying is easy in polar form: just multiply the magnitudes and add the angles.
 
 ### Incompatible representations
 
-- We could expose rectangular and polar functions but still use on particular representation under the hood. This isn't really new.
+- We could expose rectangular and polar selectors but still use one particular representation under the hood. This is nothing new.
 - What if we want _both_ representations? Data abstraction allows us to postpone the representation decision, but we don't want to make a decision at all!
 - We need a vertical barrier between rectangular and polar forms.
-- The selectors for complex numbers -- `real-part`, `imag-part`, `magnitude`, and `angle` -- must be generic operators.
+- The selectors `real-part`, `imag-part`, `magnitude`, and `angle` must be generic procedures that work with either representation.
 - For this to work, we need _typed data_. We need to tag our data objects with labels telling us the type of their contents.
 - We can simply `cons` the symbol `'rectangular` or `'polar` to the complex number data.
 - The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.
@@ -957,34 +956,33 @@ Skeletons:
 
 ### Problems with the manager
 
-- The strategy we just looked at is called _dispatch on type_.
-- One annoyance is that we had to change the names of the specific procedures (adding a suffix) to avoid naming conflicts.
+- The strategy we just looked at is called _type dispatch_.
+- One annoyance is that we had to rename specific procedures to avoid naming conflicts.
 - We'll talk about namespaces to fix that problem later.
 - What happens when you add a new type to the system?
     - The other types don't care. They can remain the same.
-    - The manager needs to add a new clause to every generic procedure that should be able to work with the new type.
-    - This is annoying because the generic procedure case analyses are very repetitive.
+    - But the manager needs to add a new clause to every generic procedure that should be able to work with the new type.
+    - This is annoying because generic procedure case analyses are very repetitive.
 
 ### Data-directed programming
 
-- Our system has a table with types on the horizontal axis and operators on the vertical axis.
-- Instead of writing these generic procedures manually, we should just use a table directly.
-- We introduce two new procedures: `(put key1 key2 value)` and `(get key1 key2)`. This is a map, or associative list.
-- Now we just need to use `put` to insert our specific procedures into the table, and the rest will be automated.
-- We wouldn't even have to name our procedures -- we could just pass a lambda expression as the last argument.
-- It is the procedures that go in the table, not their names.
+- Our system has a table with types (horizontal axis) and operators (vertical axis).
+- Instead of writing these generic procedures manually, we should just use a table.
+- We introduce two new procedures: `(put «key1» «key2» «value»)` and `(get «key1» «key2»)`.
+- Now we just need to insert our specific procedures into the table using `put`, and the rest will be automated.
+- It's the procedures that go in the table, not their names, so we could even pass a lambda expression and not give it a name.
 - The key procedure in this whole system is `operate`:
 
 ```
 (define (operate op obj)
   (let ((proc (get (type obj) op)))
     (if (null? proc)
-        (error "undefined OP")
+        (error "undefined operator")
         (proc (contents obj)))))
 ```
 
 - This uses the table to look up the correct procedure, and applies it to the given object.
-- This is what happens when we try to extract the real part of a complex number in polar form:
+- Here's what happens when we extract the real part of a complex number in polar form:
 
 ```
 (real-part z)
@@ -996,7 +994,7 @@ Skeletons:
 ```
 
 - This style of programming called _data-directed_ programming.
-- The data objects themselves are carrying the information about how you should operate on them.
+- The data objects themselves carry information about how you should operate on them.
 
 ## Part 3
 
@@ -1004,21 +1002,20 @@ Skeletons:
 
 - We just looked at data-directed programming for complex numbers.
 - The power of the methodology only becomes apparent when you embed this in a more complex system.
-- Let's consider a generic arithmetic system with operations `add`, `sub`, `mil`, and `div`.
+- Let's consider a generic arithmetic system with operations `add`, `sub`, `mul`, and `div`.
 - This should sit on top of ordinary Lisp numbers, rationals, and complex numbers.
-- We already made a rational number package; we just need to change the constructor `make-rat` so that it attaches the tag `'rational` to the data.
-- We can't use `operate` anymore because that was designed for a single argument. `apply-generic` from SICP is better.
-- Now, our complex numbers will have two labels on them: `'complex` _and_ either `'rectangular` or `'polar`.
+- We already made a rational number package. We just need to change the constructor `make-rat` so that it attaches the tag `'rational` to the data.
+- We can't use `operate` anymore because it was designed for a single argument. The `apply-generic` procedure from [](@2.4.3) works for multiple arguments.
+- Now, our complex numbers will have two levels of type tags: `'complex` on top and either `'rectangular` or `'polar` underneath.
 - At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.
 
 ### Polynomials
 
-- We could also add polynomials to the generic arithmetic system.
+- We can also add polynomials to the generic arithmetic system.
 - Our polynomials will have a variable (symbol) and a term list (list of ordered pairs).
-- We can add polynomials in the same variable by adding their term lists (collecting like terms).
-- By using `add` when we add term lists, we can use _any_ kind of numbers as a coefficients, for free!
-- This includes polynomials whose coefficients are polynomials.
-- All because we wrote `add` instead of `+`, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we'd like.
+- We can add polynomials in the same variable by combining their term lists.
+- By using the generic `add` when we add term lists, we can use _any_ kind of number as a coefficient, for free! Including polynomials themselves!
+- In other words, all because we wrote `add` instead of `+`, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we'd like.
 - If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.
 
 ### Conclusion
@@ -1026,7 +1023,7 @@ Skeletons:
 - We built a system that has decentralized control.
 - We don't have to worry about how operations are actually performed.
 - This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.
-- The true complexity comes in with _coercion_ -- when you add a complex and a rational, who worries about converting what?
+- The true complexity comes in with _coercion_: when you add a complex number and a rational, who worries about converting what?
 
 # 5A: Assignment, State, and Side-Effects
 

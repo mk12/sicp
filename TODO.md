@@ -8,7 +8,7 @@
 - fix inline code in blockquotes background
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
-    - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a
+    - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4
 + subsubsections (x.y.z.w) in code
     + should be real, i.e. `make lint` ensures they are present in text.md

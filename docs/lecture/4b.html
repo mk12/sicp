@@ -76,27 +76,22 @@
 <a class="anchor__link link" href="#1.1" aria-hidden="true">#</a> Limits of data abstraction
 </h3>
 <ul>
-<li>So far, we’ve talked a lot about data abstraction.</li>
-<li>We’ve had these horizontal abstract barriers that separate use from representation.</li>
+<li>So far, we’ve talked a lot about data abstraction. We’ve had these horizontal abstraction barriers that separate use from representation.</li>
 <li>This is powerful, but not sufficient for really complex systems.</li>
 <li>The problem is that sometimes we to use need multiple, incompatible representations.</li>
 <li>We want some kind of vertical barrier in addition to the horizontal barriers.</li>
-<li>We want <em>generic operators</em>. What these operators precisely do depends on the data format it is looking at.</li>
-<li>It should be easy to add new data types to the system, so that the generic operators work on them, too, with minimal changes.</li>
+<li>We want <em>generic operators</em> that work on multiple data representations.</li>
+<li>It should be easy to add new data types to the system, so that the generic operators work on them too with minimal changes.</li>
 </ul>
 <h3 id="1.2" class="anchor">
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Complex number arithmetic
 </h3>
 <ul>
-<li>We can represent a complex number in two ways:
-<ul>
-<li>real part and imaginary part (rectangular form);</li>
-<li>magnitude and angle (polar form).</li>
-</ul></li>
-<li>The rectangular form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>+</mo><mi>i</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">x + iy</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> and the polar form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><msup><mi>e</mi><mrow><mi>i</mi><mi>θ</mi></mrow></msup></mrow><annotation encoding="application/x-tex">re^{iθ}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.849108em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span></span></span></span></span></span></span></span></span> are related:
-<ul>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>=</mo><mi>r</mi><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">x = r\cos θ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>=</mo><mi>r</mi><mi>sin</mi><mo>⁡</mo><mi>θ</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">y = r\sin θ\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mo>=</mo><msqrt><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">r = \sqrt{x^2 + y^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2821659999999999em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9578340000000001em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-2.917834em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
+<li>We can represent a complex number rectangular form or in polar form.</li>
+<li>The rectangular form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mi>i</mi></mrow><annotation encoding="application/x-tex">x + yi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord mathnormal">i</span></span></span></span> and the polar form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><msup><mi>e</mi><mrow><mi>i</mi><mi>θ</mi></mrow></msup></mrow><annotation encoding="application/x-tex">re^{iθ}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.849108em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span></span></span></span></span></span></span></span></span> are related: <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left right left" columnspacing="0em 1em 0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mi>x</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>r</mi><mi>cos</mi><mo>⁡</mo><mi>θ</mi><mo separator="true">,</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mi>r</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><msqrt><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></msqrt><mo separator="true">,</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mi>y</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>r</mi><mi>sin</mi><mo>⁡</mo><mi>θ</mi><mo separator="true">,</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mi>θ</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>arctan</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+x &amp;= r\cos θ, &amp; r &amp;= \sqrt{x^2+y^2}, \\
+y &amp;= r\sin θ, &amp; θ &amp;= \arctan(y, x).
+\end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.1667090000000004em;vertical-align:-1.3333545000000002em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8333545000000002em;"><span style="top:-3.8333545em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord mathnormal">x</span></span></span><span style="top:-2.3333544999999996em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3333545000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8333545000000002em;"><span style="top:-3.8333545em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mpunct">,</span></span></span><span style="top:-2.3333544999999996em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mpunct">,</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3333545000000002em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8333545000000002em;"><span style="top:-3.8333545em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span></span></span><span style="top:-2.3333544999999996em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3333545000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8333545000000002em;"><span style="top:-3.8333545em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.006709em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-2.9667090000000003em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
 c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
 c340,-704.7,510.7,-1060.3,512,-1067
 l0 -0
@@ -106,19 +101,18 @@ s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,
 c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
 s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
 c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
-M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2821659999999999em;"><span></span></span></span></span></span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>θ</mi><mo>=</mo><mi>arctan</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">θ = \arctan(y,x)\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">arctan</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
-</ul></li>
-<li>We add complex numbers in rectangular form by adding the real parts and imaginary parts in parallel.</li>
-<li>We multiply complex numbers in polar form by multiplying the magnitudes and adding the angles.</li>
+M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.23329099999999992em;"><span></span></span></span></span></span><span class="mpunct">,</span></span></span><span style="top:-2.3333544999999996em;"><span class="pstrut" style="height:3.006709em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mop">arctan</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3333545000000002em;"><span></span></span></span></span></span></span></span></span></span></span></span></li>
+<li>Adding is easy in rectangular form: just add up the real and imaginary parts.</li>
+<li>Multiplying is easy in polar form: just multiply the magnitudes and add the angles.</li>
 </ul>
 <h3 id="1.3" class="anchor">
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Incompatible representations
 </h3>
 <ul>
-<li>We could expose rectangular and polar functions but still use on particular representation under the hood. This isn’t really new.</li>
+<li>We could expose rectangular and polar selectors but still use one particular representation under the hood. This is nothing new.</li>
 <li>What if we want <em>both</em> representations? Data abstraction allows us to postpone the representation decision, but we don’t want to make a decision at all!</li>
 <li>We need a vertical barrier between rectangular and polar forms.</li>
-<li>The selectors for complex numbers—<code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code>—must be generic operators.</li>
+<li>The selectors <code>real-part</code>, <code>imag-part</code>, <code>magnitude</code>, and <code>angle</code> must be generic procedures that work with either representation.</li>
 <li>For this to work, we need <em>typed data</em>. We need to tag our data objects with labels telling us the type of their contents.</li>
 <li>We can simply <code>cons</code> the symbol <code>'rectangular</code> or <code>'polar</code> to the complex number data.</li>
 <li>The generic procedures check the type of their argument, strip off the type information, and dispatch the contents to the appropriate specific procedure.</li>
@@ -130,36 +124,35 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Problems with the manager
 </h3>
 <ul>
-<li>The strategy we just looked at is called <em>dispatch on type</em>.</li>
-<li>One annoyance is that we had to change the names of the specific procedures (adding a suffix) to avoid naming conflicts.</li>
+<li>The strategy we just looked at is called <em>type dispatch</em>.</li>
+<li>One annoyance is that we had to rename specific procedures to avoid naming conflicts.</li>
 <li>We’ll talk about namespaces to fix that problem later.</li>
 <li>What happens when you add a new type to the system?
 <ul>
 <li>The other types don’t care. They can remain the same.</li>
-<li>The manager needs to add a new clause to every generic procedure that should be able to work with the new type.</li>
-<li>This is annoying because the generic procedure case analyses are very repetitive.</li>
+<li>But the manager needs to add a new clause to every generic procedure that should be able to work with the new type.</li>
+<li>This is annoying because generic procedure case analyses are very repetitive.</li>
 </ul></li>
 </ul>
 <h3 id="2.2" class="anchor">
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Data-directed programming
 </h3>
 <ul>
-<li>Our system has a table with types on the horizontal axis and operators on the vertical axis.</li>
-<li>Instead of writing these generic procedures manually, we should just use a table directly.</li>
-<li>We introduce two new procedures: <code>(put key1 key2 value)</code> and <code>(get key1 key2)</code>. This is a map, or associative list.</li>
-<li>Now we just need to use <code>put</code> to insert our specific procedures into the table, and the rest will be automated.</li>
-<li>We wouldn’t even have to name our procedures—we could just pass a lambda expression as the last argument.</li>
-<li>It is the procedures that go in the table, not their names.</li>
+<li>Our system has a table with types (horizontal axis) and operators (vertical axis).</li>
+<li>Instead of writing these generic procedures manually, we should just use a table.</li>
+<li>We introduce two new procedures: <code>(put <span class="ss">key1</span> <span class="ss">key2</span> <span class="ss">value</span>)</code> and <code>(get <span class="ss">key1</span> <span class="ss">key2</span>)</code>.</li>
+<li>Now we just need to insert our specific procedures into the table using <code>put</code>, and the rest will be automated.</li>
+<li>It’s the procedures that go in the table, not their names, so we could even pass a lambda expression and not give it a name.</li>
 <li>The key procedure in this whole system is <code>operate</code>:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (operate op obj)
   (<span class="kw">let</span> ((proc (get (type obj) op)))
     (<span class="kw">if</span> (<span class="fu">null?</span> proc)
-        (<span class="fu">error</span> <span class="cn">&quot;undefined OP&quot;</span>)
+        (<span class="fu">error</span> <span class="cn">&quot;undefined operator&quot;</span>)
         (proc (contents obj)))))</code></pre>
 <ul>
 <li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
-<li>This is what happens when we try to extract the real part of a complex number in polar form:</li>
+<li>Here’s what happens when we extract the real part of a complex number in polar form:</li>
 </ul>
 <pre><code class="blockcode">(real-part z)
 (operate <span class="vs">&#39;real-part</span> z)
@@ -169,7 +162,7 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <span class="cn">-0.4161468365</span></code></pre>
 <ul>
 <li>This style of programming called <em>data-directed</em> programming.</li>
-<li>The data objects themselves are carrying the information about how you should operate on them.</li>
+<li>The data objects themselves carry information about how you should operate on them.</li>
 </ul>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
@@ -180,23 +173,22 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <ul>
 <li>We just looked at data-directed programming for complex numbers.</li>
 <li>The power of the methodology only becomes apparent when you embed this in a more complex system.</li>
-<li>Let’s consider a generic arithmetic system with operations <code>add</code>, <code>sub</code>, <code>mil</code>, and <code>div</code>.</li>
+<li>Let’s consider a generic arithmetic system with operations <code>add</code>, <code>sub</code>, <code>mul</code>, and <code>div</code>.</li>
 <li>This should sit on top of ordinary Lisp numbers, rationals, and complex numbers.</li>
-<li>We already made a rational number package; we just need to change the constructor <code>make-rat</code> so that it attaches the tag <code>'rational</code> to the data.</li>
-<li>We can’t use <code>operate</code> anymore because that was designed for a single argument. <code>apply-generic</code> from SICP is better.</li>
-<li>Now, our complex numbers will have two labels on them: <code>'complex</code> <em>and</em> either <code>'rectangular</code> or <code>'polar</code>.</li>
+<li>We already made a rational number package. We just need to change the constructor <code>make-rat</code> so that it attaches the tag <code>'rational</code> to the data.</li>
+<li>We can’t use <code>operate</code> anymore because it was designed for a single argument. The <code>apply-generic</code> procedure from <a href="../text/2/4.html#2.4.3">§&nbsp;2.4.3</a> works for multiple arguments.</li>
+<li>Now, our complex numbers will have two levels of type tags: <code>'complex</code> on top and either <code>'rectangular</code> or <code>'polar</code> underneath.</li>
 <li>At each level, we strip off a type tag and pass the data down to the level beneath. The chain of types leads you down.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Polynomials
 </h3>
 <ul>
-<li>We could also add polynomials to the generic arithmetic system.</li>
+<li>We can also add polynomials to the generic arithmetic system.</li>
 <li>Our polynomials will have a variable (symbol) and a term list (list of ordered pairs).</li>
-<li>We can add polynomials in the same variable by adding their term lists (collecting like terms).</li>
-<li>By using <code>add</code> when we add term lists, we can use <em>any</em> kind of numbers as a coefficients, for free!</li>
-<li>This includes polynomials whose coefficients are polynomials.</li>
-<li>All because we wrote <code>add</code> instead of <code>+</code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
+<li>We can add polynomials in the same variable by combining their term lists.</li>
+<li>By using the generic <code>add</code> when we add term lists, we can use <em>any</em> kind of number as a coefficient, for free! Including polynomials themselves!</li>
+<li>In other words, all because we wrote <code>add</code> instead of <code>+</code>, we have this recursive tower of types: the coefficients can be polynomials all the way down, or as far as we’d like.</li>
 <li>If we use the generic arithmetic procedures in the rational number package, we can get rational functions (polynomials over polynomials) for free as well.</li>
 </ul>
 <h3 id="3.3" class="anchor">
@@ -206,7 +198,7 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <li>We built a system that has decentralized control.</li>
 <li>We don’t have to worry about how operations are actually performed.</li>
 <li>This lets us build this complex hierarchy where all the operations sort of do the right thing automatically.</li>
-<li>The true complexity comes in with <em>coercion</em>—when you add a complex and a rational, who worries about converting what?</li>
+<li>The true complexity comes in with <em>coercion</em>: when you add a complex number and a rational, who worries about converting what?</li>
 </ul>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
