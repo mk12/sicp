@@ -1338,20 +1338,46 @@ Angle             `angle-polar`      `angle-rectangular`
 
 ## 2.5: Systems with Generic Operations
 
-- The key idea in [](@2.4.3): link specific data operations to multiple representations using generic procedures.
+- In [](@2.4) we saw how to create operations that work on multiple data representations.
 - We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.
-- We have seen several different arithmetic packages -- primitive numbers, rational numbers, intervals, and complex numbers.
-- We will use data-directed techniques to write procedures that work on all of these data structures.
-- This will require many abstraction barriers.
-- The result will be additive (modular) -- easy to add new types.
+- We will develop a general arithmetic system using data-directed programming that works on several kinds of numbers.
 
 ### 2.5.1: Generic Arithmetic Operations
 
-- We want `add` to work for primitive numbers, rational numbers, and complex numbers.
-- We will attach a type tag to each kind of number.
-- Just as we did in our first data-directed example, we will install a "package" for each kind of data.
-- For complex numbers we have two levels of tagging: a `'complex` tag on top of the `'rectangular` or `'polar` tag.
+- We want `add` to work for primitive, rational, and complex numbers.
+- We will attach a type tag to each kind of number. Complex numbers will have two levels of tagging: a `'complex` tag on top of the `'rectangular` or `'polar` tag.
 - The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.
+
+```
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+```
+
+- Here is the arithmetic package for Scheme numbers:
+
+```
+(define (install-scheme-number-package)
+  (define (tag x)
+    (attach-tag 'scheme-number x))    
+  (put 'add '(scheme-number scheme-number)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(scheme-number scheme-number)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(scheme-number scheme-number)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(scheme-number scheme-number)
+       (lambda (x y) (tag (/ x y))))
+  (put 'make 'scheme-number
+       (lambda (x) (tag x)))
+  'done)
+
+(define (make-scheme-number n)
+  ((get 'make 'scheme-number) n))
+```
+
+- We can implement similar packages for rational and complex numbers.
 
 ::: exercises
 2.77-80
@@ -1359,16 +1385,14 @@ Angle             `angle-polar`      `angle-rectangular`
 
 ### 2.5.2: Combining Data of Different Types
 
-- In our unified arithmetic system, we ignored an important issue.
-- We did not consider the possibility of operations that cross type boundaries, like adding a Scheme number to a rational.
-- One solution would be to design a procedure for each possible combination of types.
-- This is cumbersome, and it violates modularity.
+- In our unified arithmetic system, we ignored an important issue: we did not consider operations that cross type boundaries, like adding a Scheme number to a rational.
+- One solution would be to design a procedure for every possible combination of types. But this is cumbersome, and it violates modularity.
 
 #### Coercion
 
 - Often the different data types are not completely independent.
-- For example, any real number can be expressed as a complex number with an imaginary part of zero (but not vice versa).
-- We can make all operations work on combinations of Scheme numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.
+- For example, any real number can be expressed as a complex number with an imaginary part of zero.
+- We can make all operations work on combinations of Scheme numbers and complex numbers by first _coercing_ the former to the latter.
 - Here is a typical coercion procedure:
 
 ```
@@ -1376,25 +1400,25 @@ Angle             `angle-polar`      `angle-rectangular`
   (make-complex-from-real-imag (contents n) 0))
 ```
 
-- In addition to the generic procedure table, we would need a special coercion table.
-- We can modify `apply-generic` to try coercion if there is no specific procedure available for the given types.
-- The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to write specific operation procedures once per type.
-- It gets more complicated: what if both types can be converted to a third type? What if A can be converted to B and then from B to C? We have a graph of relations among the types.
+- The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to implement each operation once per type.
+- We could modify `apply-generic` to try coercion if there is no specific procedure available for the given types.
+- But it gets complicated. What if both types can be converted to a third type? What if multiple coercions are required? We end up with a graph of relations among types.
 
 #### Hierarchies of types
 
-- Integers are a subtype of rationals, which are a subtype of real numbers, and so on for complex numbers.
-- We have supertypes going in the opposite order.
-- A simple hierarchy where each type has at most one supertype and most one subtype is called a tower.
+- We can simplify the problem by using a _type hierarchy_ instead of an arbitrary graph.
+- In the hiearchy, each type is related to supertypes above it and subtypes below it.
+- A _tower_ is a hiearchy where each type has at most one supertype and subtype.
+- Our numeric tower comprises integers, rationals, real numbers, and complex numbers.
 - Coercion then simply becomes a matter of raising the argument whose type is lower in the tower to the level of the other type.
-- We can write fewer procedures by allowing types to _inherit_ the operations on supertypes.
-- In some cases we can also lower a value down the type tower.
+- We can write fewer procedures by allowing types to _inherit_ their supertype's operations.
+- In some cases we can simplify results by lowering a value down the type tower.
 
 #### Inadequacies of hierarchies
 
-- In general, a type may have more than one subtype (not a tower).
-- Having multiple super types is tricky, since the type can be raised via multiple paths to search for a procedure.
-- Large numbers of interrelated types conflicts with modularity.
+- In general, a type may have more than one subtype. This is easy to deal with.
+- Allowing multiple super types (known as _multiple inheritance_) is tricky, since the type can be raised via multiple paths to search for a procedure.
+- Having large numbers of interrelated types conflicts with modularity.
 
 ::: highlight
 > Developing a useful, general framework for expressing the relations among different types of entities (what philosophers call "ontology") seems intractably difficult. The main difference between the confusion that existed ten years ago and the confusion that exists now is that now a variety of inadequate ontological theories have been embodied in a plethora of correspondingly inadequate programming languages. For example, much of the complexity of object-oriented programming languages -- and the subtle and confusing differences among contemporary object-oriented languages -- centers on the treatment of generic operations on interrelated types. [@2.5.fn52]
@@ -1406,31 +1430,102 @@ Angle             `angle-polar`      `angle-rectangular`
 
 ### 2.5.3: Example: Symbolic Algebra
 
-- The manipulation of symbolic algebraic expressions is hard.
-- We can view them as hierarchical structures -- a tree of operators applied to operands.
-- A complete system would be exceedingly complex.
-- We will just look at the arithmetic of polynomials.
+- Manipulating symbolic algebraic expressions is hard.
+- We can view them as trees of operators applied to operands.
+- To keep things simple, we'll stick to polynomials.
 
 #### Arithmetic on polynomials
 
-- A polynomial is relative to certain variables, the _indeterminates_.
-- We will only consider univariate polynomials.
-- The polynomial is a sum of terms, each being a coefficient, a power of the indeterminate, or a product of the two.
-- A coefficient is an algebraic expression that is not dependent upon the indeterminate of the polynomial.
-- Our polynomials will be syntactic forms, not representations of mathematical functions.
-- This means that replacing each $x$ with $y$ creates a different polynomial, although they could represent the same function.
-- We will only do addition and multiplication.
-- Both operands must have the same indeterminate.
-- The _poly_ data structure consists of a variable (the indeterminate) and a list of terms.
-- Our system works with polynomials with polynomial coefficients "for free" because of data-directed recursion -- because we are using generic procedures.
+- Polynomials are expressed in terms of variables called _indeterminates_.
+- A _univariate_ polynomial has the form $c_0 + c_1x + c_2x^2 + \cdots + c_nx^n$.
+- To avoid thorny issues of identity and sameness, we will consider our polynomials to be syntactic forms, not representations of mathematical functions.
+- We will implement addition and multiplication for polynomials in the same variable.
+
+```
+(define (add-poly p1 p2)
+  (if (same-variable? (variable p1) (variable p2))
+      (make-poly (variable p1)
+                 (add-terms (term-list p1)
+                            (term-list p2)))
+      (error "polys not in same var" p1 p2)))
+
+(define (mul-poly p1 p2)
+  (if (same-variable? (variable p1) (variable p2))
+      (make-poly (variable p1)
+                 (mul-terms (term-list p1)
+                            (term-list p2)))
+      (error "polys not in same var" p1 p2)))
+```
+
+- We will install these procedures in our generic arithmetic system:
+
+```
+(define (install-polynomial-package)
+  ;; Internal procedures
+  (define (make-poly variable term-list)
+    (cons variable term-list))
+  (define (variable p) (car p))
+  (define (term-list p) (cdr p))
+  (define (add-poly p1 p2) ...)
+  (define (mul-poly p1 p2) ...)
+
+  ;; Interface to rest of the system
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial) 
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial) 
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  'done)
+```
+
+- Here is the implementation of `add-terms`:
+
+```
+(define (add-terms L1 L2)
+  (cond ((empty-termlist? L1) L2)
+        ((empty-termlist? L2) L1)
+        (else
+         (let ((t1 (first-term L1)) (t2 (first-term L2)))
+           (cond ((> (order t1) (order t2))
+                  (adjoin-term
+                   t1 (add-terms (rest-terms L1) L2)))
+                 ((< (order t1) (order t2))
+                  (adjoin-term
+                   t2 (add-terms L1 (rest-terms L2))))
+                 (else
+                  (adjoin-term
+                   (make-term (order t1)
+                              (add (coeff t1) (coeff t2)))
+                   (add-terms (rest-terms L1)
+                              (rest-terms L2)))))))))
+```
+
+- Since it uses the generic `add` internally, the system automatically works with polynomials whose coefficients are themselves polynomials in a different variable!
 
 #### Representing term lists
 
-- Our procedures `add-terms` and `mul-terms` always access term lists sequentially from highest to lowest order.
-- So, we need some kind of ordered list representation.
-- We can choose between _dense_ and _sparse_ representations.
-- Dense term lists, where most coefficients are nonzero, are best represented by simple lists.
-- Sparse term lists, where there are many zeros, are better represented by some kind of associative list or map.
+- Our procedures `add-terms` and `mul-terms` always access terms sequentially from highest to lowest order, so we need some kind of ordered representation.
+- For _dense_ polynomials (mostly nonzero coefficients), a simple list is best.
+    - _Example_: $x^5+2x^4+3x^2-2x-5$ becomes `'(1 2 3 -2 -5)`.
+- For _sparse_ polynomials (mostly zero coefficients), an associative list is best.
+    - _Example_: $x^{100}+2x^2+1$ becomes `'((100 1) (2 2) (0 1))`.
+- Here is an associative list representation:
+
+```
+(define (adjoin-term term term-list)
+  (if (=zero? (coeff term))
+      term-list
+      (cons term term-list)))
+(define (the-empty-termlist) '())
+(define (first-term term-list) (car term-list))
+(define (rest-terms term-list) (cdr term-list))
+(define (empty-termlist? term-list) (null? term-list))
+(define (make-term order coeff) (list order coeff))
+(define (order term) (car term))
+(define (coeff term) (cadr term))
+```
 
 ::: exercises
 2.87-91
@@ -1438,9 +1533,8 @@ Angle             `angle-polar`      `angle-rectangular`
 
 #### Hierarchies of types in symbolic algebra
 
-- Our polynomial system used complex objects that had objects of many different parts as types.
-- It was recursive data abstraction because the terms of the polynomial could themselves be polynomials.
-- The data types in polynomial algebra cannot be arranged in a tower.
+- The data types in our polynomial algebra cannot easily be arranged in a tower.
+- For example, how would we coerce $(x+1)y^2$ and $(y+1)x^2$ to a common type?
 - Controlling coercion is a hard problem in these systems.
 
 ::: exercises
@@ -1450,16 +1544,15 @@ Angle             `angle-polar`      `angle-rectangular`
 #### Extended exercise: Rational functions
 
 - Rational functions are "fractions" with polynomial numerators and denominators.
-- We can use our old rational package, but we need to change a few things (like using generic `add`, `mul`, etc.).
-- We can reduce rational functions as long as we can compute the GCD of two polynomials (which in turn uses the remainder operation on two polynomials).
-- Problem: we end up with a GCD polynomial that has fractional coefficients. Solution: multiply the first argument by an _integerizing factor_.
-- We can use our GCD procedure to reduce rational functions to lowest terms:
+- We can use our rational package from [](@2.5.1), but we need to change a few things.
+- To reduce rational functions, we need to be able to compute the GCD of polynomials, which in turn requires computing the remainder after polynomial division.
+- To avoid fractional coefficients, we can multiply the result by an _integerizing factor_.
+- Here is our algorithm for reducing a rational function to lowest terms:
     1. Compute the integerized GCD of the numerator and denominator.
-    2. Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power $1 + O_1 - O_2$, where $O_2$ is the order of the GCD and $O_1$ is the maximum of order of the numerator and the order of the denominator.
-    3. Divide the new numerator and new denominator by the GCD.
-    4. Divide both by the GCD of all their coefficients.
-- This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.
-- This one is very slow. Probabilistic algorithms are faster.
+    2. Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power $1 + \max\{O_\text{N}, O_\text{D}\} - O_\text{G}$, where those constants refer to the order of the numerator, denominator, and GCD, respectively.
+    3. Divide the results of (2) by the GCD from (1).
+    4. Divide the results of (3) by the GCD of all their coefficients.
+- The GCD algorithm is at the heart of every system that does operations on rational functions. Ours is very slow. Probabilistic algorithms like Zippel's are faster.
 
 ::: exercises
 2.93-97

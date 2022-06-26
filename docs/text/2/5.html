@@ -74,68 +74,88 @@
 <span class="number">2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html">Systems with Generic Operations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
-<li>The key idea in <a href="4.html#2.4.3">§&nbsp;2.4.3</a>: link specific data operations to multiple representations using generic procedures.</li>
+<li>In <a href="4.html">§&nbsp;2.4</a> we saw how to create operations that work on multiple data representations.</li>
 <li>We can extend this further to create operations that are generic over different kinds of arguments, not just different representations of the same kind of data.</li>
-<li>We have seen several different arithmetic packages—primitive numbers, rational numbers, intervals, and complex numbers.</li>
-<li>We will use data-directed techniques to write procedures that work on all of these data structures.</li>
-<li>This will require many abstraction barriers.</li>
-<li>The result will be additive (modular)—easy to add new types.</li>
+<li>We will develop a general arithmetic system using data-directed programming that works on several kinds of numbers.</li>
 </ul>
 <h2 id="2.5.1" class="anchor">
 <a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>We want <code>add</code> to work for primitive numbers, rational numbers, and complex numbers.</li>
-<li>We will attach a type tag to each kind of number.</li>
-<li>Just as we did in our first data-directed example, we will install a “package” for each kind of data.</li>
-<li>For complex numbers we have two levels of tagging: a <code>'complex</code> tag on top of the <code>'rectangular</code> or <code>'polar</code> tag.</li>
+<li>We want <code>add</code> to work for primitive, rational, and complex numbers.</li>
+<li>We will attach a type tag to each kind of number. Complex numbers will have two levels of tagging: a <code>'complex</code> tag on top of the <code>'rectangular</code> or <code>'polar</code> tag.</li>
 <li>The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">&#39;add</span> x y))
+(<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">&#39;sub</span> x y))
+(<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">&#39;mul</span> x y))
+(<span class="kw">define</span> (div x y) (apply-generic <span class="vs">&#39;div</span> x y))</code></pre>
+<ul>
+<li>Here is the arithmetic package for Scheme numbers:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (install-scheme-number-package)
+  (<span class="kw">define</span> (tag x)
+    (attach-tag <span class="vs">&#39;scheme-number</span> x))    
+  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+       (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="vs">&#39;sub</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+       (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+       (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="vs">&#39;div</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+       (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
+  (put <span class="vs">&#39;make</span> <span class="vs">&#39;scheme-number</span>
+       (<span class="kw">lambda</span> (x) (tag x)))
+  <span class="vs">&#39;done</span>)
+
+(<span class="kw">define</span> (make-scheme-number n)
+  ((get <span class="vs">&#39;make</span> <span class="vs">&#39;scheme-number</span>) n))</code></pre>
+<ul>
+<li>We can implement similar packages for rational and complex numbers.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/5.html#ex2.77">2.77</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.78">2.78</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.79">2.79</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.80">2.80</a></li></ul></aside>
 <h2 id="2.5.2" class="anchor">
 <a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a> <span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.2">Combining Data of Different Types<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>In our unified arithmetic system, we ignored an important issue.</li>
-<li>We did not consider the possibility of operations that cross type boundaries, like adding a Scheme number to a rational.</li>
-<li>One solution would be to design a procedure for each possible combination of types.</li>
-<li>This is cumbersome, and it violates modularity.</li>
+<li>In our unified arithmetic system, we ignored an important issue: we did not consider operations that cross type boundaries, like adding a Scheme number to a rational.</li>
+<li>One solution would be to design a procedure for every possible combination of types. But this is cumbersome, and it violates modularity.</li>
 </ul>
 <h3 id="2.5.2.1" class="anchor">
 <a class="anchor__link link" href="#2.5.2.1" aria-hidden="true">#</a> Coercion
 </h3>
 <ul>
 <li>Often the different data types are not completely independent.</li>
-<li>For example, any real number can be expressed as a complex number with an imaginary part of zero (but not vice versa).</li>
-<li>We can make all operations work on combinations of Scheme numbers and complex numbers by promoting, or coercing, the former to the latter type and then using the complex number procedure.</li>
+<li>For example, any real number can be expressed as a complex number with an imaginary part of zero.</li>
+<li>We can make all operations work on combinations of Scheme numbers and complex numbers by first <em>coercing</em> the former to the latter.</li>
 <li>Here is a typical coercion procedure:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (scheme-number-&gt;complex n)
   (make-complex-from-real-imag (contents n) <span class="cn">0</span>))</code></pre>
 <ul>
-<li>In addition to the generic procedure table, we would need a special coercion table.</li>
-<li>We can modify <code>apply-generic</code> to try coercion if there is no specific procedure available for the given types.</li>
-<li>The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to write specific operation procedures once per type.</li>
-<li>It gets more complicated: what if both types can be converted to a third type? What if A can be converted to B and then from B to C? We have a graph of relations among the types.</li>
+<li>The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to implement each operation once per type.</li>
+<li>We could modify <code>apply-generic</code> to try coercion if there is no specific procedure available for the given types.</li>
+<li>But it gets complicated. What if both types can be converted to a third type? What if multiple coercions are required? We end up with a graph of relations among types.</li>
 </ul>
 <h3 id="2.5.2.2" class="anchor">
 <a class="anchor__link link" href="#2.5.2.2" aria-hidden="true">#</a> Hierarchies of types
 </h3>
 <ul>
-<li>Integers are a subtype of rationals, which are a subtype of real numbers, and so on for complex numbers.</li>
-<li>We have supertypes going in the opposite order.</li>
-<li>A simple hierarchy where each type has at most one supertype and most one subtype is called a tower.</li>
+<li>We can simplify the problem by using a <em>type hierarchy</em> instead of an arbitrary graph.</li>
+<li>In the hiearchy, each type is related to supertypes above it and subtypes below it.</li>
+<li>A <em>tower</em> is a hiearchy where each type has at most one supertype and subtype.</li>
+<li>Our numeric tower comprises integers, rationals, real numbers, and complex numbers.</li>
 <li>Coercion then simply becomes a matter of raising the argument whose type is lower in the tower to the level of the other type.</li>
-<li>We can write fewer procedures by allowing types to <em>inherit</em> the operations on supertypes.</li>
-<li>In some cases we can also lower a value down the type tower.</li>
+<li>We can write fewer procedures by allowing types to <em>inherit</em> their supertype’s operations.</li>
+<li>In some cases we can simplify results by lowering a value down the type tower.</li>
 </ul>
 <h3 id="2.5.2.3" class="anchor">
 <a class="anchor__link link" href="#2.5.2.3" aria-hidden="true">#</a> Inadequacies of hierarchies
 </h3>
 <ul>
-<li>In general, a type may have more than one subtype (not a tower).</li>
-<li>Having multiple super types is tricky, since the type can be raised via multiple paths to search for a procedure.</li>
-<li>Large numbers of interrelated types conflicts with modularity.</li>
+<li>In general, a type may have more than one subtype. This is easy to deal with.</li>
+<li>Allowing multiple super types (known as <em>multiple inheritance</em>) is tricky, since the type can be raised via multiple paths to search for a procedure.</li>
+<li>Having large numbers of interrelated types conflicts with modularity.</li>
 </ul>
 <div id="q1" class="highlight">
 <a class="highlight__link link" href="../highlight.html#2.5-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
@@ -148,44 +168,109 @@
 <a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a> <span class="number">2.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>The manipulation of symbolic algebraic expressions is hard.</li>
-<li>We can view them as hierarchical structures—a tree of operators applied to operands.</li>
-<li>A complete system would be exceedingly complex.</li>
-<li>We will just look at the arithmetic of polynomials.</li>
+<li>Manipulating symbolic algebraic expressions is hard.</li>
+<li>We can view them as trees of operators applied to operands.</li>
+<li>To keep things simple, we’ll stick to polynomials.</li>
 </ul>
 <h3 id="2.5.3.1" class="anchor">
 <a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a> Arithmetic on polynomials
 </h3>
 <ul>
-<li>A polynomial is relative to certain variables, the <em>indeterminates</em>.</li>
-<li>We will only consider univariate polynomials.</li>
-<li>The polynomial is a sum of terms, each being a coefficient, a power of the indeterminate, or a product of the two.</li>
-<li>A coefficient is an algebraic expression that is not dependent upon the indeterminate of the polynomial.</li>
-<li>Our polynomials will be syntactic forms, not representations of mathematical functions.</li>
-<li>This means that replacing each <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> creates a different polynomial, although they could represent the same function.</li>
-<li>We will only do addition and multiplication.</li>
-<li>Both operands must have the same indeterminate.</li>
-<li>The <em>poly</em> data structure consists of a variable (the indeterminate) and a list of terms.</li>
-<li>Our system works with polynomials with polynomial coefficients “for free” because of data-directed recursion—because we are using generic procedures.</li>
+<li>Polynomials are expressed in terms of variables called <em>indeterminates</em>.</li>
+<li>A <em>univariate</em> polynomial has the form <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>c</mi><mn>0</mn></msub><mo>+</mo><msub><mi>c</mi><mn>1</mn></msub><mi>x</mi><mo>+</mo><msub><mi>c</mi><mn>2</mn></msub><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>c</mi><mi>n</mi></msub><msup><mi>x</mi><mi>n</mi></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">c_0 + c_1x + c_2x^2 + \cdots + c_nx^n\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.964108em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.814392em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
+<li>To avoid thorny issues of identity and sameness, we will consider our polynomials to be syntactic forms, not representations of mathematical functions.</li>
+<li>We will implement addition and multiplication for polynomials in the same variable.</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-poly p1 p2)
+  (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
+      (make-poly (variable p1)
+                 (add-terms (term-list p1)
+                            (term-list p2)))
+      (<span class="fu">error</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
+
+(<span class="kw">define</span> (mul-poly p1 p2)
+  (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
+      (make-poly (variable p1)
+                 (mul-terms (term-list p1)
+                            (term-list p2)))
+      (<span class="fu">error</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))</code></pre>
+<ul>
+<li>We will install these procedures in our generic arithmetic system:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (install-polynomial-package)
+  <span class="co">;; Internal procedures</span>
+  (<span class="kw">define</span> (make-poly variable term-list)
+    (<span class="fu">cons</span> variable term-list))
+  (<span class="kw">define</span> (variable p) (<span class="fu">car</span> p))
+  (<span class="kw">define</span> (term-list p) (<span class="fu">cdr</span> p))
+  (<span class="kw">define</span> (add-poly p1 p2) ...)
+  (<span class="kw">define</span> (mul-poly p1 p2) ...)
+
+  <span class="co">;; Interface to rest of the system</span>
+  (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">&#39;polynomial</span> p))
+  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(polynomial polynomial)</span> 
+       (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
+  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial polynomial)</span> 
+       (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
+  (put <span class="vs">&#39;make</span> <span class="vs">&#39;polynomial</span>
+       (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
+  <span class="vs">&#39;done</span>)</code></pre>
+<ul>
+<li>Here is the implementation of <code>add-terms</code>:</li>
+</ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-terms L1 L2)
+  (<span class="kw">cond</span> ((empty-termlist? L1) L2)
+        ((empty-termlist? L2) L1)
+        (<span class="kw">else</span>
+         (<span class="kw">let</span> ((t1 (first-term L1)) (t2 (first-term L2)))
+           (<span class="kw">cond</span> ((<span class="fu">&gt;</span> (order t1) (order t2))
+                  (adjoin-term
+                   t1 (add-terms (rest-terms L1) L2)))
+                 ((<span class="fu">&lt;</span> (order t1) (order t2))
+                  (adjoin-term
+                   t2 (add-terms L1 (rest-terms L2))))
+                 (<span class="kw">else</span>
+                  (adjoin-term
+                   (make-term (order t1)
+                              (add (coeff t1) (coeff t2)))
+                   (add-terms (rest-terms L1)
+                              (rest-terms L2)))))))))</code></pre>
+<ul>
+<li>Since it uses the generic <code>add</code> internally, the system automatically works with polynomials whose coefficients are themselves polynomials in a different variable!</li>
 </ul>
 <h3 id="2.5.3.2" class="anchor">
 <a class="anchor__link link" href="#2.5.3.2" aria-hidden="true">#</a> Representing term lists
 </h3>
 <ul>
-<li>Our procedures <code>add-terms</code> and <code>mul-terms</code> always access term lists sequentially from highest to lowest order.</li>
-<li>So, we need some kind of ordered list representation.</li>
-<li>We can choose between <em>dense</em> and <em>sparse</em> representations.</li>
-<li>Dense term lists, where most coefficients are nonzero, are best represented by simple lists.</li>
-<li>Sparse term lists, where there are many zeros, are better represented by some kind of associative list or map.</li>
+<li>Our procedures <code>add-terms</code> and <code>mul-terms</code> always access terms sequentially from highest to lowest order, so we need some kind of ordered representation.</li>
+<li>For <em>dense</em> polynomials (mostly nonzero coefficients), a simple list is best.
+<ul>
+<li><em>Example</em>: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>x</mi><mn>5</mn></msup><mo>+</mo><mn>2</mn><msup><mi>x</mi><mn>4</mn></msup><mo>+</mo><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><mo>−</mo><mn>2</mn><mi>x</mi><mo>−</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">x^5+2x^4+3x^2-2x-5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span></span></span></span> becomes <code><span class="vs">&#39;(1 2 3 -2 -5)</span></code>.</li>
+</ul></li>
+<li>For <em>sparse</em> polynomials (mostly zero coefficients), an associative list is best.
+<ul>
+<li><em>Example</em>: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>x</mi><mn>100</mn></msup><mo>+</mo><mn>2</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x^{100}+2x^2+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">0</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> becomes <code><span class="vs">&#39;((100 1) (2 2) (0 1))</span></code>.</li>
+</ul></li>
+<li>Here is an associative list representation:</li>
 </ul>
+<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
+  (<span class="kw">if</span> (=zero? (coeff term))
+      term-list
+      (<span class="fu">cons</span> term term-list)))
+(<span class="kw">define</span> (the-empty-termlist) <span class="vs">&#39;()</span>)
+(<span class="kw">define</span> (first-term term-list) (<span class="fu">car</span> term-list))
+(<span class="kw">define</span> (rest-terms term-list) (<span class="fu">cdr</span> term-list))
+(<span class="kw">define</span> (empty-termlist? term-list) (<span class="fu">null?</span> term-list))
+(<span class="kw">define</span> (make-term order coeff) (<span class="fu">list</span> order coeff))
+(<span class="kw">define</span> (order term) (<span class="fu">car</span> term))
+(<span class="kw">define</span> (coeff term) (<span class="fu">cadr</span> term))</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/5.html#ex2.87">2.87</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.88">2.88</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.89">2.89</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.90">2.90</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.91">2.91</a></li></ul></aside>
 <h3 id="2.5.3.3" class="anchor">
 <a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a> Hierarchies of types in symbolic algebra
 </h3>
 <ul>
-<li>Our polynomial system used complex objects that had objects of many different parts as types.</li>
-<li>It was recursive data abstraction because the terms of the polynomial could themselves be polynomials.</li>
-<li>The data types in polynomial algebra cannot be arranged in a tower.</li>
+<li>The data types in our polynomial algebra cannot easily be arranged in a tower.</li>
+<li>For example, how would we coerce <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><msup><mi>y</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">(x+1)y^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">(y+1)x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> to a common type?</li>
 <li>Controlling coercion is a hard problem in these systems.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/5.html#ex2.92">2.92</a></li></ul></aside>
@@ -194,18 +279,17 @@
 </h3>
 <ul>
 <li>Rational functions are “fractions” with polynomial numerators and denominators.</li>
-<li>We can use our old rational package, but we need to change a few things (like using generic <code>add</code>, <code>mul</code>, etc.).</li>
-<li>We can reduce rational functions as long as we can compute the GCD of two polynomials (which in turn uses the remainder operation on two polynomials).</li>
-<li>Problem: we end up with a GCD polynomial that has fractional coefficients. Solution: multiply the first argument by an <em>integerizing factor</em>.</li>
-<li>We can use our GCD procedure to reduce rational functions to lowest terms:
+<li>We can use our rational package from <a href="#2.5.1">§&nbsp;2.5.1</a>, but we need to change a few things.</li>
+<li>To reduce rational functions, we need to be able to compute the GCD of polynomials, which in turn requires computing the remainder after polynomial division.</li>
+<li>To avoid fractional coefficients, we can multiply the result by an <em>integerizing factor</em>.</li>
+<li>Here is our algorithm for reducing a rational function to lowest terms:
 <ol type="1">
 <li>Compute the integerized GCD of the numerator and denominator.</li>
-<li>Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>+</mo><msub><mi>O</mi><mn>1</mn></msub><mo>−</mo><msub><mi>O</mi><mn>2</mn></msub><mtext>,</mtext></mrow><annotation encoding="application/x-tex">1 + O_1 - O_2\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> where <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>O</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">O_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> is the order of the GCD and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>O</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">O_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> is the maximum of order of the numerator and the order of the denominator.</li>
-<li>Divide the new numerator and new denominator by the GCD.</li>
-<li>Divide both by the GCD of all their coefficients.</li>
+<li>Multiply the numerator and denominator by an integerizing factor: the leading coefficient of the GCD raised to the power <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>+</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">{</mo><msub><mi>O</mi><mtext>N</mtext></msub><mo separator="true">,</mo><msub><mi>O</mi><mtext>D</mtext></msub><mo stretchy="false">}</mo><mo>−</mo><msub><mi>O</mi><mtext>G</mtext></msub><mtext>,</mtext></mrow><annotation encoding="application/x-tex">1 + \max\{O_\text{N}, O_\text{D}\} - O_\text{G}\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">{</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">D</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">G</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> where those constants refer to the order of the numerator, denominator, and GCD, respectively.</li>
+<li>Divide the results of (2) by the GCD from (1).</li>
+<li>Divide the results of (3) by the GCD of all their coefficients.</li>
 </ol></li>
-<li>This GCD algorithm, or something like it, is at the heart of every system that does operations on rational functions.</li>
-<li>This one is very slow. Probabilistic algorithms are faster.</li>
+<li>The GCD algorithm is at the heart of every system that does operations on rational functions. Ours is very slow. Probabilistic algorithms like Zippel’s are faster.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/5.html#ex2.93">2.93</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.94">2.94</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.95">2.95</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.96">2.96</a>, </li><li class="flat__item"><a href="../../exercise/2/5.html#ex2.97">2.97</a></li></ul></aside>
 </main>
