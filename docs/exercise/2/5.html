@@ -611,17 +611,14 @@ Imports:
                     (<span class="kw">else</span> (err))))
             (err)))))
 
-(<span class="kw">define</span> (install-scheme-number-&gt;complex-package)
+(<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> add div mul sub))
+
+(<span class="kw">define</span> (scheme-number-to-complex-pkg)
   (<span class="kw">define</span> (coerce n)
     (make-complex-from-real-imag (contents n) <span class="cn">0</span>))
   (put-coercion <span class="vs">&#39;scheme-number</span> <span class="vs">&#39;complex</span> coerce))
 
-(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">&#39;add</span> x y))
-(<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">&#39;sub</span> x y))
-(<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">&#39;mul</span> x y))
-(<span class="kw">define</span> (div x y) (apply-generic <span class="vs">&#39;div</span> x y))
-
-(using numeric-pkg install-scheme-number-&gt;complex-package)
+(using numeric-pkg scheme-number-to-complex-pkg)
 
 (add (make-scheme-number <span class="cn">1</span>) (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>))
 <span class="op">=&gt;</span> (add (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>) (make-scheme-number <span class="cn">1</span>))
@@ -695,10 +692,8 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (identity-pkg)
-  (<span class="kw">define</span> (scheme-number-&gt;scheme-number n) n)
-  (<span class="kw">define</span> (complex-&gt;complex z) z)
-  (put-coercion <span class="vs">&#39;scheme-number</span> <span class="vs">&#39;scheme-number</span> scheme-number-&gt;scheme-number)
-  (put-coercion <span class="vs">&#39;complex</span> <span class="vs">&#39;complex</span> complex-&gt;complex))
+  (put-coercion <span class="vs">&#39;scheme-number</span> <span class="vs">&#39;scheme-number</span> (<span class="kw">lambda</span> (x) x))
+  (put-coercion <span class="vs">&#39;complex</span> <span class="vs">&#39;complex</span> (<span class="kw">lambda</span> (x) x)))
 
 (<span class="kw">define</span> (exp-pkg)
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;scheme-number</span> x))
@@ -706,12 +701,12 @@ Imports:
 
 (<span class="kw">define</span> (exp x y) (apply-generic <span class="vs">&#39;exp</span> x y))</code></pre>
 <ol type="a">
-<li>If we call <code>exp</code> with two complex numbers as arguments, the process will be stuck in an infinite recursion because it keeps coercing the first argument to the type of the second, although this brings it no closer to being able to find a correct procedure.</li>
+<li>If we call <code>exp</code> with two complex numbers, it will enter an infinite recursion because it will keep trying to unnecessarily coerce the first argument to the type of the second.</li>
 </ol>
 <pre><code class="blockcode">(using complex-pkg identity-pkg exp-pkg)
 
 (<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">0</span>))
-<span class="co">; (exp z z) ; never terminates</span></code></pre>
+(exp z z) <span class="er">=&gt;...</span></code></pre>
 <ol start="2" type="a">
 <li><p>Louis is wrong. Nothing needs to be done to handle coercion with arguments of the same type, because if there is no procedure installed for that type then coercion doesn’t help. This is assuming that the package consists only of operations on two arguments of the same type. If an operation had two arguments of different types, there may be multiple possible coercions that would succeed in finding a specific procedure.</p></li>
 <li><p>This <code>apply-generic</code> doesn’t coerce two arguments of the same type:</p></li>
@@ -796,7 +791,7 @@ Imports:
 <code>get-coercion</code>
 </li>
 <li class="flat__item nowrap">
-<code>install-scheme-number-&gt;complex-package</code>,
+<code>scheme-number-to-complex-pkg</code>,
 </li>
 </ul>
 </li>
@@ -852,7 +847,7 @@ Imports:
 
 (<span class="kw">define</span> (add3c z1 z2 z3) (apply-generic <span class="vs">&#39;add3c</span> z1 z2 z3))
 
-(using numeric-pkg install-scheme-number-&gt;complex-package add3c-pkg)
+(using numeric-pkg scheme-number-to-complex-pkg add3c-pkg)
 
 (add3c (make-scheme-number <span class="cn">1</span>)
        (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>)
@@ -1087,10 +1082,7 @@ Imports:
                    (<span class="kw">else</span> (apply-generic op a1 (<span class="kw">raise</span> a2))))))
           (<span class="kw">else</span> (err)))))
 
-(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">&#39;add</span> x y))
-(<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">&#39;sub</span> x y))
-(<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">&#39;mul</span> x y))
-(<span class="kw">define</span> (div x y) (apply-generic <span class="vs">&#39;div</span> x y))
+(<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> add div mul sub))
 
 (using extended-numeric-pkg raise-pkg)
 
@@ -1263,10 +1255,7 @@ Imports:
                    (<span class="kw">else</span> (apply-generic op a1 (<span class="kw">raise</span> a2))))))
           (<span class="kw">else</span> (err)))))
 
-(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">&#39;add</span> x y))
-(<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">&#39;sub</span> x y))
-(<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">&#39;mul</span> x y))
-(<span class="kw">define</span> (div x y) (apply-generic <span class="vs">&#39;div</span> x y))
+(<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> add div mul sub))
 
 (using extended-numeric-pkg equ-pkg raise-pkg project-pkg)
 

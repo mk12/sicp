@@ -3,7 +3,7 @@
 #!r6rs
 
 (library (src lang core)
-  (export SICP Chapter Section Exercise define => ~> =?> =$> =!> paste
+  (export SICP Chapter Section Exercise define => ~> =?> =$> =!> =>... paste
           capture-output hide-output
           run-sicp)
   (import (except (rnrs (6)) current-output-port define-syntax)
@@ -152,7 +152,7 @@
         (apply format
                ;; In R6RS square brackets are interchangeable with parens. I do
                ;; not use them in cond/let/etc. the way the spec does. I just
-               ;; use them in =$> assertions just to make them stand out.
+               ;; use them in =$> and =?> to make them stand out.
                (string-append
                 "["
                 (ansi 'yellow (apply string-append (slots str-or-list)))
@@ -175,7 +175,7 @@
 
 ;; Asserts that executing `thunk` raises an error, and that the error message
 ;; formatted as "<who>: <message>: <irritants>" contains `substr` as a
-;; substring. Expects `expr` to be the syntax object for `thunk`.
+;; substring. Expects `expr` to be the syntax object for the body of `thunk`.
 (define (assert-raises thunk expr substr)
   (define (format-condition con)
     (define (join sep items)
@@ -211,6 +211,20 @@
                (return))
              thunk)))
        (fail! #f result)))))
+
+;; Asserts that executing `thunk` does not terminate after a short time. Expects
+;; `expr` to be the syntax object for the body of `thunk`.
+(define (assert-nonterminating thunk expr)
+  (let ((result (run-with-short-timeout thunk)))
+    (if (null? result)
+        (test-pass!)
+        (test-fail!
+         expr
+         (format
+          (string-append
+           "left: " (ansi 'blue "~s") "\n=> ~s\n\nright:\n=>... "
+           "(expected to never terminate)\n\n")
+          (syntax->datum expr) (car result))))))
 
 ;; Captures standard output in a string.
 (define-syntax capture-output
@@ -487,7 +501,7 @@
        (begin (define-syntax (lit x)
                 (syntax-violation #f "incorrect usage of auxiliary keyword" x))
               ...)))))
-  (auxiliary Chapter Section Exercise ~> =?> =$> =!> paste))
+  (auxiliary Chapter Section Exercise ~> =?> =$> =!> =>... paste))
 
 ;; A DSL for SICP code samples and exercises. `(SICP reg e* ...)` defines a
 ;; function named `reg` that registers all the definitions produced by the
@@ -601,7 +615,8 @@
       ;; come from the original source -- it would be too confusing if a paste's
       ;; code comes from another paste.
       (add names exports))
-    (syntax-case x (Chapter Section Exercise define => ~> =?> =$> =!> paste)
+    (syntax-case x (Chapter Section Exercise define
+                    => ~> =?> =$> =!> =>... paste) ; NOALIGN
       (() #`(#,@(flush) (increase-total-tests! #,ntests)))
       (((Chapter e1* ...) e2* ...)
        (go #'(e2* ...) (car x) #'() #'() ntests (flush)))
@@ -636,6 +651,9 @@
       ((e1 =!> e2 e* ...)
        (string? (syntax->datum #'e2))
        (with-syntax ((assert #'(assert-raises (lambda () e1) #'e1 e2)))
+         (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
+      ((e =>... e* ...)
+       (with-syntax ((assert #'(assert-nonterminating (lambda () e) #'e)))
          (go #'(e* ...) header exports #`(#,@body assert) (+ ntests 1) out)))
       (((paste (id name ...) ...) e* ...)
        (with-syntax (((code ...) (retrieve-paste-code #'((id name ...) ...))))

@@ -4,15 +4,17 @@
 
 (library (src compat active)
   (export current-output-port extended-define-syntax format make-mutex
-          open-output-string parallel-execute parameterize random runtime
-          seed-rng string-contains? syntax->location with-output-to-string)
+          open-output-string parallel-execute parameterize random
+          run-with-short-timeout runtime seed-rng string-contains?
+          syntax->location with-output-to-string)
   (import (for (rnrs base (6)) run expand)
           (only (racket base)
                 current-inexact-milliseconds current-output-port current-seconds
-                format make-semaphore open-output-string parameterize random
-                random-seed remainder path->string print-mpair-curly-braces
-                semaphore-post semaphore-wait sleep syntax-column syntax-line
-                syntax-source thread thread-wait)
+                format kill-thread make-semaphore open-output-string
+                parameterize random random-seed remainder path->string
+                print-mpair-curly-braces semaphore-post semaphore-wait sleep
+                syntax-column syntax-line syntax-source thread thread-running?
+                thread-wait)
           (only (racket string) string-contains? string-replace)
           (only (racket port) with-output-to-string))
 
@@ -49,6 +51,13 @@
        (sleep (random 0.001))
        (proc))))
   (for-each thread-wait (map spawn thunks)))
+
+(define (run-with-short-timeout thunk)
+  (let* ((result '())
+         (thd (thread (lambda () (set! result (list (thunk)))))))
+    (sleep 0.001)
+    (kill-thread thd)
+    result))
 
 ;; Racket prints mutable pairs with braces instead of parens by default. We
 ;; disable this to be consistent with other Scheme implementations. This is

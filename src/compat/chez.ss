@@ -4,19 +4,21 @@
 
 (library (src compat active)
   (export current-output-port extended-define-syntax format make-mutex
-          open-output-string parallel-execute parameterize random runtime
-          seed-rng string-contains? syntax->location with-output-to-string)
+          open-output-string parallel-execute parameterize random
+          run-with-short-timeout runtime seed-rng string-contains?
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
           (rename (only (rnrs base (6)) define-syntax)
                   (define-syntax extended-define-syntax))
           (only (rnrs control (6)) unless when)
           (only (chezscheme)
-                annotation-source condition-signal condition-wait
+                annotation-source call/1cc condition-signal condition-wait
                 current-output-port current-time fork-thread format
                 locate-source-object-source make-condition make-time
                 mutex-acquire mutex-release open-output-string parameterize
-                random random-seed sleep syntax->annotation time-nanosecond
-                time-second with-mutex with-output-to-string)
+                random random-seed set-timer sleep syntax->annotation
+                time-nanosecond time-second timer-interrupt-handler with-mutex
+                with-output-to-string)
           (prefix (only (chezscheme) make-mutex) chez-))
 
 (define (syntax->location s)
@@ -63,6 +65,19 @@
         (unless (zero? remaining)
           (condition-wait finished mutex)
           (loop))))))
+
+(define (run-with-short-timeout thunk)
+  (call/1cc
+   (lambda (return)
+     (let ((old-handler (timer-interrupt-handler)))
+       (timer-interrupt-handler (lambda () (return '())))
+       ;; Set the timer for 1000 ticks. A tick is roughly one procedure call.
+       (set-timer 1000)
+       (let ((result (thunk)))
+         ;; Cancel the timer and reset the handler before returning the result.
+         (set-timer 0)
+         (timer-interrupt-handler old-handler)
+         (list result))))))
 
 ;; Rabin-Karp string search algorithm. Assumes ASCII.
 (define (string-contains? s1 s2)

@@ -163,7 +163,7 @@ circumference ~> 62.8318
 (define (test x y)
   (if (= x 0) 0 y))
 
-; (test 0 (p)) ; never terminates
+(test 0 (p)) =>...
 
 ;; With applicative-order evaluation, the expression will never return a value
 ;; because the interpreter tries to evaluate `(p)` and enters endless recursion.
@@ -233,7 +233,7 @@ circumference ~> 62.8318
 ;; `good-enough?` no matter how many times `improve` is called.
 
 (sqrt 1e14) ~> 1e7
-; (sqrt 1e20) ; never terminates
+(sqrt 1e21) =>...
 
 ;; Here is an alternative implementation of `sqrt` that watches how `guess`
 ;; changes from one iteration to the next and stops when the change is a very
@@ -1408,7 +1408,7 @@ circumference ~> 62.8318
 (define (sqrt x)
   (fixed-point (lambda (y) (/ x y)) 1.0))
 
-; (sqrt 2) ; never terminates
+(sqrt 2) =>...
 
 ;; With average damping, it converges:
 (define (sqrt x)

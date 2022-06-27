@@ -477,7 +477,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
   (fixed-point (<span class="kw">lambda</span> (y) (<span class="fu">/</span> x y)) <span class="cn">1.0</span>))
 
-<span class="co">; (sqrt 2) ; never terminates</span></code></pre>
+(<span class="fu">sqrt</span> <span class="cn">2</span>) <span class="er">=&gt;...</span></code></pre>
 <p>With average damping, it converges:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
   (fixed-point (<span class="kw">lambda</span> (y) (average y (<span class="fu">/</span> x y))) <span class="cn">1.0</span>))

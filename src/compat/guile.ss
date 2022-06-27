@@ -4,8 +4,9 @@
 
 (library (src compat active)
   (export current-output-port extended-define-syntax format make-mutex
-          open-output-string parallel-execute parameterize random runtime
-          seed-rng string-contains? syntax->location with-output-to-string)
+          open-output-string parallel-execute parameterize random
+          run-with-short-timeout runtime seed-rng string-contains?
+          syntax->location with-output-to-string)
   (import (rnrs base (6))
           (only (guile)
                 *random-state* current-output-port gettimeofday
@@ -13,7 +14,8 @@
                 random-state-from-platform source-property string-contains
                 syntax-source with-output-to-string usleep)
           (only (ice-9 threads)
-                call-with-new-thread join-thread lock-mutex unlock-mutex)
+                call-with-new-thread cancel-thread join-thread lock-mutex
+                unlock-mutex)
           (only (system syntax) syntax-sourcev)
           (prefix (only (guile) format) guile-)
           (prefix (only (ice-9 threads) make-mutex) guile-))
@@ -67,5 +69,13 @@
        (usleep (random 1000))
        (proc))))
   (for-each join-thread (map spawn thunks)))
+
+(define (run-with-short-timeout thunk)
+  (let* ((result '())
+         (thread (call-with-new-thread
+                  (lambda () (set! result (list (thunk)))))))
+    (usleep 1000)
+    (cancel-thread thread)
+    result))
 
 ) ; end of library

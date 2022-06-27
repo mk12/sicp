@@ -1440,7 +1440,7 @@
 (define (factorial n)
   (unless (= n 1) (* n (factorial (- n 1))) 1))
 
-; (factorial 5) ; never terminates
+(factorial 5) =>...
 
 ;; This never terminates in our applicative-order Scheme because the call to
 ;; `unless` always evaluates all parameters, including the recursive call to

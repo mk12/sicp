@@ -235,7 +235,7 @@ Imports:
 (<span class="kw">define</span> (test x y)
   (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span> y))
 
-<span class="co">; (test 0 (p)) ; never terminates</span></code></pre>
+(test <span class="cn">0</span> (p)) <span class="er">=&gt;...</span></code></pre>
 <p>With applicative-order evaluation, the expression will never return a value because the interpreter tries to evaluate <code>(p)</code> and enters endless recursion.</p>
 <p>With normal-order evaluation, the expression will evaluate to zero. The <code>(p)</code> expression is never evaluated because it is not necessary to do so.</p>
 <h2 id="1.1.7" class="anchor">
@@ -336,7 +336,7 @@ Imports:
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="co">; should be 1e-10</span></code></pre>
 <p>It is also inadequate for very large numbers. With limited precision, it is impossible to represent small differences between large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
 <pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
-<span class="co">; (sqrt 1e20) ; never terminates</span></code></pre>
+(<span class="fu">sqrt</span> <span class="cn">1e21</span>) <span class="er">=&gt;...</span></code></pre>
 <p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (good-enough? g1 g2)
   <span class="co">;; Note: In some Schemes, division of the smallest representable number</span>

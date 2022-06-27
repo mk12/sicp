@@ -3062,17 +3062,14 @@ z2 => (make-from-mag-ang 30 3)
                     (else (err))))
             (err)))))
 
-(define (install-scheme-number->complex-package)
+(paste (:2.5.1 add div mul sub))
+
+(define (scheme-number-to-complex-pkg)
   (define (coerce n)
     (make-complex-from-real-imag (contents n) 0))
   (put-coercion 'scheme-number 'complex coerce))
 
-(define (add x y) (apply-generic 'add x y))
-(define (sub x y) (apply-generic 'sub x y))
-(define (mul x y) (apply-generic 'mul x y))
-(define (div x y) (apply-generic 'div x y))
-
-(using numeric-pkg install-scheme-number->complex-package)
+(using numeric-pkg scheme-number-to-complex-pkg)
 
 (add (make-scheme-number 1) (make-complex-from-real-imag 0 1))
 => (add (make-complex-from-real-imag 0 1) (make-scheme-number 1))
@@ -3084,10 +3081,8 @@ z2 => (make-from-mag-ang 30 3)
        (:2.5.2 apply-generic get-coercion put-coercion) (:3.3.3.3 get put)))
 
 (define (identity-pkg)
-  (define (scheme-number->scheme-number n) n)
-  (define (complex->complex z) z)
-  (put-coercion 'scheme-number 'scheme-number scheme-number->scheme-number)
-  (put-coercion 'complex 'complex complex->complex))
+  (put-coercion 'scheme-number 'scheme-number (lambda (x) x))
+  (put-coercion 'complex 'complex (lambda (x) x)))
 
 (define (exp-pkg)
   (define (tag x) (attach-tag 'scheme-number x))
@@ -3095,15 +3090,14 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (exp x y) (apply-generic 'exp x y))
 
-;; (a) If we call `exp` with two complex numbers as arguments, the process will
-;; be stuck in an infinite recursion because it keeps coercing the first
-;; argument to the type of the second, although this brings it no closer to
-;; being able to find a correct procedure.
+;; (a) If we call `exp` with two complex numbers, it will enter an infinite
+;; recursion because it will keep trying to unnecessarily coerce the first
+;; argument to the type of the second.
 
 (using complex-pkg identity-pkg exp-pkg)
 
 (define z (make-complex-from-real-imag 0 0))
-; (exp z z) ; never terminates
+(exp z z) =>...
 
 ;; (b) Louis is wrong. Nothing needs to be done to handle coercion with
 ;; arguments of the same type, because if there is no procedure installed for
@@ -3141,7 +3135,7 @@ z2 => (make-from-mag-ang 30 3)
 (Exercise ?2.82
   (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 add-complex using)
        (:2.5.1 make-complex-from-real-imag make-scheme-number numeric-pkg)
-       (:2.5.2 add get-coercion install-scheme-number->complex-package)
+       (:2.5.2 add get-coercion scheme-number-to-complex-pkg)
        (:3.3.3.3 get put)))
 
 (define (get-coercion-or-id from to)
@@ -3183,7 +3177,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (add3c z1 z2 z3) (apply-generic 'add3c z1 z2 z3))
 
-(using numeric-pkg install-scheme-number->complex-package add3c-pkg)
+(using numeric-pkg scheme-number-to-complex-pkg add3c-pkg)
 
 (add3c (make-scheme-number 1)
        (make-complex-from-real-imag 1 1)
@@ -3295,10 +3289,7 @@ z2 => (make-from-mag-ang 30 3)
                    (else (apply-generic op a1 (raise a2))))))
           (else (err)))))
 
-(define (add x y) (apply-generic 'add x y))
-(define (sub x y) (apply-generic 'sub x y))
-(define (mul x y) (apply-generic 'mul x y))
-(define (div x y) (apply-generic 'div x y))
+(paste (:2.5.1 add div mul sub))
 
 (using extended-numeric-pkg raise-pkg)
 
@@ -3369,10 +3360,7 @@ z2 => (make-from-mag-ang 30 3)
                    (else (apply-generic op a1 (raise a2))))))
           (else (err)))))
 
-(define (add x y) (apply-generic 'add x y))
-(define (sub x y) (apply-generic 'sub x y))
-(define (mul x y) (apply-generic 'mul x y))
-(define (div x y) (apply-generic 'div x y))
+(paste (:2.5.1 add div mul sub))
 
 (using extended-numeric-pkg equ-pkg raise-pkg project-pkg)
 

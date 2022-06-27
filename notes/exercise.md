@@ -131,7 +131,7 @@ The `using` procedure defined in [](:2.4.3) resets the global table and installs
 
 ## Assertions
 
-As with modules, standard techniques for assertions are too distracting. The mere word "assert" is too verbose for our use case. Instead, the language provides five assertion operators that work at the top level: `=>`, `~>`, `=?>`, `=$>`, and `=!>`. They report detailed information when they fail, including the actual result, expected result, and line number.
+As with modules, standard techniques for assertions are too distracting. The mere word "assert" is too verbose here. Instead, the language provides six assertion operators that work at the top level: `=>`, `~>`, `=?>`, `=$>`, `=!>`, and `=>...`. They report detailed information when they fail, including the actual result, expected result, and line number.
 
 ### Exact
 
@@ -285,6 +285,29 @@ left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 
 right:
 =!> ... <span class="co">disaster</span> ...
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+
+### Nontermination
+
+The `=>...` operator asserts that evaluation will never terminate. Unlike the other operators, it has no right-hand side. For example:
+
+```
+(let loop () (loop)) =>...
+```
+
+Of course, this doesn't solve the halting problem. It just tries evaluating the expression and gives up after a short time.
+
+When `(+ 1 2) =>...` fails, the output looks like this:
+
+<pre><code class="blockcode"><!--
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
+left: <span class="fu">(+ 1 2)</span>
+=> <span class="cn">3</span>
+
+right:
+=>... (expected to never terminate)
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>

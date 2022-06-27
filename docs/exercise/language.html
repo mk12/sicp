@@ -152,7 +152,7 @@
 <h2 id="assertions" class="anchor">
 <a class="anchor__link link" href="#assertions" aria-hidden="true">#</a> Assertions
 </h2>
-<p>As with modules, standard techniques for assertions are too distracting. The mere word “assert” is too verbose for our use case. Instead, the language provides five assertion operators that work at the top level: <code>=&gt;</code>, <code>~&gt;</code>, <code>=?&gt;</code>, <code>=$&gt;</code>, and <code>=!&gt;</code>. They report detailed information when they fail, including the actual result, expected result, and line number.</p>
+<p>As with modules, standard techniques for assertions are too distracting. The mere word “assert” is too verbose here. Instead, the language provides six assertion operators that work at the top level: <code>=&gt;</code>, <code>~&gt;</code>, <code>=?&gt;</code>, <code>=$&gt;</code>, <code>=!&gt;</code>, and <code>=&gt;...</code>. They report detailed information when they fail, including the actual result, expected result, and line number.</p>
 <h3 id="exact" class="anchor">
 <a class="anchor__link link" href="#exact" aria-hidden="true">#</a> Exact
 </h3>
@@ -264,6 +264,23 @@ left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 
 right:
 =!> ... <span class="co">disaster</span> ...
+
+test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
+</code></pre>
+<h3 id="nontermination" class="anchor">
+<a class="anchor__link link" href="#nontermination" aria-hidden="true">#</a> Nontermination
+</h3>
+<p>The <code>=&gt;...</code> operator asserts that evaluation will never terminate. Unlike the other operators, it has no right-hand side. For example:</p>
+<pre><code class="blockcode">(<span class="kw">let</span> loop () (loop)) <span class="er">=&gt;...</span></code></pre>
+<p>Of course, this doesn’t solve the halting problem. It just tries evaluating the expression and gives up after a short time.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=&gt;...</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode"><!--
+--><strong>path/to/file.ss:123:1: assertion failed</strong>
+left: <span class="fu">(+ 1 2)</span>
+=> <span class="cn">3</span>
+
+right:
+=>... (expected to never terminate)
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>

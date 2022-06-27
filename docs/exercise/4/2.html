@@ -94,7 +94,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (factorial n)
   (unless (<span class="fu">=</span> n <span class="cn">1</span>) (<span class="fu">*</span> n (factorial (<span class="fu">-</span> n <span class="cn">1</span>))) <span class="cn">1</span>))
 
-<span class="co">; (factorial 5) ; never terminates</span></code></pre>
+(factorial <span class="cn">5</span>) <span class="er">=&gt;...</span></code></pre>
 <p>This never terminates in our applicative-order Scheme because the call to <code>unless</code> always evaluates all parameters, including the recursive call to <code>factorial</code> when <code>n</code> is 1. In a normal-order language, it would work, since the recursive call in the base case is not used and hence not evaluated.</p>
 <h3 id="ex4.26" class="anchor">
 <a class="anchor__link link" href="#ex4.26" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.26">Exercise 4.26<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
