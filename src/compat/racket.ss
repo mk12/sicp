@@ -46,7 +46,7 @@
     (thread
      (lambda ()
        ;; Sleep for up to 1ms to ensure nondeterminism shows up.
-       (sleep (* 0.001 (random)))
+       (sleep (random 0.001))
        (proc))))
   (for-each thread-wait (map spawn thunks)))
 

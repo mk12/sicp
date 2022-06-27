@@ -51,7 +51,7 @@
        (fork-thread
         (lambda ()
           ;; Sleep for up to 1ms to ensure nondeterminism shows up.
-          (sleep (make-time 'time-duration 1000000 0))
+          (sleep (make-time 'time-duration (random 1000000) 0))
           (proc)
           (with-mutex mutex
             (set! remaining (- remaining 1))
