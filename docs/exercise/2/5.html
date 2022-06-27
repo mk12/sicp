@@ -708,8 +708,8 @@ Imports:
 (<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">0</span>))
 (exp z z) <span class="er">=&gt;...</span></code></pre>
 <ol start="2" type="a">
-<li><p>Louis is wrong. Nothing needs to be done to handle coercion with arguments of the same type, because if there is no procedure installed for that type then coercion doesn’t help. This is assuming that the package consists only of operations on two arguments of the same type. If an operation had two arguments of different types, there may be multiple possible coercions that would succeed in finding a specific procedure.</p></li>
-<li><p>This <code>apply-generic</code> doesn’t coerce two arguments of the same type:</p></li>
+<li><p>Louis is wrong: nothing needs to be done about coercion with arguments of the same type. As long as we don’t install any self-coercions as tried above, <code>apply-generic</code> will fail to find a coercion and correctly report an error.</p></li>
+<li><p>This implementation doesn’t coerce two arguments of the same type:</p></li>
 </ol>
 <pre><code class="blockcode">(<span class="kw">define</span> (new-apply-generic op . args)
   (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
@@ -733,7 +733,8 @@ Imports:
             (err)))))
 
 (<span class="kw">define</span> (exp x y) (new-apply-generic <span class="vs">&#39;exp</span> x y))
-<span class="co">; (exp z z) ; raises an error</span></code></pre>
+
+(exp z z) <span class="er">=!&gt;</span> <span class="cn">&quot;no method for types&quot;</span></code></pre>
 <h3 id="ex2.82" class="anchor">
 <a class="anchor__link link" href="#ex2.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -853,7 +854,7 @@ Imports:
        (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>)
        (make-scheme-number <span class="cn">1</span>))
 <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">3</span> <span class="cn">1</span>)</code></pre>
-<p>This won’t work if two complex numbers are supplied and the operation takes one real number and one complex number. It only works for operations given the exact types they need, or for operations that take arguments that are all of the same type (assuming all necessary coercions are possible).</p>
+<p>This won’t work if two complex numbers are supplied and the operation takes one real number and one complex number. It only works for operations given the exact types they need, or for operations that take arguments that are all of the same type (assuming all the necessary coercions are possible).</p>
 <h3 id="ex2.83" class="anchor">
 <a class="anchor__link link" href="#ex2.83" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.83">Exercise 2.83<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -950,7 +951,7 @@ Imports:
   (put <span class="vs">&#39;make</span> <span class="vs">&#39;real</span> tag))
 
 (<span class="kw">define</span> (make-real x) (apply-specific <span class="vs">&#39;make</span> <span class="vs">&#39;real</span> x))</code></pre>
-<p>The extended numeric package splits ’scheme-number into ’integer and ’real.</p>
+<p>The <code>extended-numeric-pkg</code> is like <code>numeric-pkg</code> from <a href="#2.5.1">§&nbsp;2.5.1</a>, but it splits <code>'scheme-number</code> into <code>'integer</code> and <code>'real</code>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (extended-numeric-pkg)
   (integer-pkg)
   (rational-pkg)

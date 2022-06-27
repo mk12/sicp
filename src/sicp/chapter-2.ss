@@ -3099,14 +3099,11 @@ z2 => (make-from-mag-ang 30 3)
 (define z (make-complex-from-real-imag 0 0))
 (exp z z) =>...
 
-;; (b) Louis is wrong. Nothing needs to be done to handle coercion with
-;; arguments of the same type, because if there is no procedure installed for
-;; that type then coercion doesn't help. This is assuming that the package
-;; consists only of operations on two arguments of the same type. If an
-;; operation had two arguments of different types, there may be multiple
-;; possible coercions that would succeed in finding a specific procedure.
+;; (b) Louis is wrong: nothing needs to be done about coercion with arguments of
+;; the same type. As long as we don't install any self-coercions as tried above,
+;; `apply-generic` will fail to find a coercion and correctly report an error.
 
-;; (c) This `apply-generic` doesn't coerce two arguments of the same type:
+;; (c) This implementation doesn't coerce two arguments of the same type:
 
 (define (new-apply-generic op . args)
   (let* ((type-tags (map type-tag args))
@@ -3130,7 +3127,8 @@ z2 => (make-from-mag-ang 30 3)
             (err)))))
 
 (define (exp x y) (new-apply-generic 'exp x y))
-; (exp z z) ; raises an error
+
+(exp z z) =!> "no method for types"
 
 (Exercise ?2.82
   (use (:2.4.2 attach-tag contents type-tag) (:2.4.3 add-complex using)
@@ -3187,7 +3185,7 @@ z2 => (make-from-mag-ang 30 3)
 ;; This won't work if two complex numbers are supplied and the operation takes
 ;; one real number and one complex number. It only works for operations given
 ;; the exact types they need, or for operations that take arguments that are all
-;; of the same type (assuming all necessary coercions are possible).
+;; of the same type (assuming all the necessary coercions are possible).
 
 (Exercise ?2.83
   (use (:2.1.1 denom numer) (:2.4.2 attach-tag)
@@ -3219,7 +3217,8 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (make-real x) (apply-specific 'make 'real x))
 
-;; The extended numeric package splits 'scheme-number into 'integer and 'real.
+;; The `extended-numeric-pkg` is like `numeric-pkg` from [](:2.5.1), but it
+;; splits `'scheme-number` into `'integer` and `'real`.
 (define (extended-numeric-pkg)
   (integer-pkg)
   (rational-pkg)
