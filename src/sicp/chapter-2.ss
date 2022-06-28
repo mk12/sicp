@@ -3327,7 +3327,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (drop x)
   (let ((type (type-tag x)))
-    (if (or (tower-bottom? type) (not (tower-position type)))
+    (if (tower-bottom? type)
         x
         (let* ((down (project x))
                (down-up (raise down)))
@@ -3381,7 +3381,7 @@ z2 => (make-from-mag-ang 30 3)
        (?2.85 add apply-generic div mul project-pkg sub)))
 
 ;; This has to be built on top of the numeric tower, rather than just the types
-;; from Section 2.5.1 (scheme-number, rational, complex) because we need
+;; from [](:2.5.1) (`'scheme-number`, `'rational`, `'complex`), because we need
 ;; coercions between all the types. For example, internally complex numbers will
 ;; take sines, cosines, square roots, etc. of their components, so if they are
 ;; integers, they will need to be promoted to real numbers, and then be combined

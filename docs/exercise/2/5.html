@@ -967,7 +967,7 @@ Imports:
   (put <span class="vs">&#39;raise</span> <span class="vs">&#39;(rational)</span> rational-&gt;real)
   (put <span class="vs">&#39;raise</span> <span class="vs">&#39;(real)</span> real-&gt;complex))
 
-(<span class="kw">define</span> (<span class="kw">raise</span> x) (apply-generic <span class="vs">&#39;raise</span> x))
+(<span class="kw">define</span> (raise x) (apply-generic <span class="vs">&#39;raise</span> x))
 
 (using extended-numeric-pkg raise-pkg)
 
@@ -975,9 +975,9 @@ Imports:
 (div (make-integer <span class="cn">10</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">5</span>)
 (div (make-integer <span class="cn">1</span>) (make-integer <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)
 
-(<span class="kw">raise</span> (make-integer <span class="cn">1</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">1</span>)
-(<span class="kw">raise</span> (make-rational <span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)
-(<span class="kw">raise</span> (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">0.5</span> <span class="cn">0</span>)</code></pre>
+(raise (make-integer <span class="cn">1</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">1</span> <span class="cn">1</span>)
+(raise (make-rational <span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)
+(raise (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">0.5</span> <span class="cn">0</span>)</code></pre>
 <h3 id="ex2.84" class="anchor">
 <a class="anchor__link link" href="#ex2.84" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.84">Exercise 2.84<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1070,15 +1070,15 @@ Imports:
           ((<span class="fu">null?</span> (<span class="fu">cdr</span> args))
            (<span class="kw">if</span> (tower-top? (<span class="fu">car</span> type-tags))
                (err)
-               (apply-generic op (<span class="kw">raise</span> (<span class="fu">car</span> args)))))
+               (apply-generic op (raise (<span class="fu">car</span> args)))))
           ((<span class="fu">null?</span> (<span class="fu">cddr</span> args))
            (<span class="kw">let</span> ((a1 (<span class="fu">car</span> args))
                  (a2 (<span class="fu">cadr</span> args))
                  (p1 (tower-position (<span class="fu">car</span> type-tags)))
                  (p2 (tower-position (<span class="fu">cadr</span> type-tags))))
              (<span class="kw">cond</span> ((<span class="kw">or</span> (<span class="fu">not</span> p1) (<span class="fu">not</span> p2) (<span class="fu">=</span> p1 p2)) (err))
-                   ((<span class="fu">&lt;</span> p1 p2) (apply-generic op (<span class="kw">raise</span> a1) a2))
-                   (<span class="kw">else</span> (apply-generic op a1 (<span class="kw">raise</span> a2))))))
+                   ((<span class="fu">&lt;</span> p1 p2) (apply-generic op (raise a1) a2))
+                   (<span class="kw">else</span> (apply-generic op a1 (raise a2))))))
           (<span class="kw">else</span> (err)))))
 
 (<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> add div mul sub))
@@ -1220,10 +1220,10 @@ Imports:
 
 (<span class="kw">define</span> (drop x)
   (<span class="kw">let</span> ((type (type-tag x)))
-    (<span class="kw">if</span> (<span class="kw">or</span> (tower-bottom? type) (<span class="fu">not</span> (tower-position type)))
+    (<span class="kw">if</span> (tower-bottom? type)
         x
         (<span class="kw">let*</span> ((down (project x))
-               (down-up (<span class="kw">raise</span> down)))
+               (down-up (raise down)))
           (<span class="kw">if</span> (equ? x down-up) (drop down) x)))))
 
 (<span class="kw">define</span> (apply-generic op . args)
@@ -1243,15 +1243,15 @@ Imports:
           ((<span class="fu">null?</span> (<span class="fu">cdr</span> args))
            (<span class="kw">if</span> (tower-top? (<span class="fu">car</span> type-tags))
                (err)
-               (apply-generic op (<span class="kw">raise</span> (<span class="fu">car</span> args)))))
+               (apply-generic op (raise (<span class="fu">car</span> args)))))
           ((<span class="fu">null?</span> (<span class="fu">cddr</span> args))
            (<span class="kw">let</span> ((a1 (<span class="fu">car</span> args))
                  (a2 (<span class="fu">cadr</span> args))
                  (p1 (tower-position (<span class="fu">car</span> type-tags)))
                  (p2 (tower-position (<span class="fu">cadr</span> type-tags))))
              (<span class="kw">cond</span> ((<span class="kw">or</span> (<span class="fu">not</span> p1) (<span class="fu">not</span> p2) (<span class="fu">=</span> p1 p2)) (err))
-                   ((<span class="fu">&lt;</span> p1 p2) (apply-generic op (<span class="kw">raise</span> a1) a2))
-                   (<span class="kw">else</span> (apply-generic op a1 (<span class="kw">raise</span> a2))))))
+                   ((<span class="fu">&lt;</span> p1 p2) (apply-generic op (raise a1) a2))
+                   (<span class="kw">else</span> (apply-generic op a1 (raise a2))))))
           (<span class="kw">else</span> (err)))))
 
 (<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> add div mul sub))
@@ -1405,7 +1405,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>This has to be built on top of the numeric tower, rather than just the types from Section 2.5.1 (scheme-number, rational, complex) because we need coercions between all the types. For example, internally complex numbers will take sines, cosines, square roots, etc. of their components, so if they are integers, they will need to be promoted to real numbers, and then be combined in other operations potentially using different data types.</p>
+<p>This has to be built on top of the numeric tower, rather than just the types from <a href="#2.5.1">§&nbsp;2.5.1</a> (<code>'scheme-number</code>, <code>'rational</code>, <code>'complex</code>), because we need coercions between all the types. For example, internally complex numbers will take sines, cosines, square roots, etc. of their components, so if they are integers, they will need to be promoted to real numbers, and then be combined in other operations potentially using different data types.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (mul x x))
 
 (<span class="kw">define</span> (trig-pkg)

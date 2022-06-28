@@ -48,7 +48,9 @@
       <item>quasisyntax</item>
       <item>quote</item>
       <item>raise-continuable</item>
-      <item>raise</item>
+      <!-- We only use the built-in `error`, not `raise`. And in Section 2.5 we
+           define an ordinary procedure called `raise`. -->
+      <!-- <item>raise</item> -->
       <item>set!</item>
       <item>syntax</item>
       <item>syntax-case</item>
