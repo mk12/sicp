@@ -1973,9 +1973,10 @@ z2 => '((a b) a b)
 (set! balance 100) (mary) (paul) (peter) balance => 40
 
 ;; (b) If the system allows the processes to be interleaved, you could also get
-;; results equivalent to leaving out one or more of the assignments, where the
-;; new value is overwritten before being read. In `mary`, the value divided by
-;; 2 could also be different from the value being subtracted from.
+;;     results equivalent to leaving out one or more of the assignments, where
+;;     the new value is overwritten before being read. In `mary`, the value
+;;     divided by 2 could also be different from the value being subtracted
+;;     from.
 
 (set! balance 100)
 (parallel-execute peter paul mary)
@@ -3042,7 +3043,7 @@ a-10 => '((1 1) (1 2) (1 3) (2 2) (1 4) (2 3) (1 5) (2 4) (3 3) (1 6))
 (map a-weight a-10) => '(2 3 4 4 5 5 6 6 6 7)
 
 ;; (b) Pairs of positive integers (i, j) with i <= j, where neither i nor j is
-;; divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.
+;;     divisible by 2, 3, or 5, and the pairs are ordered by 2i + 3j + 5ij.
 (define (b-weight p)
   (+ (* 2 (car p))
      (* 3 (cadr p))

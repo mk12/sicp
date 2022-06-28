@@ -48,13 +48,19 @@ body {
 strong { font-weight: bold; }
 em { font-style: italic; }
 
-p, ul, ol, blockquote, pre, figure, table { margin-top: 1em; }
+/* The ol[type="a"] is for (a), (b), etc. in exercises. */
+p, ul, ol, blockquote, pre, figure, table, ol[type="a"] li { margin-top: 1em; }
 p:first-child, li ul, li ol { margin-top: 0; }
 
 ul { margin-left: 1.05em; }
 ol { margin-left: 1.45em; }
 li ul, li ol { margin-left: 2em; }
 ol[type="a"] li::marker { font-weight: bold; }
+
+/* Undo indent for code blocks and diagrams inside exercise (a), (b), etc. */
+ol pre, ol figure {
+    margin-left: -1.45em;
+}
 
 h1, h2, h3 {
     font-weight: bold;

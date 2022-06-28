@@ -78,20 +78,18 @@
 (<span class="kw">define</span> (paul) (<span class="kw">set!</span> balance (<span class="fu">-</span> balance <span class="cn">20</span>)))
 (<span class="kw">define</span> (mary) (<span class="kw">set!</span> balance (<span class="fu">-</span> balance (<span class="fu">/</span> balance <span class="cn">2</span>))))</code></pre>
 <ol type="a">
-<li>Out of six permutations, there are four possible values: 35, 40, 45, 50.</li>
-</ol>
+<li><p>Out of six permutations, there are four possible values: 35, 40, 45, 50.</p>
 <pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (paul) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (mary) (paul) balance <span class="op">=&gt;</span> <span class="cn">35</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (paul) (peter) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (paul) (mary) (peter) balance <span class="op">=&gt;</span> <span class="cn">50</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (peter) (paul) balance <span class="op">=&gt;</span> <span class="cn">40</span>
-(<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (paul) (peter) balance <span class="op">=&gt;</span> <span class="cn">40</span></code></pre>
-<ol start="2" type="a">
-<li>If the system allows the processes to be interleaved, you could also get results equivalent to leaving out one or more of the assignments, where the new value is overwritten before being read. In <code>mary</code>, the value divided by 2 could also be different from the value being subtracted from.</li>
-</ol>
+(<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (paul) (peter) balance <span class="op">=&gt;</span> <span class="cn">40</span></code></pre></li>
+<li><p>If the system allows the processes to be interleaved, you could also get results equivalent to leaving out one or more of the assignments, where the new value is overwritten before being read. In <code>mary</code>, the value divided by 2 could also be different from the value being subtracted from.</p>
 <pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>)
 (parallel-execute peter paul mary)
-balance <span class="op">=?&gt;</span> [<span class="cn">25</span> <span class="cn">30</span> <span class="cn">35</span> <span class="cn">40</span> <span class="cn">45</span> <span class="cn">50</span> <span class="cn">55</span> <span class="cn">60</span> <span class="cn">80</span> <span class="cn">90</span> <span class="cn">110</span>]</code></pre>
+balance <span class="op">=?&gt;</span> [<span class="cn">25</span> <span class="cn">30</span> <span class="cn">35</span> <span class="cn">40</span> <span class="cn">45</span> <span class="cn">50</span> <span class="cn">55</span> <span class="cn">60</span> <span class="cn">80</span> <span class="cn">90</span> <span class="cn">110</span>]</code></pre></li>
+</ol>
 <h2 id="3.4.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2" aria-hidden="true">#</a> <span class="number">3.4.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_3.4.2">Mechanisms for Controlling Concurrency<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -498,8 +496,7 @@ Imports:
             (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-semaphore</span> <span class="cn">&quot;unexpected message&quot;</span> m))))))</code></pre>
 <p>We can’t test this because not all Schemes we support have the required property of allowing any thread to release another’s mutex.</p>
 <ol start="2" type="a">
-<li>Semaphore in terms of atomic <code>test-and-set!</code> operations</li>
-</ol>
+<li><p>Semaphore in terms of atomic <code>test-and-set!</code> operations</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-semaphore-from-scratch n)
   (<span class="kw">let</span> ((count n)
         (cell (<span class="fu">list</span> <span class="cn">#f</span>)))
@@ -516,7 +513,8 @@ Imports:
              (<span class="kw">set!</span> count (<span class="fu">+</span> <span class="cn">1</span> count))
              (clear! cell))
             (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-semaphore-from-scratch</span> <span class="cn">&quot;unexpected message&quot;</span> m))))
-    the-semaphore))</code></pre>
+    the-semaphore))</code></pre></li>
+</ol>
 <p>We can’t test this because our <code>test-and-set!</code> is not actually atomic.</p>
 <h3 id="3.4.2.4" class="anchor">
 <a class="anchor__link link" href="#3.4.2.4" aria-hidden="true">#</a> <span class="number">3.4.2.4</span> Deadlock

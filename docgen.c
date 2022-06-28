@@ -17,6 +17,14 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+// Enable this to print Pandoc's Markdown input instead of passing it to Pandoc.
+// You must Ctrl-C out after since docgen will hang waiting for Pandoc's output.
+#define DEBUG_PANDOC_INPUT 0
+
+// Enable this to print Pandoc's HTML output instead of postprocessing it and
+// writing it to disk. This has the side effect of writing an empty output file.
+#define DEBUG_PANDOC_OUTPUT 0
+
 // Returns true if s starts with the given prefix.
 static bool startswith(const char *s, const char *prefix) {
     return strncmp(s, prefix, strlen(prefix)) == 0;
@@ -239,7 +247,9 @@ static bool fork_pandoc(struct PandocProc *proc, struct PandocOpts opts) {
         close(in[READ]);
         // Move the output write-side to file descriptor 1 (stdout).
         close(out[READ]);
+#if !DEBUG_PANDOC_OUTPUT
         dup2(out[WRITE], 1);
+#endif
         close(out[WRITE]);
         // Replace this process with pandoc.
         return pandoc(opts);
@@ -262,6 +272,9 @@ static bool fork_pandoc(struct PandocProc *proc, struct PandocOpts opts) {
         close(out[READ]);
         return false;
     }
+#if DEBUG_PANDOC_INPUT
+    proc->in = stderr;
+#endif
     return true;
 }
 
@@ -337,11 +350,16 @@ static void postprocess_html(FILE *in, FILE *out) {
         if (startswith(p, "<span id=\"cb")) {
             for (int i = 0; i < 3; i++) p = strchr(p + 1, '>');
             p++;
-            if (endswith(p, "</code></pre></div>\n")) {
+            if (endswith(p, "</span></code></pre></div></li>\n")) {
+                q -= strlen("</span></code></pre></div></li>");
+                suffix = "</code></pre></li>\n";
+            } else if (endswith(p, "</span></code></pre></div>\n")) {
                 q -= strlen("</span></code></pre></div>");
                 suffix = "</code></pre>\n";
-            } else {
+            } else if (endswith(p, "</span>\n")) {
                 q -= strlen("</span>");
+            } else {
+                assert(false);
             }
         }
         const char *n;
@@ -977,27 +995,31 @@ static void render_toc_item(struct TocRenderer *tr, FILE *out, int depth,
 // Renderer for literate code.
 struct LiterateRenderer {
     // State for the current line.
-    enum LiterateState { LR_PROSE, LR_CODE } state;
+    enum LiterateState { LR_NONE, LR_PROSE, LR_CODE } state;
     // True if there is a pending blank line we haven't rendered yet.
     bool pending_blank;
+    // An indent if we are in a list like (a), (b), etc., otherwise empty.
+    const char *list_indent;
 };
 
 // Creates a new table-of-contents renderer.
 static struct LiterateRenderer new_literate_renderer(void) {
     return (struct LiterateRenderer){
-        .state = LR_PROSE,
+        .state = LR_NONE,
         .pending_blank = false,
+        .list_indent = "",
     };
 }
 
 // Ends a section of literate output.
 static void end_literate_section(struct LiterateRenderer *lr, FILE *out) {
     if (lr->state == LR_CODE) {
-        fputs("```\n", out);
+        fprintf(out, "%s```\n", lr->list_indent);
     }
     putc('\n', out);
-    lr->state = LR_PROSE;
+    lr->state = LR_NONE;
     lr->pending_blank = false;
+    lr->list_indent = "";
 }
 
 // Renders a line of prose or code.
@@ -1012,21 +1034,32 @@ static void render_literate(struct LiterateRenderer *lr, FILE *out,
     if (lr->state == prev_state && lr->pending_blank) {
         putc('\n', out);
     }
-    lr->pending_blank = false;
     switch (lr->state) {
+    case LR_NONE:
+        assert(false);
+        break;
     case LR_PROSE:
         if (prev_state == LR_CODE) {
-            fputs("```\n\n", out);
+            fprintf(out, "%s```\n\n", lr->list_indent);
         }
         fwrite(line.data + 3, line.len - 3, 1, out);
+        if (prev_state != LR_PROSE || lr->pending_blank) {
+            lr->list_indent = line.len >= 6 && line.data[3] == '('
+                                   && isalpha(line.data[4])
+                                   && line.data[5] == ')'
+                                ? "    "
+                                : "";
+        }
         break;
     case LR_CODE:
-        if (prev_state == LR_PROSE) {
-            fputs("\n```\n", out);
+        if (prev_state != LR_CODE) {
+            fprintf(out, "\n%s```\n", lr->list_indent);
         }
+        fputs(lr->list_indent, out);
         fwrite(line.data, line.len, 1, out);
         break;
     }
+    lr->pending_blank = false;
 }
 
 // State for rendering (use (id name ...) ...) blocks as nested lists.

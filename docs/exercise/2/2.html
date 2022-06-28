@@ -358,15 +358,12 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (make-mobile left right) (<span class="fu">list</span> left right))
 (<span class="kw">define</span> (make-branch <span class="fu">length</span> structure) (<span class="fu">list</span> <span class="fu">length</span> structure))</code></pre>
 <ol type="a">
-<li>Selectors:</li>
-</ol>
+<li><p>Selectors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> left-branch <span class="fu">car</span>)
 (<span class="kw">define</span> right-branch <span class="fu">cadr</span>)
 (<span class="kw">define</span> branch-length <span class="fu">car</span>)
-(<span class="kw">define</span> branch-structure <span class="fu">cadr</span>)</code></pre>
-<ol start="2" type="a">
-<li>Total weight:</li>
-</ol>
+(<span class="kw">define</span> branch-structure <span class="fu">cadr</span>)</code></pre></li>
+<li><p>Total weight:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (mobile-weight mobile)
   (<span class="fu">+</span> (branch-weight (left-branch mobile))
      (branch-weight (right-branch mobile))))
@@ -375,10 +372,8 @@ Imports:
   (<span class="kw">let</span> ((struct (branch-structure branch)))
     (<span class="kw">if</span> (<span class="fu">number?</span> struct)
         struct
-        (mobile-weight struct))))</code></pre>
-<ol start="3" type="a">
-<li>Balance:</li>
-</ol>
+        (mobile-weight struct))))</code></pre></li>
+<li><p>Balance:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (torque branch)
   (<span class="fu">*</span> (branch-length branch)
      (branch-weight branch)))
@@ -392,15 +387,14 @@ Imports:
 (<span class="kw">define</span> (branch-balanced? branch)
   (<span class="kw">let</span> ((struct (branch-structure branch)))
     (<span class="kw">or</span> (<span class="fu">number?</span> struct)
-        (mobile-balanced? struct))))</code></pre>
-<ol start="4" type="a">
-<li>If <code>make-mobile</code> and <code>make-branch</code> use <code>cons</code> instead of <code>list</code>, all we need to do is change the <code>right-branch</code> and <code>branch-structure</code> selectors:</li>
-</ol>
+        (mobile-balanced? struct))))</code></pre></li>
+<li><p>If <code>make-mobile</code> and <code>make-branch</code> use <code>cons</code> instead of <code>list</code>, all we need to do is change the <code>right-branch</code> and <code>branch-structure</code> selectors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> make-mobile <span class="fu">cons</span>)
 (<span class="kw">define</span> make-branch <span class="fu">cons</span>)
 
 (<span class="kw">define</span> right-branch <span class="fu">cdr</span>)
-(<span class="kw">define</span> branch-structure <span class="fu">cdr</span>)</code></pre>
+(<span class="kw">define</span> branch-structure <span class="fu">cdr</span>)</code></pre></li>
+</ol>
 <h3 id="2.2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a> <span class="number">2.2.2.1</span> Mapping over trees
 </h3>
@@ -1511,33 +1505,26 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>The painter that draws the outline of the designated frame:</li>
-</ol>
+<li><p>The painter that draws the outline of the designated frame:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> outline
   (segments-&gt;painter
    (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">0</span>))
          (make-segment (make-vect <span class="cn">0</span> <span class="cn">1</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>))
          (make-segment (make-vect <span class="cn">0</span> <span class="cn">0</span>) (make-vect <span class="cn">0</span> <span class="cn">1</span>))
-         (make-segment (make-vect <span class="cn">1</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>)))))</code></pre>
-<ol start="2" type="a">
-<li>The painter that draws an “X” by connecting opposite corners of the frame:</li>
-</ol>
+         (make-segment (make-vect <span class="cn">1</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>)))))</code></pre></li>
+<li><p>The painter that draws an “X” by connecting opposite corners of the frame:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x
   (segments-&gt;painter
    (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0</span> <span class="cn">0</span>) (make-vect <span class="cn">1</span> <span class="cn">1</span>))
-         (make-segment (make-vect <span class="cn">0</span> <span class="cn">1</span>) (make-vect <span class="cn">1</span> <span class="cn">0</span>)))))</code></pre>
-<ol start="3" type="a">
-<li>The painter that draws a diamond shape by connecting the midpoints of the sides of the frame:</li>
-</ol>
+         (make-segment (make-vect <span class="cn">0</span> <span class="cn">1</span>) (make-vect <span class="cn">1</span> <span class="cn">0</span>)))))</code></pre></li>
+<li><p>The painter that draws a diamond shape by connecting the midpoints of the sides of the frame:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> diamond
   (segments-&gt;painter
    (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.5</span> <span class="cn">0.0</span>) (make-vect <span class="cn">1.0</span> <span class="cn">0.5</span>))
          (make-segment (make-vect <span class="cn">0.0</span> <span class="cn">0.5</span>) (make-vect <span class="cn">0.5</span> <span class="cn">1.0</span>))
          (make-segment (make-vect <span class="cn">0.0</span> <span class="cn">0.5</span>) (make-vect <span class="cn">0.5</span> <span class="cn">0.0</span>))
-         (make-segment (make-vect <span class="cn">0.5</span> <span class="cn">1.0</span>) (make-vect <span class="cn">1.0</span> <span class="cn">0.5</span>)))))</code></pre>
-<ol start="4" type="a">
-<li>The <code>wave</code> painter:</li>
-</ol>
+         (make-segment (make-vect <span class="cn">0.5</span> <span class="cn">1.0</span>) (make-vect <span class="cn">1.0</span> <span class="cn">0.5</span>)))))</code></pre></li>
+<li><p>The <code>wave</code> painter:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> wave-segments
   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.00</span>) (make-vect <span class="cn">0.37</span> <span class="cn">0.22</span>))
         (make-segment (make-vect <span class="cn">0.37</span> <span class="cn">0.22</span>) (make-vect <span class="cn">0.46</span> <span class="cn">0.34</span>))
@@ -1556,7 +1543,8 @@ Imports:
         (make-segment (make-vect <span class="cn">0.39</span> <span class="cn">1.00</span>) (make-vect <span class="cn">0.50</span> <span class="cn">0.68</span>))
         (make-segment (make-vect <span class="cn">0.50</span> <span class="cn">0.68</span>) (make-vect <span class="cn">0.61</span> <span class="cn">1.00</span>))))
 (<span class="kw">define</span> wave
-  (segments-&gt;painter wave-segments))</code></pre>
+  (segments-&gt;painter wave-segments))</code></pre></li>
+</ol>
 <h3 id="2.2.4.5" class="anchor">
 <a class="anchor__link link" href="#2.2.4.5" aria-hidden="true">#</a> <span class="number">2.2.4.5</span> Transforming and combining painters
 </h3>
@@ -1849,18 +1837,15 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>I changed <code>wave</code> to add a smile:</li>
-</ol>
+<li><p>I changed <code>wave</code> to add a smile:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> smile-segments
   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.13</span>) (make-vect <span class="cn">0.46</span> <span class="cn">0.17</span>))
         (make-segment (make-vect <span class="cn">0.46</span> <span class="cn">0.24</span>) (make-vect <span class="cn">0.50</span> <span class="cn">0.27</span>))
         (make-segment (make-vect <span class="cn">0.54</span> <span class="cn">0.13</span>) (make-vect <span class="cn">0.54</span> <span class="cn">0.17</span>))
         (make-segment (make-vect <span class="cn">0.54</span> <span class="cn">0.24</span>) (make-vect <span class="cn">0.50</span> <span class="cn">0.27</span>))))
 (<span class="kw">define</span> wave
-  (segments-&gt;painter (<span class="fu">append</span> wave-segments smile-segments)))</code></pre>
-<ol start="2" type="a">
-<li>I changed <code>corner-split</code> to use only one copy of the <code>up-split</code> and <code>right-split</code> images instead of two:</li>
-</ol>
+  (segments-&gt;painter (<span class="fu">append</span> wave-segments smile-segments)))</code></pre></li>
+<li><p>I changed <code>corner-split</code> to use only one copy of the <code>up-split</code> and <code>right-split</code> images instead of two:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (corner-split painter n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       painter
@@ -1868,14 +1853,13 @@ Imports:
             (right (right-split painter (<span class="fu">-</span> n <span class="cn">1</span>)))
             (corner (corner-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
         (beside (below painter up)
-                (below right corner)))))</code></pre>
-<ol start="3" type="a">
-<li>I changed <code>square-limit</code> to orient the corners differently:</li>
-</ol>
+                (below right corner)))))</code></pre></li>
+<li><p>I changed <code>square-limit</code> to orient the corners differently:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square-limit painter n)
   (<span class="kw">let</span> ((quarter (corner-split painter n)))
     (<span class="kw">let</span> ((flipped (flip-horiz quarter)))
-      (square-of-four flipped quarter flipped quarter))))</code></pre>
+      (square-of-four flipped quarter flipped quarter))))</code></pre></li>
+</ol>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

@@ -125,7 +125,7 @@ lint: lintss
 			-e 's/^([0-9]+\.){3}[0-9]+: //' | sort) \
 	| grep -Ev '^$(heading_exceptions)$$' | grep -E '^'
 	# Ensure special characters used for syntax highlighting are stripped.
-	! grep -qRE '«|»|‹|›' docs
+	! grep -qRE '«|»|‹|›|```' docs
 
 lintss: linter
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<

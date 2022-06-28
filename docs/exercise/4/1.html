@@ -750,8 +750,7 @@ Imports:
 </aside>
 <ol type="a">
 <li><p>Lous is wrong—moving the clause for procedure applications further up will break evaluation. For example, it will treat <code>(<span class="kw">define</span> x <span class="cn">3</span>)</code> as an application of the operator <code>define</code> to the operands <code>x</code> and <code>3</code>. This is because <code>application?</code> is implemented simply as <code>pair?</code>. We assume a pair is an application after ruling out all the special forms.</p></li>
-<li><p>We can change the syntax so that applications start with <code>call</code>:</p></li>
-</ol>
+<li><p>We can change the syntax so that applications start with <code>call</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (application? exp) (tagged-list? exp <span class="vs">&#39;call</span>))
 (<span class="kw">define</span> (operator exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (operands exp) (<span class="fu">cddr</span> exp))
@@ -761,7 +760,8 @@ Imports:
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="vs">&#39;((lambda () &quot;hi&quot;))</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(call (lambda () &quot;hi&quot;))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(call (lambda (x) x) 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+(<span class="fu">eval</span> <span class="vs">&#39;(call (lambda (x) x) 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre></li>
+</ol>
 <h3 id="ex4.3" class="anchor">
 <a class="anchor__link link" href="#ex4.3" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.3">Exercise 4.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2229,8 +2229,7 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>Change <code>lookup-variable-value</code></li>
-</ol>
+<li><p>Change <code>lookup-variable-value</code></p>
 <pre><code class="blockcode">(<span class="kw">define</span> (lookup-variable-value var env)
   (traverse env
             var
@@ -2240,10 +2239,8 @@ Imports:
                          <span class="cn">&quot;illegal use of internal definition&quot;</span>
                          var)
                   (<span class="fu">car</span> vals)))
-            (<span class="kw">lambda</span> (frame parent) (lookup-variable-value var parent))))</code></pre>
-<ol start="2" type="a">
-<li>Write <code>scan-out-defines</code></li>
-</ol>
+            (<span class="kw">lambda</span> (frame parent) (lookup-variable-value var parent))))</code></pre></li>
+<li><p>Write <code>scan-out-defines</code></p>
 <pre><code class="blockcode">(<span class="kw">define</span> (scan-out-defines body)
   <span class="co">;; `(revmap f src dst)` behaves like `(append (reverse (map f src)) dst)`.</span>
   (<span class="kw">define</span> (revmap f src dst)
@@ -2270,7 +2267,8 @@ Imports:
 (scan-out-defines <span class="vs">&#39;((define x 1) (define y 2) #f)</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(((lambda (x y) (set! x 1) (set! y 2) #f) &#39;*unassigned* &#39;*unassigned*))</span>
 (scan-out-defines <span class="vs">&#39;((define (f x) x))</span>)
-<span class="op">=&gt;</span> <span class="vs">&#39;(((lambda (f) (set! f (lambda (x) x))) &#39;*unassigned*))</span></code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;(((lambda (f) (set! f (lambda (x) x))) &#39;*unassigned*))</span></code></pre></li>
+</ol>
 <p>We assume that all internal definitions come first.</p>
 <pre><code class="blockcode">(scan-out-defines <span class="vs">&#39;(1 (define x 1))</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 (define x 1))</span></code></pre>
 <ol start="3" type="a">
@@ -2422,8 +2420,7 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>Implement <code>letrec</code> as a derived expression:</li>
-</ol>
+<li><p>Implement <code>letrec</code> as a derived expression:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> letrec-bindings <span class="fu">cadr</span>)
 (<span class="kw">define</span> letrec-actions <span class="fu">cddr</span>)
 
@@ -2443,16 +2440,15 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(letrec () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(letrec ((x 2)) x)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(letrec ((x 3) (y x)) y)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">&#39;(letrec ((f (lambda (x) (if x (f #f) &quot;done&quot;)))) (f #t))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;done&quot;</span></code></pre>
-<ol start="2" type="a">
-<li>Louis is wrong. When evaluating <code>(f <span class="cn">5</span>)</code>, where <code>f</code> is defined:</li>
-</ol>
+(<span class="fu">eval</span> <span class="vs">&#39;(letrec ((f (lambda (x) (if x (f #f) &quot;done&quot;)))) (f #t))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;done&quot;</span></code></pre></li>
+<li><p>Louis is wrong. When evaluating <code>(f <span class="cn">5</span>)</code>, where <code>f</code> is defined:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (f x)
   (<span class="kw">letrec</span> ((<span class="fu">even?</span> (<span class="kw">lambda</span> (n)
                     (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">#t</span> (<span class="fu">odd?</span> (<span class="fu">-</span> n <span class="cn">1</span>)))))
            (<span class="fu">odd?</span> (<span class="kw">lambda</span> (n)
                    (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">#f</span> (<span class="fu">even?</span> (<span class="fu">-</span> n <span class="cn">1</span>))))))
-    <span class="cn">&quot;rest of body of f&quot;</span>))</code></pre>
+    <span class="cn">&quot;rest of body of f&quot;</span>))</code></pre></li>
+</ol>
 <p>We have the following environment:</p>
 <pre><code class="blockcode"><span class="co">; global env [f: ...] &lt;-- E1 [x: 5] &lt;-- E2 [even?, odd?]</span>
 <span class="co">;                                       ^     |     |</span>
@@ -2468,8 +2464,7 @@ Imports:
 <a class="anchor__link link" href="#ex4.21" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.21">Exercise 4.21<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <ol type="a">
-<li>Check that it works, and devise an analogous expression for Fibonacci.</li>
-</ol>
+<li><p>Check that it works, and devise an analogous expression for Fibonacci.</p>
 <pre><code class="blockcode">((<span class="kw">lambda</span> (n)
    ((<span class="kw">lambda</span> (fact) (fact fact n))
     (<span class="kw">lambda</span> (ft k) (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">1</span>) <span class="cn">1</span> (<span class="fu">*</span> k (ft ft (<span class="fu">-</span> k <span class="cn">1</span>)))))))
@@ -2480,10 +2475,8 @@ Imports:
    ((<span class="kw">lambda</span> (fib) (fib fib n))
     (<span class="kw">lambda</span> (f k) (<span class="kw">if</span> (<span class="fu">&lt;=</span> k <span class="cn">1</span>) k (<span class="fu">+</span> (f f (<span class="fu">-</span> k <span class="cn">1</span>)) (f f (<span class="fu">-</span> k <span class="cn">2</span>)))))))
  <span class="cn">10</span>)
-<span class="op">=&gt;</span> <span class="cn">55</span></code></pre>
-<ol start="2" type="a">
-<li>Fill in the missing expressions for the even/odd mutual recursion.</li>
-</ol>
+<span class="op">=&gt;</span> <span class="cn">55</span></code></pre></li>
+<li><p>Fill in the missing expressions for the even/odd mutual recursion.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (f x)
   ((<span class="kw">lambda</span> (<span class="fu">even?</span> <span class="fu">odd?</span>) (<span class="fu">even?</span> <span class="fu">even?</span> <span class="fu">odd?</span> x))
    (<span class="kw">lambda</span> (ev? od? n)
@@ -2491,7 +2484,8 @@ Imports:
    (<span class="kw">lambda</span> (ev? od? n)
      (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">#f</span> (ev? ev? od? (<span class="fu">-</span> n <span class="cn">1</span>))))))
 
-(<span class="fu">map</span> f <span class="vs">&#39;(0 1 2 3 4 5)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(#t #f #t #f #t #f)</span></code></pre>
+(<span class="fu">map</span> f <span class="vs">&#39;(0 1 2 3 4 5)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(#t #f #t #f #t #f)</span></code></pre></li>
+</ol>
 <h2 id="4.1.7" class="anchor">
 <a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>

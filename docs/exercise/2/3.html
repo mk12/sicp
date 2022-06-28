@@ -361,8 +361,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.3.2>:2.3.2</a> deriv))</code></pre>
 <ol type="a">
-<li>Fully parenthesized infix form:</li>
-</ol>
+<li><p>Fully parenthesized infix form:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-sum a1 a2)
   (<span class="kw">cond</span> ((=number? a1 <span class="cn">0</span>) a2)
         ((=number? a2 <span class="cn">0</span>) a1)
@@ -386,10 +385,8 @@ Imports:
 (<span class="kw">define</span> multiplier <span class="fu">car</span>)
 (<span class="kw">define</span> multiplicand <span class="fu">caddr</span>)
 
-(deriv <span class="vs">&#39;(x + (3 * (x + (y + 2))))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
-<ol start="2" type="a">
-<li>Standard algebraic notation:</li>
-</ol>
+(deriv <span class="vs">&#39;(x + (3 * (x + (y + 2))))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre></li>
+<li><p>Standard algebraic notation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (has op expr)
   (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">memq</span> op expr)))
 
@@ -417,7 +414,8 @@ Imports:
 (<span class="kw">define</span> (multiplicand expr) (after <span class="vs">&#39;*</span> expr))
 
 (deriv <span class="vs">&#39;(x + 3 * (x + y + 2))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span>
-(deriv <span class="vs">&#39;(3 * (x + y * 2) + x + 1)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
+(deriv <span class="vs">&#39;(3 * (x + y * 2) + x + 1)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre></li>
+</ol>
 <h2 id="2.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -660,17 +658,15 @@ Imports:
 (<span class="kw">define</span> t2 <span class="vs">&#39;(3 (1 () ()) (7 (5 () ()) (9 () (11 () ()))))</span>)
 (<span class="kw">define</span> t3 <span class="vs">&#39;(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ())))</span>)</code></pre>
 <ol type="a">
-<li>Yes, the two procedures produce the same result for every tree. In particular, they produce the ordered list representation of the set. The first performs an in-order traversal and appends intermediate results (left to right), while the second performs a reverse in-order traversal and prepends elements to the result (right to left).</li>
-</ol>
+<li><p>Yes, the two procedures produce the same result for every tree. In particular, they produce the ordered list representation of the set. The first performs an in-order traversal and appends intermediate results (left to right), while the second performs a reverse in-order traversal and prepends elements to the result (right to left).</p>
 <pre><code class="blockcode">(tree-&gt;list-1 t1)
 <span class="op">=&gt;</span> (tree-&gt;list-2 t1)
 <span class="op">=&gt;</span> (tree-&gt;list-1 t2)
 <span class="op">=&gt;</span> (tree-&gt;list-2 t2)
 <span class="op">=&gt;</span> (tree-&gt;list-1 t3)
 <span class="op">=&gt;</span> (tree-&gt;list-2 t3)
-<span class="op">=&gt;</span> <span class="vs">&#39;(1 3 5 7 9 11)</span></code></pre>
-<ol start="2" type="a">
-<li>The first procedure does linear work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for a balanced tree. The second procedure does constant work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for any tree whether balanced or not. The second procedure is more efficient.</li>
+<span class="op">=&gt;</span> <span class="vs">&#39;(1 3 5 7 9 11)</span></code></pre></li>
+<li><p>The first procedure does linear work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for a balanced tree. The second procedure does constant work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> for any tree whether balanced or not. The second procedure is more efficient.</p></li>
 </ol>
 <h3 id="ex2.64" class="anchor">
 <a class="anchor__link link" href="#ex2.64" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.64">Exercise 2.64<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -711,11 +707,9 @@ Imports:
 (list-&gt;tree <span class="vs">&#39;(1 3 5 7 9 11)</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))</span></code></pre>
 <ol type="a">
-<li>The procedure <code>partial-tree</code> works by partitioning the first <code>n</code> elements of <code>elts</code> around a central element and recursively producing left and right subtrees. It uses truncated division to work when <code>n</code> is even or odd. It passes on the list of remaining elements to avoid re-traversing the list. Here is the tree it produces for the example:</li>
-</ol>
-<figure><svg class="diagram" viewBox="0 0 128 127" style="max-width:128px"><text x="55.143" y="13.714">5</text><path d="M54.857 18.286 36.571 54.857M64 18.286l18.286 36.571"/><text x="27.714" y="68.571">1</text><text x="82.571" y="68.571">9</text><path d="m36.571 73.143 13.715 27.428m32-27.428-13.715 27.428m22.858-27.428 13.714 27.428"/><text x="46" y="123.429">3</text><text x="64.286" y="123.429">7</text><text x="100.857" y="123.429">11</text></svg></figure>
-<ol start="2" type="a">
-<li>The procedure <code>list-&gt;tree</code> does constant work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">Θ(n)\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
+<li><p>The procedure <code>partial-tree</code> works by partitioning the first <code>n</code> elements of <code>elts</code> around a central element and recursively producing left and right subtrees. It uses truncated division to work when <code>n</code> is even or odd. It passes on the list of remaining elements to avoid re-traversing the list. Here is the tree it produces for the example:</p>
+<figure><svg class="diagram" viewBox="0 0 128 127" style="max-width:128px"><text x="55.143" y="13.714">5</text><path d="M54.857 18.286 36.571 54.857M64 18.286l18.286 36.571"/><text x="27.714" y="68.571">1</text><text x="82.571" y="68.571">9</text><path d="m36.571 73.143 13.715 27.428m32-27.428-13.715 27.428m22.858-27.428 13.714 27.428"/><text x="46" y="123.429">3</text><text x="64.286" y="123.429">7</text><text x="100.857" y="123.429">11</text></svg></figure></li>
+<li><p>The procedure <code>list-&gt;tree</code> does constant work at each node, so it grows as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">Θ(n)\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></p></li>
 </ol>
 <h3 id="ex2.65" class="anchor">
 <a class="anchor__link link" href="#ex2.65" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_thm_2.65">Exercise 2.65<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>

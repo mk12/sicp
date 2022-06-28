@@ -667,9 +667,9 @@ circumference ~> 62.8318
 ~> (p (p (p (p (p (sine 0.05)))))) ; five times until theta <= 0.1
 
 ;; (b) During the process, `p` is evaluated $k$ times such that $θ/3^k<0.1$.
-;; Solving for $k$ gives $k = \log10θ/\log3$, thus the number of steps for
-;; `sine` grows as $Θ(\log n)$. The interpreter must maintain the stack for that
-;; number of calls to `p`, therefore the space complexity is also $Θ(\log n)$.
+;;     Solving for $k$ gives $k = \log10θ/\log3$, thus the number of steps for
+;;     `sine` grows as $Θ(\log n)$. The interpreter must maintain the stack for
+;;     that number of calls to `p`, so the space complexity is also $Θ(\log n)$.
 
 (Section :1.2.4 "Exponentiation"
   (use (:1.1.4 square)))
@@ -1317,12 +1317,14 @@ circumference ~> 62.8318
   (iter a id))
 
 ;; (a) Sum of squares of primes in the interval from `a` to `b`:
+
 (define (sum-squared-primes a b)
   (filtered-accumulate + prime? 0 square a inc b))
 
 (sum-squared-primes 10 15) => 290
 
 ;; (b) Product of positive integers below `n` relatively prime to `n`:
+
 (define (product-rel-prime n)
   (define (rel-prime? i)
     (= (gcd i n) 1))

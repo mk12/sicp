@@ -829,7 +829,7 @@ one-through-four => '(1 2 3 4)
         (mobile-balanced? struct))))
 
 ;; (d) If `make-mobile` and `make-branch` use `cons` instead of `list`, all we
-;; need to do is change the `right-branch` and `branch-structure` selectors:
+;;     need to do is change the `right-branch` and `branch-structure` selectors:
 
 (define make-mobile cons)
 (define make-branch cons)
@@ -1469,14 +1469,14 @@ one-through-four => '(1 2 3 4)
          (make-segment (make-vect 1 0) (make-vect 1 1)))))
 
 ;; (b) The painter that draws an "X" by connecting opposite corners of the
-;; frame:
+;;     frame:
 (define x
   (segments->painter
    (list (make-segment (make-vect 0 0) (make-vect 1 1))
          (make-segment (make-vect 0 1) (make-vect 1 0)))))
 
 ;; (c) The painter that draws a diamond shape by connecting the midpoints of the
-;; sides of the frame:
+;;     sides of the frame:
 (define diamond
   (segments->painter
    (list (make-segment (make-vect 0.5 0.0) (make-vect 1.0 0.5))
@@ -1634,7 +1634,7 @@ one-through-four => '(1 2 3 4)
   (segments->painter (append wave-segments smile-segments)))
 
 ;; (b) I changed `corner-split` to use only one copy of the `up-split` and
-;; `right-split` images instead of two:
+;;     `right-split` images instead of two:
 (define (corner-split painter n)
   (if (= n 0)
       painter
@@ -2067,10 +2067,10 @@ one-through-four => '(1 2 3 4)
 (define t3 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
 
 ;; (a) Yes, the two procedures produce the same result for every tree. In
-;; particular, they produce the ordered list representation of the set. The
-;; first performs an in-order traversal and appends intermediate results (left
-;; to right), while the second performs a reverse in-order traversal and
-;; prepends elements to the result (right to left).
+;;     particular, they produce the ordered list representation of the set. The
+;;     first performs an in-order traversal and appends intermediate results
+;;     (left to right), while the second performs a reverse in-order traversal
+;;     and prepends elements to the result (right to left).
 
 (tree->list-1 t1)
 => (tree->list-2 t1)
@@ -2081,9 +2081,9 @@ one-through-four => '(1 2 3 4)
 => '(1 3 5 7 9 11)
 
 ;; (b) The first procedure does linear work at each node, so it grows as
-;; $Θ(n\log n)$ for a balanced tree. The second procedure does constant work at
-;; each node, so it grows as $Θ(n)$ for any tree whether balanced or not. The
-;; second procedure is more efficient.
+;;     $Θ(n\log n)$ for a balanced tree. The second procedure does constant work
+;;     at each node, so it grows as $Θ(n)$ for any tree whether balanced or not.
+;;     The second procedure is more efficient.
 
 (Exercise ?2.64
   (use (:2.3.3.3 make-tree)))
@@ -2110,23 +2110,23 @@ one-through-four => '(1 2 3 4)
 => '(5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
 
 ;; (a) The procedure `partial-tree` works by partitioning the first `n` elements
-;; of `elts` around a central element and recursively producing left and right
-;; subtrees. It uses truncated division to work when `n` is even or odd. It
-;; passes on the list of remaining elements to avoid re-traversing the list.
-;; Here is the tree it produces for the example:
+;;     of `elts` around a central element and recursively producing left and
+;;     right subtrees. It uses truncated division to work when `n` is even or
+;;     odd. It passes on the list of remaining elements to avoid re-traversing
+;;     the list. Here is the tree it produces for the example:
 ;;
-;; ```diagram
-;;       5
-;;      / \
-;;     /   \
-;;    1     9
-;;     \   / \
-;;      + +   +
-;;      3 7   11
-;; ```
+;;     ```diagram
+;;           5
+;;          / \
+;;         /   \
+;;        1     9
+;;         \   / \
+;;          + +   +
+;;          3 7   11
+;;     ```
 ;;
 ;; (b) The procedure `list->tree` does constant work at each node, so it grows
-;; as $Θ(n)$.
+;;     as $Θ(n)$.
 
 (Exercise ?2.65
   (use (:2.3.3.2 intersection-set) (?2.62 union-set) (?2.63 tree->list-2)
@@ -2654,11 +2654,12 @@ z2 => (make-from-mag-ang 30 3)
 (define operands cdr)
 
 ;; (a) We rewrote `deriv` to dispatch based on the operator of the expression.
-;; However, it still uses explicit case analysis for numbers and variables. We
-;; can't assimilate those into the data-directed dispatch because they have
-;; nothing that can be used as a type tag. Scheme only provides predicates like
-;; `number?`, not a procedure like `(type expr)` that could return `'number`. We
-;; can write our own, but this just moves the case anaylsis somewhere else:
+;;     However, it still uses explicit case analysis for numbers and variables.
+;;     We can't assimilate those into the data-directed dispatch because they
+;;     have nothing that can be used as a type tag. Scheme only provides
+;;     predicates like `number?`, not a procedure like `(type expr)` that could
+;;     return `'number`. We can write our own, but this just moves the case
+;;     anaylsis somewhere else:
 
 (define (type expr)
   (cond ((number? expr) 'number)
@@ -2702,8 +2703,8 @@ z2 => (make-from-mag-ang 30 3)
   (put 'deriv '** deriv-power))
 
 ;; (d) If we wanted to index the procedures in the opposite way, we would simply
-;; need to swap the first two arguments to `put` in all the package installation
-;; procedures.
+;;     need to swap the first two arguments to `put` in all the package
+;;     installation procedures.
 
 ;; Let's test the new system:
 
@@ -2719,8 +2720,8 @@ z2 => (make-from-mag-ang 30 3)
        (:3.3.3.3 put)))
 
 ;; (a) Each division should tag their file with a symbol such as `'marketing`,
-;; and install an implementation of `get-record` that deals with their internal
-;; record structure.
+;;     and install an implementation of `get-record` that deals with their
+;;     internal record structure.
 
 (define (get-record file employee-name)
   (let* ((tag (type-tag file))
@@ -2729,8 +2730,9 @@ z2 => (make-from-mag-ang 30 3)
     (and record (attach-tag tag record))))
 
 ;; (b) Since our generic `get-record` reattaches the division tag to the
-;; returned record, there is no need for divisions to tag records or do anything
-;; special. They just need to install an implementation of `get-salary`.
+;;     returned record, there is no need for divisions to tag records or do
+;;     anything special. They just need to install an implementation of
+;;     `get-salary`.
 
 (define (get-salary record)
   (apply-specific 'get-salary (type-tag record) (contents record)))
@@ -2744,7 +2746,7 @@ z2 => (make-from-mag-ang 30 3)
           (find-employee-record employee-name (cdr files)))))
 
 ;; (d) When they take over a new company, they must tag its file and install
-;; implementations of `get-record` and `get-salary` for it.
+;;     implementations of `get-record` and `get-salary` for it.
 
 ;; Here is an example of a company with two divisions:
 
@@ -3091,8 +3093,8 @@ z2 => (make-from-mag-ang 30 3)
 (define (exp x y) (apply-generic 'exp x y))
 
 ;; (a) If we call `exp` with two complex numbers, it will enter an infinite
-;; recursion because it will keep trying to unnecessarily coerce the first
-;; argument to the type of the second.
+;;     recursion because it will keep trying to unnecessarily coerce the first
+;;     argument to the type of the second.
 
 (using complex-pkg identity-pkg exp-pkg)
 
@@ -3100,8 +3102,8 @@ z2 => (make-from-mag-ang 30 3)
 (exp z z) =>...
 
 ;; (b) Louis is wrong: nothing needs to be done about coercion with arguments of
-;; the same type. As long as we don't install any self-coercions as tried above,
-;; `apply-generic` will fail to find a coercion and correctly report an error.
+;;     the same type. As long as we don't install any self-coercions as tried
+;;     above, `apply-generic` will fail to find a coercion and report an error.
 
 ;; (c) This implementation doesn't coerce two arguments of the same type:
 

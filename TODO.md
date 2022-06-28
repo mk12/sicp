@@ -11,7 +11,13 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
-- assertion for never terminating
++ nest diagrams etc in li?
+    x impossible to do for code because you don't know if following code is part of the last one e.g. (c) or just tests
+    + yes, it is possible!
+    + also indent in code so it lines up flush (and clearer that you need to indent after a code block to remain in the (a) part of whatever)
++ space between (a), (b) like paragraph breaks
+    + just ol[type="a"] since we have 1, 2, 3 steps which should not have space
++ assertion for never terminating
 + subsubsections (x.y.z.w) in code
     + should be real, i.e. `make lint` ensures they are present in text.md
     + but no need to put all of them. e.g. text 1.1.5 has "Applicative order versus normal order", but exercise 1.1.5 just makes these sentences with a colon at the end since adding 1.1.5.{1,2} would just clutter things and require duplicating the imports

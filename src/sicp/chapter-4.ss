@@ -259,10 +259,10 @@
        (:4.1.3.3 lookup-variable-value make-environment)))
 
 ;; (a) Lous is wrong -- moving the clause for procedure applications further up
-;; will break evaluation. For example, it will treat `(define x 3)` as an
-;; application of the operator `define` to the operands `x` and `3`. This is
-;; because `application?` is implemented simply as `pair?`. We assume a pair is
-;; an application after ruling out all the special forms.
+;;     will break evaluation. For example, it will treat `(define x 3)` as an
+;;     application of the operator `define` to the operands `x` and `3`. This is
+;;     because `application?` is implemented simply as `pair?`. We assume a pair
+;;     is an application after ruling out all the special forms.
 
 ;; (b) We can change the syntax so that applications start with `call`:
 
@@ -1674,14 +1674,15 @@
     (p (set! x (cons x '(2))))))
 
 ;; (a) Ben is right about the behavior of `for-each` in his example. Evaluating
-;; `(proc (car items))` is sufficient to enact the side effects in `proc`. There
-;; is no need to force a returned thunk because it does not return anything.
+;;     `(proc (car items))` is sufficient to enact the side effects in `proc`.
+;;     There is no need to force a returned thunk because it does not return
+;;     anything.
 
 (using eval-pkg lazy-eval-pkg)
 (actual-value '(bens-example) env) =$> ["57" "321" "88"]
 
 ;; (b) With the original `eval-sequence`, `(p2 1)` has an unexpected result.
-;; With Cy's proposed change, `p2` behaves the same as `p1`.
+;;     With Cy's proposed change, `p2` behaves the same as `p1`.
 
 (using eval-pkg lazy-eval-pkg)
 (actual-value '(p1 1) env) => '(1 2)
@@ -1692,15 +1693,16 @@
 (actual-value '(p2 1) env) => '(1 2)
 
 ;; (c) Cy is write: his proposed `eval-sequence` does not affect part (a). All
-;; it does is force the return value of `display` and `newline`. These are void,
-;; not thunks, so forcing is a no-op.
+;;     it does is force the return value of `display` and `newline`. These are
+;;     void, not thunks, so forcing is a no-op.
 
 (using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
 (actual-value '(bens-example) env) =$> ["57" "321" "88"]
 
 ;; (d) I prefer Cy's approach because otherwise `begin` blocks, or procedures
-;; with multiple expressions in the body, are useless with the lazy evaluator.
-;; This does not totally solve the side-effects confusion, but it helps.
+;;     with multiple expressions in the body, are useless with the lazy
+;;     evaluator. This does not totally solve the side-effects confusion, but it
+;;     helps.
 
 (Exercise ?4.31
   (use (:2.4.3 using) (:3.3.3.3 put)

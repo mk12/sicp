@@ -766,27 +766,21 @@ Imports:
     (<span class="kw">define</span> (p e) e x)
     (p (<span class="kw">set!</span> x (<span class="fu">cons</span> x <span class="vs">&#39;(2)</span>)))))</code></pre>
 <ol type="a">
-<li>Ben is right about the behavior of <code>for-each</code> in his example. Evaluating <code>(proc (<span class="fu">car</span> items))</code> is sufficient to enact the side effects in <code>proc</code>. There is no need to force a returned thunk because it does not return anything.</li>
-</ol>
+<li><p>Ben is right about the behavior of <code>for-each</code> in his example. Evaluating <code>(proc (<span class="fu">car</span> items))</code> is sufficient to enact the side effects in <code>proc</code>. There is no need to force a returned thunk because it does not return anything.</p>
 <pre><code class="blockcode">(using eval-pkg lazy-eval-pkg)
-(actual-value <span class="vs">&#39;(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">&quot;57&quot;</span> <span class="cn">&quot;321&quot;</span> <span class="cn">&quot;88&quot;</span>]</code></pre>
-<ol start="2" type="a">
-<li>With the original <code>eval-sequence</code>, <code>(p2 <span class="cn">1</span>)</code> has an unexpected result. With Cy’s proposed change, <code>p2</code> behaves the same as <code>p1</code>.</li>
-</ol>
+(actual-value <span class="vs">&#39;(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">&quot;57&quot;</span> <span class="cn">&quot;321&quot;</span> <span class="cn">&quot;88&quot;</span>]</code></pre></li>
+<li><p>With the original <code>eval-sequence</code>, <code>(p2 <span class="cn">1</span>)</code> has an unexpected result. With Cy’s proposed change, <code>p2</code> behaves the same as <code>p1</code>.</p>
 <pre><code class="blockcode">(using eval-pkg lazy-eval-pkg)
 (actual-value <span class="vs">&#39;(p1 1)</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span>
 (actual-value <span class="vs">&#39;(p2 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 
 (using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
 (actual-value <span class="vs">&#39;(p1 1)</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span>
-(actual-value <span class="vs">&#39;(p2 1)</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span></code></pre>
-<ol start="3" type="a">
-<li>Cy is write: his proposed <code>eval-sequence</code> does not affect part (a). All it does is force the return value of <code>display</code> and <code>newline</code>. These are void, not thunks, so forcing is a no-op.</li>
-</ol>
+(actual-value <span class="vs">&#39;(p2 1)</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span></code></pre></li>
+<li><p>Cy is write: his proposed <code>eval-sequence</code> does not affect part (a). All it does is force the return value of <code>display</code> and <code>newline</code>. These are void, not thunks, so forcing is a no-op.</p>
 <pre><code class="blockcode">(using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
-(actual-value <span class="vs">&#39;(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">&quot;57&quot;</span> <span class="cn">&quot;321&quot;</span> <span class="cn">&quot;88&quot;</span>]</code></pre>
-<ol start="4" type="a">
-<li>I prefer Cy’s approach because otherwise <code>begin</code> blocks, or procedures with multiple expressions in the body, are useless with the lazy evaluator. This does not totally solve the side-effects confusion, but it helps.</li>
+(actual-value <span class="vs">&#39;(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">&quot;57&quot;</span> <span class="cn">&quot;321&quot;</span> <span class="cn">&quot;88&quot;</span>]</code></pre></li>
+<li><p>I prefer Cy’s approach because otherwise <code>begin</code> blocks, or procedures with multiple expressions in the body, are useless with the lazy evaluator. This does not totally solve the side-effects confusion, but it helps.</p></li>
 </ol>
 <h3 id="ex4.31" class="anchor">
 <a class="anchor__link link" href="#ex4.31" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-27.html#%25_thm_4.31">Exercise 4.31<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>

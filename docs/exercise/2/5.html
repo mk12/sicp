@@ -701,16 +701,13 @@ Imports:
 
 (<span class="kw">define</span> (exp x y) (apply-generic <span class="vs">&#39;exp</span> x y))</code></pre>
 <ol type="a">
-<li>If we call <code>exp</code> with two complex numbers, it will enter an infinite recursion because it will keep trying to unnecessarily coerce the first argument to the type of the second.</li>
-</ol>
+<li><p>If we call <code>exp</code> with two complex numbers, it will enter an infinite recursion because it will keep trying to unnecessarily coerce the first argument to the type of the second.</p>
 <pre><code class="blockcode">(using complex-pkg identity-pkg exp-pkg)
 
 (<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">0</span>))
-(exp z z) <span class="er">=&gt;...</span></code></pre>
-<ol start="2" type="a">
-<li><p>Louis is wrong: nothing needs to be done about coercion with arguments of the same type. As long as we don’t install any self-coercions as tried above, <code>apply-generic</code> will fail to find a coercion and correctly report an error.</p></li>
-<li><p>This implementation doesn’t coerce two arguments of the same type:</p></li>
-</ol>
+(exp z z) <span class="er">=&gt;...</span></code></pre></li>
+<li><p>Louis is wrong: nothing needs to be done about coercion with arguments of the same type. As long as we don’t install any self-coercions as tried above, <code>apply-generic</code> will fail to find a coercion and report an error.</p></li>
+<li><p>This implementation doesn’t coerce two arguments of the same type:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (new-apply-generic op . args)
   (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
          (proc (get op type-tags)))
@@ -734,7 +731,8 @@ Imports:
 
 (<span class="kw">define</span> (exp x y) (new-apply-generic <span class="vs">&#39;exp</span> x y))
 
-(exp z z) <span class="er">=!&gt;</span> <span class="cn">&quot;no method for types&quot;</span></code></pre>
+(exp z z) <span class="er">=!&gt;</span> <span class="cn">&quot;no method for types&quot;</span></code></pre></li>
+</ol>
 <h3 id="ex2.82" class="anchor">
 <a class="anchor__link link" href="#ex2.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2996,8 +2994,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#ex2.94>?2.94</a> greatest-common-divisor-pkg))</code></pre>
 <ol type="a">
-<li>GCD with integer coefficients</li>
-</ol>
+<li><p>GCD with integer coefficients</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (pseudoremainder-terms l1 l2)
   (<span class="kw">let*</span> ((o1 (order (first-term l1)))
          (o2 (order (first-term l2)))
@@ -3017,10 +3014,8 @@ Imports:
 
 (greatest-common-divisor q1 q2)
 <span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((2 1458) (1 -2916) (0 1458))</span>)
-<span class="op">=&gt;</span> (mul p1 (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((0 1458))</span>))</code></pre>
-<ol start="2" type="a">
-<li>GCD with reduced integer coefficients</li>
-</ol>
+<span class="op">=&gt;</span> (mul p1 (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((0 1458))</span>))</code></pre></li>
+<li><p>GCD with reduced integer coefficients</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (termlist-coeffs tl)
   (<span class="kw">if</span> (empty-termlist? tl)
       <span class="vs">&#39;()</span>
@@ -3039,7 +3034,8 @@ Imports:
 
 (greatest-common-divisor q1 q2)
 <span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((2 1) (1 -2) (0 1))</span>)
-<span class="op">=&gt;</span> p1</code></pre>
+<span class="op">=&gt;</span> p1</code></pre></li>
+</ol>
 <h3 id="ex2.97" class="anchor">
 <a class="anchor__link link" href="#ex2.97" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.97">Exercise 2.97<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -3203,8 +3199,7 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>Reduce a rational function to lowest terms</li>
-</ol>
+<li><p>Reduce a rational function to lowest terms</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (termlist-order tl) (order (first-term tl)))
 (<span class="kw">define</span> (quotient-terms l1 l2) (<span class="fu">car</span> (div-terms l1 l2)))
 
@@ -3232,10 +3227,8 @@ Imports:
             (reduced (reduce-terms (term-list n) (term-list d))))
         (<span class="fu">list</span> (make-polynomial var (<span class="fu">car</span> reduced))
               (make-polynomial var (<span class="fu">cadr</span> reduced))))
-      (<span class="fu">error</span> <span class="vs">&#39;reduce-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> n d)))</code></pre>
-<ol start="2" type="a">
-<li>Generic reducing operation</li>
-</ol>
+      (<span class="fu">error</span> <span class="vs">&#39;reduce-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> n d)))</code></pre></li>
+<li><p>Generic reducing operation</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (reduce-integers n d)
   (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
     (<span class="fu">list</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))
@@ -3268,7 +3261,8 @@ Imports:
 (add rf1 rf2)
 <span class="op">=&gt;</span> <span class="vs">&#39;(rational (polynomial x . ((3 1) (2 2) (1 3) (0 1)))</span>
 <span class="vs">              .</span>
-<span class="vs">              (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))</span></code></pre>
+<span class="vs">              (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))</span></code></pre></li>
+</ol>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

@@ -427,15 +427,12 @@ Imports:
 (<span class="kw">define</span> operator <span class="fu">car</span>)
 (<span class="kw">define</span> operands <span class="fu">cdr</span>)</code></pre>
 <ol type="a">
-<li>We rewrote <code>deriv</code> to dispatch based on the operator of the expression. However, it still uses explicit case analysis for numbers and variables. We can’t assimilate those into the data-directed dispatch because they have nothing that can be used as a type tag. Scheme only provides predicates like <code>number?</code>, not a procedure like <code>(type expr)</code> that could return <code>'number</code>. We can write our own, but this just moves the case anaylsis somewhere else:</li>
-</ol>
+<li><p>We rewrote <code>deriv</code> to dispatch based on the operator of the expression. However, it still uses explicit case analysis for numbers and variables. We can’t assimilate those into the data-directed dispatch because they have nothing that can be used as a type tag. Scheme only provides predicates like <code>number?</code>, not a procedure like <code>(type expr)</code> that could return <code>'number</code>. We can write our own, but this just moves the case anaylsis somewhere else:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (type expr)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="vs">&#39;number</span>)
         ((variable? expr) <span class="vs">&#39;variable</span>)
-        (<span class="kw">else</span> (operator expr))))</code></pre>
-<ol start="2" type="a">
-<li>Packages for sum and product differentiation:</li>
-</ol>
+        (<span class="kw">else</span> (operator expr))))</code></pre></li>
+<li><p>Packages for sum and product differentiation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (sum-pkg)
   (<span class="kw">define</span> (deriv-sum terms var)
     (accumulate make-sum <span class="cn">0</span> (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (deriv t var)) terms)))
@@ -452,10 +449,8 @@ Imports:
                             (deriv (multiplicand product) var))
               (make-product (deriv (multiplier product) var)
                             (multiplicand product))))
-  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;*</span> deriv-product))</code></pre>
-<ol start="3" type="a">
-<li>Package for power differentiation:</li>
-</ol>
+  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;*</span> deriv-product))</code></pre></li>
+<li><p>Package for power differentiation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (power-pkg)
   <span class="co">;; Note: We can&#39;t reuse these procedures from Exercise 2.56 because those ones</span>
   <span class="co">;; assume the list includes the operator.</span>
@@ -468,9 +463,8 @@ Imports:
                     (base power)
                     (make-sum (exponent power) <span class="cn">-1</span>)))
      (deriv (base power) var)))
-  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;**</span> deriv-power))</code></pre>
-<ol start="4" type="a">
-<li>If we wanted to index the procedures in the opposite way, we would simply need to swap the first two arguments to <code>put</code> in all the package installation procedures.</li>
+  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;**</span> deriv-power))</code></pre></li>
+<li><p>If we wanted to index the procedures in the opposite way, we would simply need to swap the first two arguments to <code>put</code> in all the package installation procedures.</p></li>
 </ol>
 <p>Let’s test the new system:</p>
 <pre><code class="blockcode">(using sum-pkg product-pkg power-pkg)
@@ -523,28 +517,22 @@ Imports:
 </ul>
 </aside>
 <ol type="a">
-<li>Each division should tag their file with a symbol such as <code>'marketing</code>, and install an implementation of <code>get-record</code> that deals with their internal record structure.</li>
-</ol>
+<li><p>Each division should tag their file with a symbol such as <code>'marketing</code>, and install an implementation of <code>get-record</code> that deals with their internal record structure.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (get-record file employee-name)
   (<span class="kw">let*</span> ((tag (type-tag file))
          (record
           (apply-specific <span class="vs">&#39;get-record</span> tag (contents file) employee-name)))
-    (<span class="kw">and</span> record (attach-tag tag record))))</code></pre>
-<ol start="2" type="a">
-<li>Since our generic <code>get-record</code> reattaches the division tag to the returned record, there is no need for divisions to tag records or do anything special. They just need to install an implementation of <code>get-salary</code>.</li>
-</ol>
+    (<span class="kw">and</span> record (attach-tag tag record))))</code></pre></li>
+<li><p>Since our generic <code>get-record</code> reattaches the division tag to the returned record, there is no need for divisions to tag records or do anything special. They just need to install an implementation of <code>get-salary</code>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (get-salary record)
-  (apply-specific <span class="vs">&#39;get-salary</span> (type-tag record) (contents record)))</code></pre>
-<ol start="3" type="a">
-<li>Procedure to find an employee’s record across all files:</li>
-</ol>
+  (apply-specific <span class="vs">&#39;get-salary</span> (type-tag record) (contents record)))</code></pre></li>
+<li><p>Procedure to find an employee’s record across all files:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (find-employee-record employee-name files)
   (<span class="kw">if</span> (<span class="fu">null?</span> files)
       <span class="cn">#f</span>
       (<span class="kw">or</span> (get-record (<span class="fu">car</span> files) employee-name)
-          (find-employee-record employee-name (<span class="fu">cdr</span> files)))))</code></pre>
-<ol start="4" type="a">
-<li>When they take over a new company, they must tag its file and install implementations of <code>get-record</code> and <code>get-salary</code> for it.</li>
+          (find-employee-record employee-name (<span class="fu">cdr</span> files)))))</code></pre></li>
+<li><p>When they take over a new company, they must tag its file and install implementations of <code>get-record</code> and <code>get-salary</code> for it.</p></li>
 </ol>
 <p>Here is an example of a company with two divisions:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> files
