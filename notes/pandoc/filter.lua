@@ -297,15 +297,24 @@ function internal_target(sigil, num)
     return exercise_target(tonumber(chap), tonumber(ex))
 end
 
--- Converts links like [](:1.2.3), [](1a), and [](?1.23) -- textbook sections,
--- lectures, and exercises respectively. If the link content [] is empty, sets
--- it automatically to § 1.2.3, Lecture 1A, Exercise 1.23, etc.
+-- Converts links like [](@1.2.3), [](@1a), [](:1.2.3), and [](?1.23) --
+-- textbook notes, lecture notes, exercise sections, and exercise problems
+-- respectively. If the link content [] is empty, sets it automatically to
+-- § 1.2.3, Lecture 1A, Exercise 1.23, etc.
 function link_cross_references(el)
     local sigil = el.target:sub(1, 1)
     local num = el.target:sub(2)
     local prefix
     local ident = num
     if sigil == "@" then
+        -- Special case: for a footnote, link directly to the textbook like
+        -- citations do, rather than to my textbook notes.
+        if num:find("%.fn%d+$") then
+            assert(#el.content > 0)
+            local info = citation_info(num)
+            el.target = info.href
+            return el
+        end
         local lecture = num:match("^(%d+[ab])")
         if lecture then
             prefix = "Lecture"

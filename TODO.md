@@ -11,6 +11,12 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
+- remove/change all "Note:"
++ in :2.5.3 link to footnote
+    x considered having @ always link to textbook like citation [@1a] and links [](@1a)
+    x then need different sigil for text/lecture notes, like "%"?
+    x no, should avoid links to textbook since I already autolink headings etc.
+    + just make [](@#.#.fn##) a special case to link to textbook
 + copyright year 2022
 + nest diagrams etc in li?
     x impossible to do for code because you don't know if following code is part of the last one e.g. (c) or just tests

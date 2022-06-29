@@ -1588,9 +1588,9 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>Note: We are following <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_303" title="SICP Chapter 2, Footnote 58">(Footnote&nbsp;2.58)</a> and using the generic arithmetic system from <a href="#ex2.78">Exercise&nbsp;2.78</a>, where Scheme numbers are not explicitly tagged.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (variable p) (<span class="fu">car</span> p))
-(<span class="kw">define</span> (term-list p) (<span class="fu">cdr</span> p))
+<p>We are following <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_303">Footnote 58</a> and using the generic arithmetic system from <a href="#ex2.78">Exercise&nbsp;2.78</a>, where Scheme numbers are not explicitly tagged.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> variable <span class="fu">car</span>)
+(<span class="kw">define</span> term-list <span class="fu">cdr</span>)
 
 (<span class="kw">define</span> (polynomial-pkg)
   (<span class="kw">define</span> (make-poly variable term-list) (<span class="fu">cons</span> variable term-list))
@@ -1666,8 +1666,8 @@ Imports:
 </li>
 </ul>
 </aside>
+<p>We have to use <code>apply-generic</code> below because importing <code>=zero?</code> from <a href="#ex2.87">Exercise&nbsp;2.87</a> would cause an import cycle.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
-  <span class="co">;; Can&#39;t use `=zero?` from Exercise 2.87 due to import cycle.</span>
   (<span class="kw">if</span> (apply-generic <span class="vs">&#39;=zero?</span> (coeff term))
       term-list
       (<span class="fu">cons</span> term term-list)))

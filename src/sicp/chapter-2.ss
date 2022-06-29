@@ -2543,7 +2543,7 @@ z2 => (make-from-mag-ang 30 3)
   (use (:1.1.4 square) (:2.4.2 attach-tag contents type-tag)
        (:3.3.3.3 get put reset)))
 
-;; Note: The textbook calls these procedures `install-rectangular-package` and
+;; The textbook calls these procedures `install-rectangular-package` and
 ;; `install-polar-package`. I shorten them to `rectangular-pkg` and `polar-pkg`
 ;; since there are many of these procedures and the long names tend to bloat
 ;; import lists.
@@ -3520,12 +3520,11 @@ z2 => (make-from-mag-ang 30 3)
                  rest-terms the-empty-termlist)
        (:3.3.3.3 put) (?2.78 add attach-tag mul)))
 
-;; Note: We are following [@2.5.fn58] and using the generic
-;; arithmetic system from [](?2.78), where Scheme numbers are not explicitly
-;; tagged.
+;; We are following [Footnote 58](@2.5.fn58) and using the generic arithmetic
+;; system from [](?2.78), where Scheme numbers are not explicitly tagged.
 
-(define (variable p) (car p))
-(define (term-list p) (cdr p))
+(define variable car)
+(define term-list cdr)
 
 (define (polynomial-pkg)
   (define (make-poly variable term-list) (cons variable term-list))
@@ -3579,8 +3578,9 @@ z2 => (make-from-mag-ang 30 3)
 (Section :2.5.3.2 "Representing term lists"
   (use (:2.4.3 apply-specific) (?2.78 apply-generic)))
 
+;; We have to use `apply-generic` below because importing `=zero?` from
+;; [](?2.87) would cause an import cycle.
 (define (adjoin-term term term-list)
-  ;; Can't use `=zero?` from Exercise 2.87 due to import cycle.
   (if (apply-generic '=zero? (coeff term))
       term-list
       (cons term term-list)))
