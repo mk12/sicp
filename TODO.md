@@ -11,6 +11,7 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
++ copyright year 2022
 + nest diagrams etc in li?
     x impossible to do for code because you don't know if following code is part of the last one e.g. (c) or just tests
     + yes, it is possible!
