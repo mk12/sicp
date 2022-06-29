@@ -3376,36 +3376,32 @@ z2 => (make-from-mag-ang 30 3)
                make-from-real-imag real-part using)
        (:2.5.1 make-complex-from-mag-ang make-complex-from-real-imag
                make-rational rational-pkg)
-       (:3.3.3.3 put) (?2.79 equ-pkg equ?)
-       (?2.83 integer-pkg make-integer make-real raise-pkg real-pkg)
+       (:3.3.3.3 put) (?2.79 equ-pkg)
+       (?2.83 integer-pkg make-integer make-real raise raise-pkg real-pkg)
        (?2.85 add apply-generic div mul project-pkg sub)))
 
-;; This has to be built on top of the numeric tower, rather than just the types
-;; from [](:2.5.1) (`'scheme-number`, `'rational`, `'complex`), because we need
-;; coercions between all the types. For example, internally complex numbers will
-;; take sines, cosines, square roots, etc. of their components, so if they are
-;; integers, they will need to be promoted to real numbers, and then be combined
-;; in other operations potentially using different data types.
+;; To support complex numbers whose components are themselves tagged data
+;; objects, we must rewrite all the complex number operations using generic
+;; procedures like `add` instead of specific procedures like `+`. Before we can
+;; do that, we need generic procedures for squares, square roots, and
+;; trigonometric functions. Thanks to the automatic coercion in [](?2.85)'s
+;; `apply-generic`, we only need to define them for `'real`.
 
 (define (square x) (mul x x))
 
-(define (trig-pkg)
+(define (sqrt-trig-pkg)
   (define (tag x) (attach-tag 'real x))
-  (define (id x) x)
-  (define (divide-rat x) (/ (numer x) (denom x)))
-  (for-each
-   (lambda (type f)
-     (put 'square-root (list type) (lambda (x) (tag (sqrt (f x)))))
-     (put 'sine (list type) (lambda (x) (tag (sin (f x)))))
-     (put 'cosine (list type) (lambda (x) (tag (cos (f x)))))
-     (put 'atan2 (list type type) (lambda (x y) (tag (atan (f x) (f y))))))
-   '(integer real rational)
-   (list id id divide-rat)))
+  (put 'square-root '(real) (lambda (x) (tag (sqrt x))))
+  (put 'sine '(real) (lambda (x) (tag (sin x))))
+  (put 'cosine '(real) (lambda (x) (tag (cos x))))
+  (put 'atan2 '(real real) (lambda (y x) (tag (atan y x)))))
 
 (define (square-root x) (apply-generic 'square-root x))
 (define (sine x) (apply-generic 'sine x))
 (define (cosine x) (apply-generic 'cosine x))
 (define (atan2 x y) (apply-generic 'atan2 x y))
+
+;; Now we can rewrite the rectangular and polar packages:
 
 (define (rectangular-pkg)
   (define real-part car)
@@ -3449,53 +3445,48 @@ z2 => (make-from-mag-ang 30 3)
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a)))))
 
-(define (complex-pkg)
-  (define (tag z) (attach-tag 'complex z))
-  (define (add-complex z1 z2)
-    (make-from-real-imag (add (real-part z1) (real-part z2))
-                         (add (imag-part z1) (imag-part z2))))
-  (define (sub-complex z1 z2)
-    (make-from-real-imag (sub (real-part z1) (real-part z2))
-                         (sub (imag-part z1) (imag-part z2))))
-  (define (mul-complex z1 z2)
-    (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
-                       (add (angle z1) (angle z2))))
-  (define (div-complex z1 z2)
-    (make-from-mag-ang (div (magnitude z1) (magnitude z2))
-                       (sub (angle z1) (angle z2))))
-  (rectangular-pkg)
-  (polar-pkg)
-  (put 'add '(complex complex) (lambda (z1 z2) (tag (add-complex z1 z2))))
-  (put 'sub '(complex complex) (lambda (z1 z2) (tag (sub-complex z1 z2))))
-  (put 'mul '(complex complex) (lambda (z1 z2) (tag (mul-complex z1 z2))))
-  (put 'div '(complex complex) (lambda (z1 z2) (tag (div-complex z1 z2))))
-  (put 'make-from-real-imag 'complex
-       (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-mag-ang 'complex
-       (lambda (r a) (tag (make-from-mag-ang r a)))))
+;; Next, we will rewrite the complex package:
 
-;; Note: The implementation of `drop` will still use the old implementation of
-;; `equ?`, which uses an older `apply-generic` without coercion.
-(define (equ-generic? x y) (apply-generic 'equ? x y))
+(define (add-complex z1 z2)
+  (make-from-real-imag (add (real-part z1) (real-part z2))
+                       (add (imag-part z1) (imag-part z2))))
+(define (sub-complex z1 z2)
+  (make-from-real-imag (sub (real-part z1) (real-part z2))
+                       (sub (imag-part z1) (imag-part z2))))
+(define (mul-complex z1 z2)
+  (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
+                     (add (angle z1) (angle z2))))
+(define (div-complex z1 z2)
+  (make-from-mag-ang (div (magnitude z1) (magnitude z2))
+                     (sub (angle z1) (angle z2))))
 
-;; Fix complex procedures that previously assumed the complex number's real part
-;; and imaginary part were plain Scheme numbers.
+(paste (:2.5.1 complex-pkg))
+
+;; Finally, we need to fix some procedures in other packages that assumed a
+;; complex number's real part and imaginary part were plain Scheme numbers.
+;; Fixing `equ?` is tricky because the `equ?` from [](?2.79) used the old
+;; `apply-generic` without coercion. That was fine since we only use it in
+;; `drop` on `x` and `(raise (project x))`, which must be the same type. But
+;; now, if they are complex numbers, their component types might be different.
+;; So in the new `'complex` implementation of `equ?`, we need to recursively
+;; invoke a version of `equ?` that supports coercion.
 (define (complex-patch-pkg)
+  (define (equ-with-coercion? x y) (apply-generic 'equ? x y))
   (put 'equ? '(complex complex)
        (lambda (z1 z2)
-         (and (equ-generic? (real-part z1) (real-part z2))
-              (equ-generic? (imag-part z1) (imag-part z2)))))
+         (and (equ-with-coercion? (real-part z1) (real-part z2))
+              (equ-with-coercion? (imag-part z1) (imag-part z2)))))
   (put 'raise '(real)
        (lambda (x) (make-complex-from-real-imag (make-real x) (make-real 0))))
   (put 'project '(complex)
        (lambda (x)
-         (let* ((rp (real-part x))
-                (type (type-tag rp))
-                (value (contents rp)))
-           (case type
-             ((real) rp)
-             ((rational) (make-real (inexact (/ (numer value) (denom value)))))
-             ((integer) (make-real value)))))))
+         (let ((r (real-part x)))
+           (case (type-tag r)
+             ((real) r)
+             ((rational) (raise r))
+             ((integer) (raise (raise r))))))))
+
+;; Putting it all together:
 
 (define (final-numeric-pkg)
   (integer-pkg)
@@ -3503,7 +3494,7 @@ z2 => (make-from-mag-ang 30 3)
   (real-pkg)
   (complex-pkg)
   ;; Used by the new complex package.
-  (trig-pkg)
+  (sqrt-trig-pkg)
   ;; Used by numeric tower coercion and simplifying.
   (equ-pkg)
   (raise-pkg)
@@ -3529,8 +3520,9 @@ z2 => (make-from-mag-ang 30 3)
                  rest-terms the-empty-termlist)
        (:3.3.3.3 put) (?2.78 add attach-tag mul)))
 
-;; Note: We are following Footnote 58 and using the generic arithmetic system
-;; from Exercise 2.78, where Scheme numbers are not explicitly tagged.
+;; Note: We are following [@2.5.fn58] and using the generic
+;; arithmetic system from [](?2.78), where Scheme numbers are not explicitly
+;; tagged.
 
 (define (variable p) (car p))
 (define (term-list p) (cdr p))

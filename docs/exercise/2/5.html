@@ -1353,10 +1353,7 @@ Imports:
 <a href="#ex2.79">Ex 2.79</a>
 <ul class="flat">
 <li class="flat__item nowrap">
-<code>equ-pkg</code>
-</li>
-<li class="flat__item nowrap">
-<code>equ?</code>,
+<code>equ-pkg</code>,
 </li>
 </ul>
 </li>
@@ -1371,6 +1368,9 @@ Imports:
 </li>
 <li class="flat__item nowrap">
 <code>make-real</code>
+</li>
+<li class="flat__item nowrap">
+<code>raise</code>
 </li>
 <li class="flat__item nowrap">
 <code>raise-pkg</code>
@@ -1405,28 +1405,22 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>This has to be built on top of the numeric tower, rather than just the types from <a href="#2.5.1">§&nbsp;2.5.1</a> (<code>'scheme-number</code>, <code>'rational</code>, <code>'complex</code>), because we need coercions between all the types. For example, internally complex numbers will take sines, cosines, square roots, etc. of their components, so if they are integers, they will need to be promoted to real numbers, and then be combined in other operations potentially using different data types.</p>
+<p>To support complex numbers whose components are themselves tagged data objects, we must rewrite all the complex number operations using generic procedures like <code>add</code> instead of specific procedures like <code>+</code>. Before we can do that, we need generic procedures for squares, square roots, and trigonometric functions. Thanks to the automatic coercion in <a href="#ex2.85">Exercise&nbsp;2.85</a>’s <code>apply-generic</code>, we only need to define them for <code>'real</code>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (mul x x))
 
-(<span class="kw">define</span> (trig-pkg)
+(<span class="kw">define</span> (sqrt-trig-pkg)
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;real</span> x))
-  (<span class="kw">define</span> (id x) x)
-  (<span class="kw">define</span> (divide-rat x) (<span class="fu">/</span> (numer x) (denom x)))
-  (<span class="fu">for-each</span>
-   (<span class="kw">lambda</span> (type f)
-     (put <span class="vs">&#39;square-root</span> (<span class="fu">list</span> type) (<span class="kw">lambda</span> (x) (tag (<span class="fu">sqrt</span> (f x)))))
-     (put <span class="vs">&#39;sine</span> (<span class="fu">list</span> type) (<span class="kw">lambda</span> (x) (tag (<span class="fu">sin</span> (f x)))))
-     (put <span class="vs">&#39;cosine</span> (<span class="fu">list</span> type) (<span class="kw">lambda</span> (x) (tag (<span class="fu">cos</span> (f x)))))
-     (put <span class="vs">&#39;atan2</span> (<span class="fu">list</span> type type) (<span class="kw">lambda</span> (x y) (tag (<span class="fu">atan</span> (f x) (f y))))))
-   <span class="vs">&#39;(integer real rational)</span>
-   (<span class="fu">list</span> id id divide-rat)))
+  (put <span class="vs">&#39;square-root</span> <span class="vs">&#39;(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">sqrt</span> x))))
+  (put <span class="vs">&#39;sine</span> <span class="vs">&#39;(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">sin</span> x))))
+  (put <span class="vs">&#39;cosine</span> <span class="vs">&#39;(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">cos</span> x))))
+  (put <span class="vs">&#39;atan2</span> <span class="vs">&#39;(real real)</span> (<span class="kw">lambda</span> (y x) (tag (<span class="fu">atan</span> y x)))))
 
 (<span class="kw">define</span> (square-root x) (apply-generic <span class="vs">&#39;square-root</span> x))
 (<span class="kw">define</span> (sine x) (apply-generic <span class="vs">&#39;sine</span> x))
 (<span class="kw">define</span> (cosine x) (apply-generic <span class="vs">&#39;cosine</span> x))
-(<span class="kw">define</span> (atan2 x y) (apply-generic <span class="vs">&#39;atan2</span> x y))
-
-(<span class="kw">define</span> (rectangular-pkg)
+(<span class="kw">define</span> (atan2 x y) (apply-generic <span class="vs">&#39;atan2</span> x y))</code></pre>
+<p>Now we can rewrite the rectangular and polar packages:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (rectangular-pkg)
   (<span class="kw">define</span> real-part <span class="fu">car</span>)
   (<span class="kw">define</span> imag-part <span class="fu">cdr</span>)
   (<span class="kw">define</span> make-from-real-imag <span class="fu">cons</span>)
@@ -1466,59 +1460,46 @@ Imports:
   (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;polar</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
   (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span>
-       (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
-
-(<span class="kw">define</span> (complex-pkg)
-  (<span class="kw">define</span> (tag z) (attach-tag <span class="vs">&#39;complex</span> z))
-  (<span class="kw">define</span> (add-complex z1 z2)
-    (make-from-real-imag (add (real-part z1) (real-part z2))
-                         (add (imag-part z1) (imag-part z2))))
-  (<span class="kw">define</span> (sub-complex z1 z2)
-    (make-from-real-imag (sub (real-part z1) (real-part z2))
-                         (sub (imag-part z1) (imag-part z2))))
-  (<span class="kw">define</span> (mul-complex z1 z2)
-    (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
-                       (add (angle z1) (angle z2))))
-  (<span class="kw">define</span> (div-complex z1 z2)
-    (make-from-mag-ang (div (magnitude z1) (magnitude z2))
-                       (sub (angle z1) (angle z2))))
-  (rectangular-pkg)
-  (polar-pkg)
-  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (add-complex z1 z2))))
-  (put <span class="vs">&#39;sub</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (sub-complex z1 z2))))
-  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
-  (put <span class="vs">&#39;div</span> <span class="vs">&#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
-  (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;complex</span>
-       (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;complex</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
-<p>Note: The implementation of <code>drop</code> will still use the old implementation of <code>equ?</code>, which uses an older <code>apply-generic</code> without coercion.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (equ-generic? x y) (apply-generic <span class="vs">&#39;equ?</span> x y))</code></pre>
-<p>Fix complex procedures that previously assumed the complex number’s real part and imaginary part were plain Scheme numbers.</p>
+<p>Next, we will rewrite the complex package:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (add-complex z1 z2)
+  (make-from-real-imag (add (real-part z1) (real-part z2))
+                       (add (imag-part z1) (imag-part z2))))
+(<span class="kw">define</span> (sub-complex z1 z2)
+  (make-from-real-imag (sub (real-part z1) (real-part z2))
+                       (sub (imag-part z1) (imag-part z2))))
+(<span class="kw">define</span> (mul-complex z1 z2)
+  (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
+                     (add (angle z1) (angle z2))))
+(<span class="kw">define</span> (div-complex z1 z2)
+  (make-from-mag-ang (div (magnitude z1) (magnitude z2))
+                     (sub (angle z1) (angle z2))))
+
+(<span class="kw">paste</span> (<a href=#2.5.1>:2.5.1</a> complex-pkg))</code></pre>
+<p>Finally, we need to fix some procedures in other packages that assumed a complex number’s real part and imaginary part were plain Scheme numbers. Fixing <code>equ?</code> is tricky because the <code>equ?</code> from <a href="#ex2.79">Exercise&nbsp;2.79</a> used the old <code>apply-generic</code> without coercion. That was fine since we only use it in <code>drop</code> on <code>x</code> and <code>(raise (project x))</code>, which must be the same type. But now, if they are complex numbers, their component types might be different. So in the new <code>'complex</code> implementation of <code>equ?</code>, we need to recursively invoke a version of <code>equ?</code> that supports coercion.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (complex-patch-pkg)
+  (<span class="kw">define</span> (equ-with-coercion? x y) (apply-generic <span class="vs">&#39;equ?</span> x y))
   (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(complex complex)</span>
        (<span class="kw">lambda</span> (z1 z2)
-         (<span class="kw">and</span> (equ-generic? (real-part z1) (real-part z2))
-              (equ-generic? (imag-part z1) (imag-part z2)))))
+         (<span class="kw">and</span> (equ-with-coercion? (real-part z1) (real-part z2))
+              (equ-with-coercion? (imag-part z1) (imag-part z2)))))
   (put <span class="vs">&#39;raise</span> <span class="vs">&#39;(real)</span>
        (<span class="kw">lambda</span> (x) (make-complex-from-real-imag (make-real x) (make-real <span class="cn">0</span>))))
   (put <span class="vs">&#39;project</span> <span class="vs">&#39;(complex)</span>
        (<span class="kw">lambda</span> (x)
-         (<span class="kw">let*</span> ((rp (real-part x))
-                (type (type-tag rp))
-                (value (contents rp)))
-           (<span class="kw">case</span> type
-             ((real) rp)
-             ((rational) (make-real (<span class="fu">inexact</span> (<span class="fu">/</span> (numer value) (denom value)))))
-             ((integer) (make-real value)))))))
-
-(<span class="kw">define</span> (final-numeric-pkg)
+         (<span class="kw">let</span> ((r (real-part x)))
+           (<span class="kw">case</span> (type-tag r)
+             ((real) r)
+             ((rational) (raise r))
+             ((integer) (raise (raise r))))))))</code></pre>
+<p>Putting it all together:</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (final-numeric-pkg)
   (integer-pkg)
   (rational-pkg)
   (real-pkg)
   (complex-pkg)
   <span class="co">;; Used by the new complex package.</span>
-  (trig-pkg)
+  (sqrt-trig-pkg)
   <span class="co">;; Used by numeric tower coercion and simplifying.</span>
   (equ-pkg)
   (raise-pkg)
@@ -1607,7 +1588,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>Note: We are following Footnote 58 and using the generic arithmetic system from Exercise 2.78, where Scheme numbers are not explicitly tagged.</p>
+<p>Note: We are following <a class="citation" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_303" title="SICP Chapter 2, Footnote 58">(Footnote&nbsp;2.58)</a> and using the generic arithmetic system from <a href="#ex2.78">Exercise&nbsp;2.78</a>, where Scheme numbers are not explicitly tagged.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (variable p) (<span class="fu">car</span> p))
 (<span class="kw">define</span> (term-list p) (<span class="fu">cdr</span> p))
 
