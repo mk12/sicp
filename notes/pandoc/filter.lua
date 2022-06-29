@@ -309,10 +309,12 @@ function link_cross_references(el)
     if sigil == "@" then
         -- Special case: for a footnote, link directly to the textbook like
         -- citations do, rather than to my textbook notes.
-        if num:find("%.fn%d+$") then
-            assert(#el.content > 0)
+        local footnote = num:match("%.fn(%d+)$")
+        if footnote then
+            assert(#el.content == 0)
             local info = citation_info(num)
             el.target = info.href
+            el.content = {pandoc.RawInline("html", "Footnote&nbsp;" .. footnote)}
             return el
         end
         local lecture = num:match("^(%d+[ab])")

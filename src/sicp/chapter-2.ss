@@ -3520,8 +3520,8 @@ z2 => (make-from-mag-ang 30 3)
                  rest-terms the-empty-termlist)
        (:3.3.3.3 put) (?2.78 add attach-tag mul)))
 
-;; We are following [Footnote 58](@2.5.fn58) and using the generic arithmetic
-;; system from [](?2.78), where Scheme numbers are not explicitly tagged.
+;; We are following [](@2.5.fn58) and using the generic arithmetic system from
+;; [](?2.78), where Scheme numbers are not explicitly tagged.
 
 (define variable car)
 (define term-list cdr)
@@ -3576,7 +3576,7 @@ z2 => (make-from-mag-ang 30 3)
                      (mul-term-by-all-terms t1 (rest-terms l))))))
 
 (Section :2.5.3.2 "Representing term lists"
-  (use (:2.4.3 apply-specific) (?2.78 apply-generic)))
+  (use (:2.4.3 apply-specific) (:3.3.3.3 put) (?2.78 apply-generic attach-tag)))
 
 ;; We have to use `apply-generic` below because importing `=zero?` from
 ;; [](?2.87) would cause an import cycle.
@@ -3596,6 +3596,19 @@ z2 => (make-from-mag-ang 30 3)
 
 (define (make-polynomial var terms)
   (apply-specific 'make 'polynomial var terms))
+
+;; This package is used in [](?2.90):
+(define (sparse-termlist-pkg)
+  (define (tag tl) (attach-tag 'sparse-termlist tl))
+  (put 'make 'sparse-termlist tag)
+  ;; Curried so that it only dispatches on the term list, not the term.
+  (put 'adjoin-term '(sparse-termlist)
+       (lambda (tl) (lambda (t) (tag (adjoin-term t tl)))))
+  (put 'the-empty-termlist 'sparse-termlist
+       (lambda () (tag (the-empty-termlist))))
+  (put 'first-term '(sparse-termlist) first-term)
+  (put 'rest-terms '(sparse-termlist) (lambda (tl) (tag (rest-terms tl))))
+  (put 'empty-termlist? '(sparse-termlist) empty-termlist?))
 
 (Exercise ?2.87
   (use (:2.4.3 using) (:2.5.3.1 polynomial-pkg term-list)
@@ -3660,19 +3673,30 @@ z2 => (make-from-mag-ang 30 3)
 (negate 1) => -1
 (sub 5 2) => 3
 
-(negate (make-polynomial 'x '((2 1)))) => (make-polynomial 'x '((2 -1)))
+(negate (make-polynomial 'x '((2 1))))
+=> (make-polynomial 'x '((2 -1)))
+
 (sub (make-polynomial 'x '((3 1) (1 2)))
      (make-polynomial 'x '((2 2) (1 1) (0 -1))))
 => (make-polynomial 'x '((3 1) (2 -2) (1 1) (0 1)))
 
 (Exercise ?2.89
-  (use (:2.5.3.2 coeff make-term order the-empty-termlist) (?2.87 =zero?)))
+  (use (:2.5.3.2 coeff empty-termlist? make-term order rest-terms
+                 the-empty-termlist)
+       (:3.3.3.3 put) (?2.78 attach-tag) (?2.87 =zero?)))
+
+;; As mentioned in [](@2.5.fn59), we are assuming that `adjoin-term` is always
+;; called with a higher-order term than appears in the list.
 
 (define (adjoin-term term term-list)
-  (cond ((=zero? (coeff term)) term-list)
-        ((= (order term) (length term-list))
-         (cons (coeff term) term-list))
-        (else (adjoin-term term (cons 0 term-list)))))
+  (let ((o (order term)))
+    (define (iter term-list len)
+      (cond ((< len o) (iter (cons 0 term-list) (+ len 1)))
+            ((= len o) (cons (coeff term) term-list))
+            (else (error 'adjoin-term "term list already has order" o))))
+    (if (=zero? (coeff term))
+        term-list
+        (iter term-list (length term-list)))))
 
 (define (first-term term-list)
   (make-term (- (length term-list) 1)
@@ -3681,88 +3705,81 @@ z2 => (make-from-mag-ang 30 3)
 (adjoin-term (make-term 3 1) (the-empty-termlist)) => '(1 0 0 0)
 (first-term '(1 0 0 0)) => (make-term 3 1)
 
-(Exercise ?2.90
-  (use (:2.2.3.1 accumulate) (:2.3.2 same-variable?)
-       (:2.4.3 apply-specific using) (:2.5.3.1 term-list variable)
-       (:2.5.3.2 coeff make-term order) (:3.3.3.3 put)
-       (?2.78 add apply-generic attach-tag mul scheme-number-pkg)
-       (?2.87 =zero?)))
+(adjoin-term (make-term 0 1) '(2)) =!> "term list already has order: 0"
 
-(define (sparse-termlist-pkg)
-  (define (the-empty-termlist) '())
-  (define empty-termlist? null?)
-  (define first-term car)
-  (define rest-terms cdr)
-  (define (adjoin-term term tl) (if (=zero? (coeff term)) tl (cons term tl)))
-  (define (tag tl) (attach-tag 'sparse-termlist tl))
-  (put 'make 'sparse-termlist (lambda (terms) (tag terms)))
-  (put 'the-empty-termlist 'sparse-termlist
-       (lambda () (tag (the-empty-termlist))))
-  (put 'empty-termlist? '(sparse-termlist) empty-termlist?)
-  (put 'first-term '(sparse-termlist) first-term)
-  (put 'rest-terms '(sparse-termlist) (lambda (tl) (tag (rest-terms tl))))
-  (put 'adjoin-term '(sparse-termlist)
-       (lambda (tl) (lambda (t) (tag (adjoin-term t tl))))))
-
+;; This package is used in [](?2.90):
 (define (dense-termlist-pkg)
-  (define (the-empty-termlist) '())
-  (define empty-termlist? null?)
-  (define (first-term tl) (make-term (- (length tl) 1) (car tl)))
-  (define rest-terms cdr)
-  (define zero-coeff (list 'scheme-number 0))
-  (define (adjoin-term term tl)
-    (cond ((=zero? (coeff term)) tl)
-          ((= (order term) (length tl))
-           (cons (coeff term) tl))
-          (else (adjoin-term term (cons zero-coeff tl)))))
   (define (tag tl) (attach-tag 'dense-termlist tl))
-  (put 'make 'dense-termlist (lambda (terms) (tag terms)))
+  (put 'make 'dense-termlist tag)
+  ;; Curried so that it only dispatches on the term list, not the term.
+  (put 'adjoin-term '(dense-termlist)
+       (lambda (tl) (lambda (t) (tag (adjoin-term t tl)))))
   (put 'the-empty-termlist 'dense-termlist
        (lambda () (tag (the-empty-termlist))))
-  (put 'empty-termlist? '(dense-termlist) empty-termlist?)
   (put 'first-term '(dense-termlist) first-term)
   (put 'rest-terms '(dense-termlist) (lambda (tl) (tag (rest-terms tl))))
-  (put 'adjoin-term '(dense-termlist)
-       (lambda (tl) (lambda (t) (tag (adjoin-term t tl))))))
+  (put 'empty-termlist? '(dense-termlist) empty-termlist?))
 
-(define (empty-sparse-termlist)
+(Exercise ?2.90
+  (use (:2.3.2 same-variable?) (:2.4.3 apply-specific using)
+       (:2.5.3.1 term-list variable)
+       (:2.5.3.2 coeff make-polynomial make-term order sparse-termlist-pkg)
+       (:3.3.3.3 put) (?2.78 add apply-generic attach-tag mul scheme-number-pkg)
+       (?2.87 =zero?) (?2.88 negate sub) (?2.89 dense-termlist-pkg)))
+
+;; To allow sparse and dense representations of polynomials to coexist, we must
+;; redefine the arithmetic operations using generic term list selectors:
+
+(define (the-empty-termlist)
   (apply-specific 'the-empty-termlist 'sparse-termlist))
-(define (empty-dense-termlist)
-  (apply-specific 'the-empty-termlist 'dense-termlist))
-(define the-empty-termlist empty-sparse-termlist)
 (define (empty-termlist? tl) (apply-generic 'empty-termlist? tl))
 (define (first-term tl) (apply-generic 'first-term tl))
 (define (rest-terms tl) (apply-generic 'rest-terms tl))
 (define (adjoin-term term tl) ((apply-generic 'adjoin-term tl) term))
 
-(define (make-polynomial var terms)
-  (define (flat? ls)
-    (or (null? ls)
-        (and (number? (car ls)) (flat? (cdr ls)))))
-  (let ((new-terms
-         (cond ((eq? terms 'sparse) (empty-sparse-termlist))
-               ((eq? terms 'dense) (empty-dense-termlist))
-               ((flat? terms) (apply-specific 'make 'dense-termlist terms))
-               (else (apply-specific 'make 'sparse-termlist terms)))))
-    (apply-specific 'make 'polynomial var new-terms)))
-
 (paste (:2.5.3.1 add-terms mul-term-by-all-terms mul-terms polynomial-pkg)
-       (?2.87 zero-pkg))
+       (?2.87 zero-pkg) (?2.88 negate-pkg negate-terms))
 
 (using sparse-termlist-pkg dense-termlist-pkg scheme-number-pkg polynomial-pkg
-       zero-pkg)
+       zero-pkg negate-pkg)
 
-;; It works with both sparse and dense representations.
-(add (make-polynomial 'x '(3 0 0 1)) (make-polynomial 'x '(0 3 3 2)))
-=> (make-polynomial 'x '(3 3 3 3))
-(mul (make-polynomial 'x '((2 1) (0 1))) (make-polynomial 'x '((1 2))))
-=> (make-polynomial 'x '((3 2) (1 2)))
+;; Let's define some polynomials using a helper that infers the representation:
 
-;; The first argument determines the representation of the result.
-(add (make-polynomial 'x '(1 2 3)) (make-polynomial 'x '((2 9))))
-=> (make-polynomial 'x '(10 2 3))
-(mul (make-polynomial 'x '((2 2))) (make-polynomial 'x '(1 0 0 0)))
-=> (make-polynomial 'x '((5 2)))
+(define (poly var terms)
+  (let ((type (if (or (null? terms) (pair? (car terms)))
+                  'sparse-termlist
+                  'dense-termlist)))
+    (apply-specific 'make 'polynomial var (apply-specific 'make type terms))))
+
+(define sparse-a (poly 'x '((3 3) (0 1))))
+(define dense-a (poly 'x '(3 0 0 1)))
+
+(define sparse-b (poly 'x '((2 3) (1 3) (0 2))))
+(define dense-b (poly 'x '(0 3 3 2)))
+
+(define sparse-a+b (poly 'x '((3 3) (2 3) (1 3) (0 3))))
+(define dense-a+b (poly 'x '(3 3 3 3)))
+
+(define sparse-a*b (poly 'x '((5 9) (4 9) (3 6) (2 3) (1 3) (0 2))))
+(define dense-a*b (poly 'x '(9 9 6 3 3 2)))
+
+;; Make sure the sparse and dense versions are equal:
+(=zero? (sub sparse-a dense-a)) => #t
+(=zero? (sub sparse-b dense-b)) => #t
+(=zero? (sub sparse-a+b dense-a+b)) => #t
+(=zero? (sub sparse-a*b dense-a*b)) => #t
+
+;; For addition, the second argument determines the result's representation:
+(add sparse-a sparse-b) => sparse-a+b
+(add dense-a sparse-b) => sparse-a+b
+(add dense-a dense-b) => dense-a+b
+(add sparse-a dense-b) => dense-a+b
+
+;; For multiplication, the result is always sparse:
+(mul sparse-a sparse-b) => sparse-a*b
+(mul dense-a sparse-b) => sparse-a*b
+(mul dense-a dense-b) => sparse-a*b
+(mul sparse-a dense-b) => sparse-a*b
 
 (Exercise ?2.91
   (use (:2.3.2 same-variable?) (:2.4.3 using)
@@ -3802,10 +3819,25 @@ z2 => (make-from-mag-ang 30 3)
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg)
 
-;; (x^5 - 1) / (x^2 - 1) = (x^3 + x), remainder (x - 1)
-(div (make-polynomial 'x '((5 1) (0 -1))) (make-polynomial 'x '((2 1) (0 -1))))
+;; Now we can test the example given in the exercise:
+;;
+;; $$\frac{x^5 - 1}{x^2 - 1} = x^3 + x,\;\text{remainder}\;x - 1.$$
+(div (make-polynomial 'x '((5 1) (0 -1)))
+     (make-polynomial 'x '((2 1) (0 -1))))
 => (list (make-polynomial 'x '((3 1) (1 1)))
          (make-polynomial 'x '((1 1) (0 -1))))
+
+;; And some other examples:
+
+(div (make-polynomial 'x '((2 2)))
+     (make-polynomial 'x '((1 2))))
+=> (list (make-polynomial 'x '((1 1)))
+         (make-polynomial 'x '()))
+
+(div (make-polynomial 'x '((1 2)))
+     (make-polynomial 'x '((2 2))))
+=> (list (make-polynomial 'x '())
+         (make-polynomial 'x '((1 2))))
 
 (Section :2.5.3.3 "Hierarchies of types in symbolic algebra")
 
