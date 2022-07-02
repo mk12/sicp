@@ -1,8 +1,8 @@
 # SICP Study
 
-This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp] and its [lectures][]. The code is written in [R6RS Scheme][], tested with [Chez Scheme][], [Guile][], and [Racket][].
+This repository is my study of [_Structure and Interpretation of Computer Programs_][sicp] and its [lectures]. The code is written in [R6RS Scheme], tested with [Chez Scheme], [Guile], and [Racket].
 
-For more information, see [the website][].
+For more information, see [the website].
 
 ## Exercises
 
@@ -96,7 +96,7 @@ For more details, see [A Note on the Language][note].
 
 ## Notes
 
-Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](notes/lecture.md). They are written [Pandoc Markdown][], with some extras implemented by the [website generator](#website):
+Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](notes/lecture.md). They are written [Pandoc Markdown], with some extras implemented by the [website generator](#website):
 
 - Heading labels: `# 1A: Foo`, `## 1.2: Bar`.
 - LaTeX math: inline `$...$`, display `$$...$$`.
@@ -120,13 +120,13 @@ To view the website, open [docs/index.html](docs/index.html) in your browser.
 
 ### Implementation
 
-The generator starts in [docgen.c](docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
+The generator starts in [docgen.c](tools/docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
 
-To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses [luaposix][] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
+To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses [luaposix] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
 
-The render.ts server is a [Deno][] server implemented in [render.ts](notes/pandoc/render.ts). It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX][], and converts ASCII diagrams to SVG using [svgbob][] and [svgo][]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
+The render.ts server is a [Deno] server implemented in [render.ts](notes/pandoc/render.ts). It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX], and converts ASCII diagrams to SVG using [svgbob] and [svgo]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
 
-Pandoc highlights code with [skylighting][], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml].
+Pandoc highlights code with [skylighting], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml].
 
 Pandoc assembles the result using [template.html](notes/pandoc/template.html). The template embeds SVGs from [notes/assets](notes/assets) rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
 
@@ -173,12 +173,12 @@ The `test` and `lint` tasks parse results into the Problems view, which you can 
 
 Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only) `./deps.sh install` to install them.
 
-- [Chez Scheme][], [Guile][], and [Racket][]: Scheme implementations.
-- [Pandoc][]: Used to build the website. Must be dynamically linked to libc.
-- [LuaRocks][] and [luaposix][]: Used in the Pandoc filter.
-- [Deno][]: Used to run a server that renders math and diagrams.
-- [vnu][]: Used to validate HTML files.
-- [clang-format][]: Used to format C files.
+- [Chez Scheme], [Guile], and [Racket]: Scheme implementations.
+- [Pandoc]: Used to build the website. Must be dynamically linked to libc.
+- [LuaRocks] and [luaposix]: Used in the Pandoc filter.
+- [Deno]: Used to run a server that renders math and diagrams.
+- [vnu]: Used to validate HTML files.
+- [clang-format]: Used to format C files.
 
 You also need a C compiler to compile [linter.c](linter.c) and [docgen.c](docgen.c).
 

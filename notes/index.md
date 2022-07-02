@@ -1,6 +1,6 @@
-Welcome to my study website for <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>, also known as the Wizard Book. SICP is a [timeless classic][] and one of my favorite books.
+Welcome to my study website for <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>, also known as the Wizard Book. SICP is a [timeless classic] and one of my favorite books.
 
-Here you will find my study notes and solutions to the exercises. The code is written in an [R6RS][]-based language that isolates each section of the book to a module with explicit dependencies. It works in [Chez][], [Guile][], and [Racket][].
+Here you will find my study notes and solutions to the exercises. The code is written in an [R6RS]-based language that isolates each section of the book to a module with explicit dependencies. It works in [Chez], [Guile], and [Racket].
 
 This site is available under the same license as SICP itself, [CC BY-SA 4.0][cc].
 

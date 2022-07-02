@@ -396,7 +396,7 @@ This is a useful abstraction, just as sigma notation is useful in math because t
 
 `lambda` creates anonymous procedures. They are just like the procedures created by `define`, but without a name: `(lambda («formal-parameters») «body»)`.
 
-A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the [λ-calculus][], a formal system invented by Alonzo Church.
+A lambda expression can be used as the operand in a combination. It will be evaluated to a procedure and applied to the arguments (the evaluated operands). The name comes from the [λ-calculus], a formal system invented by Alonzo Church.
 
 [λ-calculus]: https://en.wikipedia.org/wiki/Lambda_calculus
 

@@ -1,8 +1,8 @@
-These are my solutions to the exercises in <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>. The code is written in a language based on [R6RS Scheme][] that provides lightweight modules and assertions, allowing each section to explicitly declare its dependencies and run unit tests. The language is described more in the [next section][].
+These are my solutions to the exercises in <cite>[Structure and Interpretation of Computer Programs][sicp]</cite>. The code is written in a language based on [R6RS Scheme] that provides lightweight modules and assertions, allowing each section to explicitly declare its dependencies and run unit tests. The language is described more in the [next section].
 
-This project supports three Scheme implementations: [Chez Scheme][], [Guile][], and [Racket][]. For each one there is a [compatibility shim][] exposing some features that are not part of R6RS under a common interface. In my experience, Chez has the best performance and debugger while Racket has the best error messages.
+This project supports three Scheme implementations: [Chez Scheme], [Guile], and [Racket]. For each one there is a [compatibility shim] exposing some features that are not part of R6RS under a common interface. In my experience, Chez has the best performance and debugger while Racket has the best error messages.
 
-These webpages are [generated][] directly from source code.
+These webpages are [generated] directly from source code.
 
 [sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
 [next section]: language.html "A Note on the Language"
@@ -16,7 +16,7 @@ These webpages are [generated][] directly from source code.
 
 # Note on the Language
 
-The code on this website is written in a language based on [R6RS Scheme][]. The language provides custom syntax for modules and assertions, and defines a few built-in procedures and special forms. [Source files][] use the language by wrapping their content in `(SICP ...)`, a macro [implemented][] in plain R6RS Scheme.
+The code on this website is written in a language based on [R6RS Scheme]. The language provides custom syntax for modules and assertions, and defines a few built-in procedures and special forms. [Source files] use the language by wrapping their content in `(SICP ...)`, a macro [implemented] in plain R6RS Scheme.
 
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
@@ -314,7 +314,7 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 
 ## Built-ins
 
-The language also [defines][] a few procedures and special forms. They are usable anywhere, not just at the top level like the assertion operators.
+The language also [defines] a few procedures and special forms. They are usable anywhere, not just at the top level like the assertion operators.
 
 ### Procedures
 
