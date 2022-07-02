@@ -1,20 +1,23 @@
 #!/bin/bash
+# Copyright 2022 Mitchell Kember. Subject to the MIT License.
 
 set -eufo pipefail
 
-readonly lua_version=5.4
-platform=
-warned=false
-
 usage() {
     cat <<EOS
-usage: $0 [--help] {check,install}
+Usage: $0 {check,install}
 
-This script manages dependencies for the SICP Study project. The 'check' command
-checks if all dependencies are present. The 'install' commands installs missing
-dependencies automatically (but prompts before doing anything).
+Manage dependencies for the SICP Study project.
+
+Commands:
+    check    Check if dependencies are installed
+    install  Install missing dependencies (macOS only)
 EOS
 }
+
+lua_version=5.4
+platform=
+warned=false
 
 say() {
     echo "*** $*"
@@ -183,7 +186,7 @@ install_macos_formulas() {
 }
 
 case ${1:-} in
-    ""|-h|--help) usage ;;
+    ""|-h|--help|help) usage ;;
     check|install) "$1" ;;
     *) die "$1: invalid command" ;;
 esac

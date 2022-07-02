@@ -1,14 +1,15 @@
 #!/bin/bash
+# Copyright 2022 Mitchell Kember. Subject to the MIT License.
 
 set -eufo pipefail
 
-readonly main="src/main.ss"
+main="src/main.ss"
 
 usage() {
     cat <<EOS
-usage: $0 [--help] {all,chez,chezd,guile,racket} args ...
+Usage: $0 [-h] {all,chez,guile,racket} ARG ...
 
-Runs $main using the given Scheme implementation.
+Run $main using the given Scheme implementation.
 EOS
 }
 
@@ -21,7 +22,7 @@ run_all() {
     run_racket "$@"
 }
 
-readonly chez_cmd=(
+chez_cmd=(
     chez --libdirs .:src/compat/chez --compile-imported-libraries
     --program "$main"
 )
@@ -48,7 +49,7 @@ if [[ $# -eq 0 ]]; then
     exit
 fi
 
-readonly arg=$1
+arg=$1
 shift
 
 if ! [[ -t 1 ]] || [[ -n ${NO_COLOR+x} ]]; then
@@ -58,7 +59,7 @@ fi
 cd "$(dirname "$0")"
 
 case $arg in
-    -h|--help) usage; exit ;;
+    -h|--help|help) usage; exit ;;
     all|chez|chezd|guile|racket) "run_$arg" "$@" ;;
     *) usage >&2; exit 1 ;;
 esac

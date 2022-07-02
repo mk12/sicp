@@ -1,3 +1,28 @@
+# Copyright 2022 Mitchell Kember. Subject to the MIT License.
+
+define usage
+Targets:
+	all        Build and test everything
+	help       Show this help message
+	test       Run tests in Chez, Guile, and Racket
+	docs       Build the website in docs/
+	render     Run the render.ts server
+	fmt        Format C and TypeScript code
+	lint       Lint all source files
+	lintss     Lint only Scheme code
+	spell      Spellcheck Markdown and Scheme files
+	validate   Validate generated HTML files
+	clean      Remove compilation artifacts
+	vscode     Set up VS Code support
+	clangd     Write compile_commands.json
+	sicp_html  Download SICP HTML files
+endef
+
+.PHONY: all help test docs render fmt lint lintss spell validate clean vscode \
+	clangd sicp_html lua_env
+
+.SUFFIXES:
+
 SHELL := /bin/bash
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
@@ -38,29 +63,8 @@ heading_exceptions := \
 validate_exceptions := \
 	'.*not allowed as child of element “mo”.*'
 
-define usage
-Targets:
-	all        Build and test everything
-	help       Show this help message
-	test       Run tests in Chez, Guile, and Racket
-	docs       Build the website in docs/
-	render     Run the render.ts server
-	fmt        Format C and TypeScript code
-	lint       Lint all source files
-	lintss     Lint only Scheme code
-	spell      Spellcheck Markdown and Scheme files
-	validate   Validate generated HTML files
-	clean      Remove compilation artifacts
-	vscode     Set up VS Code support
-	clangd     Write compile_commands.json
-	sicp_html  Download SICP HTML files
-endef
-
-.PHONY: all help test docs lua_env render fmt lint lintss spell validate clean \
-	vscode clangd sicp_html
-
 # Ordered from fastest to slowest, for early feedback.
-all: lint fmt spell docs validate test
+all: lint fmt docs validate test
 
 help:
 	$(info $(usage))

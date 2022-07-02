@@ -1,6 +1,16 @@
 #!/bin/bash
+# Copyright 2022 Mitchell Kember. Subject to the MIT License.
 
 set -eufo pipefail
+
+usage() {
+    cat <<EOS
+Usage: $0
+
+Lets you choose an HTML file in docs/ using fzf, then watches for changes to all
+inputs affecting that file, automatically rebuilding and refreshing the page.
+EOS
+}
 
 entr_pid1=
 entr_pid2=
@@ -71,6 +81,11 @@ cleanup() {
     done
     rm -f render.sock
 }
+
+if [[ $# -gt 0 ]]; then
+    usage
+    exit 0
+fi
 
 if [[ "$(uname -s)" != Darwin ]]; then
     echo "error: this script only works on macOS" >&2
