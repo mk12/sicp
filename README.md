@@ -181,7 +181,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 - [vnu]: Used to validate HTML files.
 - [clang-format]: Used to format C files.
 
-You also need a C compiler to compile [linter.c] and [docgen.c].
+You also need a C compiler to compile [lint.c] and [docgen.c].
 
 ## License
 
@@ -195,7 +195,7 @@ See [LICENSE](LICENSE.md) for details.
 [docs/]: docs/
 [docs/index.html]: docs/index.html
 [filter.lua]: notes/pandoc/filter.lua
-[linter.c]: tools/linter.c
+[lint.c]: tools/lint.c
 [main.ss]: src/main.ss
 [notes/]: notes/
 [notes/assets/]: notes/assets/

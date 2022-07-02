@@ -56,7 +56,8 @@ choose_output() {
             ;;
     esac
     inputs+=(
-        "docgen.c"
+        "tools/docgen.c"
+        "tools/highlight.c"
         "docs/style.css"
     )
     while read -r file; do

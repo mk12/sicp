@@ -7,15 +7,19 @@
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
 - add "spell" to "all" (either after "fmt", or at the end)
+    - and only if we're on macOS
 - fix inline code in blockquotes background
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 - remove/change all "Note:"
+- write a basic markdown linter (for links)
 - improve structure, e.g. tools/ dir, bin/, etc.
 - use --compile-imported-libaries for chez!!!
 - highlight.c -> highlight.so, fast and perfect, quasiquote etc.
+- `./run.sh all` in parallel
+- support debugging for all not just chez
 + don't symlink active.ss, should be able to run in parallel
     + impossible to do dynamically http://www.phyast.pitt.edu/~micheles/scheme/scheme19.html
     + but maybe could use lookup paths provided on command line?

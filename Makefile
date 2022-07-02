@@ -75,8 +75,8 @@ test:
 
 docs: $(doc_html)
 
-$(doc_html): docgen $(doc_assets) $(doc_pandoc_aux) | lua_env $(render_sock)
-	./docgen $@
+$(doc_html): bin/docgen $(doc_assets) $(doc_pandoc_aux) | lua_env $(render_sock)
+	$< $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
 $(doc_text): notes/text.md
@@ -88,6 +88,15 @@ $(patsubst %,docs/exercise/%.html,$(doc_sec_2)): src/sicp/chapter-2.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_3)): src/sicp/chapter-3.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_4)): src/sicp/chapter-4.ss
 $(patsubst %,docs/exercise/%.html,$(doc_sec_5)): src/sicp/chapter-5.ss
+
+bin/%: tools/%.c | bin
+	$(CC) $(CFLAGS) -o $@ $^
+
+bin/%: tools/%.m | bin
+	$(CC) $(CFLAGS) $(OBJCFLAGS) -o $@ $^
+
+bin:
+	mkdir -p $@
 
 # This target ensures that we shell out only if needed, and at most once.
 lua_env:
@@ -131,14 +140,11 @@ lint: lintss
 	# Ensure special characters used for syntax highlighting are stripped.
 	! grep -qRE '«|»|‹|›|```' docs
 
-lintss: linter
-	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs ./$<
+lintss: bin/lint
+	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs $<
 
-spell: spellc
-	./$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
-
-spellc: %: %.m
-	$(CC) -o $@ $(CFLAGS) $(OBJCFLAGS) $^
+spell: bin/spellc
+	$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
 
 validate:
 	find docs -type f -name "*.html" \
@@ -146,7 +152,8 @@ validate:
 
 clean:
 	find src -type d -name compiled -exec rm -rf {} +
-	-rm -rf *.dSYM
+	find src -type f -name *.so -exec rm -f {} +
+	-rm -rf bin
 
 vscode: $(patsubst %,.vscode/%.json,settings tasks) clangd
 
@@ -159,20 +166,26 @@ define COMPILE_COMMANDS
 [
 	{
 		"directory": "$(CURDIR)",
-		"file": "docgen.c",
-		"output": "docgen",
+		"file": "tools/docgen.c",
+		"output": "bin/docgen",
 		"command": "clang $(CFLAGS) docgen.c"
 	},
 	{
 		"directory": "$(CURDIR)",
-		"file": "linter.c",
-		"output": "linter",
-		"command": "clang $(CFLAGS) linter.c"
+		"file": "tools/highlight.c",
+		"output": "bin/highlight.so",
+		"command": "clang $(CFLAGS) highlight.c"
 	},
 	{
 		"directory": "$(CURDIR)",
-		"file": "spellc.m",
-		"output": "spellc",
+		"file": "tools/lint.c",
+		"output": "bin/lint",
+		"command": "clang $(CFLAGS) lint.c"
+	},
+	{
+		"directory": "$(CURDIR)",
+		"file": "tools/spellc.m",
+		"output": "bin/spellc",
 		"command": "clang $(CFLAGS) $(OBJCFLAGS) spellc.m"
 	}
 ]
