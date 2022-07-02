@@ -7,7 +7,7 @@
         (rnrs io simple (6))
         (rnrs lists (6))
         (rnrs programs (6))
-        (only (src compat active) format seed-rng)
+        (only (src compat) format seed-rng)
         (only (src lang core) run-sicp)
         (src sicp chapter-1)
         (src sicp chapter-2)

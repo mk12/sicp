@@ -21,24 +21,26 @@ run_all() {
     run_racket "$@"
 }
 
+readonly chez_cmd=(
+    chez --libdirs .:src/compat/chez --compile-imported-libraries
+    --program "$main"
+)
+
 run_chez() {
-    ln -sf chez.ss src/compat/active.ss
-    chez --program "$main" "$@"
+    "${chez_cmd[@]}" "$@"
 }
 
 run_chezd() {
-    ln -sf chez.ss src/compat/active.ss
-    chez --debug-on-exception --program "$main" "$@"
+    "${chez_cmd[@]}" --debug-on-exception "$@"
 }
 
 run_guile() {
-    ln -sf guile.ss src/compat/active.ss
-    guile -q --r6rs -L . -x .ss -l src/compat/guile-init.ss "$main" "$@"
+    guile -q --r6rs -L . -L src/compat/guile -x .ss \
+        -l src/compat/guile/src/init.ss "$main" "$@"
 }
 
 run_racket() {
-    ln -sf racket.ss src/compat/active.ss
-    racket --search . --make "$main" "$@"
+    racket --search . --search src/compat/racket --make "$main" "$@"
 }
 
 if [[ $# -eq 0 ]]; then

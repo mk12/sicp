@@ -2,7 +2,7 @@
 
 #!r6rs
 
-(library (src compat active)
+(library (src compat)
   (export current-output-port extended-define-syntax format make-mutex
           open-output-string parallel-execute parameterize random
           run-with-short-timeout runtime seed-rng string-contains?

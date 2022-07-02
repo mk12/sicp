@@ -1,8 +1,9 @@
-# Symlink to compat module
-/src/compat/active.ss
-
 # Racket bytecode
-compiled/
+*.dep
+*.zo
+
+# Chez object files
+*.so
 
 # Binaries
 /docgen

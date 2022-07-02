@@ -6,12 +6,21 @@
 - remove `<!-- DELETE -->` in text.md
 - place spell in the right order for `make all`
 - finish correcting spelling and adding ignores
+- add "spell" to "all" (either after "fmt", or at the end)
 - fix inline code in blockquotes background
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 - remove/change all "Note:"
+- improve structure, e.g. tools/ dir, bin/, etc.
+- use --compile-imported-libaries for chez!!!
+- highlight.c -> highlight.so, fast and perfect, quasiquote etc.
++ don't symlink active.ss, should be able to run in parallel
+    + impossible to do dynamically http://www.phyast.pitt.edu/~micheles/scheme/scheme19.html
+    + but maybe could use lookup paths provided on command line?
+x should indented comments be rendered same as top-level?
+    x no, but use them judiciously; usually it's better to extract to top level
 + in :2.5.3 link to footnote
     x considered having @ always link to textbook like citation [@1a] and links [](@1a)
     x then need different sigil for text/lecture notes, like "%"?
@@ -31,6 +40,9 @@
     + rules of thumb: use x.y.z.w if (1) there is an exercise in between so you have to do this to get out of the exercise, or (2) the sections are long or (3) significantly different, i.e. not all importing everything from the previous one
     + actually decided to use it in :2.4.3 because it only required a couple imports, and it's nice to be more modular and realize which things are independent
     + in general trying to do it more, but not e.g. in :2.1.1 (rational numbers) because it would cause a cycle
+    + include "2.5.3.3 Hierarchies of types in symbolic algebra" even though it's empty
+        + there's nothing between it and Exercise 2.92, and both are `<h3>`
+        + but it's useful to keep the organization there ... technically could make all exercises `<h4>`...
 + gaps between `;;` paragraphs?
     + gaps con: we use comments to switch between code/prose, makes no sense to switch back to code for a blank line within prose
     + pro gaps: can be more symmetrical

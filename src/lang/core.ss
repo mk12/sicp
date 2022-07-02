@@ -9,8 +9,7 @@
   (import (except (rnrs (6)) current-output-port define-syntax)
           (rnrs mutable-pairs (6))
           (rnrs mutable-strings (6))
-          (rename (src compat active)
-                  (extended-define-syntax define-syntax)))
+          (rename (src compat) (extended-define-syntax define-syntax)))
 
 ;; Global flag for whether to use ANSI color in output.
 (define *color* #f)

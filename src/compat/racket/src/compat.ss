@@ -2,7 +2,7 @@
 
 #!r6rs
 
-(library (src compat active)
+(library (src compat)
   (export current-output-port extended-define-syntax format make-mutex
           open-output-string parallel-execute parameterize random
           run-with-short-timeout runtime seed-rng string-contains?
@@ -48,7 +48,7 @@
     (thread
      (lambda ()
        ;; Sleep for up to 1ms to ensure nondeterminism shows up.
-       (sleep (random 0.001))
+       (sleep (* 0.001 (random)))
        (proc))))
   (for-each thread-wait (map spawn thunks)))
 

@@ -20,7 +20,7 @@
           (only (rnrs mutable-pairs (6)) set-car! set-cdr!)
           (only (rnrs r5rs (6)) delay force quotient remainder)
           (src lang core)
-          (src compat active))
+          (src compat))
 
 ;; Used in Section 3.5.
 (define-syntax cons-stream
