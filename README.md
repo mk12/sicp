@@ -16,7 +16,7 @@ Racket produces artifacts in `compiled/` directories. To remove them, run `make 
 
 ### Structure
 
-The program starts in [main.ss](main.ss). Each chapter of the book has its own file in [src/sicp/](src/sicp), written in a [domain-specific language](#language) implemented in [src/lang/core.ss](src/lang/core.ss). Source files in [src/compat/](src/compat) reconcile differences between the supported Scheme implementations.
+The program starts in [main.ss]. Each chapter of the book has its own file in [src/sicp/], written in a [domain-specific language](#language) implemented in [src/lang/core.ss]. Source files in [src/compat/] reconcile differences between the supported Scheme implementations.
 
 ### Language
 
@@ -59,13 +59,13 @@ Code fragments are isolated to their part of the book:
 We can import definitions out of order:
 
 ```scheme
-(Section :1.1 "first section"
+(Section :1.1 "First section"
   (use (:1.2 square)))   ; import square from Section 1.2
 
 (define nine (square 3)) ; ok
 (define eight (cube 2))  ; ERROR, 'cube' not defined
 
-(Section :1.2 "second section")
+(Section :1.2 "Second section")
 
 (define (square x) (* x x))
 (define (cube x) (* x x x))
@@ -96,7 +96,7 @@ For more details, see [A Note on the Language][note].
 
 ## Notes
 
-Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](notes/lecture.md). They are written [Pandoc Markdown], with some extras implemented by the [website generator](#website):
+Study notes are stored in [notes/text.md] and [notes/lecture.md]. They are written [Pandoc Markdown], with some extras implemented by the [website generator](#website):
 
 - Heading labels: `# 1A: Foo`, `## 1.2: Bar`.
 - LaTeX math: inline `$...$`, display `$$...$$`.
@@ -108,7 +108,7 @@ Study notes are stored in [notes/text.md](notes/text.md) and [notes/lecture.md](
 
 ## Website
 
-In addition to the notes and exercises, this repository contains a custom static site generator. Its output is stored in [docs/](docs) and served on <https://mk12.github.io/sicp> by GitHub Pages.
+In addition to the notes and exercises, this repository contains a custom static site generator. Its output is stored in [docs/] and served on <https://mk12.github.io/sicp> by GitHub Pages.
 
 The website is pure HTML5 and CSS. It contains no JavaScript.
 
@@ -116,23 +116,23 @@ The website is pure HTML5 and CSS. It contains no JavaScript.
 
 To build the website, make sure you have all the [dependencies](#dependencies) and then run `make docs`. A separate process builds each HTML file, so you can significantly speed this up by parallelizing, for example `make docs -j10`.
 
-To view the website, open [docs/index.html](docs/index.html) in your browser.
+To view the website, open [docs/index.html] in your browser.
 
 ### Implementation
 
-The generator starts in [docgen.c](tools/docgen.c). It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua](notes/pandoc/filter.lua). The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
+The generator starts in [docgen.c]. It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua]. The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
 
 To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses [luaposix] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
 
-The render.ts server is a [Deno] server implemented in [render.ts](notes/pandoc/render.ts). It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX], and converts ASCII diagrams to SVG using [svgbob] and [svgo]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
+The render.ts server is a [Deno] server implemented in [render.ts]. It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX], and converts ASCII diagrams to SVG using [svgbob] and [svgo]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
 
-Pandoc highlights code with [skylighting], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml](notes/pandoc/scheme.xml), which I modified from [the original][scheme.xml].
+Pandoc highlights code with [skylighting], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml], which I modified from [the original][kde-scheme.xml].
 
-Pandoc assembles the result using [template.html](notes/pandoc/template.html). The template embeds SVGs from [notes/assets](notes/assets) rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
+Pandoc assembles the result using [template.html]. The template embeds SVGs from [notes/assets/] rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
 
-Finally, `docgen` post-processes the HTML and writes it in [docs/](docs).
+Finally, `docgen` post-processes the HTML and writes it in [docs/].
 
-The pages are styled by [style.css](docs/style.css). It follows the [BEM naming guide][bem].
+The pages are styled by [style.css]. It follows the [BEM naming guide][bem].
 
 ## Contributing
 
@@ -140,7 +140,7 @@ Before submitting a PR, run `make`. This makes the following targets:
 
 - `make lint`: Lints Scheme, TypeScript, and Bash.
 - `make fmt`: Formats C, Objective-C, and TypeScript.
-- `make spell`: Spellchecks Markdown and Scheme (macOS only).
+<!-- - `make spell`: Spellchecks Markdown and Scheme (macOS only). -->
 - `make docs`: Builds the website.
 - `make validate`: Validates HTML.
 - `make test`: Tests with all Scheme implementations.
@@ -181,36 +181,55 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 - [vnu]: Used to validate HTML files.
 - [clang-format]: Used to format C files.
 
-You also need a C compiler to compile [linter.c](linter.c) and [docgen.c](docgen.c).
+You also need a C compiler to compile [linter.c] and [docgen.c].
 
 ## License
 
 Most of the source code in this repository is available under the MIT License.
 
-Some files in [src/sicp/](src/sicp), [notes/](notes), and [docs/](docs) are derivative works and are available under the CC BY-SA 4.0 License instead.
+Some files in [src/sicp/], [notes/], and [docs/] are derivative works and are available under the CC BY-SA 4.0 License instead.
 
 See [LICENSE](LICENSE.md) for details.
 
-[sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
-[the website]: https://mk12.github.io/sicp
-[note]: https://mk12.github.io/sicp/exercise/language.html
-[lectures]: https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
-[R6RS Scheme]: http://www.r6rs.org
+[docgen.c]: tools/docgen.c
+[docs/]: docs/
+[docs/index.html]: docs/index.html
+[filter.lua]: notes/pandoc/filter.lua
+[linter.c]: tools/linter.c
+[main.ss]: src/main.ss
+[notes/]: notes/
+[notes/assets/]: notes/assets/
+[notes/lecture.md]: notes/lecture.md
+[notes/text.md]: notes/text.md
+[render.ts]: notes/pandoc/render.ts
+[scheme.xml]: notes/pandoc/scheme.xml
+[src/compat/]: src/compat/
+[src/lang/core.ss]: src/lang/core.ss
+[src/sicp/]: src/sicp/
+[src/sicp/]: src/sicp/
+[style.css]: docs/style.css
+[template.html]: notes/pandoc/template.html
+
+[bem]: http://getbem.com/naming/
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
-[Guile]: https://www.gnu.org/software/guile/
-[Racket]: http://racket-lang.org
-[Pandoc]: https://pandoc.org
-[Pandoc Markdown]: https://pandoc.org/MANUAL.html#pandocs-markdown
-[LuaRocks]: https://luarocks.org
-[luaposix]: https://github.com/luaposix/luaposix
-[static]: https://github.com/jgm/pandoc/issues/3986
+[clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [Deno]: https://deno.land
+[Guile]: https://www.gnu.org/software/guile/
+[kate]: https://docs.kde.org/trunk5/en/kate/katepart/highlight.html
 [KaTeX]: https://katex.org
+[kde-scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml
+[lectures]: https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video_galleries/video-lectures/
+[luaposix]: https://github.com/luaposix/luaposix
+[LuaRocks]: https://luarocks.org
+[note]: https://mk12.github.io/sicp/exercise/language.html
+[Pandoc Markdown]: https://pandoc.org/MANUAL.html#pandocs-markdown
+[Pandoc]: https://pandoc.org
+[R6RS Scheme]: http://www.r6rs.org
+[Racket]: http://racket-lang.org
+[sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
+[skylighting]: https://github.com/jgm/skylighting
+[static]: https://github.com/jgm/pandoc/issues/3986
 [svgbob]: https://github.com/ivanceras/svgbob
 [svgo]: https://github.com/svg/svgo
+[the website]: https://mk12.github.io/sicp
 [vnu]: https://validator.github.io/validator/
-[clang-format]: https://clang.llvm.org/docs/ClangFormat.html
-[skylighting]: https://github.com/jgm/skylighting
-[kate]: https://docs.kde.org/trunk5/en/applications/katepart/highlight.html
-[scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml
-[bem]: http://getbem.com/naming/
