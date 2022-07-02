@@ -177,6 +177,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 - [Pandoc]: Used to build the website. Must be dynamically linked to libc.
 - [LuaRocks] and [luaposix]: Used in the Pandoc filter.
 - [Deno]: Used to run a server that renders math and diagrams.
+- [svgbob]: Used to convert ASCII diagrams to SVG.
 - [vnu]: Used to validate HTML files.
 - [clang-format]: Used to format C files.
 
