@@ -29,7 +29,7 @@ refresh() {
 restart_render() {
     rm -f render.sock
     mkfifo render.fifo
-    deno run --unstable --allow-{read,write,run} notes/pandoc/render.ts \
+    deno run --unstable --allow-{read,write,run} tools/render.ts \
         render.{sock,fifo} &
     : < render.fifo
     rm render.fifo
@@ -66,7 +66,7 @@ choose_output() {
     )
     while read -r file; do
         inputs+=("$file")
-    done < <(find notes/pandoc -type f -not -name render.ts)
+    done < <(find notes/pandoc -type f)
 }
 
 watch() {
@@ -74,7 +74,7 @@ watch() {
     [[ -n "$entr_pid2" ]] && kill "$entr_pid2"
     printf '%s\n' "${inputs[@]}" | entr -ns 'refresh' &
     entr_pid1=$!
-    echo notes/pandoc/render.ts | entr -nsp 'restart_render && refresh' &
+    echo tools/render.ts | entr -nsp 'restart_render && refresh' &
     entr_pid2=$!
 }
 

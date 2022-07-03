@@ -20,21 +20,24 @@ const ERROR = `${RED}ERROR:${RESET}`;
 function usage(write: (s: string) => void) {
   write(
     `
-usage: deno run --unstable --allow-read --allow-write --allow-run
+Usage: deno run --unstable --allow-{read,write}=SOCKET[,FIFO] --allow-run=svgbob
        ${SCRIPT_NAME} [--help] SOCKET [FIFO]
 
-Runs a server that renders KaTeX math and svgbob diagrams.
+Run server that renders KaTeX math and svgbob diagrams
 
-It creates and listens on the Unix domain socket SOCKET (stream-oriented).
-It automatically exits if SOCKET is removed.
-If FIFO is given, it signals FIFO (writes 0 bytes) when the server is ready.
+Arguments:
+    SOCKET  Socket path. The server creates a stream-oriented Unix domain socket
+            here to listen on. It exits automatically if SOCKET is removed.
+    FIFO    Synchronization file. If provided, the sever signals FIFO (writes
+            zero bytes) when it is ready to serve requests on SOCKET.
 
-The protocol is as follows:
+Requests:
+    KaTeX   "katex:" [ "display:" ] tex_input "\\0"
+    svgbob  "svgbob:" diagram_number ":" ascii_input "\\0"
 
-* Requests and responses are null-terminated.
-* Responses contain HTML, or "error:" followed by an error message.
-* KATEX request: "katex:", (then optionally "display:"), and then TeX input.
-* SVGBOB request: "svgbob:", the diagram number, ":", and then ASCII art text.
+Responses:
+    success  html_output "\\0"
+    error    "error:" error_message "\\0"
 `.trim(),
   );
 }

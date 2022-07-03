@@ -27,7 +27,7 @@ SHELL := /bin/bash
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
 OBJCFLAGS := -fmodules -fobjc-arc
-DENOFLAGS := --unstable --allow-read --allow-write --allow-run
+DENOFLAGS := --unstable --allow-{read,write}=render.sock,render.fifo --allow-run=svgbob
 lua_version := 5.4
 
 sicp_src := $(patsubst %,src/sicp/chapter-%.ss,1 2 3 4 5)
@@ -45,15 +45,6 @@ doc_text := $(patsubst %,docs/text/%.html,index front highlight $(doc_sec_all))
 doc_lecture := $(patsubst %,docs/lecture/%.html,index highlight $(doc_lec_nums))
 doc_exercise := $(patsubst %,docs/exercise/%.html,index language $(doc_sec_all))
 doc_html := $(doc_index) $(doc_text) $(doc_lecture) $(doc_exercise)
-
-doc_assets := $(patsubst %,notes/assets/%.svg,\
-	arrows circle-left circle-right external github)
-doc_pandoc_aux := $(patsubst %,notes/pandoc/%,\
-	config.yml filter.lua render.ts pagenav.html scheme.xml template.html)
-
-render_src := notes/pandoc/render.ts
-render_sock := render.sock
-render_fifo := render.fifo
 
 # Made-up headings that are allowed in chapter-*.ss.
 heading_exceptions := \
@@ -75,7 +66,9 @@ test:
 
 docs: $(doc_html)
 
-$(doc_html): bin/docgen $(doc_assets) $(doc_pandoc_aux) | lua_env $(render_sock)
+$(doc_html): bin/docgen tools/render.ts \
+		$(wildcard notes/assets/*.svg) $(wildcard notes/pandoc/*) \
+		| lua_env render.sock
 	$< $@
 
 $(doc_index): notes/index.md notes/assets/wizard.svg
@@ -106,19 +99,19 @@ lua_env:
 		$$(shell luarocks path --lua-version=$(lua_version) --lr-cpath))
 
 render:
-	deno run $(DENOFLAGS) $(render_src) $(render_sock)
+	deno run $(DENOFLAGS) tools/render.ts render.sock
 
-ifneq (,$(wildcard $(render_sock)))
-$(render_sock): $(render_src)
+ifneq (,$(wildcard render.sock))
+render.sock: tools/render.ts
 	$(error \
-A server is already running on $(render_sock), but it is using outdated code.\
+A server is already running on render.sock, but it is using outdated code.\
 Try again after terminating or restarting it)
 else
-.INTERMEDIATE: $(render_sock) $(render_fifo)
-$(render_sock): $(render_fifo)
-	deno run $(DENOFLAGS) $(render_src) $@ $< &
+.INTERMEDIATE: render.sock render.fifo
+render.sock: render.fifo
+	deno run $(DENOFLAGS) tools/render.ts $@ $< &
 	< $<
-$(render_fifo):
+render.fifo:
 	mkfifo $@
 endif
 

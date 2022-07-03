@@ -201,7 +201,7 @@ See [LICENSE](LICENSE.md) for details.
 [notes/assets/]: notes/assets/
 [notes/lecture.md]: notes/lecture.md
 [notes/text.md]: notes/text.md
-[render.ts]: notes/pandoc/render.ts
+[render.ts]: tools/render.ts
 [scheme.xml]: notes/pandoc/scheme.xml
 [src/compat/]: src/compat/
 [src/lang/core.ss]: src/lang/core.ss
