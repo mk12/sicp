@@ -43,7 +43,7 @@ update() {
         line="${stripped::$((cols - 3))}..."
     fi
     # shellcheck disable=SC2059
-    printf "\x1b[${n}A\r\x1b[2K${line}\x1b[${n}B\r"
+    printf "\x1b[${n}A\r\x1b[2K${line}\x1b[0m\x1b[${n}B\r"
 }
 
 # Runs ${@:3} and prints output prefixed with $2 on the ${1}th line.
