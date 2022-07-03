@@ -7,8 +7,12 @@ usage() {
     cat <<EOS
 Usage: $0
 
-Lets you choose an HTML file in docs/ using fzf, then watches for changes to all
-inputs affecting that file, automatically rebuilding and refreshing the page.
+Watch files and live-reload docs
+
+Initially it will let you choose an HTML in docs/ using fzf, and then watch for
+changes to all inputs that affect that file. Press any key to choose a different
+HTML file. When an input file changes, it rebuilds the page and refreshes it in
+the browser. This only works on macOS with Safari.
 EOS
 }
 

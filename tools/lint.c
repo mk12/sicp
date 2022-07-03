@@ -700,16 +700,22 @@ end:
     return state.status;
 }
 
+static void usage(FILE *out, const char *program) {
+    fprintf(out,
+            "\
+Usage: %s FILE ...\n\
+\n\
+Lint Scheme code\n\
+\n\
+Arguments:\n\
+    FILE  Scheme file or Markdown file (lints code blocks)\n\
+",
+            program);
+}
+
 int main(int argc, char **argv) {
     if (argc == 1) {
-        fprintf(stderr,
-                "\
-usage: %s FILE ...\n\
-\n\
-Lints Scheme code, printing errors for any style violations.\n\
-If a file ends in .md (Markdown), lints fenced code blocks.\n\
-",
-                argv[0]);
+        usage(stderr, argv[0]);
         return 1;
     }
     int status = 0;

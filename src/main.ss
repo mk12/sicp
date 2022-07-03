@@ -17,25 +17,25 @@
 
 (define (usage program)
   (format "\
-usage: ~A [-hsv] [FILTER ...]
+Usage: ~A [-hvn] [FILTER ...]
 
-Runs SICP code and tests. If FILTER is provided, only runs the parts whose id
-matches one of the FILTER arguments. For example:
+Run SICP code and tests
 
-  1       chapter 1
-  1 2     chapters 1 and 2
-  :1      chapter 1, minus exercises
-  :1.2    section 1.2, including subsections
-  :1.2.3  subsection 1.2.3
-  ?1.12   exercise 1.12
+If FILTER is provided, only runs matching modules. For example:
 
-It will also run all transitive dependencies of the specified parts.
+    1       chapter 1
+    1 2     chapters 1 and 2
+    :1      chapter 1, minus exercises
+    :1.2    section 1.2, including subsections
+    :1.2.3  subsection 1.2.3
+    ?1.12   exercise 1.12
 
-options:
+It will also run all transitive dependencies of the selected modules.
 
-  -h, --help       show this help message
-  -v, --verbose    verbose output
-  -n, --no-color   disable color
+Options:
+    -h, --help      Show this help message
+    -v, --verbose   Enable verbose output
+    -n, --no-color  Disable color output
 " program))
 
 (define (die msg)
@@ -53,6 +53,7 @@ options:
     (cond ((null? args) options)
           ((is? "-h" "--help") (just 'help))
           ((is? "-v" "--verbose") (add 'verbose))
+          ;; Note: run.sh passes --no-color based on NO_COLOR and isatty.
           ((is? "-n" "--no-color") (add 'no-color))
           ((not (startswith? #\-)) (add 'filter (car args)))
           (else (just 'error))))

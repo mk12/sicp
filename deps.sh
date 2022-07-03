@@ -7,7 +7,7 @@ usage() {
     cat <<EOS
 Usage: $0 {check,install}
 
-Manage dependencies for the SICP Study project.
+Manage dependencies for the SICP Study project
 
 Commands:
     check    Check if dependencies are installed
@@ -191,6 +191,6 @@ case ${1:-} in
     *) die "$1: invalid command" ;;
 esac
 
-if [[ $warned == true ]]; then
+if [[ $warned = true ]]; then
     exit 1
 fi

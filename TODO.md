@@ -14,6 +14,8 @@
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 - remove/change all "Note:"
++ honor NO_COLOR (and check isatty?)
+    + already done, just in run.sh not main.ss
 - write a basic markdown linter (for links)
 - improve structure, e.g. tools/ dir, bin/, etc.
 - use --compile-imported-libaries for chez!!!

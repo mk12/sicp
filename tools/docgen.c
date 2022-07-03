@@ -2035,15 +2035,25 @@ static bool gen(const char *output) {
     return false;
 }
 
+static void usage(FILE *out, const char *program) {
+    fprintf(out,
+            "\
+Usage: %s OUT_FILE\n\
+\n\
+Generate OUT_FILE from Markdown/Scheme sources\n\
+\n\
+This is part of a custom static site generator for the SICP Study project.\n\
+For more information, see the \"Website\" section in README.md.\n\
+\n\
+Arguments:\n\
+    OUT_FILE  Path matching docs/**/*.html\n\
+",
+            program);
+}
+
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr,
-                "\
-usage: %s OUT_FILE\n\
-\n\
-Generates an HTML file in docs/.\n\
-",
-                argv[0]);
+        usage(stderr, argv[0]);
         return 1;
     }
     const char *output = argv[1];
