@@ -27,7 +27,8 @@ SHELL := /bin/bash
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
 OBJCFLAGS := -fmodules -fobjc-arc
-DENOFLAGS := --unstable --allow-{read,write}=render.sock,render.fifo --allow-run=svgbob
+DENOFLAGS := --unstable --allow-{read,write}=render.sock,render.fifo \
+	--allow-run=svgbob
 lua_version := 5.4
 
 sicp_src := $(patsubst %,src/sicp/chapter-%.ss,1 2 3 4 5)
@@ -101,18 +102,18 @@ lua_env:
 render:
 	deno run $(DENOFLAGS) tools/render.ts render.sock
 
-ifneq (,$(wildcard render.sock))
-render.sock: tools/render.ts
-	$(error \
-A server is already running on render.sock, but it is using outdated code.\
-Try again after terminating or restarting it)
-else
+ifeq (,$(wildcard render.sock))
 .INTERMEDIATE: render.sock render.fifo
 render.sock: render.fifo
 	deno run $(DENOFLAGS) tools/render.ts $@ $< &
 	< $<
 render.fifo:
 	mkfifo $@
+else
+render.sock: tools/render.ts
+	$(error \
+A server is already running on render.sock, but it is using outdated code.\
+Try again after terminating or restarting it)
 endif
 
 fmt:

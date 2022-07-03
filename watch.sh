@@ -28,11 +28,10 @@ refresh() {
 
 restart_render() {
     rm -f render.sock
-    mkfifo render.fifo
-    deno run --unstable --allow-{read,write,run} tools/render.ts \
-        render.{sock,fifo} &
-    : < render.fifo
-    rm render.fifo
+    # Normally render.sock is used as an INTERMEDIATE target for building docs
+    # when a server isn't already running. However, if we ask for it explicitly,
+    # it will not get deleted at the end as usual.
+    make render.sock
 }
 
 # Make functions work in entr.
@@ -69,21 +68,19 @@ choose_output() {
     done < <(find notes/pandoc -type f)
 }
 
-watch() {
+kill_entr() {
     [[ -n "$entr_pid1" ]] && kill "$entr_pid1"
     [[ -n "$entr_pid2" ]] && kill "$entr_pid2"
-    printf '%s\n' "${inputs[@]}" | entr -ns 'refresh' &
-    entr_pid1=$!
-    echo tools/render.ts | entr -nsp 'restart_render && refresh' &
-    entr_pid2=$!
+}
+
+watch() {
+    kill_entr
+    printf '%s\n' "${inputs[@]}" | entr -ns 'refresh' & entr_pid1=$!
+    echo tools/render.ts | entr -nsp 'restart_render && refresh' & entr_pid2=$!
 }
 
 cleanup() {
-    for pid in "$entr_pid1" "$entr_pid2"; do
-        if [[ -n "$pid" ]] && kill -s 0 "$pid"; then
-            kill "$pid" || :
-        fi
-    done
+    kill_entr
     rm -f render.sock
 }
 
