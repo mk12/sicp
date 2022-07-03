@@ -143,7 +143,7 @@ lint: lintss
 lintss: bin/lint
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs $<
 
-spell: bin/spellc
+spell: bin/spell
 	$^ notes/{index,text,lecture,exercise}.md src/sicp/chapter-{1,2,3,4,5}.ss
 
 validate:
@@ -184,9 +184,9 @@ define COMPILE_COMMANDS
 	},
 	{
 		"directory": "$(CURDIR)",
-		"file": "tools/spellc.m",
-		"output": "bin/spellc",
-		"command": "clang $(CFLAGS) $(OBJCFLAGS) spellc.m"
+		"file": "tools/spell.m",
+		"output": "bin/spell",
+		"command": "clang $(CFLAGS) $(OBJCFLAGS) spell.m"
 	}
 ]
 endef

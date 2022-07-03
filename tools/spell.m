@@ -1113,19 +1113,41 @@ static CheckResult check(struct SpellChecker spell, struct Options options,
 
 static const char IGNORE_PATH[] = "spell-ignore.txt";
 
+static void usage(FILE *out, const char *program) {
+    fprintf(out, "\
+Usage: %1$s [-pdxi] FILE ...\n\
+\n\
+Check spelling and grammar using the macOS spellchecker\n\
+\n\
+It ignores entries from %2$s, which has this format:\n\
+\n\
+    errors\n\
+        (substring of error text, one per line)\n\
+    words\n\
+        (word to ignore, one per line)\n\
+    blocks\n\
+        (base64 hash of block/paragraph, one per line)\n\
+    phrases\n\
+        (base64 hash of phrase with grammatical error, one per line)\n\
+    subphrases\n\
+        (base64 hash of problematic subphrase in phrase, one per line)\n\
+\n\
+Arguments:\n\
+    FILE  Markdown file or Scheme file (spellchecks comments)\n\
+\n\
+Options:\n\
+    -p    Print plain text extracted from FILE\n\
+    -d    Show diff from FILE to extracted plain text\n\
+    -x    Print hashes of blocks, phrases, and subphrases\n\
+    -i    Interactively add to %2$s\n\
+",
+            program, IGNORE_PATH);
+}
+
 int main(int argc, char **argv) {
     setup_color();
     if (argc == 1) {
-        fprintf(stderr, "\
-usage: %s [-p | -d | -x | -i] FILE ...\n\
-\n\
-Spellchecks Markdown (.md) or Scheme (.ss) files using NSSpellChecker.\n\
-Pass the -p flag to print the file as plain text without spellchecking,\n\
-or the -d flag to show a diff from the input to the plain text.\n\
-Pass the -x flag to print hashes that can be used for ignoring errors.\n\
-Pass the -i flag to interactively add to spell-ignore.txt.\n\
-",
-                argv[0]);
+        usage(stderr, argv[0]);
         return 1;
     }
     if (strcmp(argv[1], "-d") == 0) {
