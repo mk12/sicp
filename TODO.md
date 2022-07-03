@@ -17,7 +17,7 @@
 - write a basic markdown linter (for links)
 - highlight.c -> highlight.so, fast and perfect, quasiquote etc.
 - consider reordering to "Chez, Racket, Guile"
-- improve structure around notes/, and reconsider style.css
++ improve structure around notes/, and reconsider style.css
 + tighter Deno allows, and share them between Makefile and watch.sh
     + can just use `make render.sock`!!
 + `./run.sh all` in parallel
