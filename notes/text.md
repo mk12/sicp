@@ -1535,7 +1535,8 @@ Angle             `angle-polar`      `angle-rectangular`
 
 - The data types in our polynomial algebra cannot easily be arranged in a tower.
 - For example, how would we coerce $(x+1)y^2$ and $(y+1)x^2$ to a common type?
-- Controlling coercion is a hard problem in these systems.
+
+> It should not be surprising that controlling coercion is a serious problem in the design of large-scale algebraic-manipulation systems. Much of the complexity of such systems is concerned with relationships among diverse types. Indeed, it is fair to say that we do not yet completely understand coercion. In fact, we do not yet completely understand the concept of a data type. Nevertheless, what we know provides us with powerful structuring and modularity principles to support the design of large systems. [@2.5.3]
 
 ::: exercises
 2.92
