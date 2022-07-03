@@ -71,7 +71,7 @@ help:
 	@:
 
 test:
-	./run.sh all
+	./run.sh all --plain
 
 docs: $(doc_html)
 

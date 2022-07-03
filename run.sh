@@ -7,7 +7,7 @@ main="src/main.ss"
 
 usage() {
     cat <<EOS
-Usage: $0 [-hd] {all,chez,guile,racket} ARG ...
+Usage: $0 [-hdp] {all,chez,guile,racket} ARG ...
 
 Run $main using the given Scheme implementation
 
@@ -23,10 +23,12 @@ Arguments:
 Options:
     -h, --help   Show this help message
     -d, --debug  Enter debugger on uncaught exception
+    -p, --plain  Use plain output for 'all'
 EOS
 }
 
-debug=
+debug=false
+plain=false
 num_schemes=3
 
 # Assuming the cursor is below $num_schemes lines of output, moves up to the
@@ -46,8 +48,13 @@ update() {
     printf "\x1b[${n}A\r\x1b[2K${line}\x1b[0m\x1b[${n}B\r"
 }
 
-# Runs ${@:3} and prints output prefixed with $2 on the ${1}th line.
+# Runs ${@:3} and prints output prefixed with $2 on the ${1}th line. But if
+# $plain is true, just prints output without moving the cursor.
 monitor() {
+    if [[ $plain = true ]]; then
+        "${@:3}" 2>&1 | sed "s/^/$2/;s/$/\x1b[0m/"
+        return
+    fi
     n=$(( num_schemes + 1 - $1 ))
     update "$n" "$2"
     prev=
@@ -64,7 +71,9 @@ monitor() {
 }
 
 run_all() {
-    head -c $num_schemes /dev/zero | tr '\0' $'\n'
+    # Print blank lines so that every call to `update` can reset the old output
+    # instead of having a special case for the first time.
+    [[ $plain = false ]] && head -c $num_schemes /dev/zero | tr '\0' $'\n'
     pids=()
     monitor 1 "Chez   ... " run_chez "$@" & pids+=($!)
     monitor 2 "Guile  ... " run_guile "$@" & pids+=($!)
@@ -101,17 +110,17 @@ run_racket() {
     racket -q --search . --search src/compat/racket --make "$main" "$@"
 }
 
+# This logic is a bit complicated so that we can recognize the run.sh options
+# anywhere, while passing everything else on to main.ss, unless there is a "--"
+# argument that explicitly divides run.sh options from main.ss options.
 ours=true
 scheme=
 fwd=()
-
-# This logic is a bit complicated so that we can recognize -d/--debug anywhere,
-# while passing everything else on to main.ss, unless there is a -- argument
-# that explicitly divides run.sh options from main.ss options.
 for arg; do
     if [[ $ours = true ]]; then
         case $arg in
             -d|--debug) debug=true; continue ;;
+            -p|--plain) plain=true; continue ;;
             --) ours=false; continue ;;
             *)
                 if [[ -z "$scheme" ]]; then
