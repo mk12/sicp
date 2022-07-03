@@ -10,7 +10,7 @@ Usage: $0
 Watch files and live-reload docs
 
 Initially it will let you choose an HTML in docs/ using fzf, and then watch for
-changes to all inputs that affect that file. Press any key to choose a different
+changes to all inputs that affect that file. Press enter to choose a different
 HTML file. When an input file changes, it rebuilds the page and refreshes it in
 the browser. This only works on macOS with Safari.
 EOS
@@ -69,8 +69,12 @@ choose_output() {
 }
 
 kill_entr() {
-    [[ -n "$entr_pid1" ]] && kill "$entr_pid1"
-    [[ -n "$entr_pid2" ]] && kill "$entr_pid2"
+    if [[ -n "$entr_pid1" ]]; then
+        kill "$entr_pid1" || :
+    fi
+    if [[ -n "$entr_pid2" ]]; then
+        kill "$entr_pid2" || :
+    fi
 }
 
 watch() {
@@ -100,5 +104,5 @@ restart_render
 while :; do
     choose_output
     watch
-    read -r -n1
+    read -r
 done
