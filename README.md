@@ -120,6 +120,8 @@ To build the website, make sure you have all the [dependencies](#dependencies) a
 
 To view the website, open [docs/index.html] in your browser.
 
+Use `./watch.sh` to live-reload the website while you edit sources.
+
 ### Implementation
 
 The generator starts in [docgen.c]. It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua]. The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
