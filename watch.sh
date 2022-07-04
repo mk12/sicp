@@ -22,6 +22,11 @@ entr_pid2=
 inputs=
 output=docs/index.html
 
+die() {
+    echo "$0: $*" >&2
+    exit 1
+}
+
 refresh() {
     make "$output" && open -g "$output"
 }
@@ -88,21 +93,28 @@ cleanup() {
     rm -f render.sock
 }
 
-if [[ $# -gt 0 ]]; then
-    usage
-    exit 0
-fi
+main() {
+    if [[ "$(uname -s)" != Darwin ]]; then
+        die "this script only works on macOS"
+    fi
 
-if [[ "$(uname -s)" != Darwin ]]; then
-    echo "error: this script only works on macOS" >&2
-    exit 1
-fi
+    cd "$(dirname "$0")/.."
+    trap cleanup EXIT
+    restart_render
+    while :; do
+        choose_output
+        watch
+        read -r
+    done
+}
 
-cd "$(dirname "$0")"
-trap cleanup EXIT
-restart_render
-while :; do
-    choose_output
-    watch
-    read -r
-done
+case $# in
+    0) main ;;
+    1)
+        case $1 in
+            -h|--help) usage ;;
+            *) usage >&2; exit 1 ;;
+        esac
+        ;;
+    *) usage >&2; exit 1 ;;
+esac

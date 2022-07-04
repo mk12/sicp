@@ -185,10 +185,15 @@ install_macos_formulas() {
     fi
 }
 
-case ${1:-} in
-    ""|-h|--help|help) usage ;;
-    check|install) "$1" ;;
-    *) die "$1: invalid command" ;;
+case $# in
+    1)
+        case $1 in
+            -h|--help|help) usage ;;
+            check|install) "$1" ;;
+            *) die "$1: invalid command" ;;
+        esac
+        ;;
+    *) usage >&2; exit 1 ;;
 esac
 
 if [[ $warned = true ]]; then
