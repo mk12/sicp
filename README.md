@@ -20,7 +20,7 @@ The program starts in [main.ss]. Each chapter of the book has its own file in [s
 
 ### Language
 
-Tests use `=>`, `~>`, `=?>`, `=$>`, and `=!>`:
+Tests use `=>`, `~>`, `=?>`, `=$>`, `=!>`, and `=>...`:
 
 ```scheme
 (+ 1 2 3) => (+ 3 2 1) => 6            ; => asserts equality
@@ -34,6 +34,8 @@ Tests use `=>`, `~>`, `=?>`, `=$>`, and `=!>`:
 
 (error 'foo "bad" 3) =!> "foo: bad: 3" ; =!> tests the error message
 (error 'foo "bad" 3) =!> "bad"         ; any substring will do
+
+(let loop () (loop)) =>...             ; =>... asserts nontermination
 ```
 
 Code fragments are isolated to their part of the book:
