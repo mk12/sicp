@@ -16,7 +16,15 @@
 - remove/change all "Note:"
 - write a basic markdown linter (for links)
 - highlight.c -> highlight.so, fast and perfect, quasiquote etc.
-- consider reordering to "Chez, Racket, Guile"
++ share Lua version between Makefile and deps.sh
++ generate compile_commands.json from Makefile rules
++ make scripts/
+    + but only for internal scripts used by makefile
+    + wasted lots of time trying to make perfect usage messages for them
+    + realized they are internal, so they don't need them
+    + keep run.sh, deps.sh, watch.sh at top level with good usage messages etc.
+x consider reordering to "Chez, Racket, Guile"
+    x no, already fine, sorted alphabetically
 + improve structure around notes/, and reconsider style.css
 + tighter Deno allows, and share them between Makefile and watch.sh
     + can just use `make render.sock`!!

@@ -12,12 +12,12 @@
 *.sock
 *.fifo
 
-# Downloaded HTML files
-/sicp_html
-
 # Editor config
 .vscode
 
 # clangd
 compile_commands.json
 .cache
+
+# Downloaded HTML files
+/sicp-html
