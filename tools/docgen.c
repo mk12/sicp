@@ -2040,7 +2040,7 @@ static void usage(FILE *out, const char *program) {
             "\
 Usage: %s OUT_FILE\n\
 \n\
-Generate OUT_FILE from Markdown/Scheme sources\n\
+Generate OUT_FILE from Markdown and Scheme sources\n\
 \n\
 This is part of a custom static site generator for the SICP Study project.\n\
 For more information, see the \"Website\" section in README.md.\n\
@@ -2055,6 +2055,10 @@ int main(int argc, char **argv) {
     if (argc != 2) {
         usage(stderr, argv[0]);
         return 1;
+    }
+    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+        usage(stdout, argv[0]);
+        return 0;
     }
     const char *output = argv[1];
     char *parent = strdup(output);

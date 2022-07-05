@@ -1115,7 +1115,7 @@ static const char IGNORE_PATH[] = "spell-ignore.txt";
 
 static void usage(FILE *out, const char *program) {
     fprintf(out, "\
-Usage: %1$s [-pdxi] FILE ...\n\
+Usage: %1$s [-hpdxi] FILE ...\n\
 \n\
 Check spelling and grammar using the macOS spellchecker\n\
 \n\
@@ -1133,13 +1133,14 @@ It ignores entries from %2$s, which has this format:\n\
         (base64 hash of problematic subphrase in phrase, one per line)\n\
 \n\
 Arguments:\n\
-    FILE  Markdown file or Scheme file (spellchecks comments)\n\
+    FILE               Markdown file or Scheme file (spellchecks comments)\n\
 \n\
 Options:\n\
-    -p    Print plain text extracted from FILE\n\
-    -d    Show diff from FILE to extracted plain text\n\
-    -x    Print hashes of blocks, phrases, and subphrases\n\
-    -i    Interactively add to %2$s\n\
+    -h, --help         Show this help message\n\
+    -p, --plain        Print plain text extracted from FILE\n\
+    -d, --diff         Show diff from FILE to extracted plain text\n\
+    -x, --hash         Print hashes of blocks, phrases, and subphrases\n\
+    -i, --interactive  Interactively add to %2$s\n\
 ",
             program, IGNORE_PATH);
 }
@@ -1150,7 +1151,11 @@ int main(int argc, char **argv) {
         usage(stderr, argv[0]);
         return 1;
     }
-    if (strcmp(argv[1], "-d") == 0) {
+    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+        usage(stdout, argv[0]);
+        return 0;
+    }
+    if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--diff") == 0) {
         if (argc != 3) {
             fprintf(stderr, "%s: -d only works with one file\n", argv[0]);
             return 1;
@@ -1169,13 +1174,14 @@ int main(int argc, char **argv) {
     }
     struct Options options = {.print_plain = false, .print_hashes = false};
     int idx = 1;
-    if (strcmp(argv[1], "-p") == 0) {
+    if (strcmp(argv[1], "-p") == 0 || strcmp(argv[1], "--plain") == 0) {
         options.print_plain = true;
         idx++;
-    } else if (strcmp(argv[1], "-x") == 0) {
+    } else if (strcmp(argv[1], "-x") == 0 || strcmp(argv[1], "--hash") == 0) {
         options.print_hashes = true;
         idx++;
-    } else if (strcmp(argv[1], "-i") == 0) {
+    } else if (strcmp(argv[1], "-i") == 0
+               || strcmp(argv[1], "--interactive") == 0) {
         options.interactive = true;
         idx++;
     }

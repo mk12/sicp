@@ -21,7 +21,7 @@ function usage(write: (s: string) => void) {
   write(
     `
 Usage: deno run --unstable --allow-{read,write}=SOCKET[,FIFO] --allow-run=svgbob
-       ${SCRIPT_NAME} [--help] SOCKET [FIFO]
+       ${SCRIPT_NAME} SOCKET [FIFO]
 
 Run server that renders KaTeX math and svgbob diagrams
 
