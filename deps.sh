@@ -15,7 +15,7 @@ Commands:
 EOS
 }
 
-lua_version=5.4
+lua_version=$(make print-lua_version)
 platform=
 warned=false
 
@@ -56,7 +56,7 @@ racket_file_installed() {
 }
 
 set_luarocks_env() {
-    eval "$(luarocks --lua-version=$lua_version path)"
+    eval "$(luarocks --lua-version="$lua_version" path)"
 }
 
 pandoc_lua_library_installed() {
@@ -143,7 +143,7 @@ install_macos_scheme() {
 
 install_macos_docs() {
     lua="lua@$lua_version"
-    lua_dir=$(brew --prefix $lua)
+    lua_dir=$(brew --prefix "$lua")
     install_macos_formulas pandoc "$lua:$lua_dir/bin/lua" luarocks deno
     set_luarocks_env
     if pandoc_lua_library_installed posix; then

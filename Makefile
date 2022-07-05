@@ -205,3 +205,6 @@ sicp_html:
 		done; \
 		wait; \
 	done
+
+print-%:
+	@echo $($*)
