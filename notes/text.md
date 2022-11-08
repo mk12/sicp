@@ -1,6 +1,6 @@
 These notes are based on the second edition of <cite>[Structure and Interpretation of Computer Programs][sicp]</cite> by Hal Abelson and Gerald Jay Sussman with Julie Sussman.
 
-[sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
+[sicp]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/index.html
 
 ## Dedication
 

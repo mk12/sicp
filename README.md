@@ -230,7 +230,7 @@ See [LICENSE](LICENSE.md) for details.
 [Pandoc]: https://pandoc.org
 [R6RS Scheme]: http://www.r6rs.org
 [Racket]: http://racket-lang.org
-[sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
+[sicp]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/index.html
 [skylighting]: https://github.com/jgm/skylighting
 [static]: https://github.com/jgm/pandoc/issues/3986
 [svgbob]: https://github.com/ivanceras/svgbob

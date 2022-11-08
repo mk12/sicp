@@ -1161,7 +1161,8 @@ static int num_sections(int chapter) {
 
 // Base URL for the online SICP textbook.
 static const char TEXT_URL_BASE[] =
-    "https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H";
+    "https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/"
+    "6515/sicp.zip/full-text/book/book-Z-H";
 
 // Base URL for the online SICP video lectures.
 static const char LECTURE_URL_BASE[] =

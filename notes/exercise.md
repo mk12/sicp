@@ -4,7 +4,7 @@ This project supports three Scheme implementations: [Chez Scheme], [Guile], and 
 
 These webpages are [generated] directly from source code.
 
-[sicp]: https://mitpress.mit.edu/sites/default/files/sicp/index.html
+[sicp]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/index.html
 [next section]: language.html "A Note on the Language"
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
@@ -324,9 +324,9 @@ The language also [defines] a few procedures and special forms. They are usable 
 
 `(make-mutex)` returns an object `«mutex»` that supports messages `(«mutex» 'acquire)` and `(«mutex» 'release)`. Unlike the [textbook version][mutex], which calls `test-and-set!` in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like `parallel-execute`, it is used in [](:3.4).
 
-[runtime]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%25_thm_1.22
-[parallel]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_Temp_414
-[mutex]: https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-23.html#%25_sec_Temp_427
+[runtime]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.22
+[parallel]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_414
+[mutex]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_427
 
 ### Special forms
 

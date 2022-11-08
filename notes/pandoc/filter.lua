@@ -415,7 +415,7 @@ end
 
 -- These correspond to definitions in docgen.c.
 local text_url_base =
-    "https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H"
+    "https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H"
 local lecture_url_base =
     "https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005"
 

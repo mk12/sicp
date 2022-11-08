@@ -3,8 +3,8 @@
 
 set -eufo pipefail
 
-site=https://mitpress.mit.edu
-prefix=$site/sites/default/files/sicp/full-text/book/book-Z-H
+site=https://mitp-content-server.mit.edu
+prefix=$site/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H
 num_sec=(0 3 5 5 4 5)
 offset=(0 0 3 8 13 17)
 
