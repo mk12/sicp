@@ -14,8 +14,15 @@
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 - remove/change all "Note:"
-- write a basic markdown linter (for links)
+- write a basic markdown linter (for links, and check 200 OK)
 - highlight.c -> highlight.so, fast and perfect, quasiquote etc.
+- move notes/pandoc/ to pandoc/
++ hyphens vs. underscores
+    + hyphen: Scheme, Make targets
+    + underscores: compile_commands.json, 
++ automatically produce -Wl,-U flags for lua
++ put Lua .so in lib/ not bin/
++ stop using luaposix, just write a C library for it
 + share Lua version between Makefile and deps.sh
 + generate compile_commands.json from Makefile rules
 + make scripts/

@@ -7,16 +7,15 @@ cd "$(dirname "$0")/.."
 
 echo "["
 
-for output; do
-    command=$(make -Bn "$output" | tail -n1 | sed 's/^cc /clang /')
+for tool; do
+    command=$(make -Bn "$tool" | grep 'tools/' | sed 's/^cc /clang /')
     file=${command##* }
     comma=,
-    [[ "$output" = "${*:$#:1}" ]] && comma=
+    [[ "$tool" = "${*:$#:1}" ]] && comma=
     cat <<EOS
     {
         "directory": "$(pwd)",
         "file": "$file",
-        "output": "$output",
         "command": "$command"
     }$comma
 EOS

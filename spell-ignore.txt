@@ -19,7 +19,6 @@ words
     indeterminates
     integerized
     integerizing
-    luaposix
     mutexes
     noninfringement
     skylighting

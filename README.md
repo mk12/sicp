@@ -126,7 +126,7 @@ Use `./watch.sh` to live-reload the website while you edit sources.
 
 The generator starts in [docgen.c]. It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua]. The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
 
-To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses [luaposix] to do this, which loads its C modules from `.so` files. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
+To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses the C library [tools/lua/ntsp.c] to do this, loaded from a `.so` file. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
 
 The render.ts server is a [Deno] server implemented in [render.ts]. It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX], and converts ASCII diagrams to SVG using [svgbob] and [svgo]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
 
@@ -179,7 +179,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 
 - [Chez Scheme], [Guile], and [Racket]: Scheme implementations.
 - [Pandoc]: Used to build the website. Must be dynamically linked to libc.
-- [LuaRocks] and [luaposix]: Used in the Pandoc filter.
+- [Lua]: Its headers are used by the libraries in [tools/lua/].
 - [Deno]: Used to run a server that renders math and diagrams.
 - [svgbob]: Used to convert ASCII diagrams to SVG.
 - [vnu]: Used to validate HTML files.
@@ -213,6 +213,8 @@ See [LICENSE](LICENSE.md) for details.
 [src/sicp/]: src/sicp/
 [style.css]: docs/style.css
 [template.html]: notes/pandoc/template.html
+[tools/lua/]: tools/lua
+[tools/lua/ntsp.c]: tools/lua/ntsp.c
 
 [bem]: http://getbem.com/naming/
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
@@ -223,8 +225,7 @@ See [LICENSE](LICENSE.md) for details.
 [KaTeX]: https://katex.org
 [kde-scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml
 [lectures]: https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video_galleries/video-lectures/
-[luaposix]: https://github.com/luaposix/luaposix
-[LuaRocks]: https://luarocks.org
+[Lua]: https://www.lua.org
 [note]: https://mk12.github.io/sicp/exercise/language.html
 [Pandoc Markdown]: https://pandoc.org/MANUAL.html#pandocs-markdown
 [Pandoc]: https://pandoc.org

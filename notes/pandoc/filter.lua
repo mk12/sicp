@@ -3,36 +3,16 @@
 -- Used for reading and writing Pandoc metadata.
 local vars = {}
 
--- The luaposix modules are loaded only if needed.
-local S = nil  -- posix.sys.socket
-local U = nil  -- posix.unistd
-
 -- Connection to the render.ts server.
 local socket = nil
 
 -- Makes a request to the render.ts server.
 function call_render_server(args)
     if not socket then
-        S = require("posix.sys.socket")
-        U = require("posix.unistd")
-        socket = assert(S.socket(S.AF_UNIX, S.SOCK_STREAM, 0))
-        assert(S.connect(socket, {family = S.AF_UNIX, path = "render.sock"}))
+        socket = assert(require("ntsp").connect("render.sock"))
     end
-    local request = table.concat(args, ":") .. "\x00"
-    local i = 1
-    while i < #request do
-        i = assert(S.send(socket, request:sub(i))) + 1
-    end
-    local chunks = {}
-    while true do
-        chunk = assert(S.recv(socket, 1024))
-        if chunk:sub(#chunk) == "\x00" then
-            table.insert(chunks, chunk:sub(1, #chunk - 1))
-            break
-        end
-        table.insert(chunks, chunk)
-    end
-    local response = table.concat(chunks)
+    local request = table.concat(args, ":")
+    local response = socket:send(request)
     local error_prefix = "error:"
     if response:sub(1, #error_prefix) == error_prefix then
         error("render.ts error: " .. response:sub(#error_prefix + 1))
@@ -43,7 +23,7 @@ end
 -- Closes the connection to render.ts, if it was opened.
 function close_socket()
     if socket then
-        assert(U.close(socket))
+        assert(socket:close())
     end
 end
 
