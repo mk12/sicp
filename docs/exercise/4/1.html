@@ -65,10 +65,10 @@
 </nav>
 <main id="main">
 <h1>
-<span class="number">4.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html">The Metacircular Evaluator<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<span class="number">4.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html">The Metacircular Evaluator<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="4.1.1" class="anchor">
-<a class="anchor__link link" href="#4.1.1" aria-hidden="true">#</a> <span class="number">4.1.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.1">The Core of the Evaluator<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.1" aria-hidden="true">#</a> <span class="number">4.1.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.1">The Core of the Evaluator<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -306,7 +306,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span></code></pre>
 <h3 id="ex4.1" class="anchor">
-<a class="anchor__link link" href="#ex4.1" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.1">Exercise 4.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.1" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.1">Exercise 4.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -502,7 +502,7 @@ Imports:
   ((<span class="kw">lambda</span> (a b) x) (<span class="kw">set!</span> x <span class="cn">&quot;left&quot;</span>) (<span class="kw">set!</span> x <span class="cn">&quot;right&quot;</span>)))
 <span class="op">=&gt;</span> <span class="cn">&quot;left&quot;</span></code></pre>
 <h2 id="4.1.2" class="anchor">
-<a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a> <span class="number">4.1.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.2">Representing Expressions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.2" aria-hidden="true">#</a> <span class="number">4.1.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.2">Representing Expressions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> (self-evaluating? exp) (<span class="kw">or</span> (<span class="fu">boolean?</span> exp) (<span class="fu">number?</span> exp) (<span class="fu">string?</span> exp)))
 (<span class="kw">define</span> (variable? exp) (<span class="fu">symbol?</span> exp))
@@ -642,7 +642,7 @@ Imports:
 
 (apply-primitive-procedure (<span class="fu">list</span> <span class="vs">&#39;primitive</span> <span class="fu">car</span>) (<span class="fu">list</span> <span class="vs">&#39;(a . b)</span>)) <span class="op">=&gt;</span> <span class="vs">&#39;a</span></code></pre>
 <h3 id="ex4.2" class="anchor">
-<a class="anchor__link link" href="#ex4.2" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.2">Exercise 4.2<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.2" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.2">Exercise 4.2<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -763,7 +763,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(call (lambda (x) x) 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre></li>
 </ol>
 <h3 id="ex4.3" class="anchor">
-<a class="anchor__link link" href="#ex4.3" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.3">Exercise 4.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.3" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.3">Exercise 4.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -986,7 +986,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span></code></pre>
 <h3 id="ex4.4" class="anchor">
-<a class="anchor__link link" href="#ex4.4" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.4">Exercise 4.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.4" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.4">Exercise 4.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1069,7 +1069,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(or 2 #f 1)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(or #f #f #f)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex4.5" class="anchor">
-<a class="anchor__link link" href="#ex4.5" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.5">Exercise 4.5<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.5" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.5">Exercise 4.5<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1172,7 +1172,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(cond (#f 1) (2 =&gt; (lambda (x) x)))</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(cond (2 =&gt; (lambda (x) &quot;hi&quot;)) (#f 1))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span></code></pre>
 <h3 id="ex4.6" class="anchor">
-<a class="anchor__link link" href="#ex4.6" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.6">Exercise 4.6<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.6" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.6">Exercise 4.6<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1252,7 +1252,7 @@ Imports:
 <pre><code class="blockcode">(<span class="fu">eval</span> <span class="vs">&#39;(define f (lambda () &quot;hi&quot;))</span> env)
 (<span class="fu">eval</span> <span class="vs">&#39;(let ((x (set! f (f)))) x x f)</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span></code></pre>
 <h3 id="ex4.7" class="anchor">
-<a class="anchor__link link" href="#ex4.7" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.7">Exercise 4.7<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.7" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.7">Exercise 4.7<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1340,7 +1340,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(let ((x 1) (y x)) y)</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unbound variable: x&quot;</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(let* ((x 1) (y x)) y)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <h3 id="ex4.8" class="anchor">
-<a class="anchor__link link" href="#ex4.8" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.8">Exercise 4.8<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.8" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.8">Exercise 4.8<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1439,7 +1439,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(let foo ((x 1)) x)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(let foo ((x #t)) (if x (foo #f) &quot;done&quot;))</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;done&quot;</span></code></pre>
 <h3 id="ex4.9" class="anchor">
-<a class="anchor__link link" href="#ex4.9" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.9">Exercise 4.9<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.9" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.9">Exercise 4.9<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1528,7 +1528,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(while x (set! x #f) (set! y 2))</span> env)
 (<span class="fu">eval</span> <span class="vs">&#39;y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h3 id="ex4.10" class="anchor">
-<a class="anchor__link link" href="#ex4.10" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.10">Exercise 4.10<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.10" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.10">Exercise 4.10<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1660,7 +1660,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(#t ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(#f ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h2 id="4.1.3" class="anchor">
-<a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.3">Evaluator Data Structures<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.3">Evaluator Data Structures<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="4.1.3.1" class="anchor">
 <a class="anchor__link link" href="#4.1.3.1" aria-hidden="true">#</a> <span class="number">4.1.3.1</span> Testing of predicates
@@ -1771,7 +1771,7 @@ Imports:
 <p><code>y</code> is “orange” in <code>env1</code> because <code>set-variable-value!</code> changed it in <code>env1</code>:</p>
 <pre><code class="blockcode">(lookup-variable-value <span class="vs">&#39;y</span> env1) <span class="op">=&gt;</span> <span class="cn">&quot;orange&quot;</span></code></pre>
 <h3 id="ex4.11" class="anchor">
-<a class="anchor__link link" href="#ex4.11" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.11">Exercise 4.11<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.11" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.11">Exercise 4.11<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1855,7 +1855,7 @@ Imports:
 (lookup-variable-value <span class="vs">&#39;x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
 (lookup-variable-value <span class="vs">&#39;y</span> env1) <span class="op">=&gt;</span> <span class="cn">&quot;orange&quot;</span></code></pre>
 <h3 id="ex4.12" class="anchor">
-<a class="anchor__link link" href="#ex4.12" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.12">Exercise 4.12<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.12" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.12">Exercise 4.12<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1930,7 +1930,7 @@ Imports:
 (lookup-variable-value <span class="vs">&#39;x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
 (lookup-variable-value <span class="vs">&#39;y</span> env1) <span class="op">=&gt;</span> <span class="cn">&quot;orange&quot;</span></code></pre>
 <h3 id="ex4.13" class="anchor">
-<a class="anchor__link link" href="#ex4.13" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.13">Exercise 4.13<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.13" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.13">Exercise 4.13<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2020,7 +2020,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(make-unbound! y)</span> env)
 (<span class="fu">eval</span> <span class="vs">&#39;y</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unbound variable: y&quot;</span></code></pre>
 <h2 id="4.1.4" class="anchor">
-<a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -2123,17 +2123,17 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;(cdr (cons 1 2))</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="vs">&#39;(= (+ 1 2) 3 (- 10 7))</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h3 id="ex4.14" class="anchor">
-<a class="anchor__link link" href="#ex4.14" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.14">Exercise 4.14<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.14" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.14">Exercise 4.14<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>Louis’s <code>map</code> fails with compound procedures because it attempts to apply an object created by <code>make-procedure</code> in the underlying Lisp. (It would work if he only passed other primitive procedures, like <code>(<span class="fu">map</span> <span class="fu">car</span> pairs)</code>.) Eva’s <code>map</code> works because evaluation of <code>map</code> stays in the metacircular evaluator, which is capable of evaluating its own procedure format.</p>
 <h2 id="4.1.5" class="anchor">
-<a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.5">Data as Programs<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.5">Data as Programs<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode">(<span class="fu">eval</span> <span class="vs">&#39;(* 5 5)</span> user-initial-environment)
 <span class="op">=&gt;</span> (<span class="fu">eval</span> (<span class="fu">cons</span> <span class="vs">&#39;*</span> (<span class="fu">list</span> <span class="cn">5</span> <span class="cn">5</span>)) user-initial-environment)
 <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
 <h3 id="ex4.15" class="anchor">
-<a class="anchor__link link" href="#ex4.15" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.15">Exercise 4.15<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.15" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.15">Exercise 4.15<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (halts? p a)
   (<span class="fu">error</span> <span class="vs">&#39;halts?</span> <span class="cn">&quot;the halting problem is impossible to solve&quot;</span>))
@@ -2142,10 +2142,10 @@ Imports:
 (<span class="kw">define</span> (try p) (<span class="kw">if</span> (halts? p p) (run-forever) <span class="vs">&#39;halted</span>))</code></pre>
 <p>It is impossible for <code>halts?</code> to correctly determine whether <code>(p a)</code> halts. Consider the expression <code>(try try)</code>. Suppose it halts. But then <code>(halts? p p) <span class="op">=&gt;</span> (halts? try try) <span class="op">=&gt;</span> <span class="cn">#t</span></code>, so <code>(try try) <span class="op">=&gt;</span> (run-forever)</code>. So it must run forever instead. But then <code>(halts? try try) <span class="op">=&gt;</span> <span class="cn">#f</span></code>, so <code>(try try) <span class="op">=&gt;</span> <span class="vs">&#39;halted</span></code>, a contradiction. This completes the proof.</p>
 <h2 id="4.1.6" class="anchor">
-<a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.6">Internal Definitions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.6">Internal Definitions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="ex4.16" class="anchor">
-<a class="anchor__link link" href="#ex4.16" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.16">Exercise 4.16<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.16" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.16">Exercise 4.16<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2300,7 +2300,7 @@ Imports:
      <span class="cn">#f</span>)))
 <span class="er">=!&gt;</span> <span class="cn">&quot;illegal use of internal definition: y&quot;</span></code></pre>
 <h3 id="ex4.17" class="anchor">
-<a class="anchor__link link" href="#ex4.17" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.17">Exercise 4.17<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.17" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.17">Exercise 4.17<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>Code before:</p>
 <pre><code class="blockcode"><span class="co">; (lambda &lt;vars&gt;</span>
@@ -2327,7 +2327,7 @@ Imports:
 <span class="co">;   (set! v &lt;e2&gt;)</span>
 <span class="co">;   &lt;e3&gt;)</span></code></pre>
 <h3 id="ex4.18" class="anchor">
-<a class="anchor__link link" href="#ex4.18" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.18">Exercise 4.18<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.18" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.18">Exercise 4.18<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>No, the <code>solve</code> procedure from Section 3.5.4 will not work if internal definitions are scanned out using this alternative strategy. We get:</p>
 <pre><code class="blockcode"><span class="co">; (define (solve f yo dt)</span>
@@ -2345,12 +2345,12 @@ Imports:
 <span class="co">;     y)))</span></code></pre>
 <p>This time, <code>y</code> has been initialized by the time <code>stream-map</code> is called.</p>
 <h3 id="ex4.19" class="anchor">
-<a class="anchor__link link" href="#ex4.19" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.19">Exercise 4.19<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.19" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.19">Exercise 4.19<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>I support Alyssa’s view. The fact that this case is tricky means that, even if there are good theoretical grounds for a particular semantics, code like this is likely to cause confusion and bugs. It is better to simply disallow it, resulting in code that is more clear.</p>
 <p>I cannot think of an easy way to implement Eva’s preference. If you think of variables as nodes and uses of other variables as directed edges, then the set of internal definitions form a graph, and producing Eva’s behavior requires topologically sorting the graph.</p>
 <h3 id="ex4.20" class="anchor">
-<a class="anchor__link link" href="#ex4.20" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.20">Exercise 4.20<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.20" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.20">Exercise 4.20<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2461,7 +2461,7 @@ Imports:
 <span class="co">;                         +-----------------[*|*]-[*|*]</span></code></pre>
 <p>So references to <code>even?</code> inside <code>odd?</code> and vice versa will not resolve.</p>
 <h3 id="ex4.21" class="anchor">
-<a class="anchor__link link" href="#ex4.21" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.21">Exercise 4.21<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.21" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.21">Exercise 4.21<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <ol type="a">
 <li><p>Check that it works, and devise an analogous expression for Fibonacci.</p>
@@ -2487,7 +2487,7 @@ Imports:
 (<span class="fu">map</span> f <span class="vs">&#39;(0 1 2 3 4 5)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(#t #f #t #f #t #f)</span></code></pre></li>
 </ol>
 <h2 id="4.1.7" class="anchor">
-<a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -2736,7 +2736,7 @@ Imports:
 (<span class="fu">eval</span> <span class="vs">&#39;((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span></code></pre>
 <h3 id="ex4.22" class="anchor">
-<a class="anchor__link link" href="#ex4.22" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.22">Exercise 4.22<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.22" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.22">Exercise 4.22<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2933,7 +2933,7 @@ Imports:
 <pre><code class="blockcode">(<span class="fu">eval</span> <span class="vs">&#39;(define f (lambda () &quot;hi&quot;))</span> env)
 (<span class="fu">eval</span> <span class="vs">&#39;(let ((x (set! f (f)))) x x f)</span> env) <span class="op">=&gt;</span> <span class="cn">&quot;hi&quot;</span></code></pre>
 <h3 id="ex4.23" class="anchor">
-<a class="anchor__link link" href="#ex4.23" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.23">Exercise 4.23<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.23" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.23">Exercise 4.23<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>In the case of a procedure body with a single expression, Alyssa’s program would result in the following process during evaluation (after analysis):</p>
 <pre><code class="blockcode"><span class="co">; (proc)</span>
@@ -2964,7 +2964,7 @@ Imports:
 <span class="co">; (*analyzed-proc-1* env)</span>
 <span class="co">; (*analyzed-proc-1* env)</span></code></pre>
 <h3 id="ex4.24" class="anchor">
-<a class="anchor__link link" href="#ex4.24" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%25_thm_4.24">Exercise 4.24<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex4.24" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.24">Exercise 4.24<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>

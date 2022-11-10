@@ -67,10 +67,10 @@
 </nav>
 <main id="main">
 <h1>
-<span class="number">2.5</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html">Systems with Generic Operations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<span class="number">2.5</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html">Systems with Generic Operations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <h2 id="2.5.1" class="anchor">
-<a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.5.1" aria-hidden="true">#</a> <span class="number">2.5.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_sec_2.5.1">Generic Arithmetic Operations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -225,7 +225,7 @@ Imports:
 (sub (make-complex-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>) (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>))
 <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">-1</span>)</code></pre>
 <h3 id="ex2.77" class="anchor">
-<a class="anchor__link link" href="#ex2.77" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.77">Exercise 2.77<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.77" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.77">Exercise 2.77<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -310,7 +310,7 @@ Imports:
 <span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
 <p>In this example, <code>apply-generic</code> is invoked twice: once on the outer <code>'complex</code> object and again on the inner <code>'rectangular</code> object. Each invocation strips off one type tag.</p>
 <h3 id="ex2.78" class="anchor">
-<a class="anchor__link link" href="#ex2.78" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.78">Exercise 2.78<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.78" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.78">Exercise 2.78<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -365,7 +365,7 @@ Imports:
 (add <span class="cn">1</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
 (mul <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
 <h3 id="ex2.79" class="anchor">
-<a class="anchor__link link" href="#ex2.79" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.79">Exercise 2.79<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.79" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.79">Exercise 2.79<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -430,8 +430,11 @@ Imports:
 </li>
 </ul>
 </aside>
+<p>In addition to Scheme numbers, rationals, and complex numbers, we’ll also make it work for integers and reals. This will be used to implement <code>drop</code> in <a href="#ex2.85">Exercise&nbsp;2.85</a>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (equ-pkg)
   (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(scheme-number scheme-number)</span> <span class="fu">=</span>)
+  (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(integer integer)</span> <span class="fu">=</span>)
+  (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(real real)</span> <span class="fu">=</span>)
   (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(rational rational)</span>
        (<span class="kw">lambda</span> (x y)
          (<span class="kw">and</span> (<span class="fu">=</span> (numer x) (numer y))
@@ -439,10 +442,7 @@ Imports:
   (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(complex complex)</span>
        (<span class="kw">lambda</span> (z1 z2)
          (<span class="kw">and</span> (<span class="fu">=</span> (real-part z1) (real-part z2))
-              (<span class="fu">=</span> (imag-part z1) (imag-part z2)))))
-  <span class="co">;; These are used later in Exercise 2.85.</span>
-  (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(integer integer)</span> <span class="fu">=</span>)
-  (put <span class="vs">&#39;equ?</span> <span class="vs">&#39;(real real)</span> <span class="fu">=</span>))
+              (<span class="fu">=</span> (imag-part z1) (imag-part z2))))))
 
 (<span class="kw">define</span> (equ? x y) (apply-generic <span class="vs">&#39;equ?</span> x y))
 
@@ -455,7 +455,7 @@ Imports:
 (equ? (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">0</span>) (make-complex-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (equ? (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>) (make-complex-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex2.80" class="anchor">
-<a class="anchor__link link" href="#ex2.80" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.80">Exercise 2.80<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.80" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.80">Exercise 2.80<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -536,7 +536,7 @@ Imports:
 (=zero? (make-complex-from-mag-ang <span class="cn">0</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (=zero? (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h2 id="2.5.2" class="anchor">
-<a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a> <span class="number">2.5.2</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.2">Combining Data of Different Types<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.5.2" aria-hidden="true">#</a> <span class="number">2.5.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_sec_2.5.2">Combining Data of Different Types<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <aside class="imports">
 <h4>
@@ -626,7 +626,7 @@ Imports:
 <span class="op">=&gt;</span> (add (make-complex-from-real-imag <span class="cn">0</span> <span class="cn">1</span>) (make-scheme-number <span class="cn">1</span>))
 <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">1</span> <span class="cn">1</span>)</code></pre>
 <h3 id="ex2.81" class="anchor">
-<a class="anchor__link link" href="#ex2.81" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.81">Exercise 2.81<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.81" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.81">Exercise 2.81<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -736,7 +736,7 @@ Imports:
 (exp z z) <span class="er">=!&gt;</span> <span class="cn">&quot;no method for types&quot;</span></code></pre></li>
 </ol>
 <h3 id="ex2.82" class="anchor">
-<a class="anchor__link link" href="#ex2.82" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.82" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -856,7 +856,7 @@ Imports:
 <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">3</span> <span class="cn">1</span>)</code></pre>
 <p>This won’t work if two complex numbers are supplied and the operation takes one real number and one complex number. It only works for operations given the exact types they need, or for operations that take arguments that are all of the same type (assuming all the necessary coercions are possible).</p>
 <h3 id="ex2.83" class="anchor">
-<a class="anchor__link link" href="#ex2.83" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.83">Exercise 2.83<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.83" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.83">Exercise 2.83<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -981,7 +981,7 @@ Imports:
 (raise (make-rational <span class="cn">1</span> <span class="cn">2</span>)) <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)
 (raise (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-complex-from-real-imag <span class="cn">0.5</span> <span class="cn">0</span>)</code></pre>
 <h3 id="ex2.84" class="anchor">
-<a class="anchor__link link" href="#ex2.84" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.84">Exercise 2.84<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.84" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.84">Exercise 2.84<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1096,7 +1096,7 @@ Imports:
 (div (make-real <span class="cn">1</span>) (make-integer <span class="cn">2</span>))
 <span class="op">=&gt;</span> (make-real <span class="cn">0.5</span>)</code></pre>
 <h3 id="ex2.85" class="anchor">
-<a class="anchor__link link" href="#ex2.85" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.85">Exercise 2.85<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.85" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.85">Exercise 2.85<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1205,11 +1205,11 @@ Imports:
 </li>
 </ul>
 </aside>
+<p>Projection from reals to rationals is the hardest. Instead of designing an algorithm to find the nearest rational, we’ll cheat and use the procedures <code>exact</code>, <code>numerator</code>, and <code>denominator</code> which deal with Scheme’s built-in rational numbers.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (project-pkg)
   (<span class="kw">define</span> (complex-&gt;real x)
     (make-real (real-part x)))
   (<span class="kw">define</span> (real-&gt;rational x)
-    <span class="co">;; Note: `exact`, `numerator`, and `denominator` are built-in procedures.</span>
     (<span class="kw">let</span> ((y (<span class="fu">exact</span> x)))
       (make-rational (<span class="fu">numerator</span> y) (<span class="fu">denominator</span> y))))
   (<span class="kw">define</span> (rational-&gt;integer r)
@@ -1265,7 +1265,7 @@ Imports:
 (mul (make-rational <span class="cn">3</span> <span class="cn">2</span>) (make-real <span class="cn">8</span>)) <span class="op">=&gt;</span> (make-integer <span class="cn">12</span>)
 (sub (make-real <span class="cn">2</span>) (make-real <span class="cn">0.5</span>)) <span class="op">=&gt;</span> (make-rational <span class="cn">3</span> <span class="cn">2</span>)</code></pre>
 <h3 id="ex2.86" class="anchor">
-<a class="anchor__link link" href="#ex2.86" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.86">Exercise 2.86<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.86" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.86">Exercise 2.86<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1500,13 +1500,10 @@ Imports:
   (rational-pkg)
   (real-pkg)
   (complex-pkg)
-  <span class="co">;; Used by the new complex package.</span>
   (sqrt-trig-pkg)
-  <span class="co">;; Used by numeric tower coercion and simplifying.</span>
   (equ-pkg)
   (raise-pkg)
   (project-pkg)
-  <span class="co">;; Fix up complex entries in the packages above.</span>
   (complex-patch-pkg))
 
 (using final-numeric-pkg)
@@ -1519,7 +1516,7 @@ Imports:
      (make-complex-from-mag-ang (make-rational <span class="cn">1</span> <span class="cn">2</span>) (make-real <span class="cn">1</span>)))
 <span class="op">=&gt;</span> (make-integer <span class="cn">6</span>)</code></pre>
 <h2 id="2.5.3" class="anchor">
-<a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a> <span class="number">2.5.3</span> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#2.5.3" aria-hidden="true">#</a> <span class="number">2.5.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_sec_2.5.3">Example: Symbolic Algebra<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <h3 id="2.5.3.1" class="anchor">
 <a class="anchor__link link" href="#2.5.3.1" aria-hidden="true">#</a> <span class="number">2.5.3.1</span> Arithmetic on polynomials
@@ -1590,12 +1587,12 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>We are following <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_303">Footnote&nbsp;58</a> and using the generic arithmetic system from <a href="#ex2.78">Exercise&nbsp;2.78</a>, where Scheme numbers are not explicitly tagged.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> variable <span class="fu">car</span>)
+<p>We are following <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#footnote_Temp_303">Footnote&nbsp;58</a> and using the generic arithmetic system from <a href="#ex2.78">Exercise&nbsp;2.78</a>, where Scheme numbers are not explicitly tagged.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> make-poly <span class="fu">cons</span>)
+(<span class="kw">define</span> variable <span class="fu">car</span>)
 (<span class="kw">define</span> term-list <span class="fu">cdr</span>)
 
 (<span class="kw">define</span> (polynomial-pkg)
-  (<span class="kw">define</span> (make-poly variable term-list) (<span class="fu">cons</span> variable term-list))
   (<span class="kw">define</span> (add-poly p1 p2)
     (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
         (make-poly (variable p1)
@@ -1607,9 +1604,9 @@ Imports:
                    (mul-terms (term-list p1) (term-list p2)))
         (<span class="fu">error</span> <span class="vs">&#39;mul-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
   (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">&#39;polynomial</span> p))
+  (put <span class="vs">&#39;make</span> <span class="vs">&#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
   (put <span class="vs">&#39;add</span> <span class="vs">&#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
-  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
-  (put <span class="vs">&#39;make</span> <span class="vs">&#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms)))))
+  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2)))))
 
 (<span class="kw">define</span> (add-terms l1 l2)
   (<span class="kw">cond</span> ((empty-termlist? l1) l2)
@@ -1709,7 +1706,7 @@ Imports:
   (put <span class="vs">&#39;rest-terms</span> <span class="vs">&#39;(sparse-termlist)</span> (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
   (put <span class="vs">&#39;empty-termlist?</span> <span class="vs">&#39;(sparse-termlist)</span> empty-termlist?))</code></pre>
 <h3 id="ex2.87" class="anchor">
-<a class="anchor__link link" href="#ex2.87" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.87">Exercise 2.87<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.87" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.87">Exercise 2.87<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1811,7 +1808,7 @@ Imports:
 (add (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;()</span>) (make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;()</span>))
 <span class="er">=!&gt;</span> <span class="cn">&quot;polys not in same var&quot;</span></code></pre>
 <h3 id="ex2.88" class="anchor">
-<a class="anchor__link link" href="#ex2.88" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.88">Exercise 2.88<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.88" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.88">Exercise 2.88<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1933,7 +1930,7 @@ Imports:
      (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((2 2) (1 1) (0 -1))</span>))
 <span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((3 1) (2 -2) (1 1) (0 1))</span>)</code></pre>
 <h3 id="ex2.89" class="anchor">
-<a class="anchor__link link" href="#ex2.89" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.89">Exercise 2.89<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.89" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.89">Exercise 2.89<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -1989,7 +1986,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<p>As mentioned in <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#footnote_Temp_304">Footnote&nbsp;59</a>, we are assuming that <code>adjoin-term</code> is always called with a higher-order term than appears in the list.</p>
+<p>As mentioned in <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#footnote_Temp_304">Footnote&nbsp;59</a>, we are assuming that <code>adjoin-term</code> is always called with a higher-order term than appears in the list.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
   (<span class="kw">let</span> ((o (order term)))
     (<span class="kw">define</span> (iter term-list len)
@@ -2021,7 +2018,7 @@ Imports:
   (put <span class="vs">&#39;rest-terms</span> <span class="vs">&#39;(dense-termlist)</span> (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
   (put <span class="vs">&#39;empty-termlist?</span> <span class="vs">&#39;(dense-termlist)</span> empty-termlist?))</code></pre>
 <h3 id="ex2.90" class="anchor">
-<a class="anchor__link link" href="#ex2.90" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.90">Exercise 2.90<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.90" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.90">Exercise 2.90<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2050,6 +2047,9 @@ Imports:
 <li class="flat__item">
 <a href="#2.5.3.1">2.5.3.1</a>
 <ul class="flat">
+<li class="flat__item nowrap">
+<code>make-poly</code>
+</li>
 <li class="flat__item nowrap">
 <code>term-list</code>
 </li>
@@ -2182,7 +2182,7 @@ Imports:
 (mul dense-a dense-b) <span class="op">=&gt;</span> sparse-a*b
 (mul sparse-a dense-b) <span class="op">=&gt;</span> sparse-a*b</code></pre>
 <h3 id="ex2.91" class="anchor">
-<a class="anchor__link link" href="#ex2.91" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.91">Exercise 2.91<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.91" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.91">Exercise 2.91<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2353,7 +2353,7 @@ Imports:
 <a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a> <span class="number">2.5.3.3</span> Hierarchies of types in symbolic algebra
 </h3>
 <h3 id="ex2.92" class="anchor">
-<a class="anchor__link link" href="#ex2.92" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.92">Exercise 2.92<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.92" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.92">Exercise 2.92<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2384,6 +2384,9 @@ Imports:
 <ul class="flat">
 <li class="flat__item nowrap">
 <code>add-terms</code>
+</li>
+<li class="flat__item nowrap">
+<code>make-poly</code>
 </li>
 <li class="flat__item nowrap">
 <code>mul-term-by-all-terms</code>
@@ -2472,83 +2475,84 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (polynomial? x)
-  (<span class="fu">eq?</span> (type-tag x) <span class="vs">&#39;polynomial</span>))
-
-(<span class="kw">define</span> (variable&lt;? a b)
-  (<span class="fu">string&lt;?</span> (<span class="fu">symbol-&gt;string</span> a)
-            (<span class="fu">symbol-&gt;string</span> b)))
-
-(<span class="kw">define</span> (polynomial-pkg)
-  (<span class="kw">define</span> make-poly <span class="fu">cons</span>)
+<p>To add or multiply of polynomials in different variables, we first need to coerce them to a common variable. We’ll choose the variable that comes first alphabetically.</p>
+<p>Suppose we’re coercing a polynomial from <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">x\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> For a term with a numerical coefficient like <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5</mn><msup><mi>y</mi><mn>2</mn></msup><mtext>,</mtext></mrow><annotation encoding="application/x-tex">5y^2\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord">5</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> we’ll change it to a constant term with a polynomial coefficient: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>5</mn><msup><mi>y</mi><mn>2</mn></msup><mo stretchy="false">)</mo><msup><mi>x</mi><mn>0</mn></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">(5y^2)x^0\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">5</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> For a term with a polynomial coefficient like <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>3</mn><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><msup><mi>y</mi><mn>2</mn></msup><mtext>,</mtext></mrow><annotation encoding="application/x-tex">(3x+1)y^2\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">3</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> we’ll first coerce the coefficient to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> (already done) and then multiply it by <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><msup><mi>y</mi><mn>2</mn></msup><mo stretchy="false">)</mo><msup><mi>x</mi><mn>0</mn></msup><mtext>,</mtext></mrow><annotation encoding="application/x-tex">(y^2)x^0\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> resulting in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>3</mn><msup><mi>y</mi><mn>2</mn></msup><mo stretchy="false">)</mo><msup><mi>x</mi><mn>1</mn></msup><mo>+</mo><mo stretchy="false">(</mo><msup><mi>y</mi><mn>2</mn></msup><mo stretchy="false">)</mo><msup><mi>x</mi><mn>0</mn></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">(3y^2)x^1+(y^2)x^0\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">3</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> For this to work, we need to support adding and multiplying Scheme numbers with polynomials, since coefficients can be a mix of the two.</p>
+<pre><code class="blockcode">(<span class="kw">define</span> (polynomial-pkg)
   (<span class="kw">define</span> (singleton t)
     (adjoin-term t (the-empty-termlist)))
-  (<span class="kw">define</span> (as-constant-term var term)
+  (<span class="kw">define</span> (constant-term var term)
     (make-term <span class="cn">0</span> (make-polynomial var (singleton term))))
-  (<span class="kw">define</span> (principal-variable p1 p2)
-    (<span class="kw">let</span> ((v1 (variable p1))
-          (v2 (variable p2)))
-      (<span class="kw">if</span> (variable&lt;? v1 v2) v1 v2)))
+  (<span class="kw">define</span> (variable&lt;? a b)
+    (<span class="fu">string&lt;?</span> (<span class="fu">symbol-&gt;string</span> a) (<span class="fu">symbol-&gt;string</span> b)))
+  (<span class="kw">define</span> (principal-variable v1 v2)
+    (<span class="kw">if</span> (variable&lt;? v1 v2) v1 v2))
+  (<span class="kw">define</span> (coerce-term t from to)
+    (<span class="kw">case</span> (type-tag (coeff t))
+      ((scheme-number) (singleton (constant-term from t)))
+      ((polynomial)
+       (<span class="kw">let</span> ((tl (term-list (coerce-poly (contents (coeff t)) to))))
+         (<span class="kw">if</span> (<span class="fu">zero?</span> (order t))
+             tl
+             (mul-term-by-all-terms
+              (constant-term from (make-term (order t) <span class="cn">1</span>))
+              tl))))
+      (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;coerce-term</span> <span class="cn">&quot;invalid coeff type&quot;</span> (coeff t)))))
   (<span class="kw">define</span> (coerce-termlist tl from to)
     (<span class="kw">if</span> (empty-termlist? tl)
-        (the-empty-termlist)
-        (<span class="kw">let</span> ((ft (first-term tl)))
-          (add-terms
-           (<span class="kw">if</span> (polynomial? (coeff ft))
-               (mul-term-by-all-terms
-                (as-constant-term from (make-term (order ft) <span class="cn">1</span>))
-                (term-list (coerce-poly (contents (coeff ft)) to)))
-               (singleton (as-constant-term from ft)))
-           (coerce-termlist (rest-terms tl) from to)))))
+        tl
+        (add-terms
+         (coerce-term (first-term tl) from to)
+         (coerce-termlist (rest-terms tl) from to))))
   (<span class="kw">define</span> (coerce-poly p var)
-    (<span class="kw">cond</span> ((same-variable? (variable p) var) p)
-          (<span class="kw">else</span> (make-poly var
-                           (coerce-termlist (term-list p) (variable p) var)))))
-  (<span class="kw">define</span> (binary-poly-op f)
+    (<span class="kw">if</span> (same-variable? (variable p) var)
+        p
+        (make-poly var (coerce-termlist (term-list p) (variable p) var))))
+  (<span class="kw">define</span> (binary-op term-fn)
     (<span class="kw">lambda</span> (p1 p2)
-      (<span class="kw">let</span> ((var (principal-variable p1 p2)))
-        (f (coerce-poly p1 var)
-           (coerce-poly p2 var)))))
-  (<span class="kw">define</span> add-poly
-    (binary-poly-op
-     (<span class="kw">lambda</span> (p1 p2)
-       (make-poly (variable p1)
-                  (add-terms (term-list p1) (term-list p2))))))
-  (<span class="kw">define</span> mul-poly
-    (binary-poly-op
-     (<span class="kw">lambda</span> (p1 p2)
-       (make-poly (variable p1)
-                  (mul-terms (term-list p1) (term-list p2))))))
-  (<span class="kw">define</span> (scale-poly k p)
+      (<span class="kw">let</span> ((var (principal-variable (variable p1) (variable p2))))
+        (make-poly var (term-fn (term-list (coerce-poly p1 var))
+                                (term-list (coerce-poly p2 var)))))))
+  (<span class="kw">define</span> add-poly (binary-op add-terms))
+  (<span class="kw">define</span> mul-poly (binary-op mul-terms))
+  (<span class="kw">define</span> (add-mixed x p)
     (make-poly (variable p)
-               (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (make-term (order t) (mul k (coeff t))))
+               (add-terms (singleton (make-term <span class="cn">0</span> x)) (term-list p))))
+  (<span class="kw">define</span> (mul-mixed x p)
+    (make-poly (variable p)
+               (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (make-term (order t) (mul x (coeff t))))
                     (term-list p))))
   (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">&#39;polynomial</span> p))
+  (put <span class="vs">&#39;make</span> <span class="vs">&#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
   (put <span class="vs">&#39;add</span> <span class="vs">&#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
   (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
-  <span class="co">;; Number-polynomial multiplications needed by `coerce-termlist` when calling</span>
-  <span class="co">;; `mul-term-by-all-terms`, since terms can have different coefficient types.</span>
-  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (scale-poly x p))))
-  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (scale-poly x p))))
-  (put <span class="vs">&#39;make</span> <span class="vs">&#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms)))))
+  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (add-mixed x p))))
+  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (add-mixed x p))))
+  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (mul-mixed x p))))
+  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (mul-mixed x p)))))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg)</code></pre>
-<p>x + y = y + x = (1)x^1 + ((1)y<sup>1)x</sup>0</p>
+<p>A simple test:</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mi>y</mi><mo>+</mo><mi>x</mi><mo>=</mo><mn>1</mn><msup><mi>x</mi><mn>1</mn></msup><mo>+</mo><mrow><mo fence="true">(</mo><mn>1</mn><msup><mi>y</mi><mn>1</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>0</mn></msup><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">x + y = y + x = 1x^1 + \left(1y^1\right)x^0.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.2141179999999998em;vertical-align:-0.35001em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mord">.</span></span></span></span></span></p>
 <pre><code class="blockcode">(add (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((1 1))</span>) (make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((1 1))</span>))
 <span class="op">=&gt;</span> (add (make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((1 1))</span>) (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((1 1))</span>))
 <span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x</span> `((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> ,(make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((1 1))</span>))))</code></pre>
-<p>(yx^3 + 2)(y + x^2 + 1) = ((1)y<sup>1)x</sup>5 + ((1)y^2 + (1)y<sup>1)x</sup>3 + (2)x^2 + ((2)y^1 + (2)y<sup>0)x</sup>0</p>
+<p>A more complicated test:</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mphantom><mo>=</mo></mphantom><mo stretchy="false">(</mo><mi>y</mi><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>y</mi><mo>+</mo><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mn>1</mn><msup><mi>y</mi><mn>1</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>5</mn></msup><mo>+</mo><mrow><mo fence="true">(</mo><mn>1</mn><msup><mi>y</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn><msup><mi>y</mi><mn>1</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>2</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mo fence="true">(</mo><mn>2</mn><msup><mi>y</mi><mn>1</mn></msup><mo>+</mo><mn>2</mn><msup><mi>y</mi><mn>0</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>0</mn></msup><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+&amp;\phantom{=} (yx^3 + 2)(y + x^2 + 1) \\
+&amp;= \left(1y^1\right)x^5 + \left(1y^2 + 1y^1\right)x^3 + 2x^2
++ \left(2y^1 + 2y^0\right)x^0.
+\end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.048216em;vertical-align:-1.274108em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.774108em;"><span style="top:-3.774108em;"><span class="pstrut" style="height:2.864108em;"></span><span class="mord"></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:2.864108em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.274108em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.774108em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel" style="color:transparent;">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span><span style="top:-2.385892em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.274108em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
 <pre><code class="blockcode">(mul (make-polynomial <span class="vs">&#39;x</span> `((<span class="cn">3</span> ,(make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((1 1))</span>)) (<span class="cn">0</span> <span class="cn">2</span>)))
      (make-polynomial <span class="vs">&#39;y</span> `((<span class="cn">1</span> <span class="cn">1</span>) (<span class="cn">0</span> ,(make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((2 1) (0 1))</span>)))))
 <span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x</span> `((<span class="cn">5</span> ,(make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((1 1))</span>))
                          (<span class="cn">3</span> ,(make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((2 1) (1 1))</span>))
-                         (<span class="cn">2</span> ,(make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((0 2))</span>))
+                         (<span class="cn">2</span> <span class="cn">2</span>)
                          (<span class="cn">0</span> ,(make-polynomial <span class="vs">&#39;y</span> <span class="vs">&#39;((1 2) (0 2))</span>))))</code></pre>
 <h3 id="2.5.3.4" class="anchor">
 <a class="anchor__link link" href="#2.5.3.4" aria-hidden="true">#</a> <span class="number">2.5.3.4</span> Extended exercise: Rational functions
 </h3>
 <h3 id="ex2.93" class="anchor">
-<a class="anchor__link link" href="#ex2.93" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.93">Exercise 2.93<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.93" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.93">Exercise 2.93<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2668,7 +2672,7 @@ Imports:
 <span class="op">=&gt;</span> (make-rational (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((5 2) (3 2) (2 2) (0 2))</span>)
                   (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((4 1) (2 2) (0 1))</span>))</code></pre>
 <h3 id="ex2.94" class="anchor">
-<a class="anchor__link link" href="#ex2.94" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.94">Exercise 2.94<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.94" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.94">Exercise 2.94<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2792,7 +2796,7 @@ Imports:
 <span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((2 -1) (1 1))</span>)</code></pre>
 <p>This is correct according to WolframAlpha: http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x</p>
 <h3 id="ex2.95" class="anchor">
-<a class="anchor__link link" href="#ex2.95" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.95">Exercise 2.95<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.95" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.95">Exercise 2.95<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -2896,7 +2900,7 @@ Imports:
      (make-polynomial <span class="vs">&#39;x</span> <span class="vs">&#39;((0 169/1458))</span>))
 <span class="op">=&gt;</span> p1</code></pre>
 <h3 id="ex2.96" class="anchor">
-<a class="anchor__link link" href="#ex2.96" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.96">Exercise 2.96<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.96" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.96">Exercise 2.96<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
@@ -3088,7 +3092,7 @@ Imports:
 <span class="op">=&gt;</span> p1</code></pre></li>
 </ol>
 <h3 id="ex2.97" class="anchor">
-<a class="anchor__link link" href="#ex2.97" aria-hidden="true">#</a> <a class="link" href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-18.html#%25_thm_2.97">Exercise 2.97<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
+<a class="anchor__link link" href="#ex2.97" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.97">Exercise 2.97<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <aside class="imports">
 <h4>
