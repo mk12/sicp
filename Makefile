@@ -145,7 +145,7 @@ $(lua_c_tools): lib/%.so: lib/%.o lib/%.rsp | lib
 $(lua_c_obj): lib/%.o: tools/lua/%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
-$(lua_c_rsp): lib/%.rsp: scripts/allow-undefined-lua-symbols.sh lib/%.o
+$(lua_c_rsp): lib/%.rsp: scripts/lua-symbol-flags.sh lib/%.o
 	$^ > $@
 
 bin lib:
