@@ -11,7 +11,7 @@ These webpages are [generated] directly from source code.
 [Chez Scheme]: https://cisco.github.io/ChezScheme/ "Chez Scheme"
 [Guile]: https://www.gnu.org/software/guile/ "GNU Guile"
 [Racket]: http://racket-lang.org "Racket programming language"
-[compatibility shim]: https://github.com/mk12/sicp/blob/master/src/compat
+[compatibility shim]: https://github.com/mk12/sicp/blob/main/src/compat
 [generated]: https://github.com/mk12/sicp#website
 
 # Note on the Language
@@ -20,8 +20,8 @@ The code on this website is written in a language based on [R6RS Scheme]. The la
 
 [R6RS Scheme]: http://www.r6rs.org
     "The Revised(6) Report on the Algorithmic Language Scheme"
-[Source files]: https://github.com/mk12/sicp/blob/master/src/sicp
-[implemented]: https://github.com/mk12/sicp/blob/master/src/lang/core.ss
+[Source files]: https://github.com/mk12/sicp/blob/main/src/sicp
+[implemented]: https://github.com/mk12/sicp/blob/main/src/lang/core.ss
 
 ## Modules
 
@@ -338,4 +338,4 @@ The language also [defines] a few procedures and special forms. They are usable 
 
 `(with-eval «eval» «env» «exp*» ...)` is equivalent to `(begin («eval» «exp*» «env») ...)`, except it first creates bindings for `«eval»` and `«env»` to avoid re-evaluating them. It is used in [](:4) to make tests more readable.
 
-[defines]: https://github.com/mk12/sicp/blob/master/src/lang/sicp.ss
+[defines]: https://github.com/mk12/sicp/blob/main/src/lang/sicp.ss
