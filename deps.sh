@@ -71,8 +71,8 @@ check() {
     # Note: Lua is only needed for its headers, to compile the C libraries in
     # tools/lua. But we assume you just install the entire Lua package.
     say "checking programs"
-    for cmd in chez guile racket pandoc lua$lua_version deno svgbob vnu \
-        shellcheck clang-format
+    for cmd in chez guile racket pandoc lua$lua_version deno svgbob python3 \
+        vnu shellcheck clang-format
     do
         installed "$cmd" || warn "$cmd not installed"
     done
@@ -146,7 +146,7 @@ install_macos_docs() {
 }
 
 install_macos_other() {
-    install_macos_formulas vnu clang-format shellcheck
+    install_macos_formulas python3 vnu clang-format shellcheck
 }
 
 install_macos_formulas() {

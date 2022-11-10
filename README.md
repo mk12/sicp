@@ -182,6 +182,7 @@ Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only
 - [Lua]: Its headers are used by the libraries in [tools/lua/].
 - [Deno]: Used to run a server that renders math and diagrams.
 - [svgbob]: Used to convert ASCII diagrams to SVG.
+- [Python 3]: Used for some scripts.
 - [vnu]: Used to validate HTML files.
 - [clang-format]: Used to format C files.
 
@@ -237,4 +238,5 @@ See [LICENSE](LICENSE.md) for details.
 [svgbob]: https://github.com/ivanceras/svgbob
 [svgo]: https://github.com/svg/svgo
 [the website]: https://mk12.github.io/sicp
+[Python 3]: https://www.python.org
 [vnu]: https://validator.github.io/validator/

@@ -10,6 +10,7 @@
     - and only if we're on macOS
 - fix "Note:" in chapters 3-5 (see previous item about "Note:")
 - fix inline code in blockquotes background
+- remove skipping from check-links.py
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b

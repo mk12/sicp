@@ -125,6 +125,7 @@ spell: bin/spell
 validate:
 	find docs -type f -name "*.html" \
 		| xargs vnu --filterpattern $(validate_exceptions)
+	find docs -type f -name "*.html" | xargs scripts/check-links.py
 	# Ensure special characters used for syntax highlighting are stripped.
 	! grep -qRE '«|»|‹|›|```' docs
 
