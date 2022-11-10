@@ -2674,8 +2674,6 @@ z2 => (make-from-mag-ang 30 3)
   (put 'deriv '+ deriv-sum))
 
 (define (product-pkg)
-  ;; Note: We can't reuse these procedures from Exercise 2.57 because those ones
-  ;; assume the list includes the operator.
   (define multiplier car)
   (define (multiplicand product)
     (accumulate make-product 1 (cdr product)))
@@ -2686,11 +2684,12 @@ z2 => (make-from-mag-ang 30 3)
                             (multiplicand product))))
   (put 'deriv '* deriv-product))
 
+;;     Note that we can't reuse the selectors `multiplier` and `multiplicand`
+;;     from [](?2.57) because they assume the list includes the operator.
+
 ;; (c) Package for power differentiation:
 
 (define (power-pkg)
-  ;; Note: We can't reuse these procedures from Exercise 2.56 because those ones
-  ;; assume the list includes the operator.
   (define base car)
   (define exponent cadr)
   (define (deriv-power power var)
@@ -2701,6 +2700,9 @@ z2 => (make-from-mag-ang 30 3)
                     (make-sum (exponent power) -1)))
      (deriv (base power) var)))
   (put 'deriv '** deriv-power))
+
+;;     Note that we can't reuse the selectors `base` and `exponent` from
+;;     [](?2.56) because they assume the list includes the operator.
 
 ;; (d) If we wanted to index the procedures in the opposite way, we would simply
 ;;     need to swap the first two arguments to `put` in all the package
@@ -2985,8 +2987,14 @@ z2 => (make-from-mag-ang 30 3)
                make-rational make-scheme-number numeric-pkg)
        (:3.3.3.3 put)))
 
+;; In addition to Scheme numbers, rationals, and complex numbers, we'll also
+;; make it work for integers and reals. This will be used to implement `drop` in
+;; [](?2.85).
+
 (define (equ-pkg)
   (put 'equ? '(scheme-number scheme-number) =)
+  (put 'equ? '(integer integer) =)
+  (put 'equ? '(real real) =)
   (put 'equ? '(rational rational)
        (lambda (x y)
          (and (= (numer x) (numer y))
@@ -2994,10 +3002,7 @@ z2 => (make-from-mag-ang 30 3)
   (put 'equ? '(complex complex)
        (lambda (z1 z2)
          (and (= (real-part z1) (real-part z2))
-              (= (imag-part z1) (imag-part z2)))))
-  ;; These are used later in Exercise 2.85.
-  (put 'equ? '(integer integer) =)
-  (put 'equ? '(real real) =))
+              (= (imag-part z1) (imag-part z2))))))
 
 (define (equ? x y) (apply-generic 'equ? x y))
 
@@ -3310,11 +3315,15 @@ z2 => (make-from-mag-ang 30 3)
        (?2.83 extended-numeric-pkg make-integer make-real raise raise-pkg)
        (?2.84 tower-bottom? tower-position tower-top?)))
 
+;; Projection from reals to rationals is the hardest. Instead of designing an
+;; algorithm to find the nearest rational, we'll cheat and use the procedures
+;; `exact`, `numerator`, and `denominator` which deal with Scheme's built-in
+;; rational numbers.
+
 (define (project-pkg)
   (define (complex->real x)
     (make-real (real-part x)))
   (define (real->rational x)
-    ;; Note: `exact`, `numerator`, and `denominator` are built-in procedures.
     (let ((y (exact x)))
       (make-rational (numerator y) (denominator y))))
   (define (rational->integer r)
@@ -3493,13 +3502,10 @@ z2 => (make-from-mag-ang 30 3)
   (rational-pkg)
   (real-pkg)
   (complex-pkg)
-  ;; Used by the new complex package.
   (sqrt-trig-pkg)
-  ;; Used by numeric tower coercion and simplifying.
   (equ-pkg)
   (raise-pkg)
   (project-pkg)
-  ;; Fix up complex entries in the packages above.
   (complex-patch-pkg))
 
 (using final-numeric-pkg)
