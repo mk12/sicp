@@ -3529,11 +3529,11 @@ z2 => (make-from-mag-ang 30 3)
 ;; We are following [](@2.5.fn58) and using the generic arithmetic system from
 ;; [](?2.78), where Scheme numbers are not explicitly tagged.
 
+(define make-poly cons)
 (define variable car)
 (define term-list cdr)
 
 (define (polynomial-pkg)
-  (define (make-poly variable term-list) (cons variable term-list))
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
         (make-poly (variable p1)
@@ -3545,9 +3545,9 @@ z2 => (make-from-mag-ang 30 3)
                    (mul-terms (term-list p1) (term-list p2)))
         (error 'mul-poly "polys not in same var" p1 p2)))
   (define (tag p) (attach-tag 'polynomial p))
+  (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms))))
   (put 'add '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
-  (put 'mul '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms)))))
+  (put 'mul '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2)))))
 
 (define (add-terms l1 l2)
   (cond ((empty-termlist? l1) l2)
@@ -3728,7 +3728,7 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.90
   (use (:2.3.2 same-variable?) (:2.4.3 apply-specific using)
-       (:2.5.3.1 term-list variable)
+       (:2.5.3.1 make-poly term-list variable)
        (:2.5.3.2 coeff make-polynomial make-term order sparse-termlist-pkg)
        (:3.3.3.3 put) (?2.78 add apply-generic attach-tag mul scheme-number-pkg)
        (?2.87 =zero?) (?2.88 negate sub) (?2.89 dense-termlist-pkg)))
@@ -3849,87 +3849,100 @@ z2 => (make-from-mag-ang 30 3)
 
 (Exercise ?2.92
   (use (:2.3.2 same-variable? variable?) (:2.4.3 using)
-       (:2.5.3.1 add-terms mul-term-by-all-terms mul-terms term-list variable)
+       (:2.5.3.1 add-terms make-poly mul-term-by-all-terms mul-terms term-list
+                 variable)
        (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
                  make-term order rest-terms the-empty-termlist)
        (:3.3.3.3 put)
        (?2.78 add attach-tag contents mul scheme-number-pkg type-tag)
        (?2.87 zero-pkg)))
 
-(define (polynomial? x)
-  (eq? (type-tag x) 'polynomial))
-
-(define (variable<? a b)
-  (string<? (symbol->string a)
-            (symbol->string b)))
+;; To add or multiply of polynomials in different variables, we first need to
+;; coerce them to a common variable. We'll choose the variable that comes first
+;; alphabetically.
+;;
+;; Suppose we're coercing a polynomial from $y$ to $x$. For a term with a
+;; numerical coefficient like $5y^2$, we'll change it to a constant term with a
+;; polynomial coefficient: $(5y^2)x^0$. For a term with a polynomial coefficient
+;; like $(3x+1)y^2$, we'll first coerce the coefficient to $x$ (already done)
+;; and then multiply it by $(y^2)x^0$, resulting in $(3y^2)x^1+(y^2)x^0$. For
+;; this to work, we need to support adding and multiplying Scheme numbers with
+;; polynomials, since coefficients can be a mix of the two.
 
 (define (polynomial-pkg)
-  (define make-poly cons)
   (define (singleton t)
     (adjoin-term t (the-empty-termlist)))
-  (define (as-constant-term var term)
+  (define (constant-term var term)
     (make-term 0 (make-polynomial var (singleton term))))
-  (define (principal-variable p1 p2)
-    (let ((v1 (variable p1))
-          (v2 (variable p2)))
-      (if (variable<? v1 v2) v1 v2)))
+  (define (variable<? a b)
+    (string<? (symbol->string a) (symbol->string b)))
+  (define (principal-variable v1 v2)
+    (if (variable<? v1 v2) v1 v2))
+  (define (coerce-term t from to)
+    (case (type-tag (coeff t))
+      ((scheme-number) (singleton (constant-term from t)))
+      ((polynomial)
+       (let ((tl (term-list (coerce-poly (contents (coeff t)) to))))
+         (if (zero? (order t))
+             tl
+             (mul-term-by-all-terms
+              (constant-term from (make-term (order t) 1))
+              tl))))
+      (else (error 'coerce-term "invalid coeff type" (coeff t)))))
   (define (coerce-termlist tl from to)
     (if (empty-termlist? tl)
-        (the-empty-termlist)
-        (let ((ft (first-term tl)))
-          (add-terms
-           (if (polynomial? (coeff ft))
-               (mul-term-by-all-terms
-                (as-constant-term from (make-term (order ft) 1))
-                (term-list (coerce-poly (contents (coeff ft)) to)))
-               (singleton (as-constant-term from ft)))
-           (coerce-termlist (rest-terms tl) from to)))))
+        tl
+        (add-terms
+         (coerce-term (first-term tl) from to)
+         (coerce-termlist (rest-terms tl) from to))))
   (define (coerce-poly p var)
-    (cond ((same-variable? (variable p) var) p)
-          (else (make-poly var
-                           (coerce-termlist (term-list p) (variable p) var)))))
-  (define (binary-poly-op f)
+    (if (same-variable? (variable p) var)
+        p
+        (make-poly var (coerce-termlist (term-list p) (variable p) var))))
+  (define (binary-op term-fn)
     (lambda (p1 p2)
-      (let ((var (principal-variable p1 p2)))
-        (f (coerce-poly p1 var)
-           (coerce-poly p2 var)))))
-  (define add-poly
-    (binary-poly-op
-     (lambda (p1 p2)
-       (make-poly (variable p1)
-                  (add-terms (term-list p1) (term-list p2))))))
-  (define mul-poly
-    (binary-poly-op
-     (lambda (p1 p2)
-       (make-poly (variable p1)
-                  (mul-terms (term-list p1) (term-list p2))))))
-  (define (scale-poly k p)
+      (let ((var (principal-variable (variable p1) (variable p2))))
+        (make-poly var (term-fn (term-list (coerce-poly p1 var))
+                                (term-list (coerce-poly p2 var)))))))
+  (define add-poly (binary-op add-terms))
+  (define mul-poly (binary-op mul-terms))
+  (define (add-mixed x p)
     (make-poly (variable p)
-               (map (lambda (t) (make-term (order t) (mul k (coeff t))))
+               (add-terms (singleton (make-term 0 x)) (term-list p))))
+  (define (mul-mixed x p)
+    (make-poly (variable p)
+               (map (lambda (t) (make-term (order t) (mul x (coeff t))))
                     (term-list p))))
   (define (tag p) (attach-tag 'polynomial p))
+  (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms))))
   (put 'add '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'mul '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  ;; Number-polynomial multiplications needed by `coerce-termlist` when calling
-  ;; `mul-term-by-all-terms`, since terms can have different coefficient types.
-  (put 'mul '(scheme-number polynomial) (lambda (x p) (tag (scale-poly x p))))
-  (put 'mul '(polynomial scheme-number) (lambda (p x) (tag (scale-poly x p))))
-  (put 'make 'polynomial (lambda (var terms) (tag (make-poly var terms)))))
+  (put 'add '(scheme-number polynomial) (lambda (x p) (tag (add-mixed x p))))
+  (put 'add '(polynomial scheme-number) (lambda (p x) (tag (add-mixed x p))))
+  (put 'mul '(scheme-number polynomial) (lambda (x p) (tag (mul-mixed x p))))
+  (put 'mul '(polynomial scheme-number) (lambda (p x) (tag (mul-mixed x p)))))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg)
 
-;; x + y = y + x = (1)x^1 + ((1)y^1)x^0
+;; A simple test:
+;;
+;; $$x + y = y + x = 1x^1 + \left(1y^1\right)x^0.$$
 (add (make-polynomial 'x '((1 1))) (make-polynomial 'y '((1 1))))
 => (add (make-polynomial 'y '((1 1))) (make-polynomial 'x '((1 1))))
 => (make-polynomial 'x `((1 1) (0 ,(make-polynomial 'y '((1 1))))))
 
-;; (yx^3 + 2)(y + x^2 + 1)
-;; = ((1)y^1)x^5 + ((1)y^2 + (1)y^1)x^3 + (2)x^2 + ((2)y^1 + (2)y^0)x^0
+;; A more complicated test:
+;;
+;; $$\begin{aligned}
+;; &\phantom{=} (yx^3 + 2)(y + x^2 + 1) \\
+;; &= \left(1y^1\right)x^5 + \left(1y^2 + 1y^1\right)x^3 + 2x^2
+;; + \left(2y^1 + 2y^0\right)x^0.
+;; \end{aligned}$$
 (mul (make-polynomial 'x `((3 ,(make-polynomial 'y '((1 1)))) (0 2)))
      (make-polynomial 'y `((1 1) (0 ,(make-polynomial 'x '((2 1) (0 1)))))))
 => (make-polynomial 'x `((5 ,(make-polynomial 'y '((1 1))))
                          (3 ,(make-polynomial 'y '((2 1) (1 1))))
-                         (2 ,(make-polynomial 'y '((0 2))))
+                         (2 2)
                          (0 ,(make-polynomial 'y '((1 2) (0 2))))))
 
 (Section :2.5.3.4 "Extended exercise: Rational functions")
