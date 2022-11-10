@@ -1112,7 +1112,7 @@ static void render_import(struct ImportRenderer *ir, FILE *out,
                     len--;
                     const char *prefix = sigil == '?' ? "Ex&nbsp;" : "";
                     fprintf(out,
-                            "[%s%.*s](%c%.*s)"
+                            "[%s%.*s](%c%.*s#)"
                             "<ul class=\"flat\">\n",
                             prefix, len, ptr, sigil, len, ptr);
                 } else {
@@ -1950,7 +1950,11 @@ static bool gen_exercise_section(const char *output) {
     struct Heading h = parse_ss_heading(scan.line);
     assert(h.label.data);
     const int page_num = text_url_num(target_sector);
-    render_heading(proc.in, 1, NULL_SPAN, h, "%s-%d.html", TEXT_URL_BASE,
+    // In all other pages we pass NULL_SPAN as the id for <h1> headings, because
+    // it doesn't make sense to link to the <h1> as opposed to the overall page.
+    // But here (exercise section) we pass h.label because it does make sense:
+    // for example, a :1.3 import refers to the :1.3 code, not all of 1/3.html.
+    render_heading(proc.in, 1, h.label, h, "%s-%d.html", TEXT_URL_BASE,
                    page_num);
     struct LiterateRenderer lr = new_literate_renderer();
     struct ImportRenderer ir = new_import_renderer();

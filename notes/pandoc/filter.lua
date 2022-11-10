@@ -34,7 +34,7 @@ function move_punctuation_in_math(inlines)
         local x, y = inlines[i], inlines[i+1]
         if x.t == "Math" and y.t == "Str" then
             -- If the math is part of a hyphenated word, leave it. It's fine to
-            -- break aronud a hyphen.
+            -- break around a hyphen.
             if y.text:sub(1, 1) ~= "-" then
                 if not (
                     y.text == "." or y.text == "," or y.text == ":"
@@ -246,8 +246,9 @@ function exercise_target(chap, ex)
         "#ex" .. num
 end
 
--- Returns the path and fragment for an internal link.
-function internal_target(sigil, num)
+-- Returns the path and fragment for an internal link. If use_h1_anchor is true,
+-- links to the <h1> id rather than the overall page, if applicable.
+function internal_target(sigil, num, use_h1_anchor)
     if sigil == "@" then
         local lecture, rest = num:match("^(%d+[ab])(.*)$")
         if lecture then
@@ -270,7 +271,7 @@ function internal_target(sigil, num)
         end
         local chap, sec = num:match("^(%d)%.(%d)")
         return "exercise/" .. chap .. "/" .. sec .. ".html",
-            #num > 3 and "#" .. num or ""
+            (#num > 3 or use_h1_anchor) and "#" .. num or ""
     end
     assert(sigil == "?", "invalid sigil " .. sigil)
     local chap, ex = num:match("^(%d)%.(%d+)$")
@@ -283,7 +284,8 @@ end
 -- § 1.2.3, Lecture 1A, Exercise 1.23, etc.
 function link_cross_references(el)
     local sigil = el.target:sub(1, 1)
-    local num = el.target:sub(2)
+    local use_h1_anchor = el.target:sub(-1) == "#"
+    local num = el.target:sub(2, use_h1_anchor and -2 or -1)
     local prefix
     local ident = num
     if sigil == "@" then
@@ -311,7 +313,7 @@ function link_cross_references(el)
     else
         return
     end
-    local target, frag = internal_target(sigil, num)
+    local target, frag = internal_target(sigil, num, use_h1_anchor)
     el.target = relpath(vars.id .. ".html", target) .. frag
     if el.target == "" then
         el.target = "#"
@@ -346,7 +348,7 @@ function process_code_block(el)
             table.insert(pieces, text:sub(i, j))
             local a, b = text:find("[:?][%d%.]+", j + 1)
             local id = text:sub(a, b)
-            local target, frag = internal_target(id:sub(1, 1), id:sub(2))
+            local target, frag = internal_target(id:sub(1, 1), id:sub(2), true)
             local href = relpath(vars.id .. ".html", target) .. frag
             -- The unicode characters ‹ and › are rendered as RawHtml in
             -- scheme.xml, and docgen.c converts them back to < and >.
