@@ -52,7 +52,7 @@ validate_exceptions := \
 
 c_tools := $(patsubst %,bin/%,docgen lint)
 objc_tools := $(patsubst %,bin/%,spell)
-lua_c_tools := $(patsubst %,lib/%.so,highlight ntsp)
+lua_c_tools := $(patsubst %,lib/%.so,ntsp schemehl)
 tools := $(c_tools) $(objc_tools) $(lua_c_tools)
 
 lua_c_obj := $(lua_c_tools:.so=.o)

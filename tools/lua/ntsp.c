@@ -6,7 +6,7 @@
 //
 // Example usage from Lua:
 //
-//     ntsp = require("ntsp") -- assuming ntsp.so can be found via LUA_CPATH
+//     ntsp = require("ntsp") -- loads ntsp.so from LUA_CPATH
 //     socket = ntsp.connect("foo.sock")
 //     print(socket:send("hi!")) -- prints the server's response, e.g. "hey!"
 //     socket:close()
