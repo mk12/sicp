@@ -8,18 +8,30 @@ case ${2-} in
     new)
         watch+=(tools/lua/schemehl.c)
         export LUA_CPATH="lib/?.so"
-        cmd="make -s lib/schemehl.so && echo &&
+        cmd="make -s lib/schemehl.so DEBUG=1 && echo &&
         pandoc --lua-filter <(echo '
             schemehl = require(\"schemehl\")
             function Code(el)
-                local html = schemehl.highlight(el.text)
+                local html = (
+                    \"<code>\"
+                    .. schemehl.highlight(el.text)
+                    .. \"</code>\"
+                )
                 return pandoc.RawInline(\"html\", html)
             end
             function CodeBlock(el)
-                local html = schemehl.highlight(el.text)
+                local html = (
+                    \"<pre><code class=\\\"blockcode\\\">\"
+                    .. schemehl.highlight(el.text, {
+                         sicp_id_link = function(id)
+                            return \"FOO-\" .. id
+                         end
+                     })
+                    .. \"</code></pre>\"
+                )
                 return pandoc.RawBlock(\"html\", html)
             end
-        ') < $1; echo"
+        ') < $1 | bat -pl html; echo"
         ;;
     *)
         cmd="pandoc -dnotes/pandoc/config.yml -Mid=1 $1 -Mtitle=foo \
@@ -31,4 +43,4 @@ case ${2-} in
             | bat -pl html; echo"
 esac
 
-printf "%s\n" "${watch[@]}" | SHELL=/bin/bash entr -cs "$cmd"
+printf "%s\n" "${watch[@]}" | SHELL=/bin/bash entr -ccs "$cmd"

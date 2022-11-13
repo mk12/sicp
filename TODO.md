@@ -16,8 +16,11 @@
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 - write a basic markdown linter (for links, and check 200 OK)
-- highlight.c -> highlight.so, fast and perfect, quasiquote etc.
 - move notes/pandoc/ to pandoc/
+- highlight.c -> highlight.so, fast and perfect, quasiquote etc.
+    - eliminate logic of adding "scheme" class
+    - delete a lot of the postprocessing in docgen
+    - simplify or rename the CSS classes
 + link to :1.3 in ?1.29 should link to "#1.3" (h1 needs id="1.3"), not to "#"
 + remove/change all "Note:"
     + goal here is to fix weird things that needed notes (e.g. the NaN thing), and also reduce red comments (prefer to have rendered in text with links etc.)

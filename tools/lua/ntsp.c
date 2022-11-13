@@ -11,7 +11,7 @@
 //     print(socket:send("hi!")) -- prints the server's response, e.g. "hey!"
 //     socket:close()
 //
-// You can do the same thing interactively using netcat:
+// You can try out the same thing interactively using netcat:
 //
 //     $ nc -U foo.sock
 //     hi!^@hey!
