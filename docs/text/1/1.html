@@ -133,7 +133,7 @@
 <li><em>Procedure definition</em> is a powerful technique for abstraction.</li>
 <li>A squaring procedure: <code>(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code>.</li>
 <li>This is a compound procedure given the name “square.<span class="tuck">”</span></li>
-<li>General form of a procedure definition: <code>(<span class="kw">define</span> (<span class="ss">name</span> <span class="ss">formal-parameters</span>) <span class="ss">body</span>)</code>.</li>
+<li>General form of a procedure definition: <code>(<span class="kw">define</span> (<span class="ss">name formal-parameters</span>) <span class="ss">body</span>)</code>.</li>
 <li>If the body contains more than one expression, each is evaluated in sequence and the value of the last one is returned.</li>
 </ul>
 <h2 id="1.1.5" class="anchor">
@@ -145,10 +145,10 @@
 </blockquote>
 <p>An example of procedure application:</p>
 <pre><code class="blockcode">(f <span class="cn">5</span>)
-(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
-(sum-of-squares <span class="cn">6</span> <span class="cn">10</span>)
+(sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
+(sum-of-squares <span class="cn">6 10</span>)
 (<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
-(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+(<span class="fu">+</span> <span class="cn">36 100</span>)
 <span class="cn">136</span></code></pre>
 <h3 id="1.1.5.1" class="anchor">
 <a class="anchor__link link" href="#1.1.5.1" aria-hidden="true">#</a> Applicative order versus normal order
@@ -159,11 +159,11 @@
 <li>An example of normal-order procedure application:</li>
 </ul>
 <pre><code class="blockcode">(f <span class="cn">5</span>)
-(sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
-(<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
-(<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
-(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
-(<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+(sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
+(<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5 1</span>)) (square (<span class="fu">*</span> <span class="cn">5 2</span>)))
+(<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">+</span> <span class="cn">5 1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5 2</span>) (<span class="fu">*</span> <span class="cn">5 2</span>)))
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6 6</span>) (<span class="fu">*</span> <span class="cn">10 10</span>))
+(<span class="fu">+</span> <span class="cn">36 100</span>)
 <span class="cn">136</span></code></pre>
 <ul>
 <li>Here, normal order causes some combinations to be evaluated multiple times.</li>

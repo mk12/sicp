@@ -109,9 +109,9 @@
              balance)
       <span class="cn">&quot;Insufficient funds&quot;</span>))</code></pre>
 <ul>
-<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="ss">name</span> <span class="ss">new-value</span>)</code>.</li>
+<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="ss">name new-value</span>)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
-<li>The expression <code>(<span class="kw">begin</span> <span class="ss">exp1</span> <span class="ss">exp2</span> ... <span class="ss">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
+<li>The expression <code>(<span class="kw">begin</span> <span class="ss">exp1 exp2</span> ... <span class="ss">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
 <li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> withdraw
@@ -212,7 +212,7 @@
     balance))
 ((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>)
 ((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)
-(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)) <span class="cn">25</span></code></pre>
+(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25 20</span>)) <span class="cn">25</span></code></pre>
 <ul>
 <li>Adhering to the substitution model, we set <code>balance</code> to 5 and then return 25 as the value of the expression.</li>
 <li>This is wrong. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>

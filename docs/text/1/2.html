@@ -93,19 +93,19 @@
 (<span class="fu">*</span> <span class="cn">4</span> (factorial <span class="cn">3</span>))
 (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (factorial <span class="cn">2</span>)))
 (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (factorial <span class="cn">1</span>))))
-(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>)))
-(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>))
-(<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>)
+(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2 1</span>)))
+(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3 2</span>))
+(<span class="fu">*</span> <span class="cn">4 6</span>)
 <span class="cn">24</span></code></pre>
 <ul>
 <li>The <em>iterative</em> implementation maintains a running product and multiplies the numbers from 1 to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">N\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> This creates a shape with a straight edge:</li>
 </ul>
 <pre><code class="blockcode">(factorial <span class="cn">4</span>)
-(fact-iter <span class="cn">1</span> <span class="cn">1</span> <span class="cn">4</span>)
-(fact-iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">4</span>)
-(fact-iter <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>)
-(fact-iter <span class="cn">6</span> <span class="cn">4</span> <span class="cn">4</span>)
-(fact-iter <span class="cn">24</span> <span class="cn">5</span> <span class="cn">4</span>)
+(fact-iter <span class="cn">1 1 4</span>)
+(fact-iter <span class="cn">1 2 4</span>)
+(fact-iter <span class="cn">2 3 4</span>)
+(fact-iter <span class="cn">6 4 4</span>)
+(fact-iter <span class="cn">24 5 4</span>)
 <span class="cn">24</span></code></pre>
 <ul>
 <li>Both compute the same mathematical function, but the computational processes evolve very differently.</li>
@@ -187,13 +187,13 @@ b * b^{n-1}, &amp; \text{if $n$ is odd.}
 <ul>
 <li>The GCD of integers <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">a</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">b</span></span></span></span> is the largest integer that divides both <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">a</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">b</span></span></span></span> with no remainder. For example, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>gcd</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>16</mn><mo separator="true">,</mo><mn>28</mn><mo stretchy="false">)</mo><mo>=</mo><mn>4</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">\gcd(16,28) = 4\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span style="margin-right:0.01389em;">g</span>cd</span><span class="mopen">(</span><span class="mord">1</span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mord">8</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
 <li>An efficient algorithm uses <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>gcd</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>gcd</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>b</mi><mo separator="true">,</mo><mi>a</mi><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mi>b</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">\gcd(a,b) = \gcd(b,a\bmod b)\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span style="margin-right:0.01389em;">g</span>cd</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">b</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span style="margin-right:0.01389em;">g</span>cd</span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.05555555555555555em;"></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.05555555555555555em;"></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mclose">)</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
-<li>For example, we can reduce <code>(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)</code> as follows:</li>
+<li>For example, we can reduce <code>(<span class="fu">gcd</span> <span class="cn">206 40</span>)</code> as follows:</li>
 </ul>
-<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)
-(<span class="fu">gcd</span> <span class="cn">40</span> <span class="cn">6</span>)
-(<span class="fu">gcd</span> <span class="cn">6</span> <span class="cn">4</span>)
-(<span class="fu">gcd</span> <span class="cn">4</span> <span class="cn">2</span>)
-(<span class="fu">gcd</span> <span class="cn">2</span> <span class="cn">0</span>)
+<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206 40</span>)
+(<span class="fu">gcd</span> <span class="cn">40 6</span>)
+(<span class="fu">gcd</span> <span class="cn">6 4</span>)
+(<span class="fu">gcd</span> <span class="cn">4 2</span>)
+(<span class="fu">gcd</span> <span class="cn">2 0</span>)
 <span class="cn">2</span></code></pre>
 <ul>
 <li>This always works: you always get a pair where the second number is zero, and the other number is the GCD of the original pair.</li>

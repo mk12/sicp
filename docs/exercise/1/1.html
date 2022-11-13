@@ -73,15 +73,15 @@
 <a class="anchor__link link" href="#1.1.1" aria-hidden="true">#</a> <span class="number">1.1.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.1">Expressions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode"><span class="cn">486</span> <span class="op">=&gt;</span> <span class="cn">486</span>
-(<span class="fu">+</span> <span class="cn">137</span> <span class="cn">349</span>) <span class="op">=&gt;</span> <span class="cn">486</span>
-(<span class="fu">-</span> <span class="cn">1000</span> <span class="cn">334</span>) <span class="op">=&gt;</span> <span class="cn">666</span>
-(<span class="fu">*</span> <span class="cn">5</span> <span class="cn">99</span>) <span class="op">=&gt;</span> <span class="cn">495</span>
-(<span class="fu">/</span> <span class="cn">10</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">+</span> <span class="cn">2.7</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">12.7</span>
-(<span class="fu">+</span> <span class="cn">21</span> <span class="cn">35</span> <span class="cn">12</span> <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
-(<span class="fu">*</span> <span class="cn">25</span> <span class="cn">4</span> <span class="cn">12</span>) <span class="op">=&gt;</span> <span class="cn">1200</span>
-(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">5</span>) (<span class="fu">-</span> <span class="cn">10</span> <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">19</span>
-(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">4</span>) (<span class="fu">+</span> <span class="cn">3</span> <span class="cn">5</span>))) (<span class="fu">+</span> (<span class="fu">-</span> <span class="cn">10</span> <span class="cn">7</span>) <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">57</span></code></pre>
+(<span class="fu">+</span> <span class="cn">137 349</span>) <span class="op">=&gt;</span> <span class="cn">486</span>
+(<span class="fu">-</span> <span class="cn">1000 334</span>) <span class="op">=&gt;</span> <span class="cn">666</span>
+(<span class="fu">*</span> <span class="cn">5 99</span>) <span class="op">=&gt;</span> <span class="cn">495</span>
+(<span class="fu">/</span> <span class="cn">10 5</span>) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">+</span> <span class="cn">2.7 10</span>) <span class="op">=&gt;</span> <span class="cn">12.7</span>
+(<span class="fu">+</span> <span class="cn">21 35 12 7</span>) <span class="op">=&gt;</span> <span class="cn">75</span>
+(<span class="fu">*</span> <span class="cn">25 4 12</span>) <span class="op">=&gt;</span> <span class="cn">1200</span>
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3 5</span>) (<span class="fu">-</span> <span class="cn">10 6</span>)) <span class="op">=&gt;</span> <span class="cn">19</span>
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2 4</span>) (<span class="fu">+</span> <span class="cn">3 5</span>))) (<span class="fu">+</span> (<span class="fu">-</span> <span class="cn">10 7</span>) <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">57</span></code></pre>
 <h2 id="1.1.2" class="anchor">
 <a class="anchor__link link" href="#1.1.2" aria-hidden="true">#</a> <span class="number">1.1.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.2">Naming and the Environment<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -98,20 +98,20 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h2 id="1.1.3" class="anchor">
 <a class="anchor__link link" href="#1.1.3" aria-hidden="true">#</a> <span class="number">1.1.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.3">Evaluating Combinations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>))
-   (<span class="fu">+</span> <span class="cn">3</span> <span class="cn">5</span> <span class="cn">7</span>))
+<pre><code class="blockcode">(<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">4 6</span>))
+   (<span class="fu">+</span> <span class="cn">3 5 7</span>))
 <span class="op">=&gt;</span> <span class="cn">390</span></code></pre>
 <h2 id="1.1.4" class="anchor">
 <a class="anchor__link link" href="#1.1.4" aria-hidden="true">#</a> <span class="number">1.1.4</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.4">Compound Procedures<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
 (square <span class="cn">21</span>) <span class="op">=&gt;</span> <span class="cn">441</span>
-(square (<span class="fu">+</span> <span class="cn">2</span> <span class="cn">5</span>)) <span class="op">=&gt;</span> <span class="cn">49</span>
+(square (<span class="fu">+</span> <span class="cn">2 5</span>)) <span class="op">=&gt;</span> <span class="cn">49</span>
 (square (square <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">81</span>
 
 (<span class="kw">define</span> (sum-of-squares x y)
   (<span class="fu">+</span> (square x) (square y)))
-(sum-of-squares <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">25</span>
+(sum-of-squares <span class="cn">3 4</span>) <span class="op">=&gt;</span> <span class="cn">25</span>
 
 (<span class="kw">define</span> (f a)
   (sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>)))
@@ -142,18 +142,18 @@ Imports:
 </aside>
 <p>Applicative-order evaluation:</p>
 <pre><code class="blockcode">(f <span class="cn">5</span>)
-<span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
+<span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
 <span class="op">=&gt;</span> (<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
-<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
-<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6 6</span>) (<span class="fu">*</span> <span class="cn">10 10</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36 100</span>)
 <span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
 <p>Normal-order evaluation:</p>
 <pre><code class="blockcode">(f <span class="cn">5</span>)
-<span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>))
-<span class="op">=&gt;</span> (<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (square (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
-<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>) (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>) (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">2</span>)))
-<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">6</span>) (<span class="fu">*</span> <span class="cn">10</span> <span class="cn">10</span>))
-<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36</span> <span class="cn">100</span>)
+<span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5 1</span>)) (square (<span class="fu">*</span> <span class="cn">5 2</span>)))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">+</span> <span class="cn">5 1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5 2</span>) (<span class="fu">*</span> <span class="cn">5 2</span>)))
+<span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6 6</span>) (<span class="fu">*</span> <span class="cn">10 10</span>))
+<span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36 100</span>)
 <span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
 <h2 id="1.1.6" class="anchor">
 <a class="anchor__link link" href="#1.1.6" aria-hidden="true">#</a> <span class="number">1.1.6</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.6">Conditional Expressions and Predicates<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -178,10 +178,10 @@ Imports:
 <a class="anchor__link link" href="#ex1.1" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.1">Exercise 1.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode"><span class="cn">10</span> <span class="op">=&gt;</span> <span class="cn">10</span>
-(<span class="fu">+</span> <span class="cn">5</span> <span class="cn">3</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">12</span>
-(<span class="fu">-</span> <span class="cn">9</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
-(<span class="fu">/</span> <span class="cn">6</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">4</span>) (<span class="fu">-</span> <span class="cn">4</span> <span class="cn">6</span>)) <span class="op">=&gt;</span> <span class="cn">6</span>
+(<span class="fu">+</span> <span class="cn">5 3 4</span>) <span class="op">=&gt;</span> <span class="cn">12</span>
+(<span class="fu">-</span> <span class="cn">9 1</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
+(<span class="fu">/</span> <span class="cn">6 2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">2 4</span>) (<span class="fu">-</span> <span class="cn">4 6</span>)) <span class="op">=&gt;</span> <span class="cn">6</span>
 (<span class="kw">define</span> a <span class="cn">3</span>)
 (<span class="kw">define</span> b (<span class="fu">+</span> a <span class="cn">1</span>))
 (<span class="fu">+</span> a b (<span class="fu">*</span> a b)) <span class="op">=&gt;</span> <span class="cn">19</span>
@@ -192,7 +192,7 @@ Imports:
 <span class="op">=&gt;</span> <span class="cn">4</span>
 
 (<span class="kw">cond</span> ((<span class="fu">=</span> a <span class="cn">4</span>) <span class="cn">6</span>)
-      ((<span class="fu">=</span> b <span class="cn">4</span>) (<span class="fu">+</span> <span class="cn">6</span> <span class="cn">7</span> a))
+      ((<span class="fu">=</span> b <span class="cn">4</span>) (<span class="fu">+</span> <span class="cn">6 7</span> a))
       (<span class="kw">else</span> <span class="cn">25</span>))
 <span class="op">=&gt;</span> <span class="cn">16</span>
 
@@ -206,8 +206,8 @@ Imports:
 <h3 id="ex1.2" class="anchor">
 <a class="anchor__link link" href="#ex1.2" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.2">Exercise 1.2<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">5</span> <span class="cn">4</span> (<span class="fu">-</span> <span class="cn">2</span> (<span class="fu">-</span> <span class="cn">3</span> (<span class="fu">+</span> <span class="cn">6</span> <span class="cn">4/5</span>))))
-   (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">-</span> <span class="cn">6</span> <span class="cn">2</span>) (<span class="fu">-</span> <span class="cn">2</span> <span class="cn">7</span>)))
+<pre><code class="blockcode">(<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">5 4</span> (<span class="fu">-</span> <span class="cn">2</span> (<span class="fu">-</span> <span class="cn">3</span> (<span class="fu">+</span> <span class="cn">6 4/5</span>))))
+   (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">-</span> <span class="cn">6 2</span>) (<span class="fu">-</span> <span class="cn">2 7</span>)))
 <span class="op">=&gt;</span> <span class="cn">-37/150</span></code></pre>
 <h3 id="ex1.3" class="anchor">
 <a class="anchor__link link" href="#ex1.3" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.3">Exercise 1.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -220,13 +220,13 @@ Imports:
         ((<span class="kw">and</span> (<span class="fu">&lt;=</span> c a) (<span class="fu">&lt;=</span> c b))
          (<span class="fu">+</span> (<span class="fu">*</span> a a) (<span class="fu">*</span> b b)))))
 
-(f <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">13</span>
-(f <span class="cn">3</span> <span class="cn">2</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">13</span></code></pre>
+(f <span class="cn">1 2 3</span>) <span class="op">=&gt;</span> <span class="cn">13</span>
+(f <span class="cn">3 2 1</span>) <span class="op">=&gt;</span> <span class="cn">13</span></code></pre>
 <h3 id="ex1.4" class="anchor">
 <a class="anchor__link link" href="#ex1.4" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.4">Exercise 1.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (a-plus-abs-b a b)
-  ((<span class="kw">if</span> (<span class="fu">&gt;</span> b <span class="cn">0</span>) <span class="fu">+</span> <span class="fu">-</span>) a b))</code></pre>
+  ((<span class="kw">if</span> (<span class="fu">&gt;</span> b <span class="cn">0</span>) <span class="fu">+ -</span>) a b))</code></pre>
 <p>The operator evaluates to <code>+</code> (addition) when <code>b</code> is positive, and to <code>-</code> (subtraction) when <code>b</code> is negative. Subtracting a negative is equivalent to adding its absolute value, so this procedure returns <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mrow><mo fence="true">∣</mo><mi>b</mi><mo fence="true">∣</mo></mrow></mrow><annotation encoding="application/x-tex">a + \abs{b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">∣</span><span class="mord mathnormal">b</span><span class="mclose delimcenter" style="top:0em;">∣</span></span></span></span></span> in all cases.</p>
 <h3 id="ex1.5" class="anchor">
 <a class="anchor__link link" href="#ex1.5" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.5">Exercise 1.5<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -271,7 +271,7 @@ Imports:
 
 (<span class="fu">sqrt</span> <span class="cn">9</span>)
 <span class="op">~&gt;</span> <span class="cn">3.00009155413138</span>
-(<span class="fu">sqrt</span> (<span class="fu">+</span> <span class="cn">100</span> <span class="cn">37</span>))
+(<span class="fu">sqrt</span> (<span class="fu">+</span> <span class="cn">100 37</span>))
 <span class="op">~&gt;</span> <span class="cn">11.704699917758145</span>
 (<span class="fu">sqrt</span> (<span class="fu">+</span> (<span class="fu">sqrt</span> <span class="cn">2</span>) (<span class="fu">sqrt</span> <span class="cn">3</span>)))
 <span class="op">~&gt;</span> <span class="cn">1.7739279023207892</span>
@@ -302,8 +302,8 @@ Imports:
   (<span class="kw">cond</span> (predicate then-clause)
         (<span class="kw">else</span> else-clause)))
 
-(new-if (<span class="fu">=</span> <span class="cn">2</span> <span class="cn">3</span>) <span class="cn">0</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
-(new-if (<span class="fu">=</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="cn">0</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+(new-if (<span class="fu">=</span> <span class="cn">2 3</span>) <span class="cn">0 5</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
+(new-if (<span class="fu">=</span> <span class="cn">1 1</span>) <span class="cn">0 5</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
 
 (<span class="kw">define</span> (sqrt-iter guess x)
   (new-if (good-enough? guess x)

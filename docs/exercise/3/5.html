@@ -144,14 +144,14 @@ Imports:
 (<span class="kw">define</span> f stream-filter)
 (<span class="kw">define</span> p? prime?)
 
-(a (d (f p? (i <span class="cn">10000</span> <span class="cn">1000000</span>))))
-<span class="op">=&gt;</span> (a (d (f p? (<span class="fu">cons</span> <span class="cn">10000</span> (<span class="kw">delay</span> (i <span class="cn">10001</span> <span class="cn">1000000</span>))))))</code></pre>
+(a (d (f p? (i <span class="cn">10000 1000000</span>))))
+<span class="op">=&gt;</span> (a (d (f p? (<span class="fu">cons</span> <span class="cn">10000</span> (<span class="kw">delay</span> (i <span class="cn">10001 1000000</span>))))))</code></pre>
 <p>… 10001 through 10006 …</p>
-<pre><code class="blockcode"><span class="op">=&gt;</span> (a (d (f p? (<span class="fu">cons</span> <span class="cn">10007</span> (<span class="kw">delay</span> (i <span class="cn">10008</span> <span class="cn">1000000</span>))))))
-<span class="op">=&gt;</span> (a (d (<span class="fu">cons</span> <span class="cn">10007</span> (<span class="kw">delay</span> (f p? (<span class="fu">cons</span> <span class="cn">10008</span> (<span class="kw">delay</span> (i <span class="cn">10009</span> <span class="cn">1000000</span>))))))))
-<span class="op">=&gt;</span> (a (f p? (<span class="fu">cons</span> <span class="cn">10008</span> (<span class="kw">delay</span> (i <span class="cn">10009</span> <span class="cn">1000000</span>)))))
-<span class="op">=&gt;</span> (a (f p? (<span class="fu">cons</span> <span class="cn">10009</span> (<span class="kw">delay</span> (i <span class="cn">10010</span> <span class="cn">1000000</span>)))))
-<span class="op">=&gt;</span> (a (<span class="fu">cons</span> <span class="cn">10009</span> (<span class="kw">delay</span> (f p? (<span class="fu">cons</span> <span class="cn">10010</span> (<span class="kw">delay</span> (i <span class="cn">10011</span> <span class="cn">1000000</span>)))))))
+<pre><code class="blockcode"><span class="op">=&gt;</span> (a (d (f p? (<span class="fu">cons</span> <span class="cn">10007</span> (<span class="kw">delay</span> (i <span class="cn">10008 1000000</span>))))))
+<span class="op">=&gt;</span> (a (d (<span class="fu">cons</span> <span class="cn">10007</span> (<span class="kw">delay</span> (f p? (<span class="fu">cons</span> <span class="cn">10008</span> (<span class="kw">delay</span> (i <span class="cn">10009 1000000</span>))))))))
+<span class="op">=&gt;</span> (a (f p? (<span class="fu">cons</span> <span class="cn">10008</span> (<span class="kw">delay</span> (i <span class="cn">10009 1000000</span>)))))
+<span class="op">=&gt;</span> (a (f p? (<span class="fu">cons</span> <span class="cn">10009</span> (<span class="kw">delay</span> (i <span class="cn">10010 1000000</span>)))))
+<span class="op">=&gt;</span> (a (<span class="fu">cons</span> <span class="cn">10009</span> (<span class="kw">delay</span> (f p? (<span class="fu">cons</span> <span class="cn">10010</span> (<span class="kw">delay</span> (i <span class="cn">10011 1000000</span>)))))))
 <span class="op">=&gt;</span> <span class="cn">10009</span></code></pre>
 <h3 id="3.5.1.2" class="anchor">
 <a class="anchor__link link" href="#3.5.1.2" aria-hidden="true">#</a> <span class="number">3.5.1.2</span> Implementing <code>delay</code> and <code>force</code>
@@ -235,12 +235,12 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (show x) (display-line x) x)
 
 (<span class="kw">define</span> x)
-(<span class="kw">set!</span> x (stream-map show (stream-enumerate-interval <span class="cn">0</span> <span class="cn">10</span>)))
+(<span class="kw">set!</span> x (stream-map show (stream-enumerate-interval <span class="cn">0 10</span>)))
 <span class="op">=$&gt;</span> [<span class="cn">&quot;0&quot;</span>]
 
-(stream-ref x <span class="cn">5</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;1&quot;</span> <span class="cn">&quot;2&quot;</span> <span class="cn">&quot;3&quot;</span> <span class="cn">&quot;4&quot;</span> <span class="cn">&quot;5&quot;</span>]
+(stream-ref x <span class="cn">5</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span>]
 (stream-ref x <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
-(stream-ref x <span class="cn">7</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;6&quot;</span> <span class="cn">&quot;7&quot;</span>]
+(stream-ref x <span class="cn">7</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;6&quot; &quot;7&quot;</span>]
 (stream-ref x <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">7</span></code></pre>
 <h3 id="ex3.52" class="anchor">
 <a class="anchor__link link" href="#ex3.52" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.52">Exercise 3.52<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -279,7 +279,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> sum <span class="cn">0</span>)
 (<span class="kw">define</span> (accum x) (<span class="kw">set!</span> sum (<span class="fu">+</span> x sum)) sum)
-(<span class="kw">define</span> seq (stream-map accum (stream-enumerate-interval <span class="cn">1</span> <span class="cn">20</span>)))
+(<span class="kw">define</span> seq (stream-map accum (stream-enumerate-interval <span class="cn">1 20</span>)))
 sum <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="kw">define</span> y (stream-filter <span class="fu">even?</span> seq))
 sum <span class="op">=&gt;</span> <span class="cn">6</span>
@@ -287,7 +287,7 @@ sum <span class="op">=&gt;</span> <span class="cn">6</span>
 sum <span class="op">=&gt;</span> <span class="cn">10</span>
 (stream-ref y <span class="cn">7</span>) <span class="op">=&gt;</span> <span class="cn">136</span>
 sum <span class="op">=&gt;</span> <span class="cn">136</span>
-(display-stream z) <span class="op">=$&gt;</span> [<span class="cn">&quot;10&quot;</span> <span class="cn">&quot;15&quot;</span> <span class="cn">&quot;45&quot;</span> <span class="cn">&quot;55&quot;</span> <span class="cn">&quot;105&quot;</span> <span class="cn">&quot;120&quot;</span> <span class="cn">&quot;190&quot;</span> <span class="cn">&quot;210&quot;</span>]</code></pre>
+(display-stream z) <span class="op">=$&gt;</span> [<span class="cn">&quot;10&quot; &quot;15&quot; &quot;45&quot; &quot;55&quot; &quot;105&quot; &quot;120&quot; &quot;190&quot; &quot;210&quot;</span>]</code></pre>
 <p>Yes, responses would differ if <code>delay</code> did not use memoization. The stream <code>seq</code> would get its <code>cdr</code> evaluated multiple times, and it would be different each time because <code>sum</code> keeps increasing. Instead of 1, 6, 10, 120, it would be 1, 6, 15, 162. Displaying <code>z</code> would only show 15. The rest of <code>seq</code> gets generated using a much higher <code>sum</code>, none of which are divisible by 5.</p>
 <h2 id="3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.5.2" aria-hidden="true">#</a> <span class="number">3.5.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_sec_3.5.2">Infinite Streams<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -335,7 +335,7 @@ Imports:
 (stream-ref no-sevens <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">117</span>
 
 (<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
-(<span class="kw">define</span> fibs (fibgen <span class="cn">0</span> <span class="cn">1</span>))
+(<span class="kw">define</span> fibs (fibgen <span class="cn">0 1</span>))
 (stream-take fibs <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(0 1 1 2 3 5 8 13 21 34)</span>
 
 (<span class="kw">define</span> (sieve s)
@@ -627,10 +627,10 @@ Imports:
    (<span class="fu">quotient</span> (<span class="fu">*</span> num radix) den)
    (expand (<span class="fu">remainder</span> (<span class="fu">*</span> num radix) den) den radix)))</code></pre>
 <p>This procedure produces the stream of digits in the base given by <code>radix</code> that represent the quotient of <code>num</code> and <code>den</code>. It does it without using floating-point operations.</p>
-<pre><code class="blockcode">(stream-take (expand <span class="cn">1</span> <span class="cn">7</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 4 2 8 5 7 1 4 2 8)</span>
-(<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">7</span>)) <span class="op">~&gt;</span> <span class="cn">0.14285714285714285</span>
-(stream-take (expand <span class="cn">3</span> <span class="cn">8</span> <span class="cn">10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(3 7 5 0 0 0 0 0 0 0)</span>
-(<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">3</span> <span class="cn">8</span>)) <span class="op">~&gt;</span> <span class="cn">0.375</span></code></pre>
+<pre><code class="blockcode">(stream-take (expand <span class="cn">1 7 10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 4 2 8 5 7 1 4 2 8)</span>
+(<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">1 7</span>)) <span class="op">~&gt;</span> <span class="cn">0.14285714285714285</span>
+(stream-take (expand <span class="cn">3 8 10</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(3 7 5 0 0 0 0 0 0 0)</span>
+(<span class="fu">inexact</span> (<span class="fu">/</span> <span class="cn">3 8</span>)) <span class="op">~&gt;</span> <span class="cn">0.375</span></code></pre>
 <h3 id="ex3.59" class="anchor">
 <a class="anchor__link link" href="#ex3.59" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.59">Exercise 3.59<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -695,7 +695,7 @@ Imports:
                            (integers-starting-from <span class="cn">0</span>))))
     (accumulate <span class="fu">+</span> <span class="cn">0.0</span> (stream-take terms n))))
 
-(eval-series exp-series <span class="cn">1.0</span> <span class="cn">15</span>) <span class="op">~&gt;</span> <span class="cn">2.7182818285</span></code></pre>
+(eval-series exp-series <span class="cn">1.0 15</span>) <span class="op">~&gt;</span> <span class="cn">2.7182818285</span></code></pre>
 <h3 id="ex3.60" class="anchor">
 <a class="anchor__link link" href="#ex3.60" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.60">Exercise 3.60<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1037,8 +1037,8 @@ Imports:
 (<span class="kw">define</span> (<span class="fu">sqrt</span> x tolerance)
   (stream-limit (sqrt-stream x) tolerance))
 
-(<span class="fu">sqrt</span> <span class="cn">2</span> <span class="cn">0.1</span>) <span class="op">~&gt;</span> <span class="cn">1.4166666666666665</span>
-(<span class="fu">sqrt</span> <span class="cn">2</span> <span class="cn">0.0001</span>) <span class="op">~&gt;</span> <span class="cn">1.4142135623746899</span></code></pre>
+(<span class="fu">sqrt</span> <span class="cn">2 0.1</span>) <span class="op">~&gt;</span> <span class="cn">1.4166666666666665</span>
+(<span class="fu">sqrt</span> <span class="cn">2 0.0001</span>) <span class="op">~&gt;</span> <span class="cn">1.4142135623746899</span></code></pre>
 <h3 id="ex3.65" class="anchor">
 <a class="anchor__link link" href="#ex3.65" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.65">Exercise 3.65<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1204,16 +1204,16 @@ Imports:
 </ul>
 </aside>
 <p>Let f(n) be the nth pair in the stream, starting at 0.</p>
-<pre><code class="blockcode"><span class="co">;;;;; [TODO: Rendering these lines as code trips schemehl assertion]</span>
-<span class="co">;;;;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k</span>
-<span class="co">;;;;;     f(2)  = (2,2); f(n) = (2,_) when n = 4  + 4k</span>
-<span class="co">;;;;;     f(6)  = (3,3); f(n) = (3,_) when n = 10 + 8k</span>
-<span class="co">;;;;;     f(14) = (4,4); f(n) = (4,_) when n = 22 + 16k</span>
-<span class="co">;;;;;     ...</span></code></pre>
+<pre><code class="blockcode"><span class="co">;;;;; [TODO: Rendering these lines as code trips schemehl assertion]
+;;;;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k
+;;;;;     f(2)  = (2,2); f(n) = (2,_) when n = 4  + 4k
+;;;;;     f(6)  = (3,3); f(n) = (3,_) when n = 10 + 8k
+;;;;;     f(14) = (4,4); f(n) = (4,_) when n = 22 + 16k
+;;;;;     ...</span></code></pre>
 <p>The next row (where the first number in the pair is incremented once) always gets updated half as often as the previous row. In general,</p>
-<pre><code class="blockcode"><span class="co">;;;;; [TODO: Rendering these lines as code trips schemehl assertion]</span>
-<span class="co">;;;;;  f(2^x - 2) = (x,x);</span>
-<span class="co">;;;;;  f(2^x - 2 + 2^(x-1) + (k - 1)2^x) = (x,x+k), k &gt; 0.</span></code></pre>
+<pre><code class="blockcode"><span class="co">;;;;; [TODO: Rendering these lines as code trips schemehl assertion]
+;;;;;  f(2^x - 2) = (x,x);
+;;;;;  f(2^x - 2 + 2^(x-1) + (k - 1)2^x) = (x,x+k), k &gt; 0.</span></code></pre>
 <p>We can write a function to find the index of a given pair:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (pair-&gt;index pair)
   (<span class="kw">let*</span> ((x (<span class="fu">car</span> pair))
@@ -1225,9 +1225,9 @@ Imports:
 
 (pair-&gt;index <span class="vs">&#39;(1 100)</span>) <span class="op">=&gt;</span> <span class="cn">197</span>
 (pair-&gt;index <span class="vs">&#39;(99 100)</span>) <span class="op">=&gt;</span> <span class="cn">950737950171172051122527404030</span>
-(pair-&gt;index <span class="vs">&#39;(100 100)</span>) <span class="op">=&gt;</span> (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">100</span>) <span class="cn">2</span>)</code></pre>
+(pair-&gt;index <span class="vs">&#39;(100 100)</span>) <span class="op">=&gt;</span> (<span class="fu">-</span> (<span class="fu">expt</span> <span class="cn">2 100</span>) <span class="cn">2</span>)</code></pre>
 <p>We can confirm that it’s correct for small indices:</p>
-<pre><code class="blockcode">(<span class="fu">map</span> pair-&gt;index first-10-pairs) <span class="op">=&gt;</span> (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)
+<pre><code class="blockcode">(<span class="fu">map</span> pair-&gt;index first-10-pairs) <span class="op">=&gt;</span> (enumerate-interval <span class="cn">0 9</span>)
 (stream-ref integer-pairs <span class="cn">197</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 100)</span>
 (<span class="kw">define</span> random-pair-fst (<span class="fu">+</span> <span class="cn">1</span> (random <span class="cn">5</span>)))
 (<span class="kw">define</span> random-pair (<span class="fu">list</span> random-pair-fst (<span class="fu">+</span> random-pair-fst (random <span class="cn">46</span>))))
@@ -1244,9 +1244,9 @@ Imports:
           (<span class="kw">else</span> (iter (<span class="fu">+</span> x <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>) (<span class="fu">*</span> b <span class="cn">2</span>)))))
   (<span class="kw">let</span> ((x (<span class="fu">log</span> (<span class="fu">+</span> n <span class="cn">2</span>) <span class="cn">2</span>)))
     (<span class="kw">cond</span> ((<span class="fu">integer?</span> x) (<span class="fu">list</span> (<span class="fu">exact</span> x) (<span class="fu">exact</span> x)))
-          (<span class="kw">else</span> (iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span>)))))
+          (<span class="kw">else</span> (iter <span class="cn">1 2 3</span>)))))
 
-(<span class="fu">map</span> index-&gt;pair (enumerate-interval <span class="cn">0</span> <span class="cn">9</span>)) <span class="op">=&gt;</span> first-10-pairs
+(<span class="fu">map</span> index-&gt;pair (enumerate-interval <span class="cn">0 9</span>)) <span class="op">=&gt;</span> first-10-pairs
 (index-&gt;pair <span class="cn">197</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 100)</span>
 (index-&gt;pair random-index) <span class="op">=&gt;</span> random-pair</code></pre>
 <h3 id="ex3.67" class="anchor">
@@ -1509,7 +1509,7 @@ Imports:
     weight)))</code></pre>
 <ol type="a">
 <li><p>Pairs of positive integers (i, j) with i &lt;= j ordered by i + j.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (a-weight p) (<span class="fu">apply</span> <span class="fu">+</span> p))
+<pre><code class="blockcode">(<span class="kw">define</span> (a-weight p) (<span class="fu">apply +</span> p))
 (<span class="kw">define</span> a-stream (weighted-pairs integers integers a-weight))
 (<span class="kw">define</span> a-10 (stream-take a-stream <span class="cn">10</span>))
 a-10 <span class="op">=&gt;</span> <span class="vs">&#39;((1 1) (1 2) (1 3) (2 2) (1 4) (2 3) (1 5) (2 4) (3 3) (1 6))</span>
@@ -1726,7 +1726,7 @@ Imports:
     (add-streams (scale-stream i R)
                  (integral (scale-stream i (<span class="fu">/</span> C)) v0 dt))))</code></pre>
 <p>RC circuit with R = 5 ohms, C = 1 farad, and dt = 0.5 s.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> RC1 (RC <span class="cn">5</span> <span class="cn">1</span> <span class="cn">0.5</span>))</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> RC1 (RC <span class="cn">5 1 0.5</span>))</code></pre>
 <p>Calculate the stream of voltages given a constant i = 1 amp and v0 = 0 V.</p>
 <pre><code class="blockcode">(stream-take (RC1 ones <span class="cn">0</span>) <span class="cn">10</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(5 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0 9.5)</span></code></pre>
@@ -1839,7 +1839,7 @@ Imports:
     (<span class="kw">cons-stream</span>
      (sign-change-detector avpt last-avpt)
      (make-zero-crossings (stream-cdr input-stream) value avpt))))
-(<span class="kw">define</span> (zero-crossings sense-data) (make-zero-crossings sense-data <span class="cn">0</span> <span class="cn">0</span>))
+(<span class="kw">define</span> (zero-crossings sense-data) (make-zero-crossings sense-data <span class="cn">0 0</span>))
 
 (<span class="kw">define</span> test-result <span class="vs">&#39;(0 0 0 -1 0 0 0 1 0 0)</span>)
 (stream-take (zero-crossings test-data) <span class="cn">10</span>) <span class="op">=&gt;</span> test-result</code></pre>
@@ -1950,7 +1950,7 @@ Imports:
   (<span class="kw">define</span> dy (stream-map f y))
   y)</code></pre>
 <p>When f(y) = y and y0 = 1, the solution is e.</p>
-<pre><code class="blockcode">(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
+<pre><code class="blockcode">(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1 0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
 <h3 id="ex3.77" class="anchor">
 <a class="anchor__link link" href="#ex3.77" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.77">Exercise 3.77<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2001,7 +2001,7 @@ Imports:
                    dt)))))
 
 (<span class="kw">paste</span> (<a href="#3.5.4">:3.5.4</a> solve))
-(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
+(stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1 0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
 <h3 id="ex3.78" class="anchor">
 <a class="anchor__link link" href="#ex3.78" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.78">Exercise 3.78<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2119,15 +2119,15 @@ Imports:
 (<span class="kw">define</span> (three-decimals x)
   (<span class="kw">let-values</span> (((a b) (<span class="fu">div-and-mod</span> (<span class="fu">round</span> (<span class="fu">*</span> (<span class="fu">abs</span> x) <span class="cn">1000</span>)) <span class="cn">1000</span>)))
     (format <span class="cn">&quot;~a~a.~a~a~a&quot;</span>
-            (<span class="kw">if</span> (<span class="fu">negative?</span> x) <span class="cn">&quot;-&quot;</span> <span class="cn">&quot;&quot;</span>)
+            (<span class="kw">if</span> (<span class="fu">negative?</span> x) <span class="cn">&quot;-&quot; &quot;&quot;</span>)
             (<span class="fu">exact</span> a)
-            (<span class="kw">if</span> (<span class="fu">&lt;</span> b <span class="cn">10</span>) <span class="cn">0</span> <span class="cn">&quot;&quot;</span>)
-            (<span class="kw">if</span> (<span class="fu">&lt;</span> b <span class="cn">100</span>) <span class="cn">0</span> <span class="cn">&quot;&quot;</span>)
+            (<span class="kw">if</span> (<span class="fu">&lt;</span> b <span class="cn">10</span>) <span class="cn">0 &quot;&quot;</span>)
+            (<span class="kw">if</span> (<span class="fu">&lt;</span> b <span class="cn">100</span>) <span class="cn">0 &quot;&quot;</span>)
             (<span class="fu">exact</span> b))))</code></pre>
 <p>RLC circuit with R = 1 ohm, C = 0.2 farad, L = 1 henry, and dt = 0.1 s.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> RLC1 (RLC <span class="cn">1</span> <span class="cn">1</span> <span class="cn">0.2</span> <span class="cn">0.1</span>))</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> RLC1 (RLC <span class="cn">1 1 0.2 0.1</span>))</code></pre>
 <p>Calculate the stream of vC (capacitor voltage) and iL (inductor current) given initial values iL0 = 0 amps and vC0 = 10 volts.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> v-and-i (RLC1 <span class="cn">10</span> <span class="cn">0</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> v-and-i (RLC1 <span class="cn">10 0</span>))
 (<span class="fu">map</span> three-decimals (stream-take (<span class="fu">car</span> v-and-i) <span class="cn">9</span>))
 <span class="op">=&gt;</span> <span class="vs">&#39;(&quot;10.000&quot; &quot;10.000&quot; &quot;9.500&quot; &quot;8.550&quot; &quot;7.220&quot; &quot;5.596&quot; &quot;3.772&quot; &quot;1.852&quot; &quot;-0.065&quot;)</span>
 (<span class="fu">map</span> three-decimals (stream-take (<span class="fu">cdr</span> v-and-i) <span class="cn">9</span>))
@@ -2191,8 +2191,8 @@ Imports:
 
 (<span class="kw">define</span> random-numbers
   (<span class="kw">cons-stream</span>
-   <span class="co">;; Start at `(rand-update random-init)` rather than `random-init` to match</span>
-   <span class="co">;; the behavior in Section 3.1.2. This ensures the same estimate of pi.</span>
+   <span class="co">;; Start at `(rand-update random-init)` rather than `random-init` to match
+   ;; the behavior in Section 3.1.2. This ensures the same estimate of pi.</span>
    (rand-update random-init)
    (stream-map rand-update random-numbers)))
 (<span class="kw">define</span> cesaro-stream
@@ -2202,7 +2202,7 @@ Imports:
 (<span class="kw">define</span> pi
   (stream-map
    (<span class="kw">lambda</span> (p) (<span class="fu">sqrt</span> (<span class="fu">/</span> <span class="cn">6</span> p)))
-   (monte-carlo cesaro-stream <span class="cn">0</span> <span class="cn">0</span>)))</code></pre>
+   (monte-carlo cesaro-stream <span class="cn">0 0</span>)))</code></pre>
 <p>This is deterministic because the <code>random-init</code> seed is fixed.</p>
 <pre><code class="blockcode">(stream-ref pi <span class="cn">999</span>) <span class="op">~&gt;</span> <span class="cn">3.149183286488868</span></code></pre>
 <h3 id="ex3.81" class="anchor">
@@ -2341,12 +2341,12 @@ Imports:
                    (<span class="fu">+</span> y1 (<span class="fu">*</span> dy (<span class="fu">/</span> r2 random-max)))))
            random-numbers)))
     (stream-map (<span class="kw">lambda</span> (p) (<span class="fu">*</span> p dx dy))
-                (monte-carlo experiment-stream <span class="cn">0</span> <span class="cn">0</span>))))
+                (monte-carlo experiment-stream <span class="cn">0 0</span>))))
 
 (<span class="kw">define</span> pi
   (<span class="kw">let</span> ((pred (<span class="kw">lambda</span> (x y)
                 (<span class="fu">&lt;=</span> (<span class="fu">+</span> (square x) (square y)) <span class="cn">1</span>))))
-    (estimate-integral pred <span class="cn">-1.0</span> <span class="cn">1.0</span> <span class="cn">-1.0</span> <span class="cn">1.0</span>)))
+    (estimate-integral pred <span class="cn">-1.0 1.0 -1.0 1.0</span>)))
 
 (stream-ref pi <span class="cn">999</span>) <span class="op">~&gt;</span> <span class="cn">3.092</span></code></pre>
 </main>

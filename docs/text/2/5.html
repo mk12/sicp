@@ -96,20 +96,20 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (install-scheme-number-package)
   (<span class="kw">define</span> (tag x)
     (attach-tag <span class="vs">&#39;scheme-number</span> x))
-  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+  (put <span class="vs">&#39;add &#39;(scheme-number scheme-number)</span>
        (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
-  (put <span class="vs">&#39;sub</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+  (put <span class="vs">&#39;sub &#39;(scheme-number scheme-number)</span>
        (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
-  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+  (put <span class="vs">&#39;mul &#39;(scheme-number scheme-number)</span>
        (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
-  (put <span class="vs">&#39;div</span> <span class="vs">&#39;(scheme-number scheme-number)</span>
+  (put <span class="vs">&#39;div &#39;(scheme-number scheme-number)</span>
        (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
-  (put <span class="vs">&#39;make</span> <span class="vs">&#39;scheme-number</span>
+  (put <span class="vs">&#39;make &#39;scheme-number</span>
        (<span class="kw">lambda</span> (x) (tag x)))
   <span class="vs">&#39;done</span>)
 
 (<span class="kw">define</span> (make-scheme-number n)
-  ((get <span class="vs">&#39;make</span> <span class="vs">&#39;scheme-number</span>) n))</code></pre>
+  ((get <span class="vs">&#39;make &#39;scheme-number</span>) n))</code></pre>
 <ul>
 <li>We can implement similar packages for rational and complex numbers.</li>
 </ul>
@@ -208,11 +208,11 @@
 
   <span class="co">;; Interface to rest of the system</span>
   (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">&#39;polynomial</span> p))
-  (put <span class="vs">&#39;add</span> <span class="vs">&#39;(polynomial polynomial)</span>
+  (put <span class="vs">&#39;add &#39;(polynomial polynomial)</span>
        (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
-  (put <span class="vs">&#39;mul</span> <span class="vs">&#39;(polynomial polynomial)</span>
+  (put <span class="vs">&#39;mul &#39;(polynomial polynomial)</span>
        (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
-  (put <span class="vs">&#39;make</span> <span class="vs">&#39;polynomial</span>
+  (put <span class="vs">&#39;make &#39;polynomial</span>
        (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
   <span class="vs">&#39;done</span>)</code></pre>
 <ul>

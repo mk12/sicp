@@ -121,12 +121,12 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (sq a) (<span class="fu">*</span> a a))
 (<span class="kw">define</span> (sos x y) (<span class="fu">+</span> (sq x) (sq y)))</code></pre>
 <p>Let’s evaluate the sum of the square of 3 and the square of 4:</p>
-<pre><code class="blockcode">(sos <span class="cn">3</span> <span class="cn">4</span>)
+<pre><code class="blockcode">(sos <span class="cn">3 4</span>)
 (<span class="fu">+</span> (sq <span class="cn">3</span>) (sq <span class="cn">4</span>))
-(<span class="fu">+</span> (sq <span class="cn">3</span>) (<span class="fu">*</span> <span class="cn">4</span> <span class="cn">4</span>))
+(<span class="fu">+</span> (sq <span class="cn">3</span>) (<span class="fu">*</span> <span class="cn">4 4</span>))
 (<span class="fu">+</span> (sq <span class="cn">3</span>) <span class="cn">16</span>)
-(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">3</span>) <span class="cn">16</span>)
-(<span class="fu">+</span> <span class="cn">9</span> <span class="cn">16</span>)
+(<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">3 3</span>) <span class="cn">16</span>)
+(<span class="fu">+</span> <span class="cn">9 16</span>)
 <span class="cn">25</span></code></pre>
 <p>This is not a perfect description of what the computer does. But it is a good enough model for now.</p>
 <div id="q1" class="highlight">
@@ -138,7 +138,7 @@
 <h3 id="1.5" class="anchor">
 <a class="anchor__link link" href="#1.5" aria-hidden="true">#</a> Evaluating conditionals
 </h3>
-<p>To evaluate <code>(<span class="kw">if</span> <span class="ss">predicate</span> <span class="ss">consequent</span> <span class="ss">alternative</span>)</code>, follow these steps:</p>
+<p>To evaluate <code>(<span class="kw">if</span> <span class="ss">predicate consequent alternative</span>)</code>, follow these steps:</p>
 <ol type="1">
 <li>Evaluate the predicate expression.
 <ol type="1">
@@ -154,21 +154,21 @@
   (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>)
       y
       (<span class="fu">+</span> (<span class="fu">-1+</span> x) (<span class="fu">1+</span> y))))</code></pre>
-<p>Now we can evaluate <code>(<span class="fu">+</span> <span class="cn">3</span> <span class="cn">4</span>)</code> like so:</p>
-<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">3</span> <span class="cn">4</span>)
-(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">3</span> <span class="cn">0</span>) <span class="cn">4</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) (<span class="fu">1+</span> <span class="cn">4</span>)))
+<p>Now we can evaluate <code>(<span class="fu">+</span> <span class="cn">3 4</span>)</code> like so:</p>
+<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">3 4</span>)
+(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">3 0</span>) <span class="cn">4</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) (<span class="fu">1+</span> <span class="cn">4</span>)))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) (<span class="fu">1+</span> <span class="cn">4</span>))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) <span class="cn">5</span>)
-(<span class="fu">+</span> <span class="cn">2</span> <span class="cn">5</span>)
-(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">2</span> <span class="cn">0</span>) <span class="cn">5</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">2</span>) (<span class="fu">1+</span> <span class="cn">5</span>)))
+(<span class="fu">+</span> <span class="cn">2 5</span>)
+(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">2 0</span>) <span class="cn">5</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">2</span>) (<span class="fu">1+</span> <span class="cn">5</span>)))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">2</span>) (<span class="fu">1+</span> <span class="cn">5</span>))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">2</span>) <span class="cn">6</span>)
-(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">6</span>)
-(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">1</span> <span class="cn">0</span>) <span class="cn">6</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">1</span>) (<span class="fu">1+</span> <span class="cn">6</span>)))
+(<span class="fu">+</span> <span class="cn">1 6</span>)
+(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">1 0</span>) <span class="cn">6</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">1</span>) (<span class="fu">1+</span> <span class="cn">6</span>)))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">1</span>) (<span class="fu">1+</span> <span class="cn">6</span>))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">1</span>) <span class="cn">7</span>)
-(<span class="fu">+</span> <span class="cn">0</span> <span class="cn">7</span>)
-(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">0</span> <span class="cn">0</span>) <span class="cn">7</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">0</span>) (<span class="fu">1+</span> <span class="cn">7</span>)))
+(<span class="fu">+</span> <span class="cn">0 7</span>)
+(<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">0 0</span>) <span class="cn">7</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">0</span>) (<span class="fu">1+</span> <span class="cn">7</span>)))
 <span class="cn">7</span></code></pre>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2

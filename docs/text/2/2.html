@@ -137,7 +137,7 @@
       (<span class="fu">cons</span> (f (<span class="fu">car</span> xs))
             (<span class="fu">map</span> f (<span class="fu">cdr</span> xs)))))</code></pre>
 <ul>
-<li>For example, <code>(<span class="fu">map</span> <span class="fu">abs</span> (<span class="fu">list</span> <span class="cn">-1</span> <span class="cn">5</span> <span class="cn">-3</span> <span class="cn">0</span> <span class="cn">2</span> <span class="cn">-2</span>))</code> gives the list <code>(<span class="cn">1</span> <span class="cn">5</span> <span class="cn">3</span> <span class="cn">0</span> <span class="cn">2</span> <span class="cn">2</span>)</code>.</li>
+<li>For example, <code>(<span class="fu">map abs</span> (<span class="fu">list</span> <span class="cn">-1 5 -3 0 2 -2</span>))</code> gives the list <code>(<span class="cn">1 5 3 0 2 2</span>)</code>.</li>
 <li><code>map</code> establishes a higher level of abstraction for dealing with lists; it suppressive the recursive detail. We think about the process differently when we use <code>map</code>.</li>
 </ul>
 <blockquote>

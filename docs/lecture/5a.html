@@ -100,7 +100,7 @@
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Assignment and Time
 </h3>
 <ul>
-<li>To do assignment, we use <code>(<span class="kw">set!</span> <span class="ss">variable</span> <span class="ss">value</span>)</code>.</li>
+<li>To do assignment, we use <code>(<span class="kw">set!</span> <span class="ss">variable value</span>)</code>.</li>
 <li>By convention, we suffix a bang to the names of procedures that do assignment-like things.</li>
 <li><code>set!</code> is like <code>define</code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
 <li>When we add assignment, we also have to consider <em>time</em>.</li>
@@ -129,7 +129,7 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (fact n)
   (<span class="kw">define</span> (iter p i)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> i n) m (iter (<span class="fu">*</span> i p) (<span class="fu">+</span> i <span class="cn">1</span>))))
-  (iter <span class="cn">1</span> <span class="cn">1</span>))</code></pre>
+  (iter <span class="cn">1 1</span>))</code></pre>
 <ul>
 <li>We could instead write it with assignments:</li>
 </ul>

@@ -84,15 +84,15 @@
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (factorial <span class="cn">3</span>))))
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (factorial <span class="cn">2</span>)))))
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (factorial <span class="cn">1</span>))))))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>)))))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>))))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> <span class="cn">6</span>)))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">24</span>))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> <span class="cn">120</span>)
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2 1</span>)))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">*</span> <span class="cn">3 2</span>))))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5</span> (<span class="fu">*</span> <span class="cn">4 6</span>)))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6</span> (<span class="fu">*</span> <span class="cn">5 24</span>))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">6 120</span>)
 <span class="op">=&gt;</span> <span class="cn">720</span></code></pre>
 <p>Linear iterative process:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (factorial n)
-  (fact-iter <span class="cn">1</span> <span class="cn">1</span> n))
+  (fact-iter <span class="cn">1 1</span> n))
 (<span class="kw">define</span> (fact-iter product counter max-count)
   (<span class="kw">if</span> (<span class="fu">&gt;</span> counter max-count)
       product
@@ -101,13 +101,13 @@
                  max-count)))
 
 (factorial <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">1</span> <span class="cn">1</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">1</span> <span class="cn">2</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">2</span> <span class="cn">3</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">6</span> <span class="cn">4</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">24</span> <span class="cn">5</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">120</span> <span class="cn">6</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (fact-iter <span class="cn">720</span> <span class="cn">7</span> <span class="cn">6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">1 1 6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">1 2 6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">2 3 6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">6 4 6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">24 5 6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">120 6 6</span>)
+<span class="op">=&gt;</span> (fact-iter <span class="cn">720 7 6</span>)
 <span class="op">=&gt;</span> <span class="cn">720</span></code></pre>
 <h3 id="ex1.9" class="anchor">
 <a class="anchor__link link" href="#ex1.9" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.9">Exercise 1.9<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -121,22 +121,22 @@
 (<span class="kw">define</span> (i+ a b)
   (<span class="kw">if</span> (<span class="fu">=</span> a <span class="cn">0</span>) b (i+ (dec a) (inc b))))</code></pre>
 <p><code>r+</code> generates a recursive process:</p>
-<pre><code class="blockcode">(r+ <span class="cn">4</span> <span class="cn">5</span>)
-<span class="op">=&gt;</span> (inc (r+ <span class="cn">3</span> <span class="cn">5</span>))
-<span class="op">=&gt;</span> (inc (inc (r+ <span class="cn">2</span> <span class="cn">5</span>)))             <span class="co">; expanding</span>
-<span class="op">=&gt;</span> (inc (inc (inc (r+ <span class="cn">1</span> <span class="cn">5</span>))))
-<span class="op">=&gt;</span> (inc (inc (inc (inc (r+ <span class="cn">0</span> <span class="cn">5</span>))))) <span class="co">; 4 deferred operations</span>
+<pre><code class="blockcode">(r+ <span class="cn">4 5</span>)
+<span class="op">=&gt;</span> (inc (r+ <span class="cn">3 5</span>))
+<span class="op">=&gt;</span> (inc (inc (r+ <span class="cn">2 5</span>)))             <span class="co">; expanding</span>
+<span class="op">=&gt;</span> (inc (inc (inc (r+ <span class="cn">1 5</span>))))
+<span class="op">=&gt;</span> (inc (inc (inc (inc (r+ <span class="cn">0 5</span>))))) <span class="co">; 4 deferred operations</span>
 <span class="op">=&gt;</span> (inc (inc (inc (inc <span class="cn">5</span>))))
 <span class="op">=&gt;</span> (inc (inc (inc <span class="cn">6</span>)))              <span class="co">; contracting</span>
 <span class="op">=&gt;</span> (inc (inc <span class="cn">7</span>))
 <span class="op">=&gt;</span> (inc <span class="cn">8</span>)
 <span class="op">=&gt;</span> <span class="cn">9</span></code></pre>
 <p><code>i+</code> generates an iterative process:</p>
-<pre><code class="blockcode">(i+ <span class="cn">4</span> <span class="cn">5</span>)
-<span class="op">=&gt;</span> (i+ <span class="cn">3</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (i+ <span class="cn">2</span> <span class="cn">7</span>)
-<span class="op">=&gt;</span> (i+ <span class="cn">1</span> <span class="cn">8</span>)
-<span class="op">=&gt;</span> (i+ <span class="cn">0</span> <span class="cn">9</span>)
+<pre><code class="blockcode">(i+ <span class="cn">4 5</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">3 6</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">2 7</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">1 8</span>)
+<span class="op">=&gt;</span> (i+ <span class="cn">0 9</span>)
 <span class="op">=&gt;</span> <span class="cn">9</span></code></pre>
 <h3 id="ex1.10" class="anchor">
 <a class="anchor__link link" href="#ex1.10" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.10">Exercise 1.10<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -148,9 +148,9 @@
         (<span class="kw">else</span> (A (<span class="fu">-</span> x <span class="cn">1</span>)
                  (A x (<span class="fu">-</span> y <span class="cn">1</span>))))))
 
-(A <span class="cn">1</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1024</span>
-(A <span class="cn">2</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">65536</span>
-(A <span class="cn">3</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">65536</span>
+(A <span class="cn">1 10</span>) <span class="op">=&gt;</span> <span class="cn">1024</span>
+(A <span class="cn">2 4</span>) <span class="op">=&gt;</span> <span class="cn">65536</span>
+(A <span class="cn">3 3</span>) <span class="op">=&gt;</span> <span class="cn">65536</span>
 
 (<span class="kw">define</span> (f n) (A <span class="cn">0</span> n))
 (<span class="kw">define</span> (g n) (A <span class="cn">1</span> n))
@@ -176,7 +176,7 @@
     (<span class="kw">if</span> (<span class="fu">=</span> count <span class="cn">0</span>)
         b
         (iter (<span class="fu">+</span> a b) a (<span class="fu">-</span> count <span class="cn">1</span>))))
-  (iter <span class="cn">1</span> <span class="cn">0</span> n))
+  (iter <span class="cn">1 0</span> n))
 
 (fib <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
 <h3 id="1.2.2.1" class="anchor">
@@ -213,7 +213,7 @@
     (<span class="kw">if</span> (<span class="fu">=</span> counter <span class="cn">0</span>)
         a
         (iter b c (<span class="fu">+</span> c (<span class="fu">*</span> <span class="cn">2</span> b) (<span class="fu">*</span> <span class="cn">3</span> a)) (<span class="fu">-</span> counter <span class="cn">1</span>))))
-  (iter <span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span> n))
+  (iter <span class="cn">0 1 2</span> n))
 
 (f <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
 <h3 id="ex1.12" class="anchor">
@@ -225,10 +225,10 @@
       (<span class="fu">+</span> (pascal (<span class="fu">-</span> i <span class="cn">1</span>) (<span class="fu">-</span> j <span class="cn">1</span>))
          (pascal (<span class="fu">-</span> i <span class="cn">1</span>) j))))
 
-(pascal <span class="cn">3</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(pascal <span class="cn">3</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(pascal <span class="cn">3</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
-(pascal <span class="cn">3</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+(pascal <span class="cn">3 0</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(pascal <span class="cn">3 1</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(pascal <span class="cn">3 2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
+(pascal <span class="cn">3 3</span>) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <h3 id="ex1.13" class="anchor">
 <a class="anchor__link link" href="#ex1.13" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.13">Exercise 1.13<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -758,61 +758,61 @@ Imports:
 </aside>
 <pre><code class="blockcode">(count-change <span class="cn">11</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <p>Here is the process generated by <code>(count-change <span class="cn">11</span>)</code>:</p>
-<pre><code class="blockcode">(cc <span class="cn">11</span> <span class="cn">5</span>)
-  (cc <span class="cn">-39</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-  (cc <span class="cn">11</span> <span class="cn">4</span>)
-    (cc <span class="cn">-14</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-    (cc <span class="cn">11</span> <span class="cn">3</span>)
-      (cc <span class="cn">1</span> <span class="cn">3</span>)
-        (cc <span class="cn">-9</span> <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-        (cc <span class="cn">1</span> <span class="cn">2</span>)
-          (cc <span class="cn">-4</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-          (cc <span class="cn">1</span> <span class="cn">1</span>)
-            (cc <span class="cn">0</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-            (cc <span class="cn">1</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-      (cc <span class="cn">11</span> <span class="cn">2</span>)
-        (cc <span class="cn">6</span> <span class="cn">2</span>)
-          (cc <span class="cn">1</span> <span class="cn">2</span>)
-            (cc <span class="cn">-4</span> <span class="cn">2</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-            (cc <span class="cn">1</span> <span class="cn">1</span>)
-              (cc <span class="cn">0</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-              (cc <span class="cn">1</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-          (cc <span class="cn">6</span> <span class="cn">1</span>)
-            (cc <span class="cn">5</span> <span class="cn">1</span>)
-              (cc <span class="cn">4</span> <span class="cn">1</span>)
-                (cc <span class="cn">3</span> <span class="cn">1</span>)
-                  (cc <span class="cn">2</span> <span class="cn">1</span>)
-                    (cc <span class="cn">1</span> <span class="cn">1</span>)
-                      (cc <span class="cn">0</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-                      (cc <span class="cn">1</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                    (cc <span class="cn">2</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                  (cc <span class="cn">3</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                (cc <span class="cn">4</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-              (cc <span class="cn">5</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-            (cc <span class="cn">6</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-        (cc <span class="cn">11</span> <span class="cn">1</span>)
-          (cc <span class="cn">10</span> <span class="cn">1</span>)
-            (cc <span class="cn">9</span> <span class="cn">1</span>)
-              (cc <span class="cn">8</span> <span class="cn">1</span>)
-                (cc <span class="cn">7</span> <span class="cn">1</span>)
-                  (cc <span class="cn">6</span> <span class="cn">1</span>)
-                    (cc <span class="cn">5</span> <span class="cn">1</span>)
-                      (cc <span class="cn">4</span> <span class="cn">1</span>)
-                        (cc <span class="cn">3</span> <span class="cn">1</span>)
-                          (cc <span class="cn">2</span> <span class="cn">1</span>)
-                            (cc <span class="cn">1</span> <span class="cn">1</span>)
-                              (cc <span class="cn">0</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-                              (cc <span class="cn">1</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                            (cc <span class="cn">2</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                          (cc <span class="cn">3</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                        (cc <span class="cn">4</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                      (cc <span class="cn">5</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                    (cc <span class="cn">6</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                  (cc <span class="cn">7</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-                (cc <span class="cn">8</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-              (cc <span class="cn">9</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-            (cc <span class="cn">10</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
-          (cc <span class="cn">11</span> <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="cn">0</span></code></pre>
+<pre><code class="blockcode">(cc <span class="cn">11 5</span>)
+  (cc <span class="cn">-39 5</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+  (cc <span class="cn">11 4</span>)
+    (cc <span class="cn">-14 4</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+    (cc <span class="cn">11 3</span>)
+      (cc <span class="cn">1 3</span>)
+        (cc <span class="cn">-9 3</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+        (cc <span class="cn">1 2</span>)
+          (cc <span class="cn">-4 2</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+          (cc <span class="cn">1 1</span>)
+            (cc <span class="cn">0 1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+            (cc <span class="cn">1 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+      (cc <span class="cn">11 2</span>)
+        (cc <span class="cn">6 2</span>)
+          (cc <span class="cn">1 2</span>)
+            (cc <span class="cn">-4 2</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+            (cc <span class="cn">1 1</span>)
+              (cc <span class="cn">0 1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+              (cc <span class="cn">1 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+          (cc <span class="cn">6 1</span>)
+            (cc <span class="cn">5 1</span>)
+              (cc <span class="cn">4 1</span>)
+                (cc <span class="cn">3 1</span>)
+                  (cc <span class="cn">2 1</span>)
+                    (cc <span class="cn">1 1</span>)
+                      (cc <span class="cn">0 1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+                      (cc <span class="cn">1 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                    (cc <span class="cn">2 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                  (cc <span class="cn">3 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                (cc <span class="cn">4 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+              (cc <span class="cn">5 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+            (cc <span class="cn">6 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+        (cc <span class="cn">11 1</span>)
+          (cc <span class="cn">10 1</span>)
+            (cc <span class="cn">9 1</span>)
+              (cc <span class="cn">8 1</span>)
+                (cc <span class="cn">7 1</span>)
+                  (cc <span class="cn">6 1</span>)
+                    (cc <span class="cn">5 1</span>)
+                      (cc <span class="cn">4 1</span>)
+                        (cc <span class="cn">3 1</span>)
+                          (cc <span class="cn">2 1</span>)
+                            (cc <span class="cn">1 1</span>)
+                              (cc <span class="cn">0 1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+                              (cc <span class="cn">1 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                            (cc <span class="cn">2 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                          (cc <span class="cn">3 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                        (cc <span class="cn">4 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                      (cc <span class="cn">5 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                    (cc <span class="cn">6 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                  (cc <span class="cn">7 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+                (cc <span class="cn">8 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+              (cc <span class="cn">9 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+            (cc <span class="cn">10 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span>
+          (cc <span class="cn">11 0</span>) <span class="op">=&gt;</span> <span class="cn">0</span></code></pre>
 <p>Orders of growth:</p>
 <ul>
 <li>Steps: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>5</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n^5)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> because there are 5 types of coins.</li>
@@ -862,7 +862,7 @@ Imports:
       <span class="cn">1</span>
       (<span class="fu">*</span> b (<span class="fu">expt</span> b (<span class="fu">-</span> n <span class="cn">1</span>)))))
 
-(<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
+(<span class="fu">expt</span> <span class="cn">2 5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
 <p>Iterative, naive: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> time, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span> space.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">expt</span> b n)
   (<span class="kw">define</span> (iter counter prod)
@@ -871,14 +871,14 @@ Imports:
         (iter (<span class="fu">-</span> counter <span class="cn">1</span>) (<span class="fu">*</span> prod b))))
   (iter n <span class="cn">1</span>))
 
-(<span class="fu">expt</span> <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
+(<span class="fu">expt</span> <span class="cn">2 5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
 <p>Recursive, successive squaring: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> time, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> space.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (fast-expt b n)
   (<span class="kw">cond</span> ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">1</span>)
         ((<span class="fu">even?</span> n) (square (fast-expt b (<span class="fu">/</span> n <span class="cn">2</span>))))
         (<span class="kw">else</span> (<span class="fu">*</span> b (fast-expt b (<span class="fu">-</span> n <span class="cn">1</span>))))))
 
-(fast-expt <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
+(fast-expt <span class="cn">2 5</span>) <span class="op">=&gt;</span> <span class="cn">32</span></code></pre>
 <h3 id="ex1.16" class="anchor">
 <a class="anchor__link link" href="#ex1.16" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.16">Exercise 1.16<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -905,8 +905,8 @@ Imports:
           (<span class="kw">else</span> (iter (<span class="fu">*</span> a b) b (<span class="fu">-</span> n <span class="cn">1</span>)))))
   (iter <span class="cn">1</span> b n))
 
-(fast-expt <span class="cn">2</span> <span class="cn">5</span>) <span class="op">=&gt;</span> <span class="cn">32</span>
-(fast-expt <span class="cn">2</span> <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">1267650600228229401496703205376</span></code></pre>
+(fast-expt <span class="cn">2 5</span>) <span class="op">=&gt;</span> <span class="cn">32</span>
+(fast-expt <span class="cn">2 100</span>) <span class="op">=&gt;</span> <span class="cn">1267650600228229401496703205376</span></code></pre>
 <h3 id="ex1.17" class="anchor">
 <a class="anchor__link link" href="#ex1.17" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.17">Exercise 1.17<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -916,7 +916,7 @@ Imports:
       <span class="cn">0</span>
       (<span class="fu">+</span> a (<span class="fu">*</span> a (<span class="fu">-</span> b <span class="cn">1</span>)))))
 
-(<span class="fu">*</span> <span class="cn">5</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
+(<span class="fu">*</span> <span class="cn">5 4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
 <p>These are taken as primitives:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (double x) (<span class="fu">+</span> x x))
 (<span class="kw">define</span> (halve x) (<span class="fu">/</span> x <span class="cn">2</span>))</code></pre>
@@ -926,7 +926,7 @@ Imports:
         ((<span class="fu">even?</span> b) (double (fast-* a (halve b))))
         (<span class="kw">else</span> (<span class="fu">+</span> a (fast-* a (<span class="fu">-</span> b <span class="cn">1</span>))))))
 
-(fast-* <span class="cn">5</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
+(fast-* <span class="cn">5 4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
 <h3 id="ex1.18" class="anchor">
 <a class="anchor__link link" href="#ex1.18" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.18">Exercise 1.18<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -956,7 +956,7 @@ Imports:
           (<span class="kw">else</span> (iter (<span class="fu">+</span> c a) a (<span class="fu">-</span> b <span class="cn">1</span>)))))
   (iter <span class="cn">0</span> a b))
 
-(fast-* <span class="cn">5</span> <span class="cn">4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
+(fast-* <span class="cn">5 4</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
 <h3 id="ex1.19" class="anchor">
 <a class="anchor__link link" href="#ex1.19" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.19">Exercise 1.19<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -990,7 +990,7 @@ Imports:
                       p
                       q
                       (<span class="fu">-</span> count <span class="cn">1</span>)))))
-  (iter <span class="cn">1</span> <span class="cn">0</span> <span class="cn">0</span> <span class="cn">1</span> n))
+  (iter <span class="cn">1 0 0 1</span> n))
 
 (fib <span class="cn">6</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
 (fib <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">354224848179261915075</span></code></pre>
@@ -1003,36 +1003,36 @@ Imports:
       a
       (<span class="fu">gcd</span> b (<span class="fu">remainder</span> a b))))
 
-(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+(<span class="fu">gcd</span> <span class="cn">206 40</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h3 id="ex1.20" class="anchor">
 <a class="anchor__link link" href="#ex1.20" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.20">Exercise 1.20<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>With applicative order, it performs 4 remainder operations.</p>
-<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> <span class="cn">6</span>)
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">6</span> (<span class="fu">remainder</span> <span class="cn">40</span> <span class="cn">6</span>))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">6</span> <span class="cn">4</span>)
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">4</span> (<span class="fu">remainder</span> <span class="cn">6</span> <span class="cn">4</span>))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">4</span> <span class="cn">2</span>)
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">2</span> (<span class="fu">remainder</span> <span class="cn">4</span> <span class="cn">2</span>))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">2</span> <span class="cn">0</span>)
+<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206 40</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40 6</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">6</span> (<span class="fu">remainder</span> <span class="cn">40 6</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">6 4</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">4</span> (<span class="fu">remainder</span> <span class="cn">6 4</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">4 2</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">2</span> (<span class="fu">remainder</span> <span class="cn">4 2</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">2 0</span>)
 <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <p>With normal order, it performs 18 remainder operations. Each <code>b</code> gets evaluated once in the <code>(<span class="fu">=</span> b <span class="cn">0</span>)</code> predicate (14 operations). The final <code>a</code> gets evaluated in the end (4 operations). Together, that makes 18.</p>
-<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206</span> <span class="cn">40</span>)
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
-        (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
-        (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
-                   (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))))
-<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
-                   (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))
-        (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>))
-                   (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
-                              (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))))
-<span class="op">=&gt;</span> (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)
-              (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206</span> <span class="cn">40</span>)))</code></pre>
+<pre><code class="blockcode">(<span class="fu">gcd</span> <span class="cn">206 40</span>)
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)
+        (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>))
+        (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)
+                   (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>))))
+<span class="op">=&gt;</span> (<span class="fu">gcd</span> (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)
+                   (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)))
+        (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>))
+                   (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)
+                              (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)))))
+<span class="op">=&gt;</span> (<span class="fu">remainder</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)
+              (<span class="fu">remainder</span> <span class="cn">40</span> (<span class="fu">remainder</span> <span class="cn">206 40</span>)))</code></pre>
 <h2 id="1.2.6" class="anchor">
 <a class="anchor__link link" href="#1.2.6" aria-hidden="true">#</a> <span class="number">1.2.6</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_sec_1.2.6">Example: Testing for Primality<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -1124,7 +1124,7 @@ Imports:
 (<span class="kw">define</span> many-times <span class="cn">10</span>)</code></pre>
 <p>The Fermat test only produces false positives on composite numbers, not prime numbers, so we can be certain it will return true for 13.</p>
 <pre><code class="blockcode">(fast-prime? <span class="cn">13</span> many-times) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(fast-prime? <span class="cn">10</span> many-times) <span class="op">=?&gt;</span> [<span class="cn">#f</span> <span class="cn">#t</span>] <span class="co">; correct answer is #f</span></code></pre>
+(fast-prime? <span class="cn">10</span> many-times) <span class="op">=?&gt;</span> [<span class="cn">#f #t</span>] <span class="co">; correct answer is #f</span></code></pre>
 <p>The first Carmichael number, 561, fools the Fermat test: no matter how many iterations we use, it will always think it’s prime.</p>
 <pre><code class="blockcode">(prime? <span class="cn">561</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
 (fast-prime? <span class="cn">561</span> many-times) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
@@ -1186,25 +1186,25 @@ Imports:
   (iter (<span class="kw">if</span> (<span class="fu">odd?</span> a) a (<span class="fu">+</span> a <span class="cn">1</span>)) b))
 
 (string-contains?
- (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
+ (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6 10</span>))
  <span class="cn">&quot;7 *** &quot;</span>)
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">A=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 1,000.</p>
-<pre><code class="blockcode"><span class="co">; 1009 *** 4.792213439941406e-5</span>
-<span class="co">; 1013 *** 4.291534423828125e-5</span>
-<span class="co">; 1019 *** 4.792213439941406e-5</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 1009 *** 4.792213439941406e-5
+; 1013 *** 4.291534423828125e-5
+; 1019 *** 4.792213439941406e-5</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">B=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 10,000. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>2.3</mn><mi>A</mi><mo>&lt;</mo><mi>B</mi><mo>&lt;</mo><mn>2.8</mn><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2.3A &lt; B &lt; 2.8A)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord">.</span><span class="mord">3</span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mord">.</span><span class="mord">8</span><span class="mord mathnormal">A</span><span class="mclose">)</span></span></span></span></p>
-<pre><code class="blockcode"><span class="co">; 10007 *** 1.1086463928222656e-4</span>
-<span class="co">; 10009 *** 1.1396408081054688e-4</span>
-<span class="co">; 10037 *** 1.2302398681640625e-4</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 10007 *** 1.1086463928222656e-4
+; 10009 *** 1.1396408081054688e-4
+; 10037 *** 1.2302398681640625e-4</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">C=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 100,000. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>3.3</mn><mi>B</mi><mo>&lt;</mo><mi>C</mi><mo>&lt;</mo><mn>4.1</mn><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(3.3B &lt; C &lt; 4.1B)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">3</span><span class="mord">.</span><span class="mord">3</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mord">.</span><span class="mord">1</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mclose">)</span></span></span></span></p>
-<pre><code class="blockcode"><span class="co">; 100003 *** 4.010200500488281e-4</span>
-<span class="co">; 100019 *** 3.6597251892089844e-4</span>
-<span class="co">; 100043 *** 4.558563232421875e-4</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 100003 *** 4.010200500488281e-4
+; 100019 *** 3.6597251892089844e-4
+; 100043 *** 4.558563232421875e-4</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">D=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 1,000,000. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>2.8</mn><mi>C</mi><mo>&lt;</mo><mi>D</mi><mo>&lt;</mo><mn>3.4</mn><mi>C</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2.8C &lt; D &lt; 3.4C)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord">.</span><span class="mord">8</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3</span><span class="mord">.</span><span class="mord">4</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mclose">)</span></span></span></span></p>
-<pre><code class="blockcode"><span class="co">; 1000003 *** .0013530254364013672</span>
-<span class="co">; 1000033 *** .0011339187622070312</span>
-<span class="co">; 1000037 *** .0013699531555175781</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 1000003 *** .0013530254364013672
+; 1000033 *** .0011339187622070312
+; 1000037 *** .0013699531555175781</span></code></pre>
 <p>The data bears out the <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><msqrt><mi>n</mi></msqrt><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\sqrt n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.05028em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8002800000000001em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="padding-left:0.833em;">n</span></span><span style="top:-2.76028em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'><path d='M95,702
 c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
 c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
@@ -1269,25 +1269,25 @@ Imports:
   (<span class="fu">=</span> n (smallest-divisor n)))
 
 (string-contains?
- (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
+ (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6 10</span>))
  <span class="cn">&quot;7 *** &quot;</span>)
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p>Time for 3 primes greater than 1,000:</p>
-<pre><code class="blockcode"><span class="co">; 1009 *** 5.1975250244140625e-5   (1.085x)</span>
-<span class="co">; 1013 *** 5.1975250244140625e-5   (1.211x)</span>
-<span class="co">; 1019 *** 6.198883056640625e-5    (1.294x)</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 1009 *** 5.1975250244140625e-5   (1.085x)
+; 1013 *** 5.1975250244140625e-5   (1.211x)
+; 1019 *** 6.198883056640625e-5    (1.294x)</span></code></pre>
 <p>Time for 3 primes greater than 10,000:</p>
-<pre><code class="blockcode"><span class="co">; 10007 *** 1.1491775512695312e-4  (1.037x)</span>
-<span class="co">; 10009 *** 1.1801719665527344e-4  (1.036x)</span>
-<span class="co">; 10037 *** 1.1897087097167969e-4  (0.967x)</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 10007 *** 1.1491775512695312e-4  (1.037x)
+; 10009 *** 1.1801719665527344e-4  (1.036x)
+; 10037 *** 1.1897087097167969e-4  (0.967x)</span></code></pre>
 <p>Time for 3 primes greater than 100,000:</p>
-<pre><code class="blockcode"><span class="co">; 100003 *** 3.540515899658203e-4  (0.883x)</span>
-<span class="co">; 100019 *** 3.490447998046875e-4  (0.954x)</span>
-<span class="co">; 100043 *** 3.590583801269531e-4  (0.788x)</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 100003 *** 3.540515899658203e-4  (0.883x)
+; 100019 *** 3.490447998046875e-4  (0.954x)
+; 100043 *** 3.590583801269531e-4  (0.788x)</span></code></pre>
 <p>Time for 3 primes greater than 1,000,000:</p>
-<pre><code class="blockcode"><span class="co">; 1000003 *** .0010960102081298828 (0.810x)</span>
-<span class="co">; 1000033 *** .001055002212524414  (0.930x)</span>
-<span class="co">; 1000037 *** .0010900497436523438 (0.796x)</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 1000003 *** .0010960102081298828 (0.810x)
+; 1000033 *** .001055002212524414  (0.930x)
+; 1000037 *** .0010900497436523438 (0.796x)</span></code></pre>
 <p>The expectation of half time was not confirmed. In fact, this method is actually slower for primes under 10,000. Even for seven-figure primes, it only shaves off 20%. There was probably some error in the measurements; other processes on the computer and random factors might have played a role. Maybe the overhead of calling <code>next</code> cancels the benefit of skipping even numbers.</p>
 <h3 id="ex1.24" class="anchor">
 <a class="anchor__link link" href="#ex1.24" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.24">Exercise 1.24<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1318,25 +1318,25 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (prime? n) (fast-prime? n <span class="cn">100</span>))
 
 (string-contains?
- (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6</span> <span class="cn">10</span>))
+ (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6 10</span>))
  <span class="cn">&quot;7 *** &quot;</span>)
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">A=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 1,000.</p>
-<pre><code class="blockcode"><span class="co">; 1009 *** .003638029098510742</span>
-<span class="co">; 1013 *** .003793001174926758</span>
-<span class="co">; 1019 *** .003606081008911133</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 1009 *** .003638029098510742
+; 1013 *** .003793001174926758
+; 1019 *** .003606081008911133</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">B=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 10,000. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>0.988</mn><mi>A</mi><mo>&lt;</mo><mi>B</mi><mo>&lt;</mo><mn>1.196</mn><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.988A &lt; B &lt; 1.196A)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0</span><span class="mord">.</span><span class="mord">9</span><span class="mord">8</span><span class="mord">8</span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">1</span><span class="mord">9</span><span class="mord">6</span><span class="mord mathnormal">A</span><span class="mclose">)</span></span></span></span></p>
-<pre><code class="blockcode"><span class="co">; 10007 *** .004311084747314453</span>
-<span class="co">; 10009 *** .0039730072021484375</span>
-<span class="co">; 10037 *** .0037479400634765625</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 10007 *** .004311084747314453
+; 10009 *** .0039730072021484375
+; 10037 *** .0037479400634765625</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">C=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 100,000. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>0.893</mn><mi>B</mi><mo>&lt;</mo><mi>C</mi><mo>&lt;</mo><mn>1.294</mn><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.893B &lt; C &lt; 1.294B)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0</span><span class="mord">.</span><span class="mord">8</span><span class="mord">9</span><span class="mord">3</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">2</span><span class="mord">9</span><span class="mord">4</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mclose">)</span></span></span></span></p>
-<pre><code class="blockcode"><span class="co">; 100003 *** .004847049713134766</span>
-<span class="co">; 100019 *** .004848003387451172</span>
-<span class="co">; 100043 *** .003850221633911133</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 100003 *** .004847049713134766
+; 100019 *** .004848003387451172
+; 100043 *** .003850221633911133</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">D=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 1,000,000. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mn>0.891</mn><mi>C</mi><mo>&lt;</mo><mi>D</mi><mo>&lt;</mo><mn>1.453</mn><mi>C</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.891C &lt; D &lt; 1.453C)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0</span><span class="mord">.</span><span class="mord">8</span><span class="mord">9</span><span class="mord">1</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">4</span><span class="mord">5</span><span class="mord">3</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mclose">)</span></span></span></span></p>
-<pre><code class="blockcode"><span class="co">; 1000003 *** .005592823028564453</span>
-<span class="co">; 1000033 *** .004972934722900391</span>
-<span class="co">; 1000037 *** .0043179988861083984</span></code></pre>
+<pre><code class="blockcode"><span class="co">; 1000003 *** .005592823028564453
+; 1000033 *** .004972934722900391
+; 1000037 *** .0043179988861083984</span></code></pre>
 <p>Since the Fermat test has <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Θ(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Θ</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> growth, I expected the time to test primes near 1,000,000 to be only a bit greater than for primes near 1,000. The data bears this out: for each additional order of magnitude of the primes, the time required increases by a small, constant amount. Specifically, primes that are 10 times larger take about 1 millisecond longer. These results may be dependent on the choice of 100 as the second argument to <code>fast-prime?</code> (the exercise did not specify what value to use).</p>
 <h3 id="ex1.25" class="anchor">
 <a class="anchor__link link" href="#ex1.25" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.25">Exercise 1.25<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1377,27 +1377,27 @@ Imports:
 <p>This procedure works, but it is not as efficient. The Fermat test takes much longer using <code>alyssa-expmod</code>—longer by three orders of magnitude. The key to the original <code>expmod</code> is not only successive squaring (which <code>fast-expt</code> does as well in Alyssa’s procedure), but also calling <code>remainder</code> between each squaring. Alyssa’s procedure does not, so the value becomes enormous, requiring bignums. Suppose we test the primality of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>9</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">n=9\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">9</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> choosing <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>=</mo><mn>5</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">a=5\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> Using the original <code>expmod</code>, the process evolves like so:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> r <span class="fu">remainder</span>)
 (<span class="kw">define</span> s square)
-(expmod <span class="cn">5</span> <span class="cn">9</span> <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (expmod <span class="cn">5</span> <span class="cn">8</span> <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (expmod <span class="cn">5</span> <span class="cn">4</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (expmod <span class="cn">5</span> <span class="cn">2</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (expmod <span class="cn">5</span> <span class="cn">1</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r (<span class="fu">*</span> <span class="cn">5</span> (expmod <span class="cn">5</span> <span class="cn">0</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">1</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r <span class="cn">5</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+(expmod <span class="cn">5 9 9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (expmod <span class="cn">5 8 9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (expmod <span class="cn">5 4 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (expmod <span class="cn">5 2 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (expmod <span class="cn">5 1 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r (<span class="fu">*</span> <span class="cn">5</span> (expmod <span class="cn">5 0 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r (<span class="fu">*</span> <span class="cn">5 1</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s (r <span class="cn">5 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
 <span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r (s <span class="cn">5</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r <span class="cn">25</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s (r <span class="cn">25 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
 <span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r (s <span class="cn">7</span>) <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r <span class="cn">49</span> <span class="cn">9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s (r <span class="cn">49 9</span>)) <span class="cn">9</span>)) <span class="cn">9</span>)
 <span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r (s <span class="cn">4</span>) <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r <span class="cn">16</span> <span class="cn">9</span>)) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> <span class="cn">7</span>) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r <span class="cn">35</span> <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5</span> (r <span class="cn">16 9</span>)) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r (<span class="fu">*</span> <span class="cn">5 7</span>) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r <span class="cn">35 9</span>)
 <span class="op">=&gt;</span> <span class="cn">8</span></code></pre>
 <p>Compare this to the evolution of the process using the Alyssa’s procedure:</p>
-<pre><code class="blockcode">(alyssa-expmod <span class="cn">5</span> <span class="cn">9</span> <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r (fast-expt <span class="cn">5</span> <span class="cn">9</span>) <span class="cn">9</span>)
-<span class="op">=&gt;</span> (r <span class="cn">1953125</span> <span class="cn">9</span>)</code></pre>
+<pre><code class="blockcode">(alyssa-expmod <span class="cn">5 9 9</span>)
+<span class="op">=&gt;</span> (r (fast-expt <span class="cn">5 9</span>) <span class="cn">9</span>)
+<span class="op">=&gt;</span> (r <span class="cn">1953125 9</span>)</code></pre>
 <p>The original <code>expmod</code> doesn’t need to deal with numbers anywhere near that size. This number may seem okay, but it will grow exponentially with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span> by definition, and will quickly require arbitrary precision arithmetic, which is much slower than fixnum arithmetic.</p>
 <h3 id="ex1.26" class="anchor">
 <a class="anchor__link link" href="#ex1.26" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.26">Exercise 1.26<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1498,9 +1498,9 @@ Imports:
            (fast-prime? n (<span class="fu">-</span> times <span class="cn">1</span>)))))</code></pre>
 <p>Like the Fermat test in <a href="#1.2.6">§&nbsp;1.2.6</a>, the Miller–Rabin test always returns true for primes but has probabilistic behavior for composites numbers:</p>
 <pre><code class="blockcode">(fast-prime? <span class="cn">13</span> many-times) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(fast-prime? <span class="cn">10</span> many-times) <span class="op">=?&gt;</span> [<span class="cn">#f</span> <span class="cn">#t</span>] <span class="co">; correct answer is #f</span></code></pre>
+(fast-prime? <span class="cn">10</span> many-times) <span class="op">=?&gt;</span> [<span class="cn">#f #t</span>] <span class="co">; correct answer is #f</span></code></pre>
 <p>Unlike the Fermat test, it is not fooled by Carmichael numbers:</p>
-<pre><code class="blockcode">(fast-prime? <span class="cn">561</span> many-times) <span class="op">=?&gt;</span> [<span class="cn">#f</span> <span class="cn">#t</span>] <span class="co">; correct answer is #f</span></code></pre>
+<pre><code class="blockcode">(fast-prime? <span class="cn">561</span> many-times) <span class="op">=?&gt;</span> [<span class="cn">#f #t</span>] <span class="co">; correct answer is #f</span></code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

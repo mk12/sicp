@@ -200,7 +200,7 @@
 <a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a> Representing procedures
 </h3>
 <ul>
-<li><code>(apply-primitive-procedure <span class="ss">proc</span> <span class="ss">args</span>)</code> applies a primitive procedure to <code><span class="ss">args</span></code>.</li>
+<li><code>(apply-primitive-procedure <span class="ss">proc args</span>)</code> applies a primitive procedure to <code><span class="ss">args</span></code>.</li>
 <li><code>(primitive-procedure? <span class="ss">proc</span>)</code> tests whether <code><span class="ss">proc</span></code> is a primitive procedure.</li>
 <li>Compound procedures are represented by the following data structure:</li>
 </ul>
@@ -213,10 +213,10 @@
 <a class="anchor__link link" href="#4.1.3.3" aria-hidden="true">#</a> Operations on environments
 </h3>
 <ul>
-<li><code>(lookup-variable-value <span class="ss">var</span> <span class="ss">env</span>)</code> returns the value bound to a variable.</li>
-<li><code>(extend-environment <span class="ss">variables</span> <span class="ss">values</span> <span class="ss">base-env</span>)</code> returns a new environment extended with a frame containing the given bindings.</li>
-<li><code>(define-variable! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> adds a binding to the first frame of <code><span class="ss">env</span></code>.</li>
-<li><code>(set-variable-value! <span class="ss">var</span> <span class="ss">value</span> <span class="ss">env</span>)</code> changes a binding in <code><span class="ss">env</span></code>.</li>
+<li><code>(lookup-variable-value <span class="ss">var env</span>)</code> returns the value bound to a variable.</li>
+<li><code>(extend-environment <span class="ss">variables values base-env</span>)</code> returns a new environment extended with a frame containing the given bindings.</li>
+<li><code>(define-variable! <span class="ss">var value env</span>)</code> adds a binding to the first frame of <code><span class="ss">env</span></code>.</li>
+<li><code>(set-variable-value! <span class="ss">var value env</span>)</code> changes a binding in <code><span class="ss">env</span></code>.</li>
 <li>Here is a partial implementation:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
@@ -279,7 +279,7 @@
         (<span class="fu">list</span> <span class="vs">&#39;null?</span> <span class="fu">null?</span>)
         <span class="ss">more-primitives</span>))
 (<span class="kw">define</span> (primitive-procedure-names)
-  (<span class="fu">map</span> <span class="fu">car</span> primitive-procedures))
+  (<span class="fu">map car</span> primitive-procedures))
 (<span class="kw">define</span> (primitive-procedure-objects)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="vs">&#39;primitive</span> (<span class="fu">cadr</span> proc)))
        primitive-procedures))</code></pre>
@@ -302,9 +302,9 @@
   (driver-loop))
 
 (<span class="kw">define</span> (prompt-for-input <span class="fu">string</span>)
-  (<span class="fu">newline</span>) (<span class="fu">newline</span>) (<span class="fu">display</span> <span class="fu">string</span>) (<span class="fu">newline</span>))
+  (<span class="fu">newline</span>) (<span class="fu">newline</span>) (<span class="fu">display string</span>) (<span class="fu">newline</span>))
 (<span class="kw">define</span> (announce-output <span class="fu">string</span>)
-  (<span class="fu">newline</span>) (<span class="fu">display</span> <span class="fu">string</span>) (<span class="fu">newline</span>))
+  (<span class="fu">newline</span>) (<span class="fu">display string</span>) (<span class="fu">newline</span>))
 (<span class="kw">define</span> (user-print object)
   (<span class="kw">if</span> (compound-procedure? object)
       (<span class="fu">display</span> (<span class="fu">list</span> <span class="vs">&#39;compound-procedure</span>

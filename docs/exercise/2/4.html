@@ -113,8 +113,8 @@ Imports:
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a)) (<span class="fu">*</span> r (<span class="fu">sin</span> a))))</code></pre>
 <p>Rectangular form can give exact answers for addition and subtraction.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
-(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
+<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
 (real-part z1) <span class="op">=&gt;</span> <span class="cn">4</span>
 (imag-part z1) <span class="op">=&gt;</span> <span class="cn">6</span>
 (magnitude z2) <span class="op">~&gt;</span> <span class="cn">30</span>
@@ -129,8 +129,8 @@ Imports:
         (<span class="fu">atan</span> y x)))
 (<span class="kw">define</span> make-from-mag-ang <span class="fu">cons</span>)</code></pre>
 <p>Polar form can give exact answers for multiplication and division.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
-(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
+<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
 (real-part z1) <span class="op">~&gt;</span> <span class="cn">4</span>
 (imag-part z1) <span class="op">~&gt;</span> <span class="cn">6</span>
 (magnitude z2) <span class="op">=&gt;</span> <span class="cn">30</span>
@@ -224,10 +224,10 @@ Imports:
 <p>Generic operations:</p>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Now we can get exact answers for all operations:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
-(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
-z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">4</span> <span class="cn">6</span>)
-z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <span class="cn">3</span>)</code></pre>
+<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
+z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">4 6</span>)
+z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30 3</span>)</code></pre>
 <h2 id="2.4.3" class="anchor">
 <a class="anchor__link link" href="#2.4.3" aria-hidden="true">#</a> <span class="number">2.4.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-17.html#%25_sec_2.4.3">Data-Directed Programming and Additivity<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -290,13 +290,13 @@ Imports:
 
   <span class="co">;; Interface to the rest of the system</span>
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;rectangular</span> x))
-  (put <span class="vs">&#39;real-part</span> <span class="vs">&#39;(rectangular)</span> real-part)
-  (put <span class="vs">&#39;imag-part</span> <span class="vs">&#39;(rectangular)</span> imag-part)
-  (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular)</span> magnitude)
-  (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(rectangular)</span> angle)
-  (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span>
+  (put <span class="vs">&#39;real-part &#39;(rectangular)</span> real-part)
+  (put <span class="vs">&#39;imag-part &#39;(rectangular)</span> imag-part)
+  (put <span class="vs">&#39;magnitude &#39;(rectangular)</span> magnitude)
+  (put <span class="vs">&#39;angle &#39;(rectangular)</span> angle)
+  (put <span class="vs">&#39;make-from-real-imag &#39;rectangular</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;rectangular</span>
+  (put <span class="vs">&#39;make-from-mag-ang &#39;rectangular</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
 (<span class="kw">define</span> (polar-pkg)
@@ -314,13 +314,13 @@ Imports:
 
   <span class="co">;; Interface to the rest of the system</span>
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;polar</span> x))
-  (put <span class="vs">&#39;real-part</span> <span class="vs">&#39;(polar)</span> real-part)
-  (put <span class="vs">&#39;imag-part</span> <span class="vs">&#39;(polar)</span> imag-part)
-  (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(polar)</span> magnitude)
-  (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(polar)</span> angle)
-  (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;polar</span>
+  (put <span class="vs">&#39;real-part &#39;(polar)</span> real-part)
+  (put <span class="vs">&#39;imag-part &#39;(polar)</span> imag-part)
+  (put <span class="vs">&#39;magnitude &#39;(polar)</span> magnitude)
+  (put <span class="vs">&#39;angle &#39;(polar)</span> angle)
+  (put <span class="vs">&#39;make-from-real-imag &#39;polar</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span>
+  (put <span class="vs">&#39;make-from-mag-ang &#39;polar</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
 <p>Helpers to apply generic operations:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (apply-generic op . args)
@@ -342,9 +342,9 @@ Imports:
 (<span class="kw">define</span> (angle z) (apply-generic <span class="vs">&#39;angle</span> z))</code></pre>
 <p>Generic constructors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag x y)
-  (apply-specific <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span> x y))
+  (apply-specific <span class="vs">&#39;make-from-real-imag &#39;rectangular</span> x y))
 (<span class="kw">define</span> (make-from-mag-ang r a)
-  (apply-specific <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span> r a))</code></pre>
+  (apply-specific <span class="vs">&#39;make-from-mag-ang &#39;polar</span> r a))</code></pre>
 <p>Generic operations:</p>
 <pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Helper procedure to run installers with a clean slate:</p>
@@ -354,10 +354,10 @@ Imports:
 <p>Putting it all together:</p>
 <pre><code class="blockcode">(using rectangular-pkg polar-pkg)
 
-(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
-(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
-z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">4</span> <span class="cn">6</span>)
-z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30</span> <span class="cn">3</span>)</code></pre>
+(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+(<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
+z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">4 6</span>)
+z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30 3</span>)</code></pre>
 <h3 id="ex2.73" class="anchor">
 <a class="anchor__link link" href="#ex2.73" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-17.html#%25_thm_2.73">Exercise 2.73<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -422,7 +422,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
-        ((variable? expr) (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
+        ((variable? expr) (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1 0</span>))
         (<span class="kw">else</span> (apply-specific <span class="vs">&#39;deriv</span> (operator expr) (operands expr) var))))
 (<span class="kw">define</span> operator <span class="fu">car</span>)
 (<span class="kw">define</span> operands <span class="fu">cdr</span>)</code></pre>
@@ -436,7 +436,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (sum-pkg)
   (<span class="kw">define</span> (deriv-sum terms var)
     (accumulate make-sum <span class="cn">0</span> (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (deriv t var)) terms)))
-  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;+</span> deriv-sum))
+  (put <span class="vs">&#39;deriv &#39;+</span> deriv-sum))
 
 (<span class="kw">define</span> (product-pkg)
   (<span class="kw">define</span> multiplier <span class="fu">car</span>)
@@ -447,7 +447,7 @@ Imports:
                             (deriv (multiplicand product) var))
               (make-product (deriv (multiplier product) var)
                             (multiplicand product))))
-  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;*</span> deriv-product))</code></pre>
+  (put <span class="vs">&#39;deriv &#39;*</span> deriv-product))</code></pre>
 <p>Note that we can’t reuse the selectors <code>multiplier</code> and <code>multiplicand</code> from <a href="3.html#ex2.57">Exercise&nbsp;2.57</a> because they assume the list includes the operator.</p></li>
 <li><p>Package for power differentiation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (power-pkg)
@@ -460,17 +460,17 @@ Imports:
                     (base power)
                     (make-sum (exponent power) <span class="cn">-1</span>)))
      (deriv (base power) var)))
-  (put <span class="vs">&#39;deriv</span> <span class="vs">&#39;**</span> deriv-power))</code></pre>
+  (put <span class="vs">&#39;deriv &#39;**</span> deriv-power))</code></pre>
 <p>Note that we can’t reuse the selectors <code>base</code> and <code>exponent</code> from <a href="3.html#ex2.56">Exercise&nbsp;2.56</a> because they assume the list includes the operator.</p></li>
 <li><p>If we wanted to index the procedures in the opposite way, we would simply need to swap the first two arguments to <code>put</code> in all the package installation procedures.</p></li>
 </ol>
 <p>Let’s test the new system:</p>
 <pre><code class="blockcode">(using sum-pkg product-pkg power-pkg)
 
-(deriv <span class="vs">&#39;(+ x 3)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(deriv <span class="vs">&#39;(* x y)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;y</span>
-(deriv <span class="vs">&#39;(* (* x y) (+ x 3))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x y) (* y (+ x 3)))</span>
-(deriv <span class="vs">&#39;(* 3 (** x 5))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(* 3 (* 5 (** x 4)))</span></code></pre>
+(deriv <span class="vs">&#39;(+ x 3) &#39;x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(deriv <span class="vs">&#39;(* x y) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;y</span>
+(deriv <span class="vs">&#39;(* (* x y) (+ x 3)) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x y) (* y (+ x 3)))</span>
+(deriv <span class="vs">&#39;(* 3 (** x 5)) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(* 3 (* 5 (** x 4)))</span></code></pre>
 <h3 id="ex2.74" class="anchor">
 <a class="anchor__link link" href="#ex2.74" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-17.html#%25_thm_2.74">Exercise 2.74<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -534,10 +534,10 @@ Imports:
 </ol>
 <p>Here is an example of a company with two divisions:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> files
-  (<span class="fu">list</span> (attach-tag <span class="vs">&#39;marketing</span>
-                    <span class="vs">&#39;(&quot;Alice&quot; &quot;Bob&quot;)</span>)
-        (attach-tag <span class="vs">&#39;sales</span>
-                    <span class="vs">&#39;((&quot;Joe&quot; 40) (&quot;Jane&quot; 60))</span>)))
+  (<span class="fu">list</span> (attach-tag <span class="vs">&#39;marketing
+                    &#39;(&quot;Alice&quot; &quot;Bob&quot;)</span>)
+        (attach-tag <span class="vs">&#39;sales
+                    &#39;((&quot;Joe&quot; 40) (&quot;Jane&quot; 60))</span>)))
 
 (<span class="kw">define</span> (company-pkg)
   (<span class="kw">define</span> (get-record-marketing records name)
@@ -550,10 +550,10 @@ Imports:
           ((<span class="fu">equal?</span> (<span class="fu">caar</span> records) name) (<span class="fu">car</span> records))
           (<span class="kw">else</span> (get-record-sales (<span class="fu">cdr</span> records) name))))
   (<span class="kw">define</span> get-salary-sales <span class="fu">cadr</span>)
-  (put <span class="vs">&#39;get-record</span> <span class="vs">&#39;marketing</span> get-record-marketing)
-  (put <span class="vs">&#39;get-salary</span> <span class="vs">&#39;marketing</span> get-salary-marketing)
-  (put <span class="vs">&#39;get-record</span> <span class="vs">&#39;sales</span> get-record-sales)
-  (put <span class="vs">&#39;get-salary</span> <span class="vs">&#39;sales</span> get-salary-sales))
+  (put <span class="vs">&#39;get-record &#39;marketing</span> get-record-marketing)
+  (put <span class="vs">&#39;get-salary &#39;marketing</span> get-salary-marketing)
+  (put <span class="vs">&#39;get-record &#39;sales</span> get-record-sales)
+  (put <span class="vs">&#39;get-salary &#39;sales</span> get-salary-sales))
 
 (using company-pkg)
 
@@ -590,8 +590,8 @@ Imports:
 
 (<span class="kw">define</span> (apply-generic op arg) (arg op))
 
-(apply-generic <span class="vs">&#39;real-part</span> (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)) <span class="op">=&gt;</span> <span class="cn">3</span>
-(apply-generic <span class="vs">&#39;magnitude</span> (make-from-real-imag <span class="cn">0</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">1</span></code></pre>
+(apply-generic <span class="vs">&#39;real-part</span> (make-from-real-imag <span class="cn">3 4</span>)) <span class="op">=&gt;</span> <span class="cn">3</span>
+(apply-generic <span class="vs">&#39;magnitude</span> (make-from-real-imag <span class="cn">0 1</span>)) <span class="op">~&gt;</span> <span class="cn">1</span></code></pre>
 <h3 id="ex2.75" class="anchor">
 <a class="anchor__link link" href="#ex2.75" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-17.html#%25_thm_2.75">Exercise 2.75<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -618,8 +618,8 @@ Imports:
           ((<span class="fu">eq?</span> op <span class="vs">&#39;angle</span>) a)
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-from-mag-ang</span> <span class="cn">&quot;unknown op&quot;</span> op)))))
 
-(apply-generic <span class="vs">&#39;magnitude</span> (make-from-mag-ang <span class="cn">15</span> <span class="cn">0.5</span>)) <span class="op">=&gt;</span> <span class="cn">15</span>
-(apply-generic <span class="vs">&#39;imag-part</span> (make-from-mag-ang <span class="cn">1</span> <span class="cn">0</span>)) <span class="op">~&gt;</span> <span class="cn">0</span></code></pre>
+(apply-generic <span class="vs">&#39;magnitude</span> (make-from-mag-ang <span class="cn">15 0.5</span>)) <span class="op">=&gt;</span> <span class="cn">15</span>
+(apply-generic <span class="vs">&#39;imag-part</span> (make-from-mag-ang <span class="cn">1 0</span>)) <span class="op">~&gt;</span> <span class="cn">0</span></code></pre>
 <h3 id="ex2.76" class="anchor">
 <a class="anchor__link link" href="#ex2.76" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-17.html#%25_thm_2.76">Exercise 2.76<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>

@@ -30,7 +30,7 @@
 // If enabled, the highlighter will avoid closing <span> tags before whitespace
 // only to reopen them again with the same class as before. One reason to
 // disable this would be if any of the CSS styles set a background color.
-#define MINIMIZE_TAGS 0
+#define MINIMIZE_TAGS 1
 
 // Enable this to print input code to stderr.
 #define DEBUG_INPUT 0
@@ -535,8 +535,6 @@ struct Highlighter {
     const char *class;
     // Whitespace span not yet written to the buffer.
     struct Span pending_ws;
-    // TODO: remove.
-    bool minimize_tags;
 };
 
 // Initializes a highlighter with a destination buffer.
@@ -544,7 +542,6 @@ static void hl_init(struct Highlighter *hl, struct Buffer *buf) {
     hl->buf = buf;
     hl->class = NULL;
     hl->pending_ws.data = NULL;
-    hl->minimize_tags = false;
 }
 
 // Flushes any pending </span> to the buffer.
@@ -578,8 +575,7 @@ static void hl_drop_ws(struct Highlighter *hl) { hl->pending_ws.data = NULL; }
 // escaping special characters with HTML entities.
 static void hl_write(struct Highlighter *hl, const char *class,
                      struct Span span) {
-    // TODO: Change back to MINIMIZE_TAGS.
-    if (class != hl->class || (hl->pending_ws.data && !hl->minimize_tags)) {
+    if (class != hl->class || (!MINIMIZE_TAGS && hl->pending_ws.data)) {
         hl_flush(hl);
         if (class) {
             buf_write(hl->buf, SPAN("<span class=\""));
@@ -839,10 +835,12 @@ static const char *token_end(const char *p, const char *end,
         if (p < end && (isdigit(*p) || *p == '.')) {
             goto number;
         }
-        if (p + 4 < end && p[3] == '.' && isdigit(p[4])
-            && (strncmp(p, "inf", 3) == 0 || strncmp(p, "nan", 3) == 0)) {
-            p += 3;
-            goto number;
+        if (p + 5 <= end
+            && (strncmp(p, "inf.0", 5) == 0 || strncmp(p, "nan.0", 5) == 0)) {
+            p += 5;
+            assert(!(p < end && is_ident(*p)));
+            *kind = T_NUMBER;
+            return p;
         }
         break;
     case '.':
@@ -1335,13 +1333,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
                 render_metavariable(out, scan.token);
                 break;
             default:
-                if (qt->stack[qt->i].depth == 0) {
-                    hl_write(out, "vs", scan.token);
-                } else {
-                    out->minimize_tags = true;
-                    hl_write(out, "vs", scan.token);
-                    out->minimize_tags = false;
-                }
+                hl_write(out, "vs", scan.token);
                 break;
             }
             continue;

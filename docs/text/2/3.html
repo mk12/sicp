@@ -88,7 +88,7 @@
 (<span class="fu">list</span> a b)
 <span class="sc">→ (1 2)</span>
 
-(<span class="fu">list</span> <span class="vs">&#39;a</span> <span class="vs">&#39;b</span>)
+(<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>)
 <span class="sc">→ (a b)</span>
 
 (<span class="fu">list</span> <span class="vs">&#39;a</span> b)
@@ -97,10 +97,10 @@
 <li>Now that we have quotation, we will use <code>'()</code> for the empty list instead of <code>nil</code>.</li>
 <li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
-<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="vs">&#39;a</span> <span class="vs">&#39;b</span>)
+<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="vs">&#39;a &#39;b</span>)
 <span class="sc">→ #f</span>
 
-(<span class="fu">eq?</span> <span class="vs">&#39;a</span> <span class="vs">&#39;a</span>)
+(<span class="fu">eq?</span> <span class="vs">&#39;a &#39;a</span>)
 <span class="sc">→ #t</span></code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.53">2.53</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.54">2.54</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.55">2.55</a></li></ul></aside>
 <h2 id="2.3.2" class="anchor">
@@ -177,7 +177,7 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (deriv exp var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> exp) <span class="cn">0</span>)
         ((variable? exp)
-         (<span class="kw">if</span> (same-variable? exp var) <span class="cn">1</span> <span class="cn">0</span>))
+         (<span class="kw">if</span> (same-variable? exp var) <span class="cn">1 0</span>))
         ((sum? exp)
          (make-sum (deriv (addend exp) var)
                    (deriv (augend exp) var)))

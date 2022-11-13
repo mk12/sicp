@@ -85,7 +85,7 @@
 </h2>
 <ul>
 <li>We want to add, subtract, multiply, divide, and test equality with our rational numbers.</li>
-<li>Assume we have <code>(make-rat <span class="ss">n</span> <span class="ss">d</span>)</code>, <code>(number <span class="ss">x</span>)</code>, and <code>(denom <span class="ss">x</span>)</code> available as the constructor and selectors. This is wishful thinking, and it is a good technique.</li>
+<li>Assume we have <code>(make-rat <span class="ss">n d</span>)</code>, <code>(number <span class="ss">x</span>)</code>, and <code>(denom <span class="ss">x</span>)</code> available as the constructor and selectors. This is wishful thinking, and it is a good technique.</li>
 <li>Here is the implementation for addition:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (add-rat x y)
@@ -99,7 +99,7 @@
 <li>A <em>pair</em> is a concrete structure that we create with <code>cons</code>.</li>
 <li>We extract the parts of the pair with <code>car</code> and <code>cdr</code>.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> <span class="cn">2</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1 2</span>))
 
 (<span class="fu">car</span> x)
 <span class="sc">→ 1</span>

@@ -76,7 +76,7 @@
 (<span class="kw">define</span> b <span class="cn">2</span>)
 
 (<span class="fu">list</span> a b) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span>
-(<span class="fu">list</span> <span class="vs">&#39;a</span> <span class="vs">&#39;b</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(a b)</span>
+(<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(a b)</span>
 (<span class="fu">list</span> <span class="vs">&#39;a</span> b) <span class="op">=&gt;</span> <span class="vs">&#39;(a 2)</span>
 
 (<span class="fu">car</span> <span class="vs">&#39;(a b c)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
@@ -87,8 +87,8 @@
         ((<span class="fu">eq?</span> item (<span class="fu">car</span> x)) x)
         (<span class="kw">else</span> (<span class="fu">memq</span> item (<span class="fu">cdr</span> x)))))
 
-(<span class="fu">memq</span> <span class="vs">&#39;apple</span> <span class="vs">&#39;(pear banana prune)</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">memq</span> <span class="vs">&#39;apple</span> <span class="vs">&#39;(x (apple sauce) y apple pear)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(apple pear)</span></code></pre>
+(<span class="fu">memq</span> <span class="vs">&#39;apple &#39;(pear banana prune)</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">memq</span> <span class="vs">&#39;apple &#39;(x (apple sauce) y apple pear)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(apple pear)</span></code></pre>
 <h3 id="ex2.53" class="anchor">
 <a class="anchor__link link" href="#ex2.53" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.53">Exercise 2.53<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -107,13 +107,13 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="fu">list</span> <span class="vs">&#39;a</span> <span class="vs">&#39;b</span> <span class="vs">&#39;c</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(a b c)</span>
+<pre><code class="blockcode">(<span class="fu">list</span> <span class="vs">&#39;a &#39;b &#39;c</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(a b c)</span>
 (<span class="fu">list</span> (<span class="fu">list</span> <span class="vs">&#39;george</span>)) <span class="op">=&gt;</span> <span class="vs">&#39;((george))</span>
 (<span class="fu">cdr</span> <span class="vs">&#39;((x1 x2) (y1 y2))</span>) <span class="op">=&gt;</span> <span class="vs">&#39;((y1 y2))</span>
 (<span class="fu">cadr</span> <span class="vs">&#39;((x1 x2) (y1 y2))</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(y1 y2)</span>
 (<span class="fu">pair?</span> (<span class="fu">car</span> <span class="vs">&#39;(a short list)</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">memq</span> <span class="vs">&#39;red</span> <span class="vs">&#39;((red shoes) (blue socks))</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">memq</span> <span class="vs">&#39;red</span> <span class="vs">&#39;(red shoes blue socks)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(red shoes blue socks)</span></code></pre>
+(<span class="fu">memq</span> <span class="vs">&#39;red &#39;((red shoes) (blue socks))</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">memq</span> <span class="vs">&#39;red &#39;(red shoes blue socks)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(red shoes blue socks)</span></code></pre>
 <h3 id="ex2.54" class="anchor">
 <a class="anchor__link link" href="#ex2.54" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.54">Exercise 2.54<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -125,8 +125,8 @@ Imports:
              (<span class="fu">eq?</span> (<span class="fu">car</span> list1) (<span class="fu">car</span> list2))
              (<span class="fu">equal?</span> (<span class="fu">cdr</span> list1) (<span class="fu">cdr</span> list2))))))
 
-(<span class="fu">equal?</span> <span class="vs">&#39;(this is a list)</span> <span class="vs">&#39;(this is a list)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(<span class="fu">equal?</span> <span class="vs">&#39;(this is a list)</span> <span class="vs">&#39;(this (is a) list)</span>) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
+(<span class="fu">equal?</span> <span class="vs">&#39;(this is a list) &#39;(this is a list)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(<span class="fu">equal?</span> <span class="vs">&#39;(this is a list) &#39;(this (is a) list)</span>) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex2.55" class="anchor">
 <a class="anchor__link link" href="#ex2.55" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -141,7 +141,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
         ((variable? expr)
-         (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
+         (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1 0</span>))
         ((sum? expr)
          (make-sum (deriv (addend expr) var)
                    (deriv (augend expr) var)))
@@ -169,11 +169,11 @@ Imports:
 (<span class="kw">define</span> multiplier <span class="fu">cadr</span>)
 (<span class="kw">define</span> multiplicand <span class="fu">caddr</span>)
 
-(deriv <span class="vs">&#39;(+ x 3)</span> <span class="vs">&#39;x</span>)
+(deriv <span class="vs">&#39;(+ x 3) &#39;x</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(+ 1 0)</span>
-(deriv <span class="vs">&#39;(* x y)</span> <span class="vs">&#39;x</span>)
+(deriv <span class="vs">&#39;(* x y) &#39;x</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x 0) (* 1 y))</span>
-(deriv <span class="vs">&#39;(* (* x y) (+ x 3))</span> <span class="vs">&#39;x</span>)
+(deriv <span class="vs">&#39;(* (* x y) (+ x 3)) &#39;x</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* (* x y) (+ 1 0))
        (* (+ (* x 0) (* 1 y))
           (+ x 3)))</span>
@@ -194,9 +194,9 @@ Imports:
         ((<span class="kw">and</span> (<span class="fu">number?</span> m1) (<span class="fu">number?</span> m2)) (<span class="fu">*</span> m1 m2))
         (<span class="kw">else</span> (<span class="fu">list</span> <span class="vs">&#39;*</span> m1 m2))))
 
-(deriv <span class="vs">&#39;(+ x 3)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(deriv <span class="vs">&#39;(* x y)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;y</span>
-(deriv <span class="vs">&#39;(* (* x y) (+ x 3))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x y) (* y (+ x 3)))</span></code></pre>
+(deriv <span class="vs">&#39;(+ x 3) &#39;x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(deriv <span class="vs">&#39;(* x y) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;y</span>
+(deriv <span class="vs">&#39;(* (* x y) (+ x 3)) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x y) (* y (+ x 3)))</span></code></pre>
 <h3 id="ex2.56" class="anchor">
 <a class="anchor__link link" href="#ex2.56" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.56">Exercise 2.56<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -248,7 +248,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
         ((variable? expr)
-         (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1</span> <span class="cn">0</span>))
+         (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1 0</span>))
         ((sum? expr)
          (make-sum (deriv (addend expr) var)
                    (deriv (augend expr) var)))
@@ -275,7 +275,7 @@ Imports:
 (<span class="kw">define</span> base <span class="fu">cadr</span>)
 (<span class="kw">define</span> exponent <span class="fu">caddr</span>)
 
-(deriv <span class="vs">&#39;(* 3 (** x 5))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(* 3 (* 5 (** x 4)))</span></code></pre>
+(deriv <span class="vs">&#39;(* 3 (** x 5)) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(* 3 (* 5 (** x 4)))</span></code></pre>
 <h3 id="ex2.57" class="anchor">
 <a class="anchor__link link" href="#ex2.57" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.57">Exercise 2.57<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -326,7 +326,7 @@ Imports:
 (<span class="kw">define</span> (multiplicand product)
   (accumulate make-product <span class="cn">1</span> (<span class="fu">cddr</span> product)))
 
-(deriv <span class="vs">&#39;(* x y (+ x 3))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x y) (* y (+ x 3)))</span></code></pre>
+(deriv <span class="vs">&#39;(* x y (+ x 3)) &#39;x</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(+ (* x y) (* y (+ x 3)))</span></code></pre>
 <h3 id="ex2.58" class="anchor">
 <a class="anchor__link link" href="#ex2.58" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.58">Exercise 2.58<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -385,7 +385,7 @@ Imports:
 (<span class="kw">define</span> multiplier <span class="fu">car</span>)
 (<span class="kw">define</span> multiplicand <span class="fu">caddr</span>)
 
-(deriv <span class="vs">&#39;(x + (3 * (x + (y + 2))))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre></li>
+(deriv <span class="vs">&#39;(x + (3 * (x + (y + 2)))) &#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre></li>
 <li><p>Standard algebraic notation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (has op expr)
   (<span class="kw">and</span> (<span class="fu">pair?</span> expr) (<span class="fu">memq</span> op expr)))
@@ -413,8 +413,8 @@ Imports:
 (<span class="kw">define</span> (multiplier expr) (before <span class="vs">&#39;*</span> expr))
 (<span class="kw">define</span> (multiplicand expr) (after <span class="vs">&#39;*</span> expr))
 
-(deriv <span class="vs">&#39;(x + 3 * (x + y + 2))</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span>
-(deriv <span class="vs">&#39;(3 * (x + y * 2) + x + 1)</span> <span class="vs">&#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre></li>
+(deriv <span class="vs">&#39;(x + 3 * (x + y + 2)) &#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span>
+(deriv <span class="vs">&#39;(3 * (x + y * 2) + x + 1) &#39;x</span>) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre></li>
 </ol>
 <h2 id="2.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3" aria-hidden="true">#</a> <span class="number">2.3.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_sec_2.3.3">Example: Representing Sets<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -448,10 +448,10 @@ Imports:
 (element-of-set? <span class="cn">1</span> <span class="vs">&#39;(1)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (element-of-set? <span class="cn">1</span> <span class="vs">&#39;(3 2 1)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
 
-(intersection-set <span class="vs">&#39;()</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
-(intersection-set <span class="vs">&#39;(1)</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1)</span>
-(intersection-set <span class="vs">&#39;(2)</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(2)</span>
-(intersection-set <span class="vs">&#39;(2 1)</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(2 1)</span></code></pre>
+(intersection-set <span class="vs">&#39;() &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(intersection-set <span class="vs">&#39;(1) &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1)</span>
+(intersection-set <span class="vs">&#39;(2) &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(2)</span>
+(intersection-set <span class="vs">&#39;(2 1) &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(2 1)</span></code></pre>
 <h3 id="ex2.59" class="anchor">
 <a class="anchor__link link" href="#ex2.59" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.59">Exercise 2.59<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -481,9 +481,9 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (union-set set1 set2)
   (accumulate adjoin-set set2 set1))
 
-(union-set <span class="vs">&#39;()</span> <span class="vs">&#39;(1 2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
-(union-set <span class="vs">&#39;(1 2 3)</span> <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
-(union-set <span class="vs">&#39;(1 2)</span> <span class="vs">&#39;(2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span></code></pre>
+(union-set <span class="vs">&#39;() &#39;(1 2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
+(union-set <span class="vs">&#39;(1 2 3) &#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
+(union-set <span class="vs">&#39;(1 2) &#39;(2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span></code></pre>
 <h3 id="ex2.60" class="anchor">
 <a class="anchor__link link" href="#ex2.60" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.60">Exercise 2.60<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -545,10 +545,10 @@ Imports:
 (element-of-set? <span class="cn">2</span> <span class="vs">&#39;(2)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (element-of-set? <span class="cn">2</span> <span class="vs">&#39;(1 2 3)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
 
-(intersection-set <span class="vs">&#39;()</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
-(intersection-set <span class="vs">&#39;(1)</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1)</span>
-(intersection-set <span class="vs">&#39;(2)</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(2)</span>
-(intersection-set <span class="vs">&#39;(1 2)</span> <span class="vs">&#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span></code></pre>
+(intersection-set <span class="vs">&#39;() &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(intersection-set <span class="vs">&#39;(1) &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1)</span>
+(intersection-set <span class="vs">&#39;(2) &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(2)</span>
+(intersection-set <span class="vs">&#39;(1 2) &#39;(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2)</span></code></pre>
 <h3 id="ex2.61" class="anchor">
 <a class="anchor__link link" href="#ex2.61" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.61">Exercise 2.61<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -575,9 +575,9 @@ Imports:
                  ((<span class="fu">&lt;</span> x1 x2) (<span class="fu">cons</span> x1 (union-set (<span class="fu">cdr</span> set1) set2)))
                  (<span class="kw">else</span> (<span class="fu">cons</span> x2 (union-set set1 (<span class="fu">cdr</span> set2)))))))))
 
-(union-set <span class="vs">&#39;()</span> <span class="vs">&#39;(1 2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
-(union-set <span class="vs">&#39;(1 2 3)</span> <span class="vs">&#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
-(union-set <span class="vs">&#39;(1 2)</span> <span class="vs">&#39;(2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span></code></pre>
+(union-set <span class="vs">&#39;() &#39;(1 2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
+(union-set <span class="vs">&#39;(1 2 3) &#39;()</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span>
+(union-set <span class="vs">&#39;(1 2) &#39;(2 3)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(1 2 3)</span></code></pre>
 <h3 id="2.3.3.3" class="anchor">
 <a class="anchor__link link" href="#2.3.3.3" aria-hidden="true">#</a> <span class="number">2.3.3.3</span> Sets as binary trees
 </h3>
@@ -595,7 +595,7 @@ Imports:
                 (element-of-set? x (right-branch set))))))
 
 (<span class="kw">define</span> (adjoin-set x set)
-  (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (make-tree x <span class="vs">&#39;()</span> <span class="vs">&#39;()</span>))
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (make-tree x <span class="vs">&#39;() &#39;()</span>))
         ((<span class="fu">=</span> x (entry set)) set)
         ((<span class="fu">&lt;</span> x (entry set))
          (make-tree (entry set)

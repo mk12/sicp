@@ -108,16 +108,16 @@
 </h3>
 <p>We often need local variables in addition to the formal parameters. We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special form <code>let</code> to make it easier.</p>
 <p>The general form of a let-expression is:</p>
-<pre><code class="blockcode">(<span class="kw">let</span> ((<span class="ss">var1</span> <span class="ss">exp1</span>)
-      (<span class="ss">var2</span> <span class="ss">exp2</span>)
+<pre><code class="blockcode">(<span class="kw">let</span> ((<span class="ss">var1 exp1</span>)
+      (<span class="ss">var2 exp2</span>)
       ...
-      (<span class="ss">varn</span> <span class="ss">expn</span>))
+      (<span class="ss">varn expn</span>))
   <span class="ss">body</span>)</code></pre>
 <p>This is just syntactic sugar for:</p>
-<pre><code class="blockcode">((<span class="kw">lambda</span> (<span class="ss">var1</span> <span class="ss">var2</span> ... <span class="ss">varn</span>)
+<pre><code class="blockcode">((<span class="kw">lambda</span> (<span class="ss">var1 var2</span> ... <span class="ss">varn</span>)
    <span class="ss">body</span>)
- <span class="ss">exp1</span>
- <span class="ss">exp2</span>
+ <span class="ss">exp1
+ exp2</span>
  ...
  <span class="ss">expn</span>)</code></pre>
 <ul>
@@ -167,7 +167,7 @@
           (<span class="kw">else</span>
            (<span class="fu">error</span> <span class="cn">&quot;values are not of opposite sign&quot;</span> a b)))))</code></pre>
 <p>We can use <code>half-interval-method</code> to approximate <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>π</mi></mrow><annotation encoding="application/x-tex">\pi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span></span></span></span> as a root of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>sin</mi><mo>⁡</mo><mi>x</mi><mo>=</mo><mn>0</mn><mtext>:</mtext></mrow><annotation encoding="application/x-tex">\sin x = 0\htmlClass{math-punctuation}{\text{:}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66786em;vertical-align:0em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">:</span></span></span></span></span></span></p>
-<pre><code class="blockcode">(half-interval-method <span class="fu">sin</span> <span class="cn">2.0</span> <span class="cn">4.0</span>)
+<pre><code class="blockcode">(half-interval-method <span class="fu">sin</span> <span class="cn">2.0 4.0</span>)
 <span class="sc">→ 3.14111328125</span></code></pre>
 <h3 id="1.3.3.2" class="anchor">
 <a class="anchor__link link" href="#1.3.3.2" aria-hidden="true">#</a> Finding fixed points of functions
@@ -201,7 +201,7 @@
 <pre><code class="blockcode">((average-damp square) <span class="cn">10</span>)
 <span class="sc">→ 55</span>
 
-(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span> <span class="cn">5</span> <span class="cn">6</span> <span class="cn">7</span> <span class="cn">8</span> <span class="cn">9</span> <span class="cn">10</span>)
+(<span class="fu">+</span> <span class="cn">1 2 3 4 5 6 7 8 9 10</span>)
 <span class="sc">→ 55</span></code></pre>
 <div id="q1" class="highlight">
 <a class="highlight__link link" href="../highlight.html#1.3-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>

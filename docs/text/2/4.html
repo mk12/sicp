@@ -178,7 +178,7 @@
 </table>
 <ul>
 <li>Before, we implemented each generic procedure using case analysis. Now, we will write a single procedure that looks up the operation name and argument type in a table.</li>
-<li>Assume we have the procedure <code>(put <span class="ss">op</span> <span class="ss">type</span> <span class="ss">item</span>)</code> which installs <code><span class="ss">item</span></code> in the the table, and <code>(get <span class="ss">op</span> <span class="ss">type</span>)</code> which retrieves it. (We will implement them in <a href="../3/3.html#3.3.3">§&nbsp;3.3.3</a>.)</li>
+<li>Assume we have the procedure <code>(put <span class="ss">op type item</span>)</code> which installs <code><span class="ss">item</span></code> in the the table, and <code>(get <span class="ss">op type</span>)</code> which retrieves it. (We will implement them in <a href="../3/3.html#3.3.3">§&nbsp;3.3.3</a>.)</li>
 <li>Then, we can define a collection of procedures, or <em>package</em>, to install the each representation of complex numbers. For example, the rectangular representation:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (install-rectangular-package)
@@ -196,13 +196,13 @@
 
   <span class="co">;; Interface to the rest of the system</span>
   (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;rectangular</span> x))
-  (put <span class="vs">&#39;real-part</span> <span class="vs">&#39;(rectangular)</span> real-part)
-  (put <span class="vs">&#39;imag-part</span> <span class="vs">&#39;(rectangular)</span> imag-part)
-  (put <span class="vs">&#39;magnitude</span> <span class="vs">&#39;(rectangular)</span> magnitude)
-  (put <span class="vs">&#39;angle</span> <span class="vs">&#39;(rectangular)</span> angle)
-  (put <span class="vs">&#39;make-from-real-imag</span> <span class="vs">&#39;rectangular</span>
+  (put <span class="vs">&#39;real-part &#39;(rectangular)</span> real-part)
+  (put <span class="vs">&#39;imag-part &#39;(rectangular)</span> imag-part)
+  (put <span class="vs">&#39;magnitude &#39;(rectangular)</span> magnitude)
+  (put <span class="vs">&#39;angle &#39;(rectangular)</span> angle)
+  (put <span class="vs">&#39;make-from-real-imag &#39;rectangular</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;rectangular</span>
+  (put <span class="vs">&#39;make-from-mag-ang &#39;rectangular</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a))))
   <span class="vs">&#39;done</span>)</code></pre>
 <ul>

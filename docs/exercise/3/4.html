@@ -88,7 +88,7 @@
 <li><p>If the system allows the processes to be interleaved, you could also get results equivalent to leaving out one or more of the assignments, where the new value is overwritten before being read. In <code>mary</code>, the value divided by 2 could also be different from the value being subtracted from.</p>
 <pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>)
 (parallel-execute peter paul mary)
-balance <span class="op">=?&gt;</span> [<span class="cn">25</span> <span class="cn">30</span> <span class="cn">35</span> <span class="cn">40</span> <span class="cn">45</span> <span class="cn">50</span> <span class="cn">55</span> <span class="cn">60</span> <span class="cn">80</span> <span class="cn">90</span> <span class="cn">110</span>]</code></pre></li>
+balance <span class="op">=?&gt;</span> [<span class="cn">25 30 35 40 45 50 55 60 80 90 110</span>]</code></pre></li>
 </ol>
 <h2 id="3.4.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2" aria-hidden="true">#</a> <span class="number">3.4.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_3.4.2">Mechanisms for Controlling Concurrency<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -116,14 +116,14 @@ Imports:
 (parallel-execute
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))
-x <span class="op">=?&gt;</span> [<span class="cn">11</span> <span class="cn">100</span> <span class="cn">101</span> <span class="cn">110</span> <span class="cn">121</span>]</code></pre>
+x <span class="op">=?&gt;</span> [<span class="cn">11 100 101 110 121</span>]</code></pre>
 <p>With serialization, it narrows to two possible values:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))))
-x <span class="op">=?&gt;</span> [<span class="cn">101</span> <span class="cn">121</span>]
+x <span class="op">=?&gt;</span> [<span class="cn">101 121</span>]
 
 (<span class="kw">define</span> (make-account balance)
   (<span class="kw">define</span> (withdraw amount)
@@ -223,7 +223,7 @@ Imports:
  <span class="co">; process C: 7        4 5 6</span>
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x x))))</code></pre>
 <p>There are five possible values:</p>
-<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100</span> <span class="cn">1000</span> <span class="cn">10000</span> <span class="cn">100000</span> <span class="cn">1000000</span>]</code></pre>
+<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100 1000 10000 100000 1000000</span>]</code></pre>
 <p>We will now demonstrate how the steps can interleave to produce these values. There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and 6 are reads; steps 3 and 7 are writes.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> steps-s-read <span class="vs">&#39;(1 2)</span>)
 (<span class="kw">define</span> steps-s-write <span class="vs">&#39;(3)</span>)
@@ -245,7 +245,7 @@ Imports:
         (<span class="kw">and</span> (in? (<span class="fu">car</span> p) steps-c)
              (<span class="fu">&gt;</span> (<span class="fu">car</span> p) latest-c)
              (iter latest-s (<span class="fu">car</span> p) (<span class="fu">cdr</span> p)))))
-  (iter <span class="cn">0</span> <span class="cn">0</span> p))
+  (iter <span class="cn">0 0</span> p))
 
 (<span class="kw">define</span> possible-orders
   (<span class="fu">filter</span> good-interleave? (permutations steps)))
@@ -260,11 +260,11 @@ Imports:
           ((in? (<span class="fu">car</span> steps) steps-c-read)
            (iter s-reads (<span class="fu">cons</span> x c-reads) (<span class="fu">cdr</span> steps) x))
           ((in? (<span class="fu">car</span> steps) steps-s-write)
-           (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply</span> <span class="fu">*</span> s-reads)))
+           (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply *</span> s-reads)))
           ((in? (<span class="fu">car</span> steps) steps-c-write)
-           (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply</span> <span class="fu">*</span> c-reads)))
+           (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply *</span> c-reads)))
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;execute-steps</span> <span class="cn">&quot;unknown step number&quot;</span> (<span class="fu">car</span> steps)))))
-  (iter <span class="vs">&#39;()</span> <span class="vs">&#39;()</span> steps x))
+  (iter <span class="vs">&#39;() &#39;()</span> steps x))
 
 (<span class="kw">define</span> final-values
   (<span class="fu">map</span> (<span class="kw">lambda</span> (ss) (execute-steps ss <span class="cn">10</span>)) possible-orders))
@@ -440,8 +440,8 @@ Imports:
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    <span class="co">;;              2            1</span>
-   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> <span class="cn">100</span> x)))) <span class="co">; process P</span>
-   <span class="co">;;              2        1</span>
+   (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> <span class="cn">100</span> x)))) <span class="co">; process P
+   ;;              2        1</span>
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">/</span> x <span class="cn">2</span>)))))) <span class="co">; process Q</span></code></pre>
 <p>There are four possible values:</p>
 <pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100</span> <span class="co">; P1, P2, Q1, Q2 (serial)</span>

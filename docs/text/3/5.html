@@ -118,7 +118,7 @@
 <li>We can define Fibonacci sequence explicitly with a generator:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
-(<span class="kw">define</span> fibs (fibgen <span class="cn">0</span> <span class="cn">1</span>))</code></pre>
+(<span class="kw">define</span> fibs (fibgen <span class="cn">0 1</span>))</code></pre>
 <ul>
 <li>As long as we don’t try to display the whole sequence, we will never get stuck in an infinite loop.</li>
 <li>We can also create an infinite stream of primes.</li>

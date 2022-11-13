@@ -179,8 +179,8 @@
   dispatch)
 
 (<span class="kw">define</span> acc (make-account <span class="cn">100</span> <span class="vs">&#39;secret-password</span>))
-((acc <span class="vs">&#39;secret-password</span> <span class="vs">&#39;withdraw</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">60</span>
-((acc <span class="vs">&#39;some-other-password</span> <span class="vs">&#39;deposit</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span></code></pre>
+((acc <span class="vs">&#39;secret-password &#39;withdraw</span>) <span class="cn">40</span>) <span class="op">=&gt;</span> <span class="cn">60</span>
+((acc <span class="vs">&#39;some-other-password &#39;deposit</span>) <span class="cn">50</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span></code></pre>
 <h3 id="ex3.4" class="anchor">
 <a class="anchor__link link" href="#ex3.4" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_thm_3.4">Exercise 3.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -208,14 +208,14 @@
 (<span class="kw">define</span> (call-the-cops) <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span>)
 
 (<span class="kw">define</span> acc (make-account <span class="vs">&#39;right</span> <span class="cn">100</span>))
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((acc <span class="vs">&#39;wrong</span> <span class="vs">&#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span></code></pre>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((acc <span class="vs">&#39;wrong &#39;withdraw</span>) <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">&quot;PUT YOUR HANDS UP!&quot;</span></code></pre>
 <h2 id="3.1.2" class="anchor">
 <a class="anchor__link link" href="#3.1.2" aria-hidden="true">#</a> <span class="number">3.1.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_sec_3.1.2">The Benefits of Introducing Assignment<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -294,7 +294,7 @@ Imports:
 (<span class="kw">define</span> (estimate-pi trials)
   (<span class="kw">let</span> ((pred (<span class="kw">lambda</span> (x y)
                 (<span class="fu">&lt;=</span> (<span class="fu">+</span> (square x) (square y)) <span class="cn">1</span>))))
-    (estimate-integral pred <span class="cn">-1.0</span> <span class="cn">1.0</span> <span class="cn">-1.0</span> <span class="cn">1.0</span> trials)))</code></pre>
+    (estimate-integral pred <span class="cn">-1.0 1.0 -1.0 1.0</span> trials)))</code></pre>
 <h3 id="ex3.6" class="anchor">
 <a class="anchor__link link" href="#ex3.6" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_thm_3.6">Exercise 3.6<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -350,14 +350,14 @@ Imports:
 <p>Substitution analysis of <code>make-decrementer</code>:</p>
 <pre><code class="blockcode">((make-decrementer <span class="cn">25</span>) <span class="cn">20</span>)
 <span class="op">=&gt;</span> ((<span class="kw">lambda</span> (amount) (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">20</span>)
-<span class="op">=&gt;</span> (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)
+<span class="op">=&gt;</span> (<span class="fu">-</span> <span class="cn">25 20</span>)
 <span class="op">=&gt;</span> <span class="cn">5</span></code></pre>
 <p>Faulty substitution analysis of <code>make-simplified-withdraw</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> balance)
 ((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>) <span class="op">=&gt;</span> <span class="cn">5</span>
 <span class="co">; =&gt;</span>
 ((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)
-<span class="op">=&gt;</span> (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> <span class="cn">20</span>)) <span class="cn">25</span>)
+<span class="op">=&gt;</span> (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25 20</span>)) <span class="cn">25</span>)
 <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
 <h3 id="3.1.3.1" class="anchor">
 <a class="anchor__link link" href="#3.1.3.1" aria-hidden="true">#</a> <span class="number">3.1.3.1</span> Sameness and change
@@ -461,12 +461,12 @@ Imports:
     (pp-acc (<span class="kw">if</span> (<span class="fu">eq?</span> p new-password) password <span class="cn">#f</span>) m)))
 
 (<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span> <span class="vs">&#39;open-sesame</span>))
-(<span class="kw">define</span> paul-acc (make-joint peter-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;rosebud</span>))
-((peter-acc <span class="vs">&#39;rosebud</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((paul-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
-((peter-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
-((paul-acc <span class="vs">&#39;rosebud</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">80</span>
-((peter-acc <span class="vs">&#39;open-sesame</span> <span class="vs">&#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">70</span></code></pre>
+(<span class="kw">define</span> paul-acc (make-joint peter-acc <span class="vs">&#39;open-sesame &#39;rosebud</span>))
+((peter-acc <span class="vs">&#39;rosebud &#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((paul-acc <span class="vs">&#39;open-sesame &#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">&quot;Incorrect password&quot;</span>
+((peter-acc <span class="vs">&#39;open-sesame &#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">90</span>
+((paul-acc <span class="vs">&#39;rosebud &#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">80</span>
+((peter-acc <span class="vs">&#39;open-sesame &#39;withdraw</span>) <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">70</span></code></pre>
 <h3 id="ex3.8" class="anchor">
 <a class="anchor__link link" href="#ex3.8" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_thm_3.8">Exercise 3.8<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>

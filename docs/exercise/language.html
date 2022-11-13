@@ -139,10 +139,10 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">&#39;real-part</span> z))
 
 (<span class="kw">define</span> (rectangular-pkg)
-  (put <span class="vs">&#39;real-part</span> <span class="vs">&#39;(rectangular)</span> ...)
+  (put <span class="vs">&#39;real-part &#39;(rectangular)</span> ...)
   ...)
 (<span class="kw">define</span> (polar-pkg)
-  (put <span class="vs">&#39;real-part</span> <span class="vs">&#39;(polar)</span> ...)
+  (put <span class="vs">&#39;real-part &#39;(polar)</span> ...)
   ...)
 
 (using rectangular-pkg polar-pkg)
@@ -157,13 +157,13 @@
 <a class="anchor__link link" href="#exact" aria-hidden="true">#</a> Exact
 </h3>
 <p>The <code>=&gt;</code> operator is by far the most common. It asserts that the left-hand side is equal to the right-hand side, using <code>equal?</code>. For example:</p>
-<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <p>It can also be chained to assert that several expressions are equal, while ensuring that each expression is evaluated only once:</p>
 <pre><code class="blockcode">(fact <span class="cn">3</span>)
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (fact <span class="cn">2</span>))
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (fact <span class="cn">1</span>)))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> <span class="cn">1</span>))
-<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> <span class="cn">2</span>)
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2 1</span>))
+<span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3 2</span>)
 <span class="op">=&gt;</span> <span class="cn">6</span></code></pre>
 <p>When <code>(fact <span class="cn">3</span>) <span class="op">=&gt;</span> (fact <span class="cn">5</span>)</code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
@@ -199,9 +199,9 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#nondeterministic" aria-hidden="true">#</a> Nondeterministic
 </h3>
 <p>The <code>=?&gt;</code> operator asserts that the left-hand side is equal to one of the elements from the right-hand side, using <code>equal?</code>. For example:</p>
-<pre><code class="blockcode">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0</span> <span class="cn">1</span> <span class="cn">2</span> <span class="cn">3</span> <span class="cn">4</span>]</code></pre>
+<pre><code class="blockcode">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0 1 2 3 4</span>]</code></pre>
 <p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code><span class="vs">&#39;(...)</span></code>.</p>
-<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1</span> <span class="cn">1</span>) <span class="cn">&quot;two&quot;</span>]</code> fails, the output looks like this:</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1 1</span>) <span class="cn">&quot;two&quot;</span>]</code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 1)</span>
@@ -223,10 +223,10 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
   (<span class="fu">newline</span>)
   (<span class="fu">display</span> <span class="cn">&quot;world&quot;</span>))
 
-(foo) <span class="op">=$&gt;</span> [<span class="cn">&quot;hello&quot;</span> <span class="cn">&quot;world&quot;</span>]</code></pre>
+(foo) <span class="op">=$&gt;</span> [<span class="cn">&quot;hello&quot; &quot;world&quot;</span>]</code></pre>
 <p>Newlines occurring at the beginning, end, or after another newline are ignored:</p>
-<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">&quot;</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;One&quot;</span> <span class="cn">&quot;Two&quot;</span> <span class="cn">&quot;Three&quot;</span>]</code></pre>
-<p>When <code>(<span class="fu">display</span> <span class="cn">&quot;pong</span><span class="co">\n</span><span class="cn">ping&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;ping&quot;</span> <span class="cn">&quot;pong&quot;</span>]</code> fails, the output looks like this:</p>
+<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">&quot;</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;One&quot; &quot;Two&quot; &quot;Three&quot;</span>]</code></pre>
+<p>When <code>(<span class="fu">display</span> <span class="cn">&quot;pong</span><span class="co">\n</span><span class="cn">ping&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;ping&quot; &quot;pong&quot;</span>]</code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
@@ -243,9 +243,9 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#error" aria-hidden="true">#</a> Error
 </h3>
 <p>The <code>=!&gt;</code> operator asserts that an error will occur. For example:</p>
-<pre><code class="blockcode">(<span class="fu">error</span> <span class="vs">&#39;foo</span> <span class="cn">&quot;oops&quot;</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;foo: oops: 1 2&quot;</span></code></pre>
-<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">&quot;&quot;</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
-<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode">(<span class="fu">error</span> <span class="vs">&#39;foo</span> <span class="cn">&quot;oops&quot; 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;foo: oops: 1 2&quot;</span></code></pre>
+<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">&quot;&quot;</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1 0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
@@ -256,7 +256,7 @@ right:
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
-<p>When <code>(<span class="fu">error</span> <span class="vs">&#39;foo</span> <span class="cn">&quot;catastrophe&quot;</span> <span class="cn">1</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<p>When <code>(<span class="fu">error</span> <span class="vs">&#39;foo</span> <span class="cn">&quot;catastrophe&quot; 1</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
@@ -273,7 +273,7 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <p>The <code>=&gt;...</code> operator asserts that evaluation will never terminate. Unlike the other operators, it has no right-hand side. For example:</p>
 <pre><code class="blockcode">(<span class="kw">let</span> loop () (loop)) <span class="er">=&gt;...</span></code></pre>
 <p>Of course, this doesn’t solve the halting problem. It just tries evaluating the expression and gives up after a short time.</p>
-<p>When <code>(<span class="fu">+</span> <span class="cn">1</span> <span class="cn">2</span>) <span class="er">=&gt;...</span></code> fails, the output looks like this:</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=&gt;...</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
@@ -299,8 +299,8 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </h3>
 <p><code>(<span class="kw">capture-output</span> <span class="ss">exp*</span> ...)</code> evaluates the given expressions and returns standard output captured in a string. The <code>=$&gt;</code> operator uses this internally, and it’s useful to invoke directly when you need to manipulate the string in some way.</p>
 <p><code>(<span class="kw">hide-output</span> <span class="ss">exp*</span> ...)</code> evaluates the given expressions while suppressing standard output. It returns the value of the last expression.</p>
-<p><code>(<span class="kw">cons-stream</span> <span class="ss">a</span> <span class="ss">b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
-<p><code>(<span class="kw">with-eval</span> <span class="ss">eval</span> <span class="ss">env</span> <span class="ss">exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval</span> <span class="ss">exp*</span> <span class="ss">env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
+<p><code>(<span class="kw">cons-stream</span> <span class="ss">a b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
+<p><code>(<span class="kw">with-eval</span> <span class="ss">eval env exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval exp* env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

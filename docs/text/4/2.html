@@ -85,7 +85,7 @@
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (try a b) (<span class="kw">if</span> <span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b)</code></pre>
 <ul>
-<li>In Scheme, <code>(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1</span> <span class="cn">0</span>))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
+<li>In Scheme, <code>(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1 0</span>))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
 <li>In a lazy language, we can implement <code>if</code> as an ordinary procedure.</li>
 </ul>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/2.html#ex4.25">4.25</a>, </li><li class="flat__item"><a href="../../exercise/4/2.html#ex4.26">4.26</a></li></ul></aside>
