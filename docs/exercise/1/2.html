@@ -192,7 +192,7 @@
   (cc amount <span class="cn">5</span>))
 
 (<span class="kw">define</span> (first-denomination kinds-of-coins)
-  (<span class="fu">vector-ref</span> &#39;#(<span class="cn">1</span> <span class="cn">5</span> <span class="cn">10</span> <span class="cn">25</span> <span class="cn">50</span>) (<span class="fu">-</span> kinds-of-coins <span class="cn">1</span>)))
+  (<span class="fu">vector-ref</span> <span class="vs">&#39;#(1 5 10 25 50)</span> (<span class="fu">-</span> kinds-of-coins <span class="cn">1</span>)))
 
 (count-change <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
 <h3 id="ex1.11" class="anchor">

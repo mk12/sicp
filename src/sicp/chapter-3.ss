@@ -2904,17 +2904,19 @@ first-10-pairs => '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (1 5) (2 4) (1 6))
 
 ;; Let f(n) be the nth pair in the stream, starting at 0.
 ;;
-;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k
-;;     f(2)  = (2,2); f(n) = (2,_) when n = 4  + 4k
-;;     f(6)  = (3,3); f(n) = (3,_) when n = 10 + 8k
-;;     f(14) = (4,4); f(n) = (4,_) when n = 22 + 16k
-;;     ...
+;;;;; [TODO: Rendering these lines as code trips schemehl assertion]
+;;;;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k
+;;;;;     f(2)  = (2,2); f(n) = (2,_) when n = 4  + 4k
+;;;;;     f(6)  = (3,3); f(n) = (3,_) when n = 10 + 8k
+;;;;;     f(14) = (4,4); f(n) = (4,_) when n = 22 + 16k
+;;;;;     ...
 ;;
 ;; The next row (where the first number in the pair is incremented once) always
 ;; gets updated half as often as the previous row. In general,
 ;;
-;;     f(2^x - 2) = (x,x);
-;;     f(2^x - 2 + 2^(x-1) + (k - 1)2^x) = (x,x+k), k > 0.
+;;;;; [TODO: Rendering these lines as code trips schemehl assertion]
+;;;;;  f(2^x - 2) = (x,x);
+;;;;;  f(2^x - 2 + 2^(x-1) + (k - 1)2^x) = (x,x+k), k > 0.
 ;;
 ;; We can write a function to find the index of a given pair:
 

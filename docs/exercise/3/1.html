@@ -221,7 +221,7 @@
 </h2>
 <p>Tausworthe PRNG: https://stackoverflow.com/a/23875298</p>
 <pre><code class="blockcode">(<span class="kw">define</span> random-init <span class="cn">1</span>)
-(<span class="kw">define</span> random-max #x7fffffff)
+(<span class="kw">define</span> random-max <span class="cn">#x7fffffff</span>)
 (<span class="kw">define</span> (rand-update x0)
   (<span class="kw">let*</span> ((x1 (<span class="fu">fxxor</span> x0 (<span class="fu">fxarithmetic-shift-right</span> x0 <span class="cn">13</span>)))
          (x2 (<span class="fu">fxxor</span> x1 (<span class="fu">fxarithmetic-shift-left</span> x1 <span class="cn">18</span>))))

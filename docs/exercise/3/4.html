@@ -270,11 +270,11 @@ Imports:
   (<span class="fu">map</span> (<span class="kw">lambda</span> (ss) (execute-steps ss <span class="cn">10</span>)) possible-orders))
 
 final-values
-<span class="op">=&gt;</span> <span class="vs">&#39;(1000000 100000 10000 1000 100 100000 10000</span>
-<span class="vs">     1000 100 10000 1000 100 1000 100</span>
-<span class="vs">     10000 100000 10000 1000 100 10000 1000</span>
-<span class="vs">     100 1000 100 10000 10000 1000 100</span>
-<span class="vs">     1000 100 10000 1000 100 10000 1000000)</span></code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;(1000000 100000 10000 1000 100 100000 10000
+     1000 100 10000 1000 100 1000 100
+     10000 100000 10000 1000 100 10000 1000
+     100 1000 100 10000 10000 1000 100
+     1000 100 10000 1000 100 10000 1000000)</span></code></pre>
 <p>There are many duplicates, so let’s count the occurrences.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (group xs)
   (<span class="kw">let</span> ((occurence-table (make-table)))
@@ -289,11 +289,11 @@ final-values
     (iter xs)))
 
 (group final-values)
-<span class="op">=&gt;</span> <span class="vs">&#39;(*table* (100 . 10)</span>
-<span class="vs">             (1000 . 10)</span>
-<span class="vs">             (10000 . 10)</span>
-<span class="vs">             (100000 . 3)</span>
-<span class="vs">             (1000000 . 2))</span></code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;(*table* (100 . 10)
+             (1000 . 10)
+             (10000 . 10)
+             (100000 . 3)
+             (1000000 . 2))</span></code></pre>
 <p>The largest value, 1000000, can be obtained in two ways:</p>
 <pre><code class="blockcode">(execute-steps <span class="vs">&#39;(1 2 3 4 5 6 7)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; squared, then cubed</span>
 (execute-steps <span class="vs">&#39;(4 5 6 7 1 2 3)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; cubed, then squared</span></code></pre>
@@ -434,7 +434,7 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
-(<span class="kw">paste</span> (<a href=#3.4.2.3>:3.4.2.3</a> make-serializer))</code></pre>
+(<span class="kw">paste</span> (<a href="#3.4.2.3">:3.4.2.3</a> make-serializer))</code></pre>
 <p>Suppose we execute this using the non-atomic <code>test-and-set!</code>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">100</span>)
 (<span class="kw">let</span> ((s (make-serializer)))

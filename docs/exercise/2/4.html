@@ -222,7 +222,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> make-from-real-imag make-from-real-imag-rectangular)
 (<span class="kw">define</span> make-from-mag-ang make-from-mag-ang-polar)</code></pre>
 <p>Generic operations:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.4.1>:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Now we can get exact answers for all operations:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1</span> <span class="cn">2</span>) (make-from-real-imag <span class="cn">3</span> <span class="cn">4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5</span> <span class="cn">1</span>) (make-from-mag-ang <span class="cn">6</span> <span class="cn">2</span>)))
@@ -346,7 +346,7 @@ Imports:
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (apply-specific <span class="vs">&#39;make-from-mag-ang</span> <span class="vs">&#39;polar</span> r a))</code></pre>
 <p>Generic operations:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#2.4.1>:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Helper procedure to run installers with a clean slate:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (using . installers)
   (reset)

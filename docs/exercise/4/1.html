@@ -239,7 +239,7 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
   (<span class="kw">cond</span> ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
-        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (text-of-quotation exp))
+        ((quoted? exp) (text-of-quotation exp))
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
@@ -475,7 +475,7 @@ Imports:
 </ul>
 </aside>
 <p>Paste everything except <code>list-of-values</code>:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.1.1>:4.1.1</a> <span class="fu">apply</span> <span class="fu">eval</span> eval-assignment eval-definition eval-if
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">apply</span> <span class="fu">eval</span> eval-assignment eval-definition eval-if
                eval-sequence))</code></pre>
 <p>Evaluates operands from left to right:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (list-of-values exps env)
@@ -506,7 +506,7 @@ Imports:
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> (self-evaluating? exp) (<span class="kw">or</span> (<span class="fu">boolean?</span> exp) (<span class="fu">number?</span> exp) (<span class="fu">string?</span> exp)))
 (<span class="kw">define</span> (variable? exp) (<span class="fu">symbol?</span> exp))
-(<span class="kw">define</span> (<span class="kw">quote</span><span class="vs">d? exp</span>) (tagged-list? exp &#39;<span class="kw">quote</span>))
+(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">&#39;quote</span>))
 (<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (tagged-list? exp tag) (<span class="kw">and</span> (<span class="fu">pair?</span> exp) (<span class="fu">eq?</span> (<span class="fu">car</span> exp) tag)))
 (<span class="kw">define</span> (assignment? exp) (tagged-list? exp <span class="vs">&#39;set!</span>))
@@ -607,14 +607,14 @@ Imports:
                      (sequence-&gt;exp (cond-actions first))
                      (expand-clauses rest))))))
 
-(cond-&gt;if <span class="vs">&#39;(cond ((&lt; x 0) -1)</span>
-<span class="vs">                 ((= x 0) 0)</span>
-<span class="vs">                 ((&gt; x 0) 1)</span>
-<span class="vs">                 (else impossible))</span>)
+(cond-&gt;if <span class="vs">&#39;(cond ((&lt; x 0) -1)
+                 ((= x 0) 0)
+                 ((&gt; x 0) 1)
+                 (else impossible))</span>)
 <span class="op">=&gt;</span> <span class="vs">&#39;(if (&lt; x 0) -1 (if (= x 0) 0 (if (&gt; x 0) 1 impossible)))</span>
 
-(cond-&gt;if <span class="vs">&#39;(cond (else foo)</span>
-<span class="vs">                 ((= x 1) bar))</span>)
+(cond-&gt;if <span class="vs">&#39;(cond (else foo)
+                 ((= x 1) bar))</span>)
 <span class="er">=!&gt;</span> <span class="cn">&quot;else clause isn&#39;t last&quot;</span></code></pre>
 <h3 id="4.1.2.2" class="anchor">
 <a class="anchor__link link" href="#4.1.2.2" aria-hidden="true">#</a> <span class="number">4.1.2.2</span> Primitive procedures
@@ -755,7 +755,7 @@ Imports:
 (<span class="kw">define</span> (operator exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (operands exp) (<span class="fu">cddr</span> exp))
 
-(<span class="kw">paste</span> (<a href=#4.1.1>:4.1.1</a> <span class="fu">eval</span>))
+(<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">eval</span>))
 
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="vs">&#39;((lambda () &quot;hi&quot;))</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;unknown expression type&quot;</span>
@@ -943,7 +943,7 @@ Imports:
         ((<span class="fu">null?</span> datum) (<span class="fu">error</span> <span class="vs">&#39;type-tag</span> <span class="cn">&quot;invalid syntax ()&quot;</span>))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;type-tag</span> <span class="cn">&quot;unknown expression type&quot;</span> datum))))</code></pre>
 <p>Paste everything except <code>eval</code>:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.1.1>:4.1.1</a> <span class="fu">apply</span> eval-assignment eval-definition eval-if eval-sequence
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">apply</span> eval-assignment eval-definition eval-if eval-sequence
                list-of-values))
 
 (<span class="kw">define</span> (eval-pkg)
@@ -1654,7 +1654,7 @@ Imports:
 (<span class="kw">define</span> (make-if predicate consequent alternative)
   (<span class="fu">list</span> predicate <span class="vs">&#39;?</span> consequent <span class="vs">&#39;:</span> alternative))</code></pre>
 <p>Note: Only pasting the minimal amount to make the tests below work, so that the import list doesn’t have to be so long.</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.1.1>:4.1.1</a> <span class="fu">eval</span> eval-if))
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">eval</span> eval-if))
 
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="vs">&#39;(#t ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
@@ -1802,7 +1802,7 @@ Imports:
 (<span class="kw">define</span> binding-value <span class="fu">cdr</span>)
 (<span class="kw">define</span> set-binding-value! <span class="fu">set-cdr!</span>)
 
-(<span class="kw">paste</span> (<a href=#4.1.3.3>:4.1.3.3</a> make-environment))
+(<span class="kw">paste</span> (<a href="#4.1.3.3">:4.1.3.3</a> make-environment))
 
 (<span class="kw">define</span> (extend-environment vars vals base-env)
   (<span class="kw">cond</span> ((<span class="fu">=</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
@@ -2641,7 +2641,7 @@ Imports:
 
 (<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (analyze-<span class="kw">quote</span><span class="vs">d exp</span>))
+        ((quoted? exp) (analyze-quoted exp))
         ((variable? exp) (analyze-variable exp))
         ((assignment? exp) (analyze-assignment exp))
         ((definition? exp) (analyze-definition exp))
@@ -2907,7 +2907,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (analyze-<span class="kw">quote</span><span class="vs">d exp</span>))
+        ((quoted? exp) (analyze-quoted exp))
         ((variable? exp) (analyze-variable exp))
         ((assignment? exp) (analyze-assignment exp))
         ((definition? exp) (analyze-definition exp))
@@ -2919,7 +2919,7 @@ Imports:
         ((application? exp) (analyze-application exp))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;analyze</span> <span class="cn">&quot;unknown expression type&quot;</span> exp))))</code></pre>
 <p>Paste everything except <code>analyze</code>:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.1.7>:4.1.7</a> analyze-application analyze-assignment analyze-definition
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#4.1.7">:4.1.7</a> analyze-application analyze-assignment analyze-definition
                analyze-if analyze-lambda analyze-sequence <span class="fu">eval</span>
                execute-application))
 
@@ -3019,20 +3019,20 @@ Imports:
             (<span class="fu">round</span> (<span class="fu">*</span> <span class="cn">100</span> (<span class="fu">-</span> <span class="cn">1</span> (<span class="fu">/</span> new-time old-time)))))))
 
 (<span class="kw">define</span> factorial
-  <span class="vs">&#39;(define (factorial n)</span>
-<span class="vs">     (if (= n 1) 1 (* n (factorial (- n 1)))))</span>)
+  <span class="vs">&#39;(define (factorial n)
+     (if (= n 1) 1 (* n (factorial (- n 1)))))</span>)
 
 (<span class="kw">define</span> strange
-  <span class="vs">&#39;(define (strange n)</span>
-<span class="vs">     (define x ((lambda (x) x) (lambda (x) x)))</span>
-<span class="vs">     (cond ((= n 0) &#39;done)</span>
-<span class="vs">           (else &quot;self-evaluating&quot;</span>
-<span class="vs">                 &#39;quoted</span>
-<span class="vs">                 strange</span>
-<span class="vs">                 (set! n (- n 1))</span>
-<span class="vs">                 (if &#39;cond (strange n) (strange n))</span>
-<span class="vs">                 ((lambda () (+ n n n)))</span>
-<span class="vs">                 (begin (strange n) (strange n)))))</span>)
+  <span class="vs">&#39;(define (strange n)
+     (define x ((lambda (x) x) (lambda (x) x)))
+     (cond ((= n 0) &#39;done)
+           (else &quot;self-evaluating&quot;
+                 &#39;quoted
+                 strange
+                 (set! n (- n 1))
+                 (if &#39;cond (strange n) (strange n))
+                 ((lambda () (+ n n n)))
+                 (begin (strange n) (strange n)))))</span>)
 
 (<span class="fu">string?</span> (benchmark factorial <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (<span class="fu">string?</span> (benchmark strange <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>

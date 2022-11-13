@@ -93,7 +93,7 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
   (<span class="kw">cond</span> ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
-        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (text-of-quotation exp))
+        ((quoted? exp) (text-of-quotation exp))
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
@@ -148,7 +148,7 @@
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
 <li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="kw">quote</span><span class="vs">d? exp</span>) (tagged-list? exp &#39;<span class="kw">quote</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">&#39;quote</span>))
 (<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (tagged-list? exp tag)
   (<span class="kw">if</span> (<span class="fu">pair?</span> exp)
@@ -378,7 +378,7 @@
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((<span class="kw">quote</span><span class="vs">d? exp</span>) (analyze-<span class="kw">quote</span><span class="vs">d exp</span>))
+        ((quoted? exp) (analyze-quoted exp))
         ((variable? exp) (analyze-variable exp))
         ((assignment? exp) (analyze-assignment exp))
         ((definition? exp) (analyze-definition exp))

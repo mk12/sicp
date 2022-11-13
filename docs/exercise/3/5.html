@@ -964,7 +964,7 @@ Imports:
 <span class="op">~&gt;</span> <span class="cn">3.141592653589793</span></code></pre>
 <p>The 11th term is NaN, probably because a denominator becomes extremely tiny.</p>
 <pre><code class="blockcode">(stream-ref (accelerated-sequence euler-transform pi-stream) <span class="cn">10</span>)
-<span class="op">=&gt;</span> +nan<span class="cn">.0</span></code></pre>
+<span class="op">=&gt;</span> <span class="cn">+nan.0</span></code></pre>
 <h3 id="ex3.63" class="anchor">
 <a class="anchor__link link" href="#ex3.63" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.63">Exercise 3.63<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1204,14 +1204,16 @@ Imports:
 </ul>
 </aside>
 <p>Let f(n) be the nth pair in the stream, starting at 0.</p>
-<pre><code class="blockcode">f(<span class="cn">0</span>)  <span class="fu">=</span> (<span class="cn">1</span>,<span class="cn">1</span>)<span class="co">; f(n) = (1,_) when n = 1  + 2k</span>
-f(<span class="cn">2</span>)  <span class="fu">=</span> (<span class="cn">2</span>,<span class="cn">2</span>)<span class="co">; f(n) = (2,_) when n = 4  + 4k</span>
-f(<span class="cn">6</span>)  <span class="fu">=</span> (<span class="cn">3</span>,<span class="cn">3</span>)<span class="co">; f(n) = (3,_) when n = 10 + 8k</span>
-f(<span class="cn">14</span>) <span class="fu">=</span> (<span class="cn">4</span>,<span class="cn">4</span>)<span class="co">; f(n) = (4,_) when n = 22 + 16k</span>
-...</code></pre>
+<pre><code class="blockcode"><span class="co">;;;;; [TODO: Rendering these lines as code trips schemehl assertion]</span>
+<span class="co">;;;;;     f(0)  = (1,1); f(n) = (1,_) when n = 1  + 2k</span>
+<span class="co">;;;;;     f(2)  = (2,2); f(n) = (2,_) when n = 4  + 4k</span>
+<span class="co">;;;;;     f(6)  = (3,3); f(n) = (3,_) when n = 10 + 8k</span>
+<span class="co">;;;;;     f(14) = (4,4); f(n) = (4,_) when n = 22 + 16k</span>
+<span class="co">;;;;;     ...</span></code></pre>
 <p>The next row (where the first number in the pair is incremented once) always gets updated half as often as the previous row. In general,</p>
-<pre><code class="blockcode">f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span>) <span class="fu">=</span> (x,x)<span class="co">;</span>
-f(<span class="cn">2</span>^x <span class="fu">-</span> <span class="cn">2</span> <span class="fu">+</span> <span class="cn">2</span>^(x-1) <span class="fu">+</span> (k <span class="fu">-</span> <span class="cn">1</span>)<span class="cn">2</span>^x) <span class="fu">=</span> (x,x+k), k <span class="fu">&gt;</span> <span class="cn">0.</span></code></pre>
+<pre><code class="blockcode"><span class="co">;;;;; [TODO: Rendering these lines as code trips schemehl assertion]</span>
+<span class="co">;;;;;  f(2^x - 2) = (x,x);</span>
+<span class="co">;;;;;  f(2^x - 2 + 2^(x-1) + (k - 1)2^x) = (x,x+k), k &gt; 0.</span></code></pre>
 <p>We can write a function to find the index of a given pair:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (pair-&gt;index pair)
   (<span class="kw">let*</span> ((x (<span class="fu">car</span> pair))
@@ -1649,9 +1651,9 @@ Imports:
   (analyze (weighted-pairs integers integers weight)))
 
 (stream-take thrice-square-sums <span class="cn">3</span>)
-<span class="op">=&gt;</span> <span class="vs">&#39;((325 (1 18) (6 17) (10 15))</span>
-<span class="vs">     (425 (5 20) (8 19) (13 16))</span>
-<span class="vs">     (650 (5 25) (11 23) (17 19)))</span></code></pre>
+<span class="op">=&gt;</span> <span class="vs">&#39;((325 (1 18) (6 17) (10 15))
+     (425 (5 20) (8 19) (13 16))
+     (650 (5 25) (11 23) (17 19)))</span></code></pre>
 <h3 id="3.5.3.3" class="anchor">
 <a class="anchor__link link" href="#3.5.3.3" aria-hidden="true">#</a> <span class="number">3.5.3.3</span> Streams as signals
 </h3>
@@ -1998,7 +2000,7 @@ Imports:
                       initial-value)
                    dt)))))
 
-(<span class="kw">paste</span> (<a href=#3.5.4>:3.5.4</a> solve))
+(<span class="kw">paste</span> (<a href="#3.5.4">:3.5.4</a> solve))
 (stream-ref (solve (<span class="kw">lambda</span> (y) y) <span class="cn">1</span> <span class="cn">0.001</span>) <span class="cn">1000</span>) <span class="op">~&gt;</span> <span class="cn">2.716923932235896</span></code></pre>
 <h3 id="ex3.78" class="anchor">
 <a class="anchor__link link" href="#ex3.78" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-24.html#%25_thm_3.78">Exercise 3.78<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>

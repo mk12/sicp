@@ -736,7 +736,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.2.2.1>:4.2.2.1</a> <span class="fu">apply</span> eval-call))</code></pre>
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#4.2.2.1">:4.2.2.1</a> <span class="fu">apply</span> eval-call))</code></pre>
 <p>Cy D. Fect proposes the following change:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (eval-sequence exps env)
   (<span class="kw">cond</span> ((last-exp? exps) (<span class="fu">eval</span> (first-exp exps) env))
@@ -911,7 +911,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href=#4.2.2.1>:4.2.2.1</a> eval-call))
+<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#4.2.2.1">:4.2.2.1</a> eval-call))
 
 (<span class="kw">define</span> (procedure-parameter-names p)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="kw">if</span> (<span class="fu">pair?</span> x) (<span class="fu">cadr</span> x) x))
@@ -1235,8 +1235,8 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="kw">quote</span><span class="vs">d-&gt;lazy x</span>)
-  (cond ((pair? x) (<span class="fu">list</span> <span class="vs">&#39;cons</span> (<span class="kw">quote</span><span class="vs">d-&gt;lazy (car x)</span>) (<span class="kw">quote</span><span class="vs">d-&gt;lazy (cdr x)</span>)))
+<pre><code class="blockcode">(<span class="kw">define</span> (quoted-&gt;lazy x)
+  (<span class="kw">cond</span> ((<span class="fu">pair?</span> x) (<span class="fu">list</span> <span class="vs">&#39;cons</span> (quoted-&gt;lazy (<span class="fu">car</span> x)) (quoted-&gt;lazy (<span class="fu">cdr</span> x))))
         <span class="co">;; Note: We can&#39;t simply move the `eval` call inside `quoted-&gt;lazy` and</span>
         <span class="co">;; then omit it in this branch, since we might have recursed into a cons</span>
         <span class="co">;; structure. We need this &quot;dumb-quote&quot; escape hatch.</span>
@@ -1244,19 +1244,19 @@ Imports:
 
 (<span class="kw">define</span> (lazy-quote-pkg)
   (put <span class="vs">&#39;eval</span> <span class="vs">&#39;quote</span>
-       (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (<span class="kw">quote</span><span class="vs">d-&gt;lazy (text-of-quotation exp)</span>) env)))
+       (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (quoted-&gt;lazy (text-of-quotation exp)) env)))
   (put <span class="vs">&#39;eval</span> <span class="vs">&#39;dumb-quote</span>
        (<span class="kw">lambda</span> (exp env) (text-of-quotation exp))))
 
 (<span class="kw">define</span> env (make-environment lazy-list-env))
 
 (using eval-pkg lazy-eval-pkg)
-(actual-value &#39;<span class="vs">&#39;()</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(actual-value <span class="vs">&#39;&#39;()</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
 (actual-value <span class="vs">&#39;&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
 (actual-value <span class="vs">&#39;(car &#39;(a b c))</span> env) <span class="er">=!&gt;</span> <span class="cn">&quot;apply: unknown procedure type&quot;</span>
 
 (using eval-pkg lazy-eval-pkg lazy-quote-pkg)
-(actual-value &#39;<span class="vs">&#39;()</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
+(actual-value <span class="vs">&#39;&#39;()</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;()</span>
 (actual-value <span class="vs">&#39;&#39;a</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
 (actual-value <span class="vs">&#39;(car &#39;(a b c))</span> env) <span class="op">=&gt;</span> <span class="vs">&#39;a</span></code></pre>
 <h3 id="ex4.34" class="anchor">

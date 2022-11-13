@@ -530,7 +530,7 @@ static void buf_write(struct Buffer *buf, struct Span span) {
 // special characters with HTML entities.
 struct Highlighter {
     // Destination buffer.
-    struct Buffer *out;
+    struct Buffer *buf;
     // Current CSS class.
     const char *class;
     // Whitespace span not yet written to the buffer.
@@ -540,8 +540,8 @@ struct Highlighter {
 };
 
 // Initializes a highlighter with a destination buffer.
-static void hl_init(struct Highlighter *hl, struct Buffer *out) {
-    hl->out = out;
+static void hl_init(struct Highlighter *hl, struct Buffer *buf) {
+    hl->buf = buf;
     hl->class = NULL;
     hl->pending_ws.data = NULL;
     hl->minimize_tags = false;
@@ -552,7 +552,7 @@ static void hl_flush_tag(struct Highlighter *hl) {
     if (!hl->class) {
         return;
     }
-    buf_write(hl->out, SPAN("</span>"));
+    buf_write(hl->buf, SPAN("</span>"));
     hl->class = NULL;
 }
 
@@ -561,7 +561,7 @@ static void hl_flush_ws(struct Highlighter *hl) {
     if (!hl->pending_ws.data) {
         return;
     }
-    buf_write(hl->out, hl->pending_ws);
+    buf_write(hl->buf, hl->pending_ws);
     hl->pending_ws.data = NULL;
 }
 
@@ -582,9 +582,9 @@ static void hl_write(struct Highlighter *hl, const char *class,
     if (class != hl->class || (hl->pending_ws.data && !hl->minimize_tags)) {
         hl_flush(hl);
         if (class) {
-            buf_write(hl->out, SPAN("<span class=\""));
-            buf_write(hl->out, SPAN(class));
-            buf_write(hl->out, SPAN("\">"));
+            buf_write(hl->buf, SPAN("<span class=\""));
+            buf_write(hl->buf, SPAN(class));
+            buf_write(hl->buf, SPAN("\">"));
             hl->class = class;
         }
     } else {
@@ -615,12 +615,12 @@ static void hl_write(struct Highlighter *hl, const char *class,
             j++;
             continue;
         }
-        buf_write(hl->out, SUBSPAN(span, i, j));
-        buf_write(hl->out, SPAN(entity));
+        buf_write(hl->buf, SUBSPAN(span, i, j));
+        buf_write(hl->buf, SPAN(entity));
         j++;
         i = j;
     }
-    buf_write(hl->out, SUBSPAN(span, i, j));
+    buf_write(hl->buf, SUBSPAN(span, i, j));
 }
 
 // Writes a span consisting only of whitespace. This is a special case because
@@ -668,14 +668,18 @@ static bool is_ident(char c) {
 static const char *const CHARACTER_NAMES[] = {"space", "newline", "tab"};
 
 // Kinds of tokens.
+//
+// Note: We use T_{L,R}PAREN for both parens and square brackets because they
+// are interchangeable in Scheme R6RS. Well, they need to be paired correctly,
+// e.g. "(+ 1 1]" is invalid, but checking that is not the highlighter's job.
 enum TokenKind {
     // Whitespace.
     T_WHITESPACE,
     // Comment, from ";" to the end of the line.
     T_COMMENT,
-    // Left parenthesis "(".
+    // Left parenthesis "(" or bracket "[".
     T_LPAREN,
-    // Right parenthesis ")".
+    // Right parenthesis ")" or bracket "]".
     T_RPAREN,
     // Quote "'".
     T_QUOTE,
@@ -689,6 +693,8 @@ enum TokenKind {
     T_QUASISYNTAX,
     // Syntax unquote "#,".
     T_UNSYNTAX,
+    // Hash by itself, like in '#(a vector).
+    T_HASH,
     // Identifier.
     T_IDENTIFIER,
     // String literal.
@@ -697,8 +703,8 @@ enum TokenKind {
     T_STRING_WITH_ESCAPES,
     // Numeric literal.
     T_NUMBER,
-    // Hash literal like #t or #\space, or the # in '#(a vector).
-    T_HASH_LITERAL,
+    // Boolean like #t or character like #\a or #\space.
+    T_LITERAL,
     // SICP module identifier like :1.2 or ?3.4.
     T_SICP_ID,
     // Metavariable, i.e. identifier surrounded with "«" and "»".
@@ -720,11 +726,12 @@ static const char *TOKEN_KIND_NAMES[] = {
     [T_SYNTAX] = "syntax",
     [T_QUASISYNTAX] = "quasisyntax",
     [T_UNSYNTAX] = "unsyntax",
+    [T_HASH] = "hash",
     [T_IDENTIFIER] = "identifier",
     [T_STRING] = "string",
     [T_STRING_WITH_ESCAPES] = "string_with_escapes",
     [T_NUMBER] = "number",
-    [T_HASH_LITERAL] = "hash_literal",
+    [T_LITERAL] = "literal",
     [T_SICP_ID] = "sicp_id",
     [T_METAVARIABLE] = "metavariable",
     [T_CONSOLE] = "console",
@@ -736,14 +743,15 @@ static bool is_datum(enum TokenKind kind) {
     switch (kind) {
     case T_WHITESPACE:
     case T_COMMENT:
+    case T_LPAREN:
+    case T_RPAREN:
     case T_QUOTE:
     case T_QUASIQUOTE:
     case T_UNQUOTE:
     case T_SYNTAX:
     case T_QUASISYNTAX:
     case T_UNSYNTAX:
-    case T_LPAREN:
-    case T_RPAREN:
+    case T_HASH:
     case T_CONSOLE:
         return false;
     default:
@@ -797,9 +805,11 @@ static const char *token_end(const char *p, const char *end,
         *kind = T_COMMENT;
         return p;
     case '(':
+    case '[':
         *kind = T_LPAREN;
         return p;
     case ')':
+    case ']':
         *kind = T_RPAREN;
         return p;
     case '\'':
@@ -824,17 +834,22 @@ static const char *token_end(const char *p, const char *end,
         assert(p < end && *p == '"');
         p++;
         return p;
-    case '.':
-        if (!(p < end && isdigit(*p))) {
-            break;
-        }
-        // fallthrough
     case '-':
     case '+':
-        if (!(p < end && (isdigit(*p) || *p == '.'))) {
-            break;
+        if (p < end && (isdigit(*p) || *p == '.')) {
+            goto number;
         }
-        // fallthrough
+        if (p + 4 < end && p[3] == '.' && isdigit(p[4])
+            && (strncmp(p, "inf", 3) == 0 || strncmp(p, "nan", 3) == 0)) {
+            p += 3;
+            goto number;
+        }
+        break;
+    case '.':
+        if (p < end && isdigit(*p)) {
+            goto number;
+        }
+        break;
     case '0':
     case '1':
     case '2':
@@ -845,6 +860,7 @@ static const char *token_end(const char *p, const char *end,
     case '7':
     case '8':
     case '9':
+    number:
         while (p < end && isdigit(*p)) {
             p++;
         }
@@ -871,27 +887,36 @@ static const char *token_end(const char *p, const char *end,
         return p;
     case '#':
         if (*p == '\'') {
-            *kind = T_SYNTAX;
             p++;
+            *kind = T_SYNTAX;
             return p;
         }
         if (*p == '`') {
-            *kind = T_QUASISYNTAX;
             p++;
+            *kind = T_QUASISYNTAX;
             return p;
         }
         if (*p == ',') {
+            p++;
             *kind = T_UNSYNTAX;
-            p++;
-            return p;
-        }
-        *kind = T_HASH_LITERAL;
-        if (*p == 't' || *p == 'f') {
-            p++;
             return p;
         }
         if (*p == '(') {
-            // Vector literal, like '#(1 2 3).
+            *kind = T_HASH;
+            return p;
+        }
+        if (*p == 'x') {
+            p++;
+            while (p < end && is_hex(*p)) {
+                p++;
+            }
+            assert(!(p < end && is_ident(*p)));
+            *kind = T_NUMBER;
+            return p;
+        }
+        *kind = T_LITERAL;
+        if (*p == 't' || *p == 'f') {
+            p++;
             return p;
         }
         assert(*p == '\\');
@@ -1251,6 +1276,9 @@ static void render_identifier(struct Highlighter *out, struct Span token) {
         hl_write(out, "kw", token);
     } else if (IN_ARRAY(token, FUNCTIONS)) {
         hl_write(out, "fu", token);
+    } else if (span_eq(token, SPAN("true")) || span_eq(token, SPAN("false"))) {
+        // Scheme uses #t and #f but the textbook uses true and false.
+        hl_write(out, "cn", token);
     } else {
         hl_write(out, NULL, token);
     }
@@ -1270,11 +1298,12 @@ static void render_sicp_id_link(struct Highlighter *out, struct Span token,
     lua_call(L, 1, 1);
     struct Span href;
     href.data = luaL_checklstring(L, -1, &href.len);
-    hl_write(out, NULL, SPAN("<a href=\""));
-    hl_write(out, NULL, href);
-    hl_write(out, NULL, SPAN("\">"));
-    hl_write(out, NULL, token);
-    hl_write(out, NULL, SPAN("</a>"));
+    hl_flush(out);
+    buf_write(out->buf, SPAN("<a href=\""));
+    buf_write(out->buf, href);
+    buf_write(out->buf, SPAN("\">"));
+    buf_write(out->buf, token);
+    buf_write(out->buf, SPAN("</a>"));
     lua_pop(L, 1);
 }
 
@@ -1345,6 +1374,8 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
             break;
         case T_UNQUOTE:
         case T_UNSYNTAX:
+        case T_HASH:
+            // Should be inside quotes.
             assert(false);
             break;
         case T_IDENTIFIER:
@@ -1352,7 +1383,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
             break;
         case T_STRING:
         case T_NUMBER:
-        case T_HASH_LITERAL:
+        case T_LITERAL:
             hl_write(out, "cn", scan.token);
             break;
         case T_STRING_WITH_ESCAPES:

@@ -340,43 +340,20 @@ end
 -- corresponding section/exercise, and removes "NOALIGN" comments.
 function process_code_block(el)
     assert(#el.classes == 0)
-    el.classes = {"scheme"} -- TODO: remove
-    el.text = el.text:gsub(" ; NOALIGN\n", "\n")
-    local text = el.text
-    -- Don't link in language.html since it's just examples.
-    if vars.id == "exercise/language" or not text:find("(paste (", 1, true) then
-        return el
-    end
-    local pieces = {}
-    local i = 1
-    while true do
-        _, j = text:find("(paste (", i, true)
-        if not j then
-            break
-        end
-        while true do
-            table.insert(pieces, text:sub(i, j))
-            local a, b = text:find("[:?][%d%.]+", j + 1)
-            local id = text:sub(a, b)
-            local target, frag = internal_target(id:sub(1, 1), id:sub(2), true)
-            local href = relpath(vars.id .. ".html", target) .. frag
-            -- The unicode characters ‹ and › are rendered as RawHtml in
-            -- scheme.xml, and docgen.c converts them back to < and >.
-            table.insert(pieces, string.format('‹a href=%s›%s‹/a›', href, id))
-            i = b + 1
-            j = text:find(")", i, true)
-            assert(j)
-            j = j + 1
-            if text:sub(j, j) == ")" then
-                break
-            end
-            j = text:find("(", j, true)
-            assert(j)
+    local options = {}
+    -- Don't link SICP IDs in language.html since it's just examples.
+    if vars.id ~= "exercise/language" then
+        options.sicp_id_link = function(id)
+            local target, frag =
+                internal_target(id:sub(1, 1), id:sub(2), true)
+            return relpath(vars.id .. ".html", target) .. frag
         end
     end
-    table.insert(pieces, text:sub(i))
-    el.text = table.concat(pieces)
-    return el
+    return pandoc.RawBlock("html",
+        '<pre><code class="blockcode">'
+        .. highlight_code(el.text, options)
+        .. '</code></pre>'
+    )
 end
 
 -- Adds the scheme class to all Code elements within el. We do this, rather than

@@ -98,19 +98,19 @@
 <li>We can represent the differentiation rules like this:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> deriv-rules
-  <span class="vs">&#39;(((dd (?c c) (? v)) 0)</span>
-<span class="vs">    ((dd (?v v) (? v)) 1)</span>
-<span class="vs">    ((dd (?v u) (? v)) 0)</span>
-<span class="vs">    ((dd (+ (? x1) (? x2)) (? v))</span>
-<span class="vs">     (+ (dd (: x1) (: v))</span>
-<span class="vs">        (dd (: x2) (: v))))</span>
-<span class="vs">    ((dd (* (? x1) (? x2)) (? v))</span>
-<span class="vs">     (+ (* (: x1) (dd (: x2) (: v)))</span>
-<span class="vs">        (* (dd (: x1) (: v)) (: x2))))</span>
-<span class="vs">    ((dd (** (? x) (?c n)) (? v))</span>
-<span class="vs">     (* (* (: n)</span>
-<span class="vs">           (** (: x) (: (- n 1))))</span>
-<span class="vs">        (dd (: x) (: v)))))</span>)</code></pre>
+  <span class="vs">&#39;(((dd (?c c) (? v)) 0)
+    ((dd (?v v) (? v)) 1)
+    ((dd (?v u) (? v)) 0)
+    ((dd (+ (? x1) (? x2)) (? v))
+     (+ (dd (: x1) (: v))
+        (dd (: x2) (: v))))
+    ((dd (* (? x1) (? x2)) (? v))
+     (+ (* (: x1) (dd (: x2) (: v)))
+        (* (dd (: x1) (: v)) (: x2))))
+    ((dd (** (? x) (?c n)) (? v))
+     (* (* (: n)
+           (** (: x) (: (- n 1))))
+        (dd (: x) (: v)))))</span>)</code></pre>
 <ul>
 <li>It could be prettier, but that doesn’t matter. What matters is that we are writing rules directly in our language.</li>
 <li><code>deriv-rules</code> is a list of rules. Each rule has the form <code>(<span class="ss">pattern</span> <span class="ss">skeleton</span>)</code>.</li>
@@ -122,13 +122,13 @@
 <li>Once we have this language, we can reuse it for other things. For example, we can write rules for algebraic simplification:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> algebra-rules
-  <span class="vs">&#39;((((? op) (?c e1) (?c e2))</span>
-<span class="vs">     (: (op e1 e2)))</span>
-<span class="vs">    (((? op) (? e1) (?c e2))</span>
-<span class="vs">     ((: op) (: e2) (: e1)))</span>
-<span class="vs">    ((+ 0 (? e)) (: e))</span>
-<span class="vs">    ((* 1 (? e)) (: e))</span>
-<span class="vs">    ((* 0 (? e)) 0))</span>)</code></pre>
+  <span class="vs">&#39;((((? op) (?c e1) (?c e2))
+     (: (op e1 e2)))
+    (((? op) (? e1) (?c e2))
+     ((: op) (: e2) (: e1)))
+    ((+ 0 (? e)) (: e))
+    ((* 1 (? e)) (: e))
+    ((* 0 (? e)) 0))</span>)</code></pre>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Syntax
 </h3>
