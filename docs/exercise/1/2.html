@@ -192,7 +192,7 @@
   (cc amount <span class="cn">5</span>))
 
 (<span class="kw">define</span> (first-denomination kinds-of-coins)
-  (<span class="fu">vector-ref</span> <span class="vs">&#39;#(1 5 10 25 50)</span> (<span class="fu">-</span> kinds-of-coins <span class="cn">1</span>)))
+  (<span class="fu">vector-ref</span> <span class="vs">'#(1 5 10 25 50)</span> (<span class="fu">-</span> kinds-of-coins <span class="cn">1</span>)))
 
 (count-change <span class="cn">100</span>) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
 <h3 id="ex1.11" class="anchor">
@@ -1175,7 +1175,7 @@ Imports:
   (when (p? n)
     (report-prime (<span class="fu">-</span> (runtime) start-time))))
 (<span class="kw">define</span> (report-prime elapsed-time)
-  (<span class="fu">display</span> <span class="cn">&quot; *** &quot;</span>)
+  (<span class="fu">display</span> <span class="cn">" *** "</span>)
   (<span class="fu">display</span> elapsed-time))
 
 (<span class="kw">define</span> (search-for-primes p? a b)
@@ -1187,7 +1187,7 @@ Imports:
 
 (string-contains?
  (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6 10</span>))
- <span class="cn">&quot;7 *** &quot;</span>)
+ <span class="cn">"7 *** "</span>)
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">A=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 1,000.</p>
 <pre><code class="blockcode"><span class="co">; 1009 *** 4.792213439941406e-5
@@ -1270,7 +1270,7 @@ Imports:
 
 (string-contains?
  (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6 10</span>))
- <span class="cn">&quot;7 *** &quot;</span>)
+ <span class="cn">"7 *** "</span>)
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p>Time for 3 primes greater than 1,000:</p>
 <pre><code class="blockcode"><span class="co">; 1009 *** 5.1975250244140625e-5   (1.085x)
@@ -1319,7 +1319,7 @@ Imports:
 
 (string-contains?
  (<span class="kw">capture-output</span> (search-for-primes prime? <span class="cn">6 10</span>))
- <span class="cn">&quot;7 *** &quot;</span>)
+ <span class="cn">"7 *** "</span>)
 <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">A=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span> time for 3 primes greater than 1,000.</p>
 <pre><code class="blockcode"><span class="co">; 1009 *** .003638029098510742

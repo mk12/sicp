@@ -164,50 +164,50 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">&#39;add</span> x y))
-(<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">&#39;sub</span> x y))
-(<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">&#39;mul</span> x y))
-(<span class="kw">define</span> (div x y) (apply-generic <span class="vs">&#39;div</span> x y))
+<pre><code class="blockcode">(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">'add</span> x y))
+(<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">'sub</span> x y))
+(<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">'mul</span> x y))
+(<span class="kw">define</span> (div x y) (apply-generic <span class="vs">'div</span> x y))
 
 (<span class="kw">define</span> (scheme-number-pkg)
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;scheme-number</span> x))
-  (put <span class="vs">&#39;add &#39;(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
-  (put <span class="vs">&#39;sub &#39;(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
-  (put <span class="vs">&#39;mul &#39;(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
-  (put <span class="vs">&#39;div &#39;(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
-  (put <span class="vs">&#39;make &#39;scheme-number</span> tag))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'scheme-number</span> x))
+  (put <span class="vs">'add '(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="vs">'sub '(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="vs">'mul '(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="vs">'div '(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
+  (put <span class="vs">'make 'scheme-number</span> tag))
 
 (<span class="kw">define</span> (make-scheme-number n)
-  (apply-specific <span class="vs">&#39;make &#39;scheme-number</span> n))
+  (apply-specific <span class="vs">'make 'scheme-number</span> n))
 
 (<span class="kw">define</span> (rational-pkg)
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;rational</span> x))
-  (put <span class="vs">&#39;add &#39;(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (add-rat x y))))
-  (put <span class="vs">&#39;sub &#39;(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (sub-rat x y))))
-  (put <span class="vs">&#39;mul &#39;(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (mul-rat x y))))
-  (put <span class="vs">&#39;div &#39;(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (div-rat x y))))
-  (put <span class="vs">&#39;make &#39;rational</span> (<span class="kw">lambda</span> (n d) (tag (make-rat n d)))))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'rational</span> x))
+  (put <span class="vs">'add '(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (add-rat x y))))
+  (put <span class="vs">'sub '(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (sub-rat x y))))
+  (put <span class="vs">'mul '(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (mul-rat x y))))
+  (put <span class="vs">'div '(rational rational)</span> (<span class="kw">lambda</span> (x y) (tag (div-rat x y))))
+  (put <span class="vs">'make 'rational</span> (<span class="kw">lambda</span> (n d) (tag (make-rat n d)))))
 
 (<span class="kw">define</span> (make-rational n d)
-  (apply-specific <span class="vs">&#39;make &#39;rational</span> n d))
+  (apply-specific <span class="vs">'make 'rational</span> n d))
 
 (<span class="kw">define</span> (complex-pkg)
-  (<span class="kw">define</span> (tag z) (attach-tag <span class="vs">&#39;complex</span> z))
+  (<span class="kw">define</span> (tag z) (attach-tag <span class="vs">'complex</span> z))
   (rectangular-pkg)
   (polar-pkg)
-  (put <span class="vs">&#39;add &#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (add-complex z1 z2))))
-  (put <span class="vs">&#39;sub &#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (sub-complex z1 z2))))
-  (put <span class="vs">&#39;mul &#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
-  (put <span class="vs">&#39;div &#39;(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
-  (put <span class="vs">&#39;make-from-real-imag &#39;complex</span>
+  (put <span class="vs">'add '(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (add-complex z1 z2))))
+  (put <span class="vs">'sub '(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (sub-complex z1 z2))))
+  (put <span class="vs">'mul '(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (mul-complex z1 z2))))
+  (put <span class="vs">'div '(complex complex)</span> (<span class="kw">lambda</span> (z1 z2) (tag (div-complex z1 z2))))
+  (put <span class="vs">'make-from-real-imag 'complex</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang &#39;complex</span>
+  (put <span class="vs">'make-from-mag-ang 'complex</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
 (<span class="kw">define</span> (make-complex-from-real-imag x y)
-  (apply-specific <span class="vs">&#39;make-from-real-imag &#39;complex</span> x y))
+  (apply-specific <span class="vs">'make-from-real-imag 'complex</span> x y))
 (<span class="kw">define</span> (make-complex-from-mag-ang r a)
-  (apply-specific <span class="vs">&#39;make-from-mag-ang &#39;complex</span> r a))
+  (apply-specific <span class="vs">'make-from-mag-ang 'complex</span> r a))
 
 (<span class="kw">define</span> (numeric-pkg)
   (scheme-number-pkg)
@@ -288,22 +288,22 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (complex-components-pkg)
-  (put <span class="vs">&#39;real-part &#39;(complex)</span> real-part)
-  (put <span class="vs">&#39;imag-part &#39;(complex)</span> imag-part)
-  (put <span class="vs">&#39;magnitude &#39;(complex)</span> magnitude)
-  (put <span class="vs">&#39;angle &#39;(complex)</span> angle))</code></pre>
+  (put <span class="vs">'real-part '(complex)</span> real-part)
+  (put <span class="vs">'imag-part '(complex)</span> imag-part)
+  (put <span class="vs">'magnitude '(complex)</span> magnitude)
+  (put <span class="vs">'angle '(complex)</span> angle))</code></pre>
 <p>This works because these selectors were defined in <a href="4.html#2.4.3">§&nbsp;2.4.3</a> using <code>apply-generic</code>, so now they will dispatch back to themselves when given a data object tagged <code>'complex</code>. In other words, we are telling the system to strip off the type tag and try again.</p>
 <pre><code class="blockcode">(using complex-pkg complex-components-pkg)
 
 (<span class="kw">define</span> z (make-complex-from-real-imag <span class="cn">3 4</span>))
 
 (magnitude z)
-<span class="op">=&gt;</span> (magnitude <span class="vs">&#39;(complex rectangular 3 . 4)</span>)
-<span class="op">=&gt;</span> (apply-generic <span class="vs">&#39;magnitude &#39;(complex rectangular 3 . 4)</span>)    <span class="co">; 1st call</span>
-<span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="vs">&#39;magnitude &#39;(complex)</span>) <span class="vs">&#39;((rectangular 3 . 4))</span>)
-<span class="op">=&gt;</span> (magnitude <span class="vs">&#39;(rectangular 3 . 4)</span>)
-<span class="op">=&gt;</span> (apply-generic <span class="vs">&#39;magnitude &#39;(rectangular 3 . 4)</span>)            <span class="co">; 2nd call</span>
-<span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="vs">&#39;magnitude &#39;(rectangular)</span>) <span class="vs">&#39;((3 . 4))</span>)
+<span class="op">=&gt;</span> (magnitude <span class="vs">'(complex rectangular 3 . 4)</span>)
+<span class="op">=&gt;</span> (apply-generic <span class="vs">'magnitude '(complex rectangular 3 . 4)</span>)    <span class="co">; 1st call</span>
+<span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="vs">'magnitude '(complex)</span>) <span class="vs">'((rectangular 3 . 4))</span>)
+<span class="op">=&gt;</span> (magnitude <span class="vs">'(rectangular 3 . 4)</span>)
+<span class="op">=&gt;</span> (apply-generic <span class="vs">'magnitude '(rectangular 3 . 4)</span>)            <span class="co">; 2nd call</span>
+<span class="op">=&gt;</span> (<span class="fu">apply</span> (get <span class="vs">'magnitude '(rectangular)</span>) <span class="vs">'((3 . 4))</span>)
 <span class="op">=&gt;</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> (square <span class="cn">3</span>) (square <span class="cn">4</span>)))
 <span class="op">=&gt;</span> (<span class="fu">sqrt</span> (<span class="fu">+</span> <span class="cn">9 16</span>))
 <span class="op">=&gt;</span> (<span class="fu">sqrt</span> <span class="cn">25</span>)
@@ -339,23 +339,23 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (attach-tag type-tag contents)
-  (<span class="kw">if</span> (<span class="fu">eq?</span> type-tag <span class="vs">&#39;scheme-number</span>)
+  (<span class="kw">if</span> (<span class="fu">eq?</span> type-tag <span class="vs">'scheme-number</span>)
       contents
       (<span class="fu">cons</span> type-tag contents)))
 (<span class="kw">define</span> (type-tag datum)
   (<span class="kw">cond</span> ((<span class="fu">pair?</span> datum) (<span class="fu">car</span> datum))
-        ((<span class="fu">number?</span> datum) <span class="vs">&#39;scheme-number</span>)
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;type-tag</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum))))
+        ((<span class="fu">number?</span> datum) <span class="vs">'scheme-number</span>)
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'type-tag</span> <span class="cn">"bad tagged datum"</span> datum))))
 (<span class="kw">define</span> (contents datum)
   (<span class="kw">cond</span> ((<span class="fu">pair?</span> datum) (<span class="fu">cdr</span> datum))
         ((<span class="fu">number?</span> datum) datum)
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;contents</span> <span class="cn">&quot;bad tagged datum&quot;</span> datum))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'contents</span> <span class="cn">"bad tagged datum"</span> datum))))
 
-(attach-tag <span class="vs">&#39;foo &#39;a</span>) <span class="op">=&gt;</span> <span class="vs">&#39;(foo . a)</span>
-(attach-tag <span class="vs">&#39;scheme-number</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(type-tag <span class="vs">&#39;(foo . a)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;foo</span>
-(type-tag <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="vs">&#39;scheme-number</span>
-(contents <span class="vs">&#39;(foo . a)</span>) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
+(attach-tag <span class="vs">'foo 'a</span>) <span class="op">=&gt;</span> <span class="vs">'(foo . a)</span>
+(attach-tag <span class="vs">'scheme-number</span> <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(type-tag <span class="vs">'(foo . a)</span>) <span class="op">=&gt;</span> <span class="vs">'foo</span>
+(type-tag <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="vs">'scheme-number</span>
+(contents <span class="vs">'(foo . a)</span>) <span class="op">=&gt;</span> <span class="vs">'a</span>
 (contents <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
 
 (<span class="kw">paste</span> (<a href="4.html#2.4.3">:2.4.3</a> apply-generic) (<a href="#2.5.1">:2.5.1</a> add div mul scheme-number-pkg sub))
@@ -432,19 +432,19 @@ Imports:
 </aside>
 <p>In addition to Scheme numbers, rationals, and complex numbers, we’ll also make it work for integers and reals. This will be used to implement <code>drop</code> in <a href="#ex2.85">Exercise&nbsp;2.85</a>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (equ-pkg)
-  (put <span class="vs">&#39;equ? &#39;(scheme-number scheme-number)</span> <span class="fu">=</span>)
-  (put <span class="vs">&#39;equ? &#39;(integer integer)</span> <span class="fu">=</span>)
-  (put <span class="vs">&#39;equ? &#39;(real real)</span> <span class="fu">=</span>)
-  (put <span class="vs">&#39;equ? &#39;(rational rational)</span>
+  (put <span class="vs">'equ? '(scheme-number scheme-number)</span> <span class="fu">=</span>)
+  (put <span class="vs">'equ? '(integer integer)</span> <span class="fu">=</span>)
+  (put <span class="vs">'equ? '(real real)</span> <span class="fu">=</span>)
+  (put <span class="vs">'equ? '(rational rational)</span>
        (<span class="kw">lambda</span> (x y)
          (<span class="kw">and</span> (<span class="fu">=</span> (numer x) (numer y))
               (<span class="fu">=</span> (denom x) (denom y)))))
-  (put <span class="vs">&#39;equ? &#39;(complex complex)</span>
+  (put <span class="vs">'equ? '(complex complex)</span>
        (<span class="kw">lambda</span> (z1 z2)
          (<span class="kw">and</span> (<span class="fu">=</span> (real-part z1) (real-part z2))
               (<span class="fu">=</span> (imag-part z1) (imag-part z2))))))
 
-(<span class="kw">define</span> (equ? x y) (apply-generic <span class="vs">&#39;equ?</span> x y))
+(<span class="kw">define</span> (equ? x y) (apply-generic <span class="vs">'equ?</span> x y))
 
 (using numeric-pkg equ-pkg)
 
@@ -518,14 +518,14 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (zero-pkg)
-  (put <span class="vs">&#39;=zero? &#39;(scheme-number)</span> <span class="fu">zero?</span>)
-  (put <span class="vs">&#39;=zero? &#39;(rational)</span>
+  (put <span class="vs">'=zero? '(scheme-number)</span> <span class="fu">zero?</span>)
+  (put <span class="vs">'=zero? '(rational)</span>
        (<span class="kw">lambda</span> (x) (<span class="fu">zero?</span> (numer x))))
-  (put <span class="vs">&#39;=zero? &#39;(complex)</span>
+  (put <span class="vs">'=zero? '(complex)</span>
        (<span class="kw">lambda</span> (x) (<span class="kw">and</span> (<span class="fu">zero?</span> (real-part x))
                         (<span class="fu">zero?</span> (imag-part x))))))
 
-(<span class="kw">define</span> (=zero? n) (apply-generic <span class="vs">&#39;=zero?</span> n))
+(<span class="kw">define</span> (=zero? n) (apply-generic <span class="vs">'=zero?</span> n))
 
 (using numeric-pkg zero-pkg)
 
@@ -590,15 +590,15 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (get-coercion type1 type2)
-  (get <span class="vs">&#39;coerce</span> (<span class="fu">list</span> type1 type2)))
+  (get <span class="vs">'coerce</span> (<span class="fu">list</span> type1 type2)))
 (<span class="kw">define</span> (put-coercion type1 type2 coerce)
-  (put <span class="vs">&#39;coerce</span> (<span class="fu">list</span> type1 type2) coerce))
+  (put <span class="vs">'coerce</span> (<span class="fu">list</span> type1 type2) coerce))
 
 (<span class="kw">define</span> (apply-generic op . args)
   (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
          (proc (get op type-tags)))
     (<span class="kw">define</span> (err)
-      (<span class="fu">error</span> <span class="vs">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+      (<span class="fu">error</span> <span class="vs">'apply-generic</span> <span class="cn">"no method for types"</span> op type-tags))
     (<span class="kw">if</span> proc
         (<span class="fu">apply</span> proc (<span class="fu">map</span> contents args))
         (<span class="kw">if</span> (<span class="fu">=</span> (<span class="fu">length</span> args) <span class="cn">2</span>)
@@ -618,7 +618,7 @@ Imports:
 (<span class="kw">define</span> (scheme-number-to-complex-pkg)
   (<span class="kw">define</span> (coerce n)
     (make-complex-from-real-imag (contents n) <span class="cn">0</span>))
-  (put-coercion <span class="vs">&#39;scheme-number &#39;complex</span> coerce))
+  (put-coercion <span class="vs">'scheme-number 'complex</span> coerce))
 
 (using numeric-pkg scheme-number-to-complex-pkg)
 
@@ -694,14 +694,14 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (identity-pkg)
-  (put-coercion <span class="vs">&#39;scheme-number &#39;scheme-number</span> (<span class="kw">lambda</span> (x) x))
-  (put-coercion <span class="vs">&#39;complex &#39;complex</span> (<span class="kw">lambda</span> (x) x)))
+  (put-coercion <span class="vs">'scheme-number 'scheme-number</span> (<span class="kw">lambda</span> (x) x))
+  (put-coercion <span class="vs">'complex 'complex</span> (<span class="kw">lambda</span> (x) x)))
 
 (<span class="kw">define</span> (exp-pkg)
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;scheme-number</span> x))
-  (put <span class="vs">&#39;exp &#39;(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">expt</span> x y)))))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'scheme-number</span> x))
+  (put <span class="vs">'exp '(scheme-number scheme-number)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">expt</span> x y)))))
 
-(<span class="kw">define</span> (exp x y) (apply-generic <span class="vs">&#39;exp</span> x y))</code></pre>
+(<span class="kw">define</span> (exp x y) (apply-generic <span class="vs">'exp</span> x y))</code></pre>
 <ol type="a">
 <li><p>If we call <code>exp</code> with two complex numbers, it will enter an infinite recursion because it will keep trying to unnecessarily coerce the first argument to the type of the second.</p>
 <pre><code class="blockcode">(using complex-pkg identity-pkg exp-pkg)
@@ -714,7 +714,7 @@ Imports:
   (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
          (proc (get op type-tags)))
     (<span class="kw">define</span> (err)
-      (<span class="fu">error</span> <span class="vs">&#39;new-apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+      (<span class="fu">error</span> <span class="vs">'new-apply-generic</span> <span class="cn">"no method for types"</span> op type-tags))
     (<span class="kw">if</span> proc
         (<span class="fu">apply</span> proc (<span class="fu">map</span> contents args))
         (<span class="kw">if</span> (<span class="fu">=</span> (<span class="fu">length</span> args) <span class="cn">2</span>)
@@ -731,9 +731,9 @@ Imports:
                           (<span class="kw">else</span> (err))))))
             (err)))))
 
-(<span class="kw">define</span> (exp x y) (new-apply-generic <span class="vs">&#39;exp</span> x y))
+(<span class="kw">define</span> (exp x y) (new-apply-generic <span class="vs">'exp</span> x y))
 
-(exp z z) <span class="er">=!&gt;</span> <span class="cn">&quot;no method for types&quot;</span></code></pre></li>
+(exp z z) <span class="er">=!&gt;</span> <span class="cn">"no method for types"</span></code></pre></li>
 </ol>
 <h3 id="ex2.82" class="anchor">
 <a class="anchor__link link" href="#ex2.82" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.82">Exercise 2.82<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -828,7 +828,7 @@ Imports:
          (proc (get op type-tags)))
     (<span class="kw">define</span> (try tt)
       (when (<span class="fu">null?</span> tt)
-        (<span class="fu">error</span> <span class="vs">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+        (<span class="fu">error</span> <span class="vs">'apply-generic</span> <span class="cn">"no method for types"</span> op type-tags))
       (<span class="kw">let*</span> ((try-type (<span class="fu">car</span> tt))
              (coerced-args (coerce-all args type-tags try-type))
              (new-type-tags (<span class="fu">map</span> (<span class="kw">lambda</span> (x) try-type) type-tags))
@@ -841,12 +841,12 @@ Imports:
         (try type-tags))))
 
 (<span class="kw">define</span> (add3c-pkg)
-  (<span class="kw">define</span> (tag z) (attach-tag <span class="vs">&#39;complex</span> z))
-  (put <span class="vs">&#39;add3c &#39;(complex complex complex)</span>
+  (<span class="kw">define</span> (tag z) (attach-tag <span class="vs">'complex</span> z))
+  (put <span class="vs">'add3c '(complex complex complex)</span>
        (<span class="kw">lambda</span> (z1 z2 z3)
          (tag (add-complex z1 (add-complex z2 z3))))))
 
-(<span class="kw">define</span> (add3c z1 z2 z3) (apply-generic <span class="vs">&#39;add3c</span> z1 z2 z3))
+(<span class="kw">define</span> (add3c z1 z2 z3) (apply-generic <span class="vs">'add3c</span> z1 z2 z3))
 
 (using numeric-pkg scheme-number-to-complex-pkg add3c-pkg)
 
@@ -930,27 +930,27 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (integer-pkg)
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;integer</span> x))
-  (put <span class="vs">&#39;add &#39;(integer integer)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
-  (put <span class="vs">&#39;sub &#39;(integer integer)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
-  (put <span class="vs">&#39;mul &#39;(integer integer)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
-  (put <span class="vs">&#39;div &#39;(integer integer)</span>
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'integer</span> x))
+  (put <span class="vs">'add '(integer integer)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="vs">'sub '(integer integer)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="vs">'mul '(integer integer)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="vs">'div '(integer integer)</span>
        (<span class="kw">lambda</span> (x y)
          (<span class="kw">let</span> ((z (<span class="fu">/</span> x y)))
            (<span class="kw">if</span> (<span class="fu">integer?</span> z) (tag z) (make-rational x y)))))
-  (put <span class="vs">&#39;make &#39;integer</span> tag))
+  (put <span class="vs">'make 'integer</span> tag))
 
-(<span class="kw">define</span> (make-integer x) (apply-specific <span class="vs">&#39;make &#39;integer</span> x))
+(<span class="kw">define</span> (make-integer x) (apply-specific <span class="vs">'make 'integer</span> x))
 
 (<span class="kw">define</span> (real-pkg)
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;real</span> x))
-  (put <span class="vs">&#39;add &#39;(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
-  (put <span class="vs">&#39;sub &#39;(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
-  (put <span class="vs">&#39;mul &#39;(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
-  (put <span class="vs">&#39;div &#39;(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
-  (put <span class="vs">&#39;make &#39;real</span> tag))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'real</span> x))
+  (put <span class="vs">'add '(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">+</span> x y))))
+  (put <span class="vs">'sub '(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">-</span> x y))))
+  (put <span class="vs">'mul '(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">*</span> x y))))
+  (put <span class="vs">'div '(real real)</span> (<span class="kw">lambda</span> (x y) (tag (<span class="fu">/</span> x y))))
+  (put <span class="vs">'make 'real</span> tag))
 
-(<span class="kw">define</span> (make-real x) (apply-specific <span class="vs">&#39;make &#39;real</span> x))</code></pre>
+(<span class="kw">define</span> (make-real x) (apply-specific <span class="vs">'make 'real</span> x))</code></pre>
 <p>The <code>extended-numeric-pkg</code> is like <code>numeric-pkg</code> from <a href="#2.5.1">§&nbsp;2.5.1</a>, but it splits <code>'scheme-number</code> into <code>'integer</code> and <code>'real</code>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (extended-numeric-pkg)
   (integer-pkg)
@@ -965,11 +965,11 @@ Imports:
     (make-real (<span class="fu">inexact</span> (<span class="fu">/</span> (numer x) (denom x)))))
   (<span class="kw">define</span> (real-&gt;complex n)
     (make-complex-from-real-imag n <span class="cn">0</span>))
-  (put <span class="vs">&#39;raise &#39;(integer)</span> integer-&gt;rational)
-  (put <span class="vs">&#39;raise &#39;(rational)</span> rational-&gt;real)
-  (put <span class="vs">&#39;raise &#39;(real)</span> real-&gt;complex))
+  (put <span class="vs">'raise '(integer)</span> integer-&gt;rational)
+  (put <span class="vs">'raise '(rational)</span> rational-&gt;real)
+  (put <span class="vs">'raise '(real)</span> real-&gt;complex))
 
-(<span class="kw">define</span> (raise x) (apply-generic <span class="vs">&#39;raise</span> x))
+(<span class="kw">define</span> (raise x) (apply-generic <span class="vs">'raise</span> x))
 
 (using extended-numeric-pkg raise-pkg)
 
@@ -1049,10 +1049,10 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> numeric-tower
-  <span class="vs">&#39;(integer rational real complex)</span>)
+  <span class="vs">'(integer rational real complex)</span>)
 
-(<span class="kw">define</span> (tower-bottom? type) (<span class="fu">eq?</span> type <span class="vs">&#39;integer</span>))
-(<span class="kw">define</span> (tower-top? type) (<span class="fu">eq?</span> type <span class="vs">&#39;complex</span>))
+(<span class="kw">define</span> (tower-bottom? type) (<span class="fu">eq?</span> type <span class="vs">'integer</span>))
+(<span class="kw">define</span> (tower-top? type) (<span class="fu">eq?</span> type <span class="vs">'complex</span>))
 
 (<span class="kw">define</span> (tower-position type)
   (<span class="kw">define</span> (iter tower n)
@@ -1066,7 +1066,7 @@ Imports:
          (vals (<span class="fu">map</span> contents args))
          (proc (get op type-tags)))
     (<span class="kw">define</span> (err)
-      (<span class="fu">error</span> <span class="vs">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+      (<span class="fu">error</span> <span class="vs">'apply-generic</span> <span class="cn">"no method for types"</span> op type-tags))
     (<span class="kw">cond</span> (proc (<span class="fu">apply</span> proc vals))
           ((<span class="fu">null?</span> args) (err))
           ((<span class="fu">null?</span> (<span class="fu">cdr</span> args))
@@ -1214,11 +1214,11 @@ Imports:
       (make-rational (<span class="fu">numerator</span> y) (<span class="fu">denominator</span> y))))
   (<span class="kw">define</span> (rational-&gt;integer r)
     (make-integer (<span class="fu">quotient</span> (numer r) (denom r))))
-  (put <span class="vs">&#39;project &#39;(complex)</span> complex-&gt;real)
-  (put <span class="vs">&#39;project &#39;(real)</span> real-&gt;rational)
-  (put <span class="vs">&#39;project &#39;(rational)</span> rational-&gt;integer))
+  (put <span class="vs">'project '(complex)</span> complex-&gt;real)
+  (put <span class="vs">'project '(real)</span> real-&gt;rational)
+  (put <span class="vs">'project '(rational)</span> rational-&gt;integer))
 
-(<span class="kw">define</span> (project x) (apply-generic <span class="vs">&#39;project</span> x))
+(<span class="kw">define</span> (project x) (apply-generic <span class="vs">'project</span> x))
 
 (<span class="kw">define</span> (drop x)
   (<span class="kw">let</span> ((type (type-tag x)))
@@ -1233,12 +1233,12 @@ Imports:
          (vals (<span class="fu">map</span> contents args))
          (proc (get op type-tags)))
     (<span class="kw">define</span> (err)
-      (<span class="fu">error</span> <span class="vs">&#39;apply-generic</span> <span class="cn">&quot;no method for types&quot;</span> op type-tags))
+      (<span class="fu">error</span> <span class="vs">'apply-generic</span> <span class="cn">"no method for types"</span> op type-tags))
     (<span class="kw">cond</span> (proc
            (<span class="kw">let</span> ((result (<span class="fu">apply</span> proc vals)))
              (<span class="kw">if</span> (<span class="kw">and</span> (<span class="fu">pair?</span> result)
                       (tower-position (type-tag result))
-                      (<span class="fu">not</span> (<span class="kw">or</span> (<span class="fu">eq?</span> op <span class="vs">&#39;raise</span>) (<span class="fu">eq?</span> op <span class="vs">&#39;project</span>))))
+                      (<span class="fu">not</span> (<span class="kw">or</span> (<span class="fu">eq?</span> op <span class="vs">'raise</span>) (<span class="fu">eq?</span> op <span class="vs">'project</span>))))
                  (drop result)
                  result)))
           ((<span class="fu">null?</span> args) (err))
@@ -1411,16 +1411,16 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (square x) (mul x x))
 
 (<span class="kw">define</span> (sqrt-trig-pkg)
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;real</span> x))
-  (put <span class="vs">&#39;square-root &#39;(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">sqrt</span> x))))
-  (put <span class="vs">&#39;sine &#39;(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">sin</span> x))))
-  (put <span class="vs">&#39;cosine &#39;(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">cos</span> x))))
-  (put <span class="vs">&#39;atan2 &#39;(real real)</span> (<span class="kw">lambda</span> (y x) (tag (<span class="fu">atan</span> y x)))))
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'real</span> x))
+  (put <span class="vs">'square-root '(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">sqrt</span> x))))
+  (put <span class="vs">'sine '(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">sin</span> x))))
+  (put <span class="vs">'cosine '(real)</span> (<span class="kw">lambda</span> (x) (tag (<span class="fu">cos</span> x))))
+  (put <span class="vs">'atan2 '(real real)</span> (<span class="kw">lambda</span> (y x) (tag (<span class="fu">atan</span> y x)))))
 
-(<span class="kw">define</span> (square-root x) (apply-generic <span class="vs">&#39;square-root</span> x))
-(<span class="kw">define</span> (sine x) (apply-generic <span class="vs">&#39;sine</span> x))
-(<span class="kw">define</span> (cosine x) (apply-generic <span class="vs">&#39;cosine</span> x))
-(<span class="kw">define</span> (atan2 x y) (apply-generic <span class="vs">&#39;atan2</span> x y))</code></pre>
+(<span class="kw">define</span> (square-root x) (apply-generic <span class="vs">'square-root</span> x))
+(<span class="kw">define</span> (sine x) (apply-generic <span class="vs">'sine</span> x))
+(<span class="kw">define</span> (cosine x) (apply-generic <span class="vs">'cosine</span> x))
+(<span class="kw">define</span> (atan2 x y) (apply-generic <span class="vs">'atan2</span> x y))</code></pre>
 <p>Now we can rewrite the rectangular and polar packages:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (rectangular-pkg)
   (<span class="kw">define</span> real-part <span class="fu">car</span>)
@@ -1433,14 +1433,14 @@ Imports:
     (atan2 (imag-part z) (real-part z)))
   (<span class="kw">define</span> (make-from-mag-ang r a)
     (<span class="fu">cons</span> (mul r (cosine a)) (mul r (sine a))))
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;rectangular</span> x))
-  (put <span class="vs">&#39;real-part &#39;(rectangular)</span> real-part)
-  (put <span class="vs">&#39;imag-part &#39;(rectangular)</span> imag-part)
-  (put <span class="vs">&#39;magnitude &#39;(rectangular)</span> magnitude)
-  (put <span class="vs">&#39;angle &#39;(rectangular)</span> angle)
-  (put <span class="vs">&#39;make-from-real-imag &#39;rectangular</span>
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'rectangular</span> x))
+  (put <span class="vs">'real-part '(rectangular)</span> real-part)
+  (put <span class="vs">'imag-part '(rectangular)</span> imag-part)
+  (put <span class="vs">'magnitude '(rectangular)</span> magnitude)
+  (put <span class="vs">'angle '(rectangular)</span> angle)
+  (put <span class="vs">'make-from-real-imag 'rectangular</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang &#39;rectangular</span>
+  (put <span class="vs">'make-from-mag-ang 'rectangular</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))
 
 (<span class="kw">define</span> (polar-pkg)
@@ -1454,14 +1454,14 @@ Imports:
   (<span class="kw">define</span> (make-from-real-imag x y)
     (<span class="fu">cons</span> (square-root (add (square x) (square y)))
           (atan2 y x)))
-  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">&#39;polar</span> x))
-  (put <span class="vs">&#39;real-part &#39;(polar)</span> real-part)
-  (put <span class="vs">&#39;imag-part &#39;(polar)</span> imag-part)
-  (put <span class="vs">&#39;magnitude &#39;(polar)</span> magnitude)
-  (put <span class="vs">&#39;angle &#39;(polar)</span> angle)
-  (put <span class="vs">&#39;make-from-real-imag &#39;polar</span>
+  (<span class="kw">define</span> (tag x) (attach-tag <span class="vs">'polar</span> x))
+  (put <span class="vs">'real-part '(polar)</span> real-part)
+  (put <span class="vs">'imag-part '(polar)</span> imag-part)
+  (put <span class="vs">'magnitude '(polar)</span> magnitude)
+  (put <span class="vs">'angle '(polar)</span> angle)
+  (put <span class="vs">'make-from-real-imag 'polar</span>
        (<span class="kw">lambda</span> (x y) (tag (make-from-real-imag x y))))
-  (put <span class="vs">&#39;make-from-mag-ang &#39;polar</span>
+  (put <span class="vs">'make-from-mag-ang 'polar</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
 <p>Next, we will rewrite the complex package:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (add-complex z1 z2)
@@ -1480,14 +1480,14 @@ Imports:
 (<span class="kw">paste</span> (<a href="#2.5.1">:2.5.1</a> complex-pkg))</code></pre>
 <p>Finally, we need to fix some procedures in other packages that assumed a complex number’s real part and imaginary part were plain Scheme numbers. Fixing <code>equ?</code> is tricky because the <code>equ?</code> from <a href="#ex2.79">Exercise&nbsp;2.79</a> used the old <code>apply-generic</code> without coercion. That was fine since we only use it in <code>drop</code> on <code>x</code> and <code>(raise (project x))</code>, which must be the same type. But now, if they are complex numbers, their component types might be different. So in the new <code>'complex</code> implementation of <code>equ?</code>, we need to recursively invoke a version of <code>equ?</code> that supports coercion.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (complex-patch-pkg)
-  (<span class="kw">define</span> (equ-with-coercion? x y) (apply-generic <span class="vs">&#39;equ?</span> x y))
-  (put <span class="vs">&#39;equ? &#39;(complex complex)</span>
+  (<span class="kw">define</span> (equ-with-coercion? x y) (apply-generic <span class="vs">'equ?</span> x y))
+  (put <span class="vs">'equ? '(complex complex)</span>
        (<span class="kw">lambda</span> (z1 z2)
          (<span class="kw">and</span> (equ-with-coercion? (real-part z1) (real-part z2))
               (equ-with-coercion? (imag-part z1) (imag-part z2)))))
-  (put <span class="vs">&#39;raise &#39;(real)</span>
+  (put <span class="vs">'raise '(real)</span>
        (<span class="kw">lambda</span> (x) (make-complex-from-real-imag (make-real x) (make-real <span class="cn">0</span>))))
-  (put <span class="vs">&#39;project &#39;(complex)</span>
+  (put <span class="vs">'project '(complex)</span>
        (<span class="kw">lambda</span> (x)
          (<span class="kw">let</span> ((r (real-part x)))
            (<span class="kw">case</span> (type-tag r)
@@ -1597,16 +1597,16 @@ Imports:
     (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
         (make-poly (variable p1)
                    (add-terms (term-list p1) (term-list p2)))
-        (<span class="fu">error</span> <span class="vs">&#39;add-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
+        (<span class="fu">error</span> <span class="vs">'add-poly</span> <span class="cn">"polys not in same var"</span> p1 p2)))
   (<span class="kw">define</span> (mul-poly p1 p2)
     (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
         (make-poly (variable p1)
                    (mul-terms (term-list p1) (term-list p2)))
-        (<span class="fu">error</span> <span class="vs">&#39;mul-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
-  (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">&#39;polynomial</span> p))
-  (put <span class="vs">&#39;make &#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
-  (put <span class="vs">&#39;add &#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
-  (put <span class="vs">&#39;mul &#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2)))))
+        (<span class="fu">error</span> <span class="vs">'mul-poly</span> <span class="cn">"polys not in same var"</span> p1 p2)))
+  (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">'polynomial</span> p))
+  (put <span class="vs">'make 'polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
+  (put <span class="vs">'add '(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
+  (put <span class="vs">'mul '(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2)))))
 
 (<span class="kw">define</span> (add-terms l1 l2)
   (<span class="kw">cond</span> ((empty-termlist? l1) l2)
@@ -1678,11 +1678,11 @@ Imports:
 </aside>
 <p>We have to use <code>apply-generic</code> below because importing <code>=zero?</code> from <a href="#ex2.87">Exercise&nbsp;2.87</a> would cause an import cycle.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
-  (<span class="kw">if</span> (apply-generic <span class="vs">&#39;=zero?</span> (coeff term))
+  (<span class="kw">if</span> (apply-generic <span class="vs">'=zero?</span> (coeff term))
       term-list
       (<span class="fu">cons</span> term term-list)))
 
-(<span class="kw">define</span> (the-empty-termlist) <span class="vs">&#39;()</span>)
+(<span class="kw">define</span> (the-empty-termlist) <span class="vs">'()</span>)
 (<span class="kw">define</span> first-term <span class="fu">car</span>)
 (<span class="kw">define</span> rest-terms <span class="fu">cdr</span>)
 (<span class="kw">define</span> empty-termlist? <span class="fu">null?</span>)
@@ -1692,19 +1692,19 @@ Imports:
 (<span class="kw">define</span> coeff <span class="fu">cadr</span>)
 
 (<span class="kw">define</span> (make-polynomial var terms)
-  (apply-specific <span class="vs">&#39;make &#39;polynomial</span> var terms))</code></pre>
+  (apply-specific <span class="vs">'make 'polynomial</span> var terms))</code></pre>
 <p>This package is used in <a href="#ex2.90">Exercise&nbsp;2.90</a>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (sparse-termlist-pkg)
-  (<span class="kw">define</span> (tag tl) (attach-tag <span class="vs">&#39;sparse-termlist</span> tl))
-  (put <span class="vs">&#39;make &#39;sparse-termlist</span> tag)
+  (<span class="kw">define</span> (tag tl) (attach-tag <span class="vs">'sparse-termlist</span> tl))
+  (put <span class="vs">'make 'sparse-termlist</span> tag)
   <span class="co">;; Curried so that it only dispatches on the term list, not the term.</span>
-  (put <span class="vs">&#39;adjoin-term &#39;(sparse-termlist)</span>
+  (put <span class="vs">'adjoin-term '(sparse-termlist)</span>
        (<span class="kw">lambda</span> (tl) (<span class="kw">lambda</span> (t) (tag (adjoin-term t tl)))))
-  (put <span class="vs">&#39;the-empty-termlist &#39;sparse-termlist</span>
+  (put <span class="vs">'the-empty-termlist 'sparse-termlist</span>
        (<span class="kw">lambda</span> () (tag (the-empty-termlist))))
-  (put <span class="vs">&#39;first-term &#39;(sparse-termlist)</span> first-term)
-  (put <span class="vs">&#39;rest-terms &#39;(sparse-termlist)</span> (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
-  (put <span class="vs">&#39;empty-termlist? &#39;(sparse-termlist)</span> empty-termlist?))</code></pre>
+  (put <span class="vs">'first-term '(sparse-termlist)</span> first-term)
+  (put <span class="vs">'rest-terms '(sparse-termlist)</span> (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
+  (put <span class="vs">'empty-termlist? '(sparse-termlist)</span> empty-termlist?))</code></pre>
 <h3 id="ex2.87" class="anchor">
 <a class="anchor__link link" href="#ex2.87" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.87">Exercise 2.87<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1786,27 +1786,27 @@ Imports:
           (<span class="kw">and</span> (=zero? (coeff (first-term terms)))
                (all-zero? (rest-terms terms)))))
     (all-zero? (term-list p)))
-  (put <span class="vs">&#39;=zero? &#39;(scheme-number)</span> <span class="fu">zero?</span>)
-  (put <span class="vs">&#39;=zero? &#39;(polynomial)</span> poly-zero?))
+  (put <span class="vs">'=zero? '(scheme-number)</span> <span class="fu">zero?</span>)
+  (put <span class="vs">'=zero? '(polynomial)</span> poly-zero?))
 
-(<span class="kw">define</span> (=zero? n) (apply-generic <span class="vs">&#39;=zero?</span> n))
+(<span class="kw">define</span> (=zero? n) (apply-generic <span class="vs">'=zero?</span> n))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg)
 
-(=zero? (make-polynomial <span class="vs">&#39;x &#39;()</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(=zero? (make-polynomial <span class="vs">&#39;x &#39;((2 0))</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(=zero? (make-polynomial <span class="vs">&#39;x &#39;((2 1) (1 0))</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(=zero? (make-polynomial <span class="vs">'x '()</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-polynomial <span class="vs">'x '((2 0))</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(=zero? (make-polynomial <span class="vs">'x '((2 1) (1 0))</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
 
-(add (make-polynomial <span class="vs">&#39;x &#39;((100 1) (2 3))</span>)
-     (make-polynomial <span class="vs">&#39;x &#39;((3 1) (2 2) (0 5))</span>))
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((100 1) (3 1) (2 5) (0 5))</span>)
+(add (make-polynomial <span class="vs">'x '((100 1) (2 3))</span>)
+     (make-polynomial <span class="vs">'x '((3 1) (2 2) (0 5))</span>))
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((100 1) (3 1) (2 5) (0 5))</span>)
 
-(mul (make-polynomial <span class="vs">&#39;x &#39;((2 1) (0 1))</span>)
-     (make-polynomial <span class="vs">&#39;x &#39;((1 2))</span>))
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((3 2) (1 2))</span>)
+(mul (make-polynomial <span class="vs">'x '((2 1) (0 1))</span>)
+     (make-polynomial <span class="vs">'x '((1 2))</span>))
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((3 2) (1 2))</span>)
 
-(add (make-polynomial <span class="vs">&#39;x &#39;()</span>) (make-polynomial <span class="vs">&#39;y &#39;()</span>))
-<span class="er">=!&gt;</span> <span class="cn">&quot;polys not in same var&quot;</span></code></pre>
+(add (make-polynomial <span class="vs">'x '()</span>) (make-polynomial <span class="vs">'y '()</span>))
+<span class="er">=!&gt;</span> <span class="cn">"polys not in same var"</span></code></pre>
 <h3 id="ex2.88" class="anchor">
 <a class="anchor__link link" href="#ex2.88" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.88">Exercise 2.88<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1910,12 +1910,12 @@ Imports:
                      (negate-terms (rest-terms tl))))))
 
 (<span class="kw">define</span> (negate-pkg)
-  (put <span class="vs">&#39;negate &#39;(scheme-number)</span> <span class="fu">-</span>)
-  (put <span class="vs">&#39;negate &#39;(polynomial)</span>
+  (put <span class="vs">'negate '(scheme-number)</span> <span class="fu">-</span>)
+  (put <span class="vs">'negate '(polynomial)</span>
        (<span class="kw">lambda</span> (p)
          (make-polynomial (variable p) (negate-terms (term-list p))))))
 
-(<span class="kw">define</span> (negate x) (apply-generic <span class="vs">&#39;negate</span> x))
+(<span class="kw">define</span> (negate x) (apply-generic <span class="vs">'negate</span> x))
 (<span class="kw">define</span> (sub x y) (add x (negate y)))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg)
@@ -1923,12 +1923,12 @@ Imports:
 (negate <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="cn">-1</span>
 (sub <span class="cn">5 2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
 
-(negate (make-polynomial <span class="vs">&#39;x &#39;((2 1))</span>))
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((2 -1))</span>)
+(negate (make-polynomial <span class="vs">'x '((2 1))</span>))
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((2 -1))</span>)
 
-(sub (make-polynomial <span class="vs">&#39;x &#39;((3 1) (1 2))</span>)
-     (make-polynomial <span class="vs">&#39;x &#39;((2 2) (1 1) (0 -1))</span>))
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((3 1) (2 -2) (1 1) (0 1))</span>)</code></pre>
+(sub (make-polynomial <span class="vs">'x '((3 1) (1 2))</span>)
+     (make-polynomial <span class="vs">'x '((2 2) (1 1) (0 -1))</span>))
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((3 1) (2 -2) (1 1) (0 1))</span>)</code></pre>
 <h3 id="ex2.89" class="anchor">
 <a class="anchor__link link" href="#ex2.89" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.89">Exercise 2.89<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1992,7 +1992,7 @@ Imports:
     (<span class="kw">define</span> (iter term-list len)
       (<span class="kw">cond</span> ((<span class="fu">&lt;</span> len o) (iter (<span class="fu">cons</span> <span class="cn">0</span> term-list) (<span class="fu">+</span> len <span class="cn">1</span>)))
             ((<span class="fu">=</span> len o) (<span class="fu">cons</span> (coeff term) term-list))
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;adjoin-term</span> <span class="cn">&quot;term list already has order&quot;</span> o))))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'adjoin-term</span> <span class="cn">"term list already has order"</span> o))))
     (<span class="kw">if</span> (=zero? (coeff term))
         term-list
         (iter term-list (<span class="fu">length</span> term-list)))))
@@ -2001,22 +2001,22 @@ Imports:
   (make-term (<span class="fu">-</span> (<span class="fu">length</span> term-list) <span class="cn">1</span>)
              (<span class="fu">car</span> term-list)))
 
-(adjoin-term (make-term <span class="cn">3 1</span>) (the-empty-termlist)) <span class="op">=&gt;</span> <span class="vs">&#39;(1 0 0 0)</span>
-(first-term <span class="vs">&#39;(1 0 0 0)</span>) <span class="op">=&gt;</span> (make-term <span class="cn">3 1</span>)
+(adjoin-term (make-term <span class="cn">3 1</span>) (the-empty-termlist)) <span class="op">=&gt;</span> <span class="vs">'(1 0 0 0)</span>
+(first-term <span class="vs">'(1 0 0 0)</span>) <span class="op">=&gt;</span> (make-term <span class="cn">3 1</span>)
 
-(adjoin-term (make-term <span class="cn">0 1</span>) <span class="vs">&#39;(2)</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;term list already has order: 0&quot;</span></code></pre>
+(adjoin-term (make-term <span class="cn">0 1</span>) <span class="vs">'(2)</span>) <span class="er">=!&gt;</span> <span class="cn">"term list already has order: 0"</span></code></pre>
 <p>This package is used in <a href="#ex2.90">Exercise&nbsp;2.90</a>:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (dense-termlist-pkg)
-  (<span class="kw">define</span> (tag tl) (attach-tag <span class="vs">&#39;dense-termlist</span> tl))
-  (put <span class="vs">&#39;make &#39;dense-termlist</span> tag)
+  (<span class="kw">define</span> (tag tl) (attach-tag <span class="vs">'dense-termlist</span> tl))
+  (put <span class="vs">'make 'dense-termlist</span> tag)
   <span class="co">;; Curried so that it only dispatches on the term list, not the term.</span>
-  (put <span class="vs">&#39;adjoin-term &#39;(dense-termlist)</span>
+  (put <span class="vs">'adjoin-term '(dense-termlist)</span>
        (<span class="kw">lambda</span> (tl) (<span class="kw">lambda</span> (t) (tag (adjoin-term t tl)))))
-  (put <span class="vs">&#39;the-empty-termlist &#39;dense-termlist</span>
+  (put <span class="vs">'the-empty-termlist 'dense-termlist</span>
        (<span class="kw">lambda</span> () (tag (the-empty-termlist))))
-  (put <span class="vs">&#39;first-term &#39;(dense-termlist)</span> first-term)
-  (put <span class="vs">&#39;rest-terms &#39;(dense-termlist)</span> (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
-  (put <span class="vs">&#39;empty-termlist? &#39;(dense-termlist)</span> empty-termlist?))</code></pre>
+  (put <span class="vs">'first-term '(dense-termlist)</span> first-term)
+  (put <span class="vs">'rest-terms '(dense-termlist)</span> (<span class="kw">lambda</span> (tl) (tag (rest-terms tl))))
+  (put <span class="vs">'empty-termlist? '(dense-termlist)</span> empty-termlist?))</code></pre>
 <h3 id="ex2.90" class="anchor">
 <a class="anchor__link link" href="#ex2.90" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.90">Exercise 2.90<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2137,11 +2137,11 @@ Imports:
 </aside>
 <p>To allow sparse and dense representations of polynomials to coexist, we must redefine the arithmetic operations using generic term list selectors:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (the-empty-termlist)
-  (apply-specific <span class="vs">&#39;the-empty-termlist &#39;sparse-termlist</span>))
-(<span class="kw">define</span> (empty-termlist? tl) (apply-generic <span class="vs">&#39;empty-termlist?</span> tl))
-(<span class="kw">define</span> (first-term tl) (apply-generic <span class="vs">&#39;first-term</span> tl))
-(<span class="kw">define</span> (rest-terms tl) (apply-generic <span class="vs">&#39;rest-terms</span> tl))
-(<span class="kw">define</span> (adjoin-term term tl) ((apply-generic <span class="vs">&#39;adjoin-term</span> tl) term))
+  (apply-specific <span class="vs">'the-empty-termlist 'sparse-termlist</span>))
+(<span class="kw">define</span> (empty-termlist? tl) (apply-generic <span class="vs">'empty-termlist?</span> tl))
+(<span class="kw">define</span> (first-term tl) (apply-generic <span class="vs">'first-term</span> tl))
+(<span class="kw">define</span> (rest-terms tl) (apply-generic <span class="vs">'rest-terms</span> tl))
+(<span class="kw">define</span> (adjoin-term term tl) ((apply-generic <span class="vs">'adjoin-term</span> tl) term))
 
 (<span class="kw">paste</span> (<a href="#2.5.3.1">:2.5.3.1</a> add-terms mul-term-by-all-terms mul-terms polynomial-pkg)
        (<a href="#ex2.87">?2.87</a> zero-pkg) (<a href="#ex2.88">?2.88</a> negate-pkg negate-terms))
@@ -2151,21 +2151,21 @@ Imports:
 <p>Let’s define some polynomials using a helper that infers the representation:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (poly var terms)
   (<span class="kw">let</span> ((type (<span class="kw">if</span> (<span class="kw">or</span> (<span class="fu">null?</span> terms) (<span class="fu">pair?</span> (<span class="fu">car</span> terms)))
-                  <span class="vs">&#39;sparse-termlist
-                  &#39;dense-termlist</span>)))
-    (apply-specific <span class="vs">&#39;make &#39;polynomial</span> var (apply-specific <span class="vs">&#39;make</span> type terms))))
+                  <span class="vs">'sparse-termlist
+                  'dense-termlist</span>)))
+    (apply-specific <span class="vs">'make 'polynomial</span> var (apply-specific <span class="vs">'make</span> type terms))))
 
-(<span class="kw">define</span> sparse-a (poly <span class="vs">&#39;x &#39;((3 3) (0 1))</span>))
-(<span class="kw">define</span> dense-a (poly <span class="vs">&#39;x &#39;(3 0 0 1)</span>))
+(<span class="kw">define</span> sparse-a (poly <span class="vs">'x '((3 3) (0 1))</span>))
+(<span class="kw">define</span> dense-a (poly <span class="vs">'x '(3 0 0 1)</span>))
 
-(<span class="kw">define</span> sparse-b (poly <span class="vs">&#39;x &#39;((2 3) (1 3) (0 2))</span>))
-(<span class="kw">define</span> dense-b (poly <span class="vs">&#39;x &#39;(0 3 3 2)</span>))
+(<span class="kw">define</span> sparse-b (poly <span class="vs">'x '((2 3) (1 3) (0 2))</span>))
+(<span class="kw">define</span> dense-b (poly <span class="vs">'x '(0 3 3 2)</span>))
 
-(<span class="kw">define</span> sparse-a+b (poly <span class="vs">&#39;x &#39;((3 3) (2 3) (1 3) (0 3))</span>))
-(<span class="kw">define</span> dense-a+b (poly <span class="vs">&#39;x &#39;(3 3 3 3)</span>))
+(<span class="kw">define</span> sparse-a+b (poly <span class="vs">'x '((3 3) (2 3) (1 3) (0 3))</span>))
+(<span class="kw">define</span> dense-a+b (poly <span class="vs">'x '(3 3 3 3)</span>))
 
-(<span class="kw">define</span> sparse-a*b (poly <span class="vs">&#39;x &#39;((5 9) (4 9) (3 6) (2 3) (1 3) (0 2))</span>))
-(<span class="kw">define</span> dense-a*b (poly <span class="vs">&#39;x &#39;(9 9 6 3 3 2)</span>))</code></pre>
+(<span class="kw">define</span> sparse-a*b (poly <span class="vs">'x '((5 9) (4 9) (3 6) (2 3) (1 3) (0 2))</span>))
+(<span class="kw">define</span> dense-a*b (poly <span class="vs">'x '(9 9 6 3 3 2)</span>))</code></pre>
 <p>Make sure the sparse and dense versions are equal:</p>
 <pre><code class="blockcode">(=zero? (sub sparse-a dense-a)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (=zero? (sub sparse-b dense-b)) <span class="op">=&gt;</span> <span class="cn">#t</span>
@@ -2329,26 +2329,26 @@ Imports:
               (result (div-terms (term-list p1) (term-list p2))))
           (<span class="fu">list</span> (make-polynomial var (<span class="fu">car</span> result))
                 (make-polynomial var (<span class="fu">cadr</span> result))))
-        (<span class="fu">error</span> <span class="vs">&#39;div-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
-  (put <span class="vs">&#39;div &#39;(polynomial polynomial)</span> div-poly))
+        (<span class="fu">error</span> <span class="vs">'div-poly</span> <span class="cn">"polys not in same var"</span> p1 p2)))
+  (put <span class="vs">'div '(polynomial polynomial)</span> div-poly))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg)</code></pre>
 <p>Now we can test the example given in the exercise:</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><msup><mi>x</mi><mn>5</mn></msup><mo>−</mo><mn>1</mn></mrow><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>−</mo><mn>1</mn></mrow></mfrac><mo>=</mo><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mi>x</mi><mo separator="true">,</mo><mtext>  </mtext><mtext>remainder</mtext><mtext>  </mtext><mi>x</mi><mo>−</mo><mn>1.</mn></mrow><annotation encoding="application/x-tex">\frac{x^5 - 1}{x^2 - 1} = x^3 + x,\;\text{remainder}\;x - 1.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.260438em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord">remainder</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span></span></span></span></span></p>
-<pre><code class="blockcode">(div (make-polynomial <span class="vs">&#39;x &#39;((5 1) (0 -1))</span>)
-     (make-polynomial <span class="vs">&#39;x &#39;((2 1) (0 -1))</span>))
-<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="vs">&#39;x &#39;((3 1) (1 1))</span>)
-         (make-polynomial <span class="vs">&#39;x &#39;((1 1) (0 -1))</span>))</code></pre>
+<pre><code class="blockcode">(div (make-polynomial <span class="vs">'x '((5 1) (0 -1))</span>)
+     (make-polynomial <span class="vs">'x '((2 1) (0 -1))</span>))
+<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="vs">'x '((3 1) (1 1))</span>)
+         (make-polynomial <span class="vs">'x '((1 1) (0 -1))</span>))</code></pre>
 <p>And some other examples:</p>
-<pre><code class="blockcode">(div (make-polynomial <span class="vs">&#39;x &#39;((2 2))</span>)
-     (make-polynomial <span class="vs">&#39;x &#39;((1 2))</span>))
-<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="vs">&#39;x &#39;((1 1))</span>)
-         (make-polynomial <span class="vs">&#39;x &#39;()</span>))
+<pre><code class="blockcode">(div (make-polynomial <span class="vs">'x '((2 2))</span>)
+     (make-polynomial <span class="vs">'x '((1 2))</span>))
+<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="vs">'x '((1 1))</span>)
+         (make-polynomial <span class="vs">'x '()</span>))
 
-(div (make-polynomial <span class="vs">&#39;x &#39;((1 2))</span>)
-     (make-polynomial <span class="vs">&#39;x &#39;((2 2))</span>))
-<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="vs">&#39;x &#39;()</span>)
-         (make-polynomial <span class="vs">&#39;x &#39;((1 2))</span>))</code></pre>
+(div (make-polynomial <span class="vs">'x '((1 2))</span>)
+     (make-polynomial <span class="vs">'x '((2 2))</span>))
+<span class="op">=&gt;</span> (<span class="fu">list</span> (make-polynomial <span class="vs">'x '()</span>)
+         (make-polynomial <span class="vs">'x '((1 2))</span>))</code></pre>
 <h3 id="2.5.3.3" class="anchor">
 <a class="anchor__link link" href="#2.5.3.3" aria-hidden="true">#</a> <span class="number">2.5.3.3</span> Hierarchies of types in symbolic algebra
 </h3>
@@ -2496,7 +2496,7 @@ Imports:
              (mul-term-by-all-terms
               (constant-term from (make-term (order t) <span class="cn">1</span>))
               tl))))
-      (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;coerce-term</span> <span class="cn">&quot;invalid coeff type&quot;</span> (coeff t)))))
+      (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'coerce-term</span> <span class="cn">"invalid coeff type"</span> (coeff t)))))
   (<span class="kw">define</span> (coerce-termlist tl from to)
     (<span class="kw">if</span> (empty-termlist? tl)
         tl
@@ -2521,33 +2521,33 @@ Imports:
     (make-poly (variable p)
                (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (make-term (order t) (mul x (coeff t))))
                     (term-list p))))
-  (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">&#39;polynomial</span> p))
-  (put <span class="vs">&#39;make &#39;polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
-  (put <span class="vs">&#39;add &#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
-  (put <span class="vs">&#39;mul &#39;(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
-  (put <span class="vs">&#39;add &#39;(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (add-mixed x p))))
-  (put <span class="vs">&#39;add &#39;(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (add-mixed x p))))
-  (put <span class="vs">&#39;mul &#39;(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (mul-mixed x p))))
-  (put <span class="vs">&#39;mul &#39;(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (mul-mixed x p)))))
+  (<span class="kw">define</span> (tag p) (attach-tag <span class="vs">'polynomial</span> p))
+  (put <span class="vs">'make 'polynomial</span> (<span class="kw">lambda</span> (var terms) (tag (make-poly var terms))))
+  (put <span class="vs">'add '(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (add-poly p1 p2))))
+  (put <span class="vs">'mul '(polynomial polynomial)</span> (<span class="kw">lambda</span> (p1 p2) (tag (mul-poly p1 p2))))
+  (put <span class="vs">'add '(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (add-mixed x p))))
+  (put <span class="vs">'add '(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (add-mixed x p))))
+  (put <span class="vs">'mul '(scheme-number polynomial)</span> (<span class="kw">lambda</span> (x p) (tag (mul-mixed x p))))
+  (put <span class="vs">'mul '(polynomial scheme-number)</span> (<span class="kw">lambda</span> (p x) (tag (mul-mixed x p)))))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg)</code></pre>
 <p>A simple test:</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mi>y</mi><mo>+</mo><mi>x</mi><mo>=</mo><mn>1</mn><msup><mi>x</mi><mn>1</mn></msup><mo>+</mo><mrow><mo fence="true">(</mo><mn>1</mn><msup><mi>y</mi><mn>1</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>0</mn></msup><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">x + y = y + x = 1x^1 + \left(1y^1\right)x^0.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.2141179999999998em;vertical-align:-0.35001em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mord">.</span></span></span></span></span></p>
-<pre><code class="blockcode">(add (make-polynomial <span class="vs">&#39;x &#39;((1 1))</span>) (make-polynomial <span class="vs">&#39;y &#39;((1 1))</span>))
-<span class="op">=&gt;</span> (add (make-polynomial <span class="vs">&#39;y &#39;((1 1))</span>) (make-polynomial <span class="vs">&#39;x &#39;((1 1))</span>))
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x `((1 1) (0 ,</span>(make-polynomial <span class="vs">&#39;y &#39;((1 1))</span>)<span class="vs">))</span>)</code></pre>
+<pre><code class="blockcode">(add (make-polynomial <span class="vs">'x '((1 1))</span>) (make-polynomial <span class="vs">'y '((1 1))</span>))
+<span class="op">=&gt;</span> (add (make-polynomial <span class="vs">'y '((1 1))</span>) (make-polynomial <span class="vs">'x '((1 1))</span>))
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x `((1 1) (0 ,</span>(make-polynomial <span class="vs">'y '((1 1))</span>)<span class="vs">))</span>)</code></pre>
 <p>A more complicated test:</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mphantom><mo>=</mo></mphantom><mo stretchy="false">(</mo><mi>y</mi><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>y</mi><mo>+</mo><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mn>1</mn><msup><mi>y</mi><mn>1</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>5</mn></msup><mo>+</mo><mrow><mo fence="true">(</mo><mn>1</mn><msup><mi>y</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn><msup><mi>y</mi><mn>1</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>2</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mo fence="true">(</mo><mn>2</mn><msup><mi>y</mi><mn>1</mn></msup><mo>+</mo><mn>2</mn><msup><mi>y</mi><mn>0</mn></msup><mo fence="true">)</mo></mrow><msup><mi>x</mi><mn>0</mn></msup><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
 &amp;\phantom{=} (yx^3 + 2)(y + x^2 + 1) \\
 &amp;= \left(1y^1\right)x^5 + \left(1y^2 + 1y^1\right)x^3 + 2x^2
 + \left(2y^1 + 2y^0\right)x^0.
 \end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.048216em;vertical-align:-1.274108em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.774108em;"><span style="top:-3.774108em;"><span class="pstrut" style="height:2.864108em;"></span><span class="mord"></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:2.864108em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.274108em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.774108em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel" style="color:transparent;">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span><span style="top:-2.385892em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.274108em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
-<pre><code class="blockcode">(mul (make-polynomial <span class="vs">&#39;x `((3 ,</span>(make-polynomial <span class="vs">&#39;y &#39;((1 1))</span>)<span class="vs">) (0 2))</span>)
-     (make-polynomial <span class="vs">&#39;y `((1 1) (0 ,</span>(make-polynomial <span class="vs">&#39;x &#39;((2 1) (0 1))</span>)<span class="vs">))</span>))
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x `((5 ,</span>(make-polynomial <span class="vs">&#39;y &#39;((1 1))</span>)<span class="vs">)
-                         (3 ,</span>(make-polynomial <span class="vs">&#39;y &#39;((2 1) (1 1))</span>)<span class="vs">)
+<pre><code class="blockcode">(mul (make-polynomial <span class="vs">'x `((3 ,</span>(make-polynomial <span class="vs">'y '((1 1))</span>)<span class="vs">) (0 2))</span>)
+     (make-polynomial <span class="vs">'y `((1 1) (0 ,</span>(make-polynomial <span class="vs">'x '((2 1) (0 1))</span>)<span class="vs">))</span>))
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x `((5 ,</span>(make-polynomial <span class="vs">'y '((1 1))</span>)<span class="vs">)
+                         (3 ,</span>(make-polynomial <span class="vs">'y '((2 1) (1 1))</span>)<span class="vs">)
                          (2 2)
-                         (0 ,</span>(make-polynomial <span class="vs">&#39;y &#39;((1 2) (0 2))</span>)<span class="vs">))</span>)</code></pre>
+                         (0 ,</span>(make-polynomial <span class="vs">'y '((1 2) (0 2))</span>)<span class="vs">))</span>)</code></pre>
 <h3 id="2.5.3.4" class="anchor">
 <a class="anchor__link link" href="#2.5.3.4" aria-hidden="true">#</a> <span class="number">2.5.3.4</span> Extended exercise: Rational functions
 </h3>
@@ -2664,13 +2664,13 @@ Imports:
 
 (using scheme-number-pkg zero-pkg polynomial-pkg rational-pkg)
 
-(<span class="kw">define</span> p1 (make-polynomial <span class="vs">&#39;x &#39;((2 1) (0 1))</span>))
-(<span class="kw">define</span> p2 (make-polynomial <span class="vs">&#39;x &#39;((3 1) (0 1))</span>))
+(<span class="kw">define</span> p1 (make-polynomial <span class="vs">'x '((2 1) (0 1))</span>))
+(<span class="kw">define</span> p2 (make-polynomial <span class="vs">'x '((3 1) (0 1))</span>))
 (<span class="kw">define</span> rf (make-rational p2 p1))
 
 (add rf rf)
-<span class="op">=&gt;</span> (make-rational (make-polynomial <span class="vs">&#39;x &#39;((5 2) (3 2) (2 2) (0 2))</span>)
-                  (make-polynomial <span class="vs">&#39;x &#39;((4 1) (2 2) (0 1))</span>))</code></pre>
+<span class="op">=&gt;</span> (make-rational (make-polynomial <span class="vs">'x '((5 2) (3 2) (2 2) (0 2))</span>)
+                  (make-polynomial <span class="vs">'x '((4 1) (2 2) (0 1))</span>))</code></pre>
 <h3 id="ex2.94" class="anchor">
 <a class="anchor__link link" href="#ex2.94" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.94">Exercise 2.94<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2778,22 +2778,22 @@ Imports:
     (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
         (<span class="kw">let</span> ((tl (gcd-terms (term-list p1) (term-list p2))))
           (make-polynomial (variable p1) tl))
-        (<span class="fu">error</span> <span class="vs">&#39;gcd-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> p1 p2)))
-  (put <span class="vs">&#39;greatest-common-divisor &#39;(scheme-number scheme-number)</span> <span class="fu">gcd</span>)
-  (put <span class="vs">&#39;greatest-common-divisor &#39;(polynomial polynomial)</span> gcd-poly))
+        (<span class="fu">error</span> <span class="vs">'gcd-poly</span> <span class="cn">"polys not in same var"</span> p1 p2)))
+  (put <span class="vs">'greatest-common-divisor '(scheme-number scheme-number)</span> <span class="fu">gcd</span>)
+  (put <span class="vs">'greatest-common-divisor '(polynomial polynomial)</span> gcd-poly))
 
 (<span class="kw">define</span> (greatest-common-divisor a b)
-  (apply-generic <span class="vs">&#39;greatest-common-divisor</span> a b))
+  (apply-generic <span class="vs">'greatest-common-divisor</span> a b))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg
        greatest-common-divisor-pkg)
 
 (greatest-common-divisor <span class="cn">128 40</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
 
-(<span class="kw">define</span> p1 (make-polynomial <span class="vs">&#39;x &#39;((4 1) (3 -1) (2 -2) (1 2))</span>))
-(<span class="kw">define</span> p2 (make-polynomial <span class="vs">&#39;x &#39;((3 1) (1 -1))</span>))
+(<span class="kw">define</span> p1 (make-polynomial <span class="vs">'x '((4 1) (3 -1) (2 -2) (1 2))</span>))
+(<span class="kw">define</span> p2 (make-polynomial <span class="vs">'x '((3 1) (1 -1))</span>))
 (greatest-common-divisor p1 p2)
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((2 -1) (1 1))</span>)</code></pre>
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((2 -1) (1 1))</span>)</code></pre>
 <p>This is correct according to WolframAlpha: http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x</p>
 <h3 id="ex2.95" class="anchor">
 <a class="anchor__link link" href="#ex2.95" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.95">Exercise 2.95<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -2881,9 +2881,9 @@ Imports:
 <pre><code class="blockcode">(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        greatest-common-divisor-pkg)
 
-(<span class="kw">define</span> p1 (make-polynomial <span class="vs">&#39;x &#39;((2 1) (1 -2) (0 1))</span>))
-(<span class="kw">define</span> p2 (make-polynomial <span class="vs">&#39;x &#39;((2 11) (0 7))</span>))
-(<span class="kw">define</span> p3 (make-polynomial <span class="vs">&#39;x &#39;((1 13) (0 5))</span>))
+(<span class="kw">define</span> p1 (make-polynomial <span class="vs">'x '((2 1) (1 -2) (0 1))</span>))
+(<span class="kw">define</span> p2 (make-polynomial <span class="vs">'x '((2 11) (0 7))</span>))
+(<span class="kw">define</span> p3 (make-polynomial <span class="vs">'x '((1 13) (0 5))</span>))
 (<span class="kw">define</span> q1 (mul p1 p2))
 (<span class="kw">define</span> q2 (mul p1 p3))
 
@@ -2892,12 +2892,12 @@ Imports:
 <pre><code class="blockcode">(greatest-common-divisor q1 q2)
 <span class="op">=&gt;</span> (greatest-common-divisor q2 (rem q1 q2))                   <span class="co">; 1st recursion</span>
 <span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (rem q2 (rem q1 q2))) <span class="co">; 2nd recursion</span>
-<span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (make-polynomial <span class="vs">&#39;x &#39;()</span>))
+<span class="op">=&gt;</span> (greatest-common-divisor (rem q1 q2) (make-polynomial <span class="vs">'x '()</span>))
 <span class="op">=&gt;</span> (rem q1 q2)
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((2 1458/169) (1 -2916/169) (0 1458/169))</span>)</code></pre>
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((2 1458/169) (1 -2916/169) (0 1458/169))</span>)</code></pre>
 <p>This remainder polynomial has noninteger coefficients, so the final GCD returned also has noninteger coefficients. However, if we look closely at the GCD of <code>q1</code> and <code>q2</code>, it is clear that we can factor out 1458/169:</p>
 <pre><code class="blockcode">(mul (greatest-common-divisor q1 q2)
-     (make-polynomial <span class="vs">&#39;x &#39;((0 169/1458))</span>))
+     (make-polynomial <span class="vs">'x '((0 169/1458))</span>))
 <span class="op">=&gt;</span> p1</code></pre>
 <h3 id="ex2.96" class="anchor">
 <a class="anchor__link link" href="#ex2.96" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-18.html#%25_thm_2.96">Exercise 2.96<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -3068,12 +3068,12 @@ Imports:
        greatest-common-divisor-pkg)
 
 (greatest-common-divisor q1 q2)
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((2 1458) (1 -2916) (0 1458))</span>)
-<span class="op">=&gt;</span> (mul p1 (make-polynomial <span class="vs">&#39;x &#39;((0 1458))</span>))</code></pre></li>
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((2 1458) (1 -2916) (0 1458))</span>)
+<span class="op">=&gt;</span> (mul p1 (make-polynomial <span class="vs">'x '((0 1458))</span>))</code></pre></li>
 <li><p>GCD with reduced integer coefficients</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (termlist-coeffs tl)
   (<span class="kw">if</span> (empty-termlist? tl)
-      <span class="vs">&#39;()</span>
+      <span class="vs">'()</span>
       (<span class="fu">cons</span> (coeff (first-term tl))
             (termlist-coeffs (rest-terms tl)))))
 
@@ -3088,7 +3088,7 @@ Imports:
        greatest-common-divisor-pkg)
 
 (greatest-common-divisor q1 q2)
-<span class="op">=&gt;</span> (make-polynomial <span class="vs">&#39;x &#39;((2 1) (1 -2) (0 1))</span>)
+<span class="op">=&gt;</span> (make-polynomial <span class="vs">'x '((2 1) (1 -2) (0 1))</span>)
 <span class="op">=&gt;</span> p1</code></pre></li>
 </ol>
 <h3 id="ex2.97" class="anchor">
@@ -3282,17 +3282,17 @@ Imports:
             (reduced (reduce-terms (term-list n) (term-list d))))
         (<span class="fu">list</span> (make-polynomial var (<span class="fu">car</span> reduced))
               (make-polynomial var (<span class="fu">cadr</span> reduced))))
-      (<span class="fu">error</span> <span class="vs">&#39;reduce-poly</span> <span class="cn">&quot;polys not in same var&quot;</span> n d)))</code></pre></li>
+      (<span class="fu">error</span> <span class="vs">'reduce-poly</span> <span class="cn">"polys not in same var"</span> n d)))</code></pre></li>
 <li><p>Generic reducing operation</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (reduce-integers n d)
   (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
     (<span class="fu">list</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))
 
 (<span class="kw">define</span> (reduce-pkg)
-  (put <span class="vs">&#39;reduce &#39;(scheme-number scheme-number)</span> reduce-integers)
-  (put <span class="vs">&#39;reduce &#39;(polynomial polynomial)</span> reduce-poly))
+  (put <span class="vs">'reduce '(scheme-number scheme-number)</span> reduce-integers)
+  (put <span class="vs">'reduce '(polynomial polynomial)</span> reduce-poly))
 
-(<span class="kw">define</span> (reduce n d) (apply-generic <span class="vs">&#39;reduce</span> n d))
+(<span class="kw">define</span> (reduce n d) (apply-generic <span class="vs">'reduce</span> n d))
 
 (<span class="kw">define</span> (make-rat n d)
   (<span class="kw">let</span> ((reduced (reduce n d)))
@@ -3304,17 +3304,17 @@ Imports:
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        rational-pkg reduce-pkg)
 
-(add (make-rational <span class="cn">4 7</span>) (make-rational <span class="cn">30 33</span>)) <span class="op">=&gt;</span> <span class="vs">&#39;(rational 114 . 77)</span>
+(add (make-rational <span class="cn">4 7</span>) (make-rational <span class="cn">30 33</span>)) <span class="op">=&gt;</span> <span class="vs">'(rational 114 . 77)</span>
 
-(<span class="kw">define</span> p1 (make-polynomial <span class="vs">&#39;x &#39;((1 1) (0 1))</span>))
-(<span class="kw">define</span> p2 (make-polynomial <span class="vs">&#39;x &#39;((3 1) (0 -1))</span>))
-(<span class="kw">define</span> p3 (make-polynomial <span class="vs">&#39;x &#39;((1 1))</span>))
-(<span class="kw">define</span> p4 (make-polynomial <span class="vs">&#39;x &#39;((2 1) (0 -1))</span>))
+(<span class="kw">define</span> p1 (make-polynomial <span class="vs">'x '((1 1) (0 1))</span>))
+(<span class="kw">define</span> p2 (make-polynomial <span class="vs">'x '((3 1) (0 -1))</span>))
+(<span class="kw">define</span> p3 (make-polynomial <span class="vs">'x '((1 1))</span>))
+(<span class="kw">define</span> p4 (make-polynomial <span class="vs">'x '((2 1) (0 -1))</span>))
 (<span class="kw">define</span> rf1 (make-rational p1 p2))
 (<span class="kw">define</span> rf2 (make-rational p3 p4))
 
 (add rf1 rf2)
-<span class="op">=&gt;</span> <span class="vs">&#39;(rational (polynomial x . ((3 1) (2 2) (1 3) (0 1)))
+<span class="op">=&gt;</span> <span class="vs">'(rational (polynomial x . ((3 1) (2 2) (1 3) (0 1)))
               .
               (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))</span></code></pre></li>
 </ol>

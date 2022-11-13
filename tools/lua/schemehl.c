@@ -600,13 +600,6 @@ static void hl_write(struct Highlighter *hl, const char *class,
         case '&':
             entity = "&amp;";
             break;
-        // TODO: Remove these two, not needed.
-        case '"':
-            entity = "&quot;";
-            break;
-        case '\'':
-            entity = "&#39;";
-            break;
         default:
             j++;
             continue;

@@ -105,7 +105,7 @@
         ((application? exp)
          (<span class="fu">apply</span> (<span class="fu">eval</span> (operator exp) env)
                 (list-of-values (operands exp) env)))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: EVAL&quot;</span> exp))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown expression type: EVAL"</span> exp))))</code></pre>
 <h3 id="4.1.1.2" class="anchor">
 <a class="anchor__link link" href="#4.1.1.2" aria-hidden="true">#</a> <code>Apply</code>
 </h3>
@@ -123,7 +123,7 @@
            (procedure-parameters procedure)
            arguments
            (procedure-environment procedure))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown procedure type: APPLY"</span> procedure))))</code></pre>
 <h3 id="4.1.1.3" class="anchor">
 <a class="anchor__link link" href="#4.1.1.3" aria-hidden="true">#</a> Procedure arguments
 </h3>
@@ -148,7 +148,7 @@
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
 <li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">&#39;quote</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">'quote</span>))
 (<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (tagged-list? exp tag)
   (<span class="kw">if</span> (<span class="fu">pair?</span> exp)
@@ -161,22 +161,22 @@
 <li>Some special forms can be defined in terms of others.</li>
 <li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="vs">&#39;cond</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="vs">'cond</span>))
 (<span class="kw">define</span> (cond-clauses exp) (<span class="fu">cdr</span> exp))
-(<span class="kw">define</span> (cond-else-clause? clause) (<span class="fu">eq?</span> (cond-predicate clause) <span class="vs">&#39;else</span>))
+(<span class="kw">define</span> (cond-else-clause? clause) (<span class="fu">eq?</span> (cond-predicate clause) <span class="vs">'else</span>))
 (<span class="kw">define</span> (cond-predicate clause) (<span class="fu">car</span> clause))
 (<span class="kw">define</span> (cond-actions clause) (<span class="fu">cdr</span> clause))
 (<span class="kw">define</span> (cond-&gt;if exp) (expand-clauses (cond-clauses exp)))
 
 (<span class="kw">define</span> (expand-clauses clauses)
   (<span class="kw">if</span> (<span class="fu">null?</span> clauses)
-      <span class="vs">&#39;false</span> <span class="co">; no else clause</span>
+      <span class="vs">'false</span> <span class="co">; no else clause</span>
       (<span class="kw">let</span> ((first (<span class="fu">car</span> clauses))
             (rest (<span class="fu">cdr</span> clauses)))
         (<span class="kw">if</span> (cond-else-clause? first)
             (<span class="kw">if</span> (<span class="fu">null?</span> rest)
                 (sequence-&gt;exp (cond-actions first))
-                (<span class="fu">error</span> <span class="cn">&quot;ELSE clause isn&#39;t last: COND-&gt;IF&quot;</span> clauses))
+                (<span class="fu">error</span> <span class="cn">"ELSE clause isn't last: COND-&gt;IF"</span> clauses))
             (make-if (cond-predicate first)
                      (sequence-&gt;exp (cond-actions first))
                      (expand-clauses rest))))))</code></pre>
@@ -205,8 +205,8 @@
 <li>Compound procedures are represented by the following data structure:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-procedure parameters body env)
-  (<span class="fu">list</span> <span class="vs">&#39;procedure</span> parameters body env))
-(<span class="kw">define</span> (compound-procedure? p) (tagged-list? p <span class="vs">&#39;procedure</span>))
+  (<span class="fu">list</span> <span class="vs">'procedure</span> parameters body env))
+(<span class="kw">define</span> (compound-procedure? p) (tagged-list? p <span class="vs">'procedure</span>))
 (<span class="kw">define</span> (procedure-parameters p) (<span class="fu">cadr</span> p)) (<span class="kw">define</span> (procedure-body p) (<span class="fu">caddr</span> p))
 (<span class="kw">define</span> (procedure-environment p) (<span class="fu">cadddr</span> p))</code></pre>
 <h3 id="4.1.3.3" class="anchor">
@@ -221,7 +221,7 @@
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
 (<span class="kw">define</span> (first-frame env) (<span class="fu">car</span> env))
-(<span class="kw">define</span> the-empty-environment <span class="vs">&#39;()</span>)
+(<span class="kw">define</span> the-empty-environment <span class="vs">'()</span>)
 
 (<span class="kw">define</span> (make-frame variables <span class="fu">values</span>) (<span class="fu">cons</span> variables <span class="fu">values</span>))
 (<span class="kw">define</span> (frame-variables frame) (<span class="fu">car</span> frame))
@@ -231,8 +231,8 @@
   (<span class="kw">if</span> (<span class="fu">=</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
       (<span class="fu">cons</span> (make-frame vars vals) base-env)
       (<span class="kw">if</span> (<span class="fu">&lt;</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
-          (<span class="fu">error</span> <span class="cn">&quot;Too many arguments supplied&quot;</span> vars vals)
-          (<span class="fu">error</span> <span class="cn">&quot;Too few arguments supplied&quot;</span> vars vals))))
+          (<span class="fu">error</span> <span class="cn">"Too many arguments supplied"</span> vars vals)
+          (<span class="fu">error</span> <span class="cn">"Too few arguments supplied"</span> vars vals))))
 
 (<span class="kw">define</span> (lookup-variable-value var env)
   (<span class="kw">define</span> (env-loop env)
@@ -241,7 +241,7 @@
             ((<span class="fu">eq?</span> var (<span class="fu">car</span> vars)) (<span class="fu">car</span> vals))
             (<span class="kw">else</span> (scan (<span class="fu">cdr</span> vars) (<span class="fu">cdr</span> vals)))))
     (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)
-        (<span class="fu">error</span> <span class="cn">&quot;Unbound variable&quot;</span> var)
+        (<span class="fu">error</span> <span class="cn">"Unbound variable"</span> var)
         (<span class="kw">let</span> ((frame (first-frame env)))
           (scan (frame-variables frame) (frame-values frame)))))
   (env-loop env))</code></pre>
@@ -262,26 +262,26 @@
          (extend-environment (primitive-procedure-names)
                              (primitive-procedure-objects)
                              the-empty-environment)))
-    (define-variable! <span class="vs">&#39;true</span> <span class="cn">true</span> initial-env)
-    (define-variable! <span class="vs">&#39;false</span> <span class="cn">false</span> initial-env)
+    (define-variable! <span class="vs">'true</span> <span class="cn">true</span> initial-env)
+    (define-variable! <span class="vs">'false</span> <span class="cn">false</span> initial-env)
     initial-env))
 (<span class="kw">define</span> the-global-environment (setup-environment))</code></pre>
 <ul>
 <li>We define a list of primitive procedures <code>car</code>, <code>cdr</code>, <code>cons</code>, and <code>null?</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="vs">&#39;primitive</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="vs">'primitive</span>))
 (<span class="kw">define</span> (primitive-implementation proc) (<span class="fu">cadr</span> proc))
 
 (<span class="kw">define</span> primitive-procedures
-  (<span class="fu">list</span> (<span class="fu">list</span> <span class="vs">&#39;car</span> <span class="fu">car</span>)
-        (<span class="fu">list</span> <span class="vs">&#39;cdr</span> <span class="fu">cdr</span>)
-        (<span class="fu">list</span> <span class="vs">&#39;cons</span> <span class="fu">cons</span>)
-        (<span class="fu">list</span> <span class="vs">&#39;null?</span> <span class="fu">null?</span>)
+  (<span class="fu">list</span> (<span class="fu">list</span> <span class="vs">'car</span> <span class="fu">car</span>)
+        (<span class="fu">list</span> <span class="vs">'cdr</span> <span class="fu">cdr</span>)
+        (<span class="fu">list</span> <span class="vs">'cons</span> <span class="fu">cons</span>)
+        (<span class="fu">list</span> <span class="vs">'null?</span> <span class="fu">null?</span>)
         <span class="ss">more-primitives</span>))
 (<span class="kw">define</span> (primitive-procedure-names)
   (<span class="fu">map car</span> primitive-procedures))
 (<span class="kw">define</span> (primitive-procedure-objects)
-  (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="vs">&#39;primitive</span> (<span class="fu">cadr</span> proc)))
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="vs">'primitive</span> (<span class="fu">cadr</span> proc)))
        primitive-procedures))</code></pre>
 <ul>
 <li>Here, <code>apply-in-underlying-scheme</code> refers to the built-in <code>apply</code>, not the one we defined:</li>
@@ -291,8 +291,8 @@
 <ul>
 <li>Finally, we make a simple <em>driver loop</em>, or REPL:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> input-prompt <span class="cn">&quot;;;; M-Eval input:&quot;</span>)
-(<span class="kw">define</span> output-prompt <span class="cn">&quot;;;; M-Eval value:&quot;</span>)
+<pre><code class="blockcode">(<span class="kw">define</span> input-prompt <span class="cn">";;; M-Eval input:"</span>)
+(<span class="kw">define</span> output-prompt <span class="cn">";;; M-Eval value:"</span>)
 (<span class="kw">define</span> (driver-loop)
   (prompt-for-input input-prompt)
   (<span class="kw">let</span> ((input (<span class="fu">read</span>)))
@@ -307,10 +307,10 @@
   (<span class="fu">newline</span>) (<span class="fu">display string</span>) (<span class="fu">newline</span>))
 (<span class="kw">define</span> (user-print object)
   (<span class="kw">if</span> (compound-procedure? object)
-      (<span class="fu">display</span> (<span class="fu">list</span> <span class="vs">&#39;compound-procedure</span>
+      (<span class="fu">display</span> (<span class="fu">list</span> <span class="vs">'compound-procedure</span>
                      (procedure-parameters object)
                      (procedure-body object)
-                     &#39;<span class="ss">procedure-env</span>))
+                     '<span class="ss">procedure-env</span>))
       (<span class="fu">display</span> object)))</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/4/1.html#ex4.14">4.14</a></li></ul></aside>
 <h2 id="4.1.5" class="anchor">
@@ -350,8 +350,8 @@
 <li>Transforming them into a <code>let</code> with assignments:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">lambda</span> <span class="ss">vars</span>
-  (<span class="kw">let</span> ((u <span class="vs">&#39;*unassigned*</span>)
-        (v <span class="vs">&#39;*unassigned*</span>))
+  (<span class="kw">let</span> ((u <span class="vs">'*unassigned*</span>)
+        (v <span class="vs">'*unassigned*</span>))
     (<span class="kw">set!</span> u <span class="ss">e1</span>)
     (<span class="kw">set!</span> v <span class="ss">e2</span>) <span class="ss">e3</span>))</code></pre>
 <ul>
@@ -387,7 +387,7 @@
         ((begin? exp) (analyze-sequence (begin-actions exp)))
         ((cond? exp) (analyze (cond-&gt;if exp)))
         ((application? exp) (analyze-application exp))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown expression type: ANALYZE&quot;</span> exp))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown expression type: ANALYZE"</span> exp))))</code></pre>
 <ul>
 <li>Here is one of the helper procedures, <code>analyze-lambda</code>. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.</li>
 </ul>

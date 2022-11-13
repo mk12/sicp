@@ -148,16 +148,16 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â
 <pre><code class="blockcode">(<span class="kw">define</span> (operate op obj)
   (<span class="kw">let</span> ((proc (get (type obj) op)))
     (<span class="kw">if</span> (<span class="fu">null?</span> proc)
-        (<span class="fu">error</span> <span class="cn">&quot;undefined operator&quot;</span>)
+        (<span class="fu">error</span> <span class="cn">"undefined operator"</span>)
         (proc (contents obj)))))</code></pre>
 <ul>
 <li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
 <li>Hereâ€™s what happens when we extract the real part of a complex number in polar form:</li>
 </ul>
 <pre><code class="blockcode">(real-part z)
-(operate <span class="vs">&#39;real-part</span> z)
-((get <span class="vs">&#39;polar &#39;real-part</span>) (contents z))
-(real-part-polar <span class="vs">&#39;(1 . 2)</span>)
+(operate <span class="vs">'real-part</span> z)
+((get <span class="vs">'polar 'real-part</span>) (contents z))
+(real-part-polar <span class="vs">'(1 . 2)</span>)
 (<span class="fu">*</span> <span class="cn">1</span> (<span class="fu">cos</span> <span class="cn">2</span>))
 <span class="cn">-0.4161468365</span></code></pre>
 <ul>

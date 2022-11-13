@@ -107,7 +107,7 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (odd-fibs n)
   (<span class="kw">define</span> (next k)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> k n)
-        <span class="vs">&#39;()</span>
+        <span class="vs">'()</span>
         (<span class="kw">let</span> ((f (fib k)))
           (<span class="kw">if</span> (<span class="fu">odd?</span> f)
               (<span class="fu">cons</span> f (next (<span class="fu">1+</span> k)))
@@ -153,7 +153,7 @@
                            (enumerate-tree tree)))))
 (<span class="kw">define</span> (odd-fibs n)
   (accumulate <span class="fu">cons</span>
-              <span class="vs">&#39;()</span>
+              <span class="vs">'()</span>
               (<span class="fu">filter</span> odd
                       (<span class="fu">map</span> fib
                            (enumerate-interval <span class="cn">1</span> n)))))</code></pre>

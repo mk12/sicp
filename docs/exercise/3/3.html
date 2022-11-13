@@ -72,18 +72,18 @@
 </h2>
 <pre><code class="blockcode">(<span class="kw">define</span> x)
 (<span class="kw">define</span> y)</code></pre>
-<p>Note: We must build new cons cells rather than quoting like <code><span class="vs">&#39;((a b) c d)</span></code> because quoted forms are immutable and some Schemes enforce this.</p>
+<p>Note: We must build new cons cells rather than quoting like <code><span class="vs">'((a b) c d)</span></code> because quoted forms are immutable and some Schemes enforce this.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (reset!)
-  (<span class="kw">set!</span> x (<span class="fu">list</span> (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>) <span class="vs">&#39;c &#39;d</span>))
-  (<span class="kw">set!</span> y (<span class="fu">list</span> <span class="vs">&#39;e &#39;f</span>)))
+  (<span class="kw">set!</span> x (<span class="fu">list</span> (<span class="fu">list</span> <span class="vs">'a 'b</span>) <span class="vs">'c 'd</span>))
+  (<span class="kw">set!</span> y (<span class="fu">list</span> <span class="vs">'e 'f</span>)))
 
 (reset!)
 (<span class="fu">set-car!</span> x y)
-x <span class="op">=&gt;</span> (<span class="fu">cons</span> y (<span class="fu">cdr</span> x)) <span class="op">=&gt;</span> <span class="vs">&#39;((e f) c d)</span>
+x <span class="op">=&gt;</span> (<span class="fu">cons</span> y (<span class="fu">cdr</span> x)) <span class="op">=&gt;</span> <span class="vs">'((e f) c d)</span>
 
 (reset!)
 (<span class="fu">set-cdr!</span> x y)
-x <span class="op">=&gt;</span> (<span class="fu">cons</span> (<span class="fu">car</span> x) y) <span class="op">=&gt;</span> <span class="vs">&#39;((a b) e f)</span></code></pre>
+x <span class="op">=&gt;</span> (<span class="fu">cons</span> (<span class="fu">car</span> x) y) <span class="op">=&gt;</span> <span class="vs">'((a b) e f)</span></code></pre>
 <h3 id="ex3.12" class="anchor">
 <a class="anchor__link link" href="#ex3.12" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.12">Exercise 3.12<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -97,20 +97,20 @@ x <span class="op">=&gt;</span> (<span class="fu">cons</span> (<span class="fu">
 (<span class="kw">define</span> (last-pair x)
   (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdr</span> x)) x (last-pair (<span class="fu">cdr</span> x))))
 
-(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>))
-(<span class="kw">define</span> y (<span class="fu">list</span> <span class="vs">&#39;c &#39;d</span>))
+(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">'a 'b</span>))
+(<span class="kw">define</span> y (<span class="fu">list</span> <span class="vs">'c 'd</span>))
 (<span class="kw">define</span> z (<span class="fu">append</span> x y))
 
-z <span class="op">=&gt;</span> <span class="vs">&#39;(a b c d)</span>
-(<span class="fu">cdr</span> x) <span class="op">=&gt;</span> <span class="vs">&#39;(b)</span>
+z <span class="op">=&gt;</span> <span class="vs">'(a b c d)</span>
+(<span class="fu">cdr</span> x) <span class="op">=&gt;</span> <span class="vs">'(b)</span>
 <span class="co">; x-&gt;[*|*]-&gt;[*|X]
 ;     |      |
 ;     V      V
 ;     a      b</span>
 
 (<span class="kw">define</span> w (append! x y))
-w <span class="op">=&gt;</span> <span class="vs">&#39;(a b c d)</span>
-(<span class="fu">cdr</span> x) <span class="op">=&gt;</span> <span class="vs">&#39;(b c d)</span>
+w <span class="op">=&gt;</span> <span class="vs">'(a b c d)</span>
+(<span class="fu">cdr</span> x) <span class="op">=&gt;</span> <span class="vs">'(b c d)</span>
 <span class="co">;                 y
 ;                 |
 ; x-&gt;[*|*]-&gt;[*|*]-&gt;[*|*]-&gt;[*|X]
@@ -139,8 +139,8 @@ Imports:
   (<span class="fu">set-cdr!</span> (last-pair x) x)
   x)
 
-(<span class="kw">define</span> z (make-cycle (<span class="fu">list</span> <span class="vs">&#39;a &#39;b &#39;c</span>)))
-(<span class="fu">cadddr</span> z) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
+(<span class="kw">define</span> z (make-cycle (<span class="fu">list</span> <span class="vs">'a 'b 'c</span>)))
+(<span class="fu">cadddr</span> z) <span class="op">=&gt;</span> <span class="vs">'a</span>
 <span class="co">;    +-------------------+
 ;    V                   |
 ; z-&gt;[*|*]-&gt;[*|*]-&gt;[*|*]-+
@@ -158,17 +158,17 @@ Imports:
         (<span class="kw">let</span> ((temp (<span class="fu">cdr</span> x)))
           (<span class="fu">set-cdr!</span> x y)
           (loop temp x))))
-  (loop x <span class="vs">&#39;()</span>))</code></pre>
+  (loop x <span class="vs">'()</span>))</code></pre>
 <p>In general, <code>mystery</code> reverses the list <code>x</code>. It does this by walking through the list, setting the <code>cdr</code> of each pair to point to the previous pair instead of the next. For the very first pair, it sets the <code>cdr</code> to null.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> v (<span class="fu">list</span> <span class="vs">&#39;a &#39;b &#39;c &#39;d</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> v (<span class="fu">list</span> <span class="vs">'a 'b 'c 'd</span>))
 <span class="co">; v-&gt;[*|*]-&gt;[*|*]-&gt;[*|*]-&gt;[*|X]
 ;     |      |      |      |
 ;     V      V      V      V
 ;     a      b      c      d</span>
 
 (<span class="kw">define</span> w (mystery v))
-v <span class="op">=&gt;</span> <span class="vs">&#39;(a)</span>
-w <span class="op">=&gt;</span> <span class="vs">&#39;(d c b a)</span>
+v <span class="op">=&gt;</span> <span class="vs">'(a)</span>
+w <span class="op">=&gt;</span> <span class="vs">'(d c b a)</span>
 <span class="co">; v-&gt;[*|X]&lt;-[*|*]&lt;-[*|*]&lt;-[*|*]&lt;-w
 ;     |      |      |      |
 ;     V      V      V      V
@@ -177,16 +177,16 @@ w <span class="op">=&gt;</span> <span class="vs">&#39;(d c b a)</span>
 <h3 id="3.3.1.1" class="anchor">
 <a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a> <span class="number">3.3.1.1</span> Sharing and identity
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">'a 'b</span>))
 (<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))
-(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>) (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>)))
+(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="vs">'a 'b</span>) (<span class="fu">list</span> <span class="vs">'a 'b</span>)))
 
-(<span class="kw">define</span> (set-to-wow! x) (<span class="fu">set-car!</span> (<span class="fu">car</span> x) <span class="vs">&#39;wow</span>) x)
+(<span class="kw">define</span> (set-to-wow! x) (<span class="fu">set-car!</span> (<span class="fu">car</span> x) <span class="vs">'wow</span>) x)
 
-z1 <span class="op">=&gt;</span> <span class="vs">&#39;((a b) a b)</span>
-(set-to-wow! z1) <span class="op">=&gt;</span> <span class="vs">&#39;((wow b) wow b)</span>
-z2 <span class="op">=&gt;</span> <span class="vs">&#39;((a b) a b)</span>
-(set-to-wow! z2) <span class="op">=&gt;</span> <span class="vs">&#39;((wow b) a b)</span>
+z1 <span class="op">=&gt;</span> <span class="vs">'((a b) a b)</span>
+(set-to-wow! z1) <span class="op">=&gt;</span> <span class="vs">'((wow b) wow b)</span>
+z2 <span class="op">=&gt;</span> <span class="vs">'((a b) a b)</span>
+(set-to-wow! z2) <span class="op">=&gt;</span> <span class="vs">'((wow b) a b)</span>
 
 (<span class="fu">eq?</span> (<span class="fu">car</span> z1) (<span class="fu">cdr</span> z1)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (<span class="fu">eq?</span> (<span class="fu">car</span> z2) (<span class="fu">cdr</span> z2)) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
@@ -235,11 +235,11 @@ z2 <span class="op">=&gt;</span> <span class="vs">&#39;((a b) a b)</span>
          (count-pairs (<span class="fu">cdr</span> x))
          <span class="cn">1</span>)))</code></pre>
 <p>The procedure <code>count-pairs</code> is wrong because it assumes there is no sharing. The lists below named <code>N-M</code> have <code>N</code> pairs, but they use sharing so that <code>count-pairs</code> think they have <code>M</code> pairs.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> one-1 (<span class="fu">cons</span> <span class="vs">&#39;a &#39;()</span>))
-(<span class="kw">define</span> two-2 (<span class="fu">cons</span> <span class="vs">&#39;a</span> (<span class="fu">cons</span> <span class="vs">&#39;b &#39;()</span>)))
+<pre><code class="blockcode">(<span class="kw">define</span> one-1 (<span class="fu">cons</span> <span class="vs">'a '()</span>))
+(<span class="kw">define</span> two-2 (<span class="fu">cons</span> <span class="vs">'a</span> (<span class="fu">cons</span> <span class="vs">'b '()</span>)))
 (<span class="kw">define</span> two-3 (<span class="fu">cons</span> one-1 one-1))
-(<span class="kw">define</span> three-3 (<span class="fu">cons</span> <span class="vs">&#39;a</span> (<span class="fu">cons</span> <span class="vs">&#39;a</span> (<span class="fu">cons</span> <span class="vs">&#39;a &#39;()</span>))))
-(<span class="kw">define</span> three-4 (<span class="fu">cons</span> <span class="vs">&#39;a</span> (<span class="fu">cons</span> one-1 one-1)))
+(<span class="kw">define</span> three-3 (<span class="fu">cons</span> <span class="vs">'a</span> (<span class="fu">cons</span> <span class="vs">'a</span> (<span class="fu">cons</span> <span class="vs">'a '()</span>))))
+(<span class="kw">define</span> three-4 (<span class="fu">cons</span> <span class="vs">'a</span> (<span class="fu">cons</span> one-1 one-1)))
 (<span class="kw">define</span> three-5 (<span class="fu">cons</span> two-2 two-2))
 (<span class="kw">define</span> three-7 (<span class="fu">cons</span> two-3 two-3))
 
@@ -295,7 +295,7 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (count-pairs x)
-  (<span class="kw">let</span> ((seen <span class="vs">&#39;()</span>))
+  (<span class="kw">let</span> ((seen <span class="vs">'()</span>))
     (<span class="kw">define</span> (iter x)
       (<span class="kw">if</span> (<span class="kw">or</span> (<span class="fu">not</span> (<span class="fu">pair?</span> x)) (<span class="fu">memq</span> x seen))
           <span class="cn">0</span>
@@ -343,7 +343,7 @@ Imports:
     (<span class="kw">and</span> (<span class="fu">pair?</span> ls)
          (<span class="kw">or</span> (<span class="fu">memq</span> ls seen)
              (iter (<span class="fu">cdr</span> ls) (<span class="fu">cons</span> ls seen)))))
-  (<span class="kw">if</span> (iter ls <span class="vs">&#39;()</span>) <span class="cn">#t #f</span>))
+  (<span class="kw">if</span> (iter ls <span class="vs">'()</span>) <span class="cn">#t #f</span>))
 
 (cycle? (<span class="fu">list</span> <span class="cn">1 2 3</span>)) <span class="op">=&gt;</span> <span class="cn">#f</span>
 (cycle? (make-cycle (<span class="fu">list</span> <span class="cn">1 2 3</span>))) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
@@ -384,25 +384,25 @@ Imports:
   (<span class="kw">define</span> (set-x! v) (<span class="kw">set!</span> x v))
   (<span class="kw">define</span> (set-y! v) (<span class="kw">set!</span> y v))
   (<span class="kw">define</span> (dispatch m)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;car</span>) x)
-          ((<span class="fu">eq?</span> m <span class="vs">&#39;cdr</span>) y)
-          ((<span class="fu">eq?</span> m <span class="vs">&#39;set-car!</span>) set-x!)
-          ((<span class="fu">eq?</span> m <span class="vs">&#39;set-cdr!</span>) set-y!)
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;cons</span> <span class="cn">&quot;undefined operation&quot;</span> m))))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'car</span>) x)
+          ((<span class="fu">eq?</span> m <span class="vs">'cdr</span>) y)
+          ((<span class="fu">eq?</span> m <span class="vs">'set-car!</span>) set-x!)
+          ((<span class="fu">eq?</span> m <span class="vs">'set-cdr!</span>) set-y!)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'cons</span> <span class="cn">"undefined operation"</span> m))))
   dispatch)
 
-(<span class="kw">define</span> (<span class="fu">car</span> p) (p <span class="vs">&#39;car</span>))
-(<span class="kw">define</span> (<span class="fu">cdr</span> p) (p <span class="vs">&#39;cdr</span>))
-(<span class="kw">define</span> (<span class="fu">set-car!</span> p v) ((p <span class="vs">&#39;set-car!</span>) v) p)
-(<span class="kw">define</span> (<span class="fu">set-cdr!</span> p v) ((p <span class="vs">&#39;set-cdr!</span>) v) p)
+(<span class="kw">define</span> (<span class="fu">car</span> p) (p <span class="vs">'car</span>))
+(<span class="kw">define</span> (<span class="fu">cdr</span> p) (p <span class="vs">'cdr</span>))
+(<span class="kw">define</span> (<span class="fu">set-car!</span> p v) ((p <span class="vs">'set-car!</span>) v) p)
+(<span class="kw">define</span> (<span class="fu">set-cdr!</span> p v) ((p <span class="vs">'set-cdr!</span>) v) p)
 
-(<span class="kw">define</span> z (<span class="fu">cons</span> <span class="vs">&#39;a &#39;b</span>))
-(<span class="fu">car</span> z) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-(<span class="fu">cdr</span> z) <span class="op">=&gt;</span> <span class="vs">&#39;b</span>
-(<span class="fu">set-car!</span> z <span class="vs">&#39;c</span>)
-(<span class="fu">car</span> z) <span class="op">=&gt;</span> <span class="vs">&#39;c</span>
-(<span class="fu">set-cdr!</span> z <span class="vs">&#39;d</span>)
-(<span class="fu">cdr</span> z) <span class="op">=&gt;</span> <span class="vs">&#39;d</span></code></pre>
+(<span class="kw">define</span> z (<span class="fu">cons</span> <span class="vs">'a 'b</span>))
+(<span class="fu">car</span> z) <span class="op">=&gt;</span> <span class="vs">'a</span>
+(<span class="fu">cdr</span> z) <span class="op">=&gt;</span> <span class="vs">'b</span>
+(<span class="fu">set-car!</span> z <span class="vs">'c</span>)
+(<span class="fu">car</span> z) <span class="op">=&gt;</span> <span class="vs">'c</span>
+(<span class="fu">set-cdr!</span> z <span class="vs">'d</span>)
+(<span class="fu">cdr</span> z) <span class="op">=&gt;</span> <span class="vs">'d</span></code></pre>
 <h3 id="ex3.20" class="anchor">
 <a class="anchor__link link" href="#ex3.20" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.20">Exercise 3.20<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -462,15 +462,15 @@ Imports:
 (<span class="kw">define</span> set-rear-ptr! <span class="fu">set-cdr!</span>)
 
 (<span class="kw">define</span> (empty-queue? q) (<span class="fu">null?</span> (front-ptr q)))
-(<span class="kw">define</span> (make-queue) (<span class="fu">cons</span> <span class="vs">&#39;() &#39;()</span>))
+(<span class="kw">define</span> (make-queue) (<span class="fu">cons</span> <span class="vs">'() '()</span>))
 
 (<span class="kw">define</span> (front-queue q)
   (<span class="kw">if</span> (empty-queue? q)
-      (<span class="fu">error</span> <span class="vs">&#39;front-queue</span> <span class="cn">&quot;called with an empty queue&quot;</span> q)
+      (<span class="fu">error</span> <span class="vs">'front-queue</span> <span class="cn">"called with an empty queue"</span> q)
       (<span class="fu">car</span> (front-ptr q))))
 
 (<span class="kw">define</span> (insert-queue! q x)
-  (<span class="kw">let</span> ((new-pair (<span class="fu">cons</span> x <span class="vs">&#39;()</span>)))
+  (<span class="kw">let</span> ((new-pair (<span class="fu">cons</span> x <span class="vs">'()</span>)))
     (<span class="kw">cond</span> ((empty-queue? q)
            (set-front-ptr! q new-pair)
            (set-rear-ptr! q new-pair)
@@ -485,7 +485,7 @@ Imports:
 
 (<span class="kw">define</span> (delete-queue! q)
   (<span class="kw">cond</span> ((empty-queue? q)
-         (<span class="fu">error</span> <span class="vs">&#39;delete-queue!</span> <span class="cn">&quot;called with an empty queue&quot;</span> q))
+         (<span class="fu">error</span> <span class="vs">'delete-queue!</span> <span class="cn">"called with an empty queue"</span> q))
         (<span class="kw">else</span> (set-front-ptr! q (<span class="fu">cdr</span> (front-ptr q)))
               q)))</code></pre>
 <p>Make the queue behave as a stack (FILO insertion). Used in Exercise 3.32.</p>
@@ -520,10 +520,10 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> q1 (make-queue))
-(insert-queue! q1 <span class="vs">&#39;a</span>) <span class="op">=&gt;</span> <span class="vs">&#39;((a) a)</span>
-(insert-queue! q1 <span class="vs">&#39;b</span>) <span class="op">=&gt;</span> <span class="vs">&#39;((a b) b)</span>
-(delete-queue! q1) <span class="op">=&gt;</span> <span class="vs">&#39;((b) b)</span>
-(delete-queue! q1) <span class="op">=&gt;</span> <span class="vs">&#39;(() b)</span></code></pre>
+(insert-queue! q1 <span class="vs">'a</span>) <span class="op">=&gt;</span> <span class="vs">'((a) a)</span>
+(insert-queue! q1 <span class="vs">'b</span>) <span class="op">=&gt;</span> <span class="vs">'((a b) b)</span>
+(delete-queue! q1) <span class="op">=&gt;</span> <span class="vs">'((b) b)</span>
+(delete-queue! q1) <span class="op">=&gt;</span> <span class="vs">'(() b)</span></code></pre>
 <p>Eva Lu Ator points out that Lisp is trying to print the list structure that makes up the queue. It doesn’t know anything special about our queue representation. The interpreter’s response isn’t a list of things in the queue, it is the queue as we decided to represent it. It is a bit more clear if we print the lists in dotted cons notation:</p>
 <pre><code class="blockcode"><span class="co">; list repr.      front    rear
 ; ((a) a)     =   ((a)   . (a))
@@ -535,20 +535,20 @@ Imports:
   (<span class="fu">display</span> (front-ptr q))
   (<span class="fu">newline</span>))
 
-(insert-queue! q1 <span class="vs">&#39;c</span>)
-(insert-queue! q1 <span class="vs">&#39;d</span>)
-(print-queue q1) <span class="op">=$&gt;</span> <span class="cn">&quot;(c d)</span><span class="co">\n</span><span class="cn">&quot;</span></code></pre>
+(insert-queue! q1 <span class="vs">'c</span>)
+(insert-queue! q1 <span class="vs">'d</span>)
+(print-queue q1) <span class="op">=$&gt;</span> <span class="cn">"(c d)</span><span class="co">\n</span><span class="cn">"</span></code></pre>
 <h3 id="ex3.22" class="anchor">
 <a class="anchor__link link" href="#ex3.22" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.22">Exercise 3.22<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<p>It’s interesting how I ended up using <code>dispatch</code> like you would use the <code>this</code> keyword in object-oriented languages. Another interesting point is the application of procedures in <code>dispatch</code>. For procedures that take arguments other than the queue itself, like for insertion, we have to return the procedure that can then be applied to the argument(s). In this case, the rest of the operations take no other arguments. It might be more consistent to return a procedure of zero arguments—then we would need double parentheses, like <code>((my-queue <span class="vs">&#39;front-queue</span>))</code>—but this seems a bit strange. Instead, we apply the procedure right away in <code>dispatch</code> and pass on the return value.</p>
+<p>It’s interesting how I ended up using <code>dispatch</code> like you would use the <code>this</code> keyword in object-oriented languages. Another interesting point is the application of procedures in <code>dispatch</code>. For procedures that take arguments other than the queue itself, like for insertion, we have to return the procedure that can then be applied to the argument(s). In this case, the rest of the operations take no other arguments. It might be more consistent to return a procedure of zero arguments—then we would need double parentheses, like <code>((my-queue <span class="vs">'front-queue</span>))</code>—but this seems a bit strange. Instead, we apply the procedure right away in <code>dispatch</code> and pass on the return value.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-queue)
-  (<span class="kw">let</span> ((front-ptr <span class="vs">&#39;()</span>)
-        (rear-ptr <span class="vs">&#39;()</span>))
+  (<span class="kw">let</span> ((front-ptr <span class="vs">'()</span>)
+        (rear-ptr <span class="vs">'()</span>))
     (<span class="kw">define</span> (empty?)
       (<span class="fu">null?</span> front-ptr))
     (<span class="kw">define</span> (insert! x)
-      (<span class="kw">let</span> ((new-pair (<span class="fu">cons</span> x <span class="vs">&#39;()</span>)))
+      (<span class="kw">let</span> ((new-pair (<span class="fu">cons</span> x <span class="vs">'()</span>)))
         (<span class="kw">cond</span> ((empty?)
                (<span class="kw">set!</span> front-ptr new-pair)
                (<span class="kw">set!</span> rear-ptr new-pair)
@@ -558,32 +558,32 @@ Imports:
                     dispatch))))
     (<span class="kw">define</span> (delete!)
       (<span class="kw">if</span> (empty?)
-          (<span class="fu">error</span> <span class="vs">&#39;delete!</span> <span class="cn">&quot;called with an empty queue&quot;</span>)
+          (<span class="fu">error</span> <span class="vs">'delete!</span> <span class="cn">"called with an empty queue"</span>)
           (<span class="kw">begin</span> (<span class="kw">set!</span> front-ptr (<span class="fu">cdr</span> front-ptr))
                  dispatch)))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;empty-queue?</span>) (empty?))
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;front-queue</span>)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'empty-queue?</span>) (empty?))
+            ((<span class="fu">eq?</span> m <span class="vs">'front-queue</span>)
              (<span class="kw">if</span> (empty?)
-                 (<span class="fu">error</span> <span class="vs">&#39;front-queue</span> <span class="cn">&quot;called with an empty queue&quot;</span>)
+                 (<span class="fu">error</span> <span class="vs">'front-queue</span> <span class="cn">"called with an empty queue"</span>)
                  (<span class="fu">car</span> front-ptr)))
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;insert-queue!</span>) insert!)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;delete-queue!</span>) (delete!))
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-queue</span> <span class="cn">&quot;undefined operation&quot;</span> m))))
+            ((<span class="fu">eq?</span> m <span class="vs">'insert-queue!</span>) insert!)
+            ((<span class="fu">eq?</span> m <span class="vs">'delete-queue!</span>) (delete!))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-queue</span> <span class="cn">"undefined operation"</span> m))))
     dispatch))
 
 (<span class="kw">define</span> q (make-queue))
-(q <span class="vs">&#39;empty-queue?</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
-((q <span class="vs">&#39;insert-queue!</span>) <span class="vs">&#39;a</span>)
-((q <span class="vs">&#39;insert-queue!</span>) <span class="vs">&#39;b</span>)
-(q <span class="vs">&#39;empty-queue?</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(q <span class="vs">&#39;front-queue</span>) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-(q <span class="vs">&#39;delete-queue!</span>)
-(q <span class="vs">&#39;front-queue</span>) <span class="op">=&gt;</span> <span class="vs">&#39;b</span>
-(q <span class="vs">&#39;delete-queue!</span>)
-(q <span class="vs">&#39;empty-queue?</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(q <span class="vs">&#39;front-queue</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;called with an empty queue&quot;</span>
-(q <span class="vs">&#39;delete-queue!</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;called with an empty queue&quot;</span></code></pre>
+(q <span class="vs">'empty-queue?</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+((q <span class="vs">'insert-queue!</span>) <span class="vs">'a</span>)
+((q <span class="vs">'insert-queue!</span>) <span class="vs">'b</span>)
+(q <span class="vs">'empty-queue?</span>) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(q <span class="vs">'front-queue</span>) <span class="op">=&gt;</span> <span class="vs">'a</span>
+(q <span class="vs">'delete-queue!</span>)
+(q <span class="vs">'front-queue</span>) <span class="op">=&gt;</span> <span class="vs">'b</span>
+(q <span class="vs">'delete-queue!</span>)
+(q <span class="vs">'empty-queue?</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(q <span class="vs">'front-queue</span>) <span class="er">=!&gt;</span> <span class="cn">"called with an empty queue"</span>
+(q <span class="vs">'delete-queue!</span>) <span class="er">=!&gt;</span> <span class="cn">"called with an empty queue"</span></code></pre>
 <h3 id="ex3.23" class="anchor">
 <a class="anchor__link link" href="#ex3.23" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.23">Exercise 3.23<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -599,27 +599,27 @@ Imports:
 (<span class="kw">define</span> (rear-ptr dq) (<span class="fu">cdr</span> dq))
 (<span class="kw">define</span> (set-front-ptr! dq x) (<span class="fu">set-car!</span> dq x))
 (<span class="kw">define</span> (set-rear-ptr! dq x) (<span class="fu">set-cdr!</span> dq x))
-(<span class="kw">define</span> (make-deque) (<span class="fu">cons</span> <span class="vs">&#39;() &#39;()</span>))
+(<span class="kw">define</span> (make-deque) (<span class="fu">cons</span> <span class="vs">'() '()</span>))
 
 (<span class="kw">define</span> (empty-deque? dq) (<span class="fu">null?</span> (front-ptr dq)))
 (<span class="kw">define</span> (front-deque dq)
   (<span class="kw">if</span> (empty-deque? dq)
-      (<span class="fu">error</span> <span class="vs">&#39;front-deque</span> <span class="cn">&quot;called with an empty deque&quot;</span> dq)
+      (<span class="fu">error</span> <span class="vs">'front-deque</span> <span class="cn">"called with an empty deque"</span> dq)
       (data-node (front-ptr dq))))
 (<span class="kw">define</span> (rear-deque dq)
   (<span class="kw">if</span> (empty-deque? dq)
-      (<span class="fu">error</span> <span class="vs">&#39;rear-deque</span> <span class="cn">&quot;called with an empty deque&quot;</span> dq)
+      (<span class="fu">error</span> <span class="vs">'rear-deque</span> <span class="cn">"called with an empty deque"</span> dq)
       (data-node (rear-ptr dq))))
 
 (<span class="kw">define</span> (front-insert-deque! dq x)
   (<span class="kw">cond</span> ((empty-deque? dq)
-         (<span class="kw">let</span> ((node (make-node x <span class="vs">&#39;() &#39;()</span>)))
+         (<span class="kw">let</span> ((node (make-node x <span class="vs">'() '()</span>)))
            (set-front-ptr! dq node)
            (set-rear-ptr! dq node)
            dq))
         (<span class="kw">else</span>
          (<span class="kw">let*</span> ((old-front (front-ptr dq))
-                (new-front (make-node x <span class="vs">&#39;()</span> old-front)))
+                (new-front (make-node x <span class="vs">'()</span> old-front)))
            (set-prev! old-front new-front)
            (set-front-ptr! dq new-front)
            dq))))
@@ -629,65 +629,65 @@ Imports:
          (front-insert-deque! dq x))
         (<span class="kw">else</span>
          (<span class="kw">let*</span> ((old-rear (rear-ptr dq))
-                (new-rear (make-node x old-rear <span class="vs">&#39;()</span>)))
+                (new-rear (make-node x old-rear <span class="vs">'()</span>)))
            (set-next! old-rear new-rear)
            (set-rear-ptr! dq new-rear)
            dq))))
 
 (<span class="kw">define</span> (front-delete-deque! dq)
   (<span class="kw">cond</span> ((empty-deque? dq)
-         (<span class="fu">error</span> <span class="vs">&#39;front-delete-deque!</span> <span class="cn">&quot;called with an empty deque&quot;</span> dq))
+         (<span class="fu">error</span> <span class="vs">'front-delete-deque!</span> <span class="cn">"called with an empty deque"</span> dq))
         (<span class="kw">else</span>
          (<span class="kw">let*</span> ((old-front (front-ptr dq))
                 (new-front (next-node old-front)))
            (<span class="kw">cond</span> ((<span class="fu">null?</span> new-front)
-                  (set-front-ptr! dq <span class="vs">&#39;()</span>)
-                  (set-rear-ptr! dq <span class="vs">&#39;()</span>)
+                  (set-front-ptr! dq <span class="vs">'()</span>)
+                  (set-rear-ptr! dq <span class="vs">'()</span>)
                   dq)
-                 (<span class="kw">else</span> (set-prev! new-front <span class="vs">&#39;()</span>)
+                 (<span class="kw">else</span> (set-prev! new-front <span class="vs">'()</span>)
                        (set-front-ptr! dq new-front)
                        dq))))))
 
 (<span class="kw">define</span> (rear-delete-deque! dq)
   (<span class="kw">cond</span> ((empty-deque? dq)
-         (<span class="fu">error</span> <span class="vs">&#39;rear-delete-deque!</span> <span class="cn">&quot;called with an empty deque&quot;</span> dq))
+         (<span class="fu">error</span> <span class="vs">'rear-delete-deque!</span> <span class="cn">"called with an empty deque"</span> dq))
         (<span class="kw">else</span>
          (<span class="kw">let*</span> ((old-rear (rear-ptr dq))
                 (new-rear (prev-node old-rear)))
            (<span class="kw">cond</span> ((<span class="fu">null?</span> new-rear)
                   (front-delete-deque! dq))
-                 (<span class="kw">else</span> (set-next! new-rear <span class="vs">&#39;()</span>)
+                 (<span class="kw">else</span> (set-next! new-rear <span class="vs">'()</span>)
                        (set-rear-ptr! dq new-rear)
                        dq))))))
 
 (<span class="kw">define</span> (print-deque dq)
   (<span class="kw">define</span> (iter node first)
     (when (<span class="fu">not</span> (<span class="fu">null?</span> node))
-      (when (<span class="fu">not</span> first) (<span class="fu">display</span> <span class="cn">&quot;, &quot;</span>))
+      (when (<span class="fu">not</span> first) (<span class="fu">display</span> <span class="cn">", "</span>))
       (<span class="fu">display</span> (data-node node))
       (iter (next-node node) <span class="cn">#f</span>)))
-  (<span class="fu">display</span> <span class="cn">&quot;[&quot;</span>)
+  (<span class="fu">display</span> <span class="cn">"["</span>)
   (iter (front-ptr dq) <span class="cn">#t</span>)
-  (<span class="fu">display</span> <span class="cn">&quot;]&quot;</span>)
+  (<span class="fu">display</span> <span class="cn">"]"</span>)
   (<span class="fu">newline</span>))
 
 (<span class="kw">define</span> dq (make-deque))
 (empty-deque? dq) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">&quot;[]</span><span class="co">\n</span><span class="cn">&quot;</span>
-(front-insert-deque! dq <span class="vs">&#39;b</span>)
+(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">"[]</span><span class="co">\n</span><span class="cn">"</span>
+(front-insert-deque! dq <span class="vs">'b</span>)
 (empty-deque? dq) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(rear-insert-deque! dq <span class="vs">&#39;c</span>)
-(front-insert-deque! dq <span class="vs">&#39;a</span>)
-(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">&quot;[a, b, c]</span><span class="co">\n</span><span class="cn">&quot;</span>
+(rear-insert-deque! dq <span class="vs">'c</span>)
+(front-insert-deque! dq <span class="vs">'a</span>)
+(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">"[a, b, c]</span><span class="co">\n</span><span class="cn">"</span>
 (rear-delete-deque! dq)
-(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">&quot;[a, b]</span><span class="co">\n</span><span class="cn">&quot;</span>
+(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">"[a, b]</span><span class="co">\n</span><span class="cn">"</span>
 (front-delete-deque! dq)
-(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">&quot;[b]</span><span class="co">\n</span><span class="cn">&quot;</span>
+(print-deque dq) <span class="op">=$&gt;</span> <span class="cn">"[b]</span><span class="co">\n</span><span class="cn">"</span>
 (rear-delete-deque! dq)
 (empty-deque? dq) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(front-deque dq) <span class="er">=!&gt;</span> <span class="cn">&quot;called with an empty deque&quot;</span>
-(front-delete-deque! dq) <span class="er">=!&gt;</span> <span class="cn">&quot;called with an empty deque&quot;</span>
-(rear-delete-deque! dq) <span class="er">=!&gt;</span> <span class="cn">&quot;called with an empty deque&quot;</span></code></pre>
+(front-deque dq) <span class="er">=!&gt;</span> <span class="cn">"called with an empty deque"</span>
+(front-delete-deque! dq) <span class="er">=!&gt;</span> <span class="cn">"called with an empty deque"</span>
+(rear-delete-deque! dq) <span class="er">=!&gt;</span> <span class="cn">"called with an empty deque"</span></code></pre>
 <h2 id="3.3.3" class="anchor">
 <a class="anchor__link link" href="#3.3.3" aria-hidden="true">#</a> <span class="number">3.3.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_sec_3.3.3">Representing Tables<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -713,12 +713,12 @@ Imports:
                   (<span class="fu">cons</span> (<span class="fu">cons</span> key value)
                         (<span class="fu">cdr</span> table))))))
 
-(<span class="kw">define</span> (make-table) (<span class="fu">list</span> <span class="vs">&#39;*table*</span>))
+(<span class="kw">define</span> (make-table) (<span class="fu">list</span> <span class="vs">'*table*</span>))
 
 (<span class="kw">define</span> t (make-table))
-(lookup <span class="vs">&#39;a</span> t) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(insert! <span class="vs">&#39;a</span> <span class="cn">1</span> t)
-(lookup <span class="vs">&#39;a</span> t) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+(lookup <span class="vs">'a</span> t) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(insert! <span class="vs">'a</span> <span class="cn">1</span> t)
+(lookup <span class="vs">'a</span> t) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <h3 id="3.3.3.2" class="anchor">
 <a class="anchor__link link" href="#3.3.3.2" aria-hidden="true">#</a> <span class="number">3.3.3.2</span> Two-dimensional tables
 </h3>
@@ -763,13 +763,13 @@ Imports:
                         (<span class="fu">cdr</span> table))))))
 
 (<span class="kw">define</span> t (make-table))
-(lookup <span class="vs">&#39;a &#39;b</span> t) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(insert! <span class="vs">&#39;a &#39;b</span> <span class="cn">1</span> t)
-(lookup <span class="vs">&#39;a &#39;b</span> t) <span class="op">=&gt;</span> <span class="cn">1</span>
-(insert! <span class="vs">&#39;a &#39;c</span> <span class="cn">2</span> t)
-(insert! <span class="vs">&#39;x &#39;x</span> <span class="cn">3</span> t)
-(lookup <span class="vs">&#39;a &#39;c</span> t) <span class="op">=&gt;</span> <span class="cn">2</span>
-(lookup <span class="vs">&#39;x &#39;x</span> t) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
+(lookup <span class="vs">'a 'b</span> t) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(insert! <span class="vs">'a 'b</span> <span class="cn">1</span> t)
+(lookup <span class="vs">'a 'b</span> t) <span class="op">=&gt;</span> <span class="cn">1</span>
+(insert! <span class="vs">'a 'c</span> <span class="cn">2</span> t)
+(insert! <span class="vs">'x 'x</span> <span class="cn">3</span> t)
+(lookup <span class="vs">'a 'c</span> t) <span class="op">=&gt;</span> <span class="cn">2</span>
+(lookup <span class="vs">'x 'x</span> t) <span class="op">=&gt;</span> <span class="cn">3</span></code></pre>
 <h3 id="3.3.3.3" class="anchor">
 <a class="anchor__link link" href="#3.3.3.3" aria-hidden="true">#</a> <span class="number">3.3.3.3</span> Creating local tables
 </h3>
@@ -789,7 +789,7 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-table)
-  (<span class="kw">let</span> ((local-table (<span class="fu">list</span> <span class="vs">&#39;*table*</span>)))
+  (<span class="kw">let</span> ((local-table (<span class="fu">list</span> <span class="vs">'*table*</span>)))
     (<span class="kw">define</span> (lookup key-1 key-2)
       (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> local-table))))
         (<span class="kw">if</span> subtable
@@ -809,18 +809,18 @@ Imports:
                       (<span class="fu">cons</span> (<span class="fu">list</span> key-1 (<span class="fu">cons</span> key-2 value))
                             (<span class="fu">cdr</span> local-table))))))
     (<span class="kw">define</span> (reset!)
-      (<span class="fu">set-cdr!</span> local-table <span class="vs">&#39;()</span>))
+      (<span class="fu">set-cdr!</span> local-table <span class="vs">'()</span>))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;lookup-proc</span>) lookup)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;insert-proc!</span>) insert!)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;reset-proc!</span>) reset!)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-table</span> <span class="cn">&quot;unknown operation&quot;</span> m))))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'lookup-proc</span>) lookup)
+            ((<span class="fu">eq?</span> m <span class="vs">'insert-proc!</span>) insert!)
+            ((<span class="fu">eq?</span> m <span class="vs">'reset-proc!</span>) reset!)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-table</span> <span class="cn">"unknown operation"</span> m))))
     dispatch))</code></pre>
 <p>This is used extensively in <a href="../2/index.html">Chapter&nbsp;2</a>.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> operation-table (make-table))
-(<span class="kw">define</span> get (operation-table <span class="vs">&#39;lookup-proc</span>))
-(<span class="kw">define</span> put (operation-table <span class="vs">&#39;insert-proc!</span>))
-(<span class="kw">define</span> reset (operation-table <span class="vs">&#39;reset-proc!</span>))</code></pre>
+(<span class="kw">define</span> get (operation-table <span class="vs">'lookup-proc</span>))
+(<span class="kw">define</span> put (operation-table <span class="vs">'insert-proc!</span>))
+(<span class="kw">define</span> reset (operation-table <span class="vs">'reset-proc!</span>))</code></pre>
 <h3 id="ex3.24" class="anchor">
 <a class="anchor__link link" href="#ex3.24" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.24">Exercise 3.24<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -830,7 +830,7 @@ Imports:
     (<span class="kw">cond</span> ((<span class="fu">null?</span> records) <span class="cn">#f</span>)
           ((same-key? key (<span class="fu">caar</span> records)) (<span class="fu">car</span> records))
           (<span class="kw">else</span> (<span class="fu">assoc</span> key (<span class="fu">cdr</span> records)))))
-  (<span class="kw">let</span> ((local-table (<span class="fu">list</span> <span class="vs">&#39;*table*</span>)))
+  (<span class="kw">let</span> ((local-table (<span class="fu">list</span> <span class="vs">'*table*</span>)))
     (<span class="kw">define</span> (lookup key-1 key-2)
       (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> key-1 (<span class="fu">cdr</span> local-table))))
         (<span class="kw">if</span> subtable
@@ -850,16 +850,16 @@ Imports:
                       (<span class="fu">cons</span> (<span class="fu">list</span> key-1 (<span class="fu">cons</span> key-2 value))
                             (<span class="fu">cdr</span> local-table))))))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;lookup-proc</span>) lookup)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;insert-proc!</span>) insert!)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;dispatch</span> <span class="cn">&quot;unknown operation&quot;</span> m))))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'lookup-proc</span>) lookup)
+            ((<span class="fu">eq?</span> m <span class="vs">'insert-proc!</span>) insert!)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'dispatch</span> <span class="cn">"unknown operation"</span> m))))
     dispatch))
 
 (<span class="kw">define</span> table (make-table (<span class="kw">lambda</span> (x y) (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> x y)) <span class="cn">10</span>))))
-((table <span class="vs">&#39;insert-proc!</span>) <span class="cn">0 0</span> <span class="vs">&#39;a</span>)
-((table <span class="vs">&#39;lookup-proc</span>) <span class="cn">0 0</span>) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-((table <span class="vs">&#39;lookup-proc</span>) <span class="cn">2 3</span>) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-((table <span class="vs">&#39;lookup-proc</span>) <span class="cn">-9 9</span>) <span class="op">=&gt;</span> <span class="vs">&#39;a</span></code></pre>
+((table <span class="vs">'insert-proc!</span>) <span class="cn">0 0</span> <span class="vs">'a</span>)
+((table <span class="vs">'lookup-proc</span>) <span class="cn">0 0</span>) <span class="op">=&gt;</span> <span class="vs">'a</span>
+((table <span class="vs">'lookup-proc</span>) <span class="cn">2 3</span>) <span class="op">=&gt;</span> <span class="vs">'a</span>
+((table <span class="vs">'lookup-proc</span>) <span class="cn">-9 9</span>) <span class="op">=&gt;</span> <span class="vs">'a</span></code></pre>
 <h3 id="ex3.25" class="anchor">
 <a class="anchor__link link" href="#ex3.25" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.25">Exercise 3.25<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -886,7 +886,7 @@ Imports:
   (<span class="kw">let</span> ((value (<span class="fu">cdr</span> table)))
     (<span class="kw">cond</span> ((<span class="fu">null?</span> keys)
            (<span class="kw">if</span> (<span class="fu">list?</span> value)
-               (lookup <span class="vs">&#39;(())</span> table)
+               (lookup <span class="vs">'(())</span> table)
                value))
           ((<span class="fu">list?</span> value)
            (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> (<span class="fu">car</span> keys) value)))
@@ -901,30 +901,30 @@ Imports:
              (<span class="kw">let</span> ((subtable (<span class="fu">assoc</span> (<span class="fu">car</span> keys) old-value)))
                (<span class="kw">if</span> subtable
                    (iter (<span class="fu">cdr</span> keys) subtable)
-                   (<span class="kw">let</span> ((new-subtable (<span class="fu">cons</span> (<span class="fu">car</span> keys) <span class="vs">&#39;()</span>)))
+                   (<span class="kw">let</span> ((new-subtable (<span class="fu">cons</span> (<span class="fu">car</span> keys) <span class="vs">'()</span>)))
                      (<span class="fu">set-cdr!</span> table (<span class="fu">cons</span> new-subtable old-value))
                      (iter (<span class="fu">cdr</span> keys) new-subtable)))))
-            (<span class="kw">else</span> (<span class="fu">set-cdr!</span> table (<span class="fu">list</span> (<span class="fu">cons</span> <span class="vs">&#39;()</span> old-value)))
+            (<span class="kw">else</span> (<span class="fu">set-cdr!</span> table (<span class="fu">list</span> (<span class="fu">cons</span> <span class="vs">'()</span> old-value)))
                   (iter keys table)))))
   (iter keys table))
 
 (<span class="kw">define</span> table (make-table))
 
-(insert! <span class="vs">&#39;(a)</span> <span class="cn">1</span> table)
-(insert! <span class="vs">&#39;(a b c)</span> <span class="cn">2</span> table)
-(insert! <span class="vs">&#39;(d)</span> <span class="cn">3</span> table)
-(insert! <span class="vs">&#39;(e f)</span> <span class="cn">4</span> table)
-(insert! <span class="vs">&#39;(e g h)</span> <span class="cn">5</span> table)
+(insert! <span class="vs">'(a)</span> <span class="cn">1</span> table)
+(insert! <span class="vs">'(a b c)</span> <span class="cn">2</span> table)
+(insert! <span class="vs">'(d)</span> <span class="cn">3</span> table)
+(insert! <span class="vs">'(e f)</span> <span class="cn">4</span> table)
+(insert! <span class="vs">'(e g h)</span> <span class="cn">5</span> table)
 
-(lookup <span class="vs">&#39;(a)</span> table) <span class="op">=&gt;</span> <span class="cn">1</span>
-(lookup <span class="vs">&#39;(a b c)</span> table) <span class="op">=&gt;</span> <span class="cn">2</span>
-(lookup <span class="vs">&#39;(d)</span> table) <span class="op">=&gt;</span> <span class="cn">3</span>
-(lookup <span class="vs">&#39;(e f)</span> table) <span class="op">=&gt;</span> <span class="cn">4</span>
-(lookup <span class="vs">&#39;(e g h)</span> table) <span class="op">=&gt;</span> <span class="cn">5</span>
+(lookup <span class="vs">'(a)</span> table) <span class="op">=&gt;</span> <span class="cn">1</span>
+(lookup <span class="vs">'(a b c)</span> table) <span class="op">=&gt;</span> <span class="cn">2</span>
+(lookup <span class="vs">'(d)</span> table) <span class="op">=&gt;</span> <span class="cn">3</span>
+(lookup <span class="vs">'(e f)</span> table) <span class="op">=&gt;</span> <span class="cn">4</span>
+(lookup <span class="vs">'(e g h)</span> table) <span class="op">=&gt;</span> <span class="cn">5</span>
 
-(lookup <span class="vs">&#39;(a b)</span> table) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(lookup <span class="vs">&#39;(a b c d)</span> table) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(lookup <span class="vs">&#39;(z)</span> table) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
+(lookup <span class="vs">'(a b)</span> table) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(lookup <span class="vs">'(a b c d)</span> table) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(lookup <span class="vs">'(z)</span> table) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex3.26" class="anchor">
 <a class="anchor__link link" href="#ex3.26" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.26">Exercise 3.26<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -957,7 +957,7 @@ Imports:
 (<span class="kw">define</span> (insert! key value table)
   (<span class="kw">define</span> (iter node set-child! parent)
     (<span class="kw">if</span> (<span class="fu">null?</span> node)
-        (set-child! parent (<span class="fu">cons</span> (<span class="fu">cons</span> key value) (<span class="fu">cons</span> <span class="vs">&#39;() &#39;()</span>)))
+        (set-child! parent (<span class="fu">cons</span> (<span class="fu">cons</span> key value) (<span class="fu">cons</span> <span class="vs">'() '()</span>)))
         (<span class="kw">let</span> ((node-key (<span class="fu">caar</span> node)))
           (<span class="kw">cond</span> ((<span class="fu">=</span> key node-key) (<span class="fu">set-cdr!</span> (<span class="fu">car</span> node) value))
                 ((<span class="fu">&lt;</span> key node-key) (iter (<span class="fu">cadr</span> node) <span class="fu">set-car!</span> (<span class="fu">cdr</span> node)))
@@ -966,17 +966,17 @@ Imports:
 
 (<span class="kw">define</span> table (make-table))
 
-(insert! <span class="cn">0</span> <span class="vs">&#39;a</span> table)
-(insert! <span class="cn">25</span> <span class="vs">&#39;b</span> table)
-(insert! <span class="cn">-3</span> <span class="vs">&#39;c</span> table)
-(insert! <span class="cn">-4</span> <span class="vs">&#39;d</span> table)
-(insert! <span class="cn">7</span> <span class="vs">&#39;e</span> table)
+(insert! <span class="cn">0</span> <span class="vs">'a</span> table)
+(insert! <span class="cn">25</span> <span class="vs">'b</span> table)
+(insert! <span class="cn">-3</span> <span class="vs">'c</span> table)
+(insert! <span class="cn">-4</span> <span class="vs">'d</span> table)
+(insert! <span class="cn">7</span> <span class="vs">'e</span> table)
 
-(lookup <span class="cn">0</span> table) <span class="op">=&gt;</span> <span class="vs">&#39;a</span>
-(lookup <span class="cn">25</span> table) <span class="op">=&gt;</span> <span class="vs">&#39;b</span>
-(lookup <span class="cn">-3</span> table) <span class="op">=&gt;</span> <span class="vs">&#39;c</span>
-(lookup <span class="cn">-4</span> table) <span class="op">=&gt;</span> <span class="vs">&#39;d</span>
-(lookup <span class="cn">7</span> table) <span class="op">=&gt;</span> <span class="vs">&#39;e</span></code></pre>
+(lookup <span class="cn">0</span> table) <span class="op">=&gt;</span> <span class="vs">'a</span>
+(lookup <span class="cn">25</span> table) <span class="op">=&gt;</span> <span class="vs">'b</span>
+(lookup <span class="cn">-3</span> table) <span class="op">=&gt;</span> <span class="vs">'c</span>
+(lookup <span class="cn">-4</span> table) <span class="op">=&gt;</span> <span class="vs">'d</span>
+(lookup <span class="cn">7</span> table) <span class="op">=&gt;</span> <span class="vs">'e</span></code></pre>
 <h3 id="ex3.27" class="anchor">
 <a class="anchor__link link" href="#ex3.27" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.27">Exercise 3.27<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1290,9 +1290,9 @@ Imports:
           (full-adder (<span class="fu">car</span> as) (<span class="fu">car</span> bs) c-in (<span class="fu">car</span> ss) c)
           (iter (<span class="fu">cdr</span> as) (<span class="fu">cdr</span> bs) c (<span class="fu">cdr</span> ss)))))
   (<span class="kw">cond</span> ((<span class="fu">not</span> (<span class="fu">=</span> (<span class="fu">length</span> as) (<span class="fu">length</span> bs) (<span class="fu">length</span> ss)))
-         (<span class="fu">error</span> <span class="vs">&#39;ripple-carry-adder</span> <span class="cn">&quot;bit width mismatch&quot;</span> as bs ss))
+         (<span class="fu">error</span> <span class="vs">'ripple-carry-adder</span> <span class="cn">"bit width mismatch"</span> as bs ss))
         ((<span class="fu">null?</span> as)
-         (<span class="fu">error</span> <span class="vs">&#39;ripple-carry-adder</span> <span class="cn">&quot;bit width must be at least 1&quot;</span> as))
+         (<span class="fu">error</span> <span class="vs">'ripple-carry-adder</span> <span class="cn">"bit width must be at least 1"</span> as))
         (<span class="kw">else</span> (<span class="kw">let</span> ((c-in (make-wire)))
                 (set-signal! c-in <span class="cn">0</span>)
                 (iter as bs c-in ss)))))
@@ -1328,7 +1328,7 @@ Imports:
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-wire)
   (<span class="kw">let</span> ((signal-value <span class="cn">0</span>)
-        (action-procedures <span class="vs">&#39;()</span>))
+        (action-procedures <span class="vs">'()</span>))
     (<span class="kw">define</span> (set-signal! s)
       (when (<span class="fu">not</span> (<span class="fu">=</span> signal-value s))
         (<span class="kw">set!</span> signal-value s)
@@ -1338,17 +1338,17 @@ Imports:
             (<span class="fu">cons</span> proc action-procedures))
       (proc))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;get-signal</span>) signal-value)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;set-signal!</span>) set-signal!)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;add-action!</span>) add-action!)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;dispatch</span> <span class="cn">&quot;unknown operation&quot;</span> m))))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'get-signal</span>) signal-value)
+            ((<span class="fu">eq?</span> m <span class="vs">'set-signal!</span>) set-signal!)
+            ((<span class="fu">eq?</span> m <span class="vs">'add-action!</span>) add-action!)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'dispatch</span> <span class="cn">"unknown operation"</span> m))))
     dispatch))
 
 (<span class="kw">define</span> (call-each procs) (<span class="fu">for-each</span> (<span class="kw">lambda</span> (f) (f)) procs))
 
-(<span class="kw">define</span> (get-signal wire) (wire <span class="vs">&#39;get-signal</span>))
-(<span class="kw">define</span> (set-signal! wire s) ((wire <span class="vs">&#39;set-signal!</span>) s))
-(<span class="kw">define</span> (add-action! wire a) ((wire <span class="vs">&#39;add-action!</span>) a))</code></pre>
+(<span class="kw">define</span> (get-signal wire) (wire <span class="vs">'get-signal</span>))
+(<span class="kw">define</span> (set-signal! wire s) ((wire <span class="vs">'set-signal!</span>) s))
+(<span class="kw">define</span> (add-action! wire a) ((wire <span class="vs">'add-action!</span>) a))</code></pre>
 <h3 id="3.3.4.3" class="anchor">
 <a class="anchor__link link" href="#3.3.4.3" aria-hidden="true">#</a> <span class="number">3.3.4.3</span> The agenda
 </h3>
@@ -1460,7 +1460,7 @@ Imports:
   (add-action!
    wire
    (<span class="kw">lambda</span> ()
-     (<span class="fu">display</span> (format <span class="cn">&quot;</span><span class="co">\n</span><span class="cn">~a ~a New-value = ~a&quot;</span>
+     (<span class="fu">display</span> (format <span class="cn">"</span><span class="co">\n</span><span class="cn">~a ~a New-value = ~a"</span>
                       name (simulation-time the-agenda) (get-signal wire))))))
 
 (reset)
@@ -1469,18 +1469,18 @@ Imports:
 (<span class="kw">define</span> sum (make-wire))
 (<span class="kw">define</span> carry (make-wire))
 
-(probe <span class="vs">&#39;sum</span> sum)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;sum 0 New-value = 0&quot;</span>]
-(probe <span class="vs">&#39;carry</span> carry)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;carry 0 New-value = 0&quot;</span>]
+(probe <span class="vs">'sum</span> sum)
+<span class="op">=$&gt;</span> [<span class="cn">"sum 0 New-value = 0"</span>]
+(probe <span class="vs">'carry</span> carry)
+<span class="op">=$&gt;</span> [<span class="cn">"carry 0 New-value = 0"</span>]
 (half-adder input-1 input-2 sum carry)
 (set-signal! input-1 <span class="cn">1</span>)
 (propagate)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;sum 8 New-value = 1&quot;</span>]
+<span class="op">=$&gt;</span> [<span class="cn">"sum 8 New-value = 1"</span>]
 (set-signal! input-2 <span class="cn">1</span>)
 (propagate)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;carry 11 New-value = 1&quot;
-     &quot;sum 16 New-value = 0&quot;</span>]</code></pre>
+<span class="op">=$&gt;</span> [<span class="cn">"carry 11 New-value = 1"
+     "sum 16 New-value = 0"</span>]</code></pre>
 <h3 id="ex3.31" class="anchor">
 <a class="anchor__link link" href="#ex3.31" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.31">Exercise 3.31<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1544,10 +1544,10 @@ Imports:
 <pre><code class="blockcode">(<span class="kw">define</span> (make-bad-wire)
   (<span class="kw">let</span> ((wire (make-wire)))
     (<span class="kw">lambda</span> (m)
-      (<span class="kw">if</span> (<span class="fu">not</span> (<span class="fu">eq?</span> m <span class="vs">&#39;add-action!</span>))
+      (<span class="kw">if</span> (<span class="fu">not</span> (<span class="fu">eq?</span> m <span class="vs">'add-action!</span>))
           (wire m)
           (<span class="kw">lambda</span> (action)
-            ((wire <span class="vs">&#39;add-action!</span>)
+            ((wire <span class="vs">'add-action!</span>)
              (<span class="kw">let</span> ((first <span class="cn">#t</span>))
                (<span class="kw">lambda</span> ()
                  (<span class="kw">if</span> first
@@ -1570,13 +1570,13 @@ Imports:
 (<span class="kw">define</span> input-2 (make-bad-wire))
 (<span class="kw">define</span> sum (make-bad-wire))
 (<span class="kw">define</span> carry (make-bad-wire))
-(probe <span class="vs">&#39;sum</span> sum) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
-(probe <span class="vs">&#39;carry</span> carry) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
+(probe <span class="vs">'sum</span> sum) <span class="op">=$&gt;</span> <span class="cn">""</span>
+(probe <span class="vs">'carry</span> carry) <span class="op">=$&gt;</span> <span class="cn">""</span>
 (half-adder input-1 input-2 sum carry)
 (set-signal! input-1 <span class="cn">1</span>)
-(propagate) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
+(propagate) <span class="op">=$&gt;</span> <span class="cn">""</span>
 (set-signal! input-2 <span class="cn">1</span>)
-(propagate) <span class="op">=$&gt;</span> [<span class="cn">&quot;carry 11 New-value = 1&quot;</span>]</code></pre>
+(propagate) <span class="op">=$&gt;</span> [<span class="cn">"carry 11 New-value = 1"</span>]</code></pre>
 <h3 id="3.3.4.5" class="anchor">
 <a class="anchor__link link" href="#3.3.4.5" aria-hidden="true">#</a> <span class="number">3.3.4.5</span> Implementing the agenda
 </h3>
@@ -1623,7 +1623,7 @@ Imports:
   (<span class="fu">null?</span> (segments agenda)))
 (<span class="kw">define</span> (reset-agenda! agenda)
   (set-simulation-time! agenda <span class="cn">0</span>)
-  (set-segments! agenda <span class="vs">&#39;()</span>))
+  (set-segments! agenda <span class="vs">'()</span>))
 
 (<span class="kw">define</span> (add-to-agenda! time action agenda)
   (<span class="kw">define</span> (belongs-before? segments)
@@ -1657,7 +1657,7 @@ Imports:
 
 (<span class="kw">define</span> (first-agenda-item agenda)
   (<span class="kw">if</span> (empty-agenda? agenda)
-      (<span class="fu">error</span> <span class="vs">&#39;first-agenda-item</span> <span class="cn">&quot;agenda is empty&quot;</span>)
+      (<span class="fu">error</span> <span class="vs">'first-agenda-item</span> <span class="cn">"agenda is empty"</span>)
       (<span class="kw">let</span> ((first-seg (first-segment agenda)))
         (set-simulation-time! agenda (segment-time first-seg))
         (front-queue (segment-queue first-seg)))))</code></pre>
@@ -1728,14 +1728,14 @@ Imports:
 (set-signal! a <span class="cn">0</span>)
 (set-signal! b <span class="cn">1</span>)
 (and-gate a b c)
-(probe <span class="vs">&#39;c</span> c)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;c 0 New-value = 0&quot;</span>]
-(propagate) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
+(probe <span class="vs">'c</span> c)
+<span class="op">=$&gt;</span> [<span class="cn">"c 0 New-value = 0"</span>]
+(propagate) <span class="op">=$&gt;</span> <span class="cn">""</span>
 (set-signal! a <span class="cn">1</span>)
 (set-signal! b <span class="cn">0</span>)
 (propagate)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;c 6 New-value = 1&quot;
-     &quot;c 6 New-value = 0&quot;</span>]</code></pre>
+<span class="op">=$&gt;</span> [<span class="cn">"c 6 New-value = 1"
+     "c 6 New-value = 0"</span>]</code></pre>
 <p>The value of <code>c</code> goes to 1, but settles to 0 once all actions are processed. If we use a stack (FILO) rather than a queue (FIFO) for actions, there will be a mismatch between the execution order and signal calculations. This is because gates calculate <code>new-signal</code> immediately, and only delay setting the output to that value. With FILO behaviour, <code>(set-signal! a <span class="cn">1</span>)</code> will create an action to set <code>c</code> to 1 (since <code>a</code> and <code>b</code> are 1). Then <code>(set-signal! b <span class="cn">0</span>)</code> will create an action to set <code>c</code> to 0, the correct final value. But the actions execute in reverse order, so <code>c</code> ends up incorrectly at 1:</p>
 <pre><code class="blockcode">(enable-stack-mode)
 
@@ -1746,11 +1746,11 @@ Imports:
 (set-signal! a <span class="cn">0</span>)
 (set-signal! b <span class="cn">1</span>)
 (and-gate a b c)
-(probe <span class="vs">&#39;c</span> c) <span class="op">=$&gt;</span> [<span class="cn">&quot;c 0 New-value = 0&quot;</span>]
-(propagate) <span class="op">=$&gt;</span> <span class="cn">&quot;&quot;</span>
+(probe <span class="vs">'c</span> c) <span class="op">=$&gt;</span> [<span class="cn">"c 0 New-value = 0"</span>]
+(propagate) <span class="op">=$&gt;</span> <span class="cn">""</span>
 (set-signal! a <span class="cn">1</span>)
 (set-signal! b <span class="cn">0</span>)
-(propagate) <span class="op">=$&gt;</span> [<span class="cn">&quot;c 6 New-value = 1&quot;</span>]
+(propagate) <span class="op">=$&gt;</span> [<span class="cn">"c 6 New-value = 1"</span>]
 
 (disable-stack-mode)</code></pre>
 <h2 id="3.3.5" class="anchor">
@@ -1813,20 +1813,20 @@ Imports:
 (<span class="kw">define</span> C (make-connector))
 (<span class="kw">define</span> F (make-connector))
 (celsius-fahrenheit-converter C F)
-(probe <span class="cn">&quot;Celsius temp&quot;</span> C)
-(probe <span class="cn">&quot;Fahrenheit temp&quot;</span> F)
+(probe <span class="cn">"Celsius temp"</span> C)
+(probe <span class="cn">"Fahrenheit temp"</span> F)
 
-(set-value! C <span class="cn">25</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: Celsius temp = 25&quot;
-     &quot;Probe: Fahrenheit temp = 77&quot;</span>]
-(set-value! F <span class="cn">212</span> <span class="vs">&#39;user</span>)
-<span class="er">=!&gt;</span> <span class="cn">&quot;contradiction: 77 212&quot;</span>
-(forget-value! C <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: Celsius temp = ?&quot;
-     &quot;Probe: Fahrenheit temp = ?&quot;</span>]
-(set-value! F <span class="cn">212</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: Fahrenheit temp = 212&quot;
-     &quot;Probe: Celsius temp = 100&quot;</span>]</code></pre>
+(set-value! C <span class="cn">25</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: Celsius temp = 25"
+     "Probe: Fahrenheit temp = 77"</span>]
+(set-value! F <span class="cn">212</span> <span class="vs">'user</span>)
+<span class="er">=!&gt;</span> <span class="cn">"contradiction: 77 212"</span>
+(forget-value! C <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: Celsius temp = ?"
+     "Probe: Fahrenheit temp = ?"</span>]
+(set-value! F <span class="cn">212</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: Fahrenheit temp = 212"
+     "Probe: Celsius temp = 100"</span>]</code></pre>
 <h3 id="3.3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a> <span class="number">3.3.5.2</span> Implementing the constraint system
 </h3>
@@ -1871,9 +1871,9 @@ Imports:
     (forget-value! b me)
     (process-new-value))
   (<span class="kw">define</span> (me request)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">&#39;I-have-a-value</span>) (process-new-value))
-          ((<span class="fu">eq?</span> request <span class="vs">&#39;I-lost-my-value</span>) (process-forget-value))
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;adder</span> <span class="cn">&quot;unknown request&quot;</span> request))))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">'I-have-a-value</span>) (process-new-value))
+          ((<span class="fu">eq?</span> request <span class="vs">'I-lost-my-value</span>) (process-forget-value))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'adder</span> <span class="cn">"unknown request"</span> request))))
   (connect a me)
   (connect b me)
   (connect sum me)
@@ -1896,9 +1896,9 @@ Imports:
     (forget-value! y me)
     (process-new-value))
   (<span class="kw">define</span> (me request)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">&#39;I-have-a-value</span>) (process-new-value))
-          ((<span class="fu">eq?</span> request <span class="vs">&#39;I-lost-my-value</span>) (process-forget-value))
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;multiplier</span> <span class="cn">&quot;unknown request&quot;</span> request))))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">'I-have-a-value</span>) (process-new-value))
+          ((<span class="fu">eq?</span> request <span class="vs">'I-lost-my-value</span>) (process-forget-value))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'multiplier</span> <span class="cn">"unknown request"</span> request))))
   (connect x me)
   (connect y me)
   (connect product me)
@@ -1906,20 +1906,20 @@ Imports:
 
 (<span class="kw">define</span> (constant value connector)
   (<span class="kw">define</span> (me request)
-    (<span class="fu">error</span> <span class="vs">&#39;constant</span> <span class="cn">&quot;unknown request&quot;</span> request))
+    (<span class="fu">error</span> <span class="vs">'constant</span> <span class="cn">"unknown request"</span> request))
   (connect connector me)
   (set-value! connector value me)
   me)
 
 (<span class="kw">define</span> (probe name connector)
   (<span class="kw">define</span> (print-probe value)
-    (<span class="fu">display</span> (format <span class="cn">&quot;</span><span class="co">\n</span><span class="cn">Probe: ~a = ~a&quot;</span> name value)))
+    (<span class="fu">display</span> (format <span class="cn">"</span><span class="co">\n</span><span class="cn">Probe: ~a = ~a"</span> name value)))
   (<span class="kw">define</span> (me request)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">&#39;I-have-a-value</span>)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">'I-have-a-value</span>)
            (print-probe (get-value connector)))
-          ((<span class="fu">eq?</span> request <span class="vs">&#39;I-lost-my-value</span>)
-           (print-probe <span class="cn">&quot;?&quot;</span>))
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;probe</span> <span class="cn">&quot;unknown request&quot;</span> request))))
+          ((<span class="fu">eq?</span> request <span class="vs">'I-lost-my-value</span>)
+           (print-probe <span class="cn">"?"</span>))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'probe</span> <span class="cn">"unknown request"</span> request))))
   (connect connector me)
   me)</code></pre>
 <h3 id="3.3.5.3" class="anchor">
@@ -1942,40 +1942,40 @@ Imports:
 </aside>
 <p>Moved here from Section 3.3.5.2 to avoid import cycle.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (inform-about-value constraint)
-  (constraint <span class="vs">&#39;I-have-a-value</span>))
+  (constraint <span class="vs">'I-have-a-value</span>))
 (<span class="kw">define</span> (inform-about-no-value constraint)
-  (constraint <span class="vs">&#39;I-lost-my-value</span>))
+  (constraint <span class="vs">'I-lost-my-value</span>))
 
 (<span class="kw">define</span> (make-connector)
   (<span class="kw">let</span> ((value <span class="cn">#f</span>)
         (informant <span class="cn">#f</span>)
-        (constraints <span class="vs">&#39;()</span>))
+        (constraints <span class="vs">'()</span>))
     (<span class="kw">define</span> (set-value! new-val setter)
       (<span class="kw">cond</span> ((<span class="fu">not</span> (has-value? me))
              (<span class="kw">set!</span> value new-val)
              (<span class="kw">set!</span> informant setter)
              (for-each-except setter inform-about-value constraints))
             ((<span class="fu">not</span> (<span class="fu">=</span> value new-val))
-             (<span class="fu">error</span> <span class="vs">&#39;set-value!</span> <span class="cn">&quot;contradiction&quot;</span> value new-val))
-            (<span class="kw">else</span> <span class="vs">&#39;ignored</span>)))
+             (<span class="fu">error</span> <span class="vs">'set-value!</span> <span class="cn">"contradiction"</span> value new-val))
+            (<span class="kw">else</span> <span class="vs">'ignored</span>)))
     (<span class="kw">define</span> (forget-value! retractor)
       (<span class="kw">cond</span> ((<span class="fu">eq?</span> retractor informant)
              (<span class="kw">set!</span> informant <span class="cn">#f</span>)
              (for-each-except retractor inform-about-no-value constraints))
-            (<span class="kw">else</span> <span class="vs">&#39;ignored</span>)))
+            (<span class="kw">else</span> <span class="vs">'ignored</span>)))
     (<span class="kw">define</span> (connect new-constraint)
       (unless (<span class="fu">memq</span> new-constraint constraints)
         (<span class="kw">set!</span> constraints (<span class="fu">cons</span> new-constraint constraints)))
       (when (has-value? me)
         (inform-about-value new-constraint)))
     (<span class="kw">define</span> (me request)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">&#39;has-value?</span>)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">'has-value?</span>)
              (<span class="kw">if</span> informant <span class="cn">#t #f</span>))
-            ((<span class="fu">eq?</span> request <span class="vs">&#39;get-value</span>) value)
-            ((<span class="fu">eq?</span> request <span class="vs">&#39;set-value!</span>) set-value!)
-            ((<span class="fu">eq?</span> request <span class="vs">&#39;forget-value!</span>) forget-value!)
-            ((<span class="fu">eq?</span> request <span class="vs">&#39;connect</span>) connect)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-connector</span> <span class="cn">&quot;unknown operation&quot;</span> request))))
+            ((<span class="fu">eq?</span> request <span class="vs">'get-value</span>) value)
+            ((<span class="fu">eq?</span> request <span class="vs">'set-value!</span>) set-value!)
+            ((<span class="fu">eq?</span> request <span class="vs">'forget-value!</span>) forget-value!)
+            ((<span class="fu">eq?</span> request <span class="vs">'connect</span>) connect)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-connector</span> <span class="cn">"unknown operation"</span> request))))
     me))
 
 (<span class="kw">define</span> (for-each-except exception proc ls)
@@ -1986,11 +1986,11 @@ Imports:
       (iter (<span class="fu">cdr</span> items))))
   (iter ls))
 
-(<span class="kw">define</span> (has-value? connector) (connector <span class="vs">&#39;has-value?</span>))
-(<span class="kw">define</span> (get-value connector) (connector <span class="vs">&#39;get-value</span>))
-(<span class="kw">define</span> (set-value! connector val who) ((connector <span class="vs">&#39;set-value!</span>) val who))
-(<span class="kw">define</span> (forget-value! connector who) ((connector <span class="vs">&#39;forget-value!</span>) who))
-(<span class="kw">define</span> (connect connector constraint) ((connector <span class="vs">&#39;connect</span>) constraint))</code></pre>
+(<span class="kw">define</span> (has-value? connector) (connector <span class="vs">'has-value?</span>))
+(<span class="kw">define</span> (get-value connector) (connector <span class="vs">'get-value</span>))
+(<span class="kw">define</span> (set-value! connector val who) ((connector <span class="vs">'set-value!</span>) val who))
+(<span class="kw">define</span> (forget-value! connector who) ((connector <span class="vs">'forget-value!</span>) who))
+(<span class="kw">define</span> (connect connector constraint) ((connector <span class="vs">'connect</span>) constraint))</code></pre>
 <h3 id="ex3.33" class="anchor">
 <a class="anchor__link link" href="#ex3.33" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.33">Exercise 3.33<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2043,19 +2043,19 @@ Imports:
 (<span class="kw">define</span> b (make-connector))
 (<span class="kw">define</span> c (make-connector))
 (averager a b c)
-(probe <span class="cn">&quot;a&quot;</span> a)
-(probe <span class="cn">&quot;c&quot;</span> c)
+(probe <span class="cn">"a"</span> a)
+(probe <span class="cn">"c"</span> c)
 
-(set-value! a <span class="cn">10</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: a = 10&quot;</span>]
-(set-value! b <span class="cn">20</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: c = 15&quot;</span>]
-(forget-value! a <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: a = ?&quot;
-     &quot;Probe: c = ?&quot;</span>]
-(set-value! c <span class="cn">99</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: c = 99&quot;
-     &quot;Probe: a = 178&quot;</span>]</code></pre>
+(set-value! a <span class="cn">10</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: a = 10"</span>]
+(set-value! b <span class="cn">20</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: c = 15"</span>]
+(forget-value! a <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: a = ?"
+     "Probe: c = ?"</span>]
+(set-value! c <span class="cn">99</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: c = 99"
+     "Probe: a = 178"</span>]</code></pre>
 <h3 id="ex3.34" class="anchor">
 <a class="anchor__link link" href="#ex3.34" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.34">Exercise 3.34<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2096,18 +2096,18 @@ Imports:
 <p>At first glance, Louis Reasoner’s constraint seems okay:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> a (make-connector))
 (<span class="kw">define</span> b (make-connector))
-(probe <span class="cn">&quot;a&quot;</span> a)
-(probe <span class="cn">&quot;b&quot;</span> b)
+(probe <span class="cn">"a"</span> a)
+(probe <span class="cn">"b"</span> b)
 (bad-squarer a b)
-(set-value! a <span class="cn">5</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: b = 25&quot;
-     &quot;Probe: a = 5&quot;</span>]</code></pre>
+(set-value! a <span class="cn">5</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: b = 25"
+     "Probe: a = 5"</span>]</code></pre>
 <p>However, going the other way doesn’t work:</p>
-<pre><code class="blockcode">(forget-value! a <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: b = ?&quot;
-     &quot;Probe: a = ?&quot;</span>]
-(set-value! b <span class="cn">49</span> <span class="vs">&#39;user</span>)
-<span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: b = 49&quot;</span>]</code></pre>
+<pre><code class="blockcode">(forget-value! a <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: b = ?"
+     "Probe: a = ?"</span>]
+(set-value! b <span class="cn">49</span> <span class="vs">'user</span>)
+<span class="op">=$&gt;</span> [<span class="cn">"Probe: b = 49"</span>]</code></pre>
 <p>Upon reflection, it would be remarkable if it performed a square root without us ever coding the algorithm! The problem is, <code>multiplier</code> is too general. Louis Reasoner’s constraint does not take advantage of the extra information specific to multiplications of a number to itself. It doesn’t know that the multiplicand and the multiplier are the same connector.</p>
 <h3 id="ex3.35" class="anchor">
 <a class="anchor__link link" href="#ex3.35" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.35">Exercise 3.35<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -2164,25 +2164,25 @@ Imports:
            (set-value! b (square (get-value a)) me))
           ((has-value? b)
            (<span class="kw">if</span> (<span class="fu">&lt;</span> (get-value b) <span class="cn">0</span>)
-               (<span class="fu">error</span> <span class="vs">&#39;squarer</span> <span class="cn">&quot;square less than 0&quot;</span> (get-value b))
+               (<span class="fu">error</span> <span class="vs">'squarer</span> <span class="cn">"square less than 0"</span> (get-value b))
                (set-value! a (<span class="fu">sqrt</span> (get-value b)) me)))))
   (<span class="kw">define</span> (process-forget-value)
     (forget-value! b)
     (forget-value! a)
     (process-new-value))
   (<span class="kw">define</span> (me request)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">&#39;I-have-a-value</span>) (process-new-value))
-          ((<span class="fu">eq?</span> request <span class="vs">&#39;I-lost-my-value</span>) (process-forget-value))
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;squarer</span> <span class="cn">&quot;unknown request&quot;</span> request))))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> request <span class="vs">'I-have-a-value</span>) (process-new-value))
+          ((<span class="fu">eq?</span> request <span class="vs">'I-lost-my-value</span>) (process-forget-value))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'squarer</span> <span class="cn">"unknown request"</span> request))))
   (connect a me)
   (connect b me)
   me)
 
 (<span class="kw">define</span> a (make-connector))
 (<span class="kw">define</span> b (make-connector))
-(probe <span class="cn">&quot;a&quot;</span> a)
+(probe <span class="cn">"a"</span> a)
 (squarer a b)
-(set-value! b <span class="cn">49</span> <span class="vs">&#39;user</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: a = 7&quot;</span>]</code></pre>
+(set-value! b <span class="cn">49</span> <span class="vs">'user</span>) <span class="op">=$&gt;</span> [<span class="cn">"Probe: a = 7"</span>]</code></pre>
 <h3 id="ex3.36" class="anchor">
 <a class="anchor__link link" href="#ex3.36" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%25_thm_3.36">Exercise 3.36<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2238,8 +2238,8 @@ Imports:
 
 (<span class="kw">define</span> C (make-connector))
 (<span class="kw">define</span> F (celsius-&gt;fahrenheit C))
-(probe <span class="cn">&quot;C&quot;</span> C)
-(set-value! F <span class="cn">212</span> <span class="vs">&#39;user</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;Probe: C = 100&quot;</span>]</code></pre>
+(probe <span class="cn">"C"</span> C)
+(set-value! F <span class="cn">212</span> <span class="vs">'user</span>) <span class="op">=$&gt;</span> [<span class="cn">"Probe: C = 100"</span>]</code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

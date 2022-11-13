@@ -72,11 +72,11 @@
 <a class="anchor__link link" href="#modules" aria-hidden="true">#</a> Modules
 </h2>
 <p>While R6RS provides a module system, using them for hundreds of sections and exercises is impractical. Their verbose syntax and indentation would distract from the flow of the chapter. We also need the flexibility to control module evaluation, for example to only run a subset of tests. This leads us to a custom solution:</p>
-<pre><code class="blockcode">(Chapter :1 <span class="cn">&quot;Chapter Title&quot;</span>)
+<pre><code class="blockcode">(Chapter :1 <span class="cn">"Chapter Title"</span>)
 
 (<span class="kw">define</span> x <span class="cn">1</span>)
 
-(Section :1.1 <span class="cn">&quot;Section Title&quot;</span>)
+(Section :1.1 <span class="cn">"Section Title"</span>)
 
 (<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="co">; ERROR: x, y, and z are undefined</span>
 
@@ -89,11 +89,11 @@
 <a class="anchor__link link" href="#imports" aria-hidden="true">#</a> Imports
 </h3>
 <p>We can import from other modules like so:</p>
-<pre><code class="blockcode">(Chapter :1 <span class="cn">&quot;Chapter Title&quot;</span>)
+<pre><code class="blockcode">(Chapter :1 <span class="cn">"Chapter Title"</span>)
 
 (<span class="kw">define</span> x <span class="cn">1</span>)
 
-(Section :1.1 <span class="cn">&quot;Section Title&quot;</span>
+(Section :1.1 <span class="cn">"Section Title"</span>
   (use (:1 x) (?1.1 y z)))
 
 (<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="co">; ok</span>
@@ -120,13 +120,13 @@
 <a class="anchor__link link" href="#pasting" aria-hidden="true">#</a> Pasting
 </h3>
 <p>The language provides one more feature for code reuse: <em>pasting</em>. Modules can unhygienically paste code from an earlier module in the same file:</p>
-<pre><code class="blockcode">(Section :1 <span class="cn">&quot;Original&quot;</span>)
+<pre><code class="blockcode">(Section :1 <span class="cn">"Original"</span>)
 
 (<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> (inc x) (<span class="fu">+</span> x a))
 (inc <span class="cn">42</span>) <span class="co">; 43</span>
 
-(Section :2 <span class="cn">&quot;Paste&quot;</span>)
+(Section :2 <span class="cn">"Paste"</span>)
 
 (<span class="kw">define</span> a <span class="cn">-1</span>)
 (<span class="kw">paste</span> (:1 inc))
@@ -136,13 +136,13 @@
 <a class="anchor__link link" href="#packages" aria-hidden="true">#</a> Packages
 </h3>
 <p>Starting in <a href="2/index.html">Chapter&nbsp;2</a>, many modules use <a href="../text/2/4.html#2.4.3">data-directed programming</a> to dispatch based on operation names and type tags. Modules define <em>packages</em> (procedures ending in <code>-pkg</code>) that install operations in the global table. For example:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">&#39;real-part</span> z))
+<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
 
 (<span class="kw">define</span> (rectangular-pkg)
-  (put <span class="vs">&#39;real-part &#39;(rectangular)</span> ...)
+  (put <span class="vs">'real-part '(rectangular)</span> ...)
   ...)
 (<span class="kw">define</span> (polar-pkg)
-  (put <span class="vs">&#39;real-part &#39;(polar)</span> ...)
+  (put <span class="vs">'real-part '(polar)</span> ...)
   ...)
 
 (using rectangular-pkg polar-pkg)
@@ -200,8 +200,8 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </h3>
 <p>The <code>=?&gt;</code> operator asserts that the left-hand side is equal to one of the elements from the right-hand side, using <code>equal?</code>. For example:</p>
 <pre><code class="blockcode">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0 1 2 3 4</span>]</code></pre>
-<p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code><span class="vs">&#39;(...)</span></code>.</p>
-<p>When <code>(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1 1</span>) <span class="cn">&quot;two&quot;</span>]</code> fails, the output looks like this:</p>
+<p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code><span class="vs">'(...)</span></code>.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1 1</span>) <span class="cn">"two"</span>]</code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 1)</span>
@@ -216,17 +216,17 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#output" aria-hidden="true">#</a> Output
 </h3>
 <p>The <code>=$&gt;</code> operator captures standard output. For example:</p>
-<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">&quot;hello&quot;</span>) <span class="op">=$&gt;</span> <span class="cn">&quot;hello&quot;</span></code></pre>
+<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">"hello"</span>) <span class="op">=$&gt;</span> <span class="cn">"hello"</span></code></pre>
 <p>If the right-hand side is a list, it is not evaluated but instead treated as a list of lines. Like with <code>=?&gt;</code>, these lists are conventionally written using square brackets.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (foo)
-  (<span class="fu">display</span> <span class="cn">&quot;hello&quot;</span>)
+  (<span class="fu">display</span> <span class="cn">"hello"</span>)
   (<span class="fu">newline</span>)
-  (<span class="fu">display</span> <span class="cn">&quot;world&quot;</span>))
+  (<span class="fu">display</span> <span class="cn">"world"</span>))
 
-(foo) <span class="op">=$&gt;</span> [<span class="cn">&quot;hello&quot; &quot;world&quot;</span>]</code></pre>
+(foo) <span class="op">=$&gt;</span> [<span class="cn">"hello" "world"</span>]</code></pre>
 <p>Newlines occurring at the beginning, end, or after another newline are ignored:</p>
-<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">&quot;</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;One&quot; &quot;Two&quot; &quot;Three&quot;</span>]</code></pre>
-<p>When <code>(<span class="fu">display</span> <span class="cn">&quot;pong</span><span class="co">\n</span><span class="cn">ping&quot;</span>) <span class="op">=$&gt;</span> [<span class="cn">&quot;ping&quot; &quot;pong&quot;</span>]</code> fails, the output looks like this:</p>
+<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">"</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">"</span>) <span class="op">=$&gt;</span> [<span class="cn">"One" "Two" "Three"</span>]</code></pre>
+<p>When <code>(<span class="fu">display</span> <span class="cn">"pong</span><span class="co">\n</span><span class="cn">ping"</span>) <span class="op">=$&gt;</span> [<span class="cn">"ping" "pong"</span>]</code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
@@ -243,9 +243,9 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#error" aria-hidden="true">#</a> Error
 </h3>
 <p>The <code>=!&gt;</code> operator asserts that an error will occur. For example:</p>
-<pre><code class="blockcode">(<span class="fu">error</span> <span class="vs">&#39;foo</span> <span class="cn">&quot;oops&quot; 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;foo: oops: 1 2&quot;</span></code></pre>
-<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">&quot;&quot;</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1 0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
-<p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<pre><code class="blockcode">(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"oops" 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"foo: oops: 1 2"</span></code></pre>
+<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">""</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1 0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
+<p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
@@ -256,7 +256,7 @@ right:
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
-<p>When <code>(<span class="fu">error</span> <span class="vs">&#39;foo</span> <span class="cn">&quot;catastrophe&quot; 1</span>) <span class="er">=!&gt;</span> <span class="cn">&quot;disaster&quot;</span></code> fails, the output looks like this:</p>
+<p>When <code>(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"catastrophe" 1</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
 <pre><code class="blockcode"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
@@ -293,7 +293,7 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </h3>
 <p><code>(runtime)</code> returns the time elapsed since some arbitrary point in the past, in seconds. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.22">textbook version</a>, which returns an integer, ours returns an inexact number with as much precision as possible. It is used for prime-test benchmarking in <a href="1/2.html#1.2.6">§&nbsp;1.2.6</a>.</p>
 <p><code>(parallel-execute <span class="ss">proc*</span> ...)</code> executes the given procedures in parallel. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_414">textbook version</a>, which returns immediately with a control object, ours blocks until all threads have completed. In addition, each thread sleeps for a random amount of time up to one millisecond before executing its procedure to help reveal bugs. It is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
-<p><code>(make-mutex)</code> returns an object <code><span class="ss">mutex</span></code> that supports messages <code>(<span class="ss">mutex</span> <span class="vs">&#39;acquire</span>)</code> and <code>(<span class="ss">mutex</span> <span class="vs">&#39;release</span>)</code>. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_427">textbook version</a>, which calls <code>test-and-set!</code> in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like <code>parallel-execute</code>, it is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
+<p><code>(make-mutex)</code> returns an object <code><span class="ss">mutex</span></code> that supports messages <code>(<span class="ss">mutex</span> <span class="vs">'acquire</span>)</code> and <code>(<span class="ss">mutex</span> <span class="vs">'release</span>)</code>. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_427">textbook version</a>, which calls <code>test-and-set!</code> in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like <code>parallel-execute</code>, it is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
 <h3 id="special-forms" class="anchor">
 <a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special forms
 </h3>

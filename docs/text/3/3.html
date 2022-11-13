@@ -97,9 +97,9 @@
 <a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a> Sharing and identity
 </h3>
 <ul>
-<li>Consider <code>(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>))</code> and <code>(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
+<li>Consider <code>(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">'a 'b</span>))</code> and <code>(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
 <li><code>z1</code> is a pair whose <code>car</code> and <code>cdr</code> both point to the same <code>x</code>.</li>
-<li>In contrast: <code>(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>)) (<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>))</code>.</li>
+<li>In contrast: <code>(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="vs">'a 'b</span>)) (<span class="fu">list</span> <span class="vs">'a 'b</span>))</code>.</li>
 <li>In <code>z2</code>, the two <code>(a b)</code> lists are distinct, although the actual symbols are shared.</li>
 <li>Before assignment, we would think <code>z1</code> and <code>z2</code> were “the same.<span class="tuck">”</span></li>
 <li>The sharing is undetectable without mutators on list structure.</li>
@@ -130,11 +130,11 @@
   (<span class="kw">define</span> (set-x! v) (<span class="kw">set!</span> x v))
   (<span class="kw">define</span> (set-y! v) (<span class="kw">set!</span> y v))
   (<span class="kw">define</span> (dispatch m)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;car</span>) x)
-          ((<span class="fu">eq?</span> m <span class="vs">&#39;cdr</span>) y)
-          ((<span class="fu">eq?</span> m <span class="vs">&#39;set-car!</span>) set-x!)
-          ((<span class="fu">eq?</span> m <span class="vs">&#39;set-cdr!</span>) set-y!)
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Undefined operation: CONS&quot;</span> m))))
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'car</span>) x)
+          ((<span class="fu">eq?</span> m <span class="vs">'cdr</span>) y)
+          ((<span class="fu">eq?</span> m <span class="vs">'set-car!</span>) set-x!)
+          ((<span class="fu">eq?</span> m <span class="vs">'set-cdr!</span>) set-y!)
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Undefined operation: CONS"</span> m))))
   dispatch)</code></pre>
 <ul>
 <li>Assignment and mutation are equipotent: each can be implemented in terms of the other.</li>
@@ -304,10 +304,10 @@
 </h3>
 <ul>
 <li>We create connectors with <code>(make-connector)</code>, just like wires.</li>
-<li>We use <code>(probe <span class="cn">&quot;name&quot;</span> <span class="ss">connector</span>)</code>, again just like wires.</li>
-<li><code>(set-value! <span class="ss">connector value</span> <span class="vs">&#39;user</span>)</code> assigns a value to the connector, and this information propagates through the network.</li>
+<li>We use <code>(probe <span class="cn">"name"</span> <span class="ss">connector</span>)</code>, again just like wires.</li>
+<li><code>(set-value! <span class="ss">connector value</span> <span class="vs">'user</span>)</code> assigns a value to the connector, and this information propagates through the network.</li>
 <li>This will give an error if the new value causes a contradiction.</li>
-<li><code>(forget-value! <span class="ss">connector</span> <span class="vs">&#39;user</span>)</code> undoes the assignment.</li>
+<li><code>(forget-value! <span class="ss">connector</span> <span class="vs">'user</span>)</code> undoes the assignment.</li>
 </ul>
 <h3 id="3.3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a> Implementing the constraint system

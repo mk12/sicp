@@ -145,7 +145,7 @@
            (procedure-parameters procedure)
            (list-of-delayed-args arguments env) <span class="co">; changed</span>
            (procedure-environment procedure))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;Unknown procedure type: APPLY&quot;</span> procedure))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown procedure type: APPLY"</span> procedure))))</code></pre>
 <ul>
 <li>We also need to change <code>eval-if</code> to use <code>actual-value</code> on the predicate:</li>
 </ul>
@@ -166,8 +166,8 @@
 <ul>
 <li>We can represent thunks simply by a list containing the expression and environment:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="vs">&#39;thunk</span> exp env))
-(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="vs">&#39;thunk</span>))
+<pre><code class="blockcode">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="vs">'thunk</span> exp env))
+(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="vs">'thunk</span>))
 (<span class="kw">define</span> (thunk-exp thunk) (<span class="fu">cadr</span> thunk))
 (<span class="kw">define</span> (thunk-env thunk) (<span class="fu">caddr</span> thunk))</code></pre>
 <ul>

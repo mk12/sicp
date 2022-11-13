@@ -98,7 +98,7 @@
 <li>We can represent the differentiation rules like this:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> deriv-rules
-  <span class="vs">&#39;(((dd (?c c) (? v)) 0)
+  <span class="vs">'(((dd (?c c) (? v)) 0)
     ((dd (?v v) (? v)) 1)
     ((dd (?v u) (? v)) 0)
     ((dd (+ (? x1) (? x2)) (? v))
@@ -122,7 +122,7 @@
 <li>Once we have this language, we can reuse it for other things. For example, we can write rules for algebraic simplification:</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> algebra-rules
-  <span class="vs">&#39;((((? op) (?c e1) (?c e2))
+  <span class="vs">'((((? op) (?c e1) (?c e2))
      (: (op e1 e2)))
     (((? op) (? e1) (?c e2))
      ((: op) (: e2) (: e1)))
@@ -167,22 +167,22 @@
 <li>The matcher takes an expression, a pattern, and a dictionary as input. It outputs another, augmented dictionary.</li>
 </ul>
 <pre><code class="blockcode">(<span class="kw">define</span> (match pat exp dict)
-  (<span class="kw">cond</span> ((<span class="fu">eq?</span> dict <span class="vs">&#39;failed</span>) <span class="vs">&#39;failed</span>)
+  (<span class="kw">cond</span> ((<span class="fu">eq?</span> dict <span class="vs">'failed</span>) <span class="vs">'failed</span>)
         ((atom? pat)
          (<span class="kw">if</span> (<span class="kw">and</span> (atom? exp) (<span class="fu">eq?</span> pat exp))
              dict
-             <span class="vs">&#39;failed</span>))
+             <span class="vs">'failed</span>))
         ((arbitrary-constant? pat)
          (<span class="kw">if</span> (constant? exp)
              (extend-dict pat exp dict)
-             <span class="vs">&#39;failed</span>))
+             <span class="vs">'failed</span>))
         ((arbitrary-variable? pat)
          (<span class="kw">if</span> (variable? exp)
              (extend-dict pat exp dict)
-             <span class="vs">&#39;failed</span>))
+             <span class="vs">'failed</span>))
         ((arbitrary-expression? pat)
          (extend-dict pat exp dict))
-        ((atom? exp) <span class="vs">&#39;failed</span>)
+        ((atom? exp) <span class="vs">'failed</span>)
         (<span class="kw">else</span>
          (match (<span class="fu">cdr</span> pat)
                 (<span class="fu">cdr</span> exp)
@@ -256,7 +256,7 @@
                    exp)))
   (<span class="kw">define</span> (simplify-parts exp)
     (<span class="kw">if</span> (<span class="fu">null?</span> exp)
-        <span class="vs">&#39;()</span>
+        <span class="vs">'()</span>
         (<span class="fu">cons</span> (simplify-exp (<span class="fu">car</span> exp))
               (simplify-parts (<span class="fu">cdr</span> exp)))))
   (<span class="kw">define</span> (try-rules exp)
@@ -266,7 +266,7 @@
           (<span class="kw">let</span> ((dict (match (pattern (<span class="fu">car</span> rules))
                              exp
                              (empty-dictionary))))
-            (<span class="kw">if</span> (<span class="fu">eq?</span> dict <span class="vs">&#39;failed</span>)
+            (<span class="kw">if</span> (<span class="fu">eq?</span> dict <span class="vs">'failed</span>)
                 (scan (<span class="fu">cdr</span> rules))
                 (simplify-exp
                  (instantiate (skeleton (<span class="fu">car</span> rules))
@@ -309,14 +309,14 @@
 <ul>
 <li>The implementation of the dictionary is pretty simple:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (empty-dictionary) <span class="vs">&#39;()</span>)
+<pre><code class="blockcode">(<span class="kw">define</span> (empty-dictionary) <span class="vs">'()</span>)
 (<span class="kw">define</span> (extend-dictionary pat dat dict)
   (<span class="kw">let</span> ((name (variable-name pat)))
     (<span class="kw">let</span> ((v ((<span class="fu">assq</span> name dict))))
       (<span class="kw">cond</span> ((<span class="fu">null?</span> v)
              (<span class="fu">cons</span> (<span class="fu">list</span> name dat) dict))
             ((<span class="fu">eq?</span> (<span class="fu">cadr</span> v) dat) dict)
-            (<span class="kw">else</span> <span class="vs">&#39;failed</span>)))))
+            (<span class="kw">else</span> <span class="vs">'failed</span>)))))
 (<span class="kw">define</span> (lookup var dict)
   (<span class="kw">let</span> ((v (<span class="fu">assq</span> var dict)))
     (<span class="kw">if</span> (<span class="fu">null?</span> v) var (<span class="fu">cadr</span> v))))</code></pre>

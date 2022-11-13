@@ -228,7 +228,7 @@
 <p>Move an <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span>-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (move n from to spare)
   (<span class="kw">cond</span>
-    ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">&quot;DONE&quot;</span>)
+    ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">"DONE"</span>)
     (<span class="kw">else</span> (move (<span class="fu">-1+</span> n) from spare to)
           (print-move from to)
           (move (<span class="fu">-1+</span> m) spare to from))))</code></pre>

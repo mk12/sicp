@@ -78,7 +78,7 @@
 </h2>
 <ul>
 <li>Lists with symbols look just like Lisp code, except we <em>quote</em> them.</li>
-<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span> <span class="ss">exp</span>)</code>, or the shorthand <code>&#39;<span class="ss">exp</span></code>.</li>
+<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span> <span class="ss">exp</span>)</code>, or the shorthand <code>'<span class="ss">exp</span></code>.</li>
 <li>For example, <code>'x</code> evaluates to the symbol “x” instead of the variable <code>x</code>’s value.</li>
 <li>This is like just natural language. If I say, “Say your name,<span class="tuck">”</span> you will say your name. If I instead say, “Say ‘your name’,<span class="tuck">”</span> you will literally say the words “your name.<span class="tuck">”</span></li>
 </ul>
@@ -88,19 +88,19 @@
 (<span class="fu">list</span> a b)
 <span class="sc">→ (1 2)</span>
 
-(<span class="fu">list</span> <span class="vs">&#39;a &#39;b</span>)
+(<span class="fu">list</span> <span class="vs">'a 'b</span>)
 <span class="sc">→ (a b)</span>
 
-(<span class="fu">list</span> <span class="vs">&#39;a</span> b)
+(<span class="fu">list</span> <span class="vs">'a</span> b)
 <span class="sc">→ (a 2)</span></code></pre>
 <ul>
 <li>Now that we have quotation, we will use <code>'()</code> for the empty list instead of <code>nil</code>.</li>
 <li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
-<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="vs">&#39;a &#39;b</span>)
+<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="vs">'a 'b</span>)
 <span class="sc">→ #f</span>
 
-(<span class="fu">eq?</span> <span class="vs">&#39;a &#39;a</span>)
+(<span class="fu">eq?</span> <span class="vs">'a 'a</span>)
 <span class="sc">→ #t</span></code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.53">2.53</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.54">2.54</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.55">2.55</a></li></ul></aside>
 <h2 id="2.3.2" class="anchor">
@@ -188,7 +188,7 @@
           (make-product (deriv (multiplier exp) var)
                         (multiplicand exp))))
         (<span class="kw">else</span>
-         (<span class="fu">error</span> <span class="cn">&quot;unknown expression type&quot;</span> exp))))</code></pre>
+         (<span class="fu">error</span> <span class="cn">"unknown expression type"</span> exp))))</code></pre>
 <h3 id="2.3.2.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2.2" aria-hidden="true">#</a> Representing algebraic expressions
 </h3>
@@ -294,7 +294,7 @@
 <a class="anchor__link link" href="#2.3.4.2" aria-hidden="true">#</a> Representing Huffman trees
 </h3>
 <ul>
-<li>Leaves are represented by <code>(<span class="fu">list</span> <span class="vs">&#39;leaf</span> symbol weight)</code>.</li>
+<li>Leaves are represented by <code>(<span class="fu">list</span> <span class="vs">'leaf</span> symbol weight)</code>.</li>
 <li>Internal nodes are represented by <code>(<span class="fu">list</span> left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
 </ul>
 <h3 id="2.3.4.3" class="anchor">
@@ -304,7 +304,7 @@
 <pre><code class="blockcode">(<span class="kw">define</span> (decode bits tree)
   (<span class="kw">define</span> (decode-1 bits current-branch)
     (<span class="kw">if</span> (<span class="fu">null?</span> bits)
-        <span class="vs">&#39;()</span>
+        <span class="vs">'()</span>
         (<span class="kw">let</span> ((next-branch
                (choose-branch (<span class="fu">car</span> bits) current-branch)))
           (<span class="kw">if</span> (leaf? next-branch)
@@ -316,7 +316,7 @@
 (<span class="kw">define</span> (choose-branch bit branch)
   (<span class="kw">cond</span> ((<span class="fu">=</span> bit <span class="cn">0</span>) (left-branch branch))
         ((<span class="fu">=</span> bit <span class="cn">1</span>) (right-branch branch))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">&quot;bad bit&quot;</span> bit))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"bad bit"</span> bit))))</code></pre>
 <h3 id="2.3.4.4" class="anchor">
 <a class="anchor__link link" href="#2.3.4.4" aria-hidden="true">#</a> Sets of weighted elements
 </h3>

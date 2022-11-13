@@ -130,16 +130,16 @@ x <span class="op">=?&gt;</span> [<span class="cn">101 121</span>]
     (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
                balance)
-        <span class="cn">&quot;Insufficient funds&quot;</span>))
+        <span class="cn">"Insufficient funds"</span>))
   (<span class="kw">define</span> (deposit amount)
     (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
     balance)
   (<span class="kw">let</span> ((protected (make-serializer)))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) (protected withdraw))
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) (protected deposit))
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;balance</span>) balance)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'withdraw</span>) (protected withdraw))
+            ((<span class="fu">eq?</span> m <span class="vs">'deposit</span>) (protected deposit))
+            ((<span class="fu">eq?</span> m <span class="vs">'balance</span>) balance)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-account</span> <span class="cn">"unknown request"</span> m))))
     dispatch))</code></pre>
 <h3 id="ex3.39" class="anchor">
 <a class="anchor__link link" href="#ex3.39" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_thm_3.39">Exercise 3.39<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -225,10 +225,10 @@ Imports:
 <p>There are five possible values:</p>
 <pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100 1000 10000 100000 1000000</span>]</code></pre>
 <p>We will now demonstrate how the steps can interleave to produce these values. There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and 6 are reads; steps 3 and 7 are writes.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> steps-s-read <span class="vs">&#39;(1 2)</span>)
-(<span class="kw">define</span> steps-s-write <span class="vs">&#39;(3)</span>)
-(<span class="kw">define</span> steps-c-read <span class="vs">&#39;(4 5 6)</span>)
-(<span class="kw">define</span> steps-c-write <span class="vs">&#39;(7)</span>)
+<pre><code class="blockcode">(<span class="kw">define</span> steps-s-read <span class="vs">'(1 2)</span>)
+(<span class="kw">define</span> steps-s-write <span class="vs">'(3)</span>)
+(<span class="kw">define</span> steps-c-read <span class="vs">'(4 5 6)</span>)
+(<span class="kw">define</span> steps-c-write <span class="vs">'(7)</span>)
 (<span class="kw">define</span> steps-s (<span class="fu">append</span> steps-s-read steps-s-write))
 (<span class="kw">define</span> steps-c (<span class="fu">append</span> steps-c-read steps-c-write))
 (<span class="kw">define</span> steps (<span class="fu">append</span> steps-s steps-c))</code></pre>
@@ -263,14 +263,14 @@ Imports:
            (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply *</span> s-reads)))
           ((in? (<span class="fu">car</span> steps) steps-c-write)
            (iter s-reads c-reads (<span class="fu">cdr</span> steps) (<span class="fu">apply *</span> c-reads)))
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;execute-steps</span> <span class="cn">&quot;unknown step number&quot;</span> (<span class="fu">car</span> steps)))))
-  (iter <span class="vs">&#39;() &#39;()</span> steps x))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'execute-steps</span> <span class="cn">"unknown step number"</span> (<span class="fu">car</span> steps)))))
+  (iter <span class="vs">'() '()</span> steps x))
 
 (<span class="kw">define</span> final-values
   (<span class="fu">map</span> (<span class="kw">lambda</span> (ss) (execute-steps ss <span class="cn">10</span>)) possible-orders))
 
 final-values
-<span class="op">=&gt;</span> <span class="vs">&#39;(1000000 100000 10000 1000 100 100000 10000
+<span class="op">=&gt;</span> <span class="vs">'(1000000 100000 10000 1000 100 100000 10000
      1000 100 10000 1000 100 1000 100
      10000 100000 10000 1000 100 10000 1000
      100 1000 100 10000 10000 1000 100
@@ -289,14 +289,14 @@ final-values
     (iter xs)))
 
 (group final-values)
-<span class="op">=&gt;</span> <span class="vs">&#39;(*table* (100 . 10)
+<span class="op">=&gt;</span> <span class="vs">'(*table* (100 . 10)
              (1000 . 10)
              (10000 . 10)
              (100000 . 3)
              (1000000 . 2))</span></code></pre>
 <p>The largest value, 1000000, can be obtained in two ways:</p>
-<pre><code class="blockcode">(execute-steps <span class="vs">&#39;(1 2 3 4 5 6 7)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; squared, then cubed</span>
-(execute-steps <span class="vs">&#39;(4 5 6 7 1 2 3)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; cubed, then squared</span></code></pre>
+<pre><code class="blockcode">(execute-steps <span class="vs">'(1 2 3 4 5 6 7)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; squared, then cubed</span>
+(execute-steps <span class="vs">'(4 5 6 7 1 2 3)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; cubed, then squared</span></code></pre>
 <p>If we serialize the procedures, we always get that value:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
@@ -331,36 +331,36 @@ Imports:
 </ul>
 </aside>
 <pre><code class="blockcode">(<span class="kw">define</span> (exchange account1 account2)
-  (<span class="kw">let</span> ((difference (<span class="fu">-</span> (account1 <span class="vs">&#39;balance</span>)
-                       (account2 <span class="vs">&#39;balance</span>))))
-    ((account1 <span class="vs">&#39;withdraw</span>) difference)
-    ((account2 <span class="vs">&#39;deposit</span>) difference)))
+  (<span class="kw">let</span> ((difference (<span class="fu">-</span> (account1 <span class="vs">'balance</span>)
+                       (account2 <span class="vs">'balance</span>))))
+    ((account1 <span class="vs">'withdraw</span>) difference)
+    ((account2 <span class="vs">'deposit</span>) difference)))
 
 (<span class="kw">define</span> (make-account-and-serializer balance)
   (<span class="kw">define</span> (withdraw amount)
     (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
                balance)
-        <span class="cn">&quot;Insufficient funds&quot;</span>))
+        <span class="cn">"Insufficient funds"</span>))
   (<span class="kw">define</span> (deposit amount)
     (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount)) balance)
   (<span class="kw">let</span> ((balance-serializer (make-serializer)))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) withdraw)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) deposit)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;balance</span>) balance)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;serializer</span>) balance-serializer)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'withdraw</span>) withdraw)
+            ((<span class="fu">eq?</span> m <span class="vs">'deposit</span>) deposit)
+            ((<span class="fu">eq?</span> m <span class="vs">'balance</span>) balance)
+            ((<span class="fu">eq?</span> m <span class="vs">'serializer</span>) balance-serializer)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-account</span> <span class="cn">"unknown request"</span> m))))
     dispatch))
 
 (<span class="kw">define</span> (deposit account amount)
-  (<span class="kw">let</span> ((s (account <span class="vs">&#39;serializer</span>))
-        (d (account <span class="vs">&#39;deposit</span>)))
+  (<span class="kw">let</span> ((s (account <span class="vs">'serializer</span>))
+        (d (account <span class="vs">'deposit</span>)))
     ((s d) amount)))
 
 (<span class="kw">define</span> (serialized-exchange account1 account2)
-  (<span class="kw">let</span> ((serializer1 (account1 <span class="vs">&#39;serializer</span>))
-        (serializer2 (account2 <span class="vs">&#39;serializer</span>)))
+  (<span class="kw">let</span> ((serializer1 (account1 <span class="vs">'serializer</span>))
+        (serializer2 (account2 <span class="vs">'serializer</span>)))
     ((serializer1 (serializer2 exchange))
      account1
      account2)))</code></pre>
@@ -371,18 +371,18 @@ Imports:
 <p>The balances in the accounts start out as $10, $20, and $30. Exchanging balances A and B works by taking D = A - B, and then withdrawing to get A’ = A - D = B and depositing to get B’ = B + D = A. Going from {A, B} to {B, A}, we can see that any sequence of exchanges preserves the set {A, B}, and in this particular case {10, 20, 30}.</p>
 <p>Using the first version of <code>exchange</code>, where only individual deposits and withdrawals are serialized (by account), the {10, 20, 30} set will not be preserved. For example, let us refer to concurrent processes P and Q:</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (exchange acc1 acc2)
-  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="vs">&#39;balance</span>)    <span class="co">; (1)</span>
-                 (acc2 <span class="vs">&#39;balance</span>)))) <span class="co">; (2)</span>
-    ((acc1 <span class="vs">&#39;withdraw</span>) diff)         <span class="co">; (3)</span>
-    ((acc2 <span class="vs">&#39;deposit</span>) diff)))        <span class="co">; (4)</span></code></pre>
+  (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="vs">'balance</span>)    <span class="co">; (1)</span>
+                 (acc2 <span class="vs">'balance</span>)))) <span class="co">; (2)</span>
+    ((acc1 <span class="vs">'withdraw</span>) diff)         <span class="co">; (3)</span>
+    ((acc2 <span class="vs">'deposit</span>) diff)))        <span class="co">; (4)</span></code></pre>
 <p>Suppose accounts A, B, C begin with $10, $20, $30. Process P exchanges A and B, process Q exchanges A and C. We interleave steps as P1, Q1, Q2, Q3, Q4, P2, P3, P4. P finds the balance of A to be $10. Then Q carries out all its steps: A and C are exchanged, and P’s read operation does not affect this. Therefore A, B, C now have balances $30, $20, $10. Now P carries out its three remaining steps. It finds B to have $20. It calculates 10 - 20 = -10. It withdraws -10 from A, leaving A with a balance of 30 - (-10) = 40. It deposits this in B, leaving B with a balance of 20 + (-10) = 10. Now the balances of A, B, C are $40, $10, $10. Thus {10, 20, 30} is not preserved. But it does preserve the sum 10 + 20 + 30 = 40 + 10 + 10 = 60. This would be the case even if <code>diff</code> was a random number, because deposits and withdrawals are serialized, and we deposit and withdraw the same <code>diff</code>.</p>
 <p>If we used the original implementation but changed <code>make-account</code> so that it did no serializing, the sum would not be preserved. This is because the steps of the deposits and withdrawals of concurrent processes will interleave, and we have already seen the issues this produces earlier.</p>
 <h3 id="ex3.44" class="anchor">
 <a class="anchor__link link" href="#ex3.44" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_thm_3.44">Exercise 3.44<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="blockcode">(<span class="kw">define</span> (transfer from-acc to-acc amount)
-  ((from-acc <span class="vs">&#39;withdraw</span>) amount) <span class="co">; (1)</span>
-  ((to-acc <span class="vs">&#39;deposit</span>) amount))   <span class="co">; (2)</span></code></pre>
+  ((from-acc <span class="vs">'withdraw</span>) amount) <span class="co">; (1)</span>
+  ((to-acc <span class="vs">'deposit</span>) amount))   <span class="co">; (2)</span></code></pre>
 <p>Ben Bitdiddle is correct. This procedure will behave correctly, even with multiple concurrent transfers involving the same accounts. Suppose we transfer $10 between A and B (process P), and concurrently transfer $20 between A and C (process Q). P1 and Q1 will be in the same serialization set, because they both withdraw from A. P2 and Q2 will neither be in that set nor in each other’s set. One deposits to B, and the other deposits to C. They cannot interfere with each other.</p>
 <p>The essential difference between the transfer problem and the exchange problem is that the exchange amount depends on the current balances, and so it must include steps that read the balance, introducing a hole into which a concurrent step can be interleaved, unless the whole exchange is serialized.</p>
 <h3 id="ex3.45" class="anchor">
@@ -396,17 +396,17 @@ Imports:
   (<span class="kw">let</span> ((mutex (make-mutex)))
     (<span class="kw">lambda</span> (p)
       (<span class="kw">lambda</span> args
-        (mutex <span class="vs">&#39;acquire</span>)
+        (mutex <span class="vs">'acquire</span>)
         (<span class="kw">let</span> ((val (<span class="fu">apply</span> p args)))
-          (mutex <span class="vs">&#39;release</span>)
+          (mutex <span class="vs">'release</span>)
           val)))))</code></pre>
 <p>We cannot use this implementation because not all the Schemes we’re targeting support atomics for a proper implementation of <code>test-and-set!</code>. Instead, we define <code>make-mutex</code> in src/compat to use the Scheme’s own threading library.</p>
 <pre><code class="blockcode">(<span class="kw">define</span> (make-mutex-from-scratch)
   (<span class="kw">let</span> ((cell (<span class="fu">list</span> <span class="cn">#f</span>)))
     (<span class="kw">lambda</span> (m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;acquire</span>)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'acquire</span>)
              (<span class="kw">let</span> retry () (when (test-and-set! cell) (retry))))
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;release</span>) (clear! cell))))))
+            ((<span class="fu">eq?</span> m <span class="vs">'release</span>) (clear! cell))))))
 
 (<span class="kw">define</span> (clear! cell)
   (<span class="fu">set-car!</span> cell <span class="cn">#f</span>))
@@ -478,22 +478,22 @@ Imports:
   (<span class="kw">let</span> ((count n)
         (count-mutex (make-mutex))
         (queue-mutex (make-mutex)))
-    (queue-mutex <span class="vs">&#39;acquire</span>) <span class="co">; starts out locked</span>
+    (queue-mutex <span class="vs">'acquire</span>) <span class="co">; starts out locked</span>
     (<span class="kw">lambda</span> (m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;acquire</span>)
-             (count-mutex <span class="vs">&#39;acquire</span>)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'acquire</span>)
+             (count-mutex <span class="vs">'acquire</span>)
              (<span class="kw">set!</span> count (<span class="fu">-</span> count <span class="cn">1</span>))
              (when (<span class="fu">&lt;</span> count <span class="cn">0</span>)
-               (count-mutex <span class="vs">&#39;release</span>)
-               (queue-mutex <span class="vs">&#39;acquire</span>))
-             (count-mutex <span class="vs">&#39;release</span>))
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;release</span>)
-             (count-mutex <span class="vs">&#39;acquire</span>)
+               (count-mutex <span class="vs">'release</span>)
+               (queue-mutex <span class="vs">'acquire</span>))
+             (count-mutex <span class="vs">'release</span>))
+            ((<span class="fu">eq?</span> m <span class="vs">'release</span>)
+             (count-mutex <span class="vs">'acquire</span>)
              (<span class="kw">set!</span> count (<span class="fu">+</span> count <span class="cn">1</span>))
              (<span class="kw">if</span> (<span class="fu">&lt;=</span> count <span class="cn">0</span>)
-                 (queue-mutex <span class="vs">&#39;release</span>)
-                 (count-mutex <span class="vs">&#39;release</span>)))
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-semaphore</span> <span class="cn">&quot;unexpected message&quot;</span> m))))))</code></pre>
+                 (queue-mutex <span class="vs">'release</span>)
+                 (count-mutex <span class="vs">'release</span>)))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-semaphore</span> <span class="cn">"unexpected message"</span> m))))))</code></pre>
 <p>We can’t test this because not all Schemes we support have the required property of allowing any thread to release another’s mutex.</p>
 <ol start="2" type="a">
 <li><p>Semaphore in terms of atomic <code>test-and-set!</code> operations</p>
@@ -501,18 +501,18 @@ Imports:
   (<span class="kw">let</span> ((count n)
         (cell (<span class="fu">list</span> <span class="cn">#f</span>)))
     (<span class="kw">define</span> (the-semaphore m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;acquire</span>)
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'acquire</span>)
              (<span class="kw">let</span> retry () (when (test-and-set! cell) (retry)))
              (<span class="kw">cond</span> ((<span class="fu">&gt;</span> count <span class="cn">0</span>)
                     (<span class="kw">set!</span> count (<span class="fu">-</span> count <span class="cn">1</span>))
                     (clear! cell))
                    (<span class="kw">else</span> (clear! cell)
-                         (the-semaphore <span class="vs">&#39;acquire</span>)))) <span class="co">; busy wait</span>
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;release</span>)
+                         (the-semaphore <span class="vs">'acquire</span>)))) <span class="co">; busy wait</span>
+            ((<span class="fu">eq?</span> m <span class="vs">'release</span>)
              (<span class="kw">let</span> retry () (when (test-and-set! cell) (retry)))
              (<span class="kw">set!</span> count (<span class="fu">+</span> <span class="cn">1</span> count))
              (clear! cell))
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-semaphore-from-scratch</span> <span class="cn">&quot;unexpected message&quot;</span> m))))
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-semaphore-from-scratch</span> <span class="cn">"unexpected message"</span> m))))
     the-semaphore))</code></pre></li>
 </ol>
 <p>We can’t test this because our <code>test-and-set!</code> is not actually atomic.</p>
@@ -557,24 +557,24 @@ Imports:
     (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
                balance)
-        <span class="cn">&quot;Insufficient funds&quot;</span>))
+        <span class="cn">"Insufficient funds"</span>))
   (<span class="kw">define</span> (deposit amount)
     (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount)) balance)
   (<span class="kw">let</span> ((id (gen-uuid))
         (s (make-serializer)))
     (<span class="kw">define</span> (dispatch m)
-      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">&#39;withdraw</span>) withdraw)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;deposit</span>) deposit)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;balance</span>) balance)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;serializer</span>) s)
-            ((<span class="fu">eq?</span> m <span class="vs">&#39;identifier</span>) id)
-            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">&#39;make-account</span> <span class="cn">&quot;unknown request&quot;</span> m))))
+      (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'withdraw</span>) withdraw)
+            ((<span class="fu">eq?</span> m <span class="vs">'deposit</span>) deposit)
+            ((<span class="fu">eq?</span> m <span class="vs">'balance</span>) balance)
+            ((<span class="fu">eq?</span> m <span class="vs">'serializer</span>) s)
+            ((<span class="fu">eq?</span> m <span class="vs">'identifier</span>) id)
+            (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-account</span> <span class="cn">"unknown request"</span> m))))
     dispatch))
 
 (<span class="kw">define</span> (serialized-exchange a1 a2)
-  (<span class="kw">let</span> ((s1 (a1 <span class="vs">&#39;serializer</span>))
-        (s2 (a2 <span class="vs">&#39;serializer</span>)))
-    ((<span class="kw">if</span> (<span class="fu">&lt;</span> (a1 <span class="vs">&#39;identifier</span>) (a2 <span class="vs">&#39;identifier</span>))
+  (<span class="kw">let</span> ((s1 (a1 <span class="vs">'serializer</span>))
+        (s2 (a2 <span class="vs">'serializer</span>)))
+    ((<span class="kw">if</span> (<span class="fu">&lt;</span> (a1 <span class="vs">'identifier</span>) (a2 <span class="vs">'identifier</span>))
          (s1 (s2 exchange))
          (s2 (s1 exchange)))
      a1
@@ -585,8 +585,8 @@ Imports:
 (parallel-execute
  (<span class="kw">lambda</span> () (serialized-exchange a1 a2))
  (<span class="kw">lambda</span> () (serialized-exchange a2 a1)))
-(a1 <span class="vs">&#39;balance</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
-(a2 <span class="vs">&#39;balance</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
+(a1 <span class="vs">'balance</span>) <span class="op">=&gt;</span> <span class="cn">10</span>
+(a2 <span class="vs">'balance</span>) <span class="op">=&gt;</span> <span class="cn">20</span></code></pre>
 <h3 id="ex3.49" class="anchor">
 <a class="anchor__link link" href="#ex3.49" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_thm_3.49">Exercise 3.49<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
