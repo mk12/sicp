@@ -324,13 +324,11 @@ function link_cross_references(el)
     return el
 end
 
--- Adds the scheme class to CodeBlock elements. Also links IDs in (paste ...)
--- blocks to the corresponding section/exercise, and removes "NOALIGN" comments.
+-- Highlights scheme code blocks. Also links IDs in (paste ...) blocks to the
+-- corresponding section/exercise, and removes "NOALIGN" comments.
 function process_code_block(el)
-    if #el.classes > 0 then
-        return
-    end
-    el.classes = {"scheme"}
+    assert(#el.classes == 0)
+    el.classes = {"scheme"} -- TODO: remove
     el.text = el.text:gsub(" ; NOALIGN\n", "\n")
     local text = el.text
     -- Don't link in language.html since it's just examples.
@@ -371,28 +369,20 @@ end
 
 -- Adds the scheme class to all Code elements within el. We do this, rather than
 -- transforming every Code in the document, to avoid applying it in headings.
-function process_inline_code_in_block(el)
-    return pandoc.walk_block(el, {
-        Code = function(el)
-            -- Honor explicit request to disable highlighting.
-            if #el.classes == 1 and el.classes[1] == "nohl" then
-                el.classes = nil
-                return el
-            end
-            -- Only highlight inline code if it has a parenthesis (procedure
-            -- application) or guillemet for meta-variables. Otherwise notes
-            -- with lots of bits of code is too noisy, and also blue functions
-            -- by themselves end up looking like links.
-            if (
-                #el.classes == 0
-                and (el.text:find("%(") or el.text:find("«"))
-                and el.text ~= "'()"
-            ) then
-                el.classes = {"scheme"}
-                return el
-            end
-        end
-    })
+function process_inline_code(el)
+    assert(#el.classes == 0)
+    -- Only highlight inline code if it has a parenthesis (procedure
+    -- application) or guillemet for meta-variables. Otherwise notes
+    -- with lots of bits of code is too noisy, and also blue functions
+    -- by themselves end up looking like links.
+    if (
+        #el.classes == 0
+        and (el.text:find("%(") or el.text:find("«"))
+        and el.text ~= "'()"
+    ) then
+        el.classes = {"scheme"}
+        return el
+    end
 end
 
 -- These correspond to definitions in docgen.c.
@@ -587,10 +577,7 @@ return {
     -- Handle links, code blocks, and inline code.
     {Link = link_cross_references},
     {CodeBlock = process_code_block},
-    {Para = process_inline_code_in_block},
-    {BulletList = process_inline_code_in_block},
-    {OrderedList = process_inline_code_in_block},
-    {Table = process_inline_code_in_block},
+    {Code = process_inline_code},
     -- Render citations of the SICP text or lectures.
     {Cite = render_citation},
 }
