@@ -480,7 +480,8 @@
 ;; `deposit`, and then we evaluate the body of `acc`, which is the same as the
 ;; body of `dispatch`. The enclosing environment of E2 is E1, because that is
 ;; pointed to by the procedure. This application returns the value of `deposit`
-;; from E1. Now we evaluate `((#<deposit> 40)`. We create E3 to bind `amount` to
+;;;;; [TODO: The #<deposit> on next line trips schemehl assertion.]
+;;;;; from E1. Now we evaluate `((#<deposit> 40)`. We create E3 to bind `amount` to
 ;; the value 40, and the enclosing environment is E1 (pointed to by the
 ;; procedure `deposit`). This finally assigns 90 to `balance` in E1, and then
 ;; returns that value.

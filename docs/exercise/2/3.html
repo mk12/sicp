@@ -130,7 +130,7 @@ Imports:
 <h3 id="ex2.55" class="anchor">
 <a class="anchor__link link" href="#ex2.55" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<p>This happens because the Lisp reader expands each <code>&#39;<span class="ss">exp</span></code> to <code>(<span class="kw">quote</span><span class="vs"> </span><span class="ss">exp</span>)</code> before evaluation, so <code>''abracadabra</code> evaluates to a list of two symbols:</p>
+<p>This happens because the Lisp reader expands each <code>&#39;<span class="ss">exp</span></code> to <code>(<span class="kw">quote</span> <span class="ss">exp</span>)</code> before evaluation, so <code>''abracadabra</code> evaluates to a list of two symbols:</p>
 <pre><code class="blockcode">(<span class="fu">car</span> <span class="vs">&#39;&#39;abracadabra</span>)
 <span class="op">=&gt;</span> (<span class="fu">car</span> (<span class="kw">quote</span><span class="vs"> (quote abracadabra)</span>))
 <span class="op">=&gt;</span> (<span class="fu">car</span> <span class="vs">&#39;(quote abracadabra)</span>)

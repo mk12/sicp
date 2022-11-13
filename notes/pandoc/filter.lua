@@ -6,6 +6,9 @@ local vars = {}
 -- Connection to the render.ts server.
 local socket = nil
 
+-- The schemehl library.
+local schemehl = nil
+
 -- Makes a request to the render.ts server.
 function call_render_server(args)
     if not socket then
@@ -133,6 +136,7 @@ function render_exercises_div(el)
                 '<li class="flat__item"><a href="%s">%d.%d</a>%s</li>',
                 href, chap, ex, ex == to and "" or ", "))
     end
+    -- TODO why braces
     return {pandoc.RawBlock("html",
         '<aside><h4>Exercises:</h4> <ul class="flat">'
         .. table.concat(links) .. '</ul></aside>')}
@@ -324,6 +328,14 @@ function link_cross_references(el)
     return el
 end
 
+-- Highlights code using the schemehl library. Returns the raw HTML.
+function highlight_code(code, options)
+    if not schemehl then
+        schemehl = require("schemehl")
+    end
+    return schemehl.highlight(code, options)
+end
+
 -- Highlights scheme code blocks. Also links IDs in (paste ...) blocks to the
 -- corresponding section/exercise, and removes "NOALIGN" comments.
 function process_code_block(el)
@@ -380,8 +392,8 @@ function process_inline_code(el)
         and (el.text:find("%(") or el.text:find("«"))
         and el.text ~= "'()"
     ) then
-        el.classes = {"scheme"}
-        return el
+        return pandoc.RawInline("html",
+            "<code>" .. highlight_code(el.text) .. "</code>")
     end
 end
 

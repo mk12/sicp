@@ -27,6 +27,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// If enabled, the highlighter will avoid closing <span> tags before whitespace
+// only to reopen them again with the same class as before. One reason to
+// disable this would be if any of the CSS styles set a background color.
+#define MINIMIZE_TAGS 0
+
+// Enable this to print input code to stderr.
+#define DEBUG_INPUT 0
+
 // Enable this to print tokens to stderr.
 #define DEBUG_TOKENS 0
 
@@ -518,67 +526,60 @@ static void buf_write(struct Buffer *buf, struct Span span) {
     buf->len += span.len;
 }
 
-// Inserts at an arbitrary point inside the buffer, sliding to make room.
-static void buf_insert(struct Buffer *buf, size_t index, struct Span span) {
-    assert(index <= buf->len);
-    buf_ensure_additional(buf, span.len);
-    memmove(buf->data + index + span.len, buf->data + index, buf->len - index);
-    memcpy(buf->data + index, span.data, span.len);
-    buf->len += span.len;
-}
-
-// Like buf_write but printf style.
-// __attribute__((format(printf, 2, 3))) static void buf_fmt(struct Buffer *buf,
-//                                                           const char *format,
-//                                                           ...) {
-//     va_list args;
-//     va_start(args, format);
-//     size_t room = buf->cap - buf->len;
-//     int result = vsnprintf(buf->data + buf->len, room, format, args);
-//     assert(result >= 0);
-//     size_t actual_len = result;
-//     // This uses >=, not >, because == would mean it discarded one character
-//     so
-//     // that it could write a null terminator.
-//     if (actual_len >= room) {
-//         buf_ensure_additional(buf, actual_len + 1);
-//         size_t room = buf->cap - buf->len;
-//         vsnprintf(buf->data + buf->len, room, format, args);
-//     }
-//     va_end(args);
-//     buf->len += actual_len;
-// }
-
-// Wrapper around a buffer that writes <span> tags for highlighting.
+// Wrapper around a buffer that writes <span> tags for highlighting and escapes
+// special characters with HTML entities.
 struct Highlighter {
     // Destination buffer.
     struct Buffer *out;
     // Current CSS class.
     const char *class;
-    // Number of whitespace characters at the end of the buffer.
-    size_t trailing_ws;
+    // Whitespace span not yet written to the buffer.
+    struct Span pending_ws;
+    // TODO: remove.
+    bool minimize_tags;
 };
 
 // Initializes a highlighter with a destination buffer.
 static void hl_init(struct Highlighter *hl, struct Buffer *out) {
     hl->out = out;
     hl->class = NULL;
-    hl->trailing_ws = 0;
+    hl->pending_ws.data = NULL;
+    hl->minimize_tags = false;
 }
 
-// Closes any pending <span> tag. Idempotent. Must be called at the end.
-static void hl_flush(struct Highlighter *hl) {
+// Flushes any pending </span> to the buffer.
+static void hl_flush_tag(struct Highlighter *hl) {
     if (!hl->class) {
         return;
     }
-    buf_insert(hl->out, hl->out->len - hl->trailing_ws, SPAN("</span>"));
+    buf_write(hl->out, SPAN("</span>"));
     hl->class = NULL;
 }
 
-// Writes a highlighted span with the given class (or none if it's null).
+// Flushes any pending whitespace to the buffer.
+static void hl_flush_ws(struct Highlighter *hl) {
+    if (!hl->pending_ws.data) {
+        return;
+    }
+    buf_write(hl->out, hl->pending_ws);
+    hl->pending_ws.data = NULL;
+}
+
+// Flushes any pending writes to the buffer. Must be called at the end.
+static void hl_flush(struct Highlighter *hl) {
+    hl_flush_tag(hl);
+    hl_flush_ws(hl);
+}
+
+// Drops pending whitespace so that it won't get written.
+static void hl_drop_ws(struct Highlighter *hl) { hl->pending_ws.data = NULL; }
+
+// Writes a highlighted span with the given class (or none if it's null),
+// escaping special characters with HTML entities.
 static void hl_write(struct Highlighter *hl, const char *class,
                      struct Span span) {
-    if (class != hl->class) {
+    // TODO: Change back to MINIMIZE_TAGS.
+    if (class != hl->class || (hl->pending_ws.data && !hl->minimize_tags)) {
         hl_flush(hl);
         if (class) {
             buf_write(hl->out, SPAN("<span class=\""));
@@ -586,19 +587,47 @@ static void hl_write(struct Highlighter *hl, const char *class,
             buf_write(hl->out, SPAN("\">"));
             hl->class = class;
         }
+    } else {
+        hl_flush_ws(hl);
     }
-    buf_write(hl->out, span);
-    hl->trailing_ws = 0;
+    assert(!hl->pending_ws.data);
+    size_t i, j;
+    for (i = 0, j = 0; j < span.len;) {
+        const char *entity;
+        switch (span.data[j]) {
+        case '<':
+            entity = "&lt;";
+            break;
+        case '>':
+            entity = "&gt;";
+            break;
+        case '&':
+            entity = "&amp;";
+            break;
+        // TODO: Remove these two, not needed.
+        case '"':
+            entity = "&quot;";
+            break;
+        case '\'':
+            entity = "&#39;";
+            break;
+        default:
+            j++;
+            continue;
+        }
+        buf_write(hl->out, SUBSPAN(span, i, j));
+        buf_write(hl->out, SPAN(entity));
+        j++;
+        i = j;
+    }
+    buf_write(hl->out, SUBSPAN(span, i, j));
 }
 
 // Writes a span consisting only of whitespace. This is a special case because
-// the highlight class doensn't matter, so if it occurs between two spans of the
-// same class, we avoid closing and reopening the span.
+// so that we can apply the MINIMIZE_TAGS optimization.
 static void hl_whitespace(struct Highlighter *hl, struct Span span) {
-    // Write the whitespace in whatever the current class is.
-    buf_write(hl->out, span);
-    // But keep track of it so we can insert the </span> before trailing space.
-    hl->trailing_ws += span.len;
+    assert(!hl->pending_ws.data);
+    hl->pending_ws = span;
 }
 
 // Returns true if c is a hexadecimal digit.
@@ -613,21 +642,22 @@ static bool is_ident(char c) {
         return true;
     }
     switch (c) {
-    case '_':
-    case '-':
-    case ':':
     case '!':
-    case '?':
-    case '*':
-    case '/':
+    case '$':
     case '%':
-    case '^':
+    case '*':
     case '+':
+    case '-':
+    case '.':
+    case '/':
+    case ':':
     case '<':
     case '=':
     case '>':
+    case '?':
+    case '^':
+    case '_':
     case '~':
-    case '$':
         return true;
     default:
         return false;
@@ -667,7 +697,7 @@ enum TokenKind {
     T_STRING_WITH_ESCAPES,
     // Numeric literal.
     T_NUMBER,
-    // Hash literal like #t or #\space.
+    // Hash literal like #t or #\space, or the # in '#(a vector).
     T_HASH_LITERAL,
     // SICP module identifier like :1.2 or ?3.4.
     T_SICP_ID,
@@ -794,9 +824,17 @@ static const char *token_end(const char *p, const char *end,
         assert(p < end && *p == '"');
         p++;
         return p;
+    case '.':
+        if (!(p < end && isdigit(*p))) {
+            break;
+        }
+        // fallthrough
     case '-':
     case '+':
-    case '.':
+        if (!(p < end && (isdigit(*p) || *p == '.'))) {
+            break;
+        }
+        // fallthrough
     case '0':
     case '1':
     case '2':
@@ -852,6 +890,10 @@ static const char *token_end(const char *p, const char *end,
             p++;
             return p;
         }
+        if (*p == '(') {
+            // Vector literal, like '#(1 2 3).
+            return p;
+        }
         assert(*p == '\\');
         p++;
         for (size_t i = 0; i < ARRAY_LEN(CHARACTER_NAMES); i++) {
@@ -869,9 +911,11 @@ static const char *token_end(const char *p, const char *end,
         while (p < end && (*p == '.' || isdigit(*p))) {
             p++;
         }
-        // If we had an identifier like "?abc" we'd incorrectly classify the "?"
-        // as T_SICP_ID. There shouldn't be any like that, so assert on it.
-        assert(!(p < end && isalpha(*p)));
+        // If there is still more, treat it as an identifier. For example, it
+        // could be an identifier like "?c" used for symbolic derivation.
+        if (p < end && is_ident(*p)) {
+            break;
+        }
         *kind = T_SICP_ID;
         return p;
     case "«"[0]:
@@ -932,6 +976,12 @@ static bool scan_next(struct Scanner *scan) {
     scan->token.data = start;
     scan->token.len = end - start;
     return true;
+}
+
+// Returns true if the next token has the given kind, without consuming it.
+static bool scan_peek(struct Scanner *scan, enum TokenKind kind) {
+    struct Scanner peek = *scan;
+    return scan_next(&peek) && peek.kind == kind;
 }
 
 #if DEBUG_TOKENS
@@ -1044,7 +1094,7 @@ static void qt_process(struct QuoteTracker *qt, struct Span token,
     case T_RPAREN:
         assert(qt->stack[qt->i].depth > 0);
         qt->stack[qt->i].depth--;
-        if (qt->stack[qt->i].depth == 0) {
+        if (qt->i > 0 && qt->stack[qt->i].depth == 0) {
             assert(qt->i > 0);
             qt->i--;
         }
@@ -1145,6 +1195,16 @@ static void qt_dump(struct QuoteTracker *qt) {
 }
 #endif
 
+// Renders a Scheme comment to HTML.
+static void render_comment(struct Highlighter *out, struct Span token) {
+    if (span_eq(token, SPAN("; NOALIGN"))) {
+        assert(out->pending_ws.data);
+        hl_drop_ws(out);
+        return;
+    }
+    hl_write(out, "co", token);
+}
+
 // Renders a string literal with escapes to HTML.
 static void render_string_literal(struct Highlighter *out, struct Span token) {
     assert(token.data[0] == '\"' && token.data[token.len - 1] == '\"');
@@ -1239,11 +1299,20 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
             case T_WHITESPACE:
                 hl_whitespace(out, scan.token);
                 break;
+            case T_COMMENT:
+                render_comment(out, scan.token);
+                break;
             case T_METAVARIABLE:
                 render_metavariable(out, scan.token);
                 break;
             default:
-                hl_write(out, "vs", scan.token);
+                if (qt->stack[qt->i].depth == 0) {
+                    hl_write(out, "vs", scan.token);
+                } else {
+                    out->minimize_tags = true;
+                    hl_write(out, "vs", scan.token);
+                    out->minimize_tags = false;
+                }
                 break;
             }
             continue;
@@ -1256,7 +1325,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
             hl_whitespace(out, scan.token);
             break;
         case T_COMMENT:
-            hl_write(out, "co", scan.token);
+            render_comment(out, scan.token);
             break;
         case T_LPAREN:
             hl_write(out, NULL, scan.token);
@@ -1268,7 +1337,11 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
         case T_QUASIQUOTE:
         case T_SYNTAX:
         case T_QUASISYNTAX:
-            hl_write(out, "vs", scan.token);
+            if (scan_peek(&scan, T_METAVARIABLE)) {
+                hl_write(out, NULL, scan.token);
+            } else {
+                hl_write(out, "vs", scan.token);
+            }
             break;
         case T_UNQUOTE:
         case T_UNSYNTAX:
@@ -1309,14 +1382,26 @@ int l_highlight(lua_State *L) {
     struct Span text;
     text.data = luaL_checklstring(L, 1, &text.len);
     bool sicp_id_links = false;
-    if (lua_gettop(L) == 2) {
-        luaL_checktype(L, -1, LUA_TTABLE);
-        lua_getfield(L, -1, "sicp_id_link");
+    if (lua_gettop(L) == 2 && !lua_isnil(L, 2)) {
+        luaL_checktype(L, 2, LUA_TTABLE);
+        lua_getfield(L, 2, "sicp_id_link");
         if (!lua_isnil(L, -1)) {
             luaL_checktype(L, -1, LUA_TFUNCTION);
             sicp_id_links = true;
         }
     }
+#if DEBUG_INPUT
+    fputs("highlight:\n\t", stderr);
+    for (size_t i = 0; i < text.len; i++) {
+        char c = text.data[i];
+        if (c == '\n') {
+            fputs("\n\t", stderr);
+        } else {
+            putc(c, stderr);
+        }
+    }
+    putc('\n', stderr);
+#endif
     struct Buffer buf;
     // Use double the input length as a guess for how much space we need.
     buf_init(&buf, text.len * 2);

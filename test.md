@@ -1,4 +1,8 @@
 ```
+'«x»
+... - .3
+a->b &&& <>&
+(define x 3)
 :1.2
 (quasiquote (unquote 3))
 (quote (hi))
