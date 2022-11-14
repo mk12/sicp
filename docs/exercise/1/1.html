@@ -332,8 +332,8 @@ Imports:
 </ul>
 </aside>
 <p>The <code>good-enough?</code> predicate does not work well for small numbers because the tolerance is fixed. If the number is smaller than the tolerance, the result will be hopelessly inaccurate, like measuring an atom with a yard stick.</p>
-<pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="co">; should be 0</span>
-(<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="co">; should be 1e-10</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="at">; should be 0</span>
+(<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="at">; should be 1e-10</span></code></pre>
 <p>It is also inadequate for very large numbers. With limited precision, it is impossible to represent small differences between large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
 <pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
 (<span class="fu">sqrt</span> <span class="cn">1e21</span>) <span class="er">=&gt;...</span></code></pre>

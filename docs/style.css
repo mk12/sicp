@@ -533,29 +533,29 @@ body {
 
 /* Code highlighting */
 
-.kw { color: #a626a4; } /* special forms */
+.op, .er { font-weight: bold; } /* operators (assertion arrows), errors */
+.cs { font-style: italic; } /* console output */
+
+.kw { color: #a626a4; } /* keywords (special forms) */
 .fu { color: #0060d5; } /* functions */
 .cn { color: #307a06; } /* constants */
-.co, .er { color: #c0392b; } /* comments, errors */
-.vs { color: #986801; } /* quoted */
-.sc { color: #6d6d6d; } /* console output */
-.op { color: #888; } /* assertion arrows */
+.at, .er { color: #c0392b; } /* attention (comments, escapes), errors */
+.qu { color: #986801; } /* quoted */
+.cs { color: #6d6d6d; } /* console output */
+.op { color: #888; } /* operators (assertion arrows) */
 
 @media (prefers-color-scheme: dark) {
     .kw { color: #c678dd; }
     .fu { color: #61afef; }
     .cn { color: #98c379; }
-    .co, .er { color: #e7727b; }
-    .vs { color: #e5c07b; }
-    .sc { color: #959595; }
+    .at, .er { color: #e7727b; }
+    .qu { color: #e5c07b; }
+    .cs { color: #959595; }
     .op { color: #888; }
 }
 
-.op, .er { font-weight: bold; }
-.sc { font-style: italic; }
-
 /* metavariables */
-.ss {
+.mv {
     font-style: italic;
     text-decoration: underline;
     text-underline-offset: 2px;

@@ -251,7 +251,7 @@ Imports:
         ((application? exp)
          (<span class="fu">apply</span> (<span class="fu">eval</span> (operator exp) env)
                 (list-of-values (operands exp) env)))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'eval</span> <span class="cn">"unknown expression type"</span> exp))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'eval</span> <span class="cn">"unknown expression type"</span> exp))))
 
 (<span class="kw">define</span> (<span class="fu">apply</span> proc args)
   (<span class="kw">cond</span> ((primitive-procedure? proc)
@@ -262,11 +262,11 @@ Imports:
           (extend-environment (procedure-parameters proc)
                               args
                               (procedure-environment proc))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'apply</span> <span class="cn">"unknown procedure type"</span> proc))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'apply</span> <span class="cn">"unknown procedure type"</span> proc))))
 
 (<span class="kw">define</span> (list-of-values exps env)
   (<span class="kw">if</span> (no-operands? exps)
-      <span class="vs">'()</span>
+      <span class="qu">'()</span>
       (<span class="fu">cons</span> (<span class="fu">eval</span> (first-operand exps) env)
             (list-of-values (rest-operands exps) env))))
 
@@ -293,17 +293,17 @@ Imports:
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="cn">1</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="cn">"hi"</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">''a</span> env) <span class="op">=&gt;</span> <span class="vs">'a</span>
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(<span class="fu">eval</span> <span class="vs">'(define x 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(set! x 2)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(if "truthy" "yes" "no")</span> env) <span class="op">=&gt;</span> <span class="cn">"yes"</span>
-(<span class="fu">eval</span> <span class="vs">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">'((lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">''a</span> env) <span class="op">=&gt;</span> <span class="qu">'a</span>
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(<span class="fu">eval</span> <span class="qu">'(define x 1)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(set! x 2)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(if "truthy" "yes" "no")</span> env) <span class="op">=&gt;</span> <span class="cn">"yes"</span>
+(<span class="fu">eval</span> <span class="qu">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
+(<span class="fu">eval</span> <span class="qu">'((lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">"unknown expression type"</span></code></pre>
 <h3 id="ex4.1" class="anchor">
 <a class="anchor__link link" href="#ex4.1" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.1">Exercise 4.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -480,7 +480,7 @@ Imports:
 <p>Evaluates operands from left to right:</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (list-of-values exps env)
   (<span class="kw">if</span> (no-operands? exps)
-      <span class="vs">'()</span>
+      <span class="qu">'()</span>
       (<span class="kw">let</span> ((first-value (<span class="fu">eval</span> (first-operand exps) env)))
         (<span class="fu">cons</span> first-value
               (list-of-values (rest-operands exps) env)))))
@@ -492,7 +492,7 @@ Imports:
 <p>Evaluates operands from right to left:</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (list-of-values exps env)
   (<span class="kw">if</span> (no-operands? exps)
-      <span class="vs">'()</span>
+      <span class="qu">'()</span>
       (<span class="kw">let</span> ((rest-values (list-of-values (rest-operands exps) env)))
         (<span class="fu">cons</span> (<span class="fu">eval</span> (first-operand exps) env)
               rest-values))))
@@ -506,15 +506,15 @@ Imports:
 </h2>
 <pre><code class="codeblock">(<span class="kw">define</span> (self-evaluating? exp) (<span class="kw">or</span> (<span class="fu">boolean?</span> exp) (<span class="fu">number?</span> exp) (<span class="fu">string?</span> exp)))
 (<span class="kw">define</span> (variable? exp) (<span class="fu">symbol?</span> exp))
-(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">'quote</span>))
+(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="qu">'quote</span>))
 (<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (tagged-list? exp tag) (<span class="kw">and</span> (<span class="fu">pair?</span> exp) (<span class="fu">eq?</span> (<span class="fu">car</span> exp) tag)))
-(<span class="kw">define</span> (assignment? exp) (tagged-list? exp <span class="vs">'set!</span>))
+(<span class="kw">define</span> (assignment? exp) (tagged-list? exp <span class="qu">'set!</span>))
 (<span class="kw">define</span> (assignment-variable exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (assignment-value exp) (<span class="fu">caddr</span> exp))
-(<span class="kw">define</span> (make-assignment var val) (<span class="fu">list</span> <span class="vs">'set!</span> var val))
+(<span class="kw">define</span> (make-assignment var val) (<span class="fu">list</span> <span class="qu">'set!</span> var val))
 
-(<span class="kw">define</span> (definition? exp) (tagged-list? exp <span class="vs">'define</span>))
+(<span class="kw">define</span> (definition? exp) (tagged-list? exp <span class="qu">'define</span>))
 (<span class="kw">define</span> (definition-variable exp)
   (<span class="kw">if</span> (<span class="fu">symbol?</span> (<span class="fu">cadr</span> exp))
       (<span class="fu">cadr</span> exp)
@@ -523,15 +523,15 @@ Imports:
   (<span class="kw">if</span> (<span class="fu">symbol?</span> (<span class="fu">cadr</span> exp))
       (<span class="fu">caddr</span> exp)
       (make-lambda (<span class="fu">cdadr</span> exp) (<span class="fu">cddr</span> exp))))
-(<span class="kw">define</span> (make-definition variable value) (<span class="fu">list</span> <span class="vs">'define</span> variable value))
+(<span class="kw">define</span> (make-definition variable value) (<span class="fu">list</span> <span class="qu">'define</span> variable value))
 (<span class="kw">define</span> (make-lambda-definition name parameters body)
-  (<span class="fu">cons</span> <span class="vs">'define</span> (<span class="fu">cons</span> (<span class="fu">cons</span> name parameters) body)))
-(<span class="kw">define</span> (lambda? exp) (tagged-list? exp <span class="vs">'lambda</span>))
+  (<span class="fu">cons</span> <span class="qu">'define</span> (<span class="fu">cons</span> (<span class="fu">cons</span> name parameters) body)))
+(<span class="kw">define</span> (lambda? exp) (tagged-list? exp <span class="qu">'lambda</span>))
 (<span class="kw">define</span> (lambda-parameters exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (lambda-body exp) (<span class="fu">cddr</span> exp))
-(<span class="kw">define</span> (make-lambda parameters body) (<span class="fu">cons</span> <span class="vs">'lambda</span> (<span class="fu">cons</span> parameters body)))
+(<span class="kw">define</span> (make-lambda parameters body) (<span class="fu">cons</span> <span class="qu">'lambda</span> (<span class="fu">cons</span> parameters body)))
 
-(<span class="kw">define</span> (if? exp) (tagged-list? exp <span class="vs">'if</span>))
+(<span class="kw">define</span> (if? exp) (tagged-list? exp <span class="qu">'if</span>))
 (<span class="kw">define</span> (if-predicate exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (if-consequent exp) (<span class="fu">caddr</span> exp))
 (<span class="kw">define</span> (if-alternative exp)
@@ -539,11 +539,11 @@ Imports:
       (<span class="fu">cadddr</span> exp)
       <span class="cn">#f</span>))
 (<span class="kw">define</span> (make-if predicate consequent alternative)
-  (<span class="fu">list</span> <span class="vs">'if</span> predicate consequent alternative))
+  (<span class="fu">list</span> <span class="qu">'if</span> predicate consequent alternative))
 
-(<span class="kw">define</span> (begin? exp) (tagged-list? exp <span class="vs">'begin</span>))
+(<span class="kw">define</span> (begin? exp) (tagged-list? exp <span class="qu">'begin</span>))
 (<span class="kw">define</span> (begin-actions exp) (<span class="fu">cdr</span> exp))
-(<span class="kw">define</span> (make-begin actions) (<span class="fu">cons</span> <span class="vs">'begin</span> actions))
+(<span class="kw">define</span> (make-begin actions) (<span class="fu">cons</span> <span class="qu">'begin</span> actions))
 
 (<span class="kw">define</span> (last-exp? seq) (<span class="fu">null?</span> (<span class="fu">cdr</span> seq)))
 (<span class="kw">define</span> (first-exp seq) (<span class="fu">car</span> seq))
@@ -552,7 +552,7 @@ Imports:
   (<span class="kw">cond</span> ((<span class="fu">null?</span> seq) seq)
         ((last-exp? seq) (first-exp seq))
         (<span class="kw">else</span> (make-begin seq))))
-(<span class="kw">define</span> (make-begin seq) (<span class="fu">cons</span> <span class="vs">'begin</span> seq))
+(<span class="kw">define</span> (make-begin seq) (<span class="fu">cons</span> <span class="qu">'begin</span> seq))
 
 (<span class="kw">define</span> (application? exp) (<span class="fu">pair?</span> exp))
 (<span class="kw">define</span> (operator exp) (<span class="fu">car</span> exp))
@@ -561,9 +561,9 @@ Imports:
 (<span class="kw">define</span> (first-operand ops) (<span class="fu">car</span> ops))
 (<span class="kw">define</span> (rest-operands ops) (<span class="fu">cdr</span> ops))
 
-(sequence-&gt;exp <span class="vs">'()</span>) <span class="op">=&gt;</span> <span class="vs">'()</span>
-(sequence-&gt;exp <span class="vs">'(1)</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
-(sequence-&gt;exp <span class="vs">'(1 2)</span>) <span class="op">=&gt;</span> <span class="vs">'(begin 1 2)</span></code></pre>
+(sequence-&gt;exp <span class="qu">'()</span>) <span class="op">=&gt;</span> <span class="qu">'()</span>
+(sequence-&gt;exp <span class="qu">'(1)</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
+(sequence-&gt;exp <span class="qu">'(1 2)</span>) <span class="op">=&gt;</span> <span class="qu">'(begin 1 2)</span></code></pre>
 <h3 id="4.1.2.1" class="anchor">
 <a class="anchor__link link" href="#4.1.2.1" aria-hidden="true">#</a> <span class="number">4.1.2.1</span> Derived expressions
 </h3>
@@ -588,32 +588,32 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="codeblock">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="vs">'cond</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="qu">'cond</span>))
 (<span class="kw">define</span> (cond-clauses exp) (<span class="fu">cdr</span> exp))
-(<span class="kw">define</span> (cond-else-clause? clause) (<span class="fu">eq?</span> (cond-predicate clause) <span class="vs">'else</span>))
+(<span class="kw">define</span> (cond-else-clause? clause) (<span class="fu">eq?</span> (cond-predicate clause) <span class="qu">'else</span>))
 (<span class="kw">define</span> (cond-predicate clause) (<span class="fu">car</span> clause))
 (<span class="kw">define</span> (cond-actions clause) (<span class="fu">cdr</span> clause))
 (<span class="kw">define</span> (cond-&gt;if exp) (expand-clauses (cond-clauses exp)))
 (<span class="kw">define</span> (expand-clauses clauses)
   (<span class="kw">if</span> (<span class="fu">null?</span> clauses)
-      <span class="cn">#f</span> <span class="co">; no else clause</span>
+      <span class="cn">#f</span> <span class="at">; no else clause</span>
       (<span class="kw">let</span> ((first (<span class="fu">car</span> clauses))
             (rest (<span class="fu">cdr</span> clauses)))
         (<span class="kw">if</span> (cond-else-clause? first)
             (<span class="kw">if</span> (<span class="fu">null?</span> rest)
                 (sequence-&gt;exp (cond-actions first))
-                (<span class="fu">error</span> <span class="vs">'expand-clauses</span> <span class="cn">"else clause isn't last"</span> clauses))
+                (<span class="fu">error</span> <span class="qu">'expand-clauses</span> <span class="cn">"else clause isn't last"</span> clauses))
             (make-if (cond-predicate first)
                      (sequence-&gt;exp (cond-actions first))
                      (expand-clauses rest))))))
 
-(cond-&gt;if <span class="vs">'(cond ((&lt; x 0) -1)
+(cond-&gt;if <span class="qu">'(cond ((&lt; x 0) -1)
                  ((= x 0) 0)
                  ((&gt; x 0) 1)
                  (else impossible))</span>)
-<span class="op">=&gt;</span> <span class="vs">'(if (&lt; x 0) -1 (if (= x 0) 0 (if (&gt; x 0) 1 impossible)))</span>
+<span class="op">=&gt;</span> <span class="qu">'(if (&lt; x 0) -1 (if (= x 0) 0 (if (&gt; x 0) 1 impossible)))</span>
 
-(cond-&gt;if <span class="vs">'(cond (else foo)
+(cond-&gt;if <span class="qu">'(cond (else foo)
                  ((= x 1) bar))</span>)
 <span class="er">=!&gt;</span> <span class="cn">"else clause isn't last"</span></code></pre>
 <h3 id="4.1.2.2" class="anchor">
@@ -635,12 +635,12 @@ Imports:
 </ul>
 </aside>
 <p>Moved here from Section 4.1.4 to avoid import cycle.</p>
-<pre><code class="codeblock">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="vs">'primitive</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="qu">'primitive</span>))
 (<span class="kw">define</span> (primitive-implementation proc) (<span class="fu">cadr</span> proc))
 (<span class="kw">define</span> (apply-primitive-procedure proc args)
   (<span class="fu">apply</span> (primitive-implementation proc) args))
 
-(apply-primitive-procedure (<span class="fu">list</span> <span class="vs">'primitive</span> <span class="fu">car</span>) (<span class="fu">list</span> <span class="vs">'(a . b)</span>)) <span class="op">=&gt;</span> <span class="vs">'a</span></code></pre>
+(apply-primitive-procedure (<span class="fu">list</span> <span class="qu">'primitive</span> <span class="fu">car</span>) (<span class="fu">list</span> <span class="qu">'(a . b)</span>)) <span class="op">=&gt;</span> <span class="qu">'a</span></code></pre>
 <h3 id="ex4.2" class="anchor">
 <a class="anchor__link link" href="#ex4.2" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.2">Exercise 4.2<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -751,16 +751,16 @@ Imports:
 <ol type="a">
 <li><p>Lous is wrong—moving the clause for procedure applications further up will break evaluation. For example, it will treat <code>(<span class="kw">define</span> x <span class="cn">3</span>)</code> as an application of the operator <code>define</code> to the operands <code>x</code> and <code>3</code>. This is because <code>application?</code> is implemented simply as <code>pair?</code>. We assume a pair is an application after ruling out all the special forms.</p></li>
 <li><p>We can change the syntax so that applications start with <code>call</code>:</p>
-<pre><code class="codeblock">(<span class="kw">define</span> (application? exp) (tagged-list? exp <span class="vs">'call</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (application? exp) (tagged-list? exp <span class="qu">'call</span>))
 (<span class="kw">define</span> (operator exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (operands exp) (<span class="fu">cddr</span> exp))
 
 (<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">eval</span>))
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'((lambda () "hi"))</span> env) <span class="er">=!&gt;</span> <span class="cn">"unknown expression type"</span>
-(<span class="fu">eval</span> <span class="vs">'(call (lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'(call (lambda (x) x) 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre></li>
+(<span class="fu">eval</span> <span class="qu">'((lambda () "hi"))</span> env) <span class="er">=!&gt;</span> <span class="cn">"unknown expression type"</span>
+(<span class="fu">eval</span> <span class="qu">'(call (lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'(call (lambda (x) x) 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre></li>
 </ol>
 <h3 id="ex4.3" class="anchor">
 <a class="anchor__link link" href="#ex4.3" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.3">Exercise 4.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -929,41 +929,41 @@ Imports:
 </ul>
 </aside>
 <pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
-  (<span class="kw">let</span> ((proc (get <span class="vs">'eval</span> (type-tag exp))))
+  (<span class="kw">let</span> ((proc (get <span class="qu">'eval</span> (type-tag exp))))
     (<span class="kw">if</span> proc
         (proc exp env)
-        ((get <span class="vs">'eval 'call</span>) exp env))))
+        ((get <span class="qu">'eval 'call</span>) exp env))))
 
 (<span class="kw">define</span> (type-tag datum)
   (<span class="kw">cond</span> ((<span class="fu">pair?</span> datum) (<span class="fu">car</span> datum))
-        ((<span class="fu">boolean?</span> datum) <span class="vs">'boolean</span>)
-        ((<span class="fu">number?</span> datum) <span class="vs">'number</span>)
-        ((<span class="fu">string?</span> datum) <span class="vs">'string</span>)
-        ((<span class="fu">symbol?</span> datum) <span class="vs">'symbol</span>)
-        ((<span class="fu">null?</span> datum) (<span class="fu">error</span> <span class="vs">'type-tag</span> <span class="cn">"invalid syntax ()"</span>))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'type-tag</span> <span class="cn">"unknown expression type"</span> datum))))</code></pre>
+        ((<span class="fu">boolean?</span> datum) <span class="qu">'boolean</span>)
+        ((<span class="fu">number?</span> datum) <span class="qu">'number</span>)
+        ((<span class="fu">string?</span> datum) <span class="qu">'string</span>)
+        ((<span class="fu">symbol?</span> datum) <span class="qu">'symbol</span>)
+        ((<span class="fu">null?</span> datum) (<span class="fu">error</span> <span class="qu">'type-tag</span> <span class="cn">"invalid syntax ()"</span>))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'type-tag</span> <span class="cn">"unknown expression type"</span> datum))))</code></pre>
 <p>Paste everything except <code>eval</code>:</p>
 <pre><code class="codeblock">(<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">apply</span> eval-assignment eval-definition eval-if eval-sequence
                list-of-values))
 
 (<span class="kw">define</span> (eval-pkg)
   (<span class="kw">define</span> (on-exp f) (<span class="kw">lambda</span> (exp env) (f exp)))
-  (put <span class="vs">'eval 'boolean</span> (on-exp identity))
-  (put <span class="vs">'eval 'number</span> (on-exp identity))
-  (put <span class="vs">'eval 'string</span> (on-exp identity))
-  (put <span class="vs">'eval 'symbol</span> lookup-variable-value)
-  (put <span class="vs">'eval 'quote</span> (on-exp text-of-quotation))
-  (put <span class="vs">'eval 'set!</span> eval-assignment)
-  (put <span class="vs">'eval 'define</span> eval-definition)
-  (put <span class="vs">'eval 'if</span> eval-if)
-  (put <span class="vs">'eval 'lambda</span>
+  (put <span class="qu">'eval 'boolean</span> (on-exp identity))
+  (put <span class="qu">'eval 'number</span> (on-exp identity))
+  (put <span class="qu">'eval 'string</span> (on-exp identity))
+  (put <span class="qu">'eval 'symbol</span> lookup-variable-value)
+  (put <span class="qu">'eval 'quote</span> (on-exp text-of-quotation))
+  (put <span class="qu">'eval 'set!</span> eval-assignment)
+  (put <span class="qu">'eval 'define</span> eval-definition)
+  (put <span class="qu">'eval 'if</span> eval-if)
+  (put <span class="qu">'eval 'lambda</span>
        (<span class="kw">lambda</span> (exp env)
          (make-procedure (lambda-parameters exp) (lambda-body exp) env)))
-  (put <span class="vs">'eval 'begin</span>
+  (put <span class="qu">'eval 'begin</span>
        (<span class="kw">lambda</span> (exp env) (eval-sequence (begin-actions exp) env)))
-  (put <span class="vs">'eval 'cond</span>
+  (put <span class="qu">'eval 'cond</span>
        (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (cond-&gt;if exp) env)))
-  (put <span class="vs">'eval 'call</span>
+  (put <span class="qu">'eval 'call</span>
        (<span class="kw">lambda</span> (exp env)
          (<span class="fu">apply</span> (<span class="fu">eval</span> (operator exp) env)
                 (list-of-values (operands exp) env)))))
@@ -973,17 +973,17 @@ Imports:
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="cn">1</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="cn">"hi"</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">''a</span> env) <span class="op">=&gt;</span> <span class="vs">'a</span>
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(<span class="fu">eval</span> <span class="vs">'(define x 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(set! x 2)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(if "truthy" "yes" "no")</span> env) <span class="op">=&gt;</span> <span class="cn">"yes"</span>
-(<span class="fu">eval</span> <span class="vs">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">'((lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">''a</span> env) <span class="op">=&gt;</span> <span class="qu">'a</span>
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(<span class="fu">eval</span> <span class="qu">'(define x 1)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(set! x 2)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(if "truthy" "yes" "no")</span> env) <span class="op">=&gt;</span> <span class="cn">"yes"</span>
+(<span class="fu">eval</span> <span class="qu">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
+(<span class="fu">eval</span> <span class="qu">'((lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">"unknown expression type"</span></code></pre>
 <h3 id="ex4.4" class="anchor">
 <a class="anchor__link link" href="#ex4.4" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.4">Exercise 4.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -1052,22 +1052,22 @@ Imports:
           (<span class="kw">else</span> (<span class="kw">let</span> ((value (<span class="fu">eval</span> (<span class="fu">car</span> exps) env)))
                   (<span class="kw">cond</span> ((true? value) value)
                         (<span class="kw">else</span> (eval-or (<span class="fu">cdr</span> exps) env)))))))
-  (put <span class="vs">'eval 'and</span> (<span class="kw">lambda</span> (exp env) (eval-and (<span class="fu">cdr</span> exp) env)))
-  (put <span class="vs">'eval 'or</span> (<span class="kw">lambda</span> (exp env) (eval-or (<span class="fu">cdr</span> exp) env))))
+  (put <span class="qu">'eval 'and</span> (<span class="kw">lambda</span> (exp env) (eval-and (<span class="fu">cdr</span> exp) env)))
+  (put <span class="qu">'eval 'or</span> (<span class="kw">lambda</span> (exp env) (eval-or (<span class="fu">cdr</span> exp) env))))
 
 (using eval-pkg and-or-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(and)</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(<span class="fu">eval</span> <span class="vs">'(and 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(and 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(and 2 #f 1)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">eval</span> <span class="vs">'(and #f #f #f)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">eval</span> <span class="vs">'(or)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">eval</span> <span class="vs">'(or 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(or 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(or 2 #f 1)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(or #f #f #f)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(and)</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(<span class="fu">eval</span> <span class="qu">'(and 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(and 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(and 2 #f 1)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">eval</span> <span class="qu">'(and #f #f #f)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">eval</span> <span class="qu">'(or)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">eval</span> <span class="qu">'(or 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(or 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(or 2 #f 1)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(or #f #f #f)</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex4.5" class="anchor">
 <a class="anchor__link link" href="#ex4.5" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.5">Exercise 4.5<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1146,7 +1146,7 @@ Imports:
 </aside>
 <pre><code class="codeblock">(<span class="kw">define</span> (cond-arrow-clause? clause)
   (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> (<span class="fu">cdr</span> clause)))
-       (<span class="fu">eq?</span> <span class="vs">'=&gt;</span> (<span class="fu">cadr</span> clause))))
+       (<span class="fu">eq?</span> <span class="qu">'=&gt;</span> (<span class="fu">cadr</span> clause))))
 (<span class="kw">define</span> (cond-arrow-recipient clause) (<span class="fu">caddr</span> clause))</code></pre>
 <p>Implementing this as a derived expression is hard because it requires generating a let/lambda to avoid evaluating the predicate twice. I’ve instead used direct evaluation, but without error handling, so for example it will ignore malformed clauses if they come after the selected clause.</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (eval-cond clauses env)
@@ -1162,15 +1162,15 @@ Imports:
         (<span class="kw">else</span> (eval-cond (<span class="fu">cdr</span> clauses) env))))
 
 (<span class="kw">define</span> (extended-cond-pkg)
-  (put <span class="vs">'eval 'cond</span> (<span class="kw">lambda</span> (exp env) (eval-cond (cond-clauses exp) env))))
+  (put <span class="qu">'eval 'cond</span> (<span class="kw">lambda</span> (exp env) (eval-cond (cond-clauses exp) env))))
 
 (using eval-pkg extended-cond-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(cond (#f 1))</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">eval</span> <span class="vs">'(cond (#f 1) (2 =&gt; (lambda (x) x)))</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(cond (2 =&gt; (lambda (x) "hi")) (#f 1))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(cond (#f 1))</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">eval</span> <span class="qu">'(cond (#f 1) (2 =&gt; (lambda (x) x)))</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(cond (2 =&gt; (lambda (x) "hi")) (#f 1))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
 <h3 id="ex4.6" class="anchor">
 <a class="anchor__link link" href="#ex4.6" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.6">Exercise 4.6<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1227,12 +1227,12 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="codeblock">(<span class="kw">define</span> (let? exp) (tagged-list? exp <span class="vs">'let</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (let? exp) (tagged-list? exp <span class="qu">'let</span>))
 (<span class="kw">define</span> (let-bindings exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (let-actions exp) (<span class="fu">cddr</span> exp))
 (<span class="kw">define</span> (binding-variable exp) (<span class="fu">car</span> exp))
 (<span class="kw">define</span> (binding-value exp) (<span class="fu">cadr</span> exp))
-(<span class="kw">define</span> (make-let bindings body) (<span class="fu">cons</span> <span class="vs">'let</span> (<span class="fu">cons</span> bindings body)))
+(<span class="kw">define</span> (make-let bindings body) (<span class="fu">cons</span> <span class="qu">'let</span> (<span class="fu">cons</span> bindings body)))
 
 (<span class="kw">define</span> (let-&gt;combination exp)
   (<span class="fu">cons</span> (make-lambda (<span class="fu">map</span> binding-variable (let-bindings exp))
@@ -1240,17 +1240,17 @@ Imports:
         (<span class="fu">map</span> binding-value (let-bindings exp))))
 
 (<span class="kw">define</span> (let-pkg)
-  (put <span class="vs">'eval 'let</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (let-&gt;combination exp) env))))
+  (put <span class="qu">'eval 'let</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (let-&gt;combination exp) env))))
 
 (using eval-pkg let-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(let () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(let ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'(let ((x 1) (y 2)) x y)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(let () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(let ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'(let ((x 1) (y 2)) x y)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <p>Show that the value is only evaluated once:</p>
-<pre><code class="codeblock">(<span class="fu">eval</span> <span class="vs">'(define f (lambda () "hi"))</span> env)
-(<span class="fu">eval</span> <span class="vs">'(let ((x (set! f (f)))) x x f)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">eval</span> <span class="qu">'(define f (lambda () "hi"))</span> env)
+(<span class="fu">eval</span> <span class="qu">'(let ((x (set! f (f)))) x x f)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
 <h3 id="ex4.7" class="anchor">
 <a class="anchor__link link" href="#ex4.7" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.7">Exercise 4.7<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1330,15 +1330,15 @@ Imports:
   (iter (let-bindings exp)))
 
 (<span class="kw">define</span> (let*-pkg)
-  (put <span class="vs">'eval 'let*</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (let*-&gt;nested-lets exp) env))))
+  (put <span class="qu">'eval 'let*</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (let*-&gt;nested-lets exp) env))))
 
 (using eval-pkg let-pkg let*-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(let* () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(let* ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'(let ((x 1) (y x)) y)</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(<span class="fu">eval</span> <span class="vs">'(let* ((x 1) (y x)) y)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(let* () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(let* ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'(let ((x 1) (y x)) y)</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(<span class="fu">eval</span> <span class="qu">'(let* ((x 1) (y x)) y)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <h3 id="ex4.8" class="anchor">
 <a class="anchor__link link" href="#ex4.8" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.8">Exercise 4.8<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1416,7 +1416,7 @@ Imports:
 
 (<span class="kw">define</span> (named-let-&gt;combination exp)
   (<span class="fu">list</span> (make-lambda
-         <span class="vs">'()</span>
+         <span class="qu">'()</span>
          (<span class="fu">list</span> (make-lambda-definition
                 (named-let-name exp)
                 (<span class="fu">map</span> binding-variable (named-let-bindings exp))
@@ -1425,7 +1425,7 @@ Imports:
                      (<span class="fu">map</span> binding-value (named-let-bindings exp)))))))
 
 (<span class="kw">define</span> (named-let-pkg)
-  (put <span class="vs">'eval 'let</span>
+  (put <span class="qu">'eval 'let</span>
        (<span class="kw">lambda</span> (exp env)
          (<span class="fu">eval</span> ((<span class="kw">if</span> (named-let? exp) named-let-&gt;combination let-&gt;combination)
                 exp)
@@ -1434,10 +1434,10 @@ Imports:
 (using eval-pkg named-let-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(let () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(let ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'(let foo ((x 1)) x)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(let foo ((x #t)) (if x (foo #f) "done"))</span> env) <span class="op">=&gt;</span> <span class="cn">"done"</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(let () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(let ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'(let foo ((x 1)) x)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(let foo ((x #t)) (if x (foo #f) "done"))</span> env) <span class="op">=&gt;</span> <span class="cn">"done"</span></code></pre>
 <h3 id="ex4.9" class="anchor">
 <a class="anchor__link link" href="#ex4.9" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.9">Exercise 4.9<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1506,27 +1506,27 @@ Imports:
 
 (<span class="kw">define</span> (while-&gt;combination exp)
   (<span class="fu">list</span> (make-lambda
-         <span class="vs">'(test body)</span>
+         <span class="qu">'(test body)</span>
          (<span class="fu">list</span> (make-lambda-definition
-                <span class="vs">'loop
+                <span class="qu">'loop
                 '()</span>
-                (<span class="fu">list</span> (make-if <span class="vs">'(test)</span>
-                               (make-begin (<span class="fu">list</span> <span class="vs">'(body) '(loop)</span>))
+                (<span class="fu">list</span> (make-if <span class="qu">'(test)</span>
+                               (make-begin (<span class="fu">list</span> <span class="qu">'(body) '(loop)</span>))
                                <span class="cn">#f</span>)))
-               <span class="vs">'(loop)</span>))
-        (make-lambda <span class="vs">'()</span> (<span class="fu">list</span> (while-test exp)))
-        (make-lambda <span class="vs">'()</span> (while-actions exp))))
+               <span class="qu">'(loop)</span>))
+        (make-lambda <span class="qu">'()</span> (<span class="fu">list</span> (while-test exp)))
+        (make-lambda <span class="qu">'()</span> (while-actions exp))))
 
 (<span class="kw">define</span> (while-pkg)
-  (put <span class="vs">'eval 'while</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (while-&gt;combination exp) env))))
+  (put <span class="qu">'eval 'while</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (while-&gt;combination exp) env))))
 
 (using eval-pkg while-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(define x #t)</span> env)
-(<span class="fu">eval</span> <span class="vs">'(define y 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">'(while x (set! x #f) (set! y 2))</span> env)
-(<span class="fu">eval</span> <span class="vs">'y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(define x #t)</span> env)
+(<span class="fu">eval</span> <span class="qu">'(define y 1)</span> env)
+(<span class="fu">eval</span> <span class="qu">'(while x (set! x #f) (set! y 2))</span> env)
+(<span class="fu">eval</span> <span class="qu">'y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h3 id="ex4.10" class="anchor">
 <a class="anchor__link link" href="#ex4.10" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.10">Exercise 4.10<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1646,19 +1646,19 @@ Imports:
 <pre><code class="codeblock">(<span class="kw">define</span> (if? exp)
   (<span class="kw">and</span> (<span class="fu">pair?</span> exp)
        (<span class="fu">=</span> (<span class="fu">length</span> exp) <span class="cn">5</span>)
-       (<span class="fu">eq?</span> <span class="vs">'?</span> (<span class="fu">cadr</span> exp))
-       (<span class="fu">eq?</span> <span class="vs">':</span> (<span class="fu">cadddr</span> exp))))
+       (<span class="fu">eq?</span> <span class="qu">'?</span> (<span class="fu">cadr</span> exp))
+       (<span class="fu">eq?</span> <span class="qu">':</span> (<span class="fu">cadddr</span> exp))))
 (<span class="kw">define</span> (if-predicate exp) (<span class="fu">car</span> exp))
 (<span class="kw">define</span> (if-consequent exp) (<span class="fu">caddr</span> exp))
 (<span class="kw">define</span> (if-alternative exp) (<span class="fu">car</span> (<span class="fu">cddddr</span> exp)))
 (<span class="kw">define</span> (make-if predicate consequent alternative)
-  (<span class="fu">list</span> predicate <span class="vs">'?</span> consequent <span class="vs">':</span> alternative))</code></pre>
+  (<span class="fu">list</span> predicate <span class="qu">'?</span> consequent <span class="qu">':</span> alternative))</code></pre>
 <p>Note: Only pasting the minimal amount to make the tests below work, so that the import list doesn’t have to be so long.</p>
 <pre><code class="codeblock">(<span class="kw">paste</span> (<a href="#4.1.1">:4.1.1</a> <span class="fu">eval</span> eval-if))
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(#t ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(#f ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(#t ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(#f ? 1 : 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h2 id="4.1.3" class="anchor">
 <a class="anchor__link link" href="#4.1.3" aria-hidden="true">#</a> <span class="number">4.1.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.3">Evaluator Data Structures<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -1686,20 +1686,20 @@ Imports:
 </ul>
 </aside>
 <pre><code class="codeblock">(<span class="kw">define</span> (make-procedure parameters body env)
-  (<span class="fu">list</span> <span class="vs">'procedure</span> parameters body env))
-(<span class="kw">define</span> (compound-procedure? p) (tagged-list? p <span class="vs">'procedure</span>))
+  (<span class="fu">list</span> <span class="qu">'procedure</span> parameters body env))
+(<span class="kw">define</span> (compound-procedure? p) (tagged-list? p <span class="qu">'procedure</span>))
 (<span class="kw">define</span> (procedure-parameters p) (<span class="fu">cadr</span> p))
 (<span class="kw">define</span> (procedure-body p) (<span class="fu">caddr</span> p))
 (<span class="kw">define</span> (procedure-environment p) (<span class="fu">cadddr</span> p))</code></pre>
 <h3 id="4.1.3.3" class="anchor">
 <a class="anchor__link link" href="#4.1.3.3" aria-hidden="true">#</a> <span class="number">4.1.3.3</span> Operations on environments
 </h3>
-<pre><code class="codeblock">(<span class="kw">define</span> the-empty-environment <span class="vs">'()</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> the-empty-environment <span class="qu">'()</span>)
 (<span class="kw">define</span> (make-environment . args)
   (<span class="kw">let</span> ((base (<span class="kw">cond</span> ((<span class="fu">null?</span> args) the-empty-environment)
                     ((<span class="fu">null?</span> (<span class="fu">cdr</span> args)) (<span class="fu">car</span> args))
-                    (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'make-environment</span> <span class="cn">"invalid args"</span> args)))))
-    (extend-environment <span class="vs">'() '()</span> base)))
+                    (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'make-environment</span> <span class="cn">"invalid args"</span> args)))))
+    (extend-environment <span class="qu">'() '()</span> base)))
 
 (<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
 (<span class="kw">define</span> (first-frame env) (<span class="fu">car</span> env))
@@ -1716,8 +1716,8 @@ Imports:
   (<span class="kw">cond</span> ((<span class="fu">=</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
          (<span class="fu">cons</span> (make-frame vars vals) base-env))
         ((<span class="fu">&lt;</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
-         (<span class="fu">error</span> <span class="vs">'extend-environment</span> <span class="cn">"too many arguments"</span> vars vals))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'extend-environment</span> <span class="cn">"too few arguments"</span> vars vals))))
+         (<span class="fu">error</span> <span class="qu">'extend-environment</span> <span class="cn">"too many arguments"</span> vars vals))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'extend-environment</span> <span class="cn">"too few arguments"</span> vars vals))))
 
 (<span class="kw">define</span> (lookup-variable-value var env)
   (<span class="kw">define</span> (env-loop env)
@@ -1726,7 +1726,7 @@ Imports:
             ((<span class="fu">eq?</span> var (<span class="fu">car</span> vars)) (<span class="fu">car</span> vals))
             (<span class="kw">else</span> (scan (<span class="fu">cdr</span> vars) (<span class="fu">cdr</span> vals)))))
     (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)
-        (<span class="fu">error</span> <span class="vs">'lookup-variable-value</span> <span class="cn">"unbound variable"</span> var)
+        (<span class="fu">error</span> <span class="qu">'lookup-variable-value</span> <span class="cn">"unbound variable"</span> var)
         (<span class="kw">let</span> ((frame (first-frame env)))
           (scan (frame-variables frame) (frame-values frame)))))
   (env-loop env))
@@ -1738,7 +1738,7 @@ Imports:
             ((<span class="fu">eq?</span> var (<span class="fu">car</span> vars)) (<span class="fu">set-car!</span> vals val))
             (<span class="kw">else</span> (scan (<span class="fu">cdr</span> vars) (<span class="fu">cdr</span> vals)))))
     (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)
-        (<span class="fu">error</span> <span class="vs">'set-variable-value!</span> <span class="cn">"unbound variable"</span> var)
+        (<span class="fu">error</span> <span class="qu">'set-variable-value!</span> <span class="cn">"unbound variable"</span> var)
         (<span class="kw">let</span> ((frame (first-frame env)))
           (scan (frame-variables frame) (frame-values frame)))))
   (env-loop env))
@@ -1752,24 +1752,24 @@ Imports:
     (scan (frame-variables frame) (frame-values frame))))
 
 (<span class="kw">define</span> env1 (make-environment))
-(lookup-variable-value <span class="vs">'x</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(set-variable-value! <span class="vs">'x</span> <span class="cn">1</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(define-variable! <span class="vs">'x</span> <span class="cn">1</span> env1)
-(define-variable! <span class="vs">'y</span> <span class="cn">2</span> env1)
-(lookup-variable-value <span class="vs">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
-(lookup-variable-value <span class="vs">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">2</span>
+(lookup-variable-value <span class="qu">'x</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(set-variable-value! <span class="qu">'x</span> <span class="cn">1</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(define-variable! <span class="qu">'x</span> <span class="cn">1</span> env1)
+(define-variable! <span class="qu">'y</span> <span class="cn">2</span> env1)
+(lookup-variable-value <span class="qu">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
+(lookup-variable-value <span class="qu">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">2</span>
 
 (<span class="kw">define</span> env2 (make-environment env1))
-(lookup-variable-value <span class="vs">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">1</span>
-(lookup-variable-value <span class="vs">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">2</span>
-(define-variable! <span class="vs">'x</span> <span class="cn">"apple"</span> env2)
-(set-variable-value! <span class="vs">'y</span> <span class="cn">"orange"</span> env2)
-(lookup-variable-value <span class="vs">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">"apple"</span>
-(lookup-variable-value <span class="vs">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
+(lookup-variable-value <span class="qu">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">1</span>
+(lookup-variable-value <span class="qu">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">2</span>
+(define-variable! <span class="qu">'x</span> <span class="cn">"apple"</span> env2)
+(set-variable-value! <span class="qu">'y</span> <span class="cn">"orange"</span> env2)
+(lookup-variable-value <span class="qu">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">"apple"</span>
+(lookup-variable-value <span class="qu">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
 <p><code>x</code> is still 1 in <code>env1</code> because we shadowed it with a new <code>x</code> in <code>env2</code>:</p>
-<pre><code class="codeblock">(lookup-variable-value <span class="vs">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+<pre><code class="codeblock">(lookup-variable-value <span class="qu">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <p><code>y</code> is “orange” in <code>env1</code> because <code>set-variable-value!</code> changed it in <code>env1</code>:</p>
-<pre><code class="codeblock">(lookup-variable-value <span class="vs">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
+<pre><code class="codeblock">(lookup-variable-value <span class="qu">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
 <h3 id="ex4.11" class="anchor">
 <a class="anchor__link link" href="#ex4.11" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.11">Exercise 4.11<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1808,8 +1808,8 @@ Imports:
   (<span class="kw">cond</span> ((<span class="fu">=</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
          (<span class="fu">cons</span> (<span class="fu">map cons</span> vars vals) base-env))
         ((<span class="fu">&lt;</span> (<span class="fu">length</span> vars) (<span class="fu">length</span> vals))
-         (<span class="fu">error</span> <span class="vs">'extend-environment</span> <span class="cn">"too many arguments"</span> vars vals))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'extend-environment</span> <span class="cn">"too few arguments"</span> vars vals))))
+         (<span class="fu">error</span> <span class="qu">'extend-environment</span> <span class="cn">"too many arguments"</span> vars vals))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'extend-environment</span> <span class="cn">"too few arguments"</span> vars vals))))
 
 (<span class="kw">define</span> (lookup-variable-value var env)
   (<span class="kw">define</span> (scan frame)
@@ -1819,7 +1819,7 @@ Imports:
            (binding-value (<span class="fu">car</span> frame)))
           (<span class="kw">else</span> (scan (<span class="fu">cdr</span> frame)))))
   (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)
-      (<span class="fu">error</span> <span class="vs">'lookup-variable-value</span> <span class="cn">"unbound variable"</span> var)
+      (<span class="fu">error</span> <span class="qu">'lookup-variable-value</span> <span class="cn">"unbound variable"</span> var)
       (scan (first-frame env))))
 
 (<span class="kw">define</span> (set-variable-value! var val env)
@@ -1830,7 +1830,7 @@ Imports:
            (set-binding-value! (<span class="fu">car</span> frame) val))
           (<span class="kw">else</span> (scan (<span class="fu">cdr</span> frame)))))
   (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)
-      (<span class="fu">error</span> <span class="vs">'set-variable-value!</span> <span class="cn">"unbound variable"</span> var)
+      (<span class="fu">error</span> <span class="qu">'set-variable-value!</span> <span class="cn">"unbound variable"</span> var)
       (scan (first-frame env))))
 
 (<span class="kw">define</span> (define-variable! var val env)
@@ -1845,15 +1845,15 @@ Imports:
 
 (<span class="kw">define</span> env1 (make-environment))
 (<span class="kw">define</span> env2 (make-environment env1))
-(lookup-variable-value <span class="vs">'x</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(define-variable! <span class="vs">'x</span> <span class="cn">1</span> env1)
-(define-variable! <span class="vs">'y</span> <span class="cn">2</span> env1)
-(define-variable! <span class="vs">'x</span> <span class="cn">"apple"</span> env2)
-(set-variable-value! <span class="vs">'y</span> <span class="cn">"orange"</span> env2)
-(lookup-variable-value <span class="vs">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">"apple"</span>
-(lookup-variable-value <span class="vs">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">"orange"</span>
-(lookup-variable-value <span class="vs">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
-(lookup-variable-value <span class="vs">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
+(lookup-variable-value <span class="qu">'x</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(define-variable! <span class="qu">'x</span> <span class="cn">1</span> env1)
+(define-variable! <span class="qu">'y</span> <span class="cn">2</span> env1)
+(define-variable! <span class="qu">'x</span> <span class="cn">"apple"</span> env2)
+(set-variable-value! <span class="qu">'y</span> <span class="cn">"orange"</span> env2)
+(lookup-variable-value <span class="qu">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">"apple"</span>
+(lookup-variable-value <span class="qu">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">"orange"</span>
+(lookup-variable-value <span class="qu">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
+(lookup-variable-value <span class="qu">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
 <h3 id="ex4.12" class="anchor">
 <a class="anchor__link link" href="#ex4.12" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.12">Exercise 4.12<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1892,7 +1892,7 @@ Imports:
 </aside>
 <pre><code class="codeblock">(<span class="kw">define</span> (traverse env var action otherwise)
   (<span class="kw">if</span> (<span class="fu">eq?</span> env the-empty-environment)
-      (<span class="fu">error</span> <span class="vs">'traverse</span> <span class="cn">"unbound variable"</span> var)
+      (<span class="fu">error</span> <span class="qu">'traverse</span> <span class="cn">"unbound variable"</span> var)
       (<span class="kw">let</span> ((frame (first-frame env)))
         (<span class="kw">define</span> (scan vars vals)
           (<span class="kw">cond</span> ((<span class="fu">null?</span> vars) (otherwise frame (enclosing-environment env)))
@@ -1920,15 +1920,15 @@ Imports:
 
 (<span class="kw">define</span> env1 (make-environment))
 (<span class="kw">define</span> env2 (make-environment env1))
-(lookup-variable-value <span class="vs">'x</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(define-variable! <span class="vs">'x</span> <span class="cn">1</span> env1)
-(define-variable! <span class="vs">'y</span> <span class="cn">2</span> env1)
-(define-variable! <span class="vs">'x</span> <span class="cn">"apple"</span> env2)
-(set-variable-value! <span class="vs">'y</span> <span class="cn">"orange"</span> env2)
-(lookup-variable-value <span class="vs">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">"apple"</span>
-(lookup-variable-value <span class="vs">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">"orange"</span>
-(lookup-variable-value <span class="vs">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
-(lookup-variable-value <span class="vs">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
+(lookup-variable-value <span class="qu">'x</span> env1) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(define-variable! <span class="qu">'x</span> <span class="cn">1</span> env1)
+(define-variable! <span class="qu">'y</span> <span class="cn">2</span> env1)
+(define-variable! <span class="qu">'x</span> <span class="cn">"apple"</span> env2)
+(set-variable-value! <span class="qu">'y</span> <span class="cn">"orange"</span> env2)
+(lookup-variable-value <span class="qu">'x</span> env2) <span class="op">=&gt;</span> <span class="cn">"apple"</span>
+(lookup-variable-value <span class="qu">'y</span> env2) <span class="op">=&gt;</span> <span class="cn">"orange"</span>
+(lookup-variable-value <span class="qu">'x</span> env1) <span class="op">=&gt;</span> <span class="cn">1</span>
+(lookup-variable-value <span class="qu">'y</span> env1) <span class="op">=&gt;</span> <span class="cn">"orange"</span></code></pre>
 <h3 id="ex4.13" class="anchor">
 <a class="anchor__link link" href="#ex4.13" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.13">Exercise 4.13<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1995,30 +1995,30 @@ Imports:
 (<span class="kw">define</span> (unbind-variable! var env)
   (<span class="kw">let</span> ((frame (first-frame env)))
     (<span class="kw">define</span> (scan parent-vars parent-vals vars vals)
-      (<span class="kw">cond</span> ((<span class="fu">null?</span> vars) (<span class="fu">error</span> <span class="vs">'unbind-variable!</span> <span class="cn">"unbound variable"</span> var))
+      (<span class="kw">cond</span> ((<span class="fu">null?</span> vars) (<span class="fu">error</span> <span class="qu">'unbind-variable!</span> <span class="cn">"unbound variable"</span> var))
             ((<span class="fu">eq?</span> var (<span class="fu">car</span> vars))
              (<span class="kw">cond</span> ((<span class="fu">null?</span> parent-vars)
                     (set-first-frame! env (make-frame (<span class="fu">cdr</span> vars) (<span class="fu">cdr</span> vals))))
                    (<span class="kw">else</span> (<span class="fu">set-cdr!</span> parent-vars (<span class="fu">cdr</span> vars))
                          (<span class="fu">set-cdr!</span> parent-vals (<span class="fu">cdr</span> vals)))))
             (<span class="kw">else</span> (scan vars vals (<span class="fu">cdr</span> vars) (<span class="fu">cdr</span> vals)))))
-    (scan <span class="vs">'() '()</span> (frame-variables frame) (frame-values frame))))
+    (scan <span class="qu">'() '()</span> (frame-variables frame) (frame-values frame))))
 
 (<span class="kw">define</span> (make-unbound-pkg)
-  (put <span class="vs">'eval 'make-unbound!</span> eval-make-unbound))
+  (put <span class="qu">'eval 'make-unbound!</span> eval-make-unbound))
 
 (using eval-pkg make-unbound-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(define x 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">'(define y 2)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(make-unbound! x)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(<span class="fu">eval</span> <span class="vs">'y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(make-unbound! y)</span> env)
-(<span class="fu">eval</span> <span class="vs">'y</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: y"</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(define x 1)</span> env)
+(<span class="fu">eval</span> <span class="qu">'(define y 2)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(make-unbound! x)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(<span class="fu">eval</span> <span class="qu">'y</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(make-unbound! y)</span> env)
+(<span class="fu">eval</span> <span class="qu">'y</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: y"</span></code></pre>
 <h2 id="4.1.4" class="anchor">
 <a class="anchor__link link" href="#4.1.4" aria-hidden="true">#</a> <span class="number">4.1.4</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.4">Running the Evaluator as a Program<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -2075,22 +2075,22 @@ Imports:
                       the-empty-environment))
 
 (<span class="kw">define</span> primitive-procedures
-  (<span class="fu">list</span> (<span class="fu">list</span> <span class="vs">'car</span> <span class="fu">car</span>)
-        (<span class="fu">list</span> <span class="vs">'cdr</span> <span class="fu">cdr</span>)
-        (<span class="fu">list</span> <span class="vs">'cons</span> <span class="fu">cons</span>)
-        (<span class="fu">list</span> <span class="vs">'null?</span> <span class="fu">null?</span>)
-        <span class="co">;; The textbook stops here, but I include a few more primitives.</span>
-        (<span class="fu">list</span> <span class="vs">'+</span> <span class="fu">+</span>)
-        (<span class="fu">list</span> <span class="vs">'-</span> <span class="fu">-</span>)
-        (<span class="fu">list</span> <span class="vs">'*</span> <span class="fu">*</span>)
-        (<span class="fu">list</span> <span class="vs">'=</span> <span class="fu">=</span>)
-        (<span class="fu">list</span> <span class="vs">'list</span> <span class="fu">list</span>)
-        (<span class="fu">list</span> <span class="vs">'newline</span> <span class="fu">newline</span>)
-        (<span class="fu">list</span> <span class="vs">'display</span> <span class="fu">display</span>)))
+  (<span class="fu">list</span> (<span class="fu">list</span> <span class="qu">'car</span> <span class="fu">car</span>)
+        (<span class="fu">list</span> <span class="qu">'cdr</span> <span class="fu">cdr</span>)
+        (<span class="fu">list</span> <span class="qu">'cons</span> <span class="fu">cons</span>)
+        (<span class="fu">list</span> <span class="qu">'null?</span> <span class="fu">null?</span>)
+        <span class="at">;; The textbook stops here, but I include a few more primitives.</span>
+        (<span class="fu">list</span> <span class="qu">'+</span> <span class="fu">+</span>)
+        (<span class="fu">list</span> <span class="qu">'-</span> <span class="fu">-</span>)
+        (<span class="fu">list</span> <span class="qu">'*</span> <span class="fu">*</span>)
+        (<span class="fu">list</span> <span class="qu">'=</span> <span class="fu">=</span>)
+        (<span class="fu">list</span> <span class="qu">'list</span> <span class="fu">list</span>)
+        (<span class="fu">list</span> <span class="qu">'newline</span> <span class="fu">newline</span>)
+        (<span class="fu">list</span> <span class="qu">'display</span> <span class="fu">display</span>)))
 (<span class="kw">define</span> (primitive-procedure-names)
   (<span class="fu">map car</span> primitive-procedures))
 (<span class="kw">define</span> (primitive-procedure-objects)
-  (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="vs">'primitive</span> (<span class="fu">cadr</span> proc)))
+  (<span class="fu">map</span> (<span class="kw">lambda</span> (proc) (<span class="fu">list</span> <span class="qu">'primitive</span> (<span class="fu">cadr</span> proc)))
        primitive-procedures))
 
 (<span class="kw">define</span> input-prompt <span class="cn">";;; M-Eval input:"</span>)
@@ -2109,19 +2109,19 @@ Imports:
   (<span class="fu">newline</span>) (<span class="fu">display string</span>) (<span class="fu">newline</span>))
 (<span class="kw">define</span> (user-print object)
   (<span class="kw">if</span> (compound-procedure? object)
-      (<span class="fu">display</span> (<span class="fu">list</span> <span class="vs">'compound-procedure</span>
+      (<span class="fu">display</span> (<span class="fu">list</span> <span class="qu">'compound-procedure</span>
                      (procedure-parameters object)
                      (procedure-body object)
-                     <span class="vs">'&lt;procedure-env&gt;</span>))
+                     <span class="qu">'&lt;procedure-env&gt;</span>))
       (<span class="fu">display</span> object)))
 (<span class="kw">define</span> the-global-environment (setup-environment))
 
 (<span class="kw">define</span> env (setup-environment))
-(<span class="fu">eval</span> <span class="vs">'(null? '())</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span>
-(<span class="fu">eval</span> <span class="vs">'(null? '(1))</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
-(<span class="fu">eval</span> <span class="vs">'(car (cons 1 2))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(cdr (cons 1 2))</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(= (+ 1 2) 3 (- 10 7))</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(null? '())</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(<span class="fu">eval</span> <span class="qu">'(null? '(1))</span> env) <span class="op">=&gt;</span> <span class="cn">#f</span>
+(<span class="fu">eval</span> <span class="qu">'(car (cons 1 2))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(cdr (cons 1 2))</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(= (+ 1 2) 3 (- 10 7))</span> env) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <h3 id="ex4.14" class="anchor">
 <a class="anchor__link link" href="#ex4.14" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.14">Exercise 4.14<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -2129,18 +2129,18 @@ Imports:
 <h2 id="4.1.5" class="anchor">
 <a class="anchor__link link" href="#4.1.5" aria-hidden="true">#</a> <span class="number">4.1.5</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.5">Data as Programs<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="codeblock">(<span class="fu">eval</span> <span class="vs">'(* 5 5)</span> user-initial-environment)
-<span class="op">=&gt;</span> (<span class="fu">eval</span> (<span class="fu">cons</span> <span class="vs">'*</span> (<span class="fu">list</span> <span class="cn">5 5</span>)) user-initial-environment)
+<pre><code class="codeblock">(<span class="fu">eval</span> <span class="qu">'(* 5 5)</span> user-initial-environment)
+<span class="op">=&gt;</span> (<span class="fu">eval</span> (<span class="fu">cons</span> <span class="qu">'*</span> (<span class="fu">list</span> <span class="cn">5 5</span>)) user-initial-environment)
 <span class="op">=&gt;</span> <span class="cn">25</span></code></pre>
 <h3 id="ex4.15" class="anchor">
 <a class="anchor__link link" href="#ex4.15" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.15">Exercise 4.15<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="codeblock">(<span class="kw">define</span> (halts? p a)
-  (<span class="fu">error</span> <span class="vs">'halts?</span> <span class="cn">"the halting problem is impossible to solve"</span>))
+  (<span class="fu">error</span> <span class="qu">'halts?</span> <span class="cn">"the halting problem is impossible to solve"</span>))
 
 (<span class="kw">define</span> (run-forever) (run-forever))
-(<span class="kw">define</span> (try p) (<span class="kw">if</span> (halts? p p) (run-forever) <span class="vs">'halted</span>))</code></pre>
-<p>It is impossible for <code>halts?</code> to correctly determine whether <code>(p a)</code> halts. Consider the expression <code>(try try)</code>. Suppose it halts. But then <code>(halts? p p) <span class="op">=&gt;</span> (halts? try try) <span class="op">=&gt;</span> <span class="cn">#t</span></code>, so <code>(try try) <span class="op">=&gt;</span> (run-forever)</code>. So it must run forever instead. But then <code>(halts? try try) <span class="op">=&gt;</span> <span class="cn">#f</span></code>, so <code>(try try) <span class="op">=&gt;</span> <span class="vs">'halted</span></code>, a contradiction. This completes the proof.</p>
+(<span class="kw">define</span> (try p) (<span class="kw">if</span> (halts? p p) (run-forever) <span class="qu">'halted</span>))</code></pre>
+<p>It is impossible for <code>halts?</code> to correctly determine whether <code>(p a)</code> halts. Consider the expression <code>(try try)</code>. Suppose it halts. But then <code>(halts? p p) <span class="op">=&gt;</span> (halts? try try) <span class="op">=&gt;</span> <span class="cn">#t</span></code>, so <code>(try try) <span class="op">=&gt;</span> (run-forever)</code>. So it must run forever instead. But then <code>(halts? try try) <span class="op">=&gt;</span> <span class="cn">#f</span></code>, so <code>(try try) <span class="op">=&gt;</span> <span class="qu">'halted</span></code>, a contradiction. This completes the proof.</p>
 <h2 id="4.1.6" class="anchor">
 <a class="anchor__link link" href="#4.1.6" aria-hidden="true">#</a> <span class="number">4.1.6</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.6">Internal Definitions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -2234,50 +2234,50 @@ Imports:
   (traverse env
             var
             (<span class="kw">lambda</span> (vals)
-              (<span class="kw">if</span> (<span class="fu">eq?</span> (<span class="fu">car</span> vals) <span class="vs">'*unassigned*</span>)
-                  (<span class="fu">error</span> <span class="vs">'lookup-variable-value</span>
+              (<span class="kw">if</span> (<span class="fu">eq?</span> (<span class="fu">car</span> vals) <span class="qu">'*unassigned*</span>)
+                  (<span class="fu">error</span> <span class="qu">'lookup-variable-value</span>
                          <span class="cn">"illegal use of internal definition"</span>
                          var)
                   (<span class="fu">car</span> vals)))
             (<span class="kw">lambda</span> (frame parent) (lookup-variable-value var parent))))</code></pre></li>
 <li><p>Write <code>scan-out-defines</code></p>
 <pre><code class="codeblock">(<span class="kw">define</span> (scan-out-defines body)
-  <span class="co">;; `(revmap f src dst)` behaves like `(append (reverse (map f src)) dst)`.</span>
+  <span class="at">;; `(revmap f src dst)` behaves like `(append (reverse (map f src)) dst)`.</span>
   (<span class="kw">define</span> (revmap f src dst)
     (<span class="kw">cond</span> ((<span class="fu">null?</span> src) dst)
           (<span class="kw">else</span> (revmap f (<span class="fu">cdr</span> src) (<span class="fu">cons</span> (f (<span class="fu">car</span> src)) dst)))))
   (<span class="kw">define</span> (iter body defines)
-    (<span class="kw">cond</span> ((<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> body)) (<span class="fu">pair?</span> (<span class="fu">car</span> body)) (<span class="fu">eq?</span> <span class="vs">'define</span> (<span class="fu">caar</span> body)))
+    (<span class="kw">cond</span> ((<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> body)) (<span class="fu">pair?</span> (<span class="fu">car</span> body)) (<span class="fu">eq?</span> <span class="qu">'define</span> (<span class="fu">caar</span> body)))
            (iter (<span class="fu">cdr</span> body) (<span class="fu">cons</span> (<span class="fu">car</span> body) defines)))
           ((<span class="fu">null?</span> defines) body)
-          (<span class="kw">else</span> (<span class="kw">let</span> ((params (revmap definition-variable defines <span class="vs">'()</span>))
-                      (args (<span class="fu">map</span> (<span class="kw">lambda</span> (d) <span class="vs">''*unassigned*</span>) defines))
+          (<span class="kw">else</span> (<span class="kw">let</span> ((params (revmap definition-variable defines <span class="qu">'()</span>))
+                      (args (<span class="fu">map</span> (<span class="kw">lambda</span> (d) <span class="qu">''*unassigned*</span>) defines))
                       (body (revmap (<span class="kw">lambda</span> (d)
                                       (make-assignment (definition-variable d)
                                                        (definition-value d)))
                                     defines
                                     body)))
                   (<span class="fu">list</span> (<span class="fu">cons</span> (make-lambda params body) args))))))
-  (iter body <span class="vs">'()</span>))
+  (iter body <span class="qu">'()</span>))
 
-(scan-out-defines <span class="vs">'()</span>) <span class="op">=&gt;</span> <span class="vs">'()</span>
-(scan-out-defines <span class="vs">'(1)</span>) <span class="op">=&gt;</span> <span class="vs">'(1)</span>
-(scan-out-defines <span class="vs">'((define x 1))</span>)
-<span class="op">=&gt;</span> <span class="vs">'(((lambda (x) (set! x 1)) '*unassigned*))</span>
-(scan-out-defines <span class="vs">'((define x 1) (define y 2) #f)</span>)
-<span class="op">=&gt;</span> <span class="vs">'(((lambda (x y) (set! x 1) (set! y 2) #f) '*unassigned* '*unassigned*))</span>
-(scan-out-defines <span class="vs">'((define (f x) x))</span>)
-<span class="op">=&gt;</span> <span class="vs">'(((lambda (f) (set! f (lambda (x) x))) '*unassigned*))</span></code></pre></li>
+(scan-out-defines <span class="qu">'()</span>) <span class="op">=&gt;</span> <span class="qu">'()</span>
+(scan-out-defines <span class="qu">'(1)</span>) <span class="op">=&gt;</span> <span class="qu">'(1)</span>
+(scan-out-defines <span class="qu">'((define x 1))</span>)
+<span class="op">=&gt;</span> <span class="qu">'(((lambda (x) (set! x 1)) '*unassigned*))</span>
+(scan-out-defines <span class="qu">'((define x 1) (define y 2) #f)</span>)
+<span class="op">=&gt;</span> <span class="qu">'(((lambda (x y) (set! x 1) (set! y 2) #f) '*unassigned* '*unassigned*))</span>
+(scan-out-defines <span class="qu">'((define (f x) x))</span>)
+<span class="op">=&gt;</span> <span class="qu">'(((lambda (f) (set! f (lambda (x) x))) '*unassigned*))</span></code></pre></li>
 </ol>
 <p>We assume that all internal definitions come first.</p>
-<pre><code class="codeblock">(scan-out-defines <span class="vs">'(1 (define x 1))</span>) <span class="op">=&gt;</span> <span class="vs">'(1 (define x 1))</span></code></pre>
+<pre><code class="codeblock">(scan-out-defines <span class="qu">'(1 (define x 1))</span>) <span class="op">=&gt;</span> <span class="qu">'(1 (define x 1))</span></code></pre>
 <ol start="3" type="a">
 <li>Install <code>scan-out-defines</code> in the interpreter</li>
 </ol>
 <p>Placing it in <code>make-procedure</code> is better because it will only scan out the internal definitions once per procedure. Putting it in <code>procedure-body</code> would mean it scans out every time the procedure is evaluated.</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (internal-definition-pkg)
-  (put <span class="vs">'eval 'symbol</span> lookup-variable-value)
-  (put <span class="vs">'eval 'lambda</span>
+  (put <span class="qu">'eval 'symbol</span> lookup-variable-value)
+  (put <span class="qu">'eval 'lambda</span>
        (<span class="kw">lambda</span> (exp env)
          (make-procedure (lambda-parameters exp)
                          (scan-out-defines (lambda-body exp))
@@ -2303,24 +2303,24 @@ Imports:
 <a class="anchor__link link" href="#ex4.17" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.17">Exercise 4.17<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>Code before:</p>
-<pre><code class="codeblock"><span class="co">; (lambda &lt;vars&gt;
+<pre><code class="codeblock"><span class="at">; (lambda &lt;vars&gt;
 ;   (define u &lt;e1&gt;)
 ;   (define v &lt;e2&gt;)
 ;   &lt;e3&gt;)</span></code></pre>
 <p>Environment before:</p>
-<pre><code class="codeblock"><span class="co">; global env &lt;-- E1 [&lt;vars&gt;, u, v]</span></code></pre>
+<pre><code class="codeblock"><span class="at">; global env &lt;-- E1 [&lt;vars&gt;, u, v]</span></code></pre>
 <p>Code after:</p>
-<pre><code class="codeblock"><span class="co">; (lambda &lt;vars&gt;
+<pre><code class="codeblock"><span class="at">; (lambda &lt;vars&gt;
 ;   (let ((u '*unassigned*)
 ;         (v '*unassigned*))
 ;     (set! u &lt;e1&gt;)
 ;     (set! v &lt;e2&gt;)
 ;     &lt;e3&gt;))</span></code></pre>
 <p>Environment after:</p>
-<pre><code class="codeblock"><span class="co">; global env &lt;-- E1 [&lt;vars] &lt;-- E2 [u, v]</span></code></pre>
+<pre><code class="codeblock"><span class="at">; global env &lt;-- E1 [&lt;vars] &lt;-- E2 [u, v]</span></code></pre>
 <p>There is an extra frame due to the <code>let</code> expression, which gets transformed into a <code>lambda</code>. This extra frame can never make a difference in the behavior of a correct program, since the new <code>let</code> scope completely encloses the body. If one of the internal definitions shadows a parameter, say <code>x</code>, then <code>(<span class="kw">set!</span> x <span class="cn">1</span>)</code> would have different effects in the two cases—but not in any way that could be detected, because there is no code between the two scopes.</p>
 <p>We can avoid the extra frame by instead making the following transformation:</p>
-<pre><code class="codeblock"><span class="co">; (lambda &lt;vars&gt;
+<pre><code class="codeblock"><span class="at">; (lambda &lt;vars&gt;
 ;   (define u '*unassigned*)
 ;   (define v '*unassigned*)
 ;   (set! u &lt;e1&gt;)
@@ -2330,7 +2330,7 @@ Imports:
 <a class="anchor__link link" href="#ex4.18" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.18">Exercise 4.18<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>No, the <code>solve</code> procedure from Section 3.5.4 will not work if internal definitions are scanned out using this alternative strategy. We get:</p>
-<pre><code class="codeblock"><span class="co">; (define (solve f yo dt)
+<pre><code class="codeblock"><span class="at">; (define (solve f yo dt)
 ;   (let ((y '*unassigned*) (dy '*unassigned*))
 ;     (let ((a (integral (delay dy) y0 dt)) (b (stream-map f y)))
 ;       (set! y a)
@@ -2338,7 +2338,7 @@ Imports:
 ;       y)))</span></code></pre>
 <p>The problem is with the evaluation of <code>(stream-map f y)</code>. Although streams are lazy, they still evaluate the first term right away. This cannot be done when <code>y</code> is still ’<em>unassigned</em>.</p>
 <p>Yes, the procedure will work if scanning out as shown in the text. We get:</p>
-<pre><code class="codeblock"><span class="co">; (define (solve f yo dt)
+<pre><code class="codeblock"><span class="at">; (define (solve f yo dt)
 ;   (let ((y '*unassigned*) (dy '*unassigned*))
 ;     (set! y (integral (delay dy) y0 dt))
 ;     (set! dy (stream-map f y))
@@ -2427,20 +2427,20 @@ Imports:
 (<span class="kw">define</span> (letrec-&gt;let exp)
   (<span class="kw">let</span> ((vars (<span class="fu">map</span> binding-variable (letrec-bindings exp)))
         (vals (<span class="fu">map</span> binding-value (letrec-bindings exp))))
-    (make-let (<span class="fu">map</span> (<span class="kw">lambda</span> (var) (<span class="fu">list</span> var <span class="vs">''*unassigned*</span>)) vars)
+    (make-let (<span class="fu">map</span> (<span class="kw">lambda</span> (var) (<span class="fu">list</span> var <span class="qu">''*unassigned*</span>)) vars)
               (<span class="fu">append</span> (<span class="fu">map</span> make-assignment vars vals)
                       (letrec-actions exp)))))
 
 (<span class="kw">define</span> (letrec-pkg)
-  (put <span class="vs">'eval 'letrec</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (letrec-&gt;let exp) env))))
+  (put <span class="qu">'eval 'letrec</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (letrec-&gt;let exp) env))))
 
 (using eval-pkg let-pkg letrec-pkg)
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(letrec () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(letrec ((x 2)) x)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(letrec ((x 3) (y x)) y)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">'(letrec ((f (lambda (x) (if x (f #f) "done")))) (f #t))</span> env) <span class="op">=&gt;</span> <span class="cn">"done"</span></code></pre></li>
+(<span class="fu">eval</span> <span class="qu">'(letrec () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(letrec ((x 2)) x)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(letrec ((x 3) (y x)) y)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
+(<span class="fu">eval</span> <span class="qu">'(letrec ((f (lambda (x) (if x (f #f) "done")))) (f #t))</span> env) <span class="op">=&gt;</span> <span class="cn">"done"</span></code></pre></li>
 <li><p>Louis is wrong. When evaluating <code>(f <span class="cn">5</span>)</code>, where <code>f</code> is defined:</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (f x)
   (<span class="kw">letrec</span> ((<span class="fu">even?</span> (<span class="kw">lambda</span> (n)
@@ -2450,12 +2450,12 @@ Imports:
     <span class="cn">"rest of body of f"</span>))</code></pre></li>
 </ol>
 <p>We have the following environment:</p>
-<pre><code class="codeblock"><span class="co">; global env [f: ...] &lt;-- E1 [x: 5] &lt;-- E2 [even?, odd?]
+<pre><code class="codeblock"><span class="at">; global env [f: ...] &lt;-- E1 [x: 5] &lt;-- E2 [even?, odd?]
 ;                                       ^     |     |
 ;                                       |     V     V
 ;                                       +---[*|*]-[*|*]</span></code></pre>
 <p>But when using <code>let</code> instead of <code>letrec</code>, we have:</p>
-<pre><code class="codeblock"><span class="co">; global env [f: ...] &lt;-- E1 [x: 5] &lt;-- E2 [even?, odd?]
+<pre><code class="codeblock"><span class="at">; global env [f: ...] &lt;-- E1 [x: 5] &lt;-- E2 [even?, odd?]
 ;                         ^                   |     |
 ;                         |                   V     V
 ;                         +-----------------[*|*]-[*|*]</span></code></pre>
@@ -2484,7 +2484,7 @@ Imports:
    (<span class="kw">lambda</span> (ev? od? n)
      (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">#f</span> (ev? ev? od? (<span class="fu">-</span> n <span class="cn">1</span>))))))
 
-(<span class="fu">map</span> f <span class="vs">'(0 1 2 3 4 5)</span>) <span class="op">=&gt;</span> <span class="vs">'(#t #f #t #f #t #f)</span></code></pre></li>
+(<span class="fu">map</span> f <span class="qu">'(0 1 2 3 4 5)</span>) <span class="op">=&gt;</span> <span class="qu">'(#t #f #t #f #t #f)</span></code></pre></li>
 </ol>
 <h2 id="4.1.7" class="anchor">
 <a class="anchor__link link" href="#4.1.7" aria-hidden="true">#</a> <span class="number">4.1.7</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_sec_4.1.7">Separating Syntactic Analysis from Execution<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -2650,7 +2650,7 @@ Imports:
         ((begin? exp) (analyze-sequence (begin-actions exp)))
         ((cond? exp) (analyze (cond-&gt;if exp)))
         ((application? exp) (analyze-application exp))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'analyze</span> <span class="cn">"unknown expression type"</span> exp))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'analyze</span> <span class="cn">"unknown expression type"</span> exp))))
 
 (<span class="kw">define</span> (analyze-self-evaluating exp)
   (<span class="kw">lambda</span> (env) exp))
@@ -2698,7 +2698,7 @@ Imports:
               (<span class="fu">cdr</span> rest-procs))))
   (<span class="kw">let</span> ((procs (<span class="fu">map</span> analyze exps)))
     (<span class="kw">if</span> (<span class="fu">null?</span> procs)
-        (<span class="fu">error</span> <span class="vs">'analyze</span> <span class="cn">"empty sequence"</span>)
+        (<span class="fu">error</span> <span class="qu">'analyze</span> <span class="cn">"empty sequence"</span>)
         (loop (<span class="fu">car</span> procs) (<span class="fu">cdr</span> procs)))))
 
 (<span class="kw">define</span> (analyze-application exp)
@@ -2718,22 +2718,22 @@ Imports:
            (procedure-parameters proc)
            args
            (procedure-environment proc))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'execute-application</span> <span class="cn">"unknown procedure type"</span> proc))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'execute-application</span> <span class="cn">"unknown procedure type"</span> proc))))
 
 (<span class="kw">define</span> env (make-environment))
 (<span class="fu">eval</span> <span class="cn">1</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 (<span class="fu">eval</span> <span class="cn">"hi"</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">''a</span> env) <span class="op">=&gt;</span> <span class="vs">'a</span>
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
-(<span class="fu">eval</span> <span class="vs">'(define x 1)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(set! x 2)</span> env)
-(<span class="fu">eval</span> <span class="vs">'x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
-(<span class="fu">eval</span> <span class="vs">'(if "truthy" "yes" "no")</span> env) <span class="op">=&gt;</span> <span class="cn">"yes"</span>
-(<span class="fu">eval</span> <span class="vs">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
-(<span class="fu">eval</span> <span class="vs">'((lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">''a</span> env) <span class="op">=&gt;</span> <span class="qu">'a</span>
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="er">=!&gt;</span> <span class="cn">"unbound variable: x"</span>
+(<span class="fu">eval</span> <span class="qu">'(define x 1)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(set! x 2)</span> env)
+(<span class="fu">eval</span> <span class="qu">'x</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
+(<span class="fu">eval</span> <span class="qu">'(if "truthy" "yes" "no")</span> env) <span class="op">=&gt;</span> <span class="cn">"yes"</span>
+(<span class="fu">eval</span> <span class="qu">'(cond (else 1))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(begin 1 2 3)</span> env) <span class="op">=&gt;</span> <span class="cn">3</span>
+(<span class="fu">eval</span> <span class="qu">'((lambda () "hi"))</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'((lambda (x y) y) 1 2)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">eval</span> <span class="cn">#\a</span> env) <span class="er">=!&gt;</span> <span class="cn">"unknown expression type"</span></code></pre>
 <h3 id="ex4.22" class="anchor">
 <a class="anchor__link link" href="#ex4.22" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.22">Exercise 4.22<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -2917,7 +2917,7 @@ Imports:
         ((cond? exp) (analyze (cond-&gt;if exp)))
         ((let? exp) (analyze-let exp))
         ((application? exp) (analyze-application exp))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'analyze</span> <span class="cn">"unknown expression type"</span> exp))))</code></pre>
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'analyze</span> <span class="cn">"unknown expression type"</span> exp))))</code></pre>
 <p>Paste everything except <code>analyze</code>:</p>
 <pre><code class="codeblock">(<span class="kw">paste</span> (<a href="#4.1.7">:4.1.7</a> analyze-application analyze-assignment analyze-definition
                analyze-if analyze-lambda analyze-sequence <span class="fu">eval</span>
@@ -2926,28 +2926,28 @@ Imports:
 (<span class="kw">define</span> (analyze-let exp) (analyze (let-&gt;combination exp)))
 
 (<span class="kw">define</span> env (make-environment))
-(<span class="fu">eval</span> <span class="vs">'(let () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(<span class="fu">eval</span> <span class="vs">'(let ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
-(<span class="fu">eval</span> <span class="vs">'(let ((x 1) (y 2)) x y)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(let () 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(<span class="fu">eval</span> <span class="qu">'(let ((x "hi")) x)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span>
+(<span class="fu">eval</span> <span class="qu">'(let ((x 1) (y 2)) x y)</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <p>Show that the value is only evaluated once:</p>
-<pre><code class="codeblock">(<span class="fu">eval</span> <span class="vs">'(define f (lambda () "hi"))</span> env)
-(<span class="fu">eval</span> <span class="vs">'(let ((x (set! f (f)))) x x f)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">eval</span> <span class="qu">'(define f (lambda () "hi"))</span> env)
+(<span class="fu">eval</span> <span class="qu">'(let ((x (set! f (f)))) x x f)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
 <h3 id="ex4.23" class="anchor">
 <a class="anchor__link link" href="#ex4.23" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-26.html#%25_thm_4.23">Exercise 4.23<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>In the case of a procedure body with a single expression, Alyssa’s program would result in the following process during evaluation (after analysis):</p>
-<pre><code class="codeblock"><span class="co">; (proc)
+<pre><code class="codeblock"><span class="at">; (proc)
 ; ...
 ; ((lambda (env) (execute-sequence procs env)) env)
 ; (null? (cdr procs)) =&gt; #t
 ; ((car procs) env)
 ; (*analyzed-proc* env)</span></code></pre>
 <p>The program on the text, on the other hand, would jump straight to invoking the analyzed procedure, without calling <code>null?</code> or <code>car</code>:</p>
-<pre><code class="codeblock"><span class="co">; (proc)
+<pre><code class="codeblock"><span class="at">; (proc)
 ; ...
 ; (*analyzed-proc* env)</span></code></pre>
 <p>The differnce is more noticeable for a procedure body with two expressions. With Alyssa’s program:</p>
-<pre><code class="codeblock"><span class="co">; (proc)
+<pre><code class="codeblock"><span class="at">; (proc)
 ; ...
 ; ((lambda (env) (execute-sequence procs env)) env)
 ; (null? (cdr procs)) =&gt; #f
@@ -2958,7 +2958,7 @@ Imports:
 ; ((car procs) env)
 ; (*analyzed-proc-2* env)</span></code></pre>
 <p>With the program in the text:</p>
-<pre><code class="codeblock"><span class="co">; (proc)
+<pre><code class="codeblock"><span class="at">; (proc)
 ; ...
 ; ((lambda (env) (*analyzed-proc-1* env) (*analyze-proc-2* env)) env)
 ; (*analyzed-proc-1* env)
@@ -3009,21 +3009,21 @@ Imports:
         (<span class="fu">-</span> (runtime) start))))
   (<span class="kw">let</span> ((old-time (bench <span class="fu">eval</span>))
         (new-time (bench new-eval)))
-    (format <span class="cn">"old: ~ss</span><span class="co">\n</span><span class="cn">new: ~ss</span><span class="co">\n</span><span class="cn">estimated analysis time: ~s%</span><span class="co">\n</span><span class="cn">"</span>
+    (format <span class="cn">"old: ~ss</span><span class="at">\n</span><span class="cn">new: ~ss</span><span class="at">\n</span><span class="cn">estimated analysis time: ~s%</span><span class="at">\n</span><span class="cn">"</span>
             old-time
             new-time
-            <span class="co">;; In the limit as expressions are re-evaluated many times, the
+            <span class="at">;; In the limit as expressions are re-evaluated many times, the
             ;; single analysis in `new-time` is negligible. Thus `new-time` over
             ;; `old-time` gives approximately the fraction spent in evaluation,
             ;; and subtracting from 1 gives the fraction spent in analysis.</span>
             (<span class="fu">round</span> (<span class="fu">*</span> <span class="cn">100</span> (<span class="fu">-</span> <span class="cn">1</span> (<span class="fu">/</span> new-time old-time)))))))
 
 (<span class="kw">define</span> factorial
-  <span class="vs">'(define (factorial n)
+  <span class="qu">'(define (factorial n)
      (if (= n 1) 1 (* n (factorial (- n 1)))))</span>)
 
 (<span class="kw">define</span> strange
-  <span class="vs">'(define (strange n)
+  <span class="qu">'(define (strange n)
      (define x ((lambda (x) x) (lambda (x) x)))
      (cond ((= n 0) 'done)
            (else "self-evaluating"
@@ -3037,22 +3037,22 @@ Imports:
 (<span class="fu">string?</span> (benchmark factorial <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (<span class="fu">string?</span> (benchmark strange <span class="cn">1</span>)) <span class="op">=&gt;</span> <span class="cn">#t</span></code></pre>
 <p>For small factorial inputs, the new evaluation strategy is better:</p>
-<pre><code class="codeblock"><span class="co">; (display (benchmark factorial 100))
+<pre><code class="codeblock"><span class="at">; (display (benchmark factorial 100))
 ; old: 9.399999999981645e-5s
 ; new: 5.699999999997374e-5s
 ; estimated analysis time: 39.0%</span></code></pre>
 <p>However, for large inputs, it’s actually much slower!</p>
-<pre><code class="codeblock"><span class="co">; (display (benchmark factorial 10000))
+<pre><code class="codeblock"><span class="at">; (display (benchmark factorial 10000))
 ; old: 0.06239299999999992s
 ; new: 0.11110200000000003s
 ; estimated analysis time: -78.0%</span></code></pre>
 <p>For <em>very</em> large inputs, they become more similar:</p>
-<pre><code class="codeblock"><span class="co">; (display (benchmark factorial 40000))
+<pre><code class="codeblock"><span class="at">; (display (benchmark factorial 40000))
 ; old: 0.9885509999999997s
 ; new: 1.0609169999999999s
 ; estimated analysis time: -7.0%</span></code></pre>
 <p>The <code>strange</code> procedure spends about half its evaluation time in analysis:</p>
-<pre><code class="codeblock"><span class="co">; (display (benchmark strange 13))
+<pre><code class="codeblock"><span class="at">; (display (benchmark strange 13))
 ; old: 3.0934s
 ; new: 1.577433s
 ; estimated analysis time: 49.0%</span></code></pre>

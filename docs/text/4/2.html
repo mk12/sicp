@@ -137,13 +137,13 @@
   (<span class="kw">cond</span> ((primitive-procedure? procedure)
          (apply-primitive-procedure
           procedure
-          (list-of-arg-values arguments env)))  <span class="co">; changed</span>
+          (list-of-arg-values arguments env)))  <span class="at">; changed</span>
         ((compound-procedure? procedure)
          (eval-sequence
           (procedure-body procedure)
           (extend-environment
            (procedure-parameters procedure)
-           (list-of-delayed-args arguments env) <span class="co">; changed</span>
+           (list-of-delayed-args arguments env) <span class="at">; changed</span>
            (procedure-environment procedure))))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown procedure type: APPLY"</span> procedure))))</code></pre>
 <ul>
@@ -166,8 +166,8 @@
 <ul>
 <li>We can represent thunks simply by a list containing the expression and environment:</li>
 </ul>
-<pre><code class="codeblock">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="vs">'thunk</span> exp env))
-(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="vs">'thunk</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="qu">'thunk</span> exp env))
+(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="qu">'thunk</span>))
 (<span class="kw">define</span> (thunk-exp thunk) (<span class="fu">cadr</span> thunk))
 (<span class="kw">define</span> (thunk-env thunk) (<span class="fu">caddr</span> thunk))</code></pre>
 <ul>

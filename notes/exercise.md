@@ -243,12 +243,12 @@ When `(display "pong\nping") =$> ["ping" "pong"]` fails, the output looks like t
 <pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
-=$> [<span class="vs">"pong"</span>
-     <span class="vs">"ping"</span>]
+=$> [<span class="qu">"pong"</span>
+     <span class="qu">"ping"</span>]
 
 right:
-=$> [<span class="vs">"ping"</span>
-     <span class="vs">"pong"</span>]
+=$> [<span class="qu">"ping"</span>
+     <span class="qu">"pong"</span>]
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>

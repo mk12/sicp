@@ -78,7 +78,7 @@
 
 (Section :1.1 <span class="cn">"Section Title"</span>)
 
-(<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="co">; ERROR: x, y, and z are undefined</span>
+(<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="at">; ERROR: x, y, and z are undefined</span>
 
 (Exercise ?1.1)
 
@@ -96,8 +96,8 @@
 (Section :1.1 <span class="cn">"Section Title"</span>
   (use (:1 x) (?1.1 y z)))
 
-(<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="co">; ok</span>
-(<span class="kw">set!</span> x <span class="cn">10</span>) <span class="co">; only affects :1.1</span>
+(<span class="kw">define</span> w (<span class="fu">+</span> x y z)) <span class="at">; ok</span>
+(<span class="kw">set!</span> x <span class="cn">10</span>) <span class="at">; only affects :1.1</span>
 
 (Exercise ?1.1)
 
@@ -109,12 +109,12 @@
 <pre><code class="codeblock">(Exercise ?1.1
   (use (:1.1 x)))
 
-(<span class="kw">define</span> x <span class="cn">2</span>) <span class="co">; ERROR: imported x is shadowed by local definition</span></code></pre>
+(<span class="kw">define</span> x <span class="cn">2</span>) <span class="at">; ERROR: imported x is shadowed by local definition</span></code></pre>
 <p>Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:</p>
 <pre><code class="codeblock">(Exercise ?1.1)
 
-(<span class="fu">display</span> x) <span class="co">; prints #&lt;void&gt; in chez</span>
-(<span class="fu">display</span> y) <span class="co">; ERROR: y is undefined</span>
+(<span class="fu">display</span> x) <span class="at">; prints #&lt;void&gt; in chez</span>
+(<span class="fu">display</span> y) <span class="at">; ERROR: y is undefined</span>
 (<span class="kw">define</span> x <span class="cn">1</span>)</code></pre>
 <h3 id="pasting" class="anchor">
 <a class="anchor__link link" href="#pasting" aria-hidden="true">#</a> Pasting
@@ -124,30 +124,30 @@
 
 (<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> (inc x) (<span class="fu">+</span> x a))
-(inc <span class="cn">42</span>) <span class="co">; 43</span>
+(inc <span class="cn">42</span>) <span class="at">; 43</span>
 
 (Section :2 <span class="cn">"Paste"</span>)
 
 (<span class="kw">define</span> a <span class="cn">-1</span>)
 (<span class="kw">paste</span> (:1 inc))
-(inc <span class="cn">42</span>) <span class="co">; 41</span></code></pre>
+(inc <span class="cn">42</span>) <span class="at">; 41</span></code></pre>
 <p>If <code>:2</code> had imported <code>inc</code> instead, the result would be 43 in both cases since <code>a</code> is resolved lexically. Using <code>paste</code> is inelegant, but preferable to duplicating code. It is often useful when an exercise asks to make an adjustment to earlier code and there is no dynamic dispatch to hook into.</p>
 <h3 id="packages" class="anchor">
 <a class="anchor__link link" href="#packages" aria-hidden="true">#</a> Packages
 </h3>
 <p>Starting in <a href="2/index.html">Chapter&nbsp;2</a>, many modules use <a href="../text/2/4.html#2.4.3">data-directed programming</a> to dispatch based on operation names and type tags. Modules define <em>packages</em> (procedures ending in <code>-pkg</code>) that install operations in the global table. For example:</p>
-<pre><code class="codeblock">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z) (apply-generic <span class="qu">'real-part</span> z))
 
 (<span class="kw">define</span> (rectangular-pkg)
-  (put <span class="vs">'real-part '(rectangular)</span> ...)
+  (put <span class="qu">'real-part '(rectangular)</span> ...)
   ...)
 (<span class="kw">define</span> (polar-pkg)
-  (put <span class="vs">'real-part '(polar)</span> ...)
+  (put <span class="qu">'real-part '(polar)</span> ...)
   ...)
 
 (using rectangular-pkg polar-pkg)
 
-<span class="co">;; Tests go here.</span></code></pre>
+<span class="at">;; Tests go here.</span></code></pre>
 <p>The <code>using</code> procedure defined in <a href="2/4.html#2.4.3">§&nbsp;2.4.3</a> resets the global table and installs the given packages. There is no automatic tracking of dependencies, so <code>using</code> calls must list everything explicitly. This package system is not part of the language, but it’s worth explaining here because so many modules use it.</p>
 <h2 id="assertions" class="anchor">
 <a class="anchor__link link" href="#assertions" aria-hidden="true">#</a> Assertions
@@ -200,7 +200,7 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </h3>
 <p>The <code>=?&gt;</code> operator asserts that the left-hand side is equal to one of the elements from the right-hand side, using <code>equal?</code>. For example:</p>
 <pre><code class="codeblock">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0 1 2 3 4</span>]</code></pre>
-<p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code><span class="vs">'(...)</span></code>.</p>
+<p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code><span class="qu">'(...)</span></code>.</p>
 <p>When <code>(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1 1</span>) <span class="cn">"two"</span>]</code> fails, the output looks like this:</p>
 <pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
@@ -225,17 +225,17 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 
 (foo) <span class="op">=$&gt;</span> [<span class="cn">"hello" "world"</span>]</code></pre>
 <p>Newlines occurring at the beginning, end, or after another newline are ignored:</p>
-<pre><code class="codeblock">(<span class="fu">display</span> <span class="cn">"</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">"</span>) <span class="op">=$&gt;</span> [<span class="cn">"One" "Two" "Three"</span>]</code></pre>
-<p>When <code>(<span class="fu">display</span> <span class="cn">"pong</span><span class="co">\n</span><span class="cn">ping"</span>) <span class="op">=$&gt;</span> [<span class="cn">"ping" "pong"</span>]</code> fails, the output looks like this:</p>
+<pre><code class="codeblock">(<span class="fu">display</span> <span class="cn">"</span><span class="at">\n</span><span class="cn">One</span><span class="at">\n\n</span><span class="cn">Two</span><span class="at">\n\n\n</span><span class="cn">Three</span><span class="at">\n</span><span class="cn">"</span>) <span class="op">=$&gt;</span> [<span class="cn">"One" "Two" "Three"</span>]</code></pre>
+<p>When <code>(<span class="fu">display</span> <span class="cn">"pong</span><span class="at">\n</span><span class="cn">ping"</span>) <span class="op">=$&gt;</span> [<span class="cn">"ping" "pong"</span>]</code> fails, the output looks like this:</p>
 <pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
-=$> [<span class="vs">"pong"</span>
-     <span class="vs">"ping"</span>]
+=$> [<span class="qu">"pong"</span>
+     <span class="qu">"ping"</span>]
 
 right:
-=$> [<span class="vs">"ping"</span>
-     <span class="vs">"pong"</span>]
+=$> [<span class="qu">"ping"</span>
+     <span class="qu">"pong"</span>]
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
@@ -243,8 +243,8 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#error" aria-hidden="true">#</a> Error
 </h3>
 <p>The <code>=!&gt;</code> operator asserts that an error will occur. For example:</p>
-<pre><code class="codeblock">(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"oops" 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"foo: oops: 1 2"</span></code></pre>
-<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">""</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1 0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
+<pre><code class="codeblock">(<span class="fu">error</span> <span class="qu">'foo</span> <span class="cn">"oops" 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"foo: oops: 1 2"</span></code></pre>
+<p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="mv">who</span>: <span class="mv">message</span>: <span class="mv">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">""</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1 0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
 <p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
 <pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
@@ -256,7 +256,7 @@ right:
 
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
-<p>When <code>(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"catastrophe" 1</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
+<p>When <code>(<span class="fu">error</span> <span class="qu">'foo</span> <span class="cn">"catastrophe" 1</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
 <pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
@@ -292,15 +292,15 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#procedures" aria-hidden="true">#</a> Procedures
 </h3>
 <p><code>(runtime)</code> returns the time elapsed since some arbitrary point in the past, in seconds. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-11.html#%25_thm_1.22">textbook version</a>, which returns an integer, ours returns an inexact number with as much precision as possible. It is used for prime-test benchmarking in <a href="1/2.html#1.2.6">§&nbsp;1.2.6</a>.</p>
-<p><code>(parallel-execute <span class="ss">proc*</span> ...)</code> executes the given procedures in parallel. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_414">textbook version</a>, which returns immediately with a control object, ours blocks until all threads have completed. In addition, each thread sleeps for a random amount of time up to one millisecond before executing its procedure to help reveal bugs. It is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
-<p><code>(make-mutex)</code> returns an object <code><span class="ss">mutex</span></code> that supports messages <code>(<span class="ss">mutex</span> <span class="vs">'acquire</span>)</code> and <code>(<span class="ss">mutex</span> <span class="vs">'release</span>)</code>. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_427">textbook version</a>, which calls <code>test-and-set!</code> in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like <code>parallel-execute</code>, it is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
+<p><code>(parallel-execute <span class="mv">proc*</span> ...)</code> executes the given procedures in parallel. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_414">textbook version</a>, which returns immediately with a control object, ours blocks until all threads have completed. In addition, each thread sleeps for a random amount of time up to one millisecond before executing its procedure to help reveal bugs. It is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
+<p><code>(make-mutex)</code> returns an object <code><span class="mv">mutex</span></code> that supports messages <code>(<span class="mv">mutex</span> <span class="qu">'acquire</span>)</code> and <code>(<span class="mv">mutex</span> <span class="qu">'release</span>)</code>. Unlike the <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_sec_Temp_427">textbook version</a>, which calls <code>test-and-set!</code> in a busy loop (essentially a spinlock), ours use concurrency primitives provided by the operating system. Like <code>parallel-execute</code>, it is used in <a href="3/4.html">§&nbsp;3.4</a>.</p>
 <h3 id="special-forms" class="anchor">
 <a class="anchor__link link" href="#special-forms" aria-hidden="true">#</a> Special forms
 </h3>
-<p><code>(<span class="kw">capture-output</span> <span class="ss">exp*</span> ...)</code> evaluates the given expressions and returns standard output captured in a string. The <code>=$&gt;</code> operator uses this internally, and it’s useful to invoke directly when you need to manipulate the string in some way.</p>
-<p><code>(<span class="kw">hide-output</span> <span class="ss">exp*</span> ...)</code> evaluates the given expressions while suppressing standard output. It returns the value of the last expression.</p>
-<p><code>(<span class="kw">cons-stream</span> <span class="ss">a b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="ss">a</span> (<span class="kw">delay</span> <span class="ss">b</span>))</code>. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
-<p><code>(<span class="kw">with-eval</span> <span class="ss">eval env exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="ss">eval exp* env</span>) ...)</code>, except it first creates bindings for <code><span class="ss">eval</span></code> and <code><span class="ss">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
+<p><code>(<span class="kw">capture-output</span> <span class="mv">exp*</span> ...)</code> evaluates the given expressions and returns standard output captured in a string. The <code>=$&gt;</code> operator uses this internally, and it’s useful to invoke directly when you need to manipulate the string in some way.</p>
+<p><code>(<span class="kw">hide-output</span> <span class="mv">exp*</span> ...)</code> evaluates the given expressions while suppressing standard output. It returns the value of the last expression.</p>
+<p><code>(<span class="kw">cons-stream</span> <span class="mv">a b</span>)</code> is equivalent to <code>(<span class="fu">cons</span> <span class="mv">a</span> (<span class="kw">delay</span> <span class="mv">b</span>))</code>. It is used in <a href="3/5.html">§&nbsp;3.5</a>.</p>
+<p><code>(<span class="kw">with-eval</span> <span class="mv">eval env exp*</span> ...)</code> is equivalent to <code>(<span class="kw">begin</span> (<span class="mv">eval exp* env</span>) ...)</code>, except it first creates bindings for <code><span class="mv">eval</span></code> and <code><span class="mv">env</span></code> to avoid re-evaluating them. It is used in <a href="4/index.html">Chapter&nbsp;4</a> to make tests more readable.</p>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

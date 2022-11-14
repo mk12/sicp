@@ -78,7 +78,7 @@
 </h2>
 <ul>
 <li>Lists with symbols look just like Lisp code, except we <em>quote</em> them.</li>
-<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span> <span class="ss">exp</span>)</code>, or the shorthand <code>'<span class="ss">exp</span></code>.</li>
+<li>To quote in Lisp, we use the special form <code>(<span class="kw">quote</span> <span class="mv">exp</span>)</code>, or the shorthand <code>'<span class="mv">exp</span></code>.</li>
 <li>For example, <code>'x</code> evaluates to the symbol “x” instead of the variable <code>x</code>’s value.</li>
 <li>This is like just natural language. If I say, “Say your name,<span class="tuck">”</span> you will say your name. If I instead say, “Say ‘your name’,<span class="tuck">”</span> you will literally say the words “your name.<span class="tuck">”</span></li>
 </ul>
@@ -86,22 +86,22 @@
 (<span class="kw">define</span> b <span class="cn">2</span>)
 
 (<span class="fu">list</span> a b)
-<span class="sc">→ (1 2)</span>
+<span class="cs">→ (1 2)</span>
 
-(<span class="fu">list</span> <span class="vs">'a 'b</span>)
-<span class="sc">→ (a b)</span>
+(<span class="fu">list</span> <span class="qu">'a 'b</span>)
+<span class="cs">→ (a b)</span>
 
-(<span class="fu">list</span> <span class="vs">'a</span> b)
-<span class="sc">→ (a 2)</span></code></pre>
+(<span class="fu">list</span> <span class="qu">'a</span> b)
+<span class="cs">→ (a 2)</span></code></pre>
 <ul>
 <li>Now that we have quotation, we will use <code>'()</code> for the empty list instead of <code>nil</code>.</li>
 <li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
-<pre><code class="codeblock">(<span class="fu">eq?</span> <span class="vs">'a 'b</span>)
-<span class="sc">→ #f</span>
+<pre><code class="codeblock">(<span class="fu">eq?</span> <span class="qu">'a 'b</span>)
+<span class="cs">→ #f</span>
 
-(<span class="fu">eq?</span> <span class="vs">'a 'a</span>)
-<span class="sc">→ #t</span></code></pre>
+(<span class="fu">eq?</span> <span class="qu">'a 'a</span>)
+<span class="cs">→ #t</span></code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/3.html#ex2.53">2.53</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.54">2.54</a>, </li><li class="flat__item"><a href="../../exercise/2/3.html#ex2.55">2.55</a></li></ul></aside>
 <h2 id="2.3.2" class="anchor">
 <a class="anchor__link link" href="#2.3.2" aria-hidden="true">#</a> <span class="number">2.3.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">Example: Symbolic Differentiation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -294,7 +294,7 @@
 <a class="anchor__link link" href="#2.3.4.2" aria-hidden="true">#</a> Representing Huffman trees
 </h3>
 <ul>
-<li>Leaves are represented by <code>(<span class="fu">list</span> <span class="vs">'leaf</span> symbol weight)</code>.</li>
+<li>Leaves are represented by <code>(<span class="fu">list</span> <span class="qu">'leaf</span> symbol weight)</code>.</li>
 <li>Internal nodes are represented by <code>(<span class="fu">list</span> left right symbols weight)</code>, where <code>left</code> and <code>right</code> are subtrees, <code>symbols</code> is a list of the symbols underneath the node, and <code>weight</code> is the sum of the weights of all the leaves beneath the node.</li>
 </ul>
 <h3 id="2.3.4.3" class="anchor">
@@ -304,7 +304,7 @@
 <pre><code class="codeblock">(<span class="kw">define</span> (decode bits tree)
   (<span class="kw">define</span> (decode-1 bits current-branch)
     (<span class="kw">if</span> (<span class="fu">null?</span> bits)
-        <span class="vs">'()</span>
+        <span class="qu">'()</span>
         (<span class="kw">let</span> ((next-branch
                (choose-branch (<span class="fu">car</span> bits) current-branch)))
           (<span class="kw">if</span> (leaf? next-branch)

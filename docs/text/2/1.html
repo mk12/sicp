@@ -85,7 +85,7 @@
 </h2>
 <ul>
 <li>We want to add, subtract, multiply, divide, and test equality with our rational numbers.</li>
-<li>Assume we have <code>(make-rat <span class="ss">n d</span>)</code>, <code>(number <span class="ss">x</span>)</code>, and <code>(denom <span class="ss">x</span>)</code> available as the constructor and selectors. This is wishful thinking, and it is a good technique.</li>
+<li>Assume we have <code>(make-rat <span class="mv">n d</span>)</code>, <code>(number <span class="mv">x</span>)</code>, and <code>(denom <span class="mv">x</span>)</code> available as the constructor and selectors. This is wishful thinking, and it is a good technique.</li>
 <li>Here is the implementation for addition:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> (add-rat x y)
@@ -102,10 +102,10 @@
 <pre><code class="codeblock">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1 2</span>))
 
 (<span class="fu">car</span> x)
-<span class="sc">→ 1</span>
+<span class="cs">→ 1</span>
 
 (<span class="fu">cdr</span> x)
-<span class="sc">→ 2</span></code></pre>
+<span class="cs">→ 2</span></code></pre>
 <ul>
 <li>This is all the glue we need to implement all sorts of complex data structures.</li>
 <li>Data objects constructed from pairs are called <em>list-structured</em> data.</li>

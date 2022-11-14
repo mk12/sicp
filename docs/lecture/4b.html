@@ -140,7 +140,7 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â
 <ul>
 <li>Our system has a table with types (horizontal axis) and operators (vertical axis).</li>
 <li>Instead of writing these generic procedures manually, we should just use a table.</li>
-<li>We introduce two new procedures: <code>(put <span class="ss">key1 key2 value</span>)</code> and <code>(get <span class="ss">key1 key2</span>)</code>.</li>
+<li>We introduce two new procedures: <code>(put <span class="mv">key1 key2 value</span>)</code> and <code>(get <span class="mv">key1 key2</span>)</code>.</li>
 <li>Now we just need to insert our specific procedures into the table using <code>put</code>, and the rest will be automated.</li>
 <li>Itâ€™s the procedures that go in the table, not their names, so we could even pass a lambda expression and not give it a name.</li>
 <li>The key procedure in this whole system is <code>operate</code>:</li>
@@ -155,9 +155,9 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â
 <li>Hereâ€™s what happens when we extract the real part of a complex number in polar form:</li>
 </ul>
 <pre><code class="codeblock">(real-part z)
-(operate <span class="vs">'real-part</span> z)
-((get <span class="vs">'polar 'real-part</span>) (contents z))
-(real-part-polar <span class="vs">'(1 . 2)</span>)
+(operate <span class="qu">'real-part</span> z)
+((get <span class="qu">'polar 'real-part</span>) (contents z))
+(real-part-polar <span class="qu">'(1 . 2)</span>)
 (<span class="fu">*</span> <span class="cn">1</span> (<span class="fu">cos</span> <span class="cn">2</span>))
 <span class="cn">-0.4161468365</span></code></pre>
 <ul>

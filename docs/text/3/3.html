@@ -97,9 +97,9 @@
 <a class="anchor__link link" href="#3.3.1.1" aria-hidden="true">#</a> Sharing and identity
 </h3>
 <ul>
-<li>Consider <code>(<span class="kw">define</span> x (<span class="fu">list</span> <span class="vs">'a 'b</span>))</code> and <code>(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
+<li>Consider <code>(<span class="kw">define</span> x (<span class="fu">list</span> <span class="qu">'a 'b</span>))</code> and <code>(<span class="kw">define</span> z1 (<span class="fu">cons</span> x x))</code>.</li>
 <li><code>z1</code> is a pair whose <code>car</code> and <code>cdr</code> both point to the same <code>x</code>.</li>
-<li>In contrast: <code>(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="vs">'a 'b</span>)) (<span class="fu">list</span> <span class="vs">'a 'b</span>))</code>.</li>
+<li>In contrast: <code>(<span class="kw">define</span> z2 (<span class="fu">cons</span> (<span class="fu">list</span> <span class="qu">'a 'b</span>)) (<span class="fu">list</span> <span class="qu">'a 'b</span>))</code>.</li>
 <li>In <code>z2</code>, the two <code>(a b)</code> lists are distinct, although the actual symbols are shared.</li>
 <li>Before assignment, we would think <code>z1</code> and <code>z2</code> were “the same.<span class="tuck">”</span></li>
 <li>The sharing is undetectable without mutators on list structure.</li>
@@ -130,10 +130,10 @@
   (<span class="kw">define</span> (set-x! v) (<span class="kw">set!</span> x v))
   (<span class="kw">define</span> (set-y! v) (<span class="kw">set!</span> y v))
   (<span class="kw">define</span> (dispatch m)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'car</span>) x)
-          ((<span class="fu">eq?</span> m <span class="vs">'cdr</span>) y)
-          ((<span class="fu">eq?</span> m <span class="vs">'set-car!</span>) set-x!)
-          ((<span class="fu">eq?</span> m <span class="vs">'set-cdr!</span>) set-y!)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="qu">'car</span>) x)
+          ((<span class="fu">eq?</span> m <span class="qu">'cdr</span>) y)
+          ((<span class="fu">eq?</span> m <span class="qu">'set-car!</span>) set-x!)
+          ((<span class="fu">eq?</span> m <span class="qu">'set-cdr!</span>) set-y!)
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Undefined operation: CONS"</span> m))))
   dispatch)</code></pre>
 <ul>
@@ -232,9 +232,9 @@
 <li>The primitives boxes implement “forces” by which changes in the signal of one wire influence the signal of another.</li>
 <li>We have the following operations on wires:
 <ul>
-<li><code>(get-signal <span class="ss">wire</span>)</code> returns the current value of the signal.</li>
-<li><code>(set-signal! <span class="ss">wire value</span>)</code> changes the value of the signal.</li>
-<li><code>(add-action! <span class="ss">wire procedure-of-no-arguments</span>)</code> asserts that the given procedure should be run whenever the signal on the wire changes value.</li>
+<li><code>(get-signal <span class="mv">wire</span>)</code> returns the current value of the signal.</li>
+<li><code>(set-signal! <span class="mv">wire value</span>)</code> changes the value of the signal.</li>
+<li><code>(add-action! <span class="mv">wire procedure-of-no-arguments</span>)</code> asserts that the given procedure should be run whenever the signal on the wire changes value.</li>
 </ul></li>
 <li>The procedure <code>after-delay</code> executes a procedure after a given time delay.</li>
 </ul>
@@ -262,7 +262,7 @@
 <li>The only thing left is <code>after-delay</code>.</li>
 <li>An <em>agenda</em> is a data structure that schedules things to do.</li>
 <li>For an agenda <code>(<span class="kw">define</span> a (make-agenda))</code>, the operations <code>(empty-agenda? a)</code>, <code>(first-agenda-item a)</code>, <code>(remove-first-agenda-item! a)</code>, and <code>(current-time a)</code> are self-explanatory.</li>
-<li>We schedule new items with <code>(add-to-agenda <span class="ss">time action</span> a)</code>.</li>
+<li>We schedule new items with <code>(add-to-agenda <span class="mv">time action</span> a)</code>.</li>
 <li>We call the global agenda <code>the-agenda</code>.</li>
 <li>The simulation is driven by <code>propagate</code>, which executes each item on the agenda in sequence.</li>
 </ul>
@@ -304,17 +304,17 @@
 </h3>
 <ul>
 <li>We create connectors with <code>(make-connector)</code>, just like wires.</li>
-<li>We use <code>(probe <span class="cn">"name"</span> <span class="ss">connector</span>)</code>, again just like wires.</li>
-<li><code>(set-value! <span class="ss">connector value</span> <span class="vs">'user</span>)</code> assigns a value to the connector, and this information propagates through the network.</li>
+<li>We use <code>(probe <span class="cn">"name"</span> <span class="mv">connector</span>)</code>, again just like wires.</li>
+<li><code>(set-value! <span class="mv">connector value</span> <span class="qu">'user</span>)</code> assigns a value to the connector, and this information propagates through the network.</li>
 <li>This will give an error if the new value causes a contradiction.</li>
-<li><code>(forget-value! <span class="ss">connector</span> <span class="vs">'user</span>)</code> undoes the assignment.</li>
+<li><code>(forget-value! <span class="mv">connector</span> <span class="qu">'user</span>)</code> undoes the assignment.</li>
 </ul>
 <h3 id="3.3.5.2" class="anchor">
 <a class="anchor__link link" href="#3.3.5.2" aria-hidden="true">#</a> Implementing the constraint system
 </h3>
 <ul>
 <li>The overall system is simpler than the digital circuit system because there are no propagation delays.</li>
-<li>There are five basic operations on a connector <code>c</code>: <code>(has-value? c)</code>, <code>(get-value c)</code>, <code>(set-value! c <span class="ss">value informant</span>)</code>, <code>(forget-value! c <span class="ss">retractor</span>)</code>, and <code>(connect c <span class="ss">constraint</span>)</code>.</li>
+<li>There are five basic operations on a connector <code>c</code>: <code>(has-value? c)</code>, <code>(get-value c)</code>, <code>(set-value! c <span class="mv">value informant</span>)</code>, <code>(forget-value! c <span class="mv">retractor</span>)</code>, and <code>(connect c <span class="mv">constraint</span>)</code>.</li>
 <li>The procedures <code>inform-about-value</code> and <code>inform-about-no-value</code> tells the constraint that a connector has (lost) a value.</li>
 <li>Whenever an adder gets a new value, it checks if it has two and can calculate the third.</li>
 </ul>

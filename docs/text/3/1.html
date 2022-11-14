@@ -109,9 +109,9 @@
              balance)
       <span class="cn">"Insufficient funds"</span>))</code></pre>
 <ul>
-<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="ss">name new-value</span>)</code>.</li>
+<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="mv">name new-value</span>)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
-<li>The expression <code>(<span class="kw">begin</span> <span class="ss">exp1 exp2</span> ... <span class="ss">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
+<li>The expression <code>(<span class="kw">begin</span> <span class="mv">exp1 exp2</span> ... <span class="mv">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
 <li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> withdraw
@@ -156,8 +156,8 @@
     (<span class="kw">set!</span> balance (<span class="fu">+</span> balance amount))
     balance)
   (<span class="kw">define</span> (dispatch m)
-    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'withdraw</span>) withdraw)
-          ((<span class="fu">eq?</span> m <span class="vs">'deposit</span>) deposit)
+    (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="qu">'withdraw</span>) withdraw)
+          ((<span class="fu">eq?</span> m <span class="qu">'deposit</span>) deposit)
           (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown request: MAKE-ACCOUNT"</span> m))))
   dispatch)</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/1.html#ex3.1">3.1</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.2">3.2</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.3">3.3</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.4">3.4</a></li></ul></aside>

@@ -25,7 +25,7 @@
     + eliminate logic of adding "scheme" class
     + delete a lot of the postprocessing in docgen
     + handle vector literal '#(1 2 3)
-    - simplify or rename the CSS classes
+    + simplify or rename the CSS classes
 + link to :1.3 in ?1.29 should link to "#1.3" (h1 needs id="1.3"), not to "#"
 + remove/change all "Note:"
     + goal here is to fix weird things that needed notes (e.g. the NaN thing), and also reduce red comments (prefer to have rendered in text with links etc.)

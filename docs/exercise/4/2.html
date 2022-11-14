@@ -143,22 +143,22 @@ Imports:
 </aside>
 <p>Ben is correct. You can implement <code>unless</code> as a special form:</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (unless-&gt;if exp)
-  (<span class="fu">list</span> <span class="vs">'if</span> (<span class="fu">cadr</span> exp) (<span class="fu">cadddr</span> exp) (<span class="fu">caddr</span> exp)))
+  (<span class="fu">list</span> <span class="qu">'if</span> (<span class="fu">cadr</span> exp) (<span class="fu">cadddr</span> exp) (<span class="fu">caddr</span> exp)))
 (<span class="kw">define</span> (unless-pkg)
-  (put <span class="vs">'eval 'unless</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (unless-&gt;if exp) env))))
+  (put <span class="qu">'eval 'unless</span> (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (unless-&gt;if exp) env))))
 
 (using eval-pkg unless-pkg)
 
 (<span class="kw">define</span> env (setup-environment))
-(<span class="fu">eval</span> <span class="vs">'(unless #f "hi" undefined-variable)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
+(<span class="fu">eval</span> <span class="qu">'(unless #f "hi" undefined-variable)</span> env) <span class="op">=&gt;</span> <span class="cn">"hi"</span></code></pre>
 <p>But Alyssa also has a point: this is just syntax, so it can’t be used with higher-order procedures. Here is an example where that would be useful:</p>
 <pre><code class="codeblock">(<span class="kw">with-eval</span> <span class="fu">eval</span> env
   (<span class="kw">define</span> (<span class="fu">map</span> f as bs cs)
-    (<span class="kw">cond</span> ((<span class="fu">null?</span> as) <span class="vs">'()</span>)
+    (<span class="kw">cond</span> ((<span class="fu">null?</span> as) <span class="qu">'()</span>)
           (<span class="kw">else</span> (<span class="fu">cons</span> (f (<span class="fu">car</span> as) (<span class="fu">car</span> bs) (<span class="fu">car</span> cs))
                       (<span class="fu">map</span> f (<span class="fu">cdr</span> as) (<span class="fu">cdr</span> bs) (<span class="fu">cdr</span> cs))))))
-  (<span class="kw">define</span> uppercase <span class="vs">'(#t #f)</span>)
-  (<span class="fu">map</span> unless uppercase <span class="vs">'(a b) '(A B)</span>))
+  (<span class="kw">define</span> uppercase <span class="qu">'(#t #f)</span>)
+  (<span class="fu">map</span> unless uppercase <span class="qu">'(a b) '(A B)</span>))
 <span class="er">=!&gt;</span> <span class="cn">"unbound variable: unless"</span></code></pre>
 <h2 id="4.2.2" class="anchor">
 <a class="anchor__link link" href="#4.2.2" aria-hidden="true">#</a> <span class="number">4.2.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-27.html#%25_sec_4.2.2">An Interpreter with Lazy Evaluation<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -309,15 +309,15 @@ Imports:
           (extend-environment (procedure-parameters proc)
                               (list-of-delayed-args args env)
                               (procedure-environment proc))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'apply</span> <span class="cn">"unknown procedure type"</span> proc))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'apply</span> <span class="cn">"unknown procedure type"</span> proc))))
 
 (<span class="kw">define</span> (list-of-arg-values exps env)
-  (<span class="kw">cond</span> ((no-operands? exps) <span class="vs">'()</span>)
+  (<span class="kw">cond</span> ((no-operands? exps) <span class="qu">'()</span>)
         (<span class="kw">else</span> (<span class="fu">cons</span> (actual-value (first-operand exps) env)
                     (list-of-arg-values (rest-operands exps) env)))))
 
 (<span class="kw">define</span> (list-of-delayed-args exps env)
-  (<span class="kw">cond</span> ((no-operands? exps) <span class="vs">'()</span>)
+  (<span class="kw">cond</span> ((no-operands? exps) <span class="qu">'()</span>)
         (<span class="kw">else</span> (<span class="fu">cons</span> (memo-delay-it (first-operand exps) env)
                     (list-of-delayed-args (rest-operands exps) env)))))
 
@@ -327,8 +327,8 @@ Imports:
       (<span class="fu">eval</span> (if-alternative exp) env)))
 
 (<span class="kw">define</span> (lazy-eval-pkg)
-  (put <span class="vs">'eval 'call</span> eval-call)
-  (put <span class="vs">'eval 'if</span> eval-if))
+  (put <span class="qu">'eval 'call</span> eval-call)
+  (put <span class="qu">'eval 'if</span> eval-if))
 
 (using eval-pkg)
 (<span class="kw">with-eval</span> <span class="fu">eval</span> (setup-environment)
@@ -370,13 +370,13 @@ Imports:
 <p>Moved here from Section 4.2.2.1 to avoid import cycle.</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (actual-value exp env) (force-it (<span class="fu">eval</span> exp env)))</code></pre>
 <p>Support both non-memoized and memoized thunks, to make Exercise 4.31 easier.</p>
-<pre><code class="codeblock">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="vs">'thunk</span> exp env))
-(<span class="kw">define</span> (memo-delay-it exp env) (<span class="fu">list</span> <span class="vs">'memo-thunk</span> exp env))
-(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="vs">'thunk</span>))
-(<span class="kw">define</span> (memo-thunk? obj) (tagged-list? obj <span class="vs">'memo-thunk</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="qu">'thunk</span> exp env))
+(<span class="kw">define</span> (memo-delay-it exp env) (<span class="fu">list</span> <span class="qu">'memo-thunk</span> exp env))
+(<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="qu">'thunk</span>))
+(<span class="kw">define</span> (memo-thunk? obj) (tagged-list? obj <span class="qu">'memo-thunk</span>))
 (<span class="kw">define</span> (thunk-exp thunk) (<span class="fu">cadr</span> thunk))
 (<span class="kw">define</span> (thunk-env thunk) (<span class="fu">caddr</span> thunk))
-(<span class="kw">define</span> (evaluated-thunk? obj) (tagged-list? obj <span class="vs">'evaluated-thunk</span>))
+(<span class="kw">define</span> (evaluated-thunk? obj) (tagged-list? obj <span class="qu">'evaluated-thunk</span>))
 (<span class="kw">define</span> (thunk-value thunk) (<span class="fu">cadr</span> thunk))
 
 (<span class="kw">define</span> (force-it obj)
@@ -384,9 +384,9 @@ Imports:
         ((evaluated-thunk? obj) (thunk-value obj))
         ((memo-thunk? obj)
          (<span class="kw">let</span> ((result (actual-value (thunk-exp obj) (thunk-env obj))))
-           (<span class="fu">set-car!</span> obj <span class="vs">'evaluated-thunk</span>)
+           (<span class="fu">set-car!</span> obj <span class="qu">'evaluated-thunk</span>)
            (<span class="fu">set-car!</span> (<span class="fu">cdr</span> obj) result)
-           (<span class="fu">set-cdr!</span> (<span class="fu">cdr</span> obj) <span class="vs">'()</span>)
+           (<span class="fu">set-cdr!</span> (<span class="fu">cdr</span> obj) <span class="qu">'()</span>)
            result))
         (<span class="kw">else</span> obj)))</code></pre>
 <h3 id="ex4.27" class="anchor">
@@ -450,11 +450,11 @@ Imports:
   (<span class="kw">define</span> (id x) (<span class="kw">set!</span> count (<span class="fu">+</span> count <span class="cn">1</span>)) x)
   (<span class="kw">define</span> w (id (id <span class="cn">10</span>))))</code></pre>
 <p>When we defined <code>w</code>, it forced the outer <code>id</code> operand, resulting in <code>count</code> being incremented. The <code>(id <span class="cn">10</span>)</code> argument is delayed.</p>
-<pre><code class="codeblock">(actual-value <span class="vs">'count</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+<pre><code class="codeblock">(actual-value <span class="qu">'count</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <p>Using <code>actual-value</code> forces the full evaluation of <code>w</code> to 10.</p>
-<pre><code class="codeblock">(actual-value <span class="vs">'w</span> env) <span class="op">=&gt;</span> <span class="cn">10</span></code></pre>
+<pre><code class="codeblock">(actual-value <span class="qu">'w</span> env) <span class="op">=&gt;</span> <span class="cn">10</span></code></pre>
 <p>Forcing <code>w</code> caused the inner <code>(id <span class="cn">10</span>)</code> to increment <code>count</code> again.</p>
-<pre><code class="codeblock">(actual-value <span class="vs">'count</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+<pre><code class="codeblock">(actual-value <span class="qu">'count</span> env) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <h3 id="ex4.28" class="anchor">
 <a class="anchor__link link" href="#ex4.28" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-27.html#%25_thm_4.28">Exercise 4.28<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -527,7 +527,7 @@ Imports:
 </aside>
 <pre><code class="codeblock">(using eval-pkg lazy-eval-pkg)</code></pre>
 <p>Here is an example that demonstrates the need for forcing the operand:</p>
-<pre><code class="codeblock">(<span class="kw">define</span> exp <span class="vs">'(((lambda (x) x) car) (cons 1 2))</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> exp <span class="qu">'(((lambda (x) x) car) (cons 1 2))</span>)
 (<span class="kw">define</span> env (setup-environment))
 
 (<span class="kw">define</span> (do-it-with f)
@@ -609,7 +609,7 @@ Imports:
   (square (id <span class="cn">10</span>)))
 <span class="op">=&gt;</span> <span class="cn">100</span></code></pre>
 <p>With memoization, this is 1. Without memoization, it would be 2.</p>
-<pre><code class="codeblock">(actual-value <span class="vs">'count</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
+<pre><code class="codeblock">(actual-value <span class="qu">'count</span> env) <span class="op">=&gt;</span> <span class="cn">1</span></code></pre>
 <h3 id="ex4.30" class="anchor">
 <a class="anchor__link link" href="#ex4.30" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-27.html#%25_thm_4.30">Exercise 4.30<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -743,43 +743,43 @@ Imports:
         (<span class="kw">else</span> (actual-value (first-exp exps) env)
               (eval-sequence (rest-exps exps) env))))
 (<span class="kw">define</span> (proposed-sequence-pkg)
-  (put <span class="vs">'eval 'begin</span> (<span class="kw">lambda</span> (exp env) (eval-sequence (begin-actions exp) env)))
-  (put <span class="vs">'eval 'call</span> eval-call))
+  (put <span class="qu">'eval 'begin</span> (<span class="kw">lambda</span> (exp env) (eval-sequence (begin-actions exp) env)))
+  (put <span class="qu">'eval 'call</span> eval-call))
 
 (using eval-pkg lazy-eval-pkg)
 (<span class="kw">define</span> env (setup-environment))
 
 (<span class="kw">with-eval</span> actual-value env
-  <span class="co">;; Ben Bitdiddle's example program:</span>
+  <span class="at">;; Ben Bitdiddle's example program:</span>
   (<span class="kw">define</span> (<span class="fu">for-each</span> proc items)
     (<span class="kw">if</span> (<span class="fu">null?</span> items)
-        <span class="vs">'done</span>
+        <span class="qu">'done</span>
         (<span class="kw">begin</span> (proc (<span class="fu">car</span> items))
                (<span class="fu">for-each</span> proc (<span class="fu">cdr</span> items)))))
   (<span class="kw">define</span> (bens-example)
     (<span class="fu">for-each</span> (<span class="kw">lambda</span> (x) (<span class="fu">newline</span>) (<span class="fu">display</span> x))
               (<span class="fu">list</span> <span class="cn">57 321 88</span>)))
-  <span class="co">;; Cy D. Fect's example program:</span>
+  <span class="at">;; Cy D. Fect's example program:</span>
   (<span class="kw">define</span> (p1 x)
-    (<span class="kw">set!</span> x (<span class="fu">cons</span> x <span class="vs">'(2)</span>)) x)
+    (<span class="kw">set!</span> x (<span class="fu">cons</span> x <span class="qu">'(2)</span>)) x)
   (<span class="kw">define</span> (p2 x)
     (<span class="kw">define</span> (p e) e x)
-    (p (<span class="kw">set!</span> x (<span class="fu">cons</span> x <span class="vs">'(2)</span>)))))</code></pre>
+    (p (<span class="kw">set!</span> x (<span class="fu">cons</span> x <span class="qu">'(2)</span>)))))</code></pre>
 <ol type="a">
 <li><p>Ben is right about the behavior of <code>for-each</code> in his example. Evaluating <code>(proc (<span class="fu">car</span> items))</code> is sufficient to enact the side effects in <code>proc</code>. There is no need to force a returned thunk because it does not return anything.</p>
 <pre><code class="codeblock">(using eval-pkg lazy-eval-pkg)
-(actual-value <span class="vs">'(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">"57" "321" "88"</span>]</code></pre></li>
+(actual-value <span class="qu">'(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">"57" "321" "88"</span>]</code></pre></li>
 <li><p>With the original <code>eval-sequence</code>, <code>(p2 <span class="cn">1</span>)</code> has an unexpected result. With Cy’s proposed change, <code>p2</code> behaves the same as <code>p1</code>.</p>
 <pre><code class="codeblock">(using eval-pkg lazy-eval-pkg)
-(actual-value <span class="vs">'(p1 1)</span> env) <span class="op">=&gt;</span> <span class="vs">'(1 2)</span>
-(actual-value <span class="vs">'(p2 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(actual-value <span class="qu">'(p1 1)</span> env) <span class="op">=&gt;</span> <span class="qu">'(1 2)</span>
+(actual-value <span class="qu">'(p2 1)</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 
 (using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
-(actual-value <span class="vs">'(p1 1)</span> env) <span class="op">=&gt;</span> <span class="vs">'(1 2)</span>
-(actual-value <span class="vs">'(p2 1)</span> env) <span class="op">=&gt;</span> <span class="vs">'(1 2)</span></code></pre></li>
+(actual-value <span class="qu">'(p1 1)</span> env) <span class="op">=&gt;</span> <span class="qu">'(1 2)</span>
+(actual-value <span class="qu">'(p2 1)</span> env) <span class="op">=&gt;</span> <span class="qu">'(1 2)</span></code></pre></li>
 <li><p>Cy is write: his proposed <code>eval-sequence</code> does not affect part (a). All it does is force the return value of <code>display</code> and <code>newline</code>. These are void, not thunks, so forcing is a no-op.</p>
 <pre><code class="codeblock">(using eval-pkg lazy-eval-pkg proposed-sequence-pkg)
-(actual-value <span class="vs">'(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">"57" "321" "88"</span>]</code></pre></li>
+(actual-value <span class="qu">'(bens-example)</span> env) <span class="op">=$&gt;</span> [<span class="cn">"57" "321" "88"</span>]</code></pre></li>
 <li><p>I prefer Cy’s approach because otherwise <code>begin</code> blocks, or procedures with multiple expressions in the body, are useless with the lazy evaluator. This does not totally solve the side-effects confusion, but it helps.</p></li>
 </ol>
 <h3 id="ex4.31" class="anchor">
@@ -919,11 +919,11 @@ Imports:
 
 (<span class="kw">define</span> (list-of-args exps params env)
   (<span class="kw">if</span> (no-operands? exps)
-      <span class="vs">'()</span>
+      <span class="qu">'()</span>
       (<span class="kw">let</span> ((f (<span class="kw">cond</span> ((<span class="fu">symbol?</span> (<span class="fu">car</span> params)) actual-value)
-                     ((<span class="fu">eq?</span> (<span class="fu">caar</span> params) <span class="vs">'lazy</span>) delay-it)
-                     ((<span class="fu">eq?</span> (<span class="fu">caar</span> params) <span class="vs">'lazy-memo</span>) memo-delay-it)
-                     (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'list-of-args</span>
+                     ((<span class="fu">eq?</span> (<span class="fu">caar</span> params) <span class="qu">'lazy</span>) delay-it)
+                     ((<span class="fu">eq?</span> (<span class="fu">caar</span> params) <span class="qu">'lazy-memo</span>) memo-delay-it)
+                     (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'list-of-args</span>
                                   <span class="cn">"invalid parameter"</span>
                                   (<span class="fu">car</span> params))))))
         (<span class="fu">cons</span> (f (first-operand exps) env)
@@ -939,11 +939,11 @@ Imports:
            (procedure-parameter-names proc)
            (list-of-args args (procedure-parameters proc) env)
            (procedure-environment proc))))
-        (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'apply</span> <span class="cn">"unknown procedure type"</span> proc))))
+        (<span class="kw">else</span> (<span class="fu">error</span> <span class="qu">'apply</span> <span class="cn">"unknown procedure type"</span> proc))))
 
 (<span class="kw">define</span> (explicit-lazy-pkg)
-  (put <span class="vs">'eval 'call</span> eval-call)
-  (put <span class="vs">'eval 'if</span> eval-if))
+  (put <span class="qu">'eval 'call</span> eval-call)
+  (put <span class="qu">'eval 'if</span> eval-if))
 
 (using eval-pkg explicit-lazy-pkg)
 (<span class="kw">define</span> env (setup-environment))
@@ -956,13 +956,13 @@ Imports:
   (<span class="kw">define</span> (double-lazy (lazy x)) (<span class="fu">+</span> x x))
   (<span class="kw">define</span> (double-lazy-memo (lazy-memo x)) (<span class="fu">+</span> x x)))
 
-(actual-value <span class="vs">'(try 0 (/ 1 0))</span> env) <span class="er">=!&gt;</span> <span class="cn">"/"</span>
-(actual-value <span class="vs">'(try-lazy 0 (/ 1 0))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
-(actual-value <span class="vs">'(try-lazy-memo 0 (/ 1 0))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(actual-value <span class="qu">'(try 0 (/ 1 0))</span> env) <span class="er">=!&gt;</span> <span class="cn">"/"</span>
+(actual-value <span class="qu">'(try-lazy 0 (/ 1 0))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
+(actual-value <span class="qu">'(try-lazy-memo 0 (/ 1 0))</span> env) <span class="op">=&gt;</span> <span class="cn">1</span>
 
-(actual-value <span class="vs">'(double (begin (display "x") 1))</span> env) <span class="op">=$&gt;</span> <span class="cn">"x"</span>
-(actual-value <span class="vs">'(double-lazy (begin (display "x") 1))</span> env) <span class="op">=$&gt;</span> <span class="cn">"xx"</span>
-(actual-value <span class="vs">'(double-lazy-memo (begin (display "x") 1))</span> env) <span class="op">=$&gt;</span> <span class="cn">"x"</span></code></pre>
+(actual-value <span class="qu">'(double (begin (display "x") 1))</span> env) <span class="op">=$&gt;</span> <span class="cn">"x"</span>
+(actual-value <span class="qu">'(double-lazy (begin (display "x") 1))</span> env) <span class="op">=$&gt;</span> <span class="cn">"xx"</span>
+(actual-value <span class="qu">'(double-lazy-memo (begin (display "x") 1))</span> env) <span class="op">=$&gt;</span> <span class="cn">"x"</span></code></pre>
 <h2 id="4.2.3" class="anchor">
 <a class="anchor__link link" href="#4.2.3" aria-hidden="true">#</a> <span class="number">4.2.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-27.html#%25_sec_4.2.3">Streams as Lazy Lists<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
@@ -1041,11 +1041,11 @@ Imports:
 <p>Used in Exercise 4.34.</p>
 <pre><code class="codeblock">(<span class="kw">define</span> (lazy-cons? exp)
   (<span class="kw">and</span> (compound-procedure? exp)
-       (<span class="fu">equal?</span> (procedure-parameters exp) <span class="vs">'(*lazy-cons*)</span>)))
+       (<span class="fu">equal?</span> (procedure-parameters exp) <span class="qu">'(*lazy-cons*)</span>)))
 (<span class="kw">define</span> (lazy-cons-car exp)
-  (lookup-variable-value <span class="vs">'car</span> (procedure-environment exp)))
+  (lookup-variable-value <span class="qu">'car</span> (procedure-environment exp)))
 (<span class="kw">define</span> (lazy-cons-cdr exp)
-  (lookup-variable-value <span class="vs">'cdr</span> (procedure-environment exp)))
+  (lookup-variable-value <span class="qu">'cdr</span> (procedure-environment exp)))
 
 (using eval-pkg lazy-eval-pkg)
 (<span class="kw">define</span> lazy-list-env (setup-environment))
@@ -1058,7 +1058,7 @@ Imports:
     (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>) (<span class="fu">car</span> items) (<span class="fu">list-ref</span> (<span class="fu">cdr</span> items) (<span class="fu">-</span> n <span class="cn">1</span>))))
   (<span class="kw">define</span> (<span class="fu">map</span> proc items)
     (<span class="kw">if</span> (<span class="fu">null?</span> items)
-        <span class="vs">'()</span>
+        <span class="qu">'()</span>
         (<span class="fu">cons</span> (proc (<span class="fu">car</span> items)) (<span class="fu">map</span> proc (<span class="fu">cdr</span> items)))))
   (<span class="kw">define</span> (scale-list items factor)
     (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) items))
@@ -1236,29 +1236,29 @@ Imports:
 </ul>
 </aside>
 <pre><code class="codeblock">(<span class="kw">define</span> (quoted-&gt;lazy x)
-  (<span class="kw">cond</span> ((<span class="fu">pair?</span> x) (<span class="fu">list</span> <span class="vs">'cons</span> (quoted-&gt;lazy (<span class="fu">car</span> x)) (quoted-&gt;lazy (<span class="fu">cdr</span> x))))
-        <span class="co">;; Note: We can't simply move the `eval` call inside `quoted-&gt;lazy` and
+  (<span class="kw">cond</span> ((<span class="fu">pair?</span> x) (<span class="fu">list</span> <span class="qu">'cons</span> (quoted-&gt;lazy (<span class="fu">car</span> x)) (quoted-&gt;lazy (<span class="fu">cdr</span> x))))
+        <span class="at">;; Note: We can't simply move the `eval` call inside `quoted-&gt;lazy` and
         ;; then omit it in this branch, since we might have recursed into a cons
         ;; structure. We need this "dumb-quote" escape hatch.</span>
-        (<span class="kw">else</span> (<span class="fu">list</span> <span class="vs">'dumb-quote</span> x))))
+        (<span class="kw">else</span> (<span class="fu">list</span> <span class="qu">'dumb-quote</span> x))))
 
 (<span class="kw">define</span> (lazy-quote-pkg)
-  (put <span class="vs">'eval 'quote</span>
+  (put <span class="qu">'eval 'quote</span>
        (<span class="kw">lambda</span> (exp env) (<span class="fu">eval</span> (quoted-&gt;lazy (text-of-quotation exp)) env)))
-  (put <span class="vs">'eval 'dumb-quote</span>
+  (put <span class="qu">'eval 'dumb-quote</span>
        (<span class="kw">lambda</span> (exp env) (text-of-quotation exp))))
 
 (<span class="kw">define</span> env (make-environment lazy-list-env))
 
 (using eval-pkg lazy-eval-pkg)
-(actual-value <span class="vs">''()</span> env) <span class="op">=&gt;</span> <span class="vs">'()</span>
-(actual-value <span class="vs">''a</span> env) <span class="op">=&gt;</span> <span class="vs">'a</span>
-(actual-value <span class="vs">'(car '(a b c))</span> env) <span class="er">=!&gt;</span> <span class="cn">"apply: unknown procedure type"</span>
+(actual-value <span class="qu">''()</span> env) <span class="op">=&gt;</span> <span class="qu">'()</span>
+(actual-value <span class="qu">''a</span> env) <span class="op">=&gt;</span> <span class="qu">'a</span>
+(actual-value <span class="qu">'(car '(a b c))</span> env) <span class="er">=!&gt;</span> <span class="cn">"apply: unknown procedure type"</span>
 
 (using eval-pkg lazy-eval-pkg lazy-quote-pkg)
-(actual-value <span class="vs">''()</span> env) <span class="op">=&gt;</span> <span class="vs">'()</span>
-(actual-value <span class="vs">''a</span> env) <span class="op">=&gt;</span> <span class="vs">'a</span>
-(actual-value <span class="vs">'(car '(a b c))</span> env) <span class="op">=&gt;</span> <span class="vs">'a</span></code></pre>
+(actual-value <span class="qu">''()</span> env) <span class="op">=&gt;</span> <span class="qu">'()</span>
+(actual-value <span class="qu">''a</span> env) <span class="op">=&gt;</span> <span class="qu">'a</span>
+(actual-value <span class="qu">'(car '(a b c))</span> env) <span class="op">=&gt;</span> <span class="qu">'a</span></code></pre>
 <h3 id="ex4.34" class="anchor">
 <a class="anchor__link link" href="#ex4.34" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-27.html#%25_thm_4.34">Exercise 4.34<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
@@ -1366,13 +1366,13 @@ Imports:
 
 (<span class="kw">define</span> env (make-environment lazy-list-env))
 (<span class="kw">with-eval</span> actual-value env
-  (<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> (<span class="fu">cons</span> <span class="cn">2</span> (<span class="fu">cons</span> <span class="cn">3</span> <span class="vs">'()</span>))))
+  (<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1</span> (<span class="fu">cons</span> <span class="cn">2</span> (<span class="fu">cons</span> <span class="cn">3</span> <span class="qu">'()</span>))))
   (<span class="kw">define</span> ones (<span class="fu">cons</span> <span class="cn">1</span> ones))
   (<span class="kw">define</span> one-two (<span class="fu">cons</span> <span class="cn">1</span> (<span class="fu">cons</span> <span class="cn">2</span> one-two))))
 
-(show (actual-value <span class="vs">'x</span> env)) <span class="op">=$&gt;</span> <span class="cn">"(1 2 3)"</span>
-(show (actual-value <span class="vs">'ones</span> env)) <span class="op">=$&gt;</span> <span class="cn">"(1 1 1 1 1 1 1 1 1 1 ...)"</span>
-(show (actual-value <span class="vs">'one-two</span> env)) <span class="op">=$&gt;</span> <span class="cn">"(1 2 1 2 1 2 1 2 1 2 ...)"</span></code></pre>
+(show (actual-value <span class="qu">'x</span> env)) <span class="op">=$&gt;</span> <span class="cn">"(1 2 3)"</span>
+(show (actual-value <span class="qu">'ones</span> env)) <span class="op">=$&gt;</span> <span class="cn">"(1 1 1 1 1 1 1 1 1 1 ...)"</span>
+(show (actual-value <span class="qu">'one-two</span> env)) <span class="op">=$&gt;</span> <span class="cn">"(1 2 1 2 1 2 1 2 1 2 ...)"</span></code></pre>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
   <div class="pagenav__item pagenav__item--left">

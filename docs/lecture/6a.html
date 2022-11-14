@@ -107,7 +107,7 @@
 <pre><code class="codeblock">(<span class="kw">define</span> (odd-fibs n)
   (<span class="kw">define</span> (next k)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> k n)
-        <span class="vs">'()</span>
+        <span class="qu">'()</span>
         (<span class="kw">let</span> ((f (fib k)))
           (<span class="kw">if</span> (<span class="fu">odd?</span> f)
               (<span class="fu">cons</span> f (next (<span class="fu">1+</span> k)))
@@ -153,7 +153,7 @@
                            (enumerate-tree tree)))))
 (<span class="kw">define</span> (odd-fibs n)
   (accumulate <span class="fu">cons</span>
-              <span class="vs">'()</span>
+              <span class="qu">'()</span>
               (<span class="fu">filter</span> odd
                       (<span class="fu">map</span> fib
                            (enumerate-interval <span class="cn">1</span> n)))))</code></pre>
@@ -243,11 +243,11 @@
 </ul></li>
 <li><code>delay</code> creates a promise to compute something when <code>force</code>&hairsp;d.
 <ul>
-<li><code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is an abbreviation for <code>(<span class="kw">lambda</span> () <span class="ss">expr</span>)</code></li>
+<li><code>(<span class="kw">delay</span> <span class="mv">expr</span>)</code> is an abbreviation for <code>(<span class="kw">lambda</span> () <span class="mv">expr</span>)</code></li>
 <li><code>(<span class="fu">force</span> p)</code> is <code>(p)</code></li>
 </ul></li>
 <li><code>delay</code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
-<li>One little hack: to be efficient, <code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is <code>(memo-proc (<span class="kw">lambda</span> () <span class="ss">expr</span>))</code>.</li>
+<li>One little hack: to be efficient, <code>(<span class="kw">delay</span> <span class="mv">expr</span>)</code> is <code>(memo-proc (<span class="kw">lambda</span> () <span class="mv">expr</span>))</code>.</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> (memo-proc proc)
   (<span class="kw">let</span> ((already-run? nil) (result nil))

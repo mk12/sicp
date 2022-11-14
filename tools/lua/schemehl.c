@@ -1211,6 +1211,17 @@ static void qt_dump(struct QuoteTracker *qt) {
 }
 #endif
 
+// CSS classes used by docs/style.css.
+static const char C_ATTENTION[] = "at";
+static const char C_CONSOLE[] = "cs";
+static const char C_CONSTANT[] = "cn";
+static const char C_ERROR[] = "er";
+static const char C_FUNCTION[] = "fu";
+static const char C_KEYWORD[] = "kw";
+static const char C_METAVARIABLE[] = "mv";
+static const char C_OPERATOR[] = "op";
+static const char C_QUOTED[] = "qu";
+
 // Renders a Scheme comment to HTML.
 static void render_comment(struct Highlighter *out, struct Span token) {
     if (span_eq(token, SPAN("; NOALIGN"))) {
@@ -1218,7 +1229,7 @@ static void render_comment(struct Highlighter *out, struct Span token) {
         hl_drop_ws(out);
         return;
     }
-    hl_write(out, "co", token);
+    hl_write(out, C_ATTENTION, token);
 }
 
 // Renders a string literal with escapes to HTML.
@@ -1231,7 +1242,7 @@ static void render_string_literal(struct Highlighter *out, struct Span token) {
             continue;
         }
         if (i < j) {
-            hl_write(out, "cn", SUBSPAN(token, i, j));
+            hl_write(out, C_CONSTANT, SUBSPAN(token, i, j));
         }
         i = j;
         j++;
@@ -1250,26 +1261,25 @@ static void render_string_literal(struct Highlighter *out, struct Span token) {
         } else {
             assert(false);
         }
-        // TODO: Change class name, an escape is not a comment.
-        hl_write(out, "co", SUBSPAN(token, i, j));
+        hl_write(out, C_ATTENTION, SUBSPAN(token, i, j));
         i = j;
     }
-    hl_write(out, "cn", SUBSPAN(token, i, token.len));
+    hl_write(out, C_CONSTANT, SUBSPAN(token, i, token.len));
 }
 
 // Renders a Scheme identifier to HTML.
 static void render_identifier(struct Highlighter *out, struct Span token) {
     if (IN_ARRAY(token, NORMAL_ASSERTIONS)) {
-        hl_write(out, "op", token);
+        hl_write(out, C_OPERATOR, token);
     } else if (IN_ARRAY(token, ERROR_ASSERTIONS)) {
-        hl_write(out, "er", token);
+        hl_write(out, C_ERROR, token);
     } else if (IN_ARRAY(token, SPECIAL_FORMS)) {
-        hl_write(out, "kw", token);
+        hl_write(out, C_KEYWORD, token);
     } else if (IN_ARRAY(token, FUNCTIONS)) {
-        hl_write(out, "fu", token);
+        hl_write(out, C_FUNCTION, token);
     } else if (span_eq(token, SPAN("true")) || span_eq(token, SPAN("false"))) {
         // Scheme uses #t and #f but the textbook uses true and false.
-        hl_write(out, "cn", token);
+        hl_write(out, C_CONSTANT, token);
     } else {
         hl_write(out, NULL, token);
     }
@@ -1278,7 +1288,7 @@ static void render_identifier(struct Highlighter *out, struct Span token) {
 // Renders a metavariable to HTML.
 static void render_metavariable(struct Highlighter *out, struct Span token) {
     // Remove the enclosing "«" and "»".
-    hl_write(out, "ss", SUBSPAN(token, 2, token.len - 2));
+    hl_write(out, C_METAVARIABLE, SUBSPAN(token, 2, token.len - 2));
 }
 
 // Renders a link for a SICP ID token.
@@ -1326,7 +1336,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
                 render_metavariable(out, scan.token);
                 break;
             default:
-                hl_write(out, "vs", scan.token);
+                hl_write(out, C_QUOTED, scan.token);
                 break;
             }
             continue;
@@ -1354,7 +1364,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
             if (scan_peek(&scan, T_METAVARIABLE)) {
                 hl_write(out, NULL, scan.token);
             } else {
-                hl_write(out, "vs", scan.token);
+                hl_write(out, C_QUOTED, scan.token);
             }
             break;
         case T_UNQUOTE:
@@ -1369,7 +1379,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
         case T_STRING:
         case T_NUMBER:
         case T_LITERAL:
-            hl_write(out, "cn", scan.token);
+            hl_write(out, C_CONSTANT, scan.token);
             break;
         case T_STRING_WITH_ESCAPES:
             render_string_literal(out, scan.token);
@@ -1385,7 +1395,7 @@ static void render(struct Highlighter *out, struct QuoteTracker *qt,
             render_metavariable(out, scan.token);
             break;
         case T_CONSOLE:
-            hl_write(out, "sc", scan.token);
+            hl_write(out, C_CONSOLE, scan.token);
             break;
         }
     }
