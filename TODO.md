@@ -17,14 +17,14 @@
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
 - write a basic markdown linter (for links, and check 200 OK)
 - move notes/pandoc/ to pandoc/
-- lua improvements
-    - make functions local
-    - just "return" instead of "return el"?
-- highlight.c -> highlight.so, fast and perfect, quasiquote etc.
-    - eliminate logic of adding "scheme" class
-    - delete a lot of the postprocessing in docgen
++ lua improvements
+    + make functions local
+    + just "return" instead of "return el"?
++ highlight.c -> highlight.so, fast and perfect, quasiquote etc.
+    + eliminate logic of adding "scheme" class
+    + delete a lot of the postprocessing in docgen
+    + handle vector literal '#(1 2 3)
     - simplify or rename the CSS classes
-    - handle vector literal '#(1 2 3)
 + link to :1.3 in ?1.29 should link to "#1.3" (h1 needs id="1.3"), not to "#"
 + remove/change all "Note:"
     + goal here is to fix weird things that needed notes (e.g. the NaN thing), and also reduce red comments (prefer to have rendered in text with links etc.)

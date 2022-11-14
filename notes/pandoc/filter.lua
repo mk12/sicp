@@ -8,7 +8,7 @@ local subdoc_options
 
 -- Renders elements to HTML. Pandoc will do this anyway after the filter, but
 -- rendering early is useful for post-processing that HTML.
-function render(elements)
+local function render(elements)
     if not subdoc_options then
         subdoc_options = {}
         for k, v in pairs(PANDOC_WRITER_OPTIONS) do
@@ -27,7 +27,7 @@ end
 local socket = nil
 
 -- Makes a request to the render.ts server.
-function call_render_server(args)
+local function call_render_server(args)
     if not socket then
         socket = assert(require("ntsp").connect("render.sock"))
     end
@@ -41,14 +41,14 @@ function call_render_server(args)
 end
 
 -- Closes the connection to render.ts, if it was opened.
-function close_socket()
+local function close_socket()
     if socket then
         assert(socket:close())
     end
 end
 
 -- Moves punctuation after math into the math element to avoid wrapping.
-function move_punctuation_in_math(inlines)
+local function move_punctuation_in_math(inlines)
     -- Iterate in reverse to avoid problems with shifting indices.
     for i = #inlines-1, 1, -1 do
         local x, y = inlines[i], inlines[i+1]
@@ -62,11 +62,11 @@ function move_punctuation_in_math(inlines)
                 ) then
                     io.stderr:write(
                         PANDOC_SCRIPT_FILE .. ": unexpected text after math: $"
-                        .. x.text .. "$" .. y.text .. "\n"
-                    )
+                        .. x.text .. "$" .. y.text .. "\n")
                     assert(false)
                 end
-                x.text = x.text .. "\\htmlClass{math-punctuation}{\\text{" .. y.text .. "}}"
+                x.text = x.text
+                    .. "\\htmlClass{math-punctuation}{\\text{" .. y.text .. "}}"
                 inlines:remove(i+1)
             end
         end
@@ -75,7 +75,7 @@ function move_punctuation_in_math(inlines)
 end
 
 -- Renders math with KaTeX.
-function render_math(el)
+local function render_math(el)
     vars.math = true
     local response
     if el.mathtype == "DisplayMath" then
@@ -90,7 +90,7 @@ end
 local diagram_count = 0
 
 -- Renders diagrams with svgbob.
-function render_diagrams(el)
+local function render_diagram(el)
     if el.classes[1] == "diagram" then
         diagram_count = diagram_count + 1
         local svg = call_render_server({"svgbob", diagram_count, el.text})
@@ -99,122 +99,14 @@ function render_diagrams(el)
 end
 
 -- Reads metatdata set on the command line by docgen.
-function read_meta(meta)
+local function read_meta(meta)
     vars.id = meta.id
     -- Relative path to the root of the website.
     vars.root = meta.id:gsub("[^/]+", ".."):gsub("..$", "", 1)
 end
 
--- Number of "::: highlight" divs seen so far.
-local highlight_count = 0
--- True if the page has a forward reference from highlights to notes.
-local highlight_fwd = false
--- True if the page has a backward reference from notes to highlights.
-local highlight_bwd = false
-
--- Renders "::: exercises" and processes "::: highlight" divs.
-function render_exercises_and_process_highlights(el)
-    assert(#el.classes == 1, "bad number of classes")
-    if el.classes[1] == "exercises" then
-        return render_exercises_div(el)
-    elseif el.classes[1] == "highlight" then
-        return process_highlight_div(el)
-    end
-    error("bad div class: " .. el.classes[1])
-end
-
-local last_exercise_range_end
-
--- Converts a "::: exercises" div to a list of exercise links.
-function render_exercises_div(el)
-    assert(#el.content == 1, "bad div size: " .. #el.content)
-    assert(el.content[1].t == "Para", "bad tag: " .. el.content[1].t)
-    local range = pandoc.utils.stringify(el)
-    local chap, from, to = range:match("(%d)%.(%d+)-(%d+)")
-    if not chap then
-        chap, from = range:match("(%d)%.(%d+)")
-        to = from
-    end
-    assert(chap, "bad exercise range: " .. range)
-    local links = {}
-    chap = tonumber(chap)
-    from = tonumber(from)
-    to = tonumber(to)
-    if last_exercise_range_end then
-        assert(from == last_exercise_range_end + 1,
-            "gap after exercise " .. tostring(last_exercise_range_end))
-    end
-    last_exercise_range_end = to
-    for ex = from, to do
-        local target, frag = exercise_target(chap, ex)
-        local href = relpath(vars.id .. ".html", target) .. frag
-        table.insert(links,
-            string.format(
-                '<li class="flat__item"><a href="%s">%d.%d</a>%s</li>',
-                href, chap, ex, ex == to and "" or ", "))
-    end
-    -- TODO why braces
-    return {pandoc.RawBlock("html",
-        '<aside><h4>Exercises:</h4> <ul class="flat">'
-        .. table.concat(links) .. '</ul></aside>')}
-end
-
--- Styles and links blockquotes marked with the "::: highlight" div
-function process_highlight_div(el)
-    assert(#el.content == 1, "bad div size: " .. #el.content)
-    assert(el.content[1].t == "BlockQuote", "bad tag: " .. el.content[1].t)
-    local aria, href, content
-    if #el.identifier > 0 then
-        highlight_fwd = true
-        aria = "view quote in notes"
-        href = el.identifier
-            :gsub("^(%d)%-", "%1/index-", 1):gsub("%.", "/", 1)
-            :gsub("^(.*)-(q%d+)$", "%1.html#%2", 1)
-        content = (
-            'Notes <svg class="circle-arrow" width="18" height="18"'
-            .. ' aria-hidden="true"><use xlink:href="#circle-right"/></svg>'
-        )
-    else
-        highlight_bwd = true
-        highlight_count = highlight_count + 1
-        el.identifier = "q" .. tostring(highlight_count)
-        aria = "view quote in highlights page"
-        local frag = vars.id
-            :gsub("^.-/", "", 1):gsub("/index$", "", 1):gsub("/", ".", 1)
-            .. "-" .. el.identifier
-        href = vars.root:sub(4) .. "highlight.html#" .. frag
-        content = (
-            '<svg class="circle-arrow" width="18" height="18"'
-            .. ' aria-hidden="true"><use xlink:href="#circle-left"/></svg>'
-            .. ' Highlights'
-        )
-    end
-    local link = (
-        '<a class="highlight__link link" href="' .. href .. '"'
-        .. ' aria-label="' .. aria .. '">' .. content .. '</a>'
-    )
-    table.insert(el.content, 1, pandoc.RawBlock("html", link))
-    return el
-end
-
--- Writes metadata variables used in template.html.
-function write_meta(meta)
-    meta[meta.id:gsub("/.*$", "")] = true
-    meta.root = vars.root
-    meta.math = vars.math
-    meta.pagenav = meta.up
-    meta.arrows = meta.up
-    meta.external = meta.up and meta.prev
-    meta.circle_left = highlight_bwd
-    meta.circle_right = highlight_fwd
-    meta.svg_defs = (
-        meta.arrows or meta.external or meta.circle_left or meta.circle_right
-    )
-    return meta
-end
-
 -- Returns the relative path from src to dst.
-function relpath(src, dst)
+local function relpath(src, dst)
     if src == dst then
         return ""
     end
@@ -253,7 +145,7 @@ local last_exercise_in_section = {
 }
 
 -- Returns the path and fragment for an exercise.
-function exercise_target(chap, ex)
+local function exercise_target(chap, ex)
     local sec
     for i, last in ipairs(last_exercise_in_section[chap]) do
         if ex <= last then
@@ -269,7 +161,7 @@ end
 
 -- Returns the path and fragment for an internal link. If use_h1_anchor is true,
 -- links to the <h1> id rather than the overall page, if applicable.
-function internal_target(sigil, num, use_h1_anchor)
+local function internal_target(sigil, num, use_h1_anchor)
     if sigil == "@" then
         local lecture, rest = num:match("^(%d+[ab])(.*)$")
         if lecture then
@@ -299,57 +191,113 @@ function internal_target(sigil, num, use_h1_anchor)
     return exercise_target(tonumber(chap), tonumber(ex))
 end
 
--- Converts links like [](@1.2.3), [](@1a), [](:1.2.3), and [](?1.23) --
--- textbook notes, lecture notes, exercise sections, and exercise problems
--- respectively. If the link content [] is empty, sets it automatically to
--- § 1.2.3, Lecture 1A, Exercise 1.23, etc.
-function link_cross_references(el)
-    local sigil = el.target:sub(1, 1)
-    local use_h1_anchor = el.target:sub(-1) == "#"
-    local num = el.target:sub(2, use_h1_anchor and -2 or -1)
-    local prefix
-    local ident = num
-    if sigil == "@" then
-        -- Special case: for a footnote, link directly to the textbook like
-        -- citations do, rather than to my textbook notes.
-        local footnote = num:match("%.fn(%d+)$")
-        if footnote then
-            assert(#el.content == 0)
-            local info = citation_info(num)
-            el.target = info.href
-            el.content = {pandoc.RawInline("html", "Footnote&nbsp;" .. footnote)}
-            return el
-        end
-        local lecture = num:match("^(%d+[ab])")
-        if lecture then
-            prefix = "Lecture"
-            ident = lecture:upper()
-        else
-            prefix = num:find("%.") and "§" or "Chapter"
-        end
-    elseif sigil == ":" then
-        prefix = num:find("%.") and "§" or "Chapter"
-    elseif sigil == "?" then
-        prefix = "Exercise"
+local last_exercise_range_end
+
+-- Converts a "::: exercises" div to a list of exercise links.
+local function render_exercises_div(el)
+    assert(#el.content == 1, "bad div size: " .. #el.content)
+    assert(el.content[1].t == "Para", "bad tag: " .. el.content[1].t)
+    local range = pandoc.utils.stringify(el)
+    local chap, from, to = range:match("(%d)%.(%d+)-(%d+)")
+    if not chap then
+        chap, from = range:match("(%d)%.(%d+)")
+        to = from
+    end
+    assert(chap, "bad exercise range: " .. range)
+    local links = {}
+    chap = tonumber(chap)
+    from = tonumber(from)
+    to = tonumber(to)
+    if last_exercise_range_end then
+        assert(from == last_exercise_range_end + 1,
+            "gap after exercise " .. tostring(last_exercise_range_end))
+    end
+    last_exercise_range_end = to
+    for ex = from, to do
+        local target, frag = exercise_target(chap, ex)
+        local href = relpath(vars.id .. ".html", target) .. frag
+        table.insert(links, string.format(
+            '<li class="flat__item"><a href="%s">%d.%d</a>%s</li>',
+            href, chap, ex, ex == to and "" or ", "))
+    end
+    return pandoc.RawBlock("html",
+        '<aside><h4>Exercises:</h4> <ul class="flat">'
+        .. table.concat(links) .. '</ul></aside>')
+end
+
+-- Number of "::: highlight" divs seen so far.
+local highlight_count = 0
+-- True if the page has a forward reference from highlights to notes.
+local highlight_fwd = false
+-- True if the page has a backward reference from notes to highlights.
+local highlight_bwd = false
+
+-- Styles and links blockquotes marked with the "::: highlight" div
+local function process_highlight_div(el)
+    assert(#el.content == 1, "bad div size: " .. #el.content)
+    assert(el.content[1].t == "BlockQuote", "bad tag: " .. el.content[1].t)
+    local aria, href, content
+    if #el.identifier > 0 then
+        highlight_fwd = true
+        aria = "view quote in notes"
+        href = el.identifier
+            :gsub("^(%d)%-", "%1/index-", 1):gsub("%.", "/", 1)
+            :gsub("^(.*)-(q%d+)$", "%1.html#%2", 1)
+        content =
+            'Notes <svg class="circle-arrow" width="18" height="18"'
+            .. ' aria-hidden="true"><use xlink:href="#circle-right"/></svg>'
     else
-        return
+        highlight_bwd = true
+        highlight_count = highlight_count + 1
+        el.identifier = "q" .. tostring(highlight_count)
+        aria = "view quote in highlights page"
+        local frag = vars.id
+            :gsub("^.-/", "", 1):gsub("/index$", "", 1):gsub("/", ".", 1)
+            .. "-" .. el.identifier
+        href = vars.root:sub(4) .. "highlight.html#" .. frag
+        content =
+            '<svg class="circle-arrow" width="18" height="18"'
+            .. ' aria-hidden="true"><use xlink:href="#circle-left"/></svg>'
+            .. ' Highlights'
     end
-    local target, frag = internal_target(sigil, num, use_h1_anchor)
-    el.target = relpath(vars.id .. ".html", target) .. frag
-    if el.target == "" then
-        el.target = "#"
-    end
-    if #el.content == 0 then
-        el.content = {pandoc.RawInline("html", prefix .. "&nbsp;" .. ident)}
-    end
+    local link =
+        '<a class="highlight__link link" href="' .. href .. '"'
+        .. ' aria-label="' .. aria .. '">' .. content .. '</a>'
+    table.insert(el.content, 1, pandoc.RawBlock("html", link))
     return el
+end
+
+-- Renders "::: exercises" and processes "::: highlight" divs.
+local function render_exercises_and_process_highlights(el)
+    assert(#el.classes == 1, "bad number of classes")
+    if el.classes[1] == "exercises" then
+        return render_exercises_div(el)
+    elseif el.classes[1] == "highlight" then
+        return process_highlight_div(el)
+    end
+    error("bad div class: " .. el.classes[1])
+end
+
+-- Writes metadata variables used in template.html.
+local function write_meta(meta)
+    meta[meta.id:gsub("/.*$", "")] = true
+    meta.root = vars.root
+    meta.math = vars.math
+    meta.pagenav = meta.up
+    meta.arrows = meta.up
+    meta.external = meta.up and meta.prev
+    meta.circle_left = highlight_bwd
+    meta.circle_right = highlight_fwd
+    meta.svg_defs =
+        meta.arrows or meta.external or meta.circle_left or meta.circle_right
+    return meta
 end
 
 -- The schemehl library.
 local schemehl = nil
 
 -- Highlights code using the schemehl library. Returns the raw HTML.
-function highlight_code(code, options)
+local function highlight_code(code, options)
     if not schemehl then
         schemehl = require("schemehl")
     end
@@ -359,35 +307,33 @@ end
 -- Renders code blocks using Scheme syntax highlighting. Also links IDs in
 -- (paste ...) blocks to the corresponding section/exercise, and removes
 -- "NOALIGN" comments since they are only for the linter.
-function render_code_block(el)
+local function render_code_block(el)
     assert(#el.classes == 0)
     local options = {}
     -- Don't link SICP IDs in language.html since it's just examples.
     if vars.id ~= "exercise/language" then
         options.sicp_id_link = function(id)
-            local target, frag =
-                internal_target(id:sub(1, 1), id:sub(2), true)
+            local target, frag = internal_target(id:sub(1, 1), id:sub(2), true)
             return relpath(vars.id .. ".html", target) .. frag
         end
     end
     return pandoc.RawBlock("html",
         '<pre><code class="codeblock">'
         .. highlight_code(el.text, options)
-        .. '</code></pre>'
-    )
+        .. '</code></pre>')
 end
 
 -- Renders inline code using Scheme syntax highlighting.
-function render_inline_code(el)
+local function render_inline_code(el)
     assert(#el.classes == 0)
     -- Only highlight inline code if it has a paren (procedure application) or
     -- guillemet (meta-variable). Otherwise notes with lots of code become too
     -- noisy, and also blue functions by themselves end up looking like links.
-    if (
+    if
         #el.classes == 0
         and (el.text:find("%(") or el.text:find("«"))
         and el.text ~= "'()"
-    ) then
+    then
         return pandoc.RawInline("html",
             "<code>" .. highlight_code(el.text) .. "</code>")
     end
@@ -461,7 +407,7 @@ local footnote_nums = {
 }
 
 -- Returns the URL to a specific part of the online SICP textbook.
-function text_url(chapter, section, subsection, footnote)
+local function text_url(chapter, section, subsection, footnote)
     chapter = tonumber(chapter)
     section = section and tonumber(section) or 0
     subsection = subsection and tonumber(subsection)
@@ -503,7 +449,7 @@ local lectures = {
 }
 
 -- Returns citation information for a given [@id].
-function citation_info(id)
+local function citation_info(id)
     local info = frontmatter_info[id]
     if info then
         info.href = text_url_base .. "-" .. info.page .. ".html"
@@ -550,8 +496,56 @@ function citation_info(id)
     assert(num, "bad citation id: " .. id)
 end
 
+-- Converts links like [](@1.2.3), [](@1a), [](:1.2.3), and [](?1.23) --
+-- textbook notes, lecture notes, exercise sections, and exercise problems
+-- respectively. If the link content [] is empty, sets it automatically to
+-- § 1.2.3, Lecture 1A, Exercise 1.23, etc.
+local function process_cross_reference(el)
+    local sigil = el.target:sub(1, 1)
+    local use_h1_anchor = el.target:sub(-1) == "#"
+    local num = el.target:sub(2, use_h1_anchor and -2 or -1)
+    local prefix
+    local ident = num
+    if sigil == "@" then
+        -- Special case: for a footnote, link directly to the textbook like
+        -- citations do, rather than to my textbook notes.
+        local footnote = num:match("%.fn(%d+)$")
+        if footnote then
+            assert(#el.content == 0)
+            local info = citation_info(num)
+            el.target = info.href
+            el.content = {
+                pandoc.RawInline("html", "Footnote&nbsp;" .. footnote)
+            }
+            return el
+        end
+        local lecture = num:match("^(%d+[ab])")
+        if lecture then
+            prefix = "Lecture"
+            ident = lecture:upper()
+        else
+            prefix = num:find("%.") and "§" or "Chapter"
+        end
+    elseif sigil == ":" then
+        prefix = num:find("%.") and "§" or "Chapter"
+    elseif sigil == "?" then
+        prefix = "Exercise"
+    else
+        return
+    end
+    local target, frag = internal_target(sigil, num, use_h1_anchor)
+    el.target = relpath(vars.id .. ".html", target) .. frag
+    if el.target == "" then
+        el.target = "#"
+    end
+    if #el.content == 0 then
+        el.content = {pandoc.RawInline("html", prefix .. "&nbsp;" .. ident)}
+    end
+    return el
+end
+
 -- Formats citations at the end of blockquotes.
-function render_citation(el)
+local function render_citation(el)
     assert(#el.citations == 1)
     local info = citation_info(el.citations[1].id)
     local html
@@ -566,14 +560,13 @@ function render_citation(el)
 end
 
 -- Removes unwanted styles from tables.
-function render_table(el)
+local function render_table(el)
     return pandoc.RawBlock("html",
         render(el)
         :gsub('<tr class="odd">', "<tr>")
         :gsub('<tr class="even">', "<tr>")
         :gsub('<tr class="header">', "<tr>")
-        :gsub(' style="text%-align: left;"', "")
-    )
+        :gsub(' style="text%-align: left;"', ""))
 end
 
 -- A note on naming: "render" means produce raw HTML, while "process" means
@@ -584,7 +577,7 @@ return {
     {Inlines = move_punctuation_in_math},
     -- Render math and diagrams with the render.ts server.
     {Math = render_math},
-    {CodeBlock = render_diagrams},
+    {CodeBlock = render_diagram},
     -- Close the server connection when we're done.
     {Pandoc = close_socket},
     -- Read metadata needed for rendering special divs.
@@ -593,10 +586,11 @@ return {
     {Div = render_exercises_and_process_highlights},
     -- Write metadata. This includes some info discovered while processing divs.
     {Meta = write_meta},
-    -- Handle links, code blocks, and inline code.
-    {Link = link_cross_references},
+    -- Render code with syntax highlighting.
     {CodeBlock = render_code_block},
     {Code = render_inline_code},
+    -- Handle cross reference links.
+    {Link = process_cross_reference},
     -- Render citations of the SICP text or lectures.
     {Cite = render_citation},
     -- Render tables.
