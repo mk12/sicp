@@ -130,7 +130,7 @@ To render math and diagrams, the Lua filter communicates over a Unix socket with
 
 The render.ts server is a [Deno] server implemented in [render.ts]. It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX], and converts ASCII diagrams to SVG using [svgbob] and [svgo]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
 
-Pandoc highlights code with [skylighting], which uses [Kate's XML syntax format][kate] to recognize languages. In this case it uses [scheme.xml], which I modified from [the original][kde-scheme.xml].
+To highlight code, the Lua filter uses the C library [tools/lua/schemehl.c]. I wrote this library to highlight the way I want, including proper handling of quasiquotes.
 
 Pandoc assembles the result using [template.html]. The template embeds SVGs from [notes/assets/] rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
 
@@ -207,7 +207,6 @@ See [LICENSE](LICENSE.md) for details.
 [notes/lecture.md]: notes/lecture.md
 [notes/text.md]: notes/text.md
 [render.ts]: tools/render.ts
-[scheme.xml]: notes/pandoc/scheme.xml
 [src/compat/]: src/compat/
 [src/lang/core.ss]: src/lang/core.ss
 [src/sicp/]: src/sicp/
@@ -216,15 +215,14 @@ See [LICENSE](LICENSE.md) for details.
 [template.html]: notes/pandoc/template.html
 [tools/lua/]: tools/lua
 [tools/lua/ntsp.c]: tools/lua/ntsp.c
+[tools/lua/schemehl.c]: tools/lua/schemehl.c
 
 [bem]: http://getbem.com/naming/
 [Chez Scheme]: https://cisco.github.io/ChezScheme/
 [clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [Deno]: https://deno.land
 [Guile]: https://www.gnu.org/software/guile/
-[kate]: https://docs.kde.org/trunk5/en/kate/katepart/highlight.html
 [KaTeX]: https://katex.org
-[kde-scheme.xml]: https://github.com/KDE/syntax-highlighting/blob/70b56cf8b3d1a85e15d1e09aa8490e5183967de0/data/syntax/scheme.xml
 [lectures]: https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video_galleries/video-lectures/
 [Lua]: https://www.lua.org
 [note]: https://mk12.github.io/sicp/exercise/language.html
@@ -233,7 +231,6 @@ See [LICENSE](LICENSE.md) for details.
 [R6RS Scheme]: http://www.r6rs.org
 [Racket]: http://racket-lang.org
 [sicp]: https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/index.html
-[skylighting]: https://github.com/jgm/skylighting
 [static]: https://github.com/jgm/pandoc/issues/3986
 [svgbob]: https://github.com/ivanceras/svgbob
 [svgo]: https://github.com/svg/svgo
