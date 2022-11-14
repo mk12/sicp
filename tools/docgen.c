@@ -329,141 +329,63 @@ static char *multi_strstr(const char *haystack, const char **found, int n,
     return h;
 }
 
-// Post-processes HTML, removing unwanted tags and classes in inline code and
-// code blocks (there is no option to prevent Pandoc from producing these). Also
-// deletes "«" and "»", and converts "‹" and "›" to "<" and ">". The Markdown
-// source uses the former for metavariables. The Lua filter uses the latter to
-// inject HTML links in code blocks. Also inserts some spacing.
+// Post-processes HTML, mainly to adjust spacing.
 static void postprocess_html(FILE *in, FILE *out) {
     char *line = NULL;
     size_t cap = 0;
     ssize_t len;
     while ((len = getline(&line, &cap, in)) > 0) {
         const char *p = line;
-        const char *q = line + len - 1;
-        const char *suffix = "\n";
-        assert(*q == '\n');
-        if (startswith(p, "<div class=\"sourceCode\" id=\"cb")) {
-            fputs("<pre><code class=\"blockcode\">", out);
-            for (int i = 0; i < 3; i++) p = strchr(p + 1, '<');
-        }
-        if (startswith(p, "<span id=\"cb")) {
-            for (int i = 0; i < 3; i++) p = strchr(p + 1, '>');
-            p++;
-            if (endswith(p, "</span></code></pre></div></li>\n")) {
-                q -= strlen("</span></code></pre></div></li>");
-                suffix = "</code></pre></li>\n";
-            } else if (endswith(p, "</span></code></pre></div>\n")) {
-                q -= strlen("</span></code></pre></div>");
-                suffix = "</code></pre>\n";
-            } else if (endswith(p, "</span>\n")) {
-                q -= strlen("</span>");
+        const char *n;
+        const char *close_code = "</code>";
+        const char *close_em = "</em>";
+        const char *spaced_en_dash = " – ";
+        const char *quote_period = "”.";
+        const char *quote_comma = "”,";
+        const char *tr_odd = "<tr class=\"odd\">";
+        const char *tr_even = "<tr class=\"even\">";
+        const char *tr_header = "<tr class=\"header\">";
+        const char *th_left = "<th style=\"text-align: left;\">";
+        const char *td_left = "<td style=\"text-align: left;\">";
+        const char *found;
+        while (
+            (n = multi_strstr(p, &found, 10, close_code, close_em,
+                              spaced_en_dash, quote_period, quote_comma, tr_odd,
+                              tr_even, tr_header, th_left, td_left))) {
+            fwrite(p, n - p, 1, out);
+            p = n + strlen(found);
+            if (found == close_code) {
+                fputs(close_code, out);
+                // For words partially made up of code, like `cons`ing.
+                if (isalpha(*p)) {
+                    fputs("&hairsp;", out);
+                }
+            } else if (found == close_em) {
+                fputs(close_em, out);
+                if ((*p == ':' || *p == ';')
+                    && (n[-1] == 'd' || n[-1] == 'r' || n[-1] == 't')) {
+                    fputs("&hairsp;", out);
+                }
+            } else if (found == spaced_en_dash) {
+                // Replace an open-set en dash with a closed-set em dash.
+                fputs("—", out);
+            } else if (found == quote_period) {
+                fputs(".<span class=\"tuck\">”</span>", out);
+            } else if (found == quote_comma) {
+                fputs(",<span class=\"tuck\">”</span>", out);
+            } else if (found == tr_odd || found == tr_even
+                       || found == tr_header) {
+                fputs("<tr>", out);
+            } else if (found == th_left) {
+                fputs("<th>", out);
+            } else if (found == td_left) {
+                fputs("<td>", out);
             } else {
                 assert(false);
             }
         }
-        const char *n;
-        if (startswith(line, "<pre><code")) {
-            // Hardcoded <pre><code> in exercise.md.
-        } else if (p == line) {
-            // We're not in a code block. Deal with inline stuff.
-            const char *open_code = "<code";
-            const char *close_em = "</em>";
-            const char *spaced_en_dash = " – ";
-            const char *quote_period = "”.";
-            const char *quote_comma = "”,";
-            const char *tr_odd = "<tr class=\"odd\">";
-            const char *tr_even = "<tr class=\"even\">";
-            const char *tr_header = "<tr class=\"header\">";
-            const char *th_left = "<th style=\"text-align: left;\">";
-            const char *td_left = "<td style=\"text-align: left;\">";
-            const char *found;
-            while ((n = multi_strstr(p, &found, 10, open_code, close_em,
-                                     spaced_en_dash, quote_period, quote_comma,
-                                     tr_odd, tr_even, tr_header, th_left,
-                                     td_left))) {
-                fwrite(p, n - p, 1, out);
-                p = n + strlen(found);
-                if (found == open_code) {
-                    fputs("<code>", out);
-                    p = strchr(n, '>');
-                    assert(p);
-                    p++;
-                    const char *end = strstr(p, "</code>");
-                    assert(end);
-                    // Deal with metavariables.
-                    const char *open_meta = "<span class=\"ss\">«";
-                    while ((n = strstr(p, open_meta)) && n < end) {
-                        fwrite(p, n - p + strlen(open_meta) - strlen("«"), 1,
-                               out);
-                        p = n + strlen(open_meta);
-                        n = strstr(p, "»");
-                        assert(n);
-                        fwrite(p, n - p, 1, out);
-                        p = n + strlen("»");
-                    }
-                    n = end + strlen("</code>");
-                    fwrite(p, n - p, 1, out);
-                    p = n;
-                    // For words partially made up of code, like `cons`ing.
-                    if (isalpha(*p)) {
-                        fputs("&hairsp;", out);
-                    }
-                } else if (found == close_em) {
-                    fputs(close_em, out);
-                    if ((*p == ':' || *p == ';')
-                        && (n[-1] == 'd' || n[-1] == 'r' || n[-1] == 't')) {
-                        fputs("&hairsp;", out);
-                    }
-                    continue;
-                } else if (found == spaced_en_dash) {
-                    // Replace an open-set en dash with a closed-set em dash.
-                    fputs("—", out);
-                } else if (found == quote_period) {
-                    fputs(".<span class=\"tuck\">”</span>", out);
-                } else if (found == quote_comma) {
-                    fputs(",<span class=\"tuck\">”</span>", out);
-                } else if (found == tr_odd || found == tr_even
-                           || found == tr_header) {
-                    fputs("<tr>", out);
-                } else if (found == th_left) {
-                    fputs("<th>", out);
-                } else if (found == td_left) {
-                    fputs("<td>", out);
-                } else {
-                    assert(false);
-                }
-            }
-        } else {
-            // We're in a code block. Deal with metavariables and pastes. While
-            // these two steps really should be interleaved, it doesn't matter
-            // because we never use them together (specifically, we use
-            // metavariables in code within .md files, and pastes in .ss files).
-            const char *open_meta = "<span class=\"ss\">«";
-            while ((n = strstr(p, open_meta))) {
-                fwrite(p, n - p + strlen(open_meta) - strlen("«"), 1, out);
-                p = n + strlen(open_meta);
-                n = strstr(p, "»");
-                assert(n);
-                fwrite(p, n - p, 1, out);
-                p = n + strlen("»");
-            }
-            const int open_len = strlen("‹");
-            const int close_len = strlen("›");
-            while ((n = strstr(p, "‹"))) {
-                fwrite(p, n - p, 1, out);
-                putc('<', out);
-                p = n + open_len;
-                n = strstr(p, "›");
-                assert(n);
-                fwrite(p, n - p, 1, out);
-                putc('>', out);
-                p = n + close_len;
-            }
-        }
-        assert(p <= q);
-        fwrite(p, q - p, 1, out);
-        fputs(suffix, out);
+        assert(p <= line + len);
+        fwrite(p, line + len - p, 1, out);
     }
 }
 
