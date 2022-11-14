@@ -3973,6 +3973,11 @@ z2 => (make-from-mag-ang 30 3)
 
 (using scheme-number-pkg zero-pkg polynomial-pkg rational-pkg)
 
+;; This gives a correct answer, but does not reduce it to lowest terms:
+;;
+;; $$\frac{x^3 + 1}{x^2 + 1} + \frac{x^3 + 1}{x^2 + 1}
+;; = \frac{2x^5 + 2x^3 + 2x^2 + 2}{x^4 + 2x^2 + 1}.$$
+
 (define p1 (make-polynomial 'x '((2 1) (0 1))))
 (define p2 (make-polynomial 'x '((3 1) (0 1))))
 (define rf (make-rational p2 p1))
@@ -4011,14 +4016,18 @@ z2 => (make-from-mag-ang 30 3)
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg
        greatest-common-divisor-pkg)
 
+;; It works for numbers:
 (greatest-common-divisor 128 40) => 8
+
+;; And for polynomials:
+;;
+;; $$\gcd(x^4 - x^3 - 2x^2 + 2x, \; x^3 -x) = -x^2 + x.$$
 
 (define p1 (make-polynomial 'x '((4 1) (3 -1) (2 -2) (1 2))))
 (define p2 (make-polynomial 'x '((3 1) (1 -1))))
+
 (greatest-common-divisor p1 p2)
 => (make-polynomial 'x '((2 -1) (1 1)))
-;; This is correct according to WolframAlpha:
-;; http://www.wolframalpha.com/input/?i=GCD+x%5E4-x%5E3-2x%5E2%2B2x%2C+x%5E3-x
 
 (Exercise ?2.95
   (use (:2.4.3 using) (:2.5.3.1 polynomial-pkg) (:2.5.3.2 make-polynomial)

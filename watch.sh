@@ -99,7 +99,7 @@ main() {
         die "this script only works on macOS"
     fi
 
-    cd "$(dirname "$0")/.."
+    cd "$(dirname "$0")"
     trap cleanup EXIT
     restart_render
     while :; do
