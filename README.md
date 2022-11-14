@@ -177,14 +177,14 @@ The `test` and `lint` tasks parse results into the Problems view, which you can 
 
 Run `./deps.sh check` to see if you're missing any dependencies, and (macOS only) `./deps.sh install` to install them.
 
-- [Chez Scheme], [Guile], and [Racket]: Scheme implementations.
-- [Pandoc]: Used to build the website. Must be dynamically linked to libc.
-- [Lua]: Its headers are used by the libraries in [tools/lua/].
-- [Deno]: Used to run a server that renders math and diagrams.
-- [svgbob]: Used to convert ASCII diagrams to SVG.
-- [Python 3]: Used for some scripts.
-- [vnu]: Used to validate HTML files.
-- [clang-format]: Used to format C files.
+- [Chez Scheme], [Guile], and [Racket][]: Scheme implementations.
+- [Pandoc][]: Used to build the website. Must be dynamically linked to libc.
+- [Lua][]: Its headers are used by the libraries in [tools/lua/].
+- [Deno][]: Used to run a server that renders math and diagrams.
+- [svgbob][]: Used to convert ASCII diagrams to SVG.
+- [Python 3][]: Used for some scripts.
+- [vnu][]: Used to validate HTML files.
+- [clang-format][]: Used to format C files.
 
 You also need a C compiler to compile [lint.c] and [docgen.c].
 

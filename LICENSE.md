@@ -27,7 +27,7 @@ This section applies to the following files ("derivative works"):
     - all files under [docs/text/](docs/text)
     - all files under [docs/lecture/](docs/lecture)
     - all files under [docs/exercise/](docs/exercise)
-    - [docs/assets/wizard.svg](docs/assets/wizard.svg)
+    - the embedded copy of wizard.svg in [docs/index.html](docs/index.html)
 
 ## CC BY-SA 4.0
 

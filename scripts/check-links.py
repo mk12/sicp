@@ -17,7 +17,8 @@ CONFIG = {
 
 
 def set_config(cfg):
-    CONFIG["verbose"] = cfg
+    global CONFIG
+    CONFIG = cfg
 
 
 def log(msg):
@@ -209,11 +210,9 @@ def main():
             info.update(i)
     if not validate_internal(info):
         sys.exit(1)
-    # The external link validation involves network IO and also HTML parsing.
-    # Use a separate process for each URL.
-    num_urls = len(info.external_urls)
-    assert num_urls < 100, "more URLs than expected, revisit number of process"
-    with multiprocessing.Pool(num_urls, **retain_config) as pool:
+    # The external link validation involves network IO and also HTML parsing, so
+    # use lots of processes.
+    with multiprocessing.Pool(50, **retain_config) as pool:
         ok = all(pool.imap_unordered(validate_external, info.external_urls.items()))
     if not ok:
         sys.exit(1)

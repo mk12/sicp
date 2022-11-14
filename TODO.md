@@ -15,8 +15,9 @@
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5
     - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5*
-- write a basic markdown linter (for links, and check 200 OK)
 - move notes/pandoc/ to pandoc/
++ write a basic markdown linter (for links, and check 200 OK)
+    + made check-links.py work with it
 + lua improvements
     + make functions local
     + just "return" instead of "return el"?
