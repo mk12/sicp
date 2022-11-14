@@ -126,13 +126,13 @@ Use `./watch.sh` to live-reload the website while you edit sources.
 
 The generator starts in [docgen.c]. It semi-parses Markdown and Scheme, and renders things like navigation links, headings, and tables of contents. It then forks to Pandoc, which runs [filter.lua]. The Lua filter deals with internal links, citations, code blocks, math, and diagrams.
 
-To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses the C library [tools/lua/ntsp.c] to do this, loaded from a `.so` file. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
+To render math and diagrams, the Lua filter communicates over a Unix socket with the render.ts server (described below). It uses the C library [ntsp.c] to do this, loaded from a `.so` file. We therefore require Pandoc to be dynamically linked to libc; the [fully static builds][static] provided for Linux will not work.
 
 The render.ts server is a [Deno] server implemented in [render.ts]. It serves requests in a simple text-based protocol over a Unix socket. It renders math using [KaTeX], and converts ASCII diagrams to SVG using [svgbob] and [svgo]. The benefit of this approach, rather than invoking these tools directly in the Lua filter, is that it avoids spawning a new process for every piece of inline math.
 
-To highlight code, the Lua filter uses the C library [tools/lua/schemehl.c]. I wrote this library to highlight the way I want, including proper handling of quasiquotes.
+To highlight code, the Lua filter uses the C library [schemehl.c]. I wrote this library to highlight the way I want, including proper handling of quasiquotes.
 
-Pandoc assembles the result using [template.html]. The template embeds SVGs from [notes/assets/] rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
+Pandoc assembles the result using [template.html]. The template embeds SVGs from [pandoc/assets/] rather than linking to them. (For SVGs that occur multiple times, it embeds them once at the top and then instantiates them with the `<use>` tag.)
 
 Finally, `docgen` post-processes the HTML and writes it in [docs/].
 
@@ -199,11 +199,11 @@ See [LICENSE](LICENSE.md) for details.
 [docgen.c]: tools/docgen.c
 [docs/]: docs/
 [docs/index.html]: docs/index.html
-[filter.lua]: notes/pandoc/filter.lua
+[filter.lua]: pandoc/filter.lua
 [lint.c]: tools/lint.c
 [main.ss]: src/main.ss
 [notes/]: notes/
-[notes/assets/]: notes/assets/
+[pandoc/assets/]: pandoc/assets/
 [notes/lecture.md]: notes/lecture.md
 [notes/text.md]: notes/text.md
 [render.ts]: tools/render.ts
@@ -212,10 +212,10 @@ See [LICENSE](LICENSE.md) for details.
 [src/sicp/]: src/sicp/
 [src/sicp/]: src/sicp/
 [style.css]: docs/style.css
-[template.html]: notes/pandoc/template.html
+[template.html]: pandoc/template.html
 [tools/lua/]: tools/lua
-[tools/lua/ntsp.c]: tools/lua/ntsp.c
-[tools/lua/schemehl.c]: tools/lua/schemehl.c
+[ntsp.c]: tools/lua/ntsp.c
+[schemehl.c]: tools/lua/schemehl.c
 
 [bem]: http://getbem.com/naming/
 [Chez Scheme]: https://cisco.github.io/ChezScheme/

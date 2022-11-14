@@ -71,7 +71,7 @@ choose_output() {
     )
     while read -r file; do
         inputs+=("$file")
-    done < <(find notes/pandoc -type f)
+    done < <(find pandoc -type f)
 }
 
 kill_entr() {

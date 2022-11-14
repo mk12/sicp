@@ -1,0 +1,6 @@
+from: markdown
+to: html5
+wrap: none
+template: pandoc/template.html
+filters:
+- pandoc/filter.lua

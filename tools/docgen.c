@@ -105,7 +105,7 @@ static bool pandoc(const struct PandocOpts opts) {
     argv[i++] = PANDOC;
     argv[i++] = "-o";
     argv[i++] = opts.output;
-    argv[i++] = "-dnotes/pandoc/config.yml";
+    argv[i++] = "-dpandoc/config.yml";
     // Note: We don't need to free memory allocated by concat because it will
     // all disappear when execvp replaces the process image.
     argv[i++] = "-M";

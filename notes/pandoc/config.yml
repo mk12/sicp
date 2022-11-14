@@ -1,6 +1,0 @@
-from: markdown
-to: html5
-wrap: none
-template: notes/pandoc/template.html
-filters:
-- notes/pandoc/filter.lua

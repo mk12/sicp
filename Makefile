@@ -76,11 +76,11 @@ test:
 docs: $(doc_html)
 
 $(doc_html): bin/docgen $(lua_c_tools) tools/render.ts \
-		$(wildcard notes/assets/*.svg) $(wildcard notes/pandoc/*) \
+		$(wildcard pandoc/*) $(wildcard pandoc/assets/*.svg) \
 		| render.sock
 	$< $@
 
-$(doc_index): notes/index.md notes/assets/wizard.svg
+$(doc_index): notes/index.md
 $(doc_text): notes/text.md
 $(doc_lecture): notes/lecture.md
 docs/exercise/index.html: notes/exercise.md $(sicp_src)
