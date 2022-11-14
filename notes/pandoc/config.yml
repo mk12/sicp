@@ -1,9 +1,6 @@
 from: markdown
 to: html5
 wrap: none
-highlight-style: pygments
 template: notes/pandoc/template.html
 filters:
 - notes/pandoc/filter.lua
-syntax-definitions:
-- notes/pandoc/scheme.xml
