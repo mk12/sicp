@@ -2,12 +2,27 @@
 # Copyright 2022 Mitchell Kember. Subject to the MIT License.
 
 from pathlib import Path
+import subprocess
 import sys
 from html.parser import HTMLParser
 from collections import defaultdict
 from urllib.parse import urlparse, ParseResult as Url, unquote, urldefrag
 import requests
 import multiprocessing
+
+
+CONFIG = {
+    "verbose": False,
+}
+
+
+def set_config(cfg):
+    CONFIG["verbose"] = cfg
+
+
+def log(msg):
+    if CONFIG["verbose"]:
+        print(msg, file=sys.stderr)
 
 
 class IdParser(HTMLParser):
@@ -55,9 +70,9 @@ class PageInfo:
     def __init__(self):
         # Map from paths to IDs.
         self.internal_ids: dict[Path, set[str]] = {}
-        # Map from paths to (relative path, fragment) links.
+        # Map from source paths to (target relative path, fragment) links.
         self.internal_links: dict[Path, list[tuple[str, str]]] = defaultdict(list)
-        # Map from URLs to fragments to paths where they are linked from.
+        # Map from URLs to fragments to source paths where they are linked from.
         self.external_urls: dict[str, dict[str, set[Path]]] = defaultdict(
             defaultdict_set
         )
@@ -73,10 +88,22 @@ def normalize_path(path: Path | str) -> Path:
 
 
 def parse_page(path):
+    log(f"parsing {path}")
     info = PageInfo()
     path = normalize_path(path)
-    with open(path) as f:
-        html = f.read()
+    suffix = Path(path).suffix
+    if suffix == ".html":
+        with open(path) as f:
+            html = f.read()
+    elif suffix == ".md":
+        html = subprocess.run(
+            ["pandoc", "-t" "html", path],
+            stdout=subprocess.PIPE,
+            check=True,
+            text=True,
+        ).stdout
+    else:
+        assert False, f"unexpected file extension {suffix}"
     info.internal_ids[path] = IdParser.parse(html)
     for href in HrefParser.parse(html):
         url = urlparse(href)
@@ -110,6 +137,9 @@ def validate_internal(info: PageInfo) -> bool:
     ok = True
     for src_path, links in info.internal_links.items():
         for rel_path, fragment in links:
+            log(
+                f"in {src_path} validating {rel_path}{'#' if fragment else ''}{fragment}"
+            )
             if rel_path:
                 target = normalize_path(src_path.parent / rel_path)
             else:
@@ -127,10 +157,21 @@ def validate_internal(info: PageInfo) -> bool:
     return ok
 
 
+KNOWN_TO_REJECT_HEAD = {"https://deno.land"}
+
+
 def validate_external(item: tuple[str, dict[str, set[Path]]]) -> bool:
     url, fragments = item
+    fragments_str = ""
+    if len(fragments) > 1 or next(iter(fragments.keys())) != "":
+        fragments_str = (
+            " (" + ", ".join("#" + f for f in sorted(fragments.keys())) + ")"
+        )
+    log(f"validating {url}{fragments_str}")
     no_fragments = len(fragments) == 1 and "" in fragments
     method = "head" if no_fragments else "get"
+    if url in KNOWN_TO_REJECT_HEAD:
+        method = "get"
     try:
         r = requests.request(method, url)
     except requests.TooManyRedirects:
@@ -156,10 +197,15 @@ def validate_external(item: tuple[str, dict[str, set[Path]]]) -> bool:
 
 
 def main():
+    args = sys.argv[1:]
+    if "-v" in args:
+        args.remove("-v")
+        CONFIG["verbose"] = True
+    retain_config = {"initializer": set_config, "initargs": [CONFIG]}
     info = PageInfo()
     # The HTML parsing is CPU-bound, so use the default (one process per core).
-    with multiprocessing.Pool() as pool:
-        for i in pool.imap_unordered(parse_page, sys.argv[1:]):
+    with multiprocessing.Pool(**retain_config) as pool:
+        for i in pool.imap_unordered(parse_page, args):
             info.update(i)
     if not validate_internal(info):
         sys.exit(1)
@@ -167,7 +213,7 @@ def main():
     # Use a separate process for each URL.
     num_urls = len(info.external_urls)
     assert num_urls < 100, "more URLs than expected, revisit number of process"
-    with multiprocessing.Pool(num_urls) as pool:
+    with multiprocessing.Pool(num_urls, **retain_config) as pool:
         ok = all(pool.imap_unordered(validate_external, info.external_urls.items()))
     if not ok:
         sys.exit(1)
