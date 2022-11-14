@@ -3,11 +3,28 @@
 -- Used for reading and writing Pandoc metadata.
 local vars = {}
 
+-- Options passed to pandoc.write calls, derived from PANDOC_WRITER_OPTIONS.
+local subdoc_options
+
+-- Renders elements to HTML. Pandoc will do this anyway after the filter, but
+-- rendering early is useful for post-processing that HTML.
+function render(elements)
+    if not subdoc_options then
+        subdoc_options = {}
+        for k, v in pairs(PANDOC_WRITER_OPTIONS) do
+            -- Remove the template (otherwise it will be a standalone doc) and
+            -- the filter (otherwise we'll recursively enter this file!).
+            if k ~= "template" and k ~= "filter" then
+                subdoc_options[k] = v
+            end
+        end
+    end
+    local subdoc = pandoc.Pandoc(elements)
+    return pandoc.write(subdoc, "html", subdoc_options)
+end
+
 -- Connection to the render.ts server.
 local socket = nil
-
--- The schemehl library.
-local schemehl = nil
 
 -- Makes a request to the render.ts server.
 function call_render_server(args)
@@ -328,6 +345,9 @@ function link_cross_references(el)
     return el
 end
 
+-- The schemehl library.
+local schemehl = nil
+
 -- Highlights code using the schemehl library. Returns the raw HTML.
 function highlight_code(code, options)
     if not schemehl then
@@ -336,9 +356,10 @@ function highlight_code(code, options)
     return schemehl.highlight(code, options)
 end
 
--- Highlights scheme code blocks. Also links IDs in (paste ...) blocks to the
--- corresponding section/exercise, and removes "NOALIGN" comments.
-function process_code_block(el)
+-- Renders code blocks using Scheme syntax highlighting. Also links IDs in
+-- (paste ...) blocks to the corresponding section/exercise, and removes
+-- "NOALIGN" comments since they are only for the linter.
+function render_code_block(el)
     assert(#el.classes == 0)
     local options = {}
     -- Don't link SICP IDs in language.html since it's just examples.
@@ -356,14 +377,12 @@ function process_code_block(el)
     )
 end
 
--- Adds the scheme class to all Code elements within el. We do this, rather than
--- transforming every Code in the document, to avoid applying it in headings.
-function process_inline_code(el)
+-- Renders inline code using Scheme syntax highlighting.
+function render_inline_code(el)
     assert(#el.classes == 0)
-    -- Only highlight inline code if it has a parenthesis (procedure
-    -- application) or guillemet for meta-variables. Otherwise notes
-    -- with lots of bits of code is too noisy, and also blue functions
-    -- by themselves end up looking like links.
+    -- Only highlight inline code if it has a paren (procedure application) or
+    -- guillemet (meta-variable). Otherwise notes with lots of code become too
+    -- noisy, and also blue functions by themselves end up looking like links.
     if (
         #el.classes == 0
         and (el.text:find("%(") or el.text:find("«"))
@@ -546,6 +565,17 @@ function render_citation(el)
     return pandoc.RawInline("html", html)
 end
 
+-- Removes unwanted styles from tables.
+function render_table(el)
+    return pandoc.RawBlock("html",
+        render(el)
+        :gsub('<tr class="odd">', "<tr>")
+        :gsub('<tr class="even">', "<tr>")
+        :gsub('<tr class="header">', "<tr>")
+        :gsub(' style="text%-align: left;"', "")
+    )
+end
+
 -- A note on naming: "render" means produce raw HTML, while "process" means
 -- change in some way but retain Pandoc data structures. This makes it easier to
 -- tell why filters have to be run in a particular order.
@@ -565,8 +595,10 @@ return {
     {Meta = write_meta},
     -- Handle links, code blocks, and inline code.
     {Link = link_cross_references},
-    {CodeBlock = process_code_block},
-    {Code = process_inline_code},
+    {CodeBlock = render_code_block},
+    {Code = render_inline_code},
     -- Render citations of the SICP text or lectures.
     {Cite = render_citation},
+    -- Render tables.
+    {Table = render_table},
 }
