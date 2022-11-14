@@ -8,8 +8,7 @@ Targets:
 	docs       Build the website in docs/
 	render     Run the render.ts server
 	fmt        Format source files
-	lint       Lint all source files
-	lintss     Lint only Scheme code
+	lint       Lint source files
 	spell      Spellcheck source files
 	validate   Validate generated HTML files
 	tools      Build tools
@@ -19,8 +18,8 @@ Targets:
 	sicp-html  Download SICP HTML files
 endef
 
-.PHONY: all help test docs render fmt lint lintss spell validate tools clean \
-	vscode clangd
+.PHONY: all help test docs render fmt lint spell validate tools clean vscode \
+	clangd
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
 OBJCFLAGS := -fmodules -fobjc-arc
@@ -29,6 +28,8 @@ DENOFLAGS := --unstable --allow-{read,write}=render.sock,render.fifo \
 
 LUA_VERSION := 5.4
 export LUA_CPATH := ./lib/?.so
+
+project_md := README.md LICENSE.md
 
 sicp_src := $(patsubst %,src/sicp/chapter-%.ss,1 2 3 4 5)
 notes_src := $(patsubst %,notes/%.md,index text lecture exercise)
@@ -111,21 +112,34 @@ fmt:
 	find . -type f \( -name "*.c" -o -name "*.m" \) | xargs clang-format -i
 	find . -type f -name "*.ts" | xargs deno fmt
 
-lint: lintss
-	find . -type f -name "*.sh" | xargs shellcheck
-	find . -type f -name "*.ts" | xargs deno lint --unstable
-	scripts/lint-headings.sh
+lint .PHONY: lint-ss lint-sh lint-ts lint-headings
 
-lintss: bin/lint
+lint-ss: bin/lint
 	find . -type f \( -name "*.ss" -o -name "*.md" \) | xargs $<
 
-spell: bin/spell
-	$^ $(notes_src) $(sicp_src)
+lint-sh:
+	find . -type f -name "*.sh" | xargs shellcheck
 
-validate:
+lint-ts:
+	find . -type f -name "*.ts" | xargs deno lint --unstable
+
+lint-headings:
+	scripts/lint-headings.sh
+
+spell: bin/spell
+	$^ $(project_md) $(notes_src) $(sicp_src)
+
+validate .PHONY: validate-vnu validate-links validate-other
+
+validate-vnu:
 	find docs -type f -name "*.html" \
 		| xargs vnu --filterpattern $(validate_exceptions)
-	find docs -type f -name "*.html" | xargs scripts/check-links.py
+
+validate-links:
+	{ echo $(project_md); find docs -type f -name "*.html"; } \
+		| xargs scripts/check-links.py
+
+validate-other:
 	# Ensure special characters used for syntax highlighting are stripped.
 	! grep -qRE '«|»|‹|›|```' docs
 
