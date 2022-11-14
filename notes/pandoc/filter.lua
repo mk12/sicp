@@ -371,7 +371,7 @@ function render_code_block(el)
         end
     end
     return pandoc.RawBlock("html",
-        '<pre><code class="blockcode">'
+        '<pre><code class="codeblock">'
         .. highlight_code(el.text, options)
         .. '</code></pre>'
     )

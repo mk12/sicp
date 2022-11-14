@@ -108,7 +108,7 @@
 <li>We need to apply the strategy of wishful thinking: let’s imagine that we have procedures <code>make-rat</code>, <code>numer</code>, and <code>denom</code>.</li>
 <li>We can implement a procedure for adding rationals like so:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (+rat x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (+rat x y)
   (make-rat
    (<span class="fu">+</span> (<span class="fu">*</span> (numer x) (denom y))
       (<span class="fu">*</span> (numer y) (denom x)))
@@ -149,7 +149,7 @@
 <li>This isn’t the addition procedure’s problem; the <code>make-rat</code> procedure should be responsible for reducing to lowest terms.</li>
 <li>We can use the greatest common divisor to fix this:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-rat n d)
   (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
     (<span class="fu">cons</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))</code></pre>
 <ul>
@@ -236,7 +236,7 @@
 <li>Pairs are similar: they happen to satisfy the contract that <code>(<span class="fu">car</span> (<span class="fu">cons</span> x y))</code> is <code>x</code> and <code>(<span class="fu">cdr</span> (<span class="fu">cons</span> x y))</code> is <code>y</code>.</li>
 <li>We can implement pairs with procedures. We don’t even need special primitives—all we need are lambdas:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> a b)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> a b)
   (<span class="kw">lambda</span> (pick)
     (<span class="kw">cond</span> ((<span class="fu">=</span> pick <span class="cn">1</span>) a)
           ((<span class="fu">=</span> pick <span class="cn">2</span>) b))))

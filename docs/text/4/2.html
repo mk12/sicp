@@ -83,7 +83,7 @@
 <li><em>Normal-order</em> languages use <em>lazy evaluation</em> to delay evaluation as long as possible.</li>
 <li>Consider this procedure:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (try a b) (<span class="kw">if</span> <span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b)</code></pre>
+<pre><code class="codeblock">(<span class="kw">define</span> (try a b) (<span class="kw">if</span> <span class="fu">=</span> a <span class="cn">0</span>) <span class="cn">1</span> b)</code></pre>
 <ul>
 <li>In Scheme, <code>(try <span class="cn">0</span> (<span class="fu">/</span> <span class="cn">1 0</span>))</code> causes a division-by-zero error. With lazy evaluation, it does not because the value of <code>b</code> is never needed.</li>
 <li>In a lazy language, we can implement <code>if</code> as an ordinary procedure.</li>
@@ -122,18 +122,18 @@
 <li>The main change required is the procedure application logic in <code>eval</code> and <code>apply</code>.</li>
 <li>The <code>application?</code> clause of <code>eval</code> becomes:</li>
 </ul>
-<pre><code class="blockcode">((application? exp)
+<pre><code class="codeblock">((application? exp)
  (<span class="fu">apply</span> (actual-value (operator exp) env)
         (operands exp)
         env))</code></pre>
 <ul>
 <li>Whenever we need the actual value of an expression, we force in addition to evaluating:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (actual-value exp env) (force-it (<span class="fu">eval</span> exp env)))</code></pre>
+<pre><code class="codeblock">(<span class="kw">define</span> (actual-value exp env) (force-it (<span class="fu">eval</span> exp env)))</code></pre>
 <ul>
 <li>We change <code>apply</code> to take <code>env</code>, and use <code>list-of-arg-values</code> and <code>list-of-delayed-args</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments env)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments env)
   (<span class="kw">cond</span> ((primitive-procedure? procedure)
          (apply-primitive-procedure
           procedure
@@ -149,7 +149,7 @@
 <ul>
 <li>We also need to change <code>eval-if</code> to use <code>actual-value</code> on the predicate:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (eval-if exp env)
+<pre><code class="codeblock">(<span class="kw">define</span> (eval-if exp env)
   (<span class="kw">if</span> (true? (actual-value (if-predicate exp) env))
       (<span class="fu">eval</span> (if-consequent exp) env)
       (<span class="fu">eval</span> (if-alternative exp) env)))</code></pre>
@@ -159,14 +159,14 @@
 <ul>
 <li>To force a thunk, we evaluate it in its environment. We use <code>actual-value</code> instead of <code>eval</code> so that it recursively forces if the result is another thunk:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (force-it obj)
+<pre><code class="codeblock">(<span class="kw">define</span> (force-it obj)
   (<span class="kw">if</span> (thunk? obj)
       (actual-value (thunk-exp obj) (thunk-env obj))
       obj))</code></pre>
 <ul>
 <li>We can represent thunks simply by a list containing the expression and environment:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="vs">'thunk</span> exp env))
+<pre><code class="codeblock">(<span class="kw">define</span> (delay-it exp env) (<span class="fu">list</span> <span class="vs">'thunk</span> exp env))
 (<span class="kw">define</span> (thunk? obj) (tagged-list? obj <span class="vs">'thunk</span>))
 (<span class="kw">define</span> (thunk-exp thunk) (<span class="fu">cadr</span> thunk))
 (<span class="kw">define</span> (thunk-env thunk) (<span class="fu">caddr</span> thunk))</code></pre>
@@ -187,7 +187,7 @@
 <li>All we need to do is make <code>cons</code> lazy, either by introducing non-strict primitives or by defining <code>cons</code>, <code>car</code>, and <code>cdr</code> <a href="../2/1.html#2.1.3">as compound procedures</a>.</li>
 <li>Now we can write code without distinguishing normal lists from infinite ones:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> ones (<span class="fu">cons</span> <span class="cn">1</span> ones))
+<pre><code class="codeblock">(<span class="kw">define</span> ones (<span class="fu">cons</span> <span class="cn">1</span> ones))
 (<span class="kw">define</span> (scale-list items factor) (<span class="fu">map</span> (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x factor)) items))</code></pre>
 <ul>
 <li>These lazy lists are even lazier than our original streams, since the <code>car</code> is delayed too.</li>

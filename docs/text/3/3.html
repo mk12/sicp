@@ -87,7 +87,7 @@
 <li>The old <code>car</code> is unreachable garbage. We will see later how Lisp recycles this memory.</li>
 <li>We could implement <code>cons</code> in terms of these two procedures in addition to a <code>get-new-part</code> procedure.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">let</span> ((new (get-new-pair)))
     (<span class="fu">set-car!</span> new x)
     (<span class="fu">set-cdr!</span> new y)
@@ -116,7 +116,7 @@
 <ul>
 <li>Earlier we said we can represent pairs purely in terms of procedures:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">lambda</span> (sel)
     (sel x y)))
 (<span class="kw">define</span> (<span class="fu">car</span> p)
@@ -126,7 +126,7 @@
 <ul>
 <li>The same is true of mutable data. We can implement mutators with procedures and assignment alone:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">define</span> (set-x! v) (<span class="kw">set!</span> x v))
   (<span class="kw">define</span> (set-y! v) (<span class="kw">set!</span> y v))
   (<span class="kw">define</span> (dispatch m)
@@ -197,7 +197,7 @@
 <li>We could use the message-passing style with the <code>dispatch</code> procedure that we’ve seen a few times already.</li>
 <li>We could also take the λ-calculus approach:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-table) (<span class="kw">lambda</span> (k) <span class="cn">false</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (make-table) (<span class="kw">lambda</span> (k) <span class="cn">false</span>))
 (<span class="kw">define</span> (lookup key table) (table key))
 (<span class="kw">define</span> (insert! key value table)
   (<span class="kw">lambda</span> (k)

@@ -97,7 +97,7 @@
 <ul>
 <li>We can represent the differentiation rules like this:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> deriv-rules
+<pre><code class="codeblock">(<span class="kw">define</span> deriv-rules
   <span class="vs">'(((dd (?c c) (? v)) 0)
     ((dd (?v v) (? v)) 1)
     ((dd (?v u) (? v)) 0)
@@ -121,7 +121,7 @@
 </ul></li>
 <li>Once we have this language, we can reuse it for other things. For example, we can write rules for algebraic simplification:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> algebra-rules
+<pre><code class="codeblock">(<span class="kw">define</span> algebra-rules
   <span class="vs">'((((? op) (?c e1) (?c e2))
      (: (op e1 e2)))
     (((? op) (? e1) (?c e2))
@@ -166,7 +166,7 @@
 <ul>
 <li>The matcher takes an expression, a pattern, and a dictionary as input. It outputs another, augmented dictionary.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (match pat exp dict)
+<pre><code class="codeblock">(<span class="kw">define</span> (match pat exp dict)
   (<span class="kw">cond</span> ((<span class="fu">eq?</span> dict <span class="vs">'failed</span>) <span class="vs">'failed</span>)
         ((atom? pat)
          (<span class="kw">if</span> (<span class="kw">and</span> (atom? exp) (<span class="fu">eq?</span> pat exp))
@@ -204,7 +204,7 @@
 <ul>
 <li>The instantiator takes a dictionary and a skeleton as input and outputs an expression.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (instantiate skeleton dict)
+<pre><code class="codeblock">(<span class="kw">define</span> (instantiate skeleton dict)
   (<span class="kw">define</span> (loop s)
     (<span class="kw">cond</span> ((atom? s) s)
           ((skeleton-evaluation? s)
@@ -218,7 +218,7 @@
 <li>The only reason for <code>loop</code> is to avoid passing <code>dict</code> through every recursive call.</li>
 <li>The skeleton evaluation forms like <code>(: x)</code> using <code>evaluate</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (evaluate form dict)
+<pre><code class="codeblock">(<span class="kw">define</span> (evaluate form dict)
   (<span class="kw">if</span> (atom? form)
       (lookup form dict)
       (<span class="fu">apply</span> (<span class="fu">eval</span> (lookup (<span class="fu">car</span> form) dict)
@@ -249,7 +249,7 @@
 <li>We want to be able to evaluate <code>(simplifier rules)</code> and get a procedure that simplifies expressions according to <code>rules</code>.</li>
 <li>For example, we could then write <code>(<span class="kw">define</span> dsimp (simplifier deriv-rules))</code>.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (simplifier the-rules)
+<pre><code class="codeblock">(<span class="kw">define</span> (simplifier the-rules)
   (<span class="kw">define</span> (simplify-exp exp)
     (try-rules (<span class="kw">if</span> (compound? exp)
                    (simplify-parts exp)
@@ -278,7 +278,7 @@
 <li>Since the <code>exp</code> in <code>simplify-exp</code> can be either atomic or compound, this naturally recurses through a tree of expressions.</li>
 <li>We could have just written one procedure, using <code>map</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (simplify-exp exp)
+<pre><code class="codeblock">(<span class="kw">define</span> (simplify-exp exp)
   (try-rules
    (<span class="kw">if</span> (compound? exp)
        (<span class="fu">map</span> simplify-exp exp)
@@ -309,7 +309,7 @@
 <ul>
 <li>The implementation of the dictionary is pretty simple:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (empty-dictionary) <span class="vs">'()</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> (empty-dictionary) <span class="vs">'()</span>)
 (<span class="kw">define</span> (extend-dictionary pat dat dict)
   (<span class="kw">let</span> ((name (variable-name pat)))
     (<span class="kw">let</span> ((v ((<span class="fu">assq</span> name dict))))

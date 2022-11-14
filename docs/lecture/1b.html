@@ -118,10 +118,10 @@
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Example
 </h3>
 <p>The <code>sos</code> procedure takes the sum of the squares:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (sq a) (<span class="fu">*</span> a a))
+<pre><code class="codeblock">(<span class="kw">define</span> (sq a) (<span class="fu">*</span> a a))
 (<span class="kw">define</span> (sos x y) (<span class="fu">+</span> (sq x) (sq y)))</code></pre>
 <p>Let’s evaluate the sum of the square of 3 and the square of 4:</p>
-<pre><code class="blockcode">(sos <span class="cn">3 4</span>)
+<pre><code class="codeblock">(sos <span class="cn">3 4</span>)
 (<span class="fu">+</span> (sq <span class="cn">3</span>) (sq <span class="cn">4</span>))
 (<span class="fu">+</span> (sq <span class="cn">3</span>) (<span class="fu">*</span> <span class="cn">4 4</span>))
 (<span class="fu">+</span> (sq <span class="cn">3</span>) <span class="cn">16</span>)
@@ -150,12 +150,12 @@
 <a class="anchor__link link" href="#1.6" aria-hidden="true">#</a> Example
 </h3>
 <p>The addition operator in Peano arithmetic uses a conditional:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">+</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">+</span> x y)
   (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>)
       y
       (<span class="fu">+</span> (<span class="fu">-1+</span> x) (<span class="fu">1+</span> y))))</code></pre>
 <p>Now we can evaluate <code>(<span class="fu">+</span> <span class="cn">3 4</span>)</code> like so:</p>
-<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">3 4</span>)
+<pre><code class="codeblock">(<span class="fu">+</span> <span class="cn">3 4</span>)
 (<span class="kw">if</span> (<span class="fu">=</span> <span class="cn">3 0</span>) <span class="cn">4</span> (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) (<span class="fu">1+</span> <span class="cn">4</span>)))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) (<span class="fu">1+</span> <span class="cn">4</span>))
 (<span class="fu">+</span> (<span class="fu">-1+</span> <span class="cn">3</span>) <span class="cn">5</span>)
@@ -186,7 +186,7 @@
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Peano arithmetic
 </h3>
 <p>There are two ways to add whole numbers in Peano arithmetic.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">+</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">+</span> x y)
   (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>)
       y
       (<span class="fu">+</span> (<span class="fu">-1+</span> x) (<span class="fu">1+</span> y))))
@@ -207,7 +207,7 @@
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Fibonacci sequence
 </h3>
 <p>We can represent the Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21, … in Lisp:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (fib n)
+<pre><code class="codeblock">(<span class="kw">define</span> (fib n)
   (<span class="kw">if</span> (<span class="fu">&lt;</span> n <span class="cn">2</span>)
       n
       (<span class="fu">+</span> (fib (<span class="fu">-</span> n <span class="cn">1</span>))
@@ -226,7 +226,7 @@
 </blockquote>
 </div>
 <p>Move an <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span>-high tower from spike <code>from</code> to spike <code>to</code> using spike <code>spare</code> as a spare:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (move n from to spare)
+<pre><code class="codeblock">(<span class="kw">define</span> (move n from to spare)
   (<span class="kw">cond</span>
     ((<span class="fu">=</span> n <span class="cn">0</span>) <span class="cn">"DONE"</span>)
     (<span class="kw">else</span> (move (<span class="fu">-1+</span> n) from spare to)

@@ -119,7 +119,7 @@
 <li>We can use this to control access to shared variables.</li>
 <li>Before, assignments based on a state variables current value were problematic. We could solve this with the set {<code>get-value</code>, <code>set-value!</code>, and <code>swap-value!</code>} where the latter is defined like so:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (swap-value! f)
+<pre><code class="codeblock">(<span class="kw">define</span> (swap-value! f)
   (set-value! (f (get-value))))</code></pre>
 <h3 id="3.4.2.2" class="anchor">
 <a class="anchor__link link" href="#3.4.2.2" aria-hidden="true">#</a> Serializers in Scheme
@@ -139,7 +139,7 @@
 <li>Things get much more difficult with multiple shared resources.</li>
 <li>Suppose we want to swap the balances in two bank accounts:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (exchange acc1 acc2)
+<pre><code class="codeblock">(<span class="kw">define</span> (exchange acc1 acc2)
   (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="vs">'balance</span>) (acc2 <span class="vs">'balance</span>))))
     ((acc1 <span class="vs">'withdraw</span>) diff)
     ((acc2 <span class="vs">'deposit</span>) diff)))</code></pre>

@@ -72,7 +72,7 @@
 <h2 id="2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.1" aria-hidden="true">#</a> <span class="number">2.2.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_sec_2.2.1">Representing Sequences<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="kw">define</span> one-through-four (<span class="fu">list</span> <span class="cn">1 2 3 4</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> one-through-four (<span class="fu">list</span> <span class="cn">1 2 3 4</span>))
 
 one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span>
 (<span class="fu">car</span> one-through-four) <span class="op">=&gt;</span> <span class="cn">1</span>
@@ -84,7 +84,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 <a class="anchor__link link" href="#2.2.1.1" aria-hidden="true">#</a> <span class="number">2.2.1.1</span> List operations
 </h3>
 <p>Iterative <code>list-ref</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       (<span class="fu">car</span> items)
       (<span class="fu">list-ref</span> (<span class="fu">cdr</span> items) (<span class="fu">-</span> n <span class="cn">1</span>))))
@@ -92,7 +92,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 (<span class="kw">define</span> squares (<span class="fu">list</span> <span class="cn">1 4 9 16 25</span>))
 (<span class="fu">list-ref</span> squares <span class="cn">3</span>) <span class="op">=&gt;</span> <span class="cn">16</span></code></pre>
 <p>Recursive <code>length</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">length</span> items)
   (<span class="kw">if</span> (<span class="fu">null?</span> items)
       <span class="cn">0</span>
       (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">length</span> (<span class="fu">cdr</span> items)))))
@@ -100,7 +100,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 (<span class="kw">define</span> odds (<span class="fu">list</span> <span class="cn">1 3 5 7</span>))
 (<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <p>Iterative <code>length</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">length</span> items)
   (<span class="kw">define</span> (iter a count)
     (<span class="kw">if</span> (<span class="fu">null?</span> a)
         count
@@ -109,7 +109,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 
 (<span class="fu">length</span> odds) <span class="op">=&gt;</span> <span class="cn">4</span></code></pre>
 <p>Recursive <code>append</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
   (<span class="kw">if</span> (<span class="fu">null?</span> list1)
       list2
       (<span class="fu">cons</span> (<span class="fu">car</span> list1)
@@ -120,7 +120,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 <h3 id="ex2.17" class="anchor">
 <a class="anchor__link link" href="#ex2.17" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.17">Exercise 2.17<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (last-pair xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (last-pair xs)
   (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">cdr</span> xs))
       xs
       (last-pair (<span class="fu">cdr</span> xs))))
@@ -129,7 +129,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 <h3 id="ex2.18" class="anchor">
 <a class="anchor__link link" href="#ex2.18" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.18">Exercise 2.18<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
   (<span class="kw">define</span> (iter xs ys)
     (<span class="kw">if</span> (<span class="fu">null?</span> xs)
         ys
@@ -142,7 +142,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 <a class="anchor__link link" href="#ex2.19" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.19">Exercise 2.19<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>Generalizing <code>count-change</code> from <a href="../1/2.html#1.2.2.1">§&nbsp;1.2.2.1</a> to work with any currency:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> us-coins (<span class="fu">list</span> <span class="cn">50 25 10 5 1</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> us-coins (<span class="fu">list</span> <span class="cn">50 25 10 5 1</span>))
 (<span class="kw">define</span> uk-coins (<span class="fu">list</span> <span class="cn">100 50 20 10 5 2 1 1/2</span>))
 
 (<span class="kw">define</span> (cc amount coins)
@@ -161,14 +161,14 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 
 (cc <span class="cn">20</span> uk-coins) <span class="op">=&gt;</span> <span class="cn">293</span></code></pre>
 <p>The order of the coin list does not affect the answer produced by <code>cc</code>:</p>
-<pre><code class="blockcode">(cc <span class="cn">100</span> us-coins) <span class="op">=&gt;</span> <span class="cn">292</span>
+<pre><code class="codeblock">(cc <span class="cn">100</span> us-coins) <span class="op">=&gt;</span> <span class="cn">292</span>
 (cc <span class="cn">100</span> (<span class="fu">reverse</span> us-coins)) <span class="op">=&gt;</span> <span class="cn">292</span>
 (cc <span class="cn">100</span> (<span class="fu">list</span> <span class="cn">5 50 1 25 10</span>)) <span class="op">=&gt;</span> <span class="cn">292</span></code></pre>
 <p>The tree recursion will explore every possible combination. It makes no difference if you start with combinations that prefer fewer, larger coins, or with the combination that only uses pennies, or anything in between.</p>
 <h3 id="ex2.20" class="anchor">
 <a class="anchor__link link" href="#ex2.20" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.20">Exercise 2.20<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (same-parity . xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (same-parity . xs)
   (<span class="kw">define</span> (helper pred xs)
     (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) xs)
           ((pred (<span class="fu">car</span> xs))
@@ -184,7 +184,7 @@ one-through-four <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4)</span
 <h3 id="2.2.1.2" class="anchor">
 <a class="anchor__link link" href="#2.2.1.2" aria-hidden="true">#</a> <span class="number">2.2.1.2</span> Mapping over lists
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (scale-list items factor)
+<pre><code class="codeblock">(<span class="kw">define</span> (scale-list items factor)
   (<span class="kw">if</span> (<span class="fu">null?</span> items)
       <span class="vs">'()</span>
       (<span class="fu">cons</span> (<span class="fu">*</span> (<span class="fu">car</span> items) factor)
@@ -218,7 +218,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-list xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-list xs)
   (<span class="kw">if</span> (<span class="fu">null?</span> xs)
       <span class="vs">'()</span>
       (<span class="fu">cons</span> (square (<span class="fu">car</span> xs))
@@ -245,7 +245,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-list items)
   (<span class="kw">define</span> (iter things answer)
     (<span class="kw">if</span> (<span class="fu">null?</span> things)
         answer
@@ -256,7 +256,7 @@ Imports:
 
 (square-list (<span class="fu">list</span> <span class="cn">1 2 3 4</span>)) <span class="op">=&gt;</span> <span class="vs">'(16 9 4 1)</span></code></pre>
 <p>Louis’s procedure reverses the order of the list because of the way he builds the result. His first iteration creates a pair whose <code>car</code> is <code>(square (<span class="fu">car</span> things))</code> and whose <code>cdr</code> is the empty list, and further recursions prepend to this list. So the last item of the result is the first item of the original list, and vice versa.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-list items)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-list items)
   (<span class="kw">define</span> (iter things answer)
     (<span class="kw">if</span> (<span class="fu">null?</span> things)
         answer
@@ -270,7 +270,7 @@ Imports:
 <h3 id="ex2.23" class="anchor">
 <a class="anchor__link link" href="#ex2.23" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.23">Exercise 2.23<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">for-each</span> f xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">for-each</span> f xs)
   (unless (<span class="fu">null?</span> xs)
     (f (<span class="fu">car</span> xs))
     (<span class="fu">for-each</span> f (<span class="fu">cdr</span> xs))))
@@ -284,7 +284,7 @@ Imports:
 <h2 id="2.2.2" class="anchor">
 <a class="anchor__link link" href="#2.2.2" aria-hidden="true">#</a> <span class="number">2.2.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_sec_2.2.2">Hierarchical Structures<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="kw">define</span> (count-leaves x)
+<pre><code class="codeblock">(<span class="kw">define</span> (count-leaves x)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> x) <span class="cn">0</span>)
         ((<span class="fu">not</span> (<span class="fu">pair?</span> x)) <span class="cn">1</span>)
         (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))
@@ -300,7 +300,7 @@ Imports:
 <h3 id="ex2.24" class="anchor">
 <a class="anchor__link link" href="#ex2.24" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.24">Exercise 2.24<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3 4</span>))) <span class="op">=&gt;</span> <span class="vs">'(1 (2 (3 4)))</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">list</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">2</span> (<span class="fu">list</span> <span class="cn">3 4</span>))) <span class="op">=&gt;</span> <span class="vs">'(1 (2 (3 4)))</span></code></pre>
 <p>Box-and-pointer structure:</p>
 <figure><svg class="diagram" viewBox="0 0 458 328" style="max-width:458px"><defs><marker id="m1a" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0v4l4-2-4-2z"/></marker><marker id="m1c" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><circle cx="4" cy="4" r="2.5" stroke="none" fill="currentColor"/></marker></defs><rect x="50.286" y="100.571" width="36.571" height="36.571" rx="4.571"/><text x="64.286" y="123.429">1</text><rect x="150.857" y="192" width="36.571" height="36.571" rx="4.571"/><text x="164.857" y="214.857">2</text><rect x="251.429" y="283.429" width="36.571" height="36.571" rx="4.571"/><text x="265.429" y="306.286">3</text><rect x="370.286" y="283.429" width="36.571" height="36.571" rx="4.571"/><text x="384.286" y="306.286">4</text><path marker-end="url(#m1a)" d="M0 27.429h45.714"/><path marker-end="url(#m1c)" d="M68.571 54.857V27.429"/><path marker-end="url(#m1c)" d="M118.857 27.429h-13.714"/><path marker-end="url(#m1a)" d="M118.857 27.429h45.714"/><path marker-end="url(#m1c)" d="M187.429 54.857V27.429"/><path marker-end="url(#m1a)" d="M68.571 54.857v36.572"/><path marker-end="url(#m1a)" d="M187.429 54.857v36.572"/><path marker-end="url(#m1c)" d="M169.143 146.286v-27.429"/><path marker-end="url(#m1c)" d="M219.429 118.857h-13.715"/><path marker-end="url(#m1a)" d="M219.429 118.857h45.714"/><path marker-end="url(#m1c)" d="M288 146.286v-27.429"/><path marker-end="url(#m1a)" d="M169.143 146.286v36.571"/><path marker-end="url(#m1a)" d="M288 146.286v36.571"/><path marker-end="url(#m1c)" d="M269.714 237.714v-27.428"/><path marker-end="url(#m1c)" d="M320 210.286h-13.714"/><path marker-end="url(#m1a)" d="M320 210.286h45.714"/><path marker-end="url(#m1c)" d="M388.571 237.714v-27.428"/><path marker-end="url(#m1a)" d="M269.714 237.714v36.572"/><path marker-end="url(#m1a)" d="M388.571 237.714v36.572"/><path d="M54.857 9.143a4.571 4.571 0 0 0-4.571 4.571m0 0v27.429m4.571-32h64m-32 0v36.571m32-36.571a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.572-4.571a4.571 4.571 0 0 1-4.572 4.571m54.857-36.571a4.571 4.571 0 0 0-4.571 4.571m0 0v27.429m4.571-32h64m-32 0v36.571m27.429-36.571-13.714 27.428m18.285-27.428a4.571 4.571 0 0 1 4.572 4.571m0 0v27.429m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m-18.285-9.143-4.572 9.143m27.429-4.571a4.571 4.571 0 0 1-4.572 4.571m-82.285 54.857a4.571 4.571 0 0 0-4.572 4.572m0 0v27.428m4.572-32h64m-32 0v36.572m32-36.572a4.571 4.571 0 0 1 4.571 4.572m0 0v27.428m-73.143 0a4.571 4.571 0 0 0 4.572 4.572m0 0h64m4.571-4.572a4.571 4.571 0 0 1-4.571 4.572m54.857-36.572a4.571 4.571 0 0 0-4.572 4.572m0 0v27.428m4.572-32h64m-32 0v36.572m27.428-36.572L320 128m18.286-27.429a4.571 4.571 0 0 1 4.571 4.572m0 0v27.428m-73.143 0a4.571 4.571 0 0 0 4.572 4.572m0 0h64M320 128l-4.571 9.143m27.428-4.572a4.571 4.571 0 0 1-4.571 4.572M256 192a4.571 4.571 0 0 0-4.571 4.571m0 0V224M256 192h64m-32 0v36.571M320 192a4.571 4.571 0 0 1 4.571 4.571m0 0V224m-73.142 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m4.571-4.571a4.571 4.571 0 0 1-4.571 4.571M374.857 192a4.571 4.571 0 0 0-4.571 4.571m0 0V224m4.571-32h64m-32 0v36.571M434.286 192l-13.715 27.429M438.857 192a4.571 4.571 0 0 1 4.572 4.571m0 0V224m-73.143 0a4.571 4.571 0 0 0 4.571 4.571m0 0h64m-18.286-9.142L416 228.571M443.429 224a4.571 4.571 0 0 1-4.572 4.571"/></svg></figure>
 <p>Tree interpretation:</p>
@@ -308,7 +308,7 @@ Imports:
 <h3 id="ex2.25" class="anchor">
 <a class="anchor__link link" href="#ex2.25" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.25">Exercise 2.25<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">cdr</span> <span class="vs">'(1 3 (5 7) 9)</span>)))))
+<pre><code class="codeblock">(<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">car</span> (<span class="fu">cdr</span> (<span class="fu">cdr</span> <span class="vs">'(1 3 (5 7) 9)</span>)))))
 <span class="op">=&gt;</span> <span class="cn">7</span>
 
 (<span class="fu">car</span> (<span class="fu">car</span> <span class="vs">'((7))</span>))
@@ -320,7 +320,7 @@ Imports:
 <h3 id="ex2.26" class="anchor">
 <a class="anchor__link link" href="#ex2.26" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.26">Exercise 2.26<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">1 2 3</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> x (<span class="fu">list</span> <span class="cn">1 2 3</span>))
 (<span class="kw">define</span> y (<span class="fu">list</span> <span class="cn">4 5 6</span>))
 
 (<span class="fu">append</span> x y) <span class="op">=&gt;</span> <span class="vs">'(1 2 3 4 5 6)</span>
@@ -329,7 +329,7 @@ Imports:
 <h3 id="ex2.27" class="anchor">
 <a class="anchor__link link" href="#ex2.27" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.27">Exercise 2.27<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (deep-reverse x)
+<pre><code class="codeblock">(<span class="kw">define</span> (deep-reverse x)
   (<span class="kw">if</span> (<span class="fu">pair?</span> x)
       (<span class="fu">map</span> deep-reverse (<span class="fu">reverse</span> x))
       x))
@@ -340,7 +340,7 @@ Imports:
 <h3 id="ex2.28" class="anchor">
 <a class="anchor__link link" href="#ex2.28" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.28">Exercise 2.28<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (fringe t)
+<pre><code class="codeblock">(<span class="kw">define</span> (fringe t)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> t) t)
         ((<span class="fu">pair?</span> (<span class="fu">car</span> t))
          (<span class="fu">append</span> (fringe (<span class="fu">car</span> t))
@@ -355,16 +355,16 @@ Imports:
 <h3 id="ex2.29" class="anchor">
 <a class="anchor__link link" href="#ex2.29" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.29">Exercise 2.29<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-mobile left right) (<span class="fu">list</span> left right))
+<pre><code class="codeblock">(<span class="kw">define</span> (make-mobile left right) (<span class="fu">list</span> left right))
 (<span class="kw">define</span> (make-branch <span class="fu">length</span> structure) (<span class="fu">list length</span> structure))</code></pre>
 <ol type="a">
 <li><p>Selectors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> left-branch <span class="fu">car</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> left-branch <span class="fu">car</span>)
 (<span class="kw">define</span> right-branch <span class="fu">cadr</span>)
 (<span class="kw">define</span> branch-length <span class="fu">car</span>)
 (<span class="kw">define</span> branch-structure <span class="fu">cadr</span>)</code></pre></li>
 <li><p>Total weight:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (mobile-weight mobile)
+<pre><code class="codeblock">(<span class="kw">define</span> (mobile-weight mobile)
   (<span class="fu">+</span> (branch-weight (left-branch mobile))
      (branch-weight (right-branch mobile))))
 
@@ -374,7 +374,7 @@ Imports:
         struct
         (mobile-weight struct))))</code></pre></li>
 <li><p>Balance:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (torque branch)
+<pre><code class="codeblock">(<span class="kw">define</span> (torque branch)
   (<span class="fu">*</span> (branch-length branch)
      (branch-weight branch)))
 
@@ -389,7 +389,7 @@ Imports:
     (<span class="kw">or</span> (<span class="fu">number?</span> struct)
         (mobile-balanced? struct))))</code></pre></li>
 <li><p>If <code>make-mobile</code> and <code>make-branch</code> use <code>cons</code> instead of <code>list</code>, all we need to do is change the <code>right-branch</code> and <code>branch-structure</code> selectors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> make-mobile <span class="fu">cons</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> make-mobile <span class="fu">cons</span>)
 (<span class="kw">define</span> make-branch <span class="fu">cons</span>)
 
 (<span class="kw">define</span> right-branch <span class="fu">cdr</span>)
@@ -398,7 +398,7 @@ Imports:
 <h3 id="2.2.2.1" class="anchor">
 <a class="anchor__link link" href="#2.2.2.1" aria-hidden="true">#</a> <span class="number">2.2.2.1</span> Mapping over trees
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (scale-tree tree factor)
+<pre><code class="codeblock">(<span class="kw">define</span> (scale-tree tree factor)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> tree) <span class="vs">'()</span>)
         ((<span class="fu">not</span> (<span class="fu">pair?</span> tree)) (<span class="fu">*</span> tree factor))
         (<span class="kw">else</span> (<span class="fu">cons</span> (scale-tree (<span class="fu">car</span> tree) factor)
@@ -432,10 +432,10 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> tree <span class="vs">'(1 (2 (3 4) 5) (6 7))</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> tree <span class="vs">'(1 (2 (3 4) 5) (6 7))</span>)
 (<span class="kw">define</span> squared-tree <span class="vs">'(1 (4 (9 16) 25) (36 49))</span>)</code></pre>
 <p>Direct recursion:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-tree t)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-tree t)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> t) <span class="vs">'()</span>)
         ((<span class="fu">not</span> (<span class="fu">pair?</span> t)) (square t))
         (<span class="kw">else</span> (<span class="fu">cons</span> (square-tree (<span class="fu">car</span> t))
@@ -443,7 +443,7 @@ Imports:
 
 (square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
 <p>Using <code>map</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-tree t)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-tree t)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (t)
          (<span class="kw">if</span> (<span class="fu">pair?</span> t)
              (square-tree t)
@@ -481,7 +481,7 @@ Imports:
 </ul>
 </aside>
 <p>Direct recursion:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (tree-map f t)
+<pre><code class="codeblock">(<span class="kw">define</span> (tree-map f t)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> t) <span class="vs">'()</span>)
         ((<span class="fu">not</span> (<span class="fu">pair?</span> t)) (f t))
         (<span class="kw">else</span> (<span class="fu">cons</span> (tree-map f (<span class="fu">car</span> t))
@@ -490,7 +490,7 @@ Imports:
 (<span class="kw">define</span> (square-tree tree) (tree-map square tree))
 (square-tree tree) <span class="op">=&gt;</span> squared-tree</code></pre>
 <p>Using <code>map</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (tree-map f t)
+<pre><code class="codeblock">(<span class="kw">define</span> (tree-map f t)
   (<span class="fu">map</span> (<span class="kw">lambda</span> (t)
          (<span class="kw">if</span> (<span class="fu">pair?</span> t)
              (tree-map f t)
@@ -508,7 +508,7 @@ Imports:
 <li>Given a set <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span> and any <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mtext>,</mtext></mrow><annotation encoding="application/x-tex">x\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">x</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi>S</mi><mo>∪</mo><mo stretchy="false">{</mo><mi>x</mi><mo stretchy="false">}</mo><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo>∪</mo><mo stretchy="false">{</mo><mi>R</mi><mo>∪</mo><mo stretchy="false">{</mo><mi>x</mi><mo stretchy="false">}</mo><mo>∣</mo><mi>R</mi><mo>∈</mo><mi mathvariant="script">P</mi><mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo stretchy="false">}</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">\powerset{S\cup\{x\}} = \powerset{S} \cup \{R\cup\{x\} \mid R\in\powerset{S}\}\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">x</span><span class="mclose">}</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">x</span><span class="mclose">}</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">P</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mclose">)</span><span class="mclose">}</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
 </ul>
 <p>This leads to the following implementation:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (subsets s)
+<pre><code class="codeblock">(<span class="kw">define</span> (subsets s)
   (<span class="kw">if</span> (<span class="fu">null?</span> s)
       (<span class="fu">list</span> <span class="vs">'()</span>)
       (<span class="kw">let</span> ((first-item (<span class="fu">car</span> s))
@@ -547,7 +547,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum-odd-squares tree)
+<pre><code class="codeblock">(<span class="kw">define</span> (sum-odd-squares tree)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> tree) <span class="cn">0</span>)
         ((<span class="fu">not</span> (<span class="fu">pair?</span> tree))
          (<span class="kw">if</span> (<span class="fu">odd?</span> tree) (square tree) <span class="cn">0</span>))
@@ -593,7 +593,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="fu">map</span> square (<span class="fu">list</span> <span class="cn">1 2 3 4 5</span>)) <span class="op">=&gt;</span> <span class="vs">'(1 4 9 16 25)</span>
+<pre><code class="codeblock">(<span class="fu">map</span> square (<span class="fu">list</span> <span class="cn">1 2 3 4 5</span>)) <span class="op">=&gt;</span> <span class="vs">'(1 4 9 16 25)</span>
 
 (<span class="kw">define</span> (<span class="fu">filter</span> pred xs)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> xs) <span class="vs">'()</span>)
@@ -665,7 +665,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">map</span> f xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">map</span> f xs)
   (accumulate (<span class="kw">lambda</span> (x y) (<span class="fu">cons</span> (f x) y)) <span class="vs">'()</span> xs))
 (<span class="kw">define</span> (<span class="fu">append</span> xs ys)
   (accumulate <span class="fu">cons</span> ys xs))
@@ -689,7 +689,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (horner-eval x coefs)
+<pre><code class="codeblock">(<span class="kw">define</span> (horner-eval x coefs)
   (accumulate (<span class="kw">lambda</span> (coef higher-terms)
                 (<span class="fu">+</span> (<span class="fu">*</span> higher-terms x) coef))
               <span class="cn">0</span>
@@ -720,7 +720,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (count-leaves t)
+<pre><code class="codeblock">(<span class="kw">define</span> (count-leaves t)
   (accumulate <span class="fu">+</span> <span class="cn">0</span> (<span class="fu">map</span> (<span class="kw">lambda</span> (x) <span class="cn">1</span>)
                        (enumerate-tree t))))
 
@@ -743,7 +743,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (accumulate-n op init seqs)
+<pre><code class="codeblock">(<span class="kw">define</span> (accumulate-n op init seqs)
   (<span class="kw">if</span> (<span class="fu">null?</span> (<span class="fu">car</span> seqs))
       <span class="vs">'()</span>
       (<span class="fu">cons</span> (accumulate op init (<span class="fu">map car</span> seqs))
@@ -776,7 +776,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (dot-product v w)
+<pre><code class="codeblock">(<span class="kw">define</span> (dot-product v w)
   (accumulate <span class="fu">+</span> <span class="cn">0</span> (<span class="fu">map *</span> v w)))
 
 (<span class="kw">define</span> (matrix-*-vector m v)
@@ -816,7 +816,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> fold-right accumulate)
+<pre><code class="codeblock">(<span class="kw">define</span> fold-right accumulate)
 
 (<span class="kw">define</span> (fold-left op init xs)
   (<span class="kw">define</span> (iter result rest)
@@ -852,7 +852,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">reverse</span> xs)
   (fold-right (<span class="kw">lambda</span> (x y) (<span class="fu">append</span> y (<span class="fu">list</span> x))) <span class="vs">'()</span> xs))
 
 (<span class="fu">reverse</span> (<span class="fu">list</span> <span class="cn">1 2 3 4 5</span>)) <span class="op">=&gt;</span> <span class="vs">'(5 4 3 2 1)</span>
@@ -893,7 +893,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (flatmap proc seq)
+<pre><code class="codeblock">(<span class="kw">define</span> (flatmap proc seq)
   (accumulate <span class="fu">append</span> <span class="vs">'()</span> (<span class="fu">map</span> proc seq)))
 
 (<span class="kw">define</span> (prime-sum? pair)
@@ -959,7 +959,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (unique-pairs n)
+<pre><code class="codeblock">(<span class="kw">define</span> (unique-pairs n)
   (flatmap (<span class="kw">lambda</span> (i)
              (<span class="fu">map</span> (<span class="kw">lambda</span> (j) (<span class="fu">list</span> i j))
                   (enumerate-interval <span class="cn">1</span> (<span class="fu">-</span> i <span class="cn">1</span>))))
@@ -998,7 +998,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (unique-triples n)
+<pre><code class="codeblock">(<span class="kw">define</span> (unique-triples n)
   (flatmap (<span class="kw">lambda</span> (i)
              (flatmap (<span class="kw">lambda</span> (j)
                         (<span class="fu">map</span> (<span class="kw">lambda</span> (k) (<span class="fu">list</span> i j k))
@@ -1041,7 +1041,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> make-position <span class="fu">list</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> make-position <span class="fu">list</span>)
 (<span class="kw">define</span> get-row <span class="fu">car</span>)
 (<span class="kw">define</span> get-col <span class="fu">cadr</span>)
 
@@ -1060,7 +1060,7 @@ Imports:
                  (helper (<span class="fu">cdr</span> rest-of-queens) (<span class="fu">+</span> cols-apart <span class="cn">1</span>))))))
     (helper (<span class="fu">cdr</span> positions) <span class="cn">1</span>)))</code></pre>
 <p>I’ve moved <code>queen-cols</code> to the top level so that <a href="#ex2.43">Exercise&nbsp;2.43</a> can access it.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (queen-cols k board-size)
+<pre><code class="codeblock">(<span class="kw">define</span> (queen-cols k board-size)
   (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">0</span>)
       (<span class="fu">list</span> empty-board)
       (<span class="fu">filter</span> safe?
@@ -1077,10 +1077,10 @@ Imports:
 (queens <span class="cn">0</span>) <span class="op">=&gt;</span> <span class="vs">'(())</span>
 (queens <span class="cn">1</span>) <span class="op">=&gt;</span> <span class="vs">'(((1 1)))</span></code></pre>
 <p>The number of solution for each board size matches <a href="https://oeis.org/A000170">OEIS sequence A000170</a>:</p>
-<pre><code class="blockcode">(<span class="fu">map</span> (<span class="kw">lambda</span> (n) (<span class="fu">length</span> (queens n))) (enumerate-interval <span class="cn">0 8</span>))
+<pre><code class="codeblock">(<span class="fu">map</span> (<span class="kw">lambda</span> (n) (<span class="fu">length</span> (queens n))) (enumerate-interval <span class="cn">0 8</span>))
 <span class="op">=&gt;</span> <span class="vs">'(1 1 0 0 2 10 4 40 92)</span></code></pre>
 <p>Here is the first solution (out of 92) it gives for the eight-queens puzzle:</p>
-<pre><code class="blockcode">(<span class="fu">car</span> (queens <span class="cn">8</span>)) <span class="op">=&gt;</span> <span class="vs">'((4 8) (2 7) (7 6) (3 5) (6 4) (8 3) (5 2) (1 1))</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">car</span> (queens <span class="cn">8</span>)) <span class="op">=&gt;</span> <span class="vs">'((4 8) (2 7) (7 6) (3 5) (6 4) (8 3) (5 2) (1 1))</span></code></pre>
 <p>Plotting it on a chess board, we can see that no queen is under attack:</p>
 <figure><svg class="diagram" viewBox="0 0 330 328" style="max-width:330px"><text x="36.857" y="13.714">1</text><text x="73.429" y="13.714">2</text><text x="110" y="13.714">3</text><text x="146.571" y="13.714">4</text><text x="183.143" y="13.714">5</text><text x="219.714" y="13.714">6</text><text x="256.286" y="13.714">7</text><text x="292.857" y="13.714">8</text><text x="36.857" y="50.286">Q</text><text x="256.286" y="86.857">Q</text><text x="183.143" y="123.429">Q</text><text x="292.857" y="160">Q</text><text x="73.429" y="196.571">Q</text><text x="146.571" y="233.143">Q</text><text x="219.714" y="269.714">Q</text><text x="110" y="306.286">Q</text><text x=".286" y="50.286">1</text><text x=".286" y="86.857">2</text><text x=".286" y="123.429">3</text><text x=".286" y="160">4</text><text x=".286" y="196.571">5</text><text x=".286" y="233.143">6</text><text x=".286" y="269.714">7</text><text x=".286" y="306.286">8</text><path d="M22.857 27.429h292.572m-292.572 0V320M59.429 27.429V320M96 27.429V320m36.571-292.571V320m36.572-292.571V320m36.571-292.571V320m36.572-292.571V320m36.571-292.571V320m36.572-292.571V320M22.857 64h292.572M22.857 100.571h292.572M22.857 137.143h292.572M22.857 173.714h292.572M22.857 210.286h292.572M22.857 246.857h292.572M22.857 283.429h292.572M22.857 320h292.572"/></svg></figure>
 <h3 id="ex2.43" class="anchor">
@@ -1105,7 +1105,7 @@ Imports:
 <p>To quantify how much slower it is, we will analyze both solutions. Let <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>T</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">T_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>T</mi><mi>k</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">T&#x27;_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.035em;vertical-align:-0.2831079999999999em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4168920000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2831079999999999em;"><span></span></span></span></span></span></span></span></span></span> be the number of operations performed by <code>(queen-cols k <span class="cn">8</span>)</code> using the original program and Louis’s program, respectively, and let <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">N_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> be the number of results it returns. In the base case, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>T</mi><mn>0</mn></msub><mo>=</mo><msubsup><mi>T</mi><mn>0</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>=</mo><msub><mi>C</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">T_0=T&#x27;_0=C_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.24810799999999997em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4518920000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> for some constant <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mn>0</mn></msub><mtext>.</mtext></mrow><annotation encoding="application/x-tex">C_0\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> For <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>≥</mo><mn>1</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">k≥1\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83041em;vertical-align:-0.13597em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> we have <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>T</mi><mi>k</mi></msub><mo>=</mo><msub><mi>T</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>W</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">T_k=T_{k-1}+W_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.891661em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> where <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>T</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">T_{k-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.891661em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span> is due to the recursive call and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">W_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> represents the other work done by <code>queen-cols</code>. Since Louis’s program repeats the recursive call, it takes <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>T</mi><mi>k</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>=</mo><mn>8</mn><msubsup><mi>T</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>+</mo><msub><mi>W</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">T&#x27;_k=8T&#x27;_{k-1}+W_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.035em;vertical-align:-0.2831079999999999em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4168920000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2831079999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.093331em;vertical-align:-0.34143899999999994em;"></span><span class="mord">8</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4168920000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34143899999999994em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> operations. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">W_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> includes <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">C_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> constant work; <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">C_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> for each of the <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><msub><mi>N</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">8N_{k-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.891661em;vertical-align:-0.208331em;"></span><span class="mord">8</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span> candidate boards it maps and filters; and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">C_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> in <code>safe?</code> for each of the <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> positions in all the boards. Put together, we have</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>W</mi><mi>k</mi></msub><mo>=</mo><msub><mi>C</mi><mn>1</mn></msub><mo>+</mo><mo stretchy="false">(</mo><msub><mi>C</mi><mn>2</mn></msub><mo>+</mo><msub><mi>C</mi><mn>3</mn></msub><mi>k</mi><mo stretchy="false">)</mo><mn>8</mn><msub><mi>N</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">W_k = C_1 + (C_2 + C_3k)8N_{k-1}.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mord">8</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mord">.</span></span></span></span></span></p>
 <p>Let’s implement these equations in Scheme:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> C0) (<span class="kw">define</span> C1) (<span class="kw">define</span> C2) (<span class="kw">define</span> C3)
+<pre><code class="codeblock">(<span class="kw">define</span> C0) (<span class="kw">define</span> C1) (<span class="kw">define</span> C2) (<span class="kw">define</span> C3)
 
 (<span class="kw">define</span> (T k) (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">0</span>) C0 (<span class="fu">+</span> (T (<span class="fu">-</span> k <span class="cn">1</span>)) (W k))))
 (<span class="kw">define</span> (T-louis k) (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">0</span>) C0 (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">8</span> (T-louis (<span class="fu">-</span> k <span class="cn">1</span>))) (W k))))
@@ -1113,7 +1113,7 @@ Imports:
 (<span class="kw">define</span> (W k) (<span class="fu">+</span> C1 (<span class="fu">*</span> (<span class="fu">+</span> C2 (<span class="fu">*</span> C3 k)) <span class="cn">8</span> (N (<span class="fu">-</span> k <span class="cn">1</span>)))))
 (<span class="kw">define</span> (N k) (<span class="fu">length</span> (queen-cols k <span class="cn">8</span>)))</code></pre>
 <p>To estimate how much slower Louis’s program is, all we have to do is choose reasonable values for the constants and then divide <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>T</mi><mn>8</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">T&#x27;_8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.24810799999999997em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4518920000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">8</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span> by <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>T</mi><mn>8</mn></msub><mtext>:</mtext></mrow><annotation encoding="application/x-tex">T_8\htmlClass{math-punctuation}{\text{:}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">8</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">:</span></span></span></span></span></span></p>
-<pre><code class="blockcode">(<span class="kw">define</span> (louis-slowdown v0 v1 v2 v3)
+<pre><code class="codeblock">(<span class="kw">define</span> (louis-slowdown v0 v1 v2 v3)
   (<span class="kw">set!</span> C0 v0) (<span class="kw">set!</span> C1 v1) (<span class="kw">set!</span> C2 v2) (<span class="kw">set!</span> C3 v3)
   (<span class="fu">inexact</span> (<span class="fu">/</span> (T-louis <span class="cn">8</span>) (T <span class="cn">8</span>))))
 
@@ -1177,7 +1177,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> wave2 (beside wave (flip-vert wave)))
+<pre><code class="codeblock">(<span class="kw">define</span> wave2 (beside wave (flip-vert wave)))
 (<span class="kw">define</span> wave4 (below wave2 wave2))
 
 (<span class="kw">define</span> (flipped-pairs painter)
@@ -1231,7 +1231,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (up-split painter n)
+<pre><code class="codeblock">(<span class="kw">define</span> (up-split painter n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       painter
       (<span class="kw">let</span> ((smaller (up-split painter (<span class="fu">-</span> n <span class="cn">1</span>))))
@@ -1287,7 +1287,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-of-four tl tr bl br)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-of-four tl tr bl br)
   (<span class="kw">lambda</span> (painter)
     (<span class="kw">let</span> ((top (beside (tl painter) (tr painter)))
           (bottom (beside (bl painter)
@@ -1329,7 +1329,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (split comb split-comb)
+<pre><code class="codeblock">(<span class="kw">define</span> (split comb split-comb)
   (<span class="kw">define</span> (splitter painter n)
     (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
         painter
@@ -1380,7 +1380,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (frame-coord-map frame)
+<pre><code class="codeblock">(<span class="kw">define</span> (frame-coord-map frame)
   (<span class="kw">lambda</span> (v)
     (add-vect
      (origin-frame frame)
@@ -1389,7 +1389,7 @@ Imports:
 <h3 id="ex2.46" class="anchor">
 <a class="anchor__link link" href="#ex2.46" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.46">Exercise 2.46<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> make-vect <span class="fu">cons</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> make-vect <span class="fu">cons</span>)
 (<span class="kw">define</span> xcor-vect <span class="fu">car</span>)
 (<span class="kw">define</span> ycor-vect <span class="fu">cdr</span>)
 
@@ -1410,14 +1410,14 @@ Imports:
 <a class="anchor__link link" href="#ex2.47" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.47">Exercise 2.47<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <p>First representation:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-frame origin edge1 edge2)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-frame origin edge1 edge2)
   (<span class="fu">list</span> origin edge1 edge2))
 
 (<span class="kw">define</span> origin-frame <span class="fu">car</span>)
 (<span class="kw">define</span> edge1-frame <span class="fu">cadr</span>)
 (<span class="kw">define</span> edge2-frame <span class="fu">caddr</span>)</code></pre>
 <p>Second representation:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-frame origin edge1 edge2)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-frame origin edge1 edge2)
   (<span class="fu">cons</span> origin (<span class="fu">cons</span> edge1 edge2)))
 
 (<span class="kw">define</span> origin-frame <span class="fu">car</span>)
@@ -1452,7 +1452,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (draw-line p1 p2)
+<pre><code class="codeblock">(<span class="kw">define</span> (draw-line p1 p2)
   (<span class="fu">display</span> (format <span class="cn">"Line from ~s to ~s</span><span class="co">\n</span><span class="cn">"</span> p1 p2)))
 
 (<span class="kw">define</span> (segments-&gt;painter segment-list)
@@ -1467,7 +1467,7 @@ Imports:
 <h3 id="ex2.48" class="anchor">
 <a class="anchor__link link" href="#ex2.48" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.48">Exercise 2.48<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> make-segment <span class="fu">cons</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> make-segment <span class="fu">cons</span>)
 (<span class="kw">define</span> start-segment <span class="fu">car</span>)
 (<span class="kw">define</span> end-segment <span class="fu">cdr</span>)</code></pre>
 <h3 id="ex2.49" class="anchor">
@@ -1506,26 +1506,26 @@ Imports:
 </aside>
 <ol type="a">
 <li><p>The painter that draws the outline of the designated frame:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> outline
+<pre><code class="codeblock">(<span class="kw">define</span> outline
   (segments-&gt;painter
    (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0 0</span>) (make-vect <span class="cn">1 0</span>))
          (make-segment (make-vect <span class="cn">0 1</span>) (make-vect <span class="cn">1 1</span>))
          (make-segment (make-vect <span class="cn">0 0</span>) (make-vect <span class="cn">0 1</span>))
          (make-segment (make-vect <span class="cn">1 0</span>) (make-vect <span class="cn">1 1</span>)))))</code></pre></li>
 <li><p>The painter that draws an “X” by connecting opposite corners of the frame:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> x
+<pre><code class="codeblock">(<span class="kw">define</span> x
   (segments-&gt;painter
    (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0 0</span>) (make-vect <span class="cn">1 1</span>))
          (make-segment (make-vect <span class="cn">0 1</span>) (make-vect <span class="cn">1 0</span>)))))</code></pre></li>
 <li><p>The painter that draws a diamond shape by connecting the midpoints of the sides of the frame:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> diamond
+<pre><code class="codeblock">(<span class="kw">define</span> diamond
   (segments-&gt;painter
    (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.5 0.0</span>) (make-vect <span class="cn">1.0 0.5</span>))
          (make-segment (make-vect <span class="cn">0.0 0.5</span>) (make-vect <span class="cn">0.5 1.0</span>))
          (make-segment (make-vect <span class="cn">0.0 0.5</span>) (make-vect <span class="cn">0.5 0.0</span>))
          (make-segment (make-vect <span class="cn">0.5 1.0</span>) (make-vect <span class="cn">1.0 0.5</span>)))))</code></pre></li>
 <li><p>The <code>wave</code> painter:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> wave-segments
+<pre><code class="codeblock">(<span class="kw">define</span> wave-segments
   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.46 0.00</span>) (make-vect <span class="cn">0.37 0.22</span>))
         (make-segment (make-vect <span class="cn">0.37 0.22</span>) (make-vect <span class="cn">0.46 0.34</span>))
         (make-segment (make-vect <span class="cn">0.46 0.34</span>) (make-vect <span class="cn">0.37 0.33</span>))
@@ -1582,7 +1582,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (transform-painter painter origin corner1 corner2)
+<pre><code class="codeblock">(<span class="kw">define</span> (transform-painter painter origin corner1 corner2)
   (<span class="kw">lambda</span> (frame)
     (<span class="kw">let</span> ((m (frame-coord-map frame)))
       (<span class="kw">let</span> ((new-origin (m origin)))
@@ -1663,7 +1663,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (flip-horiz painter)
+<pre><code class="codeblock">(<span class="kw">define</span> (flip-horiz painter)
   (transform-painter
    painter
    (make-vect <span class="cn">1 0</span>)
@@ -1724,7 +1724,7 @@ Imports:
 </ul>
 </aside>
 <p>Analogous to the <code>beside</code> procedure:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (below painter1 painter2)
+<pre><code class="codeblock">(<span class="kw">define</span> (below painter1 painter2)
   (<span class="kw">let</span> ((split-point (make-vect <span class="cn">0 0.5</span>)))
     (<span class="kw">let</span> ((paint-bottom
            (transform-painter
@@ -1742,7 +1742,7 @@ Imports:
         (paint-bottom frame)
         (paint-top frame)))))</code></pre>
 <p>In terms of <code>beside</code> and rotations:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (below painter1 painter2)
+<pre><code class="codeblock">(<span class="kw">define</span> (below painter1 painter2)
   (rotate90
    (beside (rotate270 painter1)
            (rotate270 painter2))))</code></pre>
@@ -1838,7 +1838,7 @@ Imports:
 </aside>
 <ol type="a">
 <li><p>I changed <code>wave</code> to add a smile:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> smile-segments
+<pre><code class="codeblock">(<span class="kw">define</span> smile-segments
   (<span class="fu">list</span> (make-segment (make-vect <span class="cn">0.46 0.13</span>) (make-vect <span class="cn">0.46 0.17</span>))
         (make-segment (make-vect <span class="cn">0.46 0.24</span>) (make-vect <span class="cn">0.50 0.27</span>))
         (make-segment (make-vect <span class="cn">0.54 0.13</span>) (make-vect <span class="cn">0.54 0.17</span>))
@@ -1846,7 +1846,7 @@ Imports:
 (<span class="kw">define</span> wave
   (segments-&gt;painter (<span class="fu">append</span> wave-segments smile-segments)))</code></pre></li>
 <li><p>I changed <code>corner-split</code> to use only one copy of the <code>up-split</code> and <code>right-split</code> images instead of two:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (corner-split painter n)
+<pre><code class="codeblock">(<span class="kw">define</span> (corner-split painter n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       painter
       (<span class="kw">let</span> ((up (up-split painter (<span class="fu">-</span> n <span class="cn">1</span>)))
@@ -1855,7 +1855,7 @@ Imports:
         (beside (below painter up)
                 (below right corner)))))</code></pre></li>
 <li><p>I changed <code>square-limit</code> to orient the corners differently:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-limit painter n)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-limit painter n)
   (<span class="kw">let</span> ((quarter (corner-split painter n)))
     (<span class="kw">let</span> ((flipped (flip-horiz quarter)))
       (square-of-four flipped quarter flipped quarter))))</code></pre></li>

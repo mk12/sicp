@@ -94,7 +94,7 @@
 <li>We’re going to look at another way to decompose systems: <em>stream processing</em>.</li>
 <li>Consider summing the odd squares in a binary tree of integers:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum-odd-squares tree)
+<pre><code class="codeblock">(<span class="kw">define</span> (sum-odd-squares tree)
   (<span class="kw">if</span> (leaf-node? tree)
       (<span class="kw">if</span> (<span class="fu">odd?</span> tree)
           (square tree)
@@ -104,7 +104,7 @@
 <ul>
 <li>And contrast with collecting the odd Fibonacci numbers:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (odd-fibs n)
+<pre><code class="codeblock">(<span class="kw">define</span> (odd-fibs n)
   (<span class="kw">define</span> (next k)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> k n)
         <span class="vs">'()</span>
@@ -134,7 +134,7 @@
 <li>For any <code>x</code> and <code>y</code>, <code>(tail (<span class="kw">cons-stream</span> x y))</code> is <code>y</code>.</li>
 <li>We can define higher-order procedures like we did for lists:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (map-stream proc s)
+<pre><code class="codeblock">(<span class="kw">define</span> (map-stream proc s)
   (<span class="kw">if</span> (empty-stream? s)
       the-empty-stream
       (<span class="kw">cons-stream</span> (proc (head s))
@@ -145,7 +145,7 @@
 <ul>
 <li>Now we can reimplement those problems with explicit stream processing:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum-odd-squares tree)
+<pre><code class="codeblock">(<span class="kw">define</span> (sum-odd-squares tree)
   (accumulate <span class="fu">+</span>
               <span class="cn">0</span>
               (<span class="fu">map</span> square
@@ -173,7 +173,7 @@
 <li>We can define a procedure <code>flatten</code> to accumulate them into a single flat stream.</li>
 <li>Problem: Given <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mtext>,</mtext></mrow><annotation encoding="application/x-tex">N\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> find all pairs <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>j</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">0&lt;j&lt;i≤N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.79549em;vertical-align:-0.13597em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i+j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.74285em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> is prime.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (prime-sum-pairs n)
+<pre><code class="codeblock">(<span class="kw">define</span> (prime-sum-pairs n)
   (<span class="fu">map</span>
    (<span class="kw">lambda</span> (p)
      (<span class="fu">list</span> (<span class="fu">car</span> p) (<span class="fu">cadr</span> p) (<span class="fu">+</span> (<span class="fu">car</span> p) (<span class="fu">cadr</span> p))))
@@ -190,7 +190,7 @@
 <li><code>flatmap</code> takes the place of nested loops in most other languages.</li>
 <li>We can simplify it with syntactic sugar <code>collect</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (prime-sum-pairs n)
+<pre><code class="codeblock">(<span class="kw">define</span> (prime-sum-pairs n)
   (collect
    (<span class="fu">list</span> i j (<span class="fu">+</span> i j))
    ((i (enumerate-interval <span class="cn">1</span> n))
@@ -204,7 +204,7 @@
 <li>This is unnecessary—it’s inordinately concerned with <em>time</em>.</li>
 <li>A simpler way is to employ <em>wishful thinking</em> and go from <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> columns to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> columns.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (queens size)
+<pre><code class="codeblock">(<span class="kw">define</span> (queens size)
   (<span class="kw">define</span> (fill-cols k)
     (<span class="kw">if</span> (<span class="fu">=</span> k <span class="cn">0</span>)
         (singleton empty-board)
@@ -249,7 +249,7 @@
 <li><code>delay</code> decouples the apparent order of events from the actual order of events that happen in the machine. We give up the idea that our procedures mirror some clear notion of time.</li>
 <li>One little hack: to be efficient, <code>(<span class="kw">delay</span> <span class="ss">expr</span>)</code> is <code>(memo-proc (<span class="kw">lambda</span> () <span class="ss">expr</span>))</code>.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (memo-proc proc)
+<pre><code class="codeblock">(<span class="kw">define</span> (memo-proc proc)
   (<span class="kw">let</span> ((already-run? nil) (result nil))
     (<span class="kw">lambda</span> ()
       (<span class="kw">if</span> (<span class="fu">not</span> already-run?)

@@ -89,7 +89,7 @@
 <li>If you try to withdraw too much, it should return the string “Insufficient funds.<span class="tuck">”</span></li>
 <li>Suppose we begin with $100:</li>
 </ul>
-<pre><code class="blockcode">(withdraw <span class="cn">25</span>)
+<pre><code class="codeblock">(withdraw <span class="cn">25</span>)
 <span class="op">=&gt;</span> <span class="cn">75</span>
 (withdraw <span class="cn">25</span>)
 <span class="op">=&gt;</span> <span class="cn">50</span>
@@ -102,7 +102,7 @@
 <li>We have lost referential transparency. This is a new kind of behavior of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
 <li>To implement <code>withdraw</code>, we define a variable called <code>balance</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> balance <span class="cn">100</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> balance <span class="cn">100</span>)
 (<span class="kw">define</span> (withdraw amount)
   (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
       (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
@@ -114,7 +114,7 @@
 <li>The expression <code>(<span class="kw">begin</span> <span class="ss">exp1 exp2</span> ... <span class="ss">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
 <li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> withdraw
+<pre><code class="codeblock">(<span class="kw">define</span> withdraw
   (<span class="kw">let</span> ((balance <span class="cn">100</span>))
     (<span class="kw">lambda</span> (amount)
       (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
@@ -126,7 +126,7 @@
 <li>For now, we technically have no way to understand how these procedures work. We will develop a new model soon.</li>
 <li>The following procedure creates “withdraw processors”:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-withdraw balance)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-withdraw balance)
   (<span class="kw">lambda</span> (amount)
     (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
@@ -146,7 +146,7 @@
 <li>Here, <code>W1</code> and <code>W2</code> are complement independent objects, each with its own local state variable.</li>
 <li>We can create a “bank-account object” that responds to multiple messages, all operating on the same local state:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-account balance)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-account balance)
   (<span class="kw">define</span> (withdraw amount)
     (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
@@ -181,7 +181,7 @@
 </ul></li>
 <li>We could implement <code>rand</code> like this:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> rand
+<pre><code class="codeblock">(<span class="kw">define</span> rand
   (<span class="kw">let</span> ((x random-init))
     (<span class="kw">lambda</span> ()
       (<span class="kw">set!</span> x (rand-update x))
@@ -206,7 +206,7 @@
 <li>Programming without the use of assignment, as we have done in the first two chapters, is called <em>functional programming</em>.</li>
 <li>Observe what happens when we try using the substitution model:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-simplified-withdraw balance)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-simplified-withdraw balance)
   (<span class="kw">lambda</span> (amount)
     (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
     balance))

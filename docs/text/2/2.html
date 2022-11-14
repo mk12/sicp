@@ -105,7 +105,7 @@
 <ul>
 <li>We can get the nth item of a list by <code>cdr</code>&hairsp;ing <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> times, and then taking the <code>car</code>.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">list-ref</span> items n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       (<span class="fu">car</span> items)
       (<span class="fu">list-ref</span> (<span class="fu">cdr</span> items) (<span class="fu">-</span> n <span class="cn">1</span>))))</code></pre>
@@ -113,14 +113,14 @@
 <li>Scheme includes a primitive predicate <code>null?</code> which is true if its argument is <code>nil</code>.</li>
 <li>We often write recursive procedures that <code>cdr</code> all the way through the list.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">length</span> items)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">length</span> items)
   (<span class="kw">if</span> (<span class="fu">null?</span> items)
       <span class="cn">0</span>
       (<span class="fu">+</span> <span class="cn">1</span> (<span class="fu">length</span> (<span class="fu">cdr</span> items)))))</code></pre>
 <ul>
 <li>We can build up lists to return by <code>cons</code>&hairsp;ing them up:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">append</span> list1 list2)
   (<span class="kw">if</span> (<span class="fu">null?</span> list1)
       list2
       (<span class="fu">cons</span> (<span class="fu">car</span> list1 (<span class="fu">append</span> (<span class="fu">cdr</span> list1) list2)))))</code></pre>
@@ -131,7 +131,7 @@
 <ul>
 <li>The higher-order procedure <code>map</code> applies the same transformation to each element in a list, producing a new list.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">map</span> f xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">map</span> f xs)
   (<span class="kw">if</span> (<span class="fu">null?</span> xs)
       nil
       (<span class="fu">cons</span> (f (<span class="fu">car</span> xs))
@@ -154,7 +154,7 @@
 <li>The primitive predicate <code>pair?</code> returns true if its argument is a pair.</li>
 <li>We can count the number of leaves in a tree like so:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (count-leaves x)
+<pre><code class="codeblock">(<span class="kw">define</span> (count-leaves x)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> x) <span class="cn">0</span>)
         ((<span class="fu">not</span> (<span class="fu">pair?</span> x)) <span class="cn">1</span>)
         (<span class="kw">else</span> (<span class="fu">+</span> (count-leaves (<span class="fu">car</span> x))
@@ -200,7 +200,7 @@
 <li>Sometimes we need <em>nested</em> mappings, where each mapping maps to a second set of mappings. We can use <code>mapcat</code> to flatten the result into one list at the end.</li>
 <li>The procedure for computing all permutations of a set is pure magic: this is wishful thinking in action!</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (permutations s)
+<pre><code class="codeblock">(<span class="kw">define</span> (permutations s)
   (<span class="kw">if</span> (<span class="fu">null?</span> s)
       (<span class="fu">list</span> nil)
       (mapcat (<span class="kw">lambda</span> (x)
@@ -225,7 +225,7 @@
 <li>We transform single images with operations like <code>flip-vert</code> and <code>flip-horiz</code>.</li>
 <li>We can build up complexity easily thanks to closure: the painters are closed under the language’s means of combination. For example:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (flipped-pairs painter)
+<pre><code class="codeblock">(<span class="kw">define</span> (flipped-pairs painter)
   (<span class="kw">let</span> ((painter2 (beside painter (flip-vert painter))))
     (below painter2 painter2)))</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/2.html#ex2.44">2.44</a></li></ul></aside>
@@ -237,7 +237,7 @@
 <li>We can manipulate the painter operations rather than manipulating the painters directly.</li>
 <li>Here is an example higher-order painter operation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (square-of-four tl tr bl br)
+<pre><code class="codeblock">(<span class="kw">define</span> (square-of-four tl tr bl br)
   (<span class="kw">lambda</span> (painter)
     (<span class="kw">let</span> ((top (beside (tl painter) (tr painter)))
           (bottom (beside (bl painter) (br painter))))
@@ -269,7 +269,7 @@
 <li>Operations on painters invoke the original painters with new frames derived from the argument frame.</li>
 <li>They are all based on the procedure <code>transform-painter</code>.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (transform-painter painter origin corner1 corner2)
+<pre><code class="codeblock">(<span class="kw">define</span> (transform-painter painter origin corner1 corner2)
   (<span class="kw">lambda</span> (frame)
     (<span class="kw">let</span> ((m (frame-coord-map frame)))
       (<span class="kw">let</span> ((new-origin (m origin)))

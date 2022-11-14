@@ -82,7 +82,7 @@
 <li>For example, <code>'x</code> evaluates to the symbol “x” instead of the variable <code>x</code>’s value.</li>
 <li>This is like just natural language. If I say, “Say your name,<span class="tuck">”</span> you will say your name. If I instead say, “Say ‘your name’,<span class="tuck">”</span> you will literally say the words “your name.<span class="tuck">”</span></li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> a <span class="cn">1</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> b <span class="cn">2</span>)
 
 (<span class="fu">list</span> a b)
@@ -97,7 +97,7 @@
 <li>Now that we have quotation, we will use <code>'()</code> for the empty list instead of <code>nil</code>.</li>
 <li>We need another primitive now: <code>eq?</code>. This checks if two symbols are the same.</li>
 </ul>
-<pre><code class="blockcode">(<span class="fu">eq?</span> <span class="vs">'a 'b</span>)
+<pre><code class="codeblock">(<span class="fu">eq?</span> <span class="vs">'a 'b</span>)
 <span class="sc">→ #f</span>
 
 (<span class="fu">eq?</span> <span class="vs">'a 'a</span>)
@@ -174,7 +174,7 @@
 <ul>
 <li>Then, we can express the differentiation rules like so:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (deriv exp var)
+<pre><code class="codeblock">(<span class="kw">define</span> (deriv exp var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> exp) <span class="cn">0</span>)
         ((variable? exp)
          (<span class="kw">if</span> (same-variable? exp var) <span class="cn">1 0</span>))
@@ -301,7 +301,7 @@
 <a class="anchor__link link" href="#2.3.4.3" aria-hidden="true">#</a> The decoding procedure
 </h3>
 <p>The following procedure decodes a list of bits using a Huffman tree:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (decode bits tree)
+<pre><code class="codeblock">(<span class="kw">define</span> (decode bits tree)
   (<span class="kw">define</span> (decode-1 bits current-branch)
     (<span class="kw">if</span> (<span class="fu">null?</span> bits)
         <span class="vs">'()</span>
@@ -324,7 +324,7 @@
 <li>Since the <a href="#2.3.4.1">tree-generating algorithm</a> requires repeatedly finding the smallest item in a set, we should represent a set of leaves and trees as a list ordered by weight.</li>
 <li>The implementation of <code>adjoin-set</code> is similar to <a href="../../exercise/2/3.html#ex2.61">Exercise&nbsp;2.61</a>, except that we compare items by weight, and the element being added is never already in the set:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-set x set)
+<pre><code class="codeblock">(<span class="kw">define</span> (adjoin-set x set)
   (<span class="kw">cond</span> ((<span class="fu">null?</span> set) (<span class="fu">list</span> x))
         ((<span class="fu">&lt;</span> (weight x) (weight (<span class="fu">car</span> set))) (<span class="fu">cons</span> x set))
         (<span class="kw">else</span> (<span class="fu">cons</span> (<span class="fu">car</span> set)

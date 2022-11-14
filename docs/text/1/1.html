@@ -144,7 +144,7 @@
 <p>To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument. <a class="citation" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.5" title="SICP Section 1.1.5">(Section&nbsp;1.1.5)</a></p>
 </blockquote>
 <p>An example of procedure application:</p>
-<pre><code class="blockcode">(f <span class="cn">5</span>)
+<pre><code class="codeblock">(f <span class="cn">5</span>)
 (sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
 (sum-of-squares <span class="cn">6 10</span>)
 (<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
@@ -158,7 +158,7 @@
 <li>With <em>normal order</em>, operands are substituted in the procedure unevaluated. Only when it reaches primitive operators do combinations reduce to values.</li>
 <li>An example of normal-order procedure application:</li>
 </ul>
-<pre><code class="blockcode">(f <span class="cn">5</span>)
+<pre><code class="codeblock">(f <span class="cn">5</span>)
 (sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
 (<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5 1</span>)) (square (<span class="fu">*</span> <span class="cn">5 2</span>)))
 (<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">+</span> <span class="cn">5 1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5 2</span>) (<span class="fu">*</span> <span class="cn">5 2</span>)))

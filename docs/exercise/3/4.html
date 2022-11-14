@@ -73,20 +73,20 @@
 <h3 id="ex3.38" class="anchor">
 <a class="anchor__link link" href="#ex3.38" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_thm_3.38">Exercise 3.38<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> balance <span class="cn">100</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> balance <span class="cn">100</span>)
 (<span class="kw">define</span> (peter) (<span class="kw">set!</span> balance (<span class="fu">+</span> balance <span class="cn">10</span>)))
 (<span class="kw">define</span> (paul) (<span class="kw">set!</span> balance (<span class="fu">-</span> balance <span class="cn">20</span>)))
 (<span class="kw">define</span> (mary) (<span class="kw">set!</span> balance (<span class="fu">-</span> balance (<span class="fu">/</span> balance <span class="cn">2</span>))))</code></pre>
 <ol type="a">
 <li><p>Out of six permutations, there are four possible values: 35, 40, 45, 50.</p>
-<pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (paul) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
+<pre><code class="codeblock">(<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (paul) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (peter) (mary) (paul) balance <span class="op">=&gt;</span> <span class="cn">35</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (paul) (peter) (mary) balance <span class="op">=&gt;</span> <span class="cn">45</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (paul) (mary) (peter) balance <span class="op">=&gt;</span> <span class="cn">50</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (peter) (paul) balance <span class="op">=&gt;</span> <span class="cn">40</span>
 (<span class="kw">set!</span> balance <span class="cn">100</span>) (mary) (paul) (peter) balance <span class="op">=&gt;</span> <span class="cn">40</span></code></pre></li>
 <li><p>If the system allows the processes to be interleaved, you could also get results equivalent to leaving out one or more of the assignments, where the new value is overwritten before being read. In <code>mary</code>, the value divided by 2 could also be different from the value being subtracted from.</p>
-<pre><code class="blockcode">(<span class="kw">set!</span> balance <span class="cn">100</span>)
+<pre><code class="codeblock">(<span class="kw">set!</span> balance <span class="cn">100</span>)
 (parallel-execute peter paul mary)
 balance <span class="op">=?&gt;</span> [<span class="cn">25 30 35 40 45 50 55 60 80 90 110</span>]</code></pre></li>
 </ol>
@@ -112,13 +112,13 @@ Imports:
 </ul>
 </aside>
 <p>Without serialization, there are five possible values:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> x <span class="cn">10</span>)
 (parallel-execute
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))
 x <span class="op">=?&gt;</span> [<span class="cn">11 100 101 110 121</span>]</code></pre>
 <p>With serialization, it narrows to two possible values:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
@@ -159,13 +159,13 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    (<span class="kw">lambda</span> () (<span class="kw">set!</span> x ((s (<span class="kw">lambda</span> () (<span class="fu">*</span> x x))))))
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">+</span> x <span class="cn">1</span>))))))</code></pre>
 <p>Three of the five values are still possible:</p>
-<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">101</span>  <span class="co">; squared, then incremented</span>
+<pre><code class="codeblock">x <span class="op">=?&gt;</span> [<span class="cn">101</span>  <span class="co">; squared, then incremented</span>
        <span class="cn">121</span>  <span class="co">; incremented, then squared</span>
        <span class="cn">100</span>] <span class="co">; incremented between squarer read and write</span></code></pre>
 <h3 id="ex3.40" class="anchor">
@@ -216,16 +216,16 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> x <span class="cn">10</span>)
 (parallel-execute
  <span class="co">; process S: 3        1 2</span>
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x)))
  <span class="co">; process C: 7        4 5 6</span>
  (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x x))))</code></pre>
 <p>There are five possible values:</p>
-<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100 1000 10000 100000 1000000</span>]</code></pre>
+<pre><code class="codeblock">x <span class="op">=?&gt;</span> [<span class="cn">100 1000 10000 100000 1000000</span>]</code></pre>
 <p>We will now demonstrate how the steps can interleave to produce these values. There are seven relevant steps: three in S, four in C. Steps 1, 2, 4, 5, and 6 are reads; steps 3 and 7 are writes.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> steps-s-read <span class="vs">'(1 2)</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> steps-s-read <span class="vs">'(1 2)</span>)
 (<span class="kw">define</span> steps-s-write <span class="vs">'(3)</span>)
 (<span class="kw">define</span> steps-c-read <span class="vs">'(4 5 6)</span>)
 (<span class="kw">define</span> steps-c-write <span class="vs">'(7)</span>)
@@ -233,7 +233,7 @@ Imports:
 (<span class="kw">define</span> steps-c (<span class="fu">append</span> steps-c-read steps-c-write))
 (<span class="kw">define</span> steps (<span class="fu">append</span> steps-s steps-c))</code></pre>
 <p>Only certain permutations of steps are valid orderings:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (in? x xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (in? x xs)
   (<span class="kw">and</span> (<span class="fu">not</span> (<span class="fu">null?</span> xs))
        (<span class="kw">or</span> (<span class="fu">=</span> (<span class="fu">car</span> xs) x) (in? x (<span class="fu">cdr</span> xs)))))
 (<span class="kw">define</span> (good-interleave? p)
@@ -252,7 +252,7 @@ Imports:
 
 (<span class="fu">length</span> possible-orders) <span class="op">=&gt;</span> <span class="cn">35</span></code></pre>
 <p>For a given ordering of steps, we can simulate the execution:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (execute-steps steps x)
+<pre><code class="codeblock">(<span class="kw">define</span> (execute-steps steps x)
   (<span class="kw">define</span> (iter s-reads c-reads steps x)
     (<span class="kw">cond</span> ((<span class="fu">null?</span> steps) x)
           ((in? (<span class="fu">car</span> steps) steps-s-read)
@@ -276,7 +276,7 @@ final-values
      100 1000 100 10000 10000 1000 100
      1000 100 10000 1000 100 10000 1000000)</span></code></pre>
 <p>There are many duplicates, so let’s count the occurrences.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (group xs)
+<pre><code class="codeblock">(<span class="kw">define</span> (group xs)
   (<span class="kw">let</span> ((occurence-table (make-table)))
     (<span class="kw">define</span> (iter xs)
       (<span class="kw">if</span> (<span class="fu">null?</span> xs)
@@ -295,10 +295,10 @@ final-values
              (100000 . 3)
              (1000000 . 2))</span></code></pre>
 <p>The largest value, 1000000, can be obtained in two ways:</p>
-<pre><code class="blockcode">(execute-steps <span class="vs">'(1 2 3 4 5 6 7)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; squared, then cubed</span>
+<pre><code class="codeblock">(execute-steps <span class="vs">'(1 2 3 4 5 6 7)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; squared, then cubed</span>
 (execute-steps <span class="vs">'(4 5 6 7 1 2 3)</span> <span class="cn">10</span>) <span class="op">=&gt;</span> <span class="cn">1000000</span> <span class="co">; cubed, then squared</span></code></pre>
 <p>If we serialize the procedures, we always get that value:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">10</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> x <span class="cn">10</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">*</span> x x))))
@@ -330,7 +330,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (exchange account1 account2)
+<pre><code class="codeblock">(<span class="kw">define</span> (exchange account1 account2)
   (<span class="kw">let</span> ((difference (<span class="fu">-</span> (account1 <span class="vs">'balance</span>)
                        (account2 <span class="vs">'balance</span>))))
     ((account1 <span class="vs">'withdraw</span>) difference)
@@ -370,7 +370,7 @@ Imports:
 <!-- TODO escape dollars -->
 <p>The balances in the accounts start out as $10, $20, and $30. Exchanging balances A and B works by taking D = A - B, and then withdrawing to get A’ = A - D = B and depositing to get B’ = B + D = A. Going from {A, B} to {B, A}, we can see that any sequence of exchanges preserves the set {A, B}, and in this particular case {10, 20, 30}.</p>
 <p>Using the first version of <code>exchange</code>, where only individual deposits and withdrawals are serialized (by account), the {10, 20, 30} set will not be preserved. For example, let us refer to concurrent processes P and Q:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (exchange acc1 acc2)
+<pre><code class="codeblock">(<span class="kw">define</span> (exchange acc1 acc2)
   (<span class="kw">let</span> ((diff (<span class="fu">-</span> (acc1 <span class="vs">'balance</span>)    <span class="co">; (1)</span>
                  (acc2 <span class="vs">'balance</span>)))) <span class="co">; (2)</span>
     ((acc1 <span class="vs">'withdraw</span>) diff)         <span class="co">; (3)</span>
@@ -380,7 +380,7 @@ Imports:
 <h3 id="ex3.44" class="anchor">
 <a class="anchor__link link" href="#ex3.44" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-23.html#%25_thm_3.44">Exercise 3.44<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (transfer from-acc to-acc amount)
+<pre><code class="codeblock">(<span class="kw">define</span> (transfer from-acc to-acc amount)
   ((from-acc <span class="vs">'withdraw</span>) amount) <span class="co">; (1)</span>
   ((to-acc <span class="vs">'deposit</span>) amount))   <span class="co">; (2)</span></code></pre>
 <p>Ben Bitdiddle is correct. This procedure will behave correctly, even with multiple concurrent transfers involving the same accounts. Suppose we transfer $10 between A and B (process P), and concurrently transfer $20 between A and C (process Q). P1 and Q1 will be in the same serialization set, because they both withdraw from A. P2 and Q2 will neither be in that set nor in each other’s set. One deposits to B, and the other deposits to C. They cannot interfere with each other.</p>
@@ -392,7 +392,7 @@ Imports:
 <h3 id="3.4.2.3" class="anchor">
 <a class="anchor__link link" href="#3.4.2.3" aria-hidden="true">#</a> <span class="number">3.4.2.3</span> Implementing serializers
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-serializer)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-serializer)
   (<span class="kw">let</span> ((mutex (make-mutex)))
     (<span class="kw">lambda</span> (p)
       (<span class="kw">lambda</span> args
@@ -401,7 +401,7 @@ Imports:
           (mutex <span class="vs">'release</span>)
           val)))))</code></pre>
 <p>We cannot use this implementation because not all the Schemes we’re targeting support atomics for a proper implementation of <code>test-and-set!</code>. Instead, we define <code>make-mutex</code> in src/compat to use the Scheme’s own threading library.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-mutex-from-scratch)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-mutex-from-scratch)
   (<span class="kw">let</span> ((cell (<span class="fu">list</span> <span class="cn">#f</span>)))
     (<span class="kw">lambda</span> (m)
       (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="vs">'acquire</span>)
@@ -433,10 +433,10 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
+<pre><code class="codeblock">(<span class="kw">define</span> make-mutex make-mutex-from-scratch)
 (<span class="kw">paste</span> (<a href="#3.4.2.3">:3.4.2.3</a> make-serializer))</code></pre>
 <p>Suppose we execute this using the non-atomic <code>test-and-set!</code>:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> x <span class="cn">100</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> x <span class="cn">100</span>)
 (<span class="kw">let</span> ((s (make-serializer)))
   (parallel-execute
    <span class="co">;;              2            1</span>
@@ -444,7 +444,7 @@ Imports:
    ;;              2        1</span>
    (s (<span class="kw">lambda</span> () (<span class="kw">set!</span> x (<span class="fu">/</span> x <span class="cn">2</span>)))))) <span class="co">; process Q</span></code></pre>
 <p>There are four possible values:</p>
-<pre><code class="blockcode">x <span class="op">=?&gt;</span> [<span class="cn">100</span> <span class="co">; P1, P2, Q1, Q2 (serial)</span>
+<pre><code class="codeblock">x <span class="op">=?&gt;</span> [<span class="cn">100</span> <span class="co">; P1, P2, Q1, Q2 (serial)</span>
        <span class="cn">150</span> <span class="co">; Q1, Q2, P1, P2 (serial)</span>
        <span class="cn">200</span> <span class="co">; P1, Q1, Q2, P2 (interleaved)</span>
        <span class="cn">50</span>] <span class="co">; Q1, P1, P2, Q2 (interleaved)</span></code></pre>
@@ -474,7 +474,7 @@ Imports:
 <li>Sempahore in terms of mutexes</li>
 </ol>
 <p>Note: This assumes that any thread can acquire/release the mutex. It does not work with mutex implementations that only allow the owner to release it.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-semaphore n)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-semaphore n)
   (<span class="kw">let</span> ((count n)
         (count-mutex (make-mutex))
         (queue-mutex (make-mutex)))
@@ -497,7 +497,7 @@ Imports:
 <p>We can’t test this because not all Schemes we support have the required property of allowing any thread to release another’s mutex.</p>
 <ol start="2" type="a">
 <li><p>Semaphore in terms of atomic <code>test-and-set!</code> operations</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-semaphore-from-scratch n)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-semaphore-from-scratch n)
   (<span class="kw">let</span> ((count n)
         (cell (<span class="fu">list</span> <span class="cn">#f</span>)))
     (<span class="kw">define</span> (the-semaphore m)
@@ -547,7 +547,7 @@ Imports:
 </ul>
 </aside>
 <p>Before we locked the <code>exchange</code> operation using the serializers of both accounts. This can lead to deadlock if lock sequences A, B and B, A are interleaved such that both processes are trying to acquire the mutex that the other has already acquired. They wait forever, and neither is released. This problem is solved when we lock accounts in a particular order because that interleaving wouldn’t work. Both processes would have the lock sequence A, B, and the second process cannot acquire A after the first already has. The first is then free to acquire B, perform its operations, and release both.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> *uuid* <span class="cn">0</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> *uuid* <span class="cn">0</span>)
 (<span class="kw">define</span> (gen-uuid)
   (<span class="kw">set!</span> *uuid* (<span class="fu">+</span> *uuid* <span class="cn">1</span>))
   *uuid*)
@@ -580,7 +580,7 @@ Imports:
      a1
      a2)))</code></pre>
 <p>This is safe from deadlocks:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> a1 (make-account <span class="cn">10</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> a1 (make-account <span class="cn">10</span>))
 (<span class="kw">define</span> a2 (make-account <span class="cn">20</span>))
 (parallel-execute
  (<span class="kw">lambda</span> () (serialized-exchange a1 a2))

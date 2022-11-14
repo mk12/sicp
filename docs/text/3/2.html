@@ -113,7 +113,7 @@
 <ul>
 <li>Let’s evaluate <code>(f <span class="cn">5</span>)</code>, given the following procedures:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+<pre><code class="codeblock">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
 (<span class="kw">define</span> (sum-of-squares x y) (<span class="fu">+</span> (square x) (square y)))
 (<span class="kw">define</span> (f a) (sum-of-squares (<span class="fu">+</span> a <span class="cn">1</span>) (<span class="fu">*</span> a <span class="cn">2</span>)))</code></pre>
 <ul>
@@ -135,7 +135,7 @@
 <li>Now we can see how the environment model makes sense of assignment and local state.</li>
 <li>Consider the “withdrawal processor”:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-withdraw balance)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-withdraw balance)
   (<span class="kw">lambda</span> (amount)
     (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))

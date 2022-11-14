@@ -72,7 +72,7 @@
 <h2 id="1.1.1" class="anchor">
 <a class="anchor__link link" href="#1.1.1" aria-hidden="true">#</a> <span class="number">1.1.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.1">Expressions<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode"><span class="cn">486</span> <span class="op">=&gt;</span> <span class="cn">486</span>
+<pre><code class="codeblock"><span class="cn">486</span> <span class="op">=&gt;</span> <span class="cn">486</span>
 (<span class="fu">+</span> <span class="cn">137 349</span>) <span class="op">=&gt;</span> <span class="cn">486</span>
 (<span class="fu">-</span> <span class="cn">1000 334</span>) <span class="op">=&gt;</span> <span class="cn">666</span>
 (<span class="fu">*</span> <span class="cn">5 99</span>) <span class="op">=&gt;</span> <span class="cn">495</span>
@@ -85,7 +85,7 @@
 <h2 id="1.1.2" class="anchor">
 <a class="anchor__link link" href="#1.1.2" aria-hidden="true">#</a> <span class="number">1.1.2</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.2">Naming and the Environment<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="kw">define</span> size <span class="cn">2</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> size <span class="cn">2</span>)
 size <span class="op">=&gt;</span> <span class="cn">2</span>
 (<span class="fu">*</span> <span class="cn">5</span> size) <span class="op">=&gt;</span> <span class="cn">10</span>
 
@@ -98,13 +98,13 @@ circumference <span class="op">~&gt;</span> <span class="cn">62.8318</span></cod
 <h2 id="1.1.3" class="anchor">
 <a class="anchor__link link" href="#1.1.3" aria-hidden="true">#</a> <span class="number">1.1.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.3">Evaluating Combinations<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">4 6</span>))
+<pre><code class="codeblock">(<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">2</span> (<span class="fu">*</span> <span class="cn">4 6</span>))
    (<span class="fu">+</span> <span class="cn">3 5 7</span>))
 <span class="op">=&gt;</span> <span class="cn">390</span></code></pre>
 <h2 id="1.1.4" class="anchor">
 <a class="anchor__link link" href="#1.1.4" aria-hidden="true">#</a> <span class="number">1.1.4</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.4">Compound Procedures<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+<pre><code class="codeblock">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
 (square <span class="cn">21</span>) <span class="op">=&gt;</span> <span class="cn">441</span>
 (square (<span class="fu">+</span> <span class="cn">2 5</span>)) <span class="op">=&gt;</span> <span class="cn">49</span>
 (square (square <span class="cn">3</span>)) <span class="op">=&gt;</span> <span class="cn">81</span>
@@ -141,14 +141,14 @@ Imports:
 </ul>
 </aside>
 <p>Applicative-order evaluation:</p>
-<pre><code class="blockcode">(f <span class="cn">5</span>)
+<pre><code class="codeblock">(f <span class="cn">5</span>)
 <span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
 <span class="op">=&gt;</span> (<span class="fu">+</span> (square <span class="cn">6</span>) (square <span class="cn">10</span>))
 <span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> <span class="cn">6 6</span>) (<span class="fu">*</span> <span class="cn">10 10</span>))
 <span class="op">=&gt;</span> (<span class="fu">+</span> <span class="cn">36 100</span>)
 <span class="op">=&gt;</span> <span class="cn">136</span></code></pre>
 <p>Normal-order evaluation:</p>
-<pre><code class="blockcode">(f <span class="cn">5</span>)
+<pre><code class="codeblock">(f <span class="cn">5</span>)
 <span class="op">=&gt;</span> (sum-of-squares (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">*</span> <span class="cn">5 2</span>))
 <span class="op">=&gt;</span> (<span class="fu">+</span> (square (<span class="fu">+</span> <span class="cn">5 1</span>)) (square (<span class="fu">*</span> <span class="cn">5 2</span>)))
 <span class="op">=&gt;</span> (<span class="fu">+</span> (<span class="fu">*</span> (<span class="fu">+</span> <span class="cn">5 1</span>) (<span class="fu">+</span> <span class="cn">5 1</span>)) (<span class="fu">*</span> (<span class="fu">*</span> <span class="cn">5 2</span>) (<span class="fu">*</span> <span class="cn">5 2</span>)))
@@ -158,7 +158,7 @@ Imports:
 <h2 id="1.1.6" class="anchor">
 <a class="anchor__link link" href="#1.1.6" aria-hidden="true">#</a> <span class="number">1.1.6</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_sec_1.1.6">Conditional Expressions and Predicates<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">abs</span> x)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">abs</span> x)
   (<span class="kw">cond</span> ((<span class="fu">&gt;</span> x <span class="cn">0</span>) x)
         ((<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span>)
         ((<span class="fu">&lt;</span> x <span class="cn">0</span>) (<span class="fu">-</span> x))))
@@ -177,7 +177,7 @@ Imports:
 <h3 id="ex1.1" class="anchor">
 <a class="anchor__link link" href="#ex1.1" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.1">Exercise 1.1<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode"><span class="cn">10</span> <span class="op">=&gt;</span> <span class="cn">10</span>
+<pre><code class="codeblock"><span class="cn">10</span> <span class="op">=&gt;</span> <span class="cn">10</span>
 (<span class="fu">+</span> <span class="cn">5 3 4</span>) <span class="op">=&gt;</span> <span class="cn">12</span>
 (<span class="fu">-</span> <span class="cn">9 1</span>) <span class="op">=&gt;</span> <span class="cn">8</span>
 (<span class="fu">/</span> <span class="cn">6 2</span>) <span class="op">=&gt;</span> <span class="cn">3</span>
@@ -206,13 +206,13 @@ Imports:
 <h3 id="ex1.2" class="anchor">
 <a class="anchor__link link" href="#ex1.2" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.2">Exercise 1.2<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">5 4</span> (<span class="fu">-</span> <span class="cn">2</span> (<span class="fu">-</span> <span class="cn">3</span> (<span class="fu">+</span> <span class="cn">6 4/5</span>))))
+<pre><code class="codeblock">(<span class="fu">/</span> (<span class="fu">+</span> <span class="cn">5 4</span> (<span class="fu">-</span> <span class="cn">2</span> (<span class="fu">-</span> <span class="cn">3</span> (<span class="fu">+</span> <span class="cn">6 4/5</span>))))
    (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">-</span> <span class="cn">6 2</span>) (<span class="fu">-</span> <span class="cn">2 7</span>)))
 <span class="op">=&gt;</span> <span class="cn">-37/150</span></code></pre>
 <h3 id="ex1.3" class="anchor">
 <a class="anchor__link link" href="#ex1.3" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.3">Exercise 1.3<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (f a b c)
+<pre><code class="codeblock">(<span class="kw">define</span> (f a b c)
   (<span class="kw">cond</span> ((<span class="kw">and</span> (<span class="fu">&lt;=</span> a b) (<span class="fu">&lt;=</span> a c))
          (<span class="fu">+</span> (<span class="fu">*</span> b b) (<span class="fu">*</span> c c)))
         ((<span class="kw">and</span> (<span class="fu">&lt;=</span> b a) (<span class="fu">&lt;=</span> b c))
@@ -225,13 +225,13 @@ Imports:
 <h3 id="ex1.4" class="anchor">
 <a class="anchor__link link" href="#ex1.4" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.4">Exercise 1.4<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (a-plus-abs-b a b)
+<pre><code class="codeblock">(<span class="kw">define</span> (a-plus-abs-b a b)
   ((<span class="kw">if</span> (<span class="fu">&gt;</span> b <span class="cn">0</span>) <span class="fu">+ -</span>) a b))</code></pre>
 <p>The operator evaluates to <code>+</code> (addition) when <code>b</code> is positive, and to <code>-</code> (subtraction) when <code>b</code> is negative. Subtracting a negative is equivalent to adding its absolute value, so this procedure returns <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>+</mo><mrow><mo fence="true">∣</mo><mi>b</mi><mo fence="true">∣</mo></mrow></mrow><annotation encoding="application/x-tex">a + \abs{b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">∣</span><span class="mord mathnormal">b</span><span class="mclose delimcenter" style="top:0em;">∣</span></span></span></span></span> in all cases.</p>
 <h3 id="ex1.5" class="anchor">
 <a class="anchor__link link" href="#ex1.5" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.5">Exercise 1.5<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
-<pre><code class="blockcode">(<span class="kw">define</span> (p) (p))
+<pre><code class="codeblock">(<span class="kw">define</span> (p) (p))
 (<span class="kw">define</span> (test x y)
   (<span class="kw">if</span> (<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span> y))
 
@@ -256,7 +256,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (sqrt-iter guess x)
+<pre><code class="codeblock">(<span class="kw">define</span> (sqrt-iter guess x)
   (<span class="kw">if</span> (good-enough? guess x)
       guess
       (sqrt-iter (improve guess x) x)))
@@ -298,7 +298,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (new-if predicate then-clause else-clause)
+<pre><code class="codeblock">(<span class="kw">define</span> (new-if predicate then-clause else-clause)
   (<span class="kw">cond</span> (predicate then-clause)
         (<span class="kw">else</span> else-clause)))
 
@@ -332,13 +332,13 @@ Imports:
 </ul>
 </aside>
 <p>The <code>good-enough?</code> predicate does not work well for small numbers because the tolerance is fixed. If the number is smaller than the tolerance, the result will be hopelessly inaccurate, like measuring an atom with a yard stick.</p>
-<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="co">; should be 0</span>
+<pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span>     <span class="co">; should be 0</span>
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">0.03125</span> <span class="co">; should be 1e-10</span></code></pre>
 <p>It is also inadequate for very large numbers. With limited precision, it is impossible to represent small differences between large numbers. This means the algorithm might never terminate, because the guess never satisfies <code>good-enough?</code> no matter how many times <code>improve</code> is called.</p>
-<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
+<pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1e7</span>
 (<span class="fu">sqrt</span> <span class="cn">1e21</span>) <span class="er">=&gt;...</span></code></pre>
 <p>Here is an alternative implementation of <code>sqrt</code> that watches how <code>guess</code> changes from one iteration to the next and stops when the change is a very small fraction of the guess.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (good-enough? g1 g2)
+<pre><code class="codeblock">(<span class="kw">define</span> (good-enough? g1 g2)
   (<span class="kw">or</span> (<span class="fu">zero?</span> g2)
       (<span class="fu">&lt;</span> (<span class="fu">/</span> (<span class="fu">abs</span> (<span class="fu">-</span> g2 g1)) g1)
          <span class="cn">0.001</span>)))
@@ -350,10 +350,10 @@ Imports:
 (<span class="kw">set!</span> <span class="fu">sqrt</span> (<span class="kw">lambda</span> (x) (sqrt-iter <span class="cn">1.0</span> x)))</code></pre>
 <p>(We use <code>set!</code> because shadowing imports with <code>define</code> is <a href="../language.html#imports">not allowed</a>.)</p>
 <p>The results for small numbers are much better. It works for zero even though the <code>guess</code> is always reduced by 50%, because eventually it reaches the smallest representable floating-point number and dividing that produces zero.</p>
-<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0</span>
+<pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">0</span>) <span class="op">~&gt;</span> <span class="cn">0</span>
 (<span class="fu">sqrt</span> <span class="cn">1e-20</span>) <span class="op">~&gt;</span> <span class="cn">1e-10</span></code></pre>
 <p>For large numbers, it works better in that it always terminates. However, the results are less precise because “a small fraction” change in <code>guess</code> can be fairly large when the guesses themselves are very large.</p>
-<pre><code class="blockcode">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1.0000029650278373e7</span>
+<pre><code class="codeblock">(<span class="fu">sqrt</span> <span class="cn">1e14</span>) <span class="op">~&gt;</span> <span class="cn">1.0000029650278373e7</span>
 (<span class="fu">sqrt</span> <span class="cn">1e20</span>) <span class="op">~&gt;</span> <span class="cn">1.0000021484861237e10</span></code></pre>
 <h3 id="ex1.8" class="anchor">
 <a class="anchor__link link" href="#ex1.8" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-10.html#%25_thm_1.8">Exercise 1.8<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
@@ -373,7 +373,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
+<pre><code class="codeblock">(<span class="kw">define</span> (cube x) (<span class="fu">*</span> x x x))
 (<span class="kw">define</span> (cbrt-iter guess x)
   (<span class="kw">if</span> (good-enough? guess x)
       guess
@@ -407,13 +407,13 @@ Imports:
 </ul>
 </aside>
 <p>The following two procedures should be indistinguishable:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+<pre><code class="codeblock">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
 (<span class="kw">define</span> (square x) (exp (<span class="fu">+</span> (<span class="fu">log</span> x) (<span class="fu">log</span> x))))</code></pre>
 <p>These should be indistinguishable as well:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
+<pre><code class="codeblock">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))
 (<span class="kw">define</span> (square y) (<span class="fu">*</span> y y))</code></pre>
 <p>Using block structure:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
   (<span class="kw">define</span> (good-enough? guess x)
     (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> (square guess) x)) <span class="cn">0.001</span>))
   (<span class="kw">define</span> (improve guess x) (average guess (<span class="fu">/</span> x guess)))
@@ -423,7 +423,7 @@ Imports:
         (sqrt-iter (improve guess x) x)))
   (sqrt-iter <span class="cn">1.0</span> x))</code></pre>
 <p>Without passing <code>x</code> around:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">sqrt</span> x)
   (<span class="kw">define</span> (good-enough? guess)
     (<span class="fu">&lt;</span> (<span class="fu">abs</span> (<span class="fu">-</span> (square guess) x)) <span class="cn">0.001</span>))
   (<span class="kw">define</span> (improve guess)

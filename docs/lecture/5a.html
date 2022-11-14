@@ -126,14 +126,14 @@
 <ul>
 <li>Here’s how we implemented factorial functionally:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (fact n)
+<pre><code class="codeblock">(<span class="kw">define</span> (fact n)
   (<span class="kw">define</span> (iter p i)
     (<span class="kw">if</span> (<span class="fu">&gt;</span> i n) m (iter (<span class="fu">*</span> i p) (<span class="fu">+</span> i <span class="cn">1</span>))))
   (iter <span class="cn">1 1</span>))</code></pre>
 <ul>
 <li>We could instead write it with assignments:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (fact n)
+<pre><code class="codeblock">(<span class="kw">define</span> (fact n)
   (<span class="kw">let</span> ((p <span class="cn">1</span>) (i <span class="cn">1</span>))
     (<span class="kw">define</span> (loop)
       (<span class="kw">cond</span> ((<span class="fu">&gt;</span> i n) p)
@@ -205,7 +205,7 @@
 <li>We wouldn’t have done this if there wasn’t a good reason.</li>
 <li>Consider the following program:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> make-counter
+<pre><code class="codeblock">(<span class="kw">define</span> make-counter
   (<span class="kw">lambda</span> (n)
     (<span class="kw">lambda</span> ()
       (<span class="kw">set!</span> n (inc n))

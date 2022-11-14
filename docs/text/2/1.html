@@ -88,7 +88,7 @@
 <li>Assume we have <code>(make-rat <span class="ss">n d</span>)</code>, <code>(number <span class="ss">x</span>)</code>, and <code>(denom <span class="ss">x</span>)</code> available as the constructor and selectors. This is wishful thinking, and it is a good technique.</li>
 <li>Here is the implementation for addition:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (add-rat x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (add-rat x y)
   (make-rat (<span class="fu">+</span> (<span class="fu">*</span> (numer x) (denom y))
                (<span class="fu">*</span> (numer y) (denom x)))
             (<span class="fu">*</span> (denom x) (denom y))))</code></pre>
@@ -99,7 +99,7 @@
 <li>A <em>pair</em> is a concrete structure that we create with <code>cons</code>.</li>
 <li>We extract the parts of the pair with <code>car</code> and <code>cdr</code>.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1 2</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> x (<span class="fu">cons</span> <span class="cn">1 2</span>))
 
 (<span class="fu">car</span> x)
 <span class="sc">→ 1</span>
@@ -116,13 +116,13 @@
 <ul>
 <li>Now we can represent rational numbers:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
+<pre><code class="codeblock">(<span class="kw">define</span> (make-rat n d) (<span class="fu">cons</span> n d))
 (<span class="kw">define</span> (numer x) (<span class="fu">car</span> x))
 (<span class="kw">define</span> (denom x) (<span class="fu">cdr</span> x))</code></pre>
 <ul>
 <li>To ensure that our rational numbers are always in lowest terms, we need <code>make-rat</code> to divide the numerator and the denominator by their greatest common divisor (GCD).</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-rat n d)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-rat n d)
   (<span class="kw">let</span> ((g (<span class="fu">gcd</span> n d)))
     (<span class="fu">cons</span> (<span class="fu">/</span> n g) (<span class="fu">/</span> d g))))</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/2/1.html#ex2.1">2.1</a></li></ul></aside>
@@ -155,7 +155,7 @@
 <li>For pairs, it is even simpler: we need three operations, which we will call <code>cons</code>, <code>car</code>, and <code>cdr</code>, such that if <code>z</code> is <code>(<span class="fu">cons</span> x y)</code>, then <code>(<span class="fu">car</span> z)</code> is <code>x</code> and <code>(<span class="fu">cdr</span> z)</code> is <code>y</code>.</li>
 <li>Any triple of procedures satisfying this definition can be used to implement pairs. In fact, we can do it with procedures themselves:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">lambda</span> (m)
     (<span class="kw">if</span> (<span class="fu">=</span> m <span class="cn">0</span>) x y)))
 (<span class="kw">define</span> (<span class="fu">car</span> z) (z <span class="cn">0</span>))

@@ -83,7 +83,7 @@
 <li>Rectangular form is convenient for addition and substraction, while polar form is convenient for multiplication and division.</li>
 <li>Our goal is to implement all the operations to work with either representation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (add-complex z1 z2)
+<pre><code class="codeblock">(<span class="kw">define</span> (add-complex z1 z2)
   (make-from-real-imag (<span class="fu">+</span> (real-part z1) (real-part z2))
                        (<span class="fu">+</span> (imag-part z1) (imag-part z2))))
 (<span class="kw">define</span> (sub-complex z1 z2)
@@ -107,7 +107,7 @@
 <li>To do this, we need some way of distinguishing between representations. We will do this with a <em>type tag</em> <code>'rectangular</code> or <code>'polar</code>.</li>
 <li>Each generic selector will strip off the type tag and use case analysis to pass the untyped data object to the appropriate specific selector.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (attach-tag type-tag contents)
+<pre><code class="codeblock">(<span class="kw">define</span> (attach-tag type-tag contents)
   (<span class="fu">cons</span> type-tag contents))
 (<span class="kw">define</span> (type-tag datum)
   (<span class="kw">if</span> (<span class="fu">pair?</span> datum)
@@ -125,7 +125,7 @@
 <ul>
 <li>For example, here is how we implement the generic <code>real-part</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z)
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z)
   (<span class="kw">cond</span> ((rectangular? z)
          (real-part-rectangular (contents z)))
         ((polar? z)
@@ -181,7 +181,7 @@
 <li>Assume we have the procedure <code>(put <span class="ss">op type item</span>)</code> which installs <code><span class="ss">item</span></code> in the the table, and <code>(get <span class="ss">op type</span>)</code> which retrieves it. (We will implement them in <a href="../3/3.html#3.3.3">§&nbsp;3.3.3</a>.)</li>
 <li>Then, we can define a collection of procedures, or <em>package</em>, to install the each representation of complex numbers. For example, the rectangular representation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (install-rectangular-package)
+<pre><code class="codeblock">(<span class="kw">define</span> (install-rectangular-package)
   <span class="co">;; Internal procedures</span>
   (<span class="kw">define</span> (real-part z) (<span class="fu">car</span> z))
   (<span class="kw">define</span> (imag-part z) (<span class="fu">cdr</span> z))
@@ -208,7 +208,7 @@
 <ul>
 <li>Next, we need a way to look up a procedure in the table by operation and arguments:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (apply-generic op . args)
+<pre><code class="codeblock">(<span class="kw">define</span> (apply-generic op . args)
   (<span class="kw">let</span> ((type-tags (<span class="fu">map</span> type-tag args)))
     (<span class="kw">let</span> ((proc (get op type-tags)))
       (<span class="kw">if</span> proc
@@ -217,7 +217,7 @@
 <ul>
 <li>Using <code>apply-generic</code>, we can define our generic selectors as follows:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
 (<span class="kw">define</span> (imag-part z) (apply-generic <span class="vs">'imag-part</span> z))
 (<span class="kw">define</span> (magnitude z) (apply-generic <span class="vs">'magnitude</span> z))
 (<span class="kw">define</span> (angle z) (apply-generic <span class="vs">'angle</span> z))</code></pre>
@@ -232,7 +232,7 @@
 <li>This is called <em>message-passing</em>, and we can accomplish it in Scheme using closures.</li>
 <li>For example, here is how we would implement the rectangular representation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-from-real-imag x y)
   (<span class="kw">define</span> (dispatch op)
     (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="vs">'real-part</span>) x)
           ((<span class="fu">eq?</span> op <span class="vs">'imag-part</span>) y)

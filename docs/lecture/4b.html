@@ -145,7 +145,7 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â
 <li>Itâ€™s the procedures that go in the table, not their names, so we could even pass a lambda expression and not give it a name.</li>
 <li>The key procedure in this whole system is <code>operate</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (operate op obj)
+<pre><code class="codeblock">(<span class="kw">define</span> (operate op obj)
   (<span class="kw">let</span> ((proc (get (type obj) op)))
     (<span class="kw">if</span> (<span class="fu">null?</span> proc)
         (<span class="fu">error</span> <span class="cn">"undefined operator"</span>)
@@ -154,7 +154,7 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â
 <li>This uses the table to look up the correct procedure, and applies it to the given object.</li>
 <li>Hereâ€™s what happens when we extract the real part of a complex number in polar form:</li>
 </ul>
-<pre><code class="blockcode">(real-part z)
+<pre><code class="codeblock">(real-part z)
 (operate <span class="vs">'real-part</span> z)
 ((get <span class="vs">'polar 'real-part</span>) (contents z))
 (real-part-polar <span class="vs">'(1 . 2)</span>)

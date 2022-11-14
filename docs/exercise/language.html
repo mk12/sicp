@@ -72,7 +72,7 @@
 <a class="anchor__link link" href="#modules" aria-hidden="true">#</a> Modules
 </h2>
 <p>While R6RS provides a module system, using them for hundreds of sections and exercises is impractical. Their verbose syntax and indentation would distract from the flow of the chapter. We also need the flexibility to control module evaluation, for example to only run a subset of tests. This leads us to a custom solution:</p>
-<pre><code class="blockcode">(Chapter :1 <span class="cn">"Chapter Title"</span>)
+<pre><code class="codeblock">(Chapter :1 <span class="cn">"Chapter Title"</span>)
 
 (<span class="kw">define</span> x <span class="cn">1</span>)
 
@@ -89,7 +89,7 @@
 <a class="anchor__link link" href="#imports" aria-hidden="true">#</a> Imports
 </h3>
 <p>We can import from other modules like so:</p>
-<pre><code class="blockcode">(Chapter :1 <span class="cn">"Chapter Title"</span>)
+<pre><code class="codeblock">(Chapter :1 <span class="cn">"Chapter Title"</span>)
 
 (<span class="kw">define</span> x <span class="cn">1</span>)
 
@@ -106,12 +106,12 @@
 <p>Here, <code>:1.1</code> imports <code>x</code> from <code>:1</code>, and <code>y</code> and <code>z</code> from <code>?1.1</code>. This implies that <code>:1.1</code> must be evaluated after the other two modules, not in source order. The test runner topologically sorts modules to achieve this, and fails if there are any cycles. Importing from later modules is occasionally very useful. For example, <a href="2/index.html">Chapter&nbsp;2</a> depends heavily on two-dimensional tables, which are not implemented until <a href="3/3.html#3.3.3.3">§&nbsp;3.3.3.3</a>.</p>
 <p>You will not see expressions like <code>(Chapter ...)</code> and <code>(Section ...)</code> elsewhere on this website because they are converted to HTML headings. Likewise, the <code>(use ...)</code> blocks are converted to compact HTML lists set in a smaller font.</p>
 <p>To avoid confusion, shadowing imports is not allowed:</p>
-<pre><code class="blockcode">(Exercise ?1.1
+<pre><code class="codeblock">(Exercise ?1.1
   (use (:1.1 x)))
 
 (<span class="kw">define</span> x <span class="cn">2</span>) <span class="co">; ERROR: imported x is shadowed by local definition</span></code></pre>
 <p>Modules get turned into procedures, which do not allow mixing definitions with other expressions. Therefore, all top-level variables get hoisted to the top. To illustrate:</p>
-<pre><code class="blockcode">(Exercise ?1.1)
+<pre><code class="codeblock">(Exercise ?1.1)
 
 (<span class="fu">display</span> x) <span class="co">; prints #&lt;void&gt; in chez</span>
 (<span class="fu">display</span> y) <span class="co">; ERROR: y is undefined</span>
@@ -120,7 +120,7 @@
 <a class="anchor__link link" href="#pasting" aria-hidden="true">#</a> Pasting
 </h3>
 <p>The language provides one more feature for code reuse: <em>pasting</em>. Modules can unhygienically paste code from an earlier module in the same file:</p>
-<pre><code class="blockcode">(Section :1 <span class="cn">"Original"</span>)
+<pre><code class="codeblock">(Section :1 <span class="cn">"Original"</span>)
 
 (<span class="kw">define</span> a <span class="cn">1</span>)
 (<span class="kw">define</span> (inc x) (<span class="fu">+</span> x a))
@@ -136,7 +136,7 @@
 <a class="anchor__link link" href="#packages" aria-hidden="true">#</a> Packages
 </h3>
 <p>Starting in <a href="2/index.html">Chapter&nbsp;2</a>, many modules use <a href="../text/2/4.html#2.4.3">data-directed programming</a> to dispatch based on operation names and type tags. Modules define <em>packages</em> (procedures ending in <code>-pkg</code>) that install operations in the global table. For example:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
 
 (<span class="kw">define</span> (rectangular-pkg)
   (put <span class="vs">'real-part '(rectangular)</span> ...)
@@ -157,16 +157,16 @@
 <a class="anchor__link link" href="#exact" aria-hidden="true">#</a> Exact
 </h3>
 <p>The <code>=&gt;</code> operator is by far the most common. It asserts that the left-hand side is equal to the right-hand side, using <code>equal?</code>. For example:</p>
-<pre><code class="blockcode">(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=&gt;</span> <span class="cn">2</span></code></pre>
 <p>It can also be chained to assert that several expressions are equal, while ensuring that each expression is evaluated only once:</p>
-<pre><code class="blockcode">(fact <span class="cn">3</span>)
+<pre><code class="codeblock">(fact <span class="cn">3</span>)
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (fact <span class="cn">2</span>))
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2</span> (fact <span class="cn">1</span>)))
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3</span> (<span class="fu">*</span> <span class="cn">2 1</span>))
 <span class="op">=&gt;</span> (<span class="fu">*</span> <span class="cn">3 2</span>)
 <span class="op">=&gt;</span> <span class="cn">6</span></code></pre>
 <p>When <code>(fact <span class="cn">3</span>) <span class="op">=&gt;</span> (fact <span class="cn">5</span>)</code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(fact 3)</span>
 => <span class="cn">6</span>
@@ -180,10 +180,10 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#inexact" aria-hidden="true">#</a> Inexact
 </h3>
 <p>The <code>~&gt;</code> operator asserts that floating-point numbers are approximately equal using an absolute tolerance of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>10</mn></mrow></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">10^{-10}\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span> For example:</p>
-<pre><code class="blockcode">(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">atan</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">3.141592653589793</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">atan</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">3.141592653589793</span></code></pre>
 <p>Like <code>=&gt;</code>, it can be chained. Each item is compared to the previous one, not to the first.</p>
 <p>When <code>(<span class="fu">*</span> <span class="cn">4</span> (<span class="fu">atan</span> <span class="cn">1</span>)) <span class="op">~&gt;</span> <span class="cn">3.14</span></code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(* 4 (atan 1))</span>
 => <span class="cn">3.141592653589793</span>
@@ -199,10 +199,10 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#nondeterministic" aria-hidden="true">#</a> Nondeterministic
 </h3>
 <p>The <code>=?&gt;</code> operator asserts that the left-hand side is equal to one of the elements from the right-hand side, using <code>equal?</code>. For example:</p>
-<pre><code class="blockcode">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0 1 2 3 4</span>]</code></pre>
+<pre><code class="codeblock">(random <span class="cn">5</span>) <span class="op">=?&gt;</span> [<span class="cn">0 1 2 3 4</span>]</code></pre>
 <p>The right-hand side must be a list. Although square brackets are interchangeable with parentheses in R6RS, in this project we restrict their use to <code>=?&gt;</code> and <code>=$&gt;</code> assertions. They serve to remind us that the list is treated like <code>(<span class="fu">list</span> ...)</code>, not <code>(...)</code> or <code><span class="vs">'(...)</span></code>.</p>
 <p>When <code>(<span class="fu">+</span> <span class="cn">1 1</span>) <span class="op">=?&gt;</span> [(<span class="fu">*</span> <span class="cn">1 1</span>) <span class="cn">"two"</span>]</code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 1)</span>
 => <span class="cn">2</span>
@@ -216,18 +216,18 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#output" aria-hidden="true">#</a> Output
 </h3>
 <p>The <code>=$&gt;</code> operator captures standard output. For example:</p>
-<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">"hello"</span>) <span class="op">=$&gt;</span> <span class="cn">"hello"</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">display</span> <span class="cn">"hello"</span>) <span class="op">=$&gt;</span> <span class="cn">"hello"</span></code></pre>
 <p>If the right-hand side is a list, it is not evaluated but instead treated as a list of lines. Like with <code>=?&gt;</code>, these lists are conventionally written using square brackets.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (foo)
+<pre><code class="codeblock">(<span class="kw">define</span> (foo)
   (<span class="fu">display</span> <span class="cn">"hello"</span>)
   (<span class="fu">newline</span>)
   (<span class="fu">display</span> <span class="cn">"world"</span>))
 
 (foo) <span class="op">=$&gt;</span> [<span class="cn">"hello" "world"</span>]</code></pre>
 <p>Newlines occurring at the beginning, end, or after another newline are ignored:</p>
-<pre><code class="blockcode">(<span class="fu">display</span> <span class="cn">"</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">"</span>) <span class="op">=$&gt;</span> [<span class="cn">"One" "Two" "Three"</span>]</code></pre>
+<pre><code class="codeblock">(<span class="fu">display</span> <span class="cn">"</span><span class="co">\n</span><span class="cn">One</span><span class="co">\n\n</span><span class="cn">Two</span><span class="co">\n\n\n</span><span class="cn">Three</span><span class="co">\n</span><span class="cn">"</span>) <span class="op">=$&gt;</span> [<span class="cn">"One" "Two" "Three"</span>]</code></pre>
 <p>When <code>(<span class="fu">display</span> <span class="cn">"pong</span><span class="co">\n</span><span class="cn">ping"</span>) <span class="op">=$&gt;</span> [<span class="cn">"ping" "pong"</span>]</code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
 =$> [<span class="vs">"pong"</span>
@@ -243,10 +243,10 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#error" aria-hidden="true">#</a> Error
 </h3>
 <p>The <code>=!&gt;</code> operator asserts that an error will occur. For example:</p>
-<pre><code class="blockcode">(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"oops" 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"foo: oops: 1 2"</span></code></pre>
+<pre><code class="codeblock">(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"oops" 1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"foo: oops: 1 2"</span></code></pre>
 <p>The assertion passes if the right-hand side occurs as a substring in the representation <code><span class="ss">who</span>: <span class="ss">message</span>: <span class="ss">irritants</span></code>. Thus, <code>(f) <span class="er">=!&gt;</span> <span class="cn">""</span></code> passes as long as <code>(f)</code> raises <em>any</em> error. This operator works best for errors raised by user code, as opposed to system errors. For example, <code>(<span class="fu">/</span> <span class="cn">1 0</span>)</code> fails in all Schemes, but they all use different error messages.</p>
 <p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
 => <span class="cn">3</span>
@@ -257,7 +257,7 @@ right:
 test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 </code></pre>
 <p>When <code>(<span class="fu">error</span> <span class="vs">'foo</span> <span class="cn">"catastrophe" 1</span>) <span class="er">=!&gt;</span> <span class="cn">"disaster"</span></code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 =!> <span class="co">foo: catastrophe: 1</span>
@@ -271,10 +271,10 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 <a class="anchor__link link" href="#nontermination" aria-hidden="true">#</a> Nontermination
 </h3>
 <p>The <code>=&gt;...</code> operator asserts that evaluation will never terminate. Unlike the other operators, it has no right-hand side. For example:</p>
-<pre><code class="blockcode">(<span class="kw">let</span> loop () (loop)) <span class="er">=&gt;...</span></code></pre>
+<pre><code class="codeblock">(<span class="kw">let</span> loop () (loop)) <span class="er">=&gt;...</span></code></pre>
 <p>Of course, this doesn’t solve the halting problem. It just tries evaluating the expression and gives up after a short time.</p>
 <p>When <code>(<span class="fu">+</span> <span class="cn">1 2</span>) <span class="er">=&gt;...</span></code> fails, the output looks like this:</p>
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
 => <span class="cn">3</span>

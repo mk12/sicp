@@ -91,13 +91,13 @@
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Summation
 </h3>
 <p>We can represent sigma notation with a procedure that takes other procedures as arguments:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum term a next b)
+<pre><code class="codeblock">(<span class="kw">define</span> (sum term a next b)
   (<span class="kw">if</span> (<span class="fu">&gt;</span> a b)
       <span class="cn">0</span>
       (<span class="fu">+</span> (term a)
          (sum term (next a) next b))))</code></pre>
 <p>Now we can write particular cases easily, without repeating ourselves:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum-int a b)
+<pre><code class="codeblock">(<span class="kw">define</span> (sum-int a b)
   (<span class="kw">define</span> (identity x) x)
   (sum identity a <span class="fu">1+</span> b))
 (<span class="kw">define</span> (sum-sq a b)

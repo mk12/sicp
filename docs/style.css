@@ -143,7 +143,7 @@ blockquote code {
     background: var(--active);
 }
 
-.blockcode {
+.codeblock {
     display: block;
     overflow-x: auto;
     padding: 15px;

@@ -90,7 +90,7 @@
 <li><code>eval</code> classifies an expression and directs its evaluation in an environment.</li>
 <li>We use <em>abstract syntax</em> to avoid committing to a particular syntax in the evaluator.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">eval</span> exp env)
   (<span class="kw">cond</span> ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (text-of-quotation exp))
@@ -113,7 +113,7 @@
 <li><code>apply</code> classifies a procedure and directs its application to a list of arguments.</li>
 <li>If compound, it evaluates the procedure body in an extended environment.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">apply</span> procedure arguments)
   (<span class="kw">cond</span> ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
         ((compound-procedure? procedure)
@@ -148,7 +148,7 @@
 <li>The evaluator is reminiscent of the symbolic differentiator: both make recursive computations on compound expressions, and both use data abstraction.</li>
 <li>The syntax of the language is determined solely by procedures that classify and extract pieces of expressions. For example:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">'quote</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (quoted? exp) (tagged-list? exp <span class="vs">'quote</span>))
 (<span class="kw">define</span> (text-of-quotation exp) (<span class="fu">cadr</span> exp))
 (<span class="kw">define</span> (tagged-list? exp tag)
   (<span class="kw">if</span> (<span class="fu">pair?</span> exp)
@@ -161,7 +161,7 @@
 <li>Some special forms can be defined in terms of others.</li>
 <li>For example, we can reduce <code>cond</code> to an <code>if</code> expression:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="vs">'cond</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (cond? exp) (tagged-list? exp <span class="vs">'cond</span>))
 (<span class="kw">define</span> (cond-clauses exp) (<span class="fu">cdr</span> exp))
 (<span class="kw">define</span> (cond-else-clause? clause) (<span class="fu">eq?</span> (cond-predicate clause) <span class="vs">'else</span>))
 (<span class="kw">define</span> (cond-predicate clause) (<span class="fu">car</span> clause))
@@ -194,7 +194,7 @@
 <ul>
 <li>Anything other than <code>false</code> is considered “truthy.<span class="tuck">”</span></li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))
+<pre><code class="codeblock">(<span class="kw">define</span> (true? x) (<span class="fu">not</span> (<span class="fu">eq?</span> x <span class="cn">false</span>)))
 (<span class="kw">define</span> (false? x) (<span class="fu">eq?</span> x <span class="cn">false</span>))</code></pre>
 <h3 id="4.1.3.2" class="anchor">
 <a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a> Representing procedures
@@ -204,7 +204,7 @@
 <li><code>(primitive-procedure? <span class="ss">proc</span>)</code> tests whether <code><span class="ss">proc</span></code> is a primitive procedure.</li>
 <li>Compound procedures are represented by the following data structure:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-procedure parameters body env)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-procedure parameters body env)
   (<span class="fu">list</span> <span class="vs">'procedure</span> parameters body env))
 (<span class="kw">define</span> (compound-procedure? p) (tagged-list? p <span class="vs">'procedure</span>))
 (<span class="kw">define</span> (procedure-parameters p) (<span class="fu">cadr</span> p)) (<span class="kw">define</span> (procedure-body p) (<span class="fu">caddr</span> p))
@@ -219,7 +219,7 @@
 <li><code>(set-variable-value! <span class="ss">var value env</span>)</code> changes a binding in <code><span class="ss">env</span></code>.</li>
 <li>Here is a partial implementation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
+<pre><code class="codeblock">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))
 (<span class="kw">define</span> (first-frame env) (<span class="fu">car</span> env))
 (<span class="kw">define</span> the-empty-environment <span class="vs">'()</span>)
 
@@ -257,7 +257,7 @@
 <li>The evaluator ultimately reduces expressions to applications of primitive procedures, so we need the evaluator to map these to the underlying Lisp’s primitive procedures.</li>
 <li>We set up a global environment mapping primitive procedures, <code>true</code>, and <code>false</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (setup-environment)
+<pre><code class="codeblock">(<span class="kw">define</span> (setup-environment)
   (<span class="kw">let</span> ((initial-env
          (extend-environment (primitive-procedure-names)
                              (primitive-procedure-objects)
@@ -269,7 +269,7 @@
 <ul>
 <li>We define a list of primitive procedures <code>car</code>, <code>cdr</code>, <code>cons</code>, and <code>null?</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="vs">'primitive</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> (primitive-procedure? proc) (tagged-list? proc <span class="vs">'primitive</span>))
 (<span class="kw">define</span> (primitive-implementation proc) (<span class="fu">cadr</span> proc))
 
 (<span class="kw">define</span> primitive-procedures
@@ -286,12 +286,12 @@
 <ul>
 <li>Here, <code>apply-in-underlying-scheme</code> refers to the built-in <code>apply</code>, not the one we defined:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (apply-primitive-procedure proc args)
+<pre><code class="codeblock">(<span class="kw">define</span> (apply-primitive-procedure proc args)
   (apply-in-underlying-scheme (primitive-implementation proc) args))</code></pre>
 <ul>
 <li>Finally, we make a simple <em>driver loop</em>, or REPL:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> input-prompt <span class="cn">";;; M-Eval input:"</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> input-prompt <span class="cn">";;; M-Eval input:"</span>)
 (<span class="kw">define</span> output-prompt <span class="cn">";;; M-Eval value:"</span>)
 (<span class="kw">define</span> (driver-loop)
   (prompt-for-input input-prompt)
@@ -342,14 +342,14 @@
 <li>The Scheme standard requires internal definitions to come first in the body and not use each other during evaluation. Although this restriction makes sequential and simultaneous scoping equivalent, simultaneous scoping makes compiler optimization easier.</li>
 <li>To achieve simultaneous scoping, we “scan out” internal definitions:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">lambda</span> <span class="ss">vars</span>
+<pre><code class="codeblock">(<span class="kw">lambda</span> <span class="ss">vars</span>
   (<span class="kw">define</span> u <span class="ss">e1</span>)
   (<span class="kw">define</span> v <span class="ss">e2</span>)
   <span class="ss">e3</span>)</code></pre>
 <ul>
 <li>Transforming them into a <code>let</code> with assignments:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">lambda</span> <span class="ss">vars</span>
+<pre><code class="codeblock">(<span class="kw">lambda</span> <span class="ss">vars</span>
   (<span class="kw">let</span> ((u <span class="vs">'*unassigned*</span>)
         (v <span class="vs">'*unassigned*</span>))
     (<span class="kw">set!</span> u <span class="ss">e1</span>)
@@ -365,7 +365,7 @@
 <li>Our evaluator is inefficient because it interleaves syntactic analysis with execution.</li>
 <li>For example, given a recursive procedure:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (factorial n)
+<pre><code class="codeblock">(<span class="kw">define</span> (factorial n)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">1</span>) <span class="cn">1</span> (<span class="fu">*</span> (factorial (<span class="fu">-</span> n <span class="cn">1</span>)) n)))</code></pre>
 <ul>
 <li>When evaluating <code>(factorial <span class="cn">4</span>)</code>, on all four recursive calls the evaluator must determine anew that the body is an <code>if</code> expression by reaching the <code>if?</code> test.</li>
@@ -376,7 +376,7 @@
 </ul></li>
 <li><code>analyze</code> is similar to the <a href="#4.1.1">original</a> <code>eval</code>, except it only performs analysis, not full evaluation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (analyze exp)
+<pre><code class="codeblock">(<span class="kw">define</span> (analyze exp)
   (<span class="kw">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
         ((quoted? exp) (analyze-quoted exp))
         ((variable? exp) (analyze-variable exp))
@@ -391,7 +391,7 @@
 <ul>
 <li>Here is one of the helper procedures, <code>analyze-lambda</code>. It provides a major gain in efficiency because we only analyze the lambda body once, no matter how many times the procedure is called.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (analyze-lambda exp)
+<pre><code class="codeblock">(<span class="kw">define</span> (analyze-lambda exp)
   (<span class="kw">let</span> ((vars (lambda-parameters exp))
         (bproc (analyze-sequence (lambda-body exp))))
     (<span class="kw">lambda</span> (env) (make-procedure vars bproc env))))</code></pre>

@@ -173,21 +173,21 @@
 <li>Parentheses are just a way to write trees as a linear sequence of characters.</li>
 </ul>
 <p><strong>Means of abstraction</strong>: This is accomplished in Lisp with <code>define</code>. Defining something gives a name to an expression. We write this the same way as a regular combination, but <code>define</code> is not a procedure—it is a <em>special form</em>. We can also define procedures this way:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code></pre>
+<pre><code class="codeblock">(<span class="kw">define</span> (square x) (<span class="fu">*</span> x x))</code></pre>
 <p>We can also make it more clear that we are naming something:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code></pre>
+<pre><code class="codeblock">(<span class="kw">define</span> square (<span class="kw">lambda</span> (x) (<span class="fu">*</span> x x)))</code></pre>
 <p>The former notation is just syntactic sugar for the latter: a more convenient surface forms for typing something. The former <em>desugars</em> to the latter.</p>
 <p>In Lisp, you do not make arbitrary distinctions between things that are defined in the language and things that happen to be built-in.</p>
 <h3 id="2.2" class="anchor">
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Case analysis
 </h3>
 <p>We do case analysis in Lisp using <code>cond</code>.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">abs</span> x)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">abs</span> x)
   (<span class="kw">cond</span> ((<span class="fu">&lt;</span> x <span class="cn">0</span>) (<span class="fu">-</span> x))
         ((<span class="fu">=</span> x <span class="cn">0</span>) <span class="cn">0</span>)
         ((<span class="fu">&gt;</span> x <span class="cn">0</span>) x)))</code></pre>
 <p>Each line is a clause consisting of a predicate (true or false) and an action. We can use <code>if</code> if there is a single case:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">abs</span> x)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">abs</span> x)
   (<span class="kw">if</span> (<span class="fu">&lt;</span> x <span class="cn">0</span>)
       (<span class="fu">-</span> x)
       x))</code></pre>

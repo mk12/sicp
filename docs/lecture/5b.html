@@ -163,7 +163,7 @@
 <li>Assignment and mutators are equally powerful. We can implement the <code>cons</code> mutators in terms of <code>set!</code>.</li>
 <li>We’ve already seen Alonzo Church’s way of creating pairs just with lambda expressions:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">lambda</span> (m)
     (m x y)))
 (<span class="kw">define</span> (<span class="fu">car</span> x) (x (<span class="kw">lambda</span> (a d) a)))
@@ -171,7 +171,7 @@
 <ul>
 <li>We can change it to allow mutation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">cons</span> x y)
   (<span class="kw">lambda</span> (m)
     (m x
        y

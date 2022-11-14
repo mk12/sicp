@@ -85,7 +85,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (add-complex z1 z2)
+<pre><code class="codeblock">(<span class="kw">define</span> (add-complex z1 z2)
   (make-from-real-imag
    (<span class="fu">+</span> (real-part z1) (real-part z2))
    (<span class="fu">+</span> (imag-part z1) (imag-part z2))))
@@ -102,7 +102,7 @@ Imports:
    (<span class="fu">/</span> (magnitude z1) (magnitude z2))
    (<span class="fu">-</span> (angle z1) (angle z2))))</code></pre>
 <p>Ben’s representation (rectangular form):</p>
-<pre><code class="blockcode">(<span class="kw">define</span> real-part <span class="fu">car</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> real-part <span class="fu">car</span>)
 (<span class="kw">define</span> imag-part <span class="fu">cdr</span>)
 (<span class="kw">define</span> (magnitude z)
   (<span class="fu">sqrt</span> (<span class="fu">+</span> (square (real-part z))
@@ -113,14 +113,14 @@ Imports:
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a)) (<span class="fu">*</span> r (<span class="fu">sin</span> a))))</code></pre>
 <p>Rectangular form can give exact answers for addition and subtraction.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+<pre><code class="codeblock">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
 (real-part z1) <span class="op">=&gt;</span> <span class="cn">4</span>
 (imag-part z1) <span class="op">=&gt;</span> <span class="cn">6</span>
 (magnitude z2) <span class="op">~&gt;</span> <span class="cn">30</span>
 (angle z2) <span class="op">~&gt;</span> <span class="cn">3</span></code></pre>
 <p>Alyssa’s representation (polar form):</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (<span class="fu">*</span> (magnitude z) (<span class="fu">cos</span> (angle z))))
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z) (<span class="fu">*</span> (magnitude z) (<span class="fu">cos</span> (angle z))))
 (<span class="kw">define</span> (imag-part z) (<span class="fu">*</span> (magnitude z) (<span class="fu">sin</span> (angle z))))
 (<span class="kw">define</span> magnitude <span class="fu">car</span>)
 (<span class="kw">define</span> angle <span class="fu">cdr</span>)
@@ -129,7 +129,7 @@ Imports:
         (<span class="fu">atan</span> y x)))
 (<span class="kw">define</span> make-from-mag-ang <span class="fu">cons</span>)</code></pre>
 <p>Polar form can give exact answers for multiplication and division.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+<pre><code class="codeblock">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
 (real-part z1) <span class="op">~&gt;</span> <span class="cn">4</span>
 (imag-part z1) <span class="op">~&gt;</span> <span class="cn">6</span>
@@ -153,7 +153,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (attach-tag type-tag contents)
+<pre><code class="codeblock">(<span class="kw">define</span> (attach-tag type-tag contents)
   (<span class="fu">cons</span> type-tag contents))
 (<span class="kw">define</span> (type-tag datum)
   (<span class="kw">if</span> (<span class="fu">pair?</span> datum)
@@ -166,7 +166,7 @@ Imports:
 (<span class="kw">define</span> (rectangular? z) (<span class="fu">eq?</span> (type-tag z) <span class="vs">'rectangular</span>))
 (<span class="kw">define</span> (polar? z) (<span class="fu">eq?</span> (type-tag z) <span class="vs">'polar</span>))</code></pre>
 <p>Ben’s representation (rectangular form):</p>
-<pre><code class="blockcode">(<span class="kw">define</span> real-part-rectangular <span class="fu">car</span>)
+<pre><code class="codeblock">(<span class="kw">define</span> real-part-rectangular <span class="fu">car</span>)
 (<span class="kw">define</span> imag-part-rectangular <span class="fu">cdr</span>)
 (<span class="kw">define</span> (magnitude-rectangular z)
   (<span class="fu">sqrt</span> (<span class="fu">+</span> (square (real-part-rectangular z))
@@ -181,7 +181,7 @@ Imports:
               (<span class="fu">cons</span> (<span class="fu">*</span> r (<span class="fu">cos</span> a))
                     (<span class="fu">*</span> r (<span class="fu">sin</span> a)))))</code></pre>
 <p>Alyssa’s representation (polar form):</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part-polar z)
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part-polar z)
   (<span class="fu">*</span> (magnitude-polar z) (<span class="fu">cos</span> (angle-polar z))))
 (<span class="kw">define</span> (imag-part-polar z)
   (<span class="fu">*</span> (magnitude-polar z) (<span class="fu">sin</span> (angle-polar z))))
@@ -194,7 +194,7 @@ Imports:
 (<span class="kw">define</span> (make-from-mag-ang-polar r a)
   (attach-tag <span class="vs">'polar</span> (<span class="fu">cons</span> r a)))</code></pre>
 <p>Generic selectors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z)
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z)
   (<span class="kw">cond</span> ((rectangular? z)
          (real-part-rectangular (contents z)))
         ((polar? z)
@@ -219,12 +219,12 @@ Imports:
          (angle-polar (contents z)))
         (<span class="kw">else</span> (<span class="fu">error</span> <span class="vs">'angle</span> <span class="cn">"unknown type"</span> z))))</code></pre>
 <p>Generic constructors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> make-from-real-imag make-from-real-imag-rectangular)
+<pre><code class="codeblock">(<span class="kw">define</span> make-from-real-imag make-from-real-imag-rectangular)
 (<span class="kw">define</span> make-from-mag-ang make-from-mag-ang-polar)</code></pre>
 <p>Generic operations:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
+<pre><code class="codeblock">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Now we can get exact answers for all operations:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
+<pre><code class="codeblock">(<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
 z1 <span class="op">=&gt;</span> (make-from-real-imag <span class="cn">4 6</span>)
 z2 <span class="op">=&gt;</span> (make-from-mag-ang <span class="cn">30 3</span>)</code></pre>
@@ -275,7 +275,7 @@ Imports:
 </ul>
 </aside>
 <p>The textbook calls these procedures <code>install-rectangular-package</code> and <code>install-polar-package</code>. I shorten them to <code>rectangular-pkg</code> and <code>polar-pkg</code> since there are many of these procedures and the long names tend to bloat import lists.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (rectangular-pkg)
+<pre><code class="codeblock">(<span class="kw">define</span> (rectangular-pkg)
   <span class="co">;; Internal procedures</span>
   (<span class="kw">define</span> real-part <span class="fu">car</span>)
   (<span class="kw">define</span> imag-part <span class="fu">cdr</span>)
@@ -323,7 +323,7 @@ Imports:
   (put <span class="vs">'make-from-mag-ang 'polar</span>
        (<span class="kw">lambda</span> (r a) (tag (make-from-mag-ang r a)))))</code></pre>
 <p>Helpers to apply generic operations:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (apply-generic op . args)
+<pre><code class="codeblock">(<span class="kw">define</span> (apply-generic op . args)
   (<span class="kw">let*</span> ((type-tags (<span class="fu">map</span> type-tag args))
          (proc (get op type-tags)))
     (<span class="kw">if</span> proc
@@ -336,23 +336,23 @@ Imports:
         (<span class="fu">apply</span> proc args)
         (<span class="fu">error</span> op <span class="cn">"no method for type"</span> op type))))</code></pre>
 <p>Generic selectors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
+<pre><code class="codeblock">(<span class="kw">define</span> (real-part z) (apply-generic <span class="vs">'real-part</span> z))
 (<span class="kw">define</span> (imag-part z) (apply-generic <span class="vs">'imag-part</span> z))
 (<span class="kw">define</span> (magnitude z) (apply-generic <span class="vs">'magnitude</span> z))
 (<span class="kw">define</span> (angle z) (apply-generic <span class="vs">'angle</span> z))</code></pre>
 <p>Generic constructors:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-from-real-imag x y)
   (apply-specific <span class="vs">'make-from-real-imag 'rectangular</span> x y))
 (<span class="kw">define</span> (make-from-mag-ang r a)
   (apply-specific <span class="vs">'make-from-mag-ang 'polar</span> r a))</code></pre>
 <p>Generic operations:</p>
-<pre><code class="blockcode">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
+<pre><code class="codeblock">(<span class="kw">paste</span> (<a href="#2.4.1">:2.4.1</a> add-complex div-complex mul-complex sub-complex))</code></pre>
 <p>Helper procedure to run installers with a clean slate:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (using . installers)
+<pre><code class="codeblock">(<span class="kw">define</span> (using . installers)
   (reset)
   (<span class="fu">for-each</span> (<span class="kw">lambda</span> (f) (f)) installers))</code></pre>
 <p>Putting it all together:</p>
-<pre><code class="blockcode">(using rectangular-pkg polar-pkg)
+<pre><code class="codeblock">(using rectangular-pkg polar-pkg)
 
 (<span class="kw">define</span> z1 (add-complex (make-from-real-imag <span class="cn">1 2</span>) (make-from-real-imag <span class="cn">3 4</span>)))
 (<span class="kw">define</span> z2 (mul-complex (make-from-mag-ang <span class="cn">5 1</span>) (make-from-mag-ang <span class="cn">6 2</span>)))
@@ -420,7 +420,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (deriv expr var)
+<pre><code class="codeblock">(<span class="kw">define</span> (deriv expr var)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="cn">0</span>)
         ((variable? expr) (<span class="kw">if</span> (same-variable? expr var) <span class="cn">1 0</span>))
         (<span class="kw">else</span> (apply-specific <span class="vs">'deriv</span> (operator expr) (operands expr) var))))
@@ -428,12 +428,12 @@ Imports:
 (<span class="kw">define</span> operands <span class="fu">cdr</span>)</code></pre>
 <ol type="a">
 <li><p>We rewrote <code>deriv</code> to dispatch based on the operator of the expression. However, it still uses explicit case analysis for numbers and variables. We can’t assimilate those into the data-directed dispatch because they have nothing that can be used as a type tag. Scheme only provides predicates like <code>number?</code>, not a procedure like <code>(type expr)</code> that could return <code>'number</code>. We can write our own, but this just moves the case anaylsis somewhere else:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (type expr)
+<pre><code class="codeblock">(<span class="kw">define</span> (type expr)
   (<span class="kw">cond</span> ((<span class="fu">number?</span> expr) <span class="vs">'number</span>)
         ((variable? expr) <span class="vs">'variable</span>)
         (<span class="kw">else</span> (operator expr))))</code></pre></li>
 <li><p>Packages for sum and product differentiation:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (sum-pkg)
+<pre><code class="codeblock">(<span class="kw">define</span> (sum-pkg)
   (<span class="kw">define</span> (deriv-sum terms var)
     (accumulate make-sum <span class="cn">0</span> (<span class="fu">map</span> (<span class="kw">lambda</span> (t) (deriv t var)) terms)))
   (put <span class="vs">'deriv '+</span> deriv-sum))
@@ -450,7 +450,7 @@ Imports:
   (put <span class="vs">'deriv '*</span> deriv-product))</code></pre>
 <p>Note that we can’t reuse the selectors <code>multiplier</code> and <code>multiplicand</code> from <a href="3.html#ex2.57">Exercise&nbsp;2.57</a> because they assume the list includes the operator.</p></li>
 <li><p>Package for power differentiation:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (power-pkg)
+<pre><code class="codeblock">(<span class="kw">define</span> (power-pkg)
   (<span class="kw">define</span> base <span class="fu">car</span>)
   (<span class="kw">define</span> exponent <span class="fu">cadr</span>)
   (<span class="kw">define</span> (deriv-power power var)
@@ -465,7 +465,7 @@ Imports:
 <li><p>If we wanted to index the procedures in the opposite way, we would simply need to swap the first two arguments to <code>put</code> in all the package installation procedures.</p></li>
 </ol>
 <p>Let’s test the new system:</p>
-<pre><code class="blockcode">(using sum-pkg product-pkg power-pkg)
+<pre><code class="codeblock">(using sum-pkg product-pkg power-pkg)
 
 (deriv <span class="vs">'(+ x 3) 'x</span>) <span class="op">=&gt;</span> <span class="cn">1</span>
 (deriv <span class="vs">'(* x y) 'x</span>) <span class="op">=&gt;</span> <span class="vs">'y</span>
@@ -516,16 +516,16 @@ Imports:
 </aside>
 <ol type="a">
 <li><p>Each division should tag their file with a symbol such as <code>'marketing</code>, and install an implementation of <code>get-record</code> that deals with their internal record structure.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (get-record file employee-name)
+<pre><code class="codeblock">(<span class="kw">define</span> (get-record file employee-name)
   (<span class="kw">let*</span> ((tag (type-tag file))
          (record
           (apply-specific <span class="vs">'get-record</span> tag (contents file) employee-name)))
     (<span class="kw">and</span> record (attach-tag tag record))))</code></pre></li>
 <li><p>Since our generic <code>get-record</code> reattaches the division tag to the returned record, there is no need for divisions to tag records or do anything special. They just need to install an implementation of <code>get-salary</code>.</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (get-salary record)
+<pre><code class="codeblock">(<span class="kw">define</span> (get-salary record)
   (apply-specific <span class="vs">'get-salary</span> (type-tag record) (contents record)))</code></pre></li>
 <li><p>Procedure to find an employee’s record across all files:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> (find-employee-record employee-name files)
+<pre><code class="codeblock">(<span class="kw">define</span> (find-employee-record employee-name files)
   (<span class="kw">if</span> (<span class="fu">null?</span> files)
       <span class="cn">#f</span>
       (<span class="kw">or</span> (get-record (<span class="fu">car</span> files) employee-name)
@@ -533,7 +533,7 @@ Imports:
 <li><p>When they take over a new company, they must tag its file and install implementations of <code>get-record</code> and <code>get-salary</code> for it.</p></li>
 </ol>
 <p>Here is an example of a company with two divisions:</p>
-<pre><code class="blockcode">(<span class="kw">define</span> files
+<pre><code class="codeblock">(<span class="kw">define</span> files
   (<span class="fu">list</span> (attach-tag <span class="vs">'marketing
                     '("Alice" "Bob")</span>)
         (attach-tag <span class="vs">'sales
@@ -580,7 +580,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-from-real-imag x y)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-from-real-imag x y)
   (<span class="kw">lambda</span> (op)
     (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="vs">'real-part</span>) x)
           ((<span class="fu">eq?</span> op <span class="vs">'imag-part</span>) y)
@@ -610,7 +610,7 @@ Imports:
 </li>
 </ul>
 </aside>
-<pre><code class="blockcode">(<span class="kw">define</span> (make-from-mag-ang r a)
+<pre><code class="codeblock">(<span class="kw">define</span> (make-from-mag-ang r a)
   (<span class="kw">lambda</span> (op)
     (<span class="kw">cond</span> ((<span class="fu">eq?</span> op <span class="vs">'real-part</span>) (<span class="fu">*</span> r (<span class="fu">cos</span> a)))
           ((<span class="fu">eq?</span> op <span class="vs">'imag-part</span>) (<span class="fu">*</span> r (<span class="fu">sin</span> a)))

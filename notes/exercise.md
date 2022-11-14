@@ -154,7 +154,7 @@ It can also be chained to assert that several expressions are equal, while ensur
 
 When `(fact 3) => (fact 5)` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(fact 3)</span>
 => <span class="cn">6</span>
@@ -177,7 +177,7 @@ Like `=>`, it can be chained. Each item is compared to the previous one, not to 
 
 When `(* 4 (atan 1)) ~> 3.14` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(* 4 (atan 1))</span>
 => <span class="cn">3.141592653589793</span>
@@ -202,7 +202,7 @@ The right-hand side must be a list. Although square brackets are interchangeable
 
 When `(+ 1 1) =?> [(* 1 1) "two"]` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 1)</span>
 => <span class="cn">2</span>
@@ -240,7 +240,7 @@ Newlines occurring at the beginning, end, or after another newline are ignored:
 
 When `(display "pong\nping") =$> ["ping" "pong"]` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(display "pong\nping")</span>
 =$> [<span class="vs">"pong"</span>
@@ -265,7 +265,7 @@ The assertion passes if the right-hand side occurs as a substring in the represe
 
 When `(+ 1 2) =!> "disaster"` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
 => <span class="cn">3</span>
@@ -278,7 +278,7 @@ test result: <span class="er">FAIL</span>. 0 passed; 1 failed; 0 filtered out
 
 When `(error 'foo "catastrophe" 1) =!> "disaster"` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(error 'foo "catastrophe" 1)</span>
 =!> <span class="co">foo: catastrophe: 1</span>
@@ -301,7 +301,7 @@ Of course, this doesn't solve the halting problem. It just tries evaluating the 
 
 When `(+ 1 2) =>...` fails, the output looks like this:
 
-<pre><code class="blockcode"><!--
+<pre><code class="codeblock"><!--
 --><strong>path/to/file.ss:123:1: assertion failed</strong>
 left: <span class="fu">(+ 1 2)</span>
 => <span class="cn">3</span>

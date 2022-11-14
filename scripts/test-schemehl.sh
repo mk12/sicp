@@ -21,7 +21,7 @@ case ${2-} in
             end
             function CodeBlock(el)
                 local html = (
-                    \"<pre><code class=\\\"blockcode\\\">\"
+                    \"<pre><code class=\\\"codeblock\\\">\"
                     .. schemehl.highlight(el.text, {
                          sicp_id_link = function(id)
                             return \"FOO-\" .. id

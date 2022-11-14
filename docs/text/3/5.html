@@ -117,7 +117,7 @@
 <li>With lazy sequences, we can manipulate infinitely long streams!</li>
 <li>We can define Fibonacci sequence explicitly with a generator:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
+<pre><code class="codeblock">(<span class="kw">define</span> (fibgen a b) (<span class="kw">cons-stream</span> a (fibgen b (<span class="fu">+</span> a b))))
 (<span class="kw">define</span> fibs (fibgen <span class="cn">0 1</span>))</code></pre>
 <ul>
 <li>As long as we don’t try to display the whole sequence, we will never get stuck in an infinite loop.</li>
@@ -129,7 +129,7 @@
 <ul>
 <li>Instead of using a generator procedure, we can define infinite streams implicitly, taking advantage of the laziness.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> fibs
+<pre><code class="codeblock">(<span class="kw">define</span> fibs
   (<span class="kw">cons-stream</span>
    <span class="cn">0</span>
    (<span class="kw">cons-stream</span> <span class="cn">1</span> (stream-map <span class="fu">+</span> fibs (stream-cdr fibs)))))
@@ -164,7 +164,7 @@
 <li>Previously, we handled traditional nested loops as processes defined on sequences of pairs.</li>
 <li>We can find all pairs <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">)</span></span></span></span> with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>≤</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i ≤ j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.79549em;vertical-align:-0.13597em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i + j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.74285em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> is prime like this:</li>
 </ul>
-<pre><code class="blockcode">(stream-filter
+<pre><code class="codeblock">(stream-filter
  (<span class="kw">lambda</span> (pair) (prime? (<span class="fu">+</span> (<span class="fu">car</span> pair) (<span class="fu">cadr</span> pair))))
  int-pairs)</code></pre>
 <ul>
@@ -180,7 +180,7 @@
 <li>We can use streams to model signal-processing systems.</li>
 <li>For example, taking the integral of a signal:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (integral integrand initial-value dt)
+<pre><code class="codeblock">(<span class="kw">define</span> (integral integrand initial-value dt)
   (<span class="kw">define</span> int
     (<span class="kw">cons-stream</span> initial-value
                  (add-streams (scale-stream integrand dt)

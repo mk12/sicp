@@ -80,7 +80,7 @@
 <li>We don’t compute elements until we’ve asked for them. When do we “ask” for them?</li>
 <li>Example: <code>nth-stream</code> forces the first <code>n</code> elements of a stream.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (nth-stream n s)
+<pre><code class="codeblock">(<span class="kw">define</span> (nth-stream n s)
   (<span class="kw">if</span> (<span class="fu">=</span> n <span class="cn">0</span>)
       (head s)
       (nth-stream (<span class="fu">-1+</span> n) (tail s))))</code></pre>
@@ -90,7 +90,7 @@
 <ul>
 <li>How long can a stream be? It can be <em>infinite</em>!</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (integers-from n)
+<pre><code class="codeblock">(<span class="kw">define</span> (integers-from n)
   (<span class="kw">cons-stream</span> n (integers-from (<span class="fu">1+</span> n))))
 (<span class="kw">define</span> integers (integers-from <span class="cn">1</span>))</code></pre>
 <ul>
@@ -102,7 +102,7 @@
 <ul>
 <li>Start with 2, cross out larger multiples of 2; take next, 3, and cross out larger multiples of 3; and so on. What you’re left with is all the primes.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (sieve s)
+<pre><code class="codeblock">(<span class="kw">define</span> (sieve s)
   (<span class="kw">cons-stream</span>
    (head s)
    (sieve (<span class="fu">filter</span> (<span class="kw">lambda</span> (x) (<span class="fu">not</span> (divisible? x (head s))))
@@ -120,7 +120,7 @@
 <li>We’ve so far seen procedures that recursively create streams.</li>
 <li>There’s another way. But first we need some additional procedures:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (add-streams s1 s2)
+<pre><code class="codeblock">(<span class="kw">define</span> (add-streams s1 s2)
   (<span class="kw">cond</span> ((empty-stream? s1) s2)
         ((empty-stream? s2) s1)
         (<span class="kw">else</span> (<span class="kw">cons-stream</span> (<span class="fu">+</span> (head s1) (head s2))
@@ -130,7 +130,7 @@
 <ul>
 <li>Now, we can define streams all at once:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
+<pre><code class="codeblock">(<span class="kw">define</span> ones (<span class="kw">cons-stream</span> <span class="cn">1</span> ones))
 (<span class="kw">define</span> integers (add-streams integers ones))</code></pre>
 <h3 id="2.2" class="anchor">
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> More examples
@@ -138,7 +138,7 @@
 <ul>
 <li>We can calculate the integral <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>∫</mo><mi>s</mi><mtext> </mtext><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\int s\,dt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.11112em;vertical-align:-0.30612em;"></span><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0005599999999999772em;">∫</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span></span> the same way you would in signal processing:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (integral s initial-value dt)
+<pre><code class="codeblock">(<span class="kw">define</span> (integral s initial-value dt)
   (<span class="kw">define</span> int
     (<span class="kw">cons-stream</span> initial-value
                  (add-streams (scale-stream dt s) int)))
@@ -146,7 +146,7 @@
 <ul>
 <li>Another example, the Fibonacci numbers:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> fibs
+<pre><code class="codeblock">(<span class="kw">define</span> fibs
   (<span class="kw">cons-stream</span> <span class="cn">0</span>
                (<span class="kw">cons-stream</span> <span class="cn">1</span>
                             (add-streams fibs (tail fibs)))))</code></pre>
@@ -157,13 +157,13 @@
 <li>Let’s say we want to solve <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>y</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><msup><mi>y</mi><mn>2</mn></msup><mo separator="true">,</mo><mtext>  </mtext><mi>y</mi><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y&#x27; = y^2,\; y(0) = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.946332em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> using the step <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>t</mi><mo>=</mo><mn>0.001</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">dt = 0.001\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
 <li>We’d like to write a stream program to solve this:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> y (integral dy <span class="cn">1 0.001</span>))
+<pre><code class="codeblock">(<span class="kw">define</span> y (integral dy <span class="cn">1 0.001</span>))
 (<span class="kw">define</span> dy (map-stream square y))</code></pre>
 <ul>
 <li>This doesn’t work because <code>y</code> and <code>dy</code> each need the other defined first.</li>
 <li>We can fix it the same way <code>cons-stream</code> allows self-referencing definitions: by introducing another <code>delay</code>, so that we can get the first value of the integral stream without knowing what stream it’s integrating.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (integral delayed-s initial-value dt)
+<pre><code class="codeblock">(<span class="kw">define</span> (integral delayed-s initial-value dt)
   (<span class="kw">define</span> int
     (<span class="kw">cons-stream</span> initial-value
                  (<span class="kw">let</span> ((s (<span class="fu">force</span> delayed-s)))

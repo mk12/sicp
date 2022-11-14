@@ -86,14 +86,14 @@
 <li>We will attach a type tag to each kind of number. Complex numbers will have two levels of tagging: a <code>'complex</code> tag on top of the <code>'rectangular</code> or <code>'polar</code> tag.</li>
 <li>The tags get stripped off as the data is passed down through packages to the appropriate specific procedure.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">'add</span> x y))
+<pre><code class="codeblock">(<span class="kw">define</span> (add x y) (apply-generic <span class="vs">'add</span> x y))
 (<span class="kw">define</span> (sub x y) (apply-generic <span class="vs">'sub</span> x y))
 (<span class="kw">define</span> (mul x y) (apply-generic <span class="vs">'mul</span> x y))
 (<span class="kw">define</span> (div x y) (apply-generic <span class="vs">'div</span> x y))</code></pre>
 <ul>
 <li>Here is the arithmetic package for Scheme numbers:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (install-scheme-number-package)
+<pre><code class="codeblock">(<span class="kw">define</span> (install-scheme-number-package)
   (<span class="kw">define</span> (tag x)
     (attach-tag <span class="vs">'scheme-number</span> x))
   (put <span class="vs">'add '(scheme-number scheme-number)</span>
@@ -130,7 +130,7 @@
 <li>We can make all operations work on combinations of Scheme numbers and complex numbers by first <em>coercing</em> the former to the latter.</li>
 <li>Here is a typical coercion procedure:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (scheme-number-&gt;complex n)
+<pre><code class="codeblock">(<span class="kw">define</span> (scheme-number-&gt;complex n)
   (make-complex-from-real-imag (contents n) <span class="cn">0</span>))</code></pre>
 <ul>
 <li>The big advantage of coercion is that, although we may need to write many coercion procedures, we only need to implement each operation once per type.</li>
@@ -181,7 +181,7 @@
 <li>To avoid thorny issues of identity and sameness, we will consider our polynomials to be syntactic forms, not representations of mathematical functions.</li>
 <li>We will implement addition and multiplication for polynomials in the same variable.</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (add-poly p1 p2)
+<pre><code class="codeblock">(<span class="kw">define</span> (add-poly p1 p2)
   (<span class="kw">if</span> (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
                  (add-terms (term-list p1)
@@ -197,7 +197,7 @@
 <ul>
 <li>We will install these procedures in our generic arithmetic system:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (install-polynomial-package)
+<pre><code class="codeblock">(<span class="kw">define</span> (install-polynomial-package)
   <span class="co">;; Internal procedures</span>
   (<span class="kw">define</span> (make-poly variable term-list)
     (<span class="fu">cons</span> variable term-list))
@@ -218,7 +218,7 @@
 <ul>
 <li>Here is the implementation of <code>add-terms</code>:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (add-terms L1 L2)
+<pre><code class="codeblock">(<span class="kw">define</span> (add-terms L1 L2)
   (<span class="kw">cond</span> ((empty-termlist? L1) L2)
         ((empty-termlist? L2) L1)
         (<span class="kw">else</span>
@@ -253,7 +253,7 @@
 </ul></li>
 <li>Here is an associative list representation:</li>
 </ul>
-<pre><code class="blockcode">(<span class="kw">define</span> (adjoin-term term term-list)
+<pre><code class="codeblock">(<span class="kw">define</span> (adjoin-term term term-list)
   (<span class="kw">if</span> (=zero? (coeff term))
       term-list
       (<span class="fu">cons</span> term term-list)))
