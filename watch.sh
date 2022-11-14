@@ -65,7 +65,8 @@ choose_output() {
     esac
     inputs+=(
         "tools/docgen.c"
-        "tools/highlight.c"
+        "tools/lua/ntsp.c"
+        "tools/lua/schemehl.c"
         "docs/style.css"
     )
     while read -r file; do
