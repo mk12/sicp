@@ -952,11 +952,12 @@ static void render_literate(struct LiterateRenderer *lr, FILE *out,
         }
         fwrite(line.data + 3, line.len - 3, 1, out);
         if (prev_state != LR_PROSE || lr->pending_blank) {
-            lr->list_indent = line.len >= 6 && line.data[3] == '('
-                                   && isalpha(line.data[4])
-                                   && line.data[5] == ')'
-                                ? "    "
-                                : "";
+            bool new_item = line.len >= 6 && line.data[3] == '('
+                         && isalpha(line.data[4]) && line.data[5] == ')';
+            bool continued_item = lr->list_indent && line.len >= 8
+                               && startswith(line.data, ";;     ")
+                               && isgraph(line.data[7]);
+            lr->list_indent = new_item || continued_item ? "    " : "";
         }
         break;
     case LR_CODE:

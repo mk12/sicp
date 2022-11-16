@@ -612,8 +612,8 @@ static void hl_write(struct Highlighter *hl, const char *class,
     buf_write(hl->buf, SUBSPAN(span, i, j));
 }
 
-// Writes a span consisting only of whitespace. This is a special case because
-// so that we can apply the MINIMIZE_TAGS optimization.
+// Writes a span consisting only of whitespace. This is a special case so that
+// we can apply the MINIMIZE_TAGS optimization.
 static void hl_whitespace(struct Highlighter *hl, struct Span span) {
     assert(!hl->pending_ws.data);
     hl->pending_ws = span;

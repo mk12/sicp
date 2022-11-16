@@ -3924,14 +3924,14 @@ z2 => (make-from-mag-ang 30 3)
 
 (using scheme-number-pkg polynomial-pkg zero-pkg)
 
-;; A simple test:
+;; Here's a simple test:
 ;;
 ;; $$x + y = y + x = 1x^1 + \left(1y^1\right)x^0.$$
 (add (make-polynomial 'x '((1 1))) (make-polynomial 'y '((1 1))))
 => (add (make-polynomial 'y '((1 1))) (make-polynomial 'x '((1 1))))
 => (make-polynomial 'x `((1 1) (0 ,(make-polynomial 'y '((1 1))))))
 
-;; A more complicated test:
+;; Here's a more complicated test:
 ;;
 ;; $$\begin{aligned}
 ;; &\phantom{=} (yx^3 + 2)(y + x^2 + 1) \\
@@ -4016,12 +4016,10 @@ z2 => (make-from-mag-ang 30 3)
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg
        greatest-common-divisor-pkg)
 
-;; It works for numbers:
+;; Now it works for integers:
 (greatest-common-divisor 128 40) => 8
 
 ;; And for polynomials:
-;;
-;; $$\gcd(x^4 - x^3 - 2x^2 + 2x, \; x^3 -x) = -x^2 + x.$$
 
 (define p1 (make-polynomial 'x '((4 1) (3 -1) (2 -2) (1 2))))
 (define p2 (make-polynomial 'x '((3 1) (1 -1))))
@@ -4030,10 +4028,12 @@ z2 => (make-from-mag-ang 30 3)
 => (make-polynomial 'x '((2 -1) (1 1)))
 
 (Exercise ?2.95
-  (use (:2.4.3 using) (:2.5.3.1 polynomial-pkg) (:2.5.3.2 make-polynomial)
-       (?2.78 div mul scheme-number-pkg) (?2.87 zero-pkg) (?2.88 negate-pkg)
+  (use (:2.4.2 contents) (:2.4.3 using) (:2.5.3.1 polynomial-pkg term-list)
+       (:2.5.3.2 make-polynomial the-empty-termlist)
+       (?2.78 mul scheme-number-pkg) (?2.87 zero-pkg) (?2.88 negate-pkg)
        (?2.91 polynomial-div-pkg)
-       (?2.94 greatest-common-divisor greatest-common-divisor-pkg)))
+       (?2.94 gcd-terms greatest-common-divisor greatest-common-divisor-pkg
+              remainder-terms)))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        greatest-common-divisor-pkg)
@@ -4044,19 +4044,24 @@ z2 => (make-from-mag-ang 30 3)
 (define q1 (mul p1 p2))
 (define q2 (mul p1 p3))
 
-(define (rem p q) (cadr (div p q)))
+;; For brevity, we'll give names to the term lists of $Q_1$ and $Q_2$:
+(define q1-tl (term-list (contents q1)))
+(define q2-tl (term-list (contents q2)))
 
-;; The GCD calculation makes two recursive calls:
-(greatest-common-divisor q1 q2)
-=> (greatest-common-divisor q2 (rem q1 q2))                   ; 1st recursion
-=> (greatest-common-divisor (rem q1 q2) (rem q2 (rem q1 q2))) ; 2nd recursion
-=> (greatest-common-divisor (rem q1 q2) (make-polynomial 'x '()))
-=> (rem q1 q2)
-=> (make-polynomial 'x '((2 1458/169) (1 -2916/169) (0 1458/169)))
+;; Tracing through the GCD calculation, we see that it reduces to the remainder
+;; of dividing the original two polynomials:
+(gcd-terms q1-tl q2-tl)
+=> (gcd-terms q2-tl (remainder-terms q1-tl q2-tl))
+=> (gcd-terms (remainder-terms q1-tl q2-tl)
+              (remainder-terms q2-tl (remainder-terms q1-tl q2-tl)))
+=> (gcd-terms (remainder-terms q1-tl q2-tl)
+              (the-empty-termlist))
+=> (remainder-terms q1-tl q2-tl)
+=> '((2 1458/169) (1 -2916/169) (0 1458/169))
 
-;; This remainder polynomial has noninteger coefficients, so the final GCD
-;; returned also has noninteger coefficients. However, if we look closely at the
-;; GCD of `q1` and `q2`, it is clear that we can factor out 1458/169:
+;; The problem is that `div-terms` from [](?2.91) calls `div` on coefficients,
+;; so they end up as fractions. In this case, we have to multiply by a factor of
+;; $169/1458$ to get the desired answer, $P_1$:
 (mul (greatest-common-divisor q1 q2)
      (make-polynomial 'x '((0 169/1458))))
 => p1
@@ -4072,7 +4077,10 @@ z2 => (make-from-mag-ang 30 3)
 
 (paste (?2.94 greatest-common-divisor-pkg))
 
-;; (a) GCD with integer coefficients
+(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
+       greatest-common-divisor-pkg)
+
+;; (a) Polynomial GCD with integer coefficients:
 
 (define (pseudoremainder-terms l1 l2)
   (let* ((o1 (order (first-term l1)))
@@ -4088,14 +4096,11 @@ z2 => (make-from-mag-ang 30 3)
       a
       (gcd-terms b (pseudoremainder-terms a b))))
 
-(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
-       greatest-common-divisor-pkg)
-
 (greatest-common-divisor q1 q2)
 => (make-polynomial 'x '((2 1458) (1 -2916) (0 1458)))
 => (mul p1 (make-polynomial 'x '((0 1458))))
 
-;; (b) GCD with reduced integer coefficients
+;; (b) Polynomial GCD with reduced integer coefficients:
 
 (define (termlist-coeffs tl)
   (if (empty-termlist? tl)
@@ -4109,9 +4114,6 @@ z2 => (make-from-mag-ang 30 3)
              (coeff-gcd (accumulate gcd (car cs) (cdr cs))))
         (mul-term-by-all-terms (make-term 0 (/ coeff-gcd)) a))
       (gcd-terms b (pseudoremainder-terms a b))))
-
-(using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
-       greatest-common-divisor-pkg)
 
 (greatest-common-divisor q1 q2)
 => (make-polynomial 'x '((2 1) (1 -2) (0 1)))
@@ -4127,7 +4129,7 @@ z2 => (make-from-mag-ang 30 3)
        (?2.87 zero-pkg) (?2.88 negate-pkg) (?2.91 div-terms polynomial-div-pkg)
        (?2.96 gcd-terms termlist-coeffs)))
 
-;; (a) Reduce a rational function to lowest terms
+;; (a) Reducing a rational function to lowest terms:
 
 (define (termlist-order tl) (order (first-term tl)))
 (define (quotient-terms l1 l2) (car (div-terms l1 l2)))
@@ -4158,7 +4160,7 @@ z2 => (make-from-mag-ang 30 3)
               (make-polynomial var (cadr reduced))))
       (error 'reduce-poly "polys not in same var" n d)))
 
-;; (b) Generic reducing operation
+;; (b) Rational arithmetic system supporting integers and polynomials:
 
 (define (reduce-integers n d)
   (let ((g (gcd n d)))
@@ -4174,25 +4176,30 @@ z2 => (make-from-mag-ang 30 3)
   (let ((reduced (reduce n d)))
     (cons (car reduced) (cadr reduced))))
 
-(paste (?2.93 add-rat div-rat mul-rat sub-rat)
-       (:2.5.1 rational-pkg))
+(paste (?2.93 add-rat div-rat mul-rat sub-rat) (:2.5.1 rational-pkg))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        rational-pkg reduce-pkg)
 
-(add (make-rational 4 7) (make-rational 30 33)) => '(rational 114 . 77)
+;;     Now it works for integers: $\displaystyle\frac{4}{7} + \frac{30}{33}
+;;     = \frac{114}{77}.$
+(add (make-rational 4 7) (make-rational 30 33))
+=> (make-rational 114 77)
+
+;;     And for polynomials: $\displaystyle\frac{x + 1}{x^3 - 1}
+;;     + \frac{x}{x^2 - 1} = \frac{x^3 + 2x^2 + 3x + 1}{x^4 + x^3 - x - 1}.$
 
 (define p1 (make-polynomial 'x '((1 1) (0 1))))
 (define p2 (make-polynomial 'x '((3 1) (0 -1))))
 (define p3 (make-polynomial 'x '((1 1))))
 (define p4 (make-polynomial 'x '((2 1) (0 -1))))
+
 (define rf1 (make-rational p1 p2))
 (define rf2 (make-rational p3 p4))
 
 (add rf1 rf2)
-=> '(rational (polynomial x . ((3 1) (2 2) (1 3) (0 1)))
-              .
-              (polynomial x . ((4 1) (3 1) (1 -1) (0 -1))))
+=> (make-rational (make-polynomial 'x '((3 1) (2 2) (1 3) (0 1)))
+                  (make-polynomial 'x '((4 1) (3 1) (1 -1) (0 -1))))
 
 ) ; end of SICP
 ) ; end of library
