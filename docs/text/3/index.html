@@ -68,17 +68,18 @@
 <span class="number number--big">3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-19.html">Modularity, Objects, and State<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
-<li>Primitive procedures and primitive data combine to construct compound entities; abstraction controls complexity.</li>
-<li>But these tools are not sufficient for designing programs.</li>
-<li>We also need organizational principles to guide the overall design of the program.</li>
-<li>We need to structure large systems to make them <em>modular</em>.</li>
-<li>A modular program can be divided into coherent parts that can be separately developed and maintained.</li>
-<li>One designed strategy is to base the structure of the program on the structure of physical systems being modeled.</li>
-<li>Done properly, this allows us to add new objects or new actions easily and locally, without changing the whole strategy.</li>
-<li>Program organization depends on the system to be modeled.</li>
-<li>Two “world views”: concentrate on <em>objects</em>, or on <em>streams</em>.</li>
-<li>Objects: Must allow change but preserve identity. Abandon the substitution model for the environment model. Grapple with time in the computational model.</li>
-<li>Streams: Decouple simulated time in the model from the order of events that take place in the computer. Delayed evaluation.</li>
+<li>So far, we’ve learned how to build abstractions with procedures and data.</li>
+<li>Abstraction is crucial to deal with complexity, but it’s not the whole story. We also need organizational principles to guide the overall design of the program.</li>
+<li>We need strategies to help us build <em>modular</em> systems, which naturally divide into coherent parts that can be separately maintained.</li>
+</ul>
+<blockquote>
+<p>If we have been successful in our system organization, then to add a new feature or debug an old one we will have to work on only a localized part of the system. <a class="citation" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-19.html" title="SICP Chapter 3">(Chapter&nbsp;3)</a></p>
+</blockquote>
+<ul>
+<li>In this chapter we will investigate two prominent organizational strategies.</li>
+<li>The first views the system as a collection of distinct <em>objects</em> that change over time.</li>
+<li>The second focuses on <em>streams</em> of information that flow in the system.</li>
+<li>Both approaches raise significant linguistic issues in our programming.</li>
 </ul>
 <h2 id="contents" class="anchor">
 <a class="anchor__link link" href="#contents" aria-hidden="true">#</a> Contents

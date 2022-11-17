@@ -1561,17 +1561,16 @@ Angle             `angle-polar`      `angle-rectangular`
 
 # 3: Modularity, Objects, and State
 
-- Primitive procedures and primitive data combine to construct compound entities; abstraction controls complexity.
-- But these tools are not sufficient for designing programs.
-- We also need organizational principles to guide the overall design of the program.
-- We need to structure large systems to make them _modular_.
-- A modular program can be divided into coherent parts that can be separately developed and maintained.
-- One designed strategy is to base the structure of the program on the structure of physical systems being modeled.
-- Done properly, this allows us to add new objects or new actions easily and locally, without changing the whole strategy.
-- Program organization depends on the system to be modeled.
-- Two "world views": concentrate on _objects_, or on _streams_.
-- Objects: Must allow change but preserve identity. Abandon the substitution model for the environment model. Grapple with time in the computational model.
-- Streams: Decouple simulated time in the model from the order of events that take place in the computer. Delayed evaluation.
+- So far, we've learned how to build abstractions with procedures and data.
+- Abstraction is crucial to deal with complexity, but it's not the whole story. We also need organizational principles to guide the overall design of the program.
+- We need strategies to help us build _modular_ systems, which naturally divide into coherent parts that can be separately maintained.
+
+> If we have been successful in our system organization, then to add a new feature or debug an old one we will have to work on only a localized part of the system. [@3]
+
+- In this chapter we will investigate two prominent organizational strategies.
+- The first views the system as a collection of distinct _objects_ that change over time.
+- The second focuses on _streams_ of information that flow in the system.
+- Both approaches raise significant linguistic issues in our programming.
 
 ## 3.1: Assignment and Local State
 
