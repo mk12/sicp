@@ -109,9 +109,9 @@
              balance)
       <span class="cn">"Insufficient funds"</span>))</code></pre>
 <ul>
-<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="mv">name new-value</span>)</code>.</li>
+<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="mv">name</span> <span class="mv">new-value</span>)</code>.</li>
 <li>Procedures names that end with a bang change the values of variables or of data structures.</li>
-<li>The expression <code>(<span class="kw">begin</span> <span class="mv">exp1 exp2</span> ... <span class="mv">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
+<li>The expression <code>(<span class="kw">begin</span> <span class="mv">exp1</span> <span class="mv">exp2</span> ... <span class="mv">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
 <li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> withdraw

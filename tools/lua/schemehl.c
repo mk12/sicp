@@ -27,11 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// If enabled, the highlighter will avoid closing <span> tags before whitespace
-// only to reopen them again with the same class as before. One reason to
-// disable this would be if any of the CSS styles set a background color.
-#define MINIMIZE_TAGS 1
-
 // Enable this to print input code to stderr.
 #define DEBUG_INPUT 0
 
@@ -40,6 +35,23 @@
 
 // Enable this to print the quote stack to stderr.
 #define DEBUG_QUOTES 0
+
+// CSS classes used by docs/style.css.
+static const char C_ATTENTION[] = "at";
+static const char C_CONSOLE[] = "cs";
+static const char C_CONSTANT[] = "cn";
+static const char C_ERROR[] = "er";
+static const char C_FUNCTION[] = "fu";
+static const char C_KEYWORD[] = "kw";
+static const char C_METAVARIABLE[] = "mv";
+static const char C_OPERATOR[] = "op";
+static const char C_QUOTED[] = "qu";
+
+// Returns true if the given CSS class is visible on whitespace, e.g. because it
+// sets a background color or underline.
+static bool visible_on_whitespace(const char *class) {
+    return class && strcmp(class, C_METAVARIABLE) == 0;
+}
 
 // SICP assertion operators to highlight normally.
 static const char *const NORMAL_ASSERTIONS[] = {
@@ -575,7 +587,8 @@ static void hl_drop_ws(struct Highlighter *hl) { hl->pending_ws.data = NULL; }
 // escaping special characters with HTML entities.
 static void hl_write(struct Highlighter *hl, const char *class,
                      struct Span span) {
-    if (class != hl->class || (!MINIMIZE_TAGS && hl->pending_ws.data)) {
+    if (class != hl->class
+        || (visible_on_whitespace(class) && hl->pending_ws.data)) {
         hl_flush(hl);
         if (class) {
             buf_write(hl->buf, SPAN("<span class=\""));
@@ -613,7 +626,7 @@ static void hl_write(struct Highlighter *hl, const char *class,
 }
 
 // Writes a span consisting only of whitespace. This is a special case so that
-// we can apply the MINIMIZE_TAGS optimization.
+// we can avoid closing and reopening span tags with the same class.
 static void hl_whitespace(struct Highlighter *hl, struct Span span) {
     assert(!hl->pending_ws.data);
     hl->pending_ws = span;
@@ -1210,17 +1223,6 @@ static void qt_dump(struct QuoteTracker *qt) {
     fprintf(stderr, "\n");
 }
 #endif
-
-// CSS classes used by docs/style.css.
-static const char C_ATTENTION[] = "at";
-static const char C_CONSOLE[] = "cs";
-static const char C_CONSTANT[] = "cn";
-static const char C_ERROR[] = "er";
-static const char C_FUNCTION[] = "fu";
-static const char C_KEYWORD[] = "kw";
-static const char C_METAVARIABLE[] = "mv";
-static const char C_OPERATOR[] = "op";
-static const char C_QUOTED[] = "qu";
 
 // Renders a Scheme comment to HTML.
 static void render_comment(struct Highlighter *out, struct Span token) {

@@ -108,16 +108,16 @@
 </h3>
 <p>We often need local variables in addition to the formal parameters. We can do this with a lambda expression that takes the local variables as arguments, but this is so common that there is a special form <code>let</code> to make it easier.</p>
 <p>The general form of a let-expression is:</p>
-<pre><code class="codeblock">(<span class="kw">let</span> ((<span class="mv">var1 exp1</span>)
-      (<span class="mv">var2 exp2</span>)
+<pre><code class="codeblock">(<span class="kw">let</span> ((<span class="mv">var1</span> <span class="mv">exp1</span>)
+      (<span class="mv">var2</span> <span class="mv">exp2</span>)
       ...
-      (<span class="mv">varn expn</span>))
+      (<span class="mv">varn</span> <span class="mv">expn</span>))
   <span class="mv">body</span>)</code></pre>
 <p>This is just syntactic sugar for:</p>
-<pre><code class="codeblock">((<span class="kw">lambda</span> (<span class="mv">var1 var2</span> ... <span class="mv">varn</span>)
+<pre><code class="codeblock">((<span class="kw">lambda</span> (<span class="mv">var1</span> <span class="mv">var2</span> ... <span class="mv">varn</span>)
    <span class="mv">body</span>)
- <span class="mv">exp1
- exp2</span>
+ <span class="mv">exp1</span>
+ <span class="mv">exp2</span>
  ...
  <span class="mv">expn</span>)</code></pre>
 <ul>

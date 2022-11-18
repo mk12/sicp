@@ -200,7 +200,7 @@
 <a class="anchor__link link" href="#4.1.3.2" aria-hidden="true">#</a> Representing procedures
 </h3>
 <ul>
-<li><code>(apply-primitive-procedure <span class="mv">proc args</span>)</code> applies a primitive procedure to <code><span class="mv">args</span></code>.</li>
+<li><code>(apply-primitive-procedure <span class="mv">proc</span> <span class="mv">args</span>)</code> applies a primitive procedure to <code><span class="mv">args</span></code>.</li>
 <li><code>(primitive-procedure? <span class="mv">proc</span>)</code> tests whether <code><span class="mv">proc</span></code> is a primitive procedure.</li>
 <li>Compound procedures are represented by the following data structure:</li>
 </ul>
@@ -213,10 +213,10 @@
 <a class="anchor__link link" href="#4.1.3.3" aria-hidden="true">#</a> Operations on environments
 </h3>
 <ul>
-<li><code>(lookup-variable-value <span class="mv">var env</span>)</code> returns the value bound to a variable.</li>
-<li><code>(extend-environment <span class="mv">variables values base-env</span>)</code> returns a new environment extended with a frame containing the given bindings.</li>
-<li><code>(define-variable! <span class="mv">var value env</span>)</code> adds a binding to the first frame of <code><span class="mv">env</span></code>.</li>
-<li><code>(set-variable-value! <span class="mv">var value env</span>)</code> changes a binding in <code><span class="mv">env</span></code>.</li>
+<li><code>(lookup-variable-value <span class="mv">var</span> <span class="mv">env</span>)</code> returns the value bound to a variable.</li>
+<li><code>(extend-environment <span class="mv">variables</span> <span class="mv">values</span> <span class="mv">base-env</span>)</code> returns a new environment extended with a frame containing the given bindings.</li>
+<li><code>(define-variable! <span class="mv">var</span> <span class="mv">value</span> <span class="mv">env</span>)</code> adds a binding to the first frame of <code><span class="mv">env</span></code>.</li>
+<li><code>(set-variable-value! <span class="mv">var</span> <span class="mv">value</span> <span class="mv">env</span>)</code> changes a binding in <code><span class="mv">env</span></code>.</li>
 <li>Here is a partial implementation:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> (enclosing-environment env) (<span class="fu">cdr</span> env))

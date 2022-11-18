@@ -178,7 +178,7 @@
 </table>
 <ul>
 <li>Before, we implemented each generic procedure using case analysis. Now, we will write a single procedure that looks up the operation name and argument type in a table.</li>
-<li>Assume we have the procedure <code>(put <span class="mv">op type item</span>)</code> which installs <code><span class="mv">item</span></code> in the the table, and <code>(get <span class="mv">op type</span>)</code> which retrieves it. (We will implement them in <a href="../3/3.html#3.3.3">§&nbsp;3.3.3</a>.)</li>
+<li>Assume we have the procedure <code>(put <span class="mv">op</span> <span class="mv">type</span> <span class="mv">item</span>)</code> which installs <code><span class="mv">item</span></code> in the the table, and <code>(get <span class="mv">op</span> <span class="mv">type</span>)</code> which retrieves it. (We will implement them in <a href="../3/3.html#3.3.3">§&nbsp;3.3.3</a>.)</li>
 <li>Then, we can define a collection of procedures, or <em>package</em>, to install the each representation of complex numbers. For example, the rectangular representation:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> (install-rectangular-package)
