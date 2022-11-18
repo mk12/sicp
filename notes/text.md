@@ -1574,36 +1574,43 @@ Angle             `angle-polar`      `angle-rectangular`
 
 ## 3.1: Assignment and Local State
 
-- The world is populated by independent objects possessing changing state.
-- An object "has state": its behavior is influenced by history.
-- A bank account is an example of a stateful object.
-- An object's state can be characterized by _state variables_.
-- We need an _assignment operator_ to change the value associated with a name representing a local variable of an object.
+- The world is populated by independent objects possessing individual, changing state.
+- When we say an object "has state", we mean its behavior is influenced by its history.
+- Instead of remembering an object's history, we can summarize it with _state variables_.
+- For example, the state variable for a bank account would record its current balance.
+
+>  Indeed, the view that a system is composed of separate objects is most useful when the state variables of the system can be grouped into closely coupled subsystems that are only loosely coupled to other subsystems. [@3.1]
+
+- To model state variables in our programming language, we need an _assignment operator_ that changes the value associated with a name.
 
 ### 3.1.1: Local State Variables
 
-- Let's model the situation of withdrawing from a bank account.
-- The `withdraw` procedure should accept an amount of money as an argument and return the balance after the withdrawal.
+- Let's model the situation of withdrawing money from a bank account.
+- `(withdraw «amount»)` should withdraw the given amount and return the new balance.
 - If you try to withdraw too much, it should return the string "Insufficient funds".
 - Suppose we begin with \$100:
 
 ```
 (withdraw 25)
-=> 75
+→ 75
+
 (withdraw 25)
-=> 50
+→ 50
+
 (withdraw 60)
-=> "Insufficient funds"
+→ "Insufficient funds"
+
 (withdraw 15)
-=> 35
+→ 35
 ```
 
-- Evaluating the same combination twice, `(withdraw 25)`, returned different values.
-- We have lost referential transparency. This is a new kind of behavior of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.
-- To implement `withdraw`, we define a variable called `balance`:
+- Notice that `(withdraw 25)` was called twice, but returned different values.
+- This is a new kind of behavior. Up until now, the returned value of a procedure depended only on the arguments, like a mathematical function. 
+- Here's how we implement `withdraw`:
 
 ```
 (define balance 100)
+
 (define (withdraw amount)
   (if (>= balance amount)
       (begin (set! balance (- balance amount))
@@ -1611,10 +1618,9 @@ Angle             `angle-polar`      `angle-rectangular`
       "Insufficient funds"))
 ```
 
-- This uses the `set!` special form, whose syntax is `(set! «name» «new-value»)`.
-- Procedures names that end with a bang change the values of variables or of data structures.
-- The expression `(begin «exp1» «exp2» ... «expk»)` evaluates all the expressions in sequence and returns the value of the last.
-- We made `balance` a global variable. It is much better to have it _encapsulated_ within `withdraw`, like so:
+- This uses the special form `(set! «name» «new-value»)` to change the value of `balance`.
+- The expression `(begin «exp1» «exp2» ... «expn»)` evaluates all the expressions in sequence and returns the value of the last one.
+- Instead of defining `balance` globally, we can _encapsulate_ it within `withdraw`:
 
 ```
 (define withdraw
@@ -1626,7 +1632,7 @@ Angle             `angle-polar`      `angle-rectangular`
           "Insufficient funds"))))
 ```
 
-- Unfortunately, the substitution model of evaluation is no longer adequate once we have assignment in our procedures.
+- Unfortunately, the substitution model of evaluation from [](@1.1.5) is no longer adequate once we have assignment in our procedures.
 - For now, we technically have no way to understand how these procedures work. We will develop a new model soon.
 - The following procedure creates "withdraw processors":
 
@@ -1637,20 +1643,25 @@ Angle             `angle-polar`      `angle-rectangular`
         (begin (set! balance (- balance amount))
                balance)
         "Insufficient funds")))
+
 (define W1 (make-withdraw 100))
 (define W2 (make-withdraw 100))
+
 (W1 50)
-=> 50
+→ 50
+
 (W2 70)
-=> 30
+→ 30
+
 (W2 40)
-=> "Insufficient funds"
+→ "Insufficient funds"
+
 (W1 40)
-=> 10
+→ 10
 ```
 
-- Here, `W1` and `W2` are complement independent objects, each with its own local state variable.
-- We can create a "bank-account object" that responds to multiple messages, all operating on the same local state:
+- `W1` and `W2` are completely independent objects, each with its own local state variable.
+- We can also create a "bank-account object" that responds to multiple messages, all operating on the same local state:
 
 ```
 (define (make-account balance)
@@ -1665,7 +1676,7 @@ Angle             `angle-polar`      `angle-rectangular`
   (define (dispatch m)
     (cond ((eq? m 'withdraw) withdraw)
           ((eq? m 'deposit) deposit)
-          (else (error "Unknown request: MAKE-ACCOUNT" m))))
+          (else (error "unknown request" m))))
   dispatch)
 ```
 

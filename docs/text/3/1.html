@@ -74,45 +74,53 @@
 <span class="number">3.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html">Assignment and Local State<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h1>
 <ul>
-<li>The world is populated by independent objects possessing changing state.</li>
-<li>An object “has state”: its behavior is influenced by history.</li>
-<li>A bank account is an example of a stateful object.</li>
-<li>An object’s state can be characterized by <em>state variables</em>.</li>
-<li>We need an <em>assignment operator</em> to change the value associated with a name representing a local variable of an object.</li>
+<li>The world is populated by independent objects possessing individual, changing state.</li>
+<li>When we say an object “has state,<span class="tuck">”</span> we mean its behavior is influenced by its history.</li>
+<li>Instead of remembering an object’s history, we can summarize it with <em>state variables</em>.</li>
+<li>For example, the state variable for a bank account would record its current balance.</li>
+</ul>
+<blockquote>
+<p>Indeed, the view that a system is composed of separate objects is most useful when the state variables of the system can be grouped into closely coupled subsystems that are only loosely coupled to other subsystems. <a class="citation" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html" title="SICP Section 3.1">(Section&nbsp;3.1)</a></p>
+</blockquote>
+<ul>
+<li>To model state variables in our programming language, we need an <em>assignment operator</em> that changes the value associated with a name.</li>
 </ul>
 <h2 id="3.1.1" class="anchor">
 <a class="anchor__link link" href="#3.1.1" aria-hidden="true">#</a> <span class="number">3.1.1</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_sec_3.1.1">Local State Variables<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>Let’s model the situation of withdrawing from a bank account.</li>
-<li>The <code>withdraw</code> procedure should accept an amount of money as an argument and return the balance after the withdrawal.</li>
+<li>Let’s model the situation of withdrawing money from a bank account.</li>
+<li><code>(withdraw <span class="mv">amount</span>)</code> should withdraw the given amount and return the new balance.</li>
 <li>If you try to withdraw too much, it should return the string “Insufficient funds.<span class="tuck">”</span></li>
 <li>Suppose we begin with $100:</li>
 </ul>
 <pre><code class="codeblock">(withdraw <span class="cn">25</span>)
-<span class="op">=&gt;</span> <span class="cn">75</span>
+<span class="cs">→ 75</span>
+
 (withdraw <span class="cn">25</span>)
-<span class="op">=&gt;</span> <span class="cn">50</span>
+<span class="cs">→ 50</span>
+
 (withdraw <span class="cn">60</span>)
-<span class="op">=&gt;</span> <span class="cn">"Insufficient funds"</span>
+<span class="cs">→ "Insufficient funds"</span>
+
 (withdraw <span class="cn">15</span>)
-<span class="op">=&gt;</span> <span class="cn">35</span></code></pre>
+<span class="cs">→ 35</span></code></pre>
 <ul>
-<li>Evaluating the same combination twice, <code>(withdraw <span class="cn">25</span>)</code>, returned different values.</li>
-<li>We have lost referential transparency. This is a new kind of behavior of a procedure. Until now, the returned value depended only on the arguments, like a mathematical function.</li>
-<li>To implement <code>withdraw</code>, we define a variable called <code>balance</code>:</li>
+<li>Notice that <code>(withdraw <span class="cn">25</span>)</code> was called twice, but returned different values.</li>
+<li>This is a new kind of behavior. Up until now, the returned value of a procedure depended only on the arguments, like a mathematical function.</li>
+<li>Here’s how we implement <code>withdraw</code>:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> balance <span class="cn">100</span>)
+
 (<span class="kw">define</span> (withdraw amount)
   (<span class="kw">if</span> (<span class="fu">&gt;=</span> balance amount)
       (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
              balance)
       <span class="cn">"Insufficient funds"</span>))</code></pre>
 <ul>
-<li>This uses the <code>set!</code> special form, whose syntax is <code>(<span class="kw">set!</span> <span class="mv">name</span> <span class="mv">new-value</span>)</code>.</li>
-<li>Procedures names that end with a bang change the values of variables or of data structures.</li>
-<li>The expression <code>(<span class="kw">begin</span> <span class="mv">exp1</span> <span class="mv">exp2</span> ... <span class="mv">expk</span>)</code> evaluates all the expressions in sequence and returns the value of the last.</li>
-<li>We made <code>balance</code> a global variable. It is much better to have it <em>encapsulated</em> within <code>withdraw</code>, like so:</li>
+<li>This uses the special form <code>(<span class="kw">set!</span> <span class="mv">name</span> <span class="mv">new-value</span>)</code> to change the value of <code>balance</code>.</li>
+<li>The expression <code>(<span class="kw">begin</span> <span class="mv">exp1</span> <span class="mv">exp2</span> ... <span class="mv">expn</span>)</code> evaluates all the expressions in sequence and returns the value of the last one.</li>
+<li>Instead of defining <code>balance</code> globally, we can <em>encapsulate</em> it within <code>withdraw</code>:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> withdraw
   (<span class="kw">let</span> ((balance <span class="cn">100</span>))
@@ -122,7 +130,7 @@
                  balance)
           <span class="cn">"Insufficient funds"</span>))))</code></pre>
 <ul>
-<li>Unfortunately, the substitution model of evaluation is no longer adequate once we have assignment in our procedures.</li>
+<li>Unfortunately, the substitution model of evaluation from <a href="../1/1.html#1.1.5">§&nbsp;1.1.5</a> is no longer adequate once we have assignment in our procedures.</li>
 <li>For now, we technically have no way to understand how these procedures work. We will develop a new model soon.</li>
 <li>The following procedure creates “withdraw processors”:</li>
 </ul>
@@ -132,19 +140,24 @@
         (<span class="kw">begin</span> (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
                balance)
         <span class="cn">"Insufficient funds"</span>)))
+
 (<span class="kw">define</span> W1 (make-withdraw <span class="cn">100</span>))
 (<span class="kw">define</span> W2 (make-withdraw <span class="cn">100</span>))
+
 (W1 <span class="cn">50</span>)
-<span class="op">=&gt;</span> <span class="cn">50</span>
+<span class="cs">→ 50</span>
+
 (W2 <span class="cn">70</span>)
-<span class="op">=&gt;</span> <span class="cn">30</span>
+<span class="cs">→ 30</span>
+
 (W2 <span class="cn">40</span>)
-<span class="op">=&gt;</span> <span class="cn">"Insufficient funds"</span>
+<span class="cs">→ "Insufficient funds"</span>
+
 (W1 <span class="cn">40</span>)
-<span class="op">=&gt;</span> <span class="cn">10</span></code></pre>
+<span class="cs">→ 10</span></code></pre>
 <ul>
-<li>Here, <code>W1</code> and <code>W2</code> are complement independent objects, each with its own local state variable.</li>
-<li>We can create a “bank-account object” that responds to multiple messages, all operating on the same local state:</li>
+<li><code>W1</code> and <code>W2</code> are completely independent objects, each with its own local state variable.</li>
+<li>We can also create a “bank-account object” that responds to multiple messages, all operating on the same local state:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> (make-account balance)
   (<span class="kw">define</span> (withdraw amount)
@@ -158,7 +171,7 @@
   (<span class="kw">define</span> (dispatch m)
     (<span class="kw">cond</span> ((<span class="fu">eq?</span> m <span class="qu">'withdraw</span>) withdraw)
           ((<span class="fu">eq?</span> m <span class="qu">'deposit</span>) deposit)
-          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"Unknown request: MAKE-ACCOUNT"</span> m))))
+          (<span class="kw">else</span> (<span class="fu">error</span> <span class="cn">"unknown request"</span> m))))
   dispatch)</code></pre>
 <aside><h4>Exercises:</h4> <ul class="flat"><li class="flat__item"><a href="../../exercise/3/1.html#ex3.1">3.1</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.2">3.2</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.3">3.3</a>, </li><li class="flat__item"><a href="../../exercise/3/1.html#ex3.4">3.4</a></li></ul></aside>
 <h2 id="3.1.2" class="anchor">
