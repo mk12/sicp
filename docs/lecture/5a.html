@@ -81,42 +81,39 @@
 </h3>
 <ul>
 <li>We’ve learned enough about programming in Lisp to do fairly complex things.</li>
-<li>We have done all of this without an assignment statement.</li>
-<li>Today, we’re going to add the assignment statement.</li>
+<li>Today, we’re going to add an assignment statement to the language.</li>
 <li>If we can do so much without it, why should we add it?</li>
-<li>After all, we only add something to the language if we have a good reason for doing so.</li>
-<li>We are adding assignment because it will allow us to break some problems up into certain sets of pieces, and this new means of decomposition would be impossible without assignment.</li>
+<li>We need to have a good reason for adding a new feature to the language!</li>
+<li>We’re doing it because it gives us a new way of decomposing programs.</li>
 </ul>
 <h3 id="1.2" class="anchor">
 <a class="anchor__link link" href="#1.2" aria-hidden="true">#</a> Functional programming
 </h3>
 <ul>
-<li>Functional programs encode mathematical truths.</li>
-<li>Processes evolved by these programs can be understood by substitution, which preserves truth (equals for equals).</li>
-<li>Methods may be distinguished by the choice of truths expressed.</li>
-<li>Although functional, Lisp is not quite the same as math. Math is declarative, but Lisp is imperative.</li>
+<li>Functional programs are a kind of encoding of mathematical truths.</li>
+<li>Processes evolved by these programs can be understood by substitution.</li>
+<li>It’s like simplifying an equation. You write a sequence of equalities, preserving truth.</li>
 </ul>
 <h3 id="1.3" class="anchor">
 <a class="anchor__link link" href="#1.3" aria-hidden="true">#</a> Assignment and Time
 </h3>
 <ul>
 <li>To do assignment, we use <code>(<span class="kw">set!</span> <span class="mv">variable</span> <span class="mv">value</span>)</code>.</li>
-<li>By convention, we suffix a bang to the names of procedures that do assignment-like things.</li>
-<li><code>set!</code> is like <code>define</code>, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.</li>
-<li>When we add assignment, we also have to consider <em>time</em>.</li>
-<li>The assignment produces a moment in time: a difference between a <em>before</em> and an <em>after</em> in time.</li>
-<li>After the moment, <code><span class="mv">variable</span></code> has the value <code><span class="mv">value</span></code>, independent of what value it had before.</li>
-<li>So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.</li>
-<li>This isn’t the case when we have assignment. The same expression can lead to different answers because it depends on time.</li>
-<li>The substitution model completely breaks down. It is static.</li>
-<li>We need a new model of computation for this “bad thing.<span class="tuck">”</span> We had better have a good reason for introducing assignment.</li>
+<li>The “!” suffix is a convention for procedures that do assignment-like things.</li>
+<li>Now that we have assignment, we have to consider <em>time</em>.</li>
+<li>Assignment produces a moment in time, which has a <em>before</em> and an <em>after</em>.</li>
+<li>After that moment, <code><span class="mv">variable</span></code> has the value <code><span class="mv">value</span></code>, independent of what it was before.</li>
+<li>So far, calling procedures with the same inputs always produced the same outputs.</li>
+<li>With assignment, this is no longer true because the output depends on time.</li>
+<li>The substitution model completely breaks down. It assumes that things don’t change.</li>
+<li>We need a new model of computation for this “bad thing.<span class="tuck">”</span> We’d better have a good reason for introducing assignment.</li>
 </ul>
 <h3 id="1.4" class="anchor">
 <a class="anchor__link link" href="#1.4" aria-hidden="true">#</a> Identity
 </h3>
 <ul>
 <li>Symbols for variables no longer refer directly to their values, but to some <em>place</em>.</li>
-<li>A variable now refers to an <em>identity</em>. This is an entity associated with a series of causally related values over time.</li>
+<li>A variable now refers to an <em>identity</em> associated with a series of causally related values.</li>
 <li>The state of an identity is its current associated value.</li>
 <li>When we talk about <em>time</em>, we mean the before/after ordering of causal values.</li>
 </ul>
@@ -142,8 +139,8 @@
                   (loop))))
     (loop)))</code></pre>
 <ul>
-<li>There are ways of making errors in the second program that simply didn’t exist when we couldn’t do assignment.</li>
-<li>If we change the ordering of the assignments, the procedure calculates the wrong value.</li>
+<li>There are ways of making mistakes in the second program that simply didn’t exist when we couldn’t do assignment.</li>
+<li>For example, it produces the wrong answer if we change the order of the assignments.</li>
 </ul>
 <h2 id="2" class="anchor">
 <a class="anchor__link link" href="#2" aria-hidden="true">#</a> Part 2

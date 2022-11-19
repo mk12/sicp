@@ -1036,36 +1036,33 @@ $$
 ### Introducing assignment
 
 - We've learned enough about programming in Lisp to do fairly complex things.
-- We have done all of this without an assignment statement.
-- Today, we're going to add the assignment statement.
+- Today, we're going to add an assignment statement to the language.
 - If we can do so much without it, why should we add it?
-- After all, we only add something to the language if we have a good reason for doing so.
-- We are adding assignment because it will allow us to break some problems up into certain sets of pieces, and this new means of decomposition would be impossible without assignment.
+- We need to have a good reason for adding a new feature to the language!
+- We're doing it because it gives us a new way of decomposing programs.
 
 ### Functional programming
 
-- Functional programs encode mathematical truths.
-- Processes evolved by these programs can be understood by substitution, which preserves truth (equals for equals).
-- Methods may be distinguished by the choice of truths expressed.
-- Although functional, Lisp is not quite the same as math. Math is declarative, but Lisp is imperative.
+- Functional programs are a kind of encoding of mathematical truths.
+- Processes evolved by these programs can be understood by substitution.
+- It's like simplifying an equation. You write a sequence of equalities, preserving truth.
 
 ### Assignment and Time
 
 - To do assignment, we use `(set! «variable» «value»)`.
-- By convention, we suffix a bang to the names of procedures that do assignment-like things.
-- `set!` is like `define`, but the latter is only used once to create the variable in the beginning; the former can only be used on existing variables.
-- When we add assignment, we also have to consider _time_.
-- The assignment produces a moment in time: a difference between a _before_ and an _after_ in time.
-- After the moment, `«variable»` has the value `«value»`, independent of what value it had before.
-- So far, calling procedures with the same inputs always produced the same outputs. These procedures are functions.
-- This isn't the case when we have assignment. The same expression can lead to different answers because it depends on time.
-- The substitution model completely breaks down. It is static.
-- We need a new model of computation for this "bad thing". We had better have a good reason for introducing assignment.
+- The "!" suffix is a convention for procedures that do assignment-like things.
+- Now that we have assignment, we have to consider _time_.
+- Assignment produces a moment in time, which has a _before_ and an _after_.
+- After that moment, `«variable»` has the value `«value»`, independent of what it was before.
+- So far, calling procedures with the same inputs always produced the same outputs.
+- With assignment, this is no longer true because the output depends on time.
+- The substitution model completely breaks down. It assumes that things don't change.
+- We need a new model of computation for this "bad thing". We'd better have a good reason for introducing assignment.
 
 ### Identity
 
 - Symbols for variables no longer refer directly to their values, but to some _place_.
-- A variable now refers to an _identity_. This is an entity associated with a series of causally related values over time.
+- A variable now refers to an _identity_ associated with a series of causally related values.
 - The state of an identity is its current associated value.
 - When we talk about _time_, we mean the before/after ordering of causal values.
 
@@ -1093,8 +1090,8 @@ $$
     (loop)))
 ```
 
-- There are ways of making errors in the second program that simply didn't exist when we couldn't do assignment.
-- If we change the ordering of the assignments, the procedure calculates the wrong value.
+- There are ways of making mistakes in the second program that simply didn't exist when we couldn't do assignment.
+- For example, it produces the wrong answer if we change the order of the assignments.
 
 ## Part 2
 
