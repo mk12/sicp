@@ -935,10 +935,12 @@ Skeletons:
 
 - We can represent a complex number rectangular form or in polar form.
 - The rectangular form $x + yi$ and the polar form $re^{iθ}$ are related:
+
 $$\begin{aligned}
 x &= r\cos θ, & r &= \sqrt{x^2+y^2}, \\
 y &= r\sin θ, & θ &= \arctan(y, x).
 \end{aligned}$$
+
 - Adding is easy in rectangular form: just add up the real and imaginary parts.
 - Multiplying is easy in polar form: just multiply the magnitudes and add the angles.
 
