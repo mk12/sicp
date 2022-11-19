@@ -6,6 +6,11 @@ local vars = {}
 -- Options passed to pandoc.write calls, derived from PANDOC_WRITER_OPTIONS.
 local subdoc_options
 
+-- Trims whitespace from the start and end of a string.
+local function trim(s)
+    return s:match("^%s*(.-)%s*$")
+end
+
 -- Renders elements to HTML. Pandoc will do this anyway after the filter, but
 -- rendering early is useful for post-processing that HTML.
 local function render(elements)
@@ -77,11 +82,12 @@ end
 -- Renders math with KaTeX.
 local function render_math(el)
     vars.math = true
+    local tex = trim(el.text)
     local response
     if el.mathtype == "DisplayMath" then
-        response = call_render_server({"katex", "display", el.text})
+        response = call_render_server({"katex", "display", tex})
     else
-        response = call_render_server({"katex", el.text})
+        response = call_render_server({"katex", tex})
     end
     return pandoc.RawInline("html", response)
 end

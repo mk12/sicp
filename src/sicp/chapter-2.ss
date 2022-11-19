@@ -388,18 +388,22 @@
 ;; $i$ and $j$, represented both in lower-upper bound form and in
 ;; center-tolerance form:
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; i &= [a_i,b_i] = [c_i(1-t_i),c_i(1+t_i)], \\
 ;; j &= [a_j,b_j] = [c_j(1-t_j),c_j(1+t_j)].
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; Assuming all numbers are positive, their product is
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; ij &= [a_ia_j,b_ib_j] \\
 ;;    &= [c_ic_j(1-t_i)(1-t_j),c_ic_j(1+t_i)(1+t_j)] \\
 ;;    &= [c_ic_j(1-t_i-t_j+t_it_j),c_ic_j(1+t_i+t_j+t_it_j)].
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; Since $t_i$ and $t_j$ are small, their product $t_it_j$ is negligible, so we
 ;; can approximate:
@@ -3933,11 +3937,13 @@ z2 => (make-from-mag-ang 30 3)
 
 ;; Here's a more complicated test:
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; &\phantom{=} (yx^3 + 2)(y + x^2 + 1) \\
 ;; &= \left(1y^1\right)x^5 + \left(1y^2 + 1y^1\right)x^3 + 2x^2
 ;; + \left(2y^1 + 2y^0\right)x^0.
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 (mul (make-polynomial 'x `((3 ,(make-polynomial 'y '((1 1)))) (0 2)))
      (make-polynomial 'y `((1 1) (0 ,(make-polynomial 'x '((2 1) (0 1)))))))
 => (make-polynomial 'x `((5 ,(make-polynomial 'y '((1 1))))
@@ -3975,8 +3981,10 @@ z2 => (make-from-mag-ang 30 3)
 
 ;; This gives a correct answer, but does not reduce it to lowest terms:
 ;;
-;; $$\frac{x^3 + 1}{x^2 + 1} + \frac{x^3 + 1}{x^2 + 1}
-;; = \frac{2x^5 + 2x^3 + 2x^2 + 2}{x^4 + 2x^2 + 1}.$$
+;; $$
+;; \frac{x^3 + 1}{x^2 + 1} + \frac{x^3 + 1}{x^2 + 1}
+;; = \frac{2x^5 + 2x^3 + 2x^2 + 2}{x^4 + 2x^2 + 1}.
+;; $$
 
 (define p1 (make-polynomial 'x '((2 1) (0 1))))
 (define p2 (make-polynomial 'x '((3 1) (0 1))))

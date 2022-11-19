@@ -504,11 +504,13 @@ circumference ~> 62.8318
 ;;
 ;; The Fibonacci sequence is defined recursively by
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; \Fib(0) &= 0, \\
 ;; \Fib(1) &= 1, \\
 ;; \Fib(n) &= \Fib(n-1) + \Fib(n-2).
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; **Lemma.** $\Fib(n)$ is equal to $f(n)=\dfrac{\varphi^n-\psi^n}{\sqrt5}.$
 ;;
@@ -518,13 +520,16 @@ circumference ~> 62.8318
 ;;
 ;; When $n=1$,
 ;;
-;; $$f(1)=\frac{\varphi^1-\psi^1}{\sqrt5} =
+;; $$
+;; f(1)=\frac{\varphi^1-\psi^1}{\sqrt5} =
 ;; \frac{\frac{1+\sqrt5}{2}-\frac{1-\sqrt5}{2}}{\sqrt5} =
-;; \frac{\frac{2\sqrt5}{2}}{\sqrt5} = 1.$$
+;; \frac{\frac{2\sqrt5}{2}}{\sqrt5} = 1.
+;; $$
 ;;
 ;; When $n=2$,
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; f(2) &= \frac{\varphi^2-\psi^2}{\sqrt5} \\
 ;; &= \frac{\left(\frac{1+\sqrt5}{2}\right)^2 -
 ;;    \left(\frac{1-\sqrt5}{2}\right)^2}{\sqrt5} \\
@@ -533,11 +538,13 @@ circumference ~> 62.8318
 ;;    \left(\left(1+\sqrt5\right)+\left(1-\sqrt5\right)\right)}{4\sqrt5} \\
 ;; &= \frac{\left(2\sqrt5\right)(2)}{4\sqrt5} \\
 ;; &= 1.
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; Now comes the inductive step:
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; f(n-1)+f(n-2) &= \frac{\varphi^{n-1}-\psi^{n-1}}{\sqrt5} +
 ;; \frac{\varphi^{n-2}-\psi^{n-2}}{\sqrt{5}} \\
 ;; &= \frac{\left(\varphi^{n-1}+\varphi^{n-2}\right) -
@@ -550,7 +557,8 @@ circumference ~> 62.8318
 ;;    \psi^n\psi^{-1}\left(\psi\right)}{\sqrt5} \\
 ;; &= \frac{\varphi^n-\psi^n}{\sqrt5} \\
 ;; &= f(n).
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; By induction, $f(n)=\Fib(n)$ for all $n$. $\blacksquare$
 ;;
@@ -560,13 +568,15 @@ circumference ~> 62.8318
 ;; _Proof._ It suffices to show that the absolute difference is less than one
 ;; half:
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; \abs{\Fib(n)-\frac{\varphi^n}{\sqrt5}} &< \frac12 \\
 ;; \abs{\frac{\varphi^n-\psi^n}{\sqrt5} - \frac{\varphi^n}{\sqrt5}} &< \frac12\\
 ;; \abs{-\frac{\psi^n}{\sqrt5}} &< \frac12 \\
 ;; \frac{\abs{-\psi^n}}{\sqrt5} &< \frac12 \\
 ;; \abs{\psi}^n &< \frac{\sqrt5}{2}.
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; Since $\abs{\psi}<0.619<1$, we have $\abs{\psi}^n<1<\dfrac{\sqrt5}{2}$ for
 ;; all $n$. $\blacksquare$
@@ -751,7 +761,8 @@ circumference ~> 62.8318
 
 ;; Let $T_{pq}(a, b) = (bq + aq + ap, bp + aq)$. Applying $T_{pq}$ twice gives
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; &\phantom{=} T_{pq}(T_{pq}(a, b)) \\
 ;; &= T_{pq}(bq + aq + ap, bp + aq) \\
 ;; &= ((bp + aq)q + (bq + aq + ap)q + (bq + aq + ap)p, \\
@@ -763,7 +774,8 @@ circumference ~> 62.8318
 ;; &= (b(q^2 + 2pq) + a(q^2 + 2pq) + a(p^2 + q^2), \\
 ;; &\phantom{= (} b(p^2 + q^2) + a(q^2 + 2pq)) \\
 ;; &= T_{p'q'}(a, b)
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; where $p' = p^2 + q^2$ and $q' = q^2 + 2pq$.
 ;;
@@ -1204,12 +1216,14 @@ circumference ~> 62.8318
 
 ;; _Simpson's rule_ provides a more accurate method of numerical integration:
 ;;
-;; $$\begin{gathered}
+;; $$
+;; \begin{gathered}
 ;; \int_a^bf\approx\frac{h}{3}\left[
 ;; y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \cdots + 2y_{n-2} + 4y_{n-1} + y_n
 ;; \right]dx \\
 ;; \text{where}\quad h = \frac{b-a}{n} \quad\text{and}\quad y_k = f(a+kh).
-;; \end{gathered}$$
+;; \end{gathered}
+;; $$
 ;;
 ;; The even integer $n$ controls the accuracy of the approximation.
 
@@ -1426,13 +1440,15 @@ circumference ~> 62.8318
 ;; closer to $\varphi$. Recall from [](?1.13) the golden ratio equation
 ;; $\varphi+1=\varphi^2$, or equivalently $\varphi=1+1/\varphi$:
 ;;
-;; $$\begin{aligned}
+;; $$
+;; \begin{aligned}
 ;; \abs{y-\varphi} &= \abs{1+\frac{1}{x}-\varphi} \\
 ;; &= \abs{\frac{x+1-\varphi x}{x}} \\
 ;; &= \abs{\frac{x+1-(1+1/\varphi)x}{x}} & \text{since $\varphi=1+1/\varphi$} \\
 ;; &= \abs{\frac{\varphi-x}{x\varphi}} \\
 ;; &= \frac{\abs{x-\varphi}}{\abs{x\varphi}}.
-;; \end{aligned}$$
+;; \end{aligned}
+;; $$
 ;;
 ;; Since $x>1$ and $\varphi>1$, we have $\abs{x\varphi}>1$, hence
 ;; $\abs{y-\varphi}<\abs{x-\varphi}$ as required. $\blacksquare$
