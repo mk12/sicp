@@ -968,7 +968,7 @@ y &= r\sin θ, & θ &= \arctan(y, x).
 
 - Our system has a table with types (horizontal axis) and operators (vertical axis).
 - Instead of writing these generic procedures manually, we should just use a table.
-- We introduce two new procedures: `(put «key1» «key2» «value»)` and `(get «key1» «key2»)`.
+- We introduce two new procedures: `(put key1 key2 value)` and `(get key1 key2)`.
 - Now we just need to insert our specific procedures into the table using `put`, and the rest will be automated.
 - It's the procedures that go in the table, not their names, so we could even pass a lambda expression and not give it a name.
 - The key procedure in this whole system is `operate`:
