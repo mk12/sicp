@@ -1690,13 +1690,8 @@ Angle             `angle-polar`      `angle-rectangular`
 > Introducing assignment into our programming language leads us into a thicket of difficult conceptual issues. Nevertheless, viewing systems as collections of objects with local state is a powerful technique for maintaining a modular design. [@3.1.2]
 :::
 
-- Consider the procedure `rand`. We want it to return an integer chosen at random each time we evaluate `(rand)`.
-- Suppose we have the procedure `rand-update` that takes one argument.
-    - We first call it with an initial value $x_1$, and it returns an integer $x_2$.
-    - We call it with $x_2$, and it gives us $x_3$, and so on.
-    - The sequence of values $x_1, x_2, \dots, x_n$ will have the desired statistical properties (random uniform distribution).
-    - This is a _pseudorandom_ sequence, since each number is a function of the previous one.
-- We could implement `rand` like this:
+- Consider the procedure `rand`, which returns an integer chosen at random.
+- It's not clear what "random" means, but we can make a _pseudo-random_ sequence with a seed value `random-init` and a procedure `rand-update` that produces the next value:
 
 ```
 (define rand
@@ -1706,9 +1701,30 @@ Angle             `angle-polar`      `angle-rectangular`
       x)))
 ```
 
-> The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. [@3.1.2]
 
+>  The relation between "real randomness" and so-called pseudo-random sequences, which are produced by well-determined computations and yet have suitable statistical properties, is a complex question involving difficult issues in mathematics and philosophy. [@3.1.fn6]
+
+- One use for randomness is the _Monte Carlo method_, which finds an approximate solution to a numerical problem by studying random numbers in a probabilistic model.
 - We can use the Monte Carlo method to approximate $π$, knowing that the probability that two randomly chosen integers have 1 as their GCD is $6/π^2$.
+
+```
+(define (estimate-pi trials)
+  (sqrt (/ 6 (monte-carlo trials cesaro-test))))
+
+(define (cesaro-test)
+   (= (gcd (rand) (rand)) 1))
+
+(define (monte-carlo trials experiment)
+  (define (iter trials-remaining trials-passed)
+    (cond ((= trials-remaining 0)
+           (/ trials-passed trials))
+          ((experiment)
+           (iter (- trials-remaining 1) (+ trials-passed 1)))
+          (else
+           (iter (- trials-remaining 1) trials-passed))))
+  (iter trials 0))
+```
+
 - If we had to use `rand-update` directly, our Monte Carlo program would betray some painful breaches of modularity.
 
 > The general phenomenon illustrated by the Monte Carlo example is this: From the point of view of one part of a complex process, the other parts appear to change with time. They have hidden time-varying local state. If we wish to write computer programs whose structure reflects this decomposition, we make computational objects (such as bank accounts and random-number generators) whose behavior changes with time. We model state with local state variables, and we model the changes of state with assignments to those variables. [@3.1.2]
@@ -1719,46 +1735,44 @@ Angle             `angle-polar`      `angle-rectangular`
 
 ### 3.1.3: The Costs of Introducing Assignment
 
-- The advantages of local state and assignment come at a price.
-- The substitution model of procedure application is no longer sufficient to properly interpret out programs.
-- Programming without the use of assignment, as we have done in the first two chapters, is called _functional programming_.
-- Observe what happens when we try using the substitution model:
+- The advantages of local state and assignment come at a price: the substitution model of procedure application from [](@1.1.5) breaks down. We need a more complex model.
+- Programming without the use of assignment, as we did in the first two chapters, is called _functional programming_.
+- Consider a simplified version of the `make-withdraw` procedure from [](:3.1.1):
 
 ```
 (define (make-simplified-withdraw balance)
   (lambda (amount)
     (set! balance (- balance amount))
     balance))
+```
+
+- Now observe what happens when we try to apply the substitution model to it:
+
+```
 ((make-simplified-withdraw 25) 20)
 ((lambda (amount) (set! balance (- 25 amount)) 25) 20)
 (set! balance (- 25 20)) 25
+25
 ```
 
-- Adhering to the substitution model, we set `balance` to 5 and then return 25 as the value of the expression.
-- This is wrong. We shouldn't have substituted 25 for `balance` everywhere, because the assignment changed it.
-- Before, a variable was simply a name for a value.
-- Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.
+- This is the wrong answer. We shouldn't have substituted 25 for `balance` everywhere, because the assignment changed it.
+- Before, a variable was simply a name for a value. Now, with assignment, it somehow refers to a place where a value can be stored, and this value can be changed.
 
 #### Sameness and change
 
-- By introducing change into our computational models, many previously straightforward notions become problematic.
-- Consider the concept of two things being "the same".
+- A language that supports "equals can be substituted for equals" is _referentially transparent_. Our language was referentially transparent until we introduced `set!`.
+- By introducing change into our computational models, many previously straightforward notions become problematic, such as the concept of two things being "the same".
 - If we have `(make-withdraw 25)` and `(make-withdraw 25)`, are they the same? No, because they can have different local state.
-- A language that supports "equals can be substituted for equals" is _referentially transparent_. `set!` violates this.
-- Reasoning about programs that use assignment is much more difficult for this reason.
-- The concepts of "sameness" and "change" chase each other around in circles; it is hard to formally define them.
-- If we have `(define peter-acc (make-account 100))`, there is a big difference between defining `paul-acc` in the same way and defining it with `(define paul-acc peter-acc)`.
-- In the first case, they have distinct accounts. In the second, both refer to the same account -- this is called _aliasing_.
-- As long as we never modify objects, we can regard them to be precisely the totality of their pieces.
-- This is no longer valid in the presence of change, because "identity" is something different from the pieces.
-- A bank account is still "the same" account after a withdrawal. Conversely, two distinct accounts with the same balance are "different".
-- The name is attached to an identity rather than the data itself.
+- If we have `(define peter-acc (make-account 100))`, there is a big difference between `(define paul-acc (make-account 100))` and `(define paul-acc peter-acc)`.
+- In the first case, they have distinct accounts. In the second, both names are _aliased_ to the same account, so withdrawing from either one will affect the other.
+
+> Bugs can occur in our programs if we forget that a change to an object may also, as a "side effect", change a "different" object because the two "different" objects are actually a single object appearing under different aliases. These so-called side-effect bugs are so difficult to locate and to analyze that some people have proposed that programming languages be designed in such a way as to not allow side effects or aliasing. [@3.1.fn10]
 
 #### Pitfalls of imperative programming
 
-- Programming that makes extensive use of assignment is called _imperative programming_.
+- Programming that makes heavy use of assignment is called _imperative programming_.
 - Imperative programs are susceptible to bugs that cannot occur in functional programs.
-- Things get even worse when we throw concurrency into the mix.
+- Things will get even worse when we throw concurrency into the mix in [](@3.4).
 
 ::: highlight
 > In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs. [@3.1.3]

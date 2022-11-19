@@ -184,15 +184,8 @@
 </blockquote>
 </div>
 <ul>
-<li>Consider the procedure <code>rand</code>. We want it to return an integer chosen at random each time we evaluate <code>(rand)</code>.</li>
-<li>Suppose we have the procedure <code>rand-update</code> that takes one argument.
-<ul>
-<li>We first call it with an initial value <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mtext>,</mtext></mrow><annotation encoding="application/x-tex">x_1\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> and it returns an integer <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mtext>.</mtext></mrow><annotation encoding="application/x-tex">x_2\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
-<li>We call it with <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mtext>,</mtext></mrow><annotation encoding="application/x-tex">x_2\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> and it gives us <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub><mtext>,</mtext></mrow><annotation encoding="application/x-tex">x_3\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> and so on.</li>
-<li>The sequence of values <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_1, x_2, \dots, x_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> will have the desired statistical properties (random uniform distribution).</li>
-<li>This is a <em>pseudorandom</em> sequence, since each number is a function of the previous one.</li>
-</ul></li>
-<li>We could implement <code>rand</code> like this:</li>
+<li>Consider the procedure <code>rand</code>, which returns an integer chosen at random.</li>
+<li>It’s not clear what “random” means, but we can make a <em>pseudo-random</em> sequence with a seed value <code>random-init</code> and a procedure <code>rand-update</code> that produces the next value:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> rand
   (<span class="kw">let</span> ((x random-init))
@@ -200,10 +193,28 @@
       (<span class="kw">set!</span> x (rand-update x))
       x)))</code></pre>
 <blockquote>
-<p>The Monte Carlo method consists of choosing sample experiments at random from a large set and then making deductions on the basis of the probabilities estimated from tabulating the results of those experiments. <a class="citation" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_sec_3.1.2" title="SICP Section 3.1.2">(Section&nbsp;3.1.2)</a></p>
+<p>The relation between “real randomness” and so-called pseudo-random sequences, which are produced by well-determined computations and yet have suitable statistical properties, is a complex question involving difficult issues in mathematics and philosophy. <a class="citation" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#footnote_Temp_330" title="SICP Chapter 3, Footnote 6">(Footnote&nbsp;3.6)</a></p>
 </blockquote>
 <ul>
+<li>One use for randomness is the <em>Monte Carlo method</em>, which finds an approximate solution to a numerical problem by studying random numbers in a probabilistic model.</li>
 <li>We can use the Monte Carlo method to approximate <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>π</mi><mtext>,</mtext></mrow><annotation encoding="application/x-tex">π\htmlClass{math-punctuation}{\text{,}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">,</span></span></span></span></span></span> knowing that the probability that two randomly chosen integers have 1 as their GCD is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn><mi mathvariant="normal">/</mi><msup><mi>π</mi><mn>2</mn></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">6/π^2\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">6</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
+</ul>
+<pre><code class="codeblock">(<span class="kw">define</span> (estimate-pi trials)
+  (<span class="fu">sqrt</span> (<span class="fu">/</span> <span class="cn">6</span> (monte-carlo trials cesaro-test))))
+
+(<span class="kw">define</span> (cesaro-test)
+   (<span class="fu">=</span> (<span class="fu">gcd</span> (rand) (rand)) <span class="cn">1</span>))
+
+(<span class="kw">define</span> (monte-carlo trials experiment)
+  (<span class="kw">define</span> (iter trials-remaining trials-passed)
+    (<span class="kw">cond</span> ((<span class="fu">=</span> trials-remaining <span class="cn">0</span>)
+           (<span class="fu">/</span> trials-passed trials))
+          ((experiment)
+           (iter (<span class="fu">-</span> trials-remaining <span class="cn">1</span>) (<span class="fu">+</span> trials-passed <span class="cn">1</span>)))
+          (<span class="kw">else</span>
+           (iter (<span class="fu">-</span> trials-remaining <span class="cn">1</span>) trials-passed))))
+  (iter trials <span class="cn">0</span>))</code></pre>
+<ul>
 <li>If we had to use <code>rand-update</code> directly, our Monte Carlo program would betray some painful breaches of modularity.</li>
 </ul>
 <blockquote>
@@ -214,48 +225,45 @@
 <a class="anchor__link link" href="#3.1.3" aria-hidden="true">#</a> <span class="number">3.1.3</span> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#%25_sec_3.1.3">The Costs of Introducing Assignment<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h2>
 <ul>
-<li>The advantages of local state and assignment come at a price.</li>
-<li>The substitution model of procedure application is no longer sufficient to properly interpret out programs.</li>
-<li>Programming without the use of assignment, as we have done in the first two chapters, is called <em>functional programming</em>.</li>
-<li>Observe what happens when we try using the substitution model:</li>
+<li>The advantages of local state and assignment come at a price: the substitution model of procedure application from <a href="../1/1.html#1.1.5">§&nbsp;1.1.5</a> breaks down. We need a more complex model.</li>
+<li>Programming without the use of assignment, as we did in the first two chapters, is called <em>functional programming</em>.</li>
+<li>Consider a simplified version of the <code>make-withdraw</code> procedure from <a href="../../exercise/3/1.html#3.1.1">§&nbsp;3.1.1</a>:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> (make-simplified-withdraw balance)
   (<span class="kw">lambda</span> (amount)
     (<span class="kw">set!</span> balance (<span class="fu">-</span> balance amount))
-    balance))
-((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>)
-((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)
-(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25 20</span>)) <span class="cn">25</span></code></pre>
+    balance))</code></pre>
 <ul>
-<li>Adhering to the substitution model, we set <code>balance</code> to 5 and then return 25 as the value of the expression.</li>
-<li>This is wrong. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>
-<li>Before, a variable was simply a name for a value.</li>
-<li>Now, since a variable can change, it somehow refers to a place where a value can be stored, and this value can be changed.</li>
+<li>Now observe what happens when we try to apply the substitution model to it:</li>
+</ul>
+<pre><code class="codeblock">((make-simplified-withdraw <span class="cn">25</span>) <span class="cn">20</span>)
+((<span class="kw">lambda</span> (amount) (<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25</span> amount)) <span class="cn">25</span>) <span class="cn">20</span>)
+(<span class="kw">set!</span> balance (<span class="fu">-</span> <span class="cn">25 20</span>)) <span class="cn">25
+25</span></code></pre>
+<ul>
+<li>This is the wrong answer. We shouldn’t have substituted 25 for <code>balance</code> everywhere, because the assignment changed it.</li>
+<li>Before, a variable was simply a name for a value. Now, with assignment, it somehow refers to a place where a value can be stored, and this value can be changed.</li>
 </ul>
 <h3 id="3.1.3.1" class="anchor">
 <a class="anchor__link link" href="#3.1.3.1" aria-hidden="true">#</a> Sameness and change
 </h3>
 <ul>
-<li>By introducing change into our computational models, many previously straightforward notions become problematic.</li>
-<li>Consider the concept of two things being “the same.<span class="tuck">”</span></li>
+<li>A language that supports “equals can be substituted for equals” is <em>referentially transparent</em>. Our language was referentially transparent until we introduced <code>set!</code>.</li>
+<li>By introducing change into our computational models, many previously straightforward notions become problematic, such as the concept of two things being “the same.<span class="tuck">”</span></li>
 <li>If we have <code>(make-withdraw <span class="cn">25</span>)</code> and <code>(make-withdraw <span class="cn">25</span>)</code>, are they the same? No, because they can have different local state.</li>
-<li>A language that supports “equals can be substituted for equals” is <em>referentially transparent</em>. <code>set!</code> violates this.</li>
-<li>Reasoning about programs that use assignment is much more difficult for this reason.</li>
-<li>The concepts of “sameness” and “change” chase each other around in circles; it is hard to formally define them.</li>
-<li>If we have <code>(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))</code>, there is a big difference between defining <code>paul-acc</code> in the same way and defining it with <code>(<span class="kw">define</span> paul-acc peter-acc)</code>.</li>
-<li>In the first case, they have distinct accounts. In the second, both refer to the same account—this is called <em>aliasing</em>.</li>
-<li>As long as we never modify objects, we can regard them to be precisely the totality of their pieces.</li>
-<li>This is no longer valid in the presence of change, because “identity” is something different from the pieces.</li>
-<li>A bank account is still “the same” account after a withdrawal. Conversely, two distinct accounts with the same balance are “different.<span class="tuck">”</span></li>
-<li>The name is attached to an identity rather than the data itself.</li>
+<li>If we have <code>(<span class="kw">define</span> peter-acc (make-account <span class="cn">100</span>))</code>, there is a big difference between <code>(<span class="kw">define</span> paul-acc (make-account <span class="cn">100</span>))</code> and <code>(<span class="kw">define</span> paul-acc peter-acc)</code>.</li>
+<li>In the first case, they have distinct accounts. In the second, both names are <em>aliased</em> to the same account, so withdrawing from either one will affect the other.</li>
 </ul>
+<blockquote>
+<p>Bugs can occur in our programs if we forget that a change to an object may also, as a “side effect,<span class="tuck">”</span> change a “different” object because the two “different” objects are actually a single object appearing under different aliases. These so-called side-effect bugs are so difficult to locate and to analyze that some people have proposed that programming languages be designed in such a way as to not allow side effects or aliasing. <a class="citation" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-20.html#footnote_Temp_337" title="SICP Chapter 3, Footnote 10">(Footnote&nbsp;3.10)</a></p>
+</blockquote>
 <h3 id="3.1.3.2" class="anchor">
 <a class="anchor__link link" href="#3.1.3.2" aria-hidden="true">#</a> Pitfalls of imperative programming
 </h3>
 <ul>
-<li>Programming that makes extensive use of assignment is called <em>imperative programming</em>.</li>
+<li>Programming that makes heavy use of assignment is called <em>imperative programming</em>.</li>
 <li>Imperative programs are susceptible to bugs that cannot occur in functional programs.</li>
-<li>Things get even worse when we throw concurrency into the mix.</li>
+<li>Things will get even worse when we throw concurrency into the mix in <a href="4.html">§&nbsp;3.4</a>.</li>
 </ul>
 <div id="q2" class="highlight">
 <a class="highlight__link link" href="../highlight.html#3.1-q2" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>

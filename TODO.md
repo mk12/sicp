@@ -12,8 +12,8 @@
 - fix inline code in blockquotes background
 - remove skipping from check-links.py
 - perfection:
-    - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1*
-    - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b
+    - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1
+    - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b, 5a*
     - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5
 x thought quote stuff was wrong
     x e.g. `(foo ,3) right now the comma is quoted-yellow color (ok)
