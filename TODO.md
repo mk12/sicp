@@ -13,8 +13,8 @@
 - remove skipping from check-links.py
 - perfection:
     - text: 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1
-    - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b, 5a*
-    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5
+    - lecture: 1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b, 5a
+    - exercise: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1*
 x thought quote stuff was wrong
     x e.g. `(foo ,3) right now the comma is quoted-yellow color (ok)
     x thought (quasiquote foo (unquote 3)), having the "(unquote" yellow was wrong ... but to truly fix that is very hard because say it's 3 quasiquotes deep and only 2 unquotes, then they should stay yellow. Just going to leave as is because I don't use unquotes like that anyway.

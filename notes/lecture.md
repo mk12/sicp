@@ -1097,46 +1097,43 @@ $$
 
 ### Environment model
 
-- We need a new model of computation that can allow us to understand programs that use assignment.
+- We need a new model of computation to understand programs that use assignment.
 - The new model is called the _environment model_.
 - Unfortunately, it is significantly more complicated than the substitution model.
 
 ### Free and bound variables
 
-- A variable `v` is _bound_ in an expression `E` if the meaning of `E` is unchanged by the uniform replacement of a variable `w` not occurring in `E`, for every occurrence of `v` in `E`.
-- We use bound variables all the time.
-- The `lambda` is the essential thing that binds variables.
+- A variable $v$ is _bound_ in an expression $E$ if the meaning of $E$ is unchanged when we replace all occurrences of $v$ by some other variable $w$ not already occuring in $E$.
+- We use bound variables all the time. In Lisp, variables are bound by `lambda`.
 - If a variable isn't bound, we say it is a _free_ variable.
-- If `x` is a bound variable in `E` then there is λ-expression where it is bound.
-- The list of formal parameters is called the _bound variable list_. The λ-expression _binds_ the variables _declared_ in its bound variable list.
-- The parts of the expression where a variable has a value defined by the λ-expression binding it is the _scope_ of the variable.
+- The parts of an expression where a variable has a value defined by a `lambda` binding is the _scope_ of that variable.
 
 ### Environments, frames, and bindings
 
 - Environments are a way of doing substitutions virtually.
-- It's the place where the names of the variables are associated with values.
-- An environment is a pointer to a _frame_. A frame is a table of _bindings_, plus a parent/enclosing environment.
-- A binding is a variable name associated with a value.
-- We look up the value of a variable in an environment by traversing up the frames, finding the first one that has a binding for the variable, and reading its associated value.
-- If a variable is bound twice in an environment, the binding in the earlier (lower) frame _shadows_ the other.
+- It's the place where the names of the variables are associated with values:
+    - An _environment_ is a pointer to a frame.
+    - A _frame_ is a table of bindings, with a pointer to a parent environment.
+    - A _binding_ associates a variable name with a value.
+- To look up the value of a variable in an environment, we traverse its frames, finding the first one that has a binding for the variable, and read its associated value.
+- If a variable is bound twice in an environment, the second _shadows_ the first.
 
 ### Procedure creation and application
 
-- A procedure is a pair: some code, and (a pointer to) an environment. Free variables are found in this environment.
-- Procedure objects are created by evaluating λ-expressions.
-- A λ-expression is evaluated relative to a given environment as follows: a new procedure object is formed, combing the text (code) of the λ-expression with (a pointer to) the environment of evaluation.
-- A procedure is applied to a set of arguments by
-    1. constructing a frame whose parent is the environment part of the procedure being applied,
-    2. binding the formal parameters of the procedure to the actual arguments of the call,
-    3. evaluating the body of the procedure in the context of the new environment.
-- In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.
+- A procedure is a pair consisting of some code and an environment.
+- We look up free variables in the procedure's environment.
+- To evaluate a `lambda` expression, we create a new procedure object combining the `lambda`'s code with the current environment.
+- To apply a procedure to arguments:
+    1. Construct a new frame whose parent is the procedure's environment.
+    2. Bind the formal parameters of the procedure to the arguments provided.
+    3. Evaluate the body of the procedure in the context of the new environment.
 
 ## Part 3
 
 ### Counter example
 
 - We've introduced a very complicated thing, assignment, which destroys most of the interesting mathematical properties of our programs.
-- We wouldn't have done this if there wasn't a good reason.
+- We wouldn't have done this without a good reason.
 - Consider the following program:
 
 ```
@@ -1145,27 +1142,32 @@ $$
     (lambda ()
       (set! n (inc n))
       n)))
+
 (define c1 (make-counter 0))
 (define c2 (make-counter 10))
+
 (c1)
-=> 1
+→ 1
+
 (c1)
-=> 2
+→ 2
+
 (c2)
-=> 11
+→ 11
+
 (c2)
-=> 12
+→ 12
 ```
 
-- These two counters are independent and have their own state.
-- The environment of `c1` points to some frame with `n`. That of `c2` points to a different frame with a different `n`. The parent of both frames is the global environment.
-- The _global environment_ is the topmost environment. Its frame contains `car`, `+`, `*`, etc., and all top-level definitions.
+- These two counters are independent: they each have their own state.
+- The environments of `c1` and `c2` point to different frames with different bindings for `n`.
+- The parent of both frames is the _global_ environment, which contains built-in procdures like `car`, `+`, `*`, etc., and the top-level definitions `make-counter`, `c1`, and `c2`.
 
 ### Objects
 
-- We like to think about the world as being made up of independent objects, each having their own state.
-- The only way to see if two objects are the same (not just associated with an equal value) is to change one and see if the other changes in the same way.
-- The idea of objects, changed, and sameness raises deep problems.
+- We like to think about the world as being made up of independent, stateful objects.
+- The only way to see if two objects are "the same", not just associated with values that are equal, is to change one and see if the other changes in the same way.
+- The idea of objects, change, and sameness raises deep philosophical problems.
 
 ::: highlight
 > For example, here I am, I am a particular person, a particular object. Now, I can take out my knife, and cut my fingernail. A piece of my fingernail has fallen off onto the table. I believe I am the same person I was a second ago, but I'm not physically the same in the slightest. I have changed. Why am I the same? What is the identity of me? I don't know. Except for the fact that I have some sort of identity. And so, I think by introducing assignment and objects, we have opened ourselves up to all the horrible questions of philosophy that have been plaguing philosophers for some thousands of years about this sort of thing. It's why mathematics is a lot cleaner. [@5a.p14]
@@ -1173,16 +1175,15 @@ $$
 
 ### Actions and identity
 
-- An action $A$ had an effect on an object $x$ (or equivalently, that $x$ was changed by $A$) if some property $P$ which was true of $x$ before $A$ became false of $x$ after $A$.
-- Two objects $x$ and $y$ are the same if any action which has an effect on $x$ has the same effect on $y$.
+- An action $A$ has an effect on an object $x$ (or equivalently, $x$ was changed by $A$) if some property which was true of $x$ before $A$ became false after.
+- We consider two objects to be the same if any action that has an effect on one has the same effect on the other.
 
 ### Uses of objection orientation
 
-- One of the nice things about objects is the way it lets us model the world. We like to think of the world as being made up of these independent objects.
-- If we want to understand the program well and we want small changes in the world to lead to small changes in the program, we would like isomorphisms between the world and the model.
-- For most things, objects and assignment are not the right way to think. We should only use them if we need them.
-- Sometimes, though, they are essential.
-- It can also improve modularity greatly -- consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can't decompose certain problems very well.
+- One of the nice things about objects is the way they let us model the world.
+- The modularity of the world can give us modularity in our programming.
+- For example, in the Monte Carlo program from [](@3.1.2), using the assignment statement for random number generation greatly enhances modularity.
+- But for most things, objects and assignment are not the right way to think. We should only use them if we need them.
 
 # 5B: Computational Objects
 

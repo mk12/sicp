@@ -149,7 +149,7 @@
 <a class="anchor__link link" href="#2.1" aria-hidden="true">#</a> Environment model
 </h3>
 <ul>
-<li>We need a new model of computation that can allow us to understand programs that use assignment.</li>
+<li>We need a new model of computation to understand programs that use assignment.</li>
 <li>The new model is called the <em>environment model</em>.</li>
 <li>Unfortunately, it is significantly more complicated than the substitution model.</li>
 </ul>
@@ -157,39 +157,38 @@
 <a class="anchor__link link" href="#2.2" aria-hidden="true">#</a> Free and bound variables
 </h3>
 <ul>
-<li>A variable <code>v</code> is <em>bound</em> in an expression <code>E</code> if the meaning of <code>E</code> is unchanged by the uniform replacement of a variable <code>w</code> not occurring in <code>E</code>, for every occurrence of <code>v</code> in <code>E</code>.</li>
-<li>We use bound variables all the time.</li>
-<li>The <code>lambda</code> is the essential thing that binds variables.</li>
+<li>A variable <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> is <em>bound</em> in an expression <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span> if the meaning of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span> is unchanged when we replace all occurrences of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> by some other variable <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> not already occuring in <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">E\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
+<li>We use bound variables all the time. In Lisp, variables are bound by <code>lambda</code>.</li>
 <li>If a variable isn’t bound, we say it is a <em>free</em> variable.</li>
-<li>If <code>x</code> is a bound variable in <code>E</code> then there is λ-expression where it is bound.</li>
-<li>The list of formal parameters is called the <em>bound variable list</em>. The λ-expression <em>binds</em> the variables <em>declared</em> in its bound variable list.</li>
-<li>The parts of the expression where a variable has a value defined by the λ-expression binding it is the <em>scope</em> of the variable.</li>
+<li>The parts of an expression where a variable has a value defined by a <code>lambda</code> binding is the <em>scope</em> of that variable.</li>
 </ul>
 <h3 id="2.3" class="anchor">
 <a class="anchor__link link" href="#2.3" aria-hidden="true">#</a> Environments, frames, and bindings
 </h3>
 <ul>
 <li>Environments are a way of doing substitutions virtually.</li>
-<li>It’s the place where the names of the variables are associated with values.</li>
-<li>An environment is a pointer to a <em>frame</em>. A frame is a table of <em>bindings</em>, plus a parent/enclosing environment.</li>
-<li>A binding is a variable name associated with a value.</li>
-<li>We look up the value of a variable in an environment by traversing up the frames, finding the first one that has a binding for the variable, and reading its associated value.</li>
-<li>If a variable is bound twice in an environment, the binding in the earlier (lower) frame <em>shadows</em> the other.</li>
+<li>It’s the place where the names of the variables are associated with values:
+<ul>
+<li>An <em>environment</em> is a pointer to a frame.</li>
+<li>A <em>frame</em> is a table of bindings, with a pointer to a parent environment.</li>
+<li>A <em>binding</em> associates a variable name with a value.</li>
+</ul></li>
+<li>To look up the value of a variable in an environment, we traverse its frames, finding the first one that has a binding for the variable, and read its associated value.</li>
+<li>If a variable is bound twice in an environment, the second <em>shadows</em> the first.</li>
 </ul>
 <h3 id="2.4" class="anchor">
 <a class="anchor__link link" href="#2.4" aria-hidden="true">#</a> Procedure creation and application
 </h3>
 <ul>
-<li>A procedure is a pair: some code, and (a pointer to) an environment. Free variables are found in this environment.</li>
-<li>Procedure objects are created by evaluating λ-expressions.</li>
-<li>A λ-expression is evaluated relative to a given environment as follows: a new procedure object is formed, combing the text (code) of the λ-expression with (a pointer to) the environment of evaluation.</li>
-<li>A procedure is applied to a set of arguments by
+<li>A procedure is a pair consisting of some code and an environment.</li>
+<li>We look up free variables in the procedure’s environment.</li>
+<li>To evaluate a <code>lambda</code> expression, we create a new procedure object combining the <code>lambda</code>’s code with the current environment.</li>
+<li>To apply a procedure to arguments:
 <ol type="1">
-<li>constructing a frame whose parent is the environment part of the procedure being applied,</li>
-<li>binding the formal parameters of the procedure to the actual arguments of the call,</li>
-<li>evaluating the body of the procedure in the context of the new environment.</li>
+<li>Construct a new frame whose parent is the procedure’s environment.</li>
+<li>Bind the formal parameters of the procedure to the arguments provided.</li>
+<li>Evaluate the body of the procedure in the context of the new environment.</li>
 </ol></li>
-<li>In other words we are taking the environment where the procedure was created, extending it with the frame for the parameters, and evaluating the body.</li>
 </ul>
 <h2 id="3" class="anchor">
 <a class="anchor__link link" href="#3" aria-hidden="true">#</a> Part 3
@@ -199,7 +198,7 @@
 </h3>
 <ul>
 <li>We’ve introduced a very complicated thing, assignment, which destroys most of the interesting mathematical properties of our programs.</li>
-<li>We wouldn’t have done this if there wasn’t a good reason.</li>
+<li>We wouldn’t have done this without a good reason.</li>
 <li>Consider the following program:</li>
 </ul>
 <pre><code class="codeblock">(<span class="kw">define</span> make-counter
@@ -207,28 +206,33 @@
     (<span class="kw">lambda</span> ()
       (<span class="kw">set!</span> n (inc n))
       n)))
+
 (<span class="kw">define</span> c1 (make-counter <span class="cn">0</span>))
 (<span class="kw">define</span> c2 (make-counter <span class="cn">10</span>))
+
 (c1)
-<span class="op">=&gt;</span> <span class="cn">1</span>
+<span class="cs">→ 1</span>
+
 (c1)
-<span class="op">=&gt;</span> <span class="cn">2</span>
+<span class="cs">→ 2</span>
+
 (c2)
-<span class="op">=&gt;</span> <span class="cn">11</span>
+<span class="cs">→ 11</span>
+
 (c2)
-<span class="op">=&gt;</span> <span class="cn">12</span></code></pre>
+<span class="cs">→ 12</span></code></pre>
 <ul>
-<li>These two counters are independent and have their own state.</li>
-<li>The environment of <code>c1</code> points to some frame with <code>n</code>. That of <code>c2</code> points to a different frame with a different <code>n</code>. The parent of both frames is the global environment.</li>
-<li>The <em>global environment</em> is the topmost environment. Its frame contains <code>car</code>, <code>+</code>, <code>*</code>, etc., and all top-level definitions.</li>
+<li>These two counters are independent: they each have their own state.</li>
+<li>The environments of <code>c1</code> and <code>c2</code> point to different frames with different bindings for <code>n</code>.</li>
+<li>The parent of both frames is the <em>global</em> environment, which contains built-in procdures like <code>car</code>, <code>+</code>, <code>*</code>, etc., and the top-level definitions <code>make-counter</code>, <code>c1</code>, and <code>c2</code>.</li>
 </ul>
 <h3 id="3.2" class="anchor">
 <a class="anchor__link link" href="#3.2" aria-hidden="true">#</a> Objects
 </h3>
 <ul>
-<li>We like to think about the world as being made up of independent objects, each having their own state.</li>
-<li>The only way to see if two objects are the same (not just associated with an equal value) is to change one and see if the other changes in the same way.</li>
-<li>The idea of objects, changed, and sameness raises deep problems.</li>
+<li>We like to think about the world as being made up of independent, stateful objects.</li>
+<li>The only way to see if two objects are “the same,<span class="tuck">”</span> not just associated with values that are equal, is to change one and see if the other changes in the same way.</li>
+<li>The idea of objects, change, and sameness raises deep philosophical problems.</li>
 </ul>
 <div id="q1" class="highlight">
 <a class="highlight__link link" href="highlight.html#5a-q1" aria-label="view quote in highlights page"><svg class="circle-arrow" width="18" height="18" aria-hidden="true"><use xlink:href="#circle-left"/></svg> Highlights</a>
@@ -240,18 +244,17 @@
 <a class="anchor__link link" href="#3.3" aria-hidden="true">#</a> Actions and identity
 </h3>
 <ul>
-<li>An action <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> had an effect on an object <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> (or equivalently, that <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> was changed by <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mtext>)</mtext></mrow><annotation encoding="application/x-tex">A\htmlClass{math-punctuation}{\text{)}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">)</span></span></span></span></span></span> if some property <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span> which was true of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> before <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> became false of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> after <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">A\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
-<li>Two objects <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> are the same if any action which has an effect on <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> has the same effect on <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">y\htmlClass{math-punctuation}{\text{.}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">.</span></span></span></span></span></span></li>
+<li>An action <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> has an effect on an object <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> (or equivalently, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> was changed by <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mtext>)</mtext></mrow><annotation encoding="application/x-tex">A\htmlClass{math-punctuation}{\text{)}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="enclosing math-punctuation"><span class="mord text"><span class="mord">)</span></span></span></span></span></span> if some property which was true of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> before <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> became false after.</li>
+<li>We consider two objects to be the same if any action that has an effect on one has the same effect on the other.</li>
 </ul>
 <h3 id="3.4" class="anchor">
 <a class="anchor__link link" href="#3.4" aria-hidden="true">#</a> Uses of objection orientation
 </h3>
 <ul>
-<li>One of the nice things about objects is the way it lets us model the world. We like to think of the world as being made up of these independent objects.</li>
-<li>If we want to understand the program well and we want small changes in the world to lead to small changes in the program, we would like isomorphisms between the world and the model.</li>
-<li>For most things, objects and assignment are not the right way to think. We should only use them if we need them.</li>
-<li>Sometimes, though, they are essential.</li>
-<li>It can also improve modularity greatly—consider the procedure for a random number generator. Without an internal feedback loop via assignment, its state leaks out everywhere and we can’t decompose certain problems very well.</li>
+<li>One of the nice things about objects is the way they let us model the world.</li>
+<li>The modularity of the world can give us modularity in our programming.</li>
+<li>For example, in the Monte Carlo program from <a href="../text/3/1.html#3.1.2">§&nbsp;3.1.2</a>, using the assignment statement for random number generation greatly enhances modularity.</li>
+<li>But for most things, objects and assignment are not the right way to think. We should only use them if we need them.</li>
 </ul>
 </main>
 <nav class="pagenav pagenav--bottom" aria-label="page">
