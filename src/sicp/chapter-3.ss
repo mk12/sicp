@@ -150,7 +150,7 @@
                 "Incorrect password"))))
     dispatch))
 
-(define (call-the-cops) "PUT YOUR HANDS UP!")
+(define (call-the-cops) "Calling the cops!")
 
 (define acc (make-account 'right 100))
 ((acc 'wrong 'withdraw) 100) => "Incorrect password"
@@ -160,7 +160,7 @@
 ((acc 'wrong 'withdraw) 100) => "Incorrect password"
 ((acc 'wrong 'withdraw) 100) => "Incorrect password"
 ((acc 'wrong 'withdraw) 100) => "Incorrect password"
-((acc 'wrong 'withdraw) 100) => "PUT YOUR HANDS UP!"
+((acc 'wrong 'withdraw) 100) => "Calling the cops!"
 
 (Section :3.1.2 "The Benefits of Introducing Assignment")
 
