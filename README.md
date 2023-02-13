@@ -8,7 +8,7 @@ For more information, see [the website].
 
 ### Usage
 
-Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Scheme implementation. Use `./run.sh chezd` to start the Chez debugger when an error occurs.
+Use `./run.sh chez`, `./run.sh guile`, or `./run.sh racket` depending on your Scheme implementation.
 
 To see the options, pass `--help`. For example, `./run.sh chez --help`.
 
@@ -160,7 +160,7 @@ This project follows <http://community.schemewiki.org/?scheme-style>, with some 
 - Use `;;` for normal comments, and `;` for commented code/diagrams.
 - Use `;` for inline comments. Separate from code by one space (or more for alignment).
 
-Run `make lintss` to verify these rules.
+Run `make lint-ss` to verify these rules.
 
 ## Editor support
 
