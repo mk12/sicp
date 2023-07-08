@@ -211,11 +211,14 @@ circumference ~> 62.8318
           guess
           (sqrt-iter (improve guess x) x)))
 
+(paste (:1.1.7 sqrt))
+
+(sqrt 9) =>...
+
 ;; When Alyssa attempts to use this to compute square roots, it will not work.
-;; The `sqrt` procedure will never return a value because it gets stuck in
-;; `sqrt-iter` due to infinite recursion. The `new-if` combination always
-;; evaluates the else-clause, which contains the recursive call, so the
-;; recursion will never end.
+;; The `sqrt-iter` procedure gets stuck in infinite recursion because the
+;; `new-if` combination always evaluates both clauses, so it always evaluates
+;; the recursive call.
 
 (Exercise ?1.7
   (use (:1.1.7 improve sqrt)))
