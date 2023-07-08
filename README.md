@@ -73,7 +73,7 @@ We can import definitions out of order:
 (define (cube x) (* x x x))
 
 (Exercise ?1.15
-  (use (:1.2 square cube)))
+  (use (:1.2 cube square)))
 
 (define a (+ (square 3) (cube 4))) ; ok
 ```

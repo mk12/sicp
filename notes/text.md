@@ -1712,7 +1712,7 @@ Angle             `angle-polar`      `angle-rectangular`
   (sqrt (/ 6 (monte-carlo trials cesaro-test))))
 
 (define (cesaro-test)
-   (= (gcd (rand) (rand)) 1))
+  (= (gcd (rand) (rand)) 1))
 
 (define (monte-carlo trials experiment)
   (define (iter trials-remaining trials-passed)
