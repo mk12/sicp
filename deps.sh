@@ -84,6 +84,12 @@ check() {
     else
         warn "cannot check racket packages: need racket"
     fi
+    say "checking python packages"
+    if installed pip3; then
+        pip3 -qq show "requests" || warn "requests not installed"
+    else
+        warn "cannot check python packages: need pip3"
+    fi
     say "checking pandoc lua version"
     if installed pandoc; then
         v=$(pandoc --lua-filter <(echo 'print(_VERSION)') <<< '' \
@@ -98,15 +104,15 @@ check() {
 
 install() {
     get_platform || die "unsupported platform: $platform"
-    install_${platform}_prep
+    "install_${platform}_prep"
     if ask "install all supported schemes?"; then
-        install_${platform}_scheme
+        "install_${platform}_scheme"
     fi
     if ask "install dependencies for buiding docs?"; then
-        install_${platform}_docs
+        "install_${platform}_docs"
     fi
     if ask "install other development tools?"; then
-        install_${platform}_other
+        "install_${platform}_other"
     fi
 }
 
@@ -147,6 +153,11 @@ install_macos_docs() {
 
 install_macos_other() {
     install_macos_formulas python3 vnu clang-format shellcheck
+    if pip3 -qq show requests; then
+        say_already_installed requests
+    else
+        pip3 install requests
+    fi
 }
 
 install_macos_formulas() {
