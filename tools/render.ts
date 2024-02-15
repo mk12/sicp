@@ -1,9 +1,7 @@
 // Copyright 2021 Mitchell Kember. Subject to the MIT License.
 
-import {
-  iterateReader,
-  writeAll,
-} from "https://deno.land/std@0.134.0/streams/mod.ts";
+import { writeAll } from "https://deno.land/std@0.216.0/io/write_all.ts";
+import { iterateReader } from "https://deno.land/std@0.216.0/streams/mod.ts";
 import katex from "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.mjs";
 import { optimize } from "https://cdn.jsdelivr.net/gh/lumeland/svgo@v3.0.1/mod.js";
 
@@ -227,17 +225,18 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
   // that from svgbob's default font size of 14. No need to pass the --font-size
   // flag since we remove all inline styles below and use style.css instead.
   const scaleFactor = 16 / 14;
-  const p = Deno.run({
-    cmd: ["svgbob", "--scale", scaleFactor.toString()],
+  const cmd = new Deno.Command("svgbob", {
+    args: ["--scale", scaleFactor.toString()],
     stdin: "piped",
     stdout: "piped",
   });
-  await writeAll(p.stdin, new TextEncoder().encode(diagram));
-  p.stdin.close();
-  const [status, stdout] = await Promise.all([p.status(), p.output()]);
-  p.close();
-  if (status.code !== 0) {
-    return ERROR_PREFIX + `svgbob exited with code ${status.code}`;
+  const child = cmd.spawn();
+  const stdin = child.stdin.getWriter();
+  await writeAll(stdin, new TextEncoder().encode(diagram));
+  stdin.close();
+  const { code, stdout } = await child.output();
+  if (code !== 0) {
+    return ERROR_PREFIX + `svgbob exited with code ${code}`;
   }
   const markers = new Set<string>();
   const unopt = new TextDecoder()
