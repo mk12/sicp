@@ -318,7 +318,7 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
       "removeDesc",
       // Don't rename IDs since they must be unique within the page.
       // "cleanupIDs",
-      // Don't remove defaults since style.css determines defaults for .digram.
+      // Don't remove defaults since style.css determines defaults for .diagram.
       // "removeUnknownsAndDefaults",
     ],
   }) as { data?: string };
