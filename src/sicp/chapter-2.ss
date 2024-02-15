@@ -1690,14 +1690,14 @@ one-through-four => '(1 2 3 4)
 (Exercise ?2.54)
 
 (define (equal? list1 list2)
-  (let ((null1 (null? list1))
-        (null2 (null? list2)))
-    (or (and null1 null2)
-        (and (not (or null1 null2))
-             (eq? (car list1) (car list2))
-             (equal? (cdr list1) (cdr list2))))))
+  (cond ((null? list1) (null? list2))
+        ((not (pair? list1)) (eq? list1 list2))
+        (else (and (pair? list2)
+                   (equal? (car list1) (car list2))
+                   (equal? (cdr list1) (cdr list2))))))
 
 (equal? '(this is a list) '(this is a list)) => #t
+(equal? '(this (is a) list) '(this (is a) list)) => #t
 (equal? '(this is a list) '(this (is a) list)) => #f
 
 (Exercise ?2.55)

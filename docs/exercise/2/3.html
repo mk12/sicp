@@ -118,14 +118,14 @@ Imports:
 <a class="anchor__link link" href="#ex2.54" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.54">Exercise 2.54<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>
 <pre><code class="codeblock">(<span class="kw">define</span> (<span class="fu">equal?</span> list1 list2)
-  (<span class="kw">let</span> ((null1 (<span class="fu">null?</span> list1))
-        (null2 (<span class="fu">null?</span> list2)))
-    (<span class="kw">or</span> (<span class="kw">and</span> null1 null2)
-        (<span class="kw">and</span> (<span class="fu">not</span> (<span class="kw">or</span> null1 null2))
-             (<span class="fu">eq?</span> (<span class="fu">car</span> list1) (<span class="fu">car</span> list2))
-             (<span class="fu">equal?</span> (<span class="fu">cdr</span> list1) (<span class="fu">cdr</span> list2))))))
+  (<span class="kw">cond</span> ((<span class="fu">null?</span> list1) (<span class="fu">null?</span> list2))
+        ((<span class="fu">not</span> (<span class="fu">pair?</span> list1)) (<span class="fu">eq?</span> list1 list2))
+        (<span class="kw">else</span> (<span class="kw">and</span> (<span class="fu">pair?</span> list2)
+                   (<span class="fu">equal?</span> (<span class="fu">car</span> list1) (<span class="fu">car</span> list2))
+                   (<span class="fu">equal?</span> (<span class="fu">cdr</span> list1) (<span class="fu">cdr</span> list2))))))
 
 (<span class="fu">equal?</span> <span class="qu">'(this is a list) '(this is a list)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
+(<span class="fu">equal?</span> <span class="qu">'(this (is a) list) '(this (is a) list)</span>) <span class="op">=&gt;</span> <span class="cn">#t</span>
 (<span class="fu">equal?</span> <span class="qu">'(this is a list) '(this (is a) list)</span>) <span class="op">=&gt;</span> <span class="cn">#f</span></code></pre>
 <h3 id="ex2.55" class="anchor">
 <a class="anchor__link link" href="#ex2.55" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-16.html#%25_thm_2.55">Exercise 2.55<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
