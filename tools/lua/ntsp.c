@@ -91,7 +91,7 @@ int l_send(lua_State *L) {
 // Opens a connection to the Unix domain socket at the given path. On success,
 // returns a table with fields "fd" (the file descriptor), "send" (the method
 // `l_send`), and "close" (the method `l_close`). On error, returns nil.
-int l_conect(lua_State *L) {
+int l_connect(lua_State *L) {
     const char *path = luaL_checklstring(L, 1, NULL);
     int fd = socket(AF_UNIX, SOCK_STREAM, 0);
     struct sockaddr_un addr;
@@ -113,7 +113,7 @@ int l_conect(lua_State *L) {
     return 1;
 }
 
-static const luaL_Reg library[] = {{"connect", l_conect}, {NULL, NULL}};
+static const luaL_Reg library[] = {{"connect", l_connect}, {NULL, NULL}};
 
 LUALIB_API int luaopen_ntsp(lua_State *L) {
     luaL_newlib(L, library);
