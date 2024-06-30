@@ -278,7 +278,7 @@ async function renderSvgbob(number: number, diagram: string): Promise<string> {
       }
       return `<defs>${defs.join("")}</defs>`;
     })
-    // Scaling up to 16px results in all text being slighlty too far right.
+    // Scaling up to 16px results in all text being slightly too far right.
     .replace(/<text x="([0-9.]+)"/g, (_, x) => `<text x="${x - 2}"`);
   const opt = optimize(unopt, {
     multipass: true,
