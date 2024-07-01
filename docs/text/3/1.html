@@ -203,7 +203,7 @@
   (<span class="fu">sqrt</span> (<span class="fu">/</span> <span class="cn">6</span> (monte-carlo trials cesaro-test))))
 
 (<span class="kw">define</span> (cesaro-test)
-   (<span class="fu">=</span> (<span class="fu">gcd</span> (rand) (rand)) <span class="cn">1</span>))
+  (<span class="fu">=</span> (<span class="fu">gcd</span> (rand) (rand)) <span class="cn">1</span>))
 
 (<span class="kw">define</span> (monte-carlo trials experiment)
   (<span class="kw">define</span> (iter trials-remaining trials-passed)
