@@ -164,13 +164,9 @@
 
 (Section :3.1.2 "The Benefits of Introducing Assignment")
 
-;; Tausworthe PRNG: https://stackoverflow.com/a/23875298
+; FIXME: moved up here away from rand-update so that it is not void in the
+; definition of rand below.
 (define random-init 1)
-(define random-max #x7fffffff)
-(define (rand-update x0)
-  (let* ((x1 (fxxor x0 (fxarithmetic-shift-right x0 13)))
-         (x2 (fxxor x1 (fxarithmetic-shift-left x1 18))))
-    (fxand x2 random-max)))
 
 (define rand
   (let ((x random-init))
@@ -180,6 +176,7 @@
 
 (define (estimate-pi trials)
   (sqrt (/ 6 (monte-carlo trials cesaro-test))))
+
 (define (cesaro-test)
   (= (gcd (rand) (rand)) 1))
 
@@ -194,7 +191,16 @@
                       trials-passed))))
   (iter trials 0))
 
-;; This is deterministic because the `random-init` seed is fixed.
+;; The textbook doesn't give an implementation of `rand-update`, so I've
+;; implemented it as a [linear-feedback shift
+;; register](https://en.wikipedia.org/wiki/Linear-feedback_shift_register)
+(define random-max #x7fffffff)
+(define (rand-update x0)
+  (let* ((x1 (fxxor x0 (fxarithmetic-shift-right x0 13)))
+         (x2 (fxxor x1 (fxarithmetic-shift-left x1 18))))
+    (fxand x2 random-max)))
+
+;; Since the `random-init` seed is fixed, this test is deterministic:
 (estimate-pi 1000) ~> 3.149183286488868
 
 (Exercise ?3.5
