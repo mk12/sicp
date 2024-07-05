@@ -20,42 +20,78 @@
 //! then CTRL-D to flush. The server's response gets printed right after.
 
 const std = @import("std");
+
 const c = @cImport({
     @cInclude("lua5.4/lauxlib.h");
     @cInclude("lua5.4/lua.h");
 });
-
-fn l_connect(lua: ?*c.lua_State) callconv(.C) c_int {
-    const path = c.luaL_checklstring(lua, 1, null);
-    _ = path;
-    // const fd = std.posix.socket(AF_UNIX, SOCK_STREAM, 0);
-    // struct sockaddr_un addr;
-    // memset(&addr, 0, sizeof addr);
-    // addr.sun_family = AF_UNIX;
-    // strcpy(addr.sun_path, path);
-    // if (connect(fd, (const struct sockaddr *)&addr, sizeof addr) != 0) {
-    //     perror(NULL);
-    //     lua_pushnil(L);
-    //     return 1;
-    // }
-    // lua_createtable(L, 0, 3);
-    // lua_pushinteger(L, fd);
-    // lua_setfield(L, -2, "fd");
-    // lua_pushcfunction(L, l_close);
-    // lua_setfield(L, -2, "close");
-    // lua_pushcfunction(L, l_send);
-    // lua_setfield(L, -2, "send");
-    return 1;
-}
 
 const library = [_]c.luaL_Reg{
     .{ .name = "connect", .func = l_connect },
     .{ .name = null, .func = null },
 };
 
-export fn luaopen_ntsp(lua: *c.lua_State) c_int {
-    c.luaL_checkversion(lua);
-    c.lua_createtable(lua, 0, library.len - 1);
-    c.luaL_setfuncs(lua, &library, 0);
+export fn luaopen_ntsp(L: *c.lua_State) c_int {
+    // Would use the luaL_newlib macro but @cImport doesn't understand it.
+    c.luaL_checkversion(L);
+    c.lua_createtable(L, 0, library.len - 1);
+    c.luaL_setfuncs(L, &library, 0);
+    return 1;
+}
+
+// Opens a connection to the Unix domain socket at the given path. On success,
+// returns a table with fields "fd" (the file descriptor), "send" (the method
+// `l_send`), and "close" (the method `l_close`). On error, returns nil.
+fn l_connect(L: ?*c.lua_State) callconv(.C) c_int {
+    const path = std.mem.span(c.luaL_checklstring(L, 1, null));
+    const stream = std.net.connectUnixSocket(path) catch |err|
+        return fail(L, "connecting to socket", err);
+    c.lua_createtable(L, 0, 3);
+    c.lua_pushinteger(L, stream.handle);
+    c.lua_setfield(L, -2, "fd");
+    c.lua_pushcfunction(L, l_close);
+    c.lua_setfield(L, -2, "close");
+    c.lua_pushcfunction(L, l_send);
+    c.lua_setfield(L, -2, "send");
+    return 1;
+}
+
+// Method on the table returned by `l_connect`. Closes the socket, returning
+// true on success and false on failure.
+fn l_close(L: ?*c.lua_State) callconv(.C) c_int {
+    c.luaL_checktype(L, 1, c.LUA_TTABLE);
+    _ = c.lua_getfield(L, 1, "fd");
+    const fd = c.luaL_checkinteger(L, -1);
+    const stream = std.net.Stream{ .handle = @intCast(fd) };
+    stream.close();
+    c.lua_pushboolean(L, 1);
+    return 1;
+}
+
+var response_buf: [100 * 1024]u8 = undefined;
+
+// Method on the table returned by `l_connect`. Sends the string argument on the
+// socket and returns the response, or nil on failure.
+fn l_send(L: ?*c.lua_State) callconv(.C) c_int {
+    c.luaL_checktype(L, 1, c.LUA_TTABLE);
+    _ = c.lua_getfield(L, 1, "fd");
+    const fd = c.luaL_checkinteger(L, -1);
+    const stream = std.net.Stream{ .handle = @intCast(fd) };
+    var request_len: usize = undefined;
+    const request = c.lua_tolstring(L, 2, &request_len);
+    std.debug.assert(request[request_len] == 0);
+    stream.writeAll(request[0 .. request_len + 1]) catch |err|
+        return fail(L, "writing to socket", err);
+    var response = std.io.fixedBufferStream(&response_buf);
+    stream.reader().streamUntilDelimiter(response.writer(), 0, response_buf.len - 1) catch |err|
+        return fail(L, "reading from socket", err);
+    response_buf[response.pos] = 0;
+    _ = c.lua_pushstring(L, &response_buf);
+    return 1;
+}
+
+fn fail(L: ?*c.lua_State, msg: []const u8, err: anytype) c_int {
+    std.debug.print("ntsp.zig: {s}: {s}\n", .{ msg, @errorName(err) });
+    c.lua_pushnil(L);
     return 1;
 }
