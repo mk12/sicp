@@ -148,7 +148,7 @@ $(objc_tools): bin/%: tools/%.m | bin
 	$(CC) $(CFLAGS) $(OBJCFLAGS) -o $@ $^
 
 $(lua_c_tools): lib/%.so: tools/lua/%.zig | lib
-	zig build-lib -O ReleaseSmall -dynamic -fsingle-threaded -fallow-shlib-undefined -femit-bin=$@ $^
+	zig build-lib -O ReleaseSafe -dynamic -fsingle-threaded -fallow-shlib-undefined -femit-bin=$@ $^
 
 bin lib:
 	mkdir -p $@
