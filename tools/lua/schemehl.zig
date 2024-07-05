@@ -654,7 +654,7 @@ const Scanner = struct {
             ',' => return .unquote,
             '"' => {
                 var kind = TokenKind.string;
-                while (self.get()) |char| : (self.inc()) switch (char) {
+                while (self.eat()) |char| switch (char) {
                     '"' => break,
                     '\\' => {
                         kind = .string_with_escapes;
@@ -662,15 +662,14 @@ const Scanner = struct {
                     },
                     else => {},
                 } else return error.UnclosedDoubleQuote;
-                self.inc();
                 return kind;
             },
             '-', '+' => if (!self.eof() and std.ascii.isDigit(self.get().?) and self.recognizeNumber()) {
                 return .number;
-            } else if (self.offset < self.text.len - 5) {
-                const span = self.text[self.offset .. self.offset + 5];
+            } else if (self.offset < self.text.len - 4) {
+                const span = self.text[self.offset..][0..5];
                 if (std.mem.eql(u8, span, "inf.0") or std.mem.eql(u8, span, "nan.0")) {
-                    self.offset += 5;
+                    self.offset += 4;
                     return .number;
                 }
             },
@@ -680,7 +679,10 @@ const Scanner = struct {
                 '\'' => return .syntax,
                 '`' => return .quasisyntax,
                 ',' => return .unsyntax,
-                '(' => return .hash,
+                '(' => {
+                    self.offset -= 1;
+                    return .hash;
+                },
                 'x' => {
                     self.eatWhile(std.ascii.isHex);
                     if (self.get()) |ch| assert(!isIdent(ch));
@@ -704,7 +706,7 @@ const Scanner = struct {
                 self.offset = end + "»".len;
                 return .metavariable;
             },
-            "→"[0] => if (self.get()) |ch1| if (ch1 == "→"[1]) if (self.get()) |ch2| if (ch2 == "→"[2]) {
+            "→"[0] => if (self.offset < self.text.len - 2 and std.mem.eql(u8, self.text[self.offset - 1 ..][0..3], "→")) {
                 self.eatUntil('\n');
                 return .console;
             },
@@ -745,12 +747,13 @@ const Scanner = struct {
     }
 
     fn eat(self: *Scanner) ?u8 {
-        defer self.inc();
-        return self.get();
+        const char = self.get() orelse return null;
+        self.inc();
+        return char;
     }
 
     fn eatUntil(self: *Scanner, end: u8) void {
-        while (self.get()) |char| : (self.inc()) if (char != end) break;
+        while (self.get()) |char| : (self.inc()) if (char == end) break;
     }
 
     fn eatWhile(self: *Scanner, predicate: anytype) void {
@@ -911,7 +914,7 @@ fn renderStringLiteral(hl: *Highlighter, token: []const u8) !void {
     var i: usize = 0;
     var j: usize = 1;
     while (j < token.len - 1) {
-        if (token[j] == '\\') {
+        if (token[j] != '\\') {
             j += 1;
             continue;
         }
@@ -976,7 +979,14 @@ fn render(hl: *Highlighter, qt: *QuoteTracker, text: []const u8, L: ?*c.lua_Stat
     var scanner = Scanner{ .text = text };
     while (try scanner.next()) |item| {
         const token = item.token;
-        // if (debug_quotes) {}
+        if (debug_quotes) {
+            std.debug.print("quote:", .{});
+            for (qt.stack.slice()) |state|
+                std.debug.print(" [{s} {} {}]", .{ @tagName(state.quote), state.quasi, state.depth });
+            std.debug.print("\n", .{});
+        }
+        if (debug_tokens)
+            std.debug.print("token: {s} \"{}\"\n", .{ @tagName(item.kind), std.zig.fmtEscapes(token) });
         switch (try qt.next(token, item.kind)) {
             .quote, .syntax => {
                 try switch (item.kind) {
@@ -1031,12 +1041,12 @@ fn l_highlight(L: ?*c.lua_State) callconv(.C) c_int {
         }
     }
     if (debug_input) {
-        std.debug.print("highlight:\n\t");
-        for (text) |char| switch (char) {
-            '\n' => std.debug.print("\n\t"),
-            else => std.debug.print("{c}", .{char}),
-        };
-        std.debug.print("\n");
+        std.debug.print("highlight:\n\t", .{});
+        for (text) |char| {
+            std.debug.print("{c}", .{char});
+            if (char == '\n') std.debug.print("\t", .{});
+        }
+        std.debug.print("\n", .{});
     }
     var buffer = std.ArrayList(u8).initCapacity(std.heap.c_allocator, text.len * 2) catch |err|
         return fail(L, "allocating buffer", err);
