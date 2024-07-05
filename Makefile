@@ -55,9 +55,6 @@ objc_tools := $(patsubst %,bin/%,spell)
 lua_c_tools := $(patsubst %,lib/%.so,ntsp schemehl)
 tools := $(c_tools) $(objc_tools) $(lua_c_tools)
 
-lua_c_obj := $(lua_c_tools:.so=.o)
-lua_c_rsp := $(lua_c_tools:.so=.rsp)
-
 vscode_files := $(patsubst %,.vscode/%.json,settings tasks)
 
 .SUFFIXES:
@@ -150,16 +147,8 @@ $(c_tools): bin/%: tools/%.c | bin
 $(objc_tools): bin/%: tools/%.m | bin
 	$(CC) $(CFLAGS) $(OBJCFLAGS) -o $@ $^
 
-$(lua_c_tools): lib/%.so: lib/%.o lib/%.rsp | lib
-	$(CC) $(CFLAGS) @$(word 2,$^) -shared -o $@ $<
-
-.INTERMEDIATE: $(lua_c_obj) $(lua_c_rsp)
-
-$(lua_c_obj): lib/%.o: tools/lua/%.c
-	$(CC) $(CFLAGS) -c -o $@ $^
-
-$(lua_c_rsp): lib/%.rsp: scripts/lua-symbol-flags.sh lib/%.o
-	$^ > $@
+$(lua_c_tools): lib/%.so: tools/lua/%.zig | lib
+	zig build-lib -O ReleaseSmall -dynamic -fsingle-threaded -fallow-shlib-undefined -femit-bin=$@ $^
 
 bin lib:
 	mkdir -p $@
