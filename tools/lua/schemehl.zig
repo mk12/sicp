@@ -25,10 +25,7 @@ const c = @cImport({
     @cInclude("lua5.4/lua.h");
 });
 
-// Debugging flags.
-const debug_input = false;
-const debug_tokens = false;
-const debug_quotes = false;
+const log = std.log.scoped(.schemehl);
 
 const library = [_]c.luaL_Reg{
     .{ .name = "highlight", .func = l_highlight },
@@ -898,6 +895,13 @@ const QuoteTracker = struct {
         }
         return prev.quote;
     }
+
+    fn fmt(self: *const QuoteTracker, comptime _: []const u8, _: std.fmt.FormatOptions, writer: anytype) !void {
+        for (self.stack.slice(), 0..) |state, i| {
+            if (i != 0) try writer.writeByte(' ');
+            try writer.print("[{s} {} {}]", .{ @tagName(state.quote), state.quasi, state.depth });
+        }
+    }
 };
 
 fn renderComment(hl: *Highlighter, text: []const u8) !void {
@@ -979,14 +983,8 @@ fn render(hl: *Highlighter, qt: *QuoteTracker, text: []const u8, L: ?*c.lua_Stat
     var scanner = Scanner{ .text = text };
     while (try scanner.next()) |item| {
         const token = item.token;
-        if (debug_quotes) {
-            std.debug.print("quote:", .{});
-            for (qt.stack.slice()) |state|
-                std.debug.print(" [{s} {} {}]", .{ @tagName(state.quote), state.quasi, state.depth });
-            std.debug.print("\n", .{});
-        }
-        if (debug_tokens)
-            std.debug.print("token: {s} \"{}\"\n", .{ @tagName(item.kind), std.zig.fmtEscapes(token) });
+        log.debug("quote: {}", .{std.fmt.Formatter(QuoteTracker.fmt){ .data = qt }});
+        log.debug("token: {s} \"{}\"", .{ @tagName(item.kind), std.zig.fmtEscapes(token) });
         switch (try qt.next(token, item.kind)) {
             .quote, .syntax => {
                 try switch (item.kind) {
@@ -1040,14 +1038,7 @@ fn l_highlight(L: ?*c.lua_State) callconv(.C) c_int {
             sicp_id_links = true;
         }
     }
-    if (debug_input) {
-        std.debug.print("highlight:\n\t", .{});
-        for (text) |char| {
-            std.debug.print("{c}", .{char});
-            if (char == '\n') std.debug.print("\t", .{});
-        }
-        std.debug.print("\n", .{});
-    }
+    log.debug("highlight:\n{s}\n--- end ---", .{text});
     var buffer = std.ArrayList(u8).initCapacity(std.heap.c_allocator, text.len * 2) catch |err|
         return fail(L, "allocating buffer", err);
     var hl = Highlighter.init(&buffer);
@@ -1059,7 +1050,7 @@ fn l_highlight(L: ?*c.lua_State) callconv(.C) c_int {
 }
 
 fn fail(L: ?*c.lua_State, msg: []const u8, err: anytype) c_int {
-    std.debug.print("ntsp.zig: {s}: {s}\n", .{ msg, @errorName(err) });
+    log.err("{s}: {s}", .{ msg, @errorName(err) });
     c.lua_pushnil(L);
     return 1;
 }

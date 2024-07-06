@@ -26,6 +26,8 @@ const c = @cImport({
     @cInclude("lua5.4/lua.h");
 });
 
+const log = std.log.scoped(.ntsp);
+
 const library = [_]c.luaL_Reg{
     .{ .name = "connect", .func = l_connect },
     .{ .name = null, .func = null },
@@ -91,7 +93,7 @@ fn l_send(L: ?*c.lua_State) callconv(.C) c_int {
 }
 
 fn fail(L: ?*c.lua_State, msg: []const u8, err: anytype) c_int {
-    std.debug.print("ntsp.zig: {s}: {s}\n", .{ msg, @errorName(err) });
+    log.err("{s}: {s}\n", .{ msg, @errorName(err) });
     c.lua_pushnil(L);
     return 1;
 }
