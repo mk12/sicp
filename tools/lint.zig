@@ -4,24 +4,39 @@ const std = @import("std");
 
 // Maximum number of columns allowed by the style guide.
 const maxColumns = 80;
-
 // Maximum paren nesting depth.
 const maxDepth = 64;
 
-// Skip alignment checks on lines ending with this comment.
-const noAlignComment = "; NOALIGN\n";
+fn printUsage(file: std.fs.File) void {
+    file.writer().print(
+        \\Usage: {s} FILE ...
+        \\
+        \\Line Scheme code
+        \\
+        \\Arguments:
+        \\    FILE  Scheme file or Markdown file (lints code blocks)
+        \\
+    , .{std.os.argv[0]}) catch unreachable;
+}
 
-// Lines in a Markdown file indicating the start of Scheme code. The explicit
-// "```scheme" is only used in README.md for GitHub rendering.
-const markdownSchemeStart1 = "```scheme\n";
-const markdownSchemeStart2 = "```\n";
-
-// Line prefix in a Markdown file that starts a code block. We need to recognize
-// these to avoid treating the ending "```" as MARKDOWN_SCHEME_START_2.
-const markdownCodeStartPrefix = "```";
-
-// Line in a Markdown file indicating the end of a code block.
-const markdownCodeEnd = "```\n";
+pub fn main() void {
+    if (std.os.argv.len < 2) {
+        printUsage(std.io.getStdErr());
+        std.process.exit(1);
+    }
+    const arg1 = std.mem.span(std.os.argv[1]);
+    if (std.mem.eql(u8, arg1, "-h") or std.mem.eql(u8, arg1, "--help")) {
+        printUsage(std.io.getStdOut());
+        return;
+    }
+    var failed = false;
+    for (std.os.argv[1..]) |path| {
+        var linter = Linter{ .filename = std.mem.span(path) };
+        linter.lintFile();
+        failed = failed or linter.failed;
+    }
+    if (failed) std.process.exit(1);
+}
 
 // Bit flags specifying indentation rules for an operator. The indentation of a
 // line is determined by the operator belonging to the most recent (as of the
@@ -249,49 +264,87 @@ const Linter = struct {
     // String containing the last name in the import block.
     last_import_name: []const u8 = "",
 
-    fn fail(self: *Linter, column: u16, comptime format: []const u8, args: anytype) void {
-        std.io.getStdErr().writer().print("{s}:{}:{}:" ++ format ++ "\n", .{ self.filename, self.lineno, column } ++ args) catch unreachable;
-        self.failed = true;
+    fn lintFile(self: *Linter) void {
+        var file = std.fs.cwd().openFile(self.filename, .{}) catch |err| return self.failNoLocation("{s}", .{@errorName(err)});
+        var input = std.io.bufferedReader(file.reader());
+        var line_buf: [128]u8 = undefined;
+        if (std.mem.endsWith(u8, self.filename, ".md")) {
+            var mode: enum { text, non_scheme, scheme } = .text;
+            while (true) {
+                var output = std.io.fixedBufferStream(&line_buf);
+                input.reader().streamUntilDelimiter(output.writer(), '\n', line_buf.len) catch |err| switch (err) {
+                    error.EndOfStream => break,
+                    error.StreamTooLong => if (mode != .text) return self.failNoColumn("line too long", .{}),
+                    else => return self.failNoColumn("{s}", .{@errorName(err)}),
+                };
+                const line = output.getWritten();
+                switch (mode) {
+                    .text => if (std.mem.eql(u8, line, "```") or std.mem.eql(u8, line, "```scheme")) {
+                        mode = .scheme;
+                    } else if (std.mem.startsWith(u8, line, "```")) {
+                        mode = .non_scheme;
+                    },
+                    .non_scheme => if (std.mem.eql(u8, line, "```")) {
+                        mode = .text;
+                    },
+                    .scheme => if (std.mem.eql(u8, line, "```")) {
+                        mode = .text;
+                    } else {
+                        self.lintLine(line);
+                        self.prev_length = @intCast(line.len);
+                    },
+                }
+                self.lineno += 1;
+            }
+        } else {
+            while (true) {
+                var output = std.io.fixedBufferStream(&line_buf);
+                input.reader().streamUntilDelimiter(output.writer(), '\n', line_buf.len) catch |err| switch (err) {
+                    error.EndOfStream => break,
+                    error.StreamTooLong => return self.failNoColumn("line too long", .{}),
+                    else => return self.failNoColumn("{s}", .{@errorName(err)}),
+                };
+                const line = output.getWritten();
+                self.lintLine(line);
+                self.prev_length = @intCast(line.len);
+                self.lineno += 1;
+            }
+        }
     }
 
     fn lintLine(self: *Linter, line: []const u8) void {
-        _ = self; // autofix
-        _ = line; // autofix
-        //
+        // Step 1. Check basic line length, whitespace, and comments.
+        if (line.len == 0) {
+            if (!self.in_string and self.prev_blanks == 1) self.fail(0, "multiple blank lines", .{});
+            self.prev_blanks += 1;
+            return;
+        }
+        self.prev_blanks = 0;
+        const utf8_len = std.unicode.utf8CountCodepoints(line) catch return self.failNoColumn("invalid UTF-8", .{});
+        if (utf8_len > maxColumns) self.fail(maxColumns - 1, "line too long: {} > {}", .{ utf8_len, maxColumns });
+        if (line[line.len - 1] == ' ') self.fail(line.len - 1, "trailing whitespace", .{});
+        if (line[0] == ';') {
+            var i: usize = 1;
+            while (i < line.len and line[i] == ';') i += 1;
+            if (i > 3) self.fail(0, "too many semicolons", .{});
+            if (i == 3 and self.lineno != 1) self.fail(0, "';;;' only allowed on first line copyright", .{});
+            if (i < line.len and line[i] != ' ') self.fail(i, "missing space after ';'", .{});
+            return;
+        }
+    }
+
+    fn failNoLocation(self: *Linter, comptime format: []const u8, args: anytype) void {
+        std.io.getStdErr().writer().print("{s}: " ++ format, .{self.filename} ++ args) catch unreachable;
+        self.failed = true;
+    }
+
+    fn failNoColumn(self: *Linter, comptime format: []const u8, args: anytype) void {
+        std.io.getStdErr().writer().print("{s}:{}: " ++ format, .{ self.filename, self.lineno } ++ args) catch unreachable;
+        self.failed = true;
+    }
+
+    fn fail(self: *Linter, column: usize, comptime format: []const u8, args: anytype) void {
+        std.io.getStdErr().writer().print("{s}:{}:{}: " ++ format, .{ self.filename, self.lineno, column + 1 } ++ args) catch unreachable;
+        self.failed = true;
     }
 };
-
-// Reads and lints the given file. If it is a Markdown file (".md" extension),
-// only lints Scheme code in fenced code blocks.
-fn lint(path: []const u8) bool {
-    _ = path; // autofix
-    //
-}
-
-fn printUsage(file: std.fs.File) void {
-    file.writer().print(
-        \\Usage: {s} FILE ...
-        \\
-        \\Line Scheme code
-        \\
-        \\Arguments:
-        \\    FILE  Scheme file or Markdown file (lints code blocks)
-        \\
-    , .{std.os.argv[0]}) catch unreachable;
-}
-
-pub fn main() void {
-    if (std.os.argv.len < 2) {
-        printUsage(std.io.getStdErr());
-        std.process.exit(1);
-    }
-    if (std.mem.eql(u8, std.os.argv[1], "-h") or std.mem.eql(u8, std.os.argv[1], "--help")) {
-        printUsage(std.io.getStdOut());
-        return;
-    }
-    var failed = false;
-    for (std.os.argv[1..]) |path| if (!lint(path)) {
-        failed = true;
-    };
-    if (failed) std.process.exit(1);
-}
