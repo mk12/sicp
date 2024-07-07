@@ -140,7 +140,7 @@ fn lookupIndentRules(line: []const u8, operator: []const u8) IndentRules {
     var rules = indentRulesMap.get(operator) orelse return .{};
     // We only recognize wrapper forms occurring at the top level (column 1,
     // meaning the open paren is on column 0).
-    if (operator.ptr - line.ptr != 1) rules.wrapper = false;
+    if (@intFromPtr(operator.ptr) - @intFromPtr(line.ptr) != 1) rules.wrapper = false;
     return rules;
 }
 
@@ -251,18 +251,18 @@ const Linter = struct {
     num_wrappers: u16 = 0,
     // If the last open paren was quoted, its alignment column (allowed as an
     // alternative to the 1st-operand/2-space alignment). Otherwise, -1.
-    quoted_align: i16 = 0,
+    quoted_align: ?u8 = null,
     // Stack of alignments, one for each unclosed parenthesis. A new line is
-    // expected to be indented by stack.get(stack.len() - 1) spaces.
+    // expected to be indented by stack.get(stack.len - 1) spaces.
     stack: std.BoundedArray(u8, 64) = .{},
     // The import block we are currently inside, or IB_NONE.
     import_mode: ImportBlock = .none,
     // The value of import_mode at the start of the previous line.
     prev_import_mode: ImportBlock = .none,
     // String containing the last id in the import block.
-    last_import_id: []const u8 = "",
+    last_import_id: ?[]const u8 = null,
     // String containing the last name in the import block.
-    last_import_name: []const u8 = "",
+    last_import_name: ?[]const u8 = null,
 
     fn lintFile(self: *Linter) void {
         var file = std.fs.cwd().openFile(self.filename, .{}) catch |err| return self.failNoLocation("{s}", .{@errorName(err)});
@@ -331,20 +331,150 @@ const Linter = struct {
             if (i < line.len and line[i] != ' ') self.fail(i, "missing space after ';'", .{});
             return;
         }
+
+        // Steps 2. Check spacing, alignment, and import ordering.
+        const no_align = std.mem.endsWith(u8, line, "; NOALIGN");
+        var can_pack_inside = self.import_mode.isInside();
+        var can_pack_outside = self.prev_import_mode != .none and !self.prev_import_mode.isInside() and self.import_mode.isOutside();
+        var prev: u8 = 0; // previous character
+        var escaped = false; // last character was unescaped backslash
+        var two_spaces = false; // saw two spaces in a row
+        var word_start: usize = 0; // start of the last word (used for imports)
+        var last_open: usize = 0; // column of the last '(' (used for imports)
+        var mode: enum { indent, normal, operator, string, comment, comment_space } = if (self.in_string) .string else .indent;
+        self.prev_import_mode = self.import_mode;
+        for (line, 0..) |char, i| {
+            if (char == '\t') self.fail(i, "illegal tab character", .{});
+            switch (mode) {
+                .indent, .normal, .operator => {
+                    if (mode == .indent) {
+                        if (char != ' ' and !no_align and i != self.indent()) {
+                            // TODO: off by one with stack len?
+                            if (i == 0 and self.stack.len == self.num_wrappers) {
+                                // Returning to zero indentation after wrapper opening.
+                                self.setIndent(0);
+                            } else if (@as(u8, @intCast(i)) == self.quoted_align) {
+                                // Quoted form is data, not code.
+                                self.setIndent(self.quoted_align.?);
+                                self.quoted_align.? -= 1;
+                            } else {
+                                self.fail(i, "incorrect indentation", .{});
+                            }
+                        }
+                        mode = .normal;
+                    }
+                    if (two_spaces and char != ' ' and char != ';') {
+                        two_spaces = false;
+                        self.fail(i, "unexpected two spaces in a row", .{});
+                    }
+                    switch (char) {
+                        '"' => {
+                            mode = .string;
+                            self.in_string = true;
+                        },
+                        ';' => {
+                            mode = .comment;
+                            if (prev != ' ') self.fail(i, "expected space before ';'", .{});
+                        },
+                        '(', '[' => if (!escaped) {
+                            mode = .operator;
+                            self.stack.append(@intCast(i + 1)) catch |err| switch (err) {
+                                error.Overflow => self.fail(i, "exceeded maximum nesting depth ({})", .{maxDepth}),
+                            };
+                            if (i > 0) switch (prev) {
+                                ' ', '#', '\'', '(', ',', '@', '[', '`' => {},
+                                else => self.fail(i, "expected space before '{c}'", .{char}),
+                            };
+                            // We only use square brackets for =?> and =$>.
+                            self.quoted_align = if (prev == '\'' or (self.quoted_align != null and prev == '(') or char == '[') @intCast(i + 1) else null;
+                            last_open = i;
+                        },
+                        ')', ']' => if (!escaped) {
+                            mode = .normal;
+                            if (i != 0 and self.stack.len == self.num_wrappers) self.fail(i, "expected ')' at start of line for wrapper", .{});
+                            if (prev == ' ') self.fail(i, "unexpected space before ')'", .{});
+                            if (self.import_mode != .none) {
+                                if (self.import_mode.isInside()) {
+                                    const name = line[word_start..i];
+                                    if (idOrder(self.last_import_name.?, name) != .lt)
+                                        self.fail(word_start, "incorrect import name ordering: {s} >= {s}", .{ self.last_import_name.?, name });
+                                    self.last_import_name = null;
+                                    if (can_pack_outside) {
+                                        can_pack_outside = false;
+                                        var would_be = self.prev_length + 1 + (i - last_open + 1);
+                                        for (line[i + 1 ..]) |c| if (c == char) {
+                                            would_be += 1;
+                                        } else break;
+                                        if (would_be <= maxColumns) self.fail(last_open, "pack imports on previous line: {s}", .{line[last_open..i]});
+                                    }
+                                    if (can_pack_inside) {
+                                        can_pack_inside = false;
+                                        var would_be = self.prev_length + 1 + (i - word_start + 1);
+                                        for (line[i + 1 ..]) |c| if (c == char) {
+                                            would_be += 1;
+                                        } else break;
+                                        if (would_be <= maxColumns) self.fail(last_open, "pack import on previous line: {s}", .{line[word_start..i]});
+                                    }
+                                } else if (self.import_mode.isOutside()) {
+                                    self.last_import_id = null;
+                                }
+                                self.import_mode = self.import_mode.parent();
+                            }
+                            _ = self.stack.popOrNull() orelse self.fail(i, "unmatched '{c}'", .{char});
+                        },
+                        // TODO \n not in string
+                        ' ', '\n' => {
+                            if (prev == ' ' and char == ' ') two_spaces = true;
+                            if (mode == .operator) {
+                                mode = .normal;
+                                const operator = line[word_start..i];
+                                const rules = lookupIndentRules(line, operator);
+                                if (rules.wrapper) self.num_wrappers += 1;
+                                var j = i;
+                                while (j < line.len and line[j] == ' ') j += 1;
+                                // TODO
+                            }
+                        },
+                        else => {},
+                    }
+                },
+                .string => if (!escaped and char == '"') {
+                    mode = .normal;
+                    self.in_string = false;
+                },
+                .comment, .comment_space => {
+                    if (mode == .comment and char == ';') mode = .comment_space;
+                    if (char != ' ') self.fail(i, "expected space after ';'", .{});
+                },
+            }
+            if (mode == .normal and prev == ' ' and char != ' ') word_start = i;
+            prev = char;
+            escaped = if (char == '\\') !escaped else false;
+        }
+    }
+
+    fn indent(self: Linter) u8 {
+        return self.stack.get(self.stack.len - 1);
+    }
+
+    fn setIndent(self: *Linter, value: u8) void {
+        self.stack.set(self.stack.len - 1, value);
     }
 
     fn failNoLocation(self: *Linter, comptime format: []const u8, args: anytype) void {
-        std.io.getStdErr().writer().print("{s}: " ++ format, .{self.filename} ++ args) catch unreachable;
-        self.failed = true;
+        self.failImpl(" " ++ format, args);
     }
 
     fn failNoColumn(self: *Linter, comptime format: []const u8, args: anytype) void {
-        std.io.getStdErr().writer().print("{s}:{}: " ++ format, .{ self.filename, self.lineno } ++ args) catch unreachable;
-        self.failed = true;
+        self.failImpl("{}: " ++ format, .{self.lineno} ++ args);
     }
 
     fn fail(self: *Linter, column: usize, comptime format: []const u8, args: anytype) void {
-        std.io.getStdErr().writer().print("{s}:{}:{}: " ++ format, .{ self.filename, self.lineno, column + 1 } ++ args) catch unreachable;
+        self.failImpl("{}:{}: " ++ format, .{ self.lineno, column + 1 } ++ args);
+    }
+
+    fn failImpl(self: *Linter, comptime format: []const u8, args: anytype) void {
+        std.io.getStdErr().writer().print("{s}:" ++ format ++ "\n", .{self.filename} ++ args) catch unreachable;
         self.failed = true;
     }
 };
