@@ -138,9 +138,11 @@ const indentRulesMap = std.StaticStringMap(IndentRules).initComptime(.{
 // Looks up the indentation rules for the given operator.
 fn lookupIndentRules(line: []const u8, operator: []const u8) IndentRules {
     var rules = indentRulesMap.get(operator) orelse return .{};
+    // TODO(https://github.com/ziglang/zig/issues/1738): @intFromPtr should be unnecessary.
+    const column = @intFromPtr(operator.ptr) - @intFromPtr(line.ptr);
     // We only recognize wrapper forms occurring at the top level (column 1,
     // meaning the open paren is on column 0).
-    if (@intFromPtr(operator.ptr) - @intFromPtr(line.ptr) != 1) rules.wrapper = false;
+    if (column != 1) rules.wrapper = false;
     return rules;
 }
 
@@ -194,7 +196,8 @@ const ImportBlock = enum {
 
 // Looks up the new import block given the current one and an operator.
 fn lookupImportBlock(current: ImportBlock, line: []const u8, operator: []const u8) ImportBlock {
-    const column = operator.ptr - line.ptr;
+    // TODO(https://github.com/ziglang/zig/issues/1738): @intFromPtr should be unnecessary.
+    const column = @intFromPtr(operator.ptr) - @intFromPtr(line.ptr);
     switch (current) {
         .none => if (column == 1) {
             if (std.mem.eql(u8, operator, "Chapter") or
@@ -203,9 +206,9 @@ fn lookupImportBlock(current: ImportBlock, line: []const u8, operator: []const u
                 return .sec;
             if (std.mem.eql(u8, operator, "paste")) return .paste;
         },
-        .sec => if (column == 3 and std.mem.eql(u8, operator, "use")) return .secUse,
-        .secUse => return .secUseArg,
-        .paste => return .pasteArg,
+        .sec => if (column == 3 and std.mem.eql(u8, operator, "use")) return .sec_use,
+        .sec_use => return .sec_use_arg,
+        .paste => return .paste_arg,
         else => {},
     }
     return .none;
@@ -260,9 +263,26 @@ const Linter = struct {
     // The value of import_mode at the start of the previous line.
     prev_import_mode: ImportBlock = .none,
     // String containing the last id in the import block.
-    last_import_id: ?[]const u8 = null,
+    last_import_id: Token = .{},
     // String containing the last name in the import block.
-    last_import_name: ?[]const u8 = null,
+    last_import_name: Token = .{},
+
+    const Token = struct {
+        array: std.BoundedArray(u8, 64) = .{},
+
+        fn get(self: Token) ?[]const u8 {
+            return if (self.array.len == 0) null else self.array.slice();
+        }
+
+        fn set(self: *Token, value: []const u8) void {
+            @memcpy(self.array.buffer[0..value.len], value);
+            self.array.len = @intCast(value.len);
+        }
+
+        fn clear(self: *Token) void {
+            self.array.len = 0;
+        }
+    };
 
     fn lintFile(self: *Linter) void {
         var file = std.fs.cwd().openFile(self.filename, .{}) catch |err| return self.failNoLocation("{s}", .{@errorName(err)});
@@ -314,11 +334,10 @@ const Linter = struct {
         if (utf8_len > maxColumns) self.fail(maxColumns - 1, "line too long: {} > {}", .{ utf8_len, maxColumns });
         if (line[line.len - 1] == ' ') self.fail(line.len - 1, "trailing whitespace", .{});
         if (line[0] == ';') {
-            var i: usize = 1;
-            while (i < line.len and line[i] == ';') i += 1;
-            if (i > 3) self.fail(0, "too many semicolons", .{});
-            if (i == 3 and self.lineno != 1) self.fail(0, "';;;' only allowed on first line copyright", .{});
-            if (i < line.len and line[i] != ' ') self.fail(i, "missing space after ';'", .{});
+            const n = count(line, 0, ';');
+            if (n > 3) self.fail(0, "too many semicolons", .{});
+            if (n == 3 and self.lineno != 1) self.fail(0, "';;;' only allowed on first line copyright", .{});
+            if (n < line.len and line[n] != ' ') self.fail(n, "missing space after ';'", .{});
             return;
         }
 
@@ -333,19 +352,21 @@ const Linter = struct {
         var last_open: usize = 0; // column of the last '(' (used for imports)
         var mode: enum { indent, normal, operator, string, comment, comment_space } = if (self.in_string) .string else .indent;
         self.prev_import_mode = self.import_mode;
-        for (line, 0..) |char, i| {
+        for (0..line.len + 1) |i| {
+            const char = if (i == line.len) '\n' else line[i];
             if (char == '\t') self.fail(i, "illegal tab character", .{});
             switch (mode) {
-                .indent, .normal, .operator => {
+                .indent, .normal, .operator => blk: {
                     if (mode == .indent) {
-                        if (char != ' ' and !no_align and i != self.indent()) {
+                        if (char == ' ') break :blk;
+                        if (!no_align and i != self.indent()) {
                             // TODO: off by one with stack len?
                             if (i == 0 and self.stack.len == self.num_wrappers) {
                                 // Returning to zero indentation after wrapper opening.
-                                self.setIndent(0);
+                                self.indentPtr().* = 0;
                             } else if (@as(u8, @intCast(i)) == self.quoted_align) {
                                 // Quoted form is data, not code.
-                                self.setIndent(self.quoted_align.?);
+                                self.indentPtr().* = self.quoted_align.?;
                                 self.quoted_align.? -= 1;
                             } else {
                                 self.fail(i, "incorrect indentation", .{});
@@ -386,43 +407,58 @@ const Linter = struct {
                             if (self.import_mode != .none) {
                                 if (self.import_mode.isInside()) {
                                     const name = line[word_start..i];
-                                    if (idOrder(self.last_import_name.?, name) != .lt)
-                                        self.fail(word_start, "incorrect import name ordering: {s} >= {s}", .{ self.last_import_name.?, name });
-                                    self.last_import_name = null;
+                                    if (self.last_import_name.get()) |last| if (std.mem.order(u8, last, name) != .lt)
+                                        self.fail(word_start, "incorrect import name ordering: {s} >= {s}", .{ last, name });
+                                    self.last_import_name.clear();
                                     if (can_pack_outside) {
                                         can_pack_outside = false;
-                                        var would_be = self.prev_length + 1 + (i - last_open + 1);
-                                        for (line[i + 1 ..]) |c| if (c == char) {
-                                            would_be += 1;
-                                        } else break;
-                                        if (would_be <= maxColumns) self.fail(last_open, "pack imports on previous line: {s}", .{line[last_open..i]});
+                                        if (self.prev_length + 1 + (i - last_open + 1) + count(line, i + 1, char) <= maxColumns)
+                                            self.fail(last_open, "pack imports on previous line: {s}", .{line[last_open .. i + 1]});
                                     }
                                     if (can_pack_inside) {
                                         can_pack_inside = false;
-                                        var would_be = self.prev_length + 1 + (i - word_start + 1);
-                                        for (line[i + 1 ..]) |c| if (c == char) {
-                                            would_be += 1;
-                                        } else break;
-                                        if (would_be <= maxColumns) self.fail(last_open, "pack import on previous line: {s}", .{line[word_start..i]});
+                                        if (self.prev_length + 1 + (i - word_start + 1) + count(line, i + 1, char) <= maxColumns)
+                                            self.fail(last_open, "pack import on previous line: {s}", .{line[word_start..i]});
                                     }
                                 } else if (self.import_mode.isOutside()) {
-                                    self.last_import_id = null;
+                                    self.last_import_id.clear();
                                 }
                                 self.import_mode = self.import_mode.parent();
                             }
                             _ = self.stack.popOrNull() orelse self.fail(i, "unmatched '{c}'", .{char});
                         },
-                        // TODO \n not in string
                         ' ', '\n' => {
                             if (prev == ' ' and char == ' ') two_spaces = true;
                             if (mode == .operator) {
                                 mode = .normal;
-                                const operator = line[word_start..i];
+                                const operator = line[self.indent()..i];
                                 const rules = lookupIndentRules(line, operator);
                                 if (rules.wrapper) self.num_wrappers += 1;
                                 var j = i;
                                 while (j < line.len and line[j] == ' ') j += 1;
-                                // TODO
+                                if (j == line.len or line[j] == ';') {
+                                    if (rules.special) self.indentPtr().* += 1;
+                                } else if (rules.special and !rules.uniform) {
+                                    self.indentPtr().* += 1;
+                                } else {
+                                    self.indentPtr().* = @intCast(i + 1);
+                                }
+                                self.import_mode = lookupImportBlock(self.import_mode, line, operator);
+                                if (self.import_mode.isOutside()) {
+                                    if (self.last_import_id.get()) |last| if (idOrder(last, operator) != .lt)
+                                        self.fail(word_start, "incorrect import id ordering: {s} >= {s}", .{ last, operator });
+                                    self.last_import_id.set(operator);
+                                }
+                            } else if (self.import_mode.isInside()) {
+                                const name = line[word_start..i];
+                                if (self.last_import_name.get()) |last| if (std.mem.order(u8, last, name) != .lt)
+                                    self.fail(word_start, "incorrect import name ordering: {s} >= {s}", .{ last, name });
+                                self.last_import_name.set(name);
+                                if (can_pack_inside) {
+                                    can_pack_inside = false;
+                                    if (self.prev_length + 1 + name.len + count(line, i + 1, ')') <= maxColumns)
+                                        self.fail(word_start, "pack import on previous line: {s}", .{name});
+                                }
                             }
                         },
                         else => {},
@@ -432,14 +468,12 @@ const Linter = struct {
                     mode = .normal;
                     self.in_string = false;
                 },
-                .comment, .comment_space => {
-                    if (mode == .comment and char == ';') {
-                        mode = .comment_space;
-                    } else if (char != ' ') {
-                        self.fail(i, "expected space after ';', got '{c}'", .{char});
-                    } else {
-                        return;
-                    }
+                .comment, .comment_space => if (mode == .comment and char == ';') {
+                    mode = .comment_space;
+                } else if (char != ' ') {
+                    self.fail(i, "expected space after ';', got '{c}'", .{char});
+                } else {
+                    return;
                 },
             }
             if (mode == .normal and prev == ' ' and char != ' ') word_start = i;
@@ -452,8 +486,8 @@ const Linter = struct {
         return if (self.stack.len == 0) 0 else self.stack.get(self.stack.len - 1);
     }
 
-    fn setIndent(self: *Linter, value: u8) void {
-        self.stack.set(self.stack.len - 1, value);
+    fn indentPtr(self: *Linter) *u8 {
+        return &self.stack.buffer[self.stack.len - 1];
     }
 
     fn failNoLocation(self: *Linter, comptime format: []const u8, args: anytype) void {
@@ -484,4 +518,10 @@ fn readLine(reader: anytype, buffer: []u8) !?[]const u8 {
         },
     };
     return output.getWritten();
+}
+
+fn count(text: []const u8, start: usize, char: u8) usize {
+    var i: usize = start;
+    while (i < text.len) : (i += 1) if (text[i] != char) break;
+    return i - start;
 }
