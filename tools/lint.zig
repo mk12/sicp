@@ -270,14 +270,10 @@ const Linter = struct {
         var line_buf: [128]u8 = undefined;
         if (std.mem.endsWith(u8, self.filename, ".md")) {
             var mode: enum { text, non_scheme, scheme } = .text;
-            while (true) {
-                var output = std.io.fixedBufferStream(&line_buf);
-                input.reader().streamUntilDelimiter(output.writer(), '\n', line_buf.len) catch |err| switch (err) {
-                    error.EndOfStream => break,
-                    error.StreamTooLong => if (mode != .text) return self.failNoColumn("line too long", .{}),
-                    else => return self.failNoColumn("{s}", .{@errorName(err)}),
-                };
-                const line = output.getWritten();
+            while (readLine(input.reader(), &line_buf) catch |err| switch (err) {
+                error.StreamTooLong => if (mode == .scheme) return self.failNoColumn("line too long", .{}) else "",
+                else => return self.failNoColumn("{s}", .{@errorName(err)}),
+            }) |line| : (self.lineno += 1) {
                 switch (mode) {
                     .text => if (std.mem.eql(u8, line, "```") or std.mem.eql(u8, line, "```scheme")) {
                         mode = .scheme;
@@ -294,20 +290,14 @@ const Linter = struct {
                         self.prev_length = @intCast(line.len);
                     },
                 }
-                self.lineno += 1;
             }
         } else {
-            while (true) {
-                var output = std.io.fixedBufferStream(&line_buf);
-                input.reader().streamUntilDelimiter(output.writer(), '\n', line_buf.len) catch |err| switch (err) {
-                    error.EndOfStream => break,
-                    error.StreamTooLong => return self.failNoColumn("line too long", .{}),
-                    else => return self.failNoColumn("{s}", .{@errorName(err)}),
-                };
-                const line = output.getWritten();
+            while (readLine(input.reader(), &line_buf) catch |err| switch (err) {
+                error.StreamTooLong => return self.failNoColumn("line too long", .{}),
+                else => return self.failNoColumn("{s}", .{@errorName(err)}),
+            }) |line| : (self.lineno += 1) {
                 self.lintLine(line);
                 self.prev_length = @intCast(line.len);
-                self.lineno += 1;
             }
         }
     }
@@ -443,8 +433,13 @@ const Linter = struct {
                     self.in_string = false;
                 },
                 .comment, .comment_space => {
-                    if (mode == .comment and char == ';') mode = .comment_space;
-                    if (char != ' ') self.fail(i, "expected space after ';'", .{});
+                    if (mode == .comment and char == ';') {
+                        mode = .comment_space;
+                    } else if (char != ' ') {
+                        self.fail(i, "expected space after ';', got '{c}'", .{char});
+                    } else {
+                        return;
+                    }
                 },
             }
             if (mode == .normal and prev == ' ' and char != ' ') word_start = i;
@@ -454,7 +449,7 @@ const Linter = struct {
     }
 
     fn indent(self: Linter) u8 {
-        return self.stack.get(self.stack.len - 1);
+        return if (self.stack.len == 0) 0 else self.stack.get(self.stack.len - 1);
     }
 
     fn setIndent(self: *Linter, value: u8) void {
@@ -478,3 +473,15 @@ const Linter = struct {
         self.failed = true;
     }
 };
+
+fn readLine(reader: anytype, buffer: []u8) !?[]const u8 {
+    var output = std.io.fixedBufferStream(buffer);
+    reader.streamUntilDelimiter(output.writer(), '\n', buffer.len) catch |err| switch (err) {
+        error.EndOfStream => return null,
+        else => {
+            if (err == error.StreamTooLong) try reader.skipUntilDelimiterOrEof('\n');
+            return err;
+        },
+    };
+    return output.getWritten();
+}
