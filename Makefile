@@ -141,8 +141,11 @@ validate-other:
 
 tools: $(tools)
 
-$(c_tools): bin/%: tools/%.c | bin
+# TODO: combine again once both Zig. Also rename zig_tools & similar for lua.
+bin/docgen: bin/%: tools/%.c | bin
 	$(CC) $(CFLAGS) -o $@ $^
+bin/lint: bin/%: tools/%.zig | bin
+	zig build-exe -O ReleaseSafe -fsingle-threaded -femit-bin=$@ $^
 
 $(objc_tools): bin/%: tools/%.m | bin
 	$(CC) $(CFLAGS) $(OBJCFLAGS) -o $@ $^
