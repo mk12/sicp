@@ -2,11 +2,6 @@
 
 const std = @import("std");
 
-// Maximum number of columns allowed by the style guide.
-const maxColumns = 80;
-// Maximum paren nesting depth.
-const maxDepth = 64;
-
 fn printUsage(file: std.fs.File) void {
     file.writer().print(
         \\Usage: {s} FILE ...
@@ -37,6 +32,11 @@ pub fn main() void {
     }
     if (failed) std.process.exit(1);
 }
+
+// Maximum number of columns allowed by the style guide.
+const maxColumns = 80;
+// Maximum paren nesting depth.
+const maxDepth = 64;
 
 // Bit flags specifying indentation rules for an operator. The indentation of a
 // line is determined by the operator belonging to the most recent (as of the
@@ -288,38 +288,27 @@ const Linter = struct {
         var file = std.fs.cwd().openFile(self.filename, .{}) catch |err| return self.failNoLocation("{s}", .{@errorName(err)});
         var input = std.io.bufferedReader(file.reader());
         var line_buf: [128]u8 = undefined;
-        if (std.mem.endsWith(u8, self.filename, ".md")) {
-            var mode: enum { text, non_scheme, scheme } = .text;
-            while (readLine(input.reader(), &line_buf) catch |err| switch (err) {
-                error.StreamTooLong => if (mode == .scheme) return self.failNoColumn("line too long", .{}) else "",
-                else => return self.failNoColumn("{s}", .{@errorName(err)}),
-            }) |line| : (self.lineno += 1) {
-                switch (mode) {
-                    .text => if (std.mem.eql(u8, line, "```") or std.mem.eql(u8, line, "```scheme")) {
-                        mode = .scheme;
-                    } else if (std.mem.startsWith(u8, line, "```")) {
-                        mode = .non_scheme;
-                    },
-                    .non_scheme => if (std.mem.eql(u8, line, "```")) {
-                        mode = .text;
-                    },
-                    .scheme => if (std.mem.eql(u8, line, "```")) {
-                        mode = .text;
-                    } else {
-                        if (!self.lintLine(line)) break;
-                        self.prev_length = @intCast(line.len);
-                    },
-                }
-            }
-        } else {
-            while (readLine(input.reader(), &line_buf) catch |err| switch (err) {
-                error.StreamTooLong => return self.failNoColumn("line too long", .{}),
-                else => return self.failNoColumn("{s}", .{@errorName(err)}),
-            }) |line| : (self.lineno += 1) {
+        const markdown = std.mem.endsWith(u8, self.filename, ".md");
+        var mode: enum { text, non_scheme, scheme } = if (markdown) .scheme else .text;
+        while (readLine(input.reader(), &line_buf) catch |err| switch (err) {
+            error.StreamTooLong => if (mode == .scheme) return self.failNoColumn("line too long", .{}) else "",
+            else => return self.failNoColumn("{s}", .{@errorName(err)}),
+        }) |line| : (self.lineno += 1) switch (mode) {
+            .text => if (std.mem.eql(u8, line, "```") or std.mem.eql(u8, line, "```scheme")) {
+                mode = .scheme;
+            } else if (std.mem.startsWith(u8, line, "```")) {
+                mode = .non_scheme;
+            },
+            .non_scheme => if (std.mem.eql(u8, line, "```")) {
+                mode = .text;
+            },
+            .scheme => if (markdown and std.mem.eql(u8, line, "```")) {
+                mode = .text;
+            } else {
                 if (!self.lintLine(line)) break;
                 self.prev_length = @intCast(line.len);
-            }
-        }
+            },
+        };
     }
 
     // Lints the line. Returns true if linting should continue.
@@ -358,7 +347,7 @@ const Linter = struct {
         self.prev_import_mode = self.import_mode;
         for (0..line.len + 1) |i| {
             const char = if (i == line.len) '\n' else line[i];
-            if (char == '\t') self.fail(i, "illegal tab character", .{});
+            if (char == '\t') self.fail(i, "tab character not allowed", .{});
             switch (mode) {
                 .indent, .normal, .operator => blk: {
                     if (mode == .indent) {
