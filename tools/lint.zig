@@ -215,7 +215,7 @@ fn lookupImportBlock(current: ImportBlock, line: []const u8, operator: []const u
 }
 
 // Returns the order of two Chapter/Section/Exercise ids.
-fn idOrder(a: []const u8, b: []const u8) std.math.Order {
+fn sicpIdOrder(a: []const u8, b: []const u8) std.math.Order {
     // The Chapter/Section sigil ':' (0x3a) is less than the Exercise sigil '?' (0x3f).
     if (a[0] != b[0]) return std.math.order(a[0], b[0]);
     var cmp = std.math.Order.eq;
@@ -270,7 +270,7 @@ const Linter = struct {
     const Token = struct {
         array: std.BoundedArray(u8, 64) = .{},
 
-        fn get(self: Token) ?[]const u8 {
+        fn get(self: *const Token) ?[]const u8 {
             return if (self.array.len == 0) null else self.array.slice();
         }
 
@@ -306,7 +306,7 @@ const Linter = struct {
                     .scheme => if (std.mem.eql(u8, line, "```")) {
                         mode = .text;
                     } else {
-                        self.lintLine(line);
+                        if (!self.lintLine(line)) break;
                         self.prev_length = @intCast(line.len);
                     },
                 }
@@ -316,21 +316,25 @@ const Linter = struct {
                 error.StreamTooLong => return self.failNoColumn("line too long", .{}),
                 else => return self.failNoColumn("{s}", .{@errorName(err)}),
             }) |line| : (self.lineno += 1) {
-                self.lintLine(line);
+                if (!self.lintLine(line)) break;
                 self.prev_length = @intCast(line.len);
             }
         }
     }
 
-    fn lintLine(self: *Linter, line: []const u8) void {
+    // Lints the line. Returns true if linting should continue.
+    fn lintLine(self: *Linter, line: []const u8) bool {
         // Step 1. Check basic line length, whitespace, and comments.
         if (line.len == 0) {
             if (!self.in_string and self.prev_blanks == 1) self.fail(0, "multiple blank lines", .{});
             self.prev_blanks += 1;
-            return;
+            return true;
         }
         self.prev_blanks = 0;
-        const utf8_len = std.unicode.utf8CountCodepoints(line) catch return self.failNoColumn("invalid UTF-8", .{});
+        const utf8_len = std.unicode.utf8CountCodepoints(line) catch {
+            self.failNoColumn("fatal: invalid UTF-8", .{});
+            return false;
+        };
         if (utf8_len > maxColumns) self.fail(maxColumns - 1, "line too long: {} > {}", .{ utf8_len, maxColumns });
         if (line[line.len - 1] == ' ') self.fail(line.len - 1, "trailing whitespace", .{});
         if (line[0] == ';') {
@@ -338,7 +342,7 @@ const Linter = struct {
             if (n > 3) self.fail(0, "too many semicolons", .{});
             if (n == 3 and self.lineno != 1) self.fail(0, "';;;' only allowed on first line copyright", .{});
             if (n < line.len and line[n] != ' ') self.fail(n, "missing space after ';'", .{});
-            return;
+            return true;
         }
 
         // Steps 2. Check spacing, alignment, and import ordering.
@@ -360,7 +364,6 @@ const Linter = struct {
                     if (mode == .indent) {
                         if (char == ' ') break :blk;
                         if (!no_align and i != self.indent()) {
-                            // TODO: off by one with stack len?
                             if (i == 0 and self.stack.len == self.num_wrappers) {
                                 // Returning to zero indentation after wrapper opening.
                                 self.indentPtr().* = 0;
@@ -390,7 +393,10 @@ const Linter = struct {
                         '(', '[' => if (!escaped) {
                             mode = .operator;
                             self.stack.append(@intCast(i + 1)) catch |err| switch (err) {
-                                error.Overflow => self.fail(i, "exceeded maximum nesting depth ({})", .{maxDepth}),
+                                error.Overflow => {
+                                    self.fail(i, "fatal: exceeded maximum nesting depth ({})", .{maxDepth});
+                                    return false;
+                                },
                             };
                             if (i > 0) switch (prev) {
                                 ' ', '#', '\'', '(', ',', '@', '[', '`' => {},
@@ -425,7 +431,10 @@ const Linter = struct {
                                 }
                                 self.import_mode = self.import_mode.parent();
                             }
-                            _ = self.stack.popOrNull() orelse self.fail(i, "unmatched '{c}'", .{char});
+                            _ = self.stack.popOrNull() orelse {
+                                self.fail(i, "fatal: unmatched '{c}'", .{char});
+                                return false;
+                            };
                         },
                         ' ', '\n' => {
                             if (prev == ' ' and char == ' ') two_spaces = true;
@@ -444,8 +453,8 @@ const Linter = struct {
                                     self.indentPtr().* = @intCast(i + 1);
                                 }
                                 self.import_mode = lookupImportBlock(self.import_mode, line, operator);
-                                if (self.import_mode.isOutside()) {
-                                    if (self.last_import_id.get()) |last| if (idOrder(last, operator) != .lt)
+                                if (self.import_mode.isInside()) {
+                                    if (self.last_import_id.get()) |last| if (sicpIdOrder(last, operator) != .lt)
                                         self.fail(word_start, "incorrect import id ordering: {s} >= {s}", .{ last, operator });
                                     self.last_import_id.set(operator);
                                 }
@@ -471,15 +480,17 @@ const Linter = struct {
                 .comment, .comment_space => if (mode == .comment and char == ';') {
                     mode = .comment_space;
                 } else if (char != ' ') {
-                    self.fail(i, "expected space after ';', got '{c}'", .{char});
+                    self.fail(i, "expected space after ';'", .{});
+                    return true;
                 } else {
-                    return;
+                    return true;
                 },
             }
             if (mode == .normal and prev == ' ' and char != ' ') word_start = i;
             prev = char;
             escaped = if (char == '\\') !escaped else false;
         }
+        return true;
     }
 
     fn indent(self: Linter) u8 {

@@ -3795,8 +3795,8 @@ z2 => (make-from-mag-ang 30 3)
   (use (:2.3.2 same-variable?) (:2.4.3 using)
        (:2.5.3.1 add-terms mul-term-by-all-terms polynomial-pkg term-list
                  variable)
-       (:2.5.3.2 adjoin-term make-polynomial make-term)
-       (:2.5.3.2 coeff empty-termlist? first-term order the-empty-termlist)
+       (:2.5.3.2 adjoin-term coeff empty-termlist? first-term make-polynomial
+                 make-term order the-empty-termlist)
        (:3.3.3.3 put) (?2.78 apply-generic div scheme-number-pkg)
        (?2.87 zero-pkg) (?2.88 negate-pkg negate-terms sub)))
 
@@ -4184,7 +4184,7 @@ z2 => (make-from-mag-ang 30 3)
   (let ((reduced (reduce n d)))
     (cons (car reduced) (cadr reduced))))
 
-(paste (?2.93 add-rat div-rat mul-rat sub-rat) (:2.5.1 rational-pkg))
+(paste (:2.5.1 rational-pkg) (?2.93 add-rat div-rat mul-rat sub-rat))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        rational-pkg reduce-pkg)
