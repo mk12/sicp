@@ -287,7 +287,7 @@ const Linter = struct {
         var input = std.io.bufferedReader(file.reader());
         var line_buf: [128]u8 = undefined;
         const markdown = std.mem.endsWith(u8, self.filename, ".md");
-        var mode: enum { text, non_scheme, scheme } = if (markdown) .scheme else .text;
+        var mode: enum { text, non_scheme, scheme } = if (markdown) .text else .scheme;
         while (readLine(input.reader(), &line_buf) catch |err| switch (err) {
             error.StreamTooLong => if (mode == .scheme) return self.failNoColumn("line too long", .{}) else "",
             else => return self.failNoColumn("{s}", .{@errorName(err)}),
