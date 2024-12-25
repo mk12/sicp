@@ -138,8 +138,7 @@ const indentRulesMap = std.StaticStringMap(IndentRules).initComptime(.{
 // Looks up the indentation rules for the given operator.
 fn lookupIndentRules(line: []const u8, operator: []const u8) IndentRules {
     var rules = indentRulesMap.get(operator) orelse return .{};
-    // TODO(https://github.com/ziglang/zig/issues/1738): @intFromPtr should be unnecessary.
-    const column = @intFromPtr(operator.ptr) - @intFromPtr(line.ptr);
+    const column = operator.ptr - line.ptr;
     // We only recognize wrapper forms occurring at the top level (column 1,
     // meaning the open paren is on column 0).
     if (column != 1) rules.wrapper = false;
@@ -196,8 +195,7 @@ const ImportBlock = enum {
 
 // Looks up the new import block given the current one and an operator.
 fn lookupImportBlock(current: ImportBlock, line: []const u8, operator: []const u8) ImportBlock {
-    // TODO(https://github.com/ziglang/zig/issues/1738): @intFromPtr should be unnecessary.
-    const column = @intFromPtr(operator.ptr) - @intFromPtr(line.ptr);
+    const column = operator.ptr - line.ptr;
     switch (current) {
         .none => if (column == 1) {
             if (std.mem.eql(u8, operator, "Chapter") or
