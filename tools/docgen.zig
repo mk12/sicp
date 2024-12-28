@@ -1,8 +1,9 @@
 // Copyright 2024 Mitchell Kember. Subject to the MIT License.
 
 const std = @import("std");
+const mem = std.mem;
 const assert = std.debug.assert;
-const Allocator = std.mem.Allocator;
+const Allocator = mem.Allocator;
 
 const log = std.log.scoped(.docgen);
 
@@ -26,8 +27,8 @@ pub fn main() !void {
         printUsage(std.io.getStdErr());
         std.process.exit(1);
     }
-    const arg = std.mem.span(std.os.argv[1]);
-    if (std.mem.eql(u8, arg, "-h") or std.mem.eql(u8, arg, "--help")) {
+    const arg = mem.span(std.os.argv[1]);
+    if (mem.eql(u8, arg, "-h") or mem.eql(u8, arg, "--help")) {
         printUsage(std.io.getStdOut());
         return;
     }
@@ -50,9 +51,9 @@ pub fn main() !void {
 }
 
 fn gen(allocator: Allocator, output: []const u8) !void {
-    if (std.mem.eql(u8, output, "docs/index.html")) return genIndex(allocator, output);
-    if (std.mem.startsWith(u8, output, "docs/text")) {
-        if (std.mem.eql(u8, output, "docs/text/index.html")) return genTextIndex(allocator, output);
+    if (mem.eql(u8, output, "docs/index.html")) return genIndex(allocator, output);
+    if (mem.startsWith(u8, output, "docs/text")) {
+        if (mem.eql(u8, output, "docs/text/index.html")) return genTextIndex(allocator, output);
     }
 }
 
@@ -238,7 +239,7 @@ export fn signalHandler(signum: i32) void {
 }
 
 fn idFromDestPath(dest: []const u8) []const u8 {
-    return dest[std.mem.indexOfScalar(u8, dest, '/').? + 1 .. std.mem.lastIndexOfScalar(u8, dest, '.').?];
+    return dest[mem.indexOfScalar(u8, dest, '/').? + 1 .. mem.lastIndexOfScalar(u8, dest, '.').?];
 }
 
 fn postprocessHtml(allocator: Allocator, reader: anytype, writer: anytype) !void {
@@ -256,15 +257,15 @@ fn postprocessHtml(allocator: Allocator, reader: anytype, writer: anytype) !void
         const close_em = "</em>";
         const spaced_en_dash = " – ";
         var i: usize = 0;
-        while (std.mem.indexOfAnyPos(u8, line, i, &.{ '/', e2 })) |j| i = blk: {
+        while (mem.indexOfAnyPos(u8, line, i, &.{ '/', e2 })) |j| i = blk: {
             switch (line[j]) {
-                '/' => if (j >= 1 and std.mem.startsWith(u8, line[j - 1 ..], close_code)) {
+                '/' => if (j >= 1 and mem.startsWith(u8, line[j - 1 ..], close_code)) {
                     try writer.writeAll(line[i .. j - 1]);
                     try writer.writeAll(close_code);
                     // For words partially made up of code, like `cons`ing.
                     if (i < line.len and std.ascii.isAlphabetic(line[i])) try writer.writeAll("&hairsp;");
                     break :blk j - 1 + close_code.len;
-                } else if (j >= 1 and std.mem.startsWith(u8, line[j - 1 ..], close_em)) {
+                } else if (j >= 1 and mem.startsWith(u8, line[j - 1 ..], close_em)) {
                     try writer.writeAll(line[i .. j - 1]);
                     try writer.writeAll(close_em);
                     if (i < line.len) switch (line[i]) {
@@ -276,12 +277,12 @@ fn postprocessHtml(allocator: Allocator, reader: anytype, writer: anytype) !void
                     };
                     break :blk j - 1 + close_em.len;
                 },
-                e2 => if (j >= 1 and std.mem.startsWith(u8, line[j - 1 ..], spaced_en_dash)) {
+                e2 => if (j >= 1 and mem.startsWith(u8, line[j - 1 ..], spaced_en_dash)) {
                     try writer.writeAll(line[i .. j - 1]);
                     // Replace an open-set en dash with a closed-set em dash.
                     try writer.writeAll("—");
                     break :blk j - 1 + spaced_en_dash.len;
-                } else if (std.mem.startsWith(u8, line[j..], "”") and j + "”".len < line.len) switch (line[j + "”".len]) {
+                } else if (mem.startsWith(u8, line[j..], "”") and j + "”".len < line.len) switch (line[j + "”".len]) {
                     '.', ',' => |ch| {
                         try writer.writeByte(ch);
                         try writer.writeAll("<span class=\"tuck\">”</span>");
@@ -308,7 +309,7 @@ fn formatArgvFn(argv: []const []const u8, comptime f: []const u8, options: std.f
     _ = options;
     for (argv, 0..) |arg, i| {
         if (i != 0) try writer.writeByte(' ');
-        try if (std.mem.indexOfAny(u8, arg, " '\"") == null)
+        try if (mem.indexOfAny(u8, arg, " '\"") == null)
             writer.writeAll(arg)
         else
             writer.print("\"{}\"", .{std.zig.fmtEscapes(arg)});
@@ -354,10 +355,10 @@ const MarkdownScanner = struct {
         self.line.clear();
         if (!try readLine(self.reader.reader(), self.line.writer())) {
             self.eof = true;
-        } else if (std.mem.startsWith(u8, self.get(), "```")) {
+        } else if (mem.startsWith(u8, self.get(), "```")) {
             self.code = !self.code;
         } else if (!self.code and prev_blank) {
-            if (std.mem.indexOfNone(u8, self.get(), "#")) |i| if (i > 0 and self.get()[i] == ' ') {
+            if (mem.indexOfNone(u8, self.get(), "#")) |i| if (i > 0 and self.get()[i] == ' ') {
                 self.level.h = @intCast(i);
                 self.sector = self.sector.next(self.level);
             };
@@ -462,11 +463,11 @@ const Sector = packed struct(u64) {
     _: u24 = 0,
 
     fn toInt(self: Sector) u64 {
-        return std.mem.littleToNative(u64, @bitCast(self));
+        return mem.littleToNative(u64, @bitCast(self));
     }
 
     fn fromInt(val: u64) Sector {
-        return @bitCast(std.mem.nativeToLittle(u64, val));
+        return @bitCast(mem.nativeToLittle(u64, val));
     }
 
     fn isZero(self: Sector) bool {
