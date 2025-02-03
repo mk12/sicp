@@ -5,8 +5,6 @@ const mem = std.mem;
 const assert = std.debug.assert;
 const Allocator = mem.Allocator;
 
-const log = std.log.scoped(.docgen);
-
 fn printUsage(file: std.fs.File) void {
     file.writer().print(
         \\Usage: {s} OUT_FILE
@@ -52,8 +50,11 @@ pub fn main() !void {
 
 fn gen(allocator: Allocator, output: []const u8) !void {
     if (mem.eql(u8, output, "docs/index.html")) return genIndex(allocator, output);
-    if (mem.startsWith(u8, output, "docs/text")) {
+    if (mem.startsWith(u8, output, "docs/text/")) {
         if (mem.eql(u8, output, "docs/text/index.html")) return genTextIndex(allocator, output);
+    }
+    if (mem.startsWith(u8, output, "docs/lecture/")) {
+        if (mem.eql(u8, output, "docs/lecture/index.html")) return genLectureIndex(allocator, output);
     }
 }
 
@@ -62,7 +63,7 @@ fn genIndex(allocator: Allocator, output: []const u8) !void {
     var pandoc = try Pandoc.spawn(allocator, .{
         .input = "notes/index.md",
         .output = output,
-        .dest = output,
+        .path = output,
         .title = "SICP Study",
     });
     try pandoc.wait();
@@ -73,39 +74,57 @@ fn genTextIndex(allocator: Allocator, output: []const u8) !void {
     var md = try MarkdownScanner.init("notes/text.md");
     defer md.deinit();
     var pandoc = try Pandoc.spawn(allocator, .{
-        .dest = output,
+        .path = output,
         .title = "SICP Notes",
-        .navigation = .{
-            .up = "../index.html",
-            .prev = null,
-            .next = "highlight.html",
-        },
+        .navigation = .{ .up = "../index.html", .prev = null, .next = "highlight.html" },
     });
     const writer = pandoc.stdin.?.writer();
-    try renderHeading(writer, Level{ .h = 1 }, null, Heading{ .title = "Textbook Notes" });
-    while (try md.scan() and md.sector.isZero()) try writer.writeAll(md.get());
+    try renderHeading(writer, .h1, null, Heading{ .title = "Textbook Notes" });
+    while (try md.scan() and md.heading == null) try writer.writeAll(md.get());
     var toc = TocRenderer{};
     try toc.renderStart(writer);
-    try toc.renderItem(writer, Level{ .h = 1 }, Heading{ .title = "Highlights" }, "highlight.html", .{});
-    while (!md.eof and md.sector.chapter == 0) : (try md.advance()) if (md.level.h == 2) {
-        const heading = Heading.parseMarkdown(md.get());
-        assert(heading.label == null);
-        try toc.renderItem(writer, Level{ .h = 1 }, heading, "front.html#{}", .{formatLower(heading.title.?)});
+    try toc.renderItem(writer, 1, Heading{ .title = "Highlights" }, "highlight.html", .{});
+    while (!md.eof) : (try md.next()) if (md.heading) |heading| switch (heading.level) {
+        .h1 => break,
+        .h2 => try toc.renderItem(writer, 1, heading.value, "front.html#{}", .{formatLower(heading.value.title.?)}),
+        else => {},
     };
-    while (!md.eof) : (try md.advance()) switch (md.level.h) {
-        1 => try toc.renderItem(writer, md.level, Heading.parseMarkdown(md.get()), "{}/index.html", .{md.sector.chapter}),
-        2 => try toc.renderItem(writer, md.level, Heading.parseMarkdown(md.get()), "{}/{}.html", .{ md.sector.chapter, md.sector.section }),
+    while (!md.eof) : (try md.next()) if (md.heading) |heading| switch (heading.level) {
+        .h1 => try toc.renderItem(writer, 1, heading.value, "{}/index.html", .{md.position.get(.h1)}),
+        .h2 => try toc.renderItem(writer, 2, heading.value, "{}/{}.html", .{ md.position.get(.h1), md.position.get(.h2) }),
         else => {},
     };
     try toc.renderEnd(writer);
     try pandoc.finish(allocator, output);
 }
 
-var global_pandoc_proc: ?std.process.Child = null;
-var global_pandoc_proc_set = std.atomic.Value(bool).init(false);
+// Generates docs/lecture/index.html.
+fn genLectureIndex(allocator: Allocator, output: []const u8) !void {
+    var md = try MarkdownScanner.init("notes/lecture.md");
+    defer md.deinit();
+    var pandoc = try Pandoc.spawn(allocator, .{
+        .path = output,
+        .title = "SICP Lecture Notes",
+        .navigation = .{ .up = "../index.html", .prev = null, .next = "highlight.html" },
+    });
+    const writer = pandoc.stdin.?.writer();
+    try renderHeading(writer, .h1, null, Heading{ .title = "Lecture Notes" });
+    while (try md.scan() and md.heading == null) try writer.writeAll(md.get());
+    var toc = TocRenderer{};
+    try toc.renderStart(writer);
+    try toc.renderItem(writer, 1, Heading{ .title = "Highlights" }, "highlight.html", .{});
+    while (!md.eof) : (try md.next()) if (md.heading) |heading| if (heading.level == .h1) {
+        try toc.renderItem(writer, 1, heading.value, "{}.html", .{formatLower(heading.value.title.?)});
+    };
+    try toc.renderEnd(writer);
+    try pandoc.finish(allocator, output);
+}
 
 // A pandoc process.
 const Pandoc = struct {
+    var global_pandoc_proc: ?std.process.Child = null;
+    var global_pandoc_proc_set = std.atomic.Value(bool).init(false);
+
     stdin: ?std.io.BufferedWriter(4096, std.fs.File.Writer),
     stdout: ?std.io.BufferedReader(4096, std.fs.File.Reader),
 
@@ -116,7 +135,7 @@ const Pandoc = struct {
         // Path to the output file. Uses stdout if null.
         output: ?[]const u8 = null,
         // The final destination path, used for construct the -M id=... parameter.
-        dest: []const u8,
+        path: []const u8,
         // Contents of <title>...</title>.
         title: []const u8,
         // Links to up/prev/next page.
@@ -134,7 +153,7 @@ const Pandoc = struct {
         if (opts.output) |path| try argv.appendSlice(&.{ "-o", path });
         try argv.append("-dpandoc/config.yml");
         try argv.append("-M");
-        try argv.append(try std.fmt.allocPrint(allocator, "id={s}", .{idFromDestPath(opts.dest)}));
+        try argv.append(try std.fmt.allocPrint(allocator, "id={s}", .{idFromPath(opts.path)}));
         try argv.append("-M");
         try argv.append(try std.fmt.allocPrint(allocator, "title={s}", .{opts.title}));
         if (opts.navigation) |navigation| {
@@ -238,7 +257,7 @@ export fn signalHandler(signum: i32) void {
     std.posix.raise(@intCast(signum)) catch {};
 }
 
-fn idFromDestPath(dest: []const u8) []const u8 {
+fn idFromPath(dest: []const u8) []const u8 {
     return dest[mem.indexOfScalar(u8, dest, '/').? + 1 .. mem.lastIndexOfScalar(u8, dest, '.').?];
 }
 
@@ -316,19 +335,41 @@ fn formatArgvFn(argv: []const []const u8, comptime f: []const u8, options: std.f
     }
 }
 
+// Represents a counter for each hierarchical level in a single integer.
+fn Position(comptime Level: type) type {
+    return struct {
+        value: u64 = 0,
+        const Self = @This();
+        fn get(self: Self, level: Level) usize {
+            const i = @intFromEnum(level) - 1;
+            return (self.value >> @intCast(i * 8)) & 0xff;
+        }
+        fn increment(self: *Self, level: Level) void {
+            const i = @intFromEnum(level) - 1;
+            // TODO(https://github.com/ziglang/zig/issues/6903): Remove?
+            const one: u64 = 1;
+            const mask = (one << @intCast((i + 1) * 8)) - 1;
+            const inc = one << @intCast(i * 8);
+            self.value = (self.value & mask) + inc;
+        }
+    };
+}
+
 // Markdown line scanner.
 const MarkdownScanner = struct {
     file: std.fs.File,
     eof: bool = false,
-    // True if we are inside a fenced code block.
-    code: bool = false,
-    // The heading level if this line is a heading.
-    level: Level = .{},
-    // Current sector within the document.
-    sector: Sector = .{},
-
     reader: std.io.BufferedReader(4096, std.fs.File.Reader),
     line: std.BoundedArray(u8, 1024) = .{},
+
+    // True if we are inside a fenced code block.
+    code: bool = false,
+    // Set if the current line is a heading.
+    heading: ?struct { level: Level, value: Heading } = null,
+    // Current position within the document.
+    position: Position(Level) = .{},
+
+    const Level = enum(u8) { h1 = 1, h2, h3, h4 };
 
     fn init(path: []const u8) !MarkdownScanner {
         const file = try std.fs.cwd().openFile(path, .{});
@@ -344,25 +385,37 @@ const MarkdownScanner = struct {
     }
 
     fn scan(self: *MarkdownScanner) !bool {
-        try self.advance();
+        try self.next();
         return !self.eof;
     }
 
-    fn advance(self: *MarkdownScanner) !void {
+    fn next(self: *MarkdownScanner) !void {
         assert(!self.eof);
         const prev_blank = self.line.len <= 1;
-        self.level.h = 0;
+        self.heading = null;
         self.line.clear();
         if (!try readLine(self.reader.reader(), self.line.writer())) {
             self.eof = true;
-        } else if (mem.startsWith(u8, self.get(), "```")) {
-            self.code = !self.code;
-        } else if (!self.code and prev_blank) {
-            if (mem.indexOfNone(u8, self.get(), "#")) |i| if (i > 0 and self.get()[i] == ' ') {
-                self.level.h = @intCast(i);
-                self.sector = self.sector.next(self.level);
-            };
+            return;
         }
+        const line = self.get();
+        if (mem.startsWith(u8, line, "```")) {
+            self.code = !self.code;
+        } else if (!self.code and prev_blank) if (mem.indexOfNone(u8, line, "#")) |i| if (i > 0 and line[i] == ' ') {
+            const level: Level = @enumFromInt(i);
+            const value = blk: {
+                const start = i + 1;
+                var j = start;
+                if (std.ascii.isDigit(line[j])) {
+                    while (j < line.len and line[j] != ':') j += 1;
+                    if (j + 2 < line.len and line[j + 1] == ' ')
+                        break :blk Heading{ .label = line[start..j], .title = line[j + 2 .. line.len - 1] };
+                }
+                break :blk Heading{ .title = line[start .. line.len - 1] };
+            };
+            self.heading = .{ .level = level, .value = value };
+            self.position.increment(level);
+        };
     }
 };
 
@@ -373,7 +426,7 @@ const TocRenderer = struct {
 
     fn renderStart(self: *TocRenderer, writer: anytype) !void {
         assert(self.depth == 0);
-        try renderHeading(writer, Level{ .h = 2 }, "contents", Heading{ .title = "Contents" });
+        try renderHeading(writer, .h2, "contents", Heading{ .title = "Contents" });
         try writer.writeAll("<nav aria-labelledby=\"contents\">");
     }
 
@@ -384,14 +437,15 @@ const TocRenderer = struct {
         self.* = undefined;
     }
 
-    fn renderItem(self: *TocRenderer, writer: anytype, level: Level, heading: Heading, comptime href_fmt: []const u8, href_args: anytype) !void {
-        switch (@as(i16, @intCast(level.h)) - self.depth) {
+    fn renderItem(self: *TocRenderer, writer: anytype, depth: u8, heading: Heading, comptime href_fmt: []const u8, href_args: anytype) !void {
+        assert(depth >= 1);
+        switch (@as(i16, @intCast(depth)) - self.depth) {
             0 => try writer.writeAll("</li>"),
             1 => try writer.writeAll("<ul class=\"toc\">"),
             2...std.math.maxInt(i16) => unreachable,
             std.math.minInt(i16)...-1 => |delta| for (0..@abs(delta)) |_| try writer.writeAll("</ul></li>"),
         }
-        self.depth = @intCast(level.h);
+        self.depth = depth;
         try writer.writeAll("<li class=\"toc__item\">");
         try writer.print("<span class=\"toc__label\">{s}</span>", .{heading.label orelse ""});
         // Put a space between <span> and <a> so that they don't run
@@ -401,27 +455,32 @@ const TocRenderer = struct {
     }
 };
 
+const HeadingLevel = enum(u8) { h1 = 1, h2, h3 };
+
+const Heading = struct {
+    title: ?[]const u8,
+    label: ?[]const u8 = null,
+};
+
 // Like renderHeadingHref but with no href for the title.
-fn renderHeading(writer: anytype, level: Level, opt_id: ?[]const u8, heading: Heading) !void {
-    return renderHeadingHref(writer, level, opt_id, heading, null, .{});
+fn renderHeading(writer: anytype, level: HeadingLevel, id: ?[]const u8, heading: Heading) !void {
+    return renderHeadingHref(writer, level, id, heading, null, .{});
 }
 
-// Renders a heading to writer. If opt_id is present, uses it and renders a
-// self-link. If heading.label is present, renders a .number span. If href_fmt
-// is present, renders heading.title as a link, otherwise renders it plain.
-fn renderHeadingHref(writer: anytype, level: Level, opt_id: ?[]const u8, heading: Heading, comptime href_fmt: ?[]const u8, href_args: anytype) !void {
-    if (opt_id) |id| {
+// Renders a heading to writer. If href_fmt is present, renders heading.title as a link.
+fn renderHeadingHref(writer: anytype, level: HeadingLevel, id: ?[]const u8, heading: Heading, comptime href_fmt: ?[]const u8, href_args: anytype) !void {
+    if (id) |the_id| {
         try writer.print(
             \\<h{0} id="{1s}" class="anchor">
             ++
             \\<a class="anchor__link link" href="#{1s}" aria-hidden="true">#</a>
-        , .{ level.h, id });
+        , .{ @intFromEnum(level), the_id });
         try writer.writeByte(' ');
     } else {
-        try writer.print("<h{}>", .{level.h});
+        try writer.print("<h{}>", .{@intFromEnum(level)});
     }
     if (heading.label) |label| {
-        const big = if (level.h == 1 and label.len == 1) " number--big" else "";
+        const big = if (level == .h1 and label.len == 1) " number--big" else "";
         try writer.print("<span class=\"number{s}\">{s}</span>", .{ big, label });
         try writer.writeByte(' ');
     }
@@ -439,80 +498,8 @@ fn renderHeadingHref(writer: anytype, level: Level, opt_id: ?[]const u8, heading
     } else {
         try writer.writeAll(heading.title.?);
     }
-    try writer.print("</h{}>\n", .{level.h});
+    try writer.print("</h{}>\n", .{@intFromEnum(level)});
 }
-
-// A heading level in Markdown or Scheme. A level of zero means no heading.
-// A positive level N corresponds to the <h{N}> level in HTML.
-const Level = struct {
-    h: u8 = 0,
-
-    const chapter = Level{ .h = 1 };
-    // TODO
-    const exercise = Level{ .h = 5 };
-};
-
-// A document sector represents a place within the textbook.
-// An index of zero means that heading has not been encountered yet.
-const Sector = packed struct(u64) {
-    chapter: u8 = 0,
-    section: u8 = 0,
-    subsection: u8 = 0,
-    subsubsection: u8 = 0,
-    exercise: u8 = 0,
-    _: u24 = 0,
-
-    fn toInt(self: Sector) u64 {
-        return mem.littleToNative(u64, @bitCast(self));
-    }
-
-    fn fromInt(val: u64) Sector {
-        return @bitCast(mem.nativeToLittle(u64, val));
-    }
-
-    fn isZero(self: Sector) bool {
-        return self.toInt() == 0;
-    }
-
-    fn next(self: Sector, level: Level) Sector {
-        assert(level.h > 0);
-        const h: u6 = @intCast(level.h);
-        // TODO(https://github.com/ziglang/zig/issues/6903): Remove?
-        const one: u64 = 1;
-        const mask = (one << h * 8) - 1;
-        const inc = one << (h - 1) * 8;
-        return fromInt((self.toInt() & mask) + inc);
-    }
-};
-
-test Sector {
-    try std.testing.expectEqual(0x01, Sector.fromInt(0x00).next(Level{ .h = 1 }).toInt());
-}
-
-// A parsed heading from Markdown or Scheme.
-const Heading = struct {
-    // Markdown: The "1A" in "# 1A: Foo bar", or null if there is none.
-    // Scheme: The "1.2" in (Section :1.2 "Foo") or (Exercise ?1.2).
-    label: ?[]const u8 = null,
-    // Markdown: The "Foo bar" in "# 1A: Foo bar" or "# Foo bar".
-    // Scheme: The "Foo" in (Section :1.2 "Foo"). Null for exercises.
-    title: ?[]const u8,
-
-    fn parseMarkdown(line: []const u8) Heading {
-        assert(line.len >= 2 and line[0] == '#' and line[line.len - 1] == '\n');
-        var i: usize = 1;
-        while (i < line.len and line[i] == '#') i += 1;
-        assert(line[i] == ' ');
-        i += 1;
-        if (std.ascii.isDigit(line[i])) {
-            var j = i;
-            while (j < line.len and line[j] != ':') j += 1;
-            if (j + 2 < line.len and line[j + 1] == ' ')
-                return Heading{ .label = line[i..j], .title = line[j + 2 .. line.len - 1] };
-        }
-        return Heading{ .title = line[i .. line.len - 1] };
-    }
-};
 
 // Reads an entire line, including the newline. Returns false on EOF.
 fn readLine(reader: anytype, writer: anytype) !bool {
