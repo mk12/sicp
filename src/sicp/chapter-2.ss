@@ -349,13 +349,13 @@
                  (else (make-interval (* x2 y1) (* x2 y2)))))
           ((< x2 0)
            (cond ((> y1 0) (make-interval (* x1 y2) (* x2 y1)))
-                 ((< y2 0) (make-interval (* x2 y2) (x1 y1)))
+                 ((< y2 0) (make-interval (* x2 y2) (* x1 y1)))
                  (else (make-interval (* x1 y2) (* x1 y1)))))
           (else
            (cond ((> y1 0) (make-interval (* x1 y2) (* x2 y2)))
                  ((< y2 0) (make-interval (* x2 y1) (* x1 y1)))
-                 (else (make-interval (min (* x1 y2) (x2 y1))
-                                      (max (* x1 y1) (x2 y2)))))))))
+                 (else (make-interval (min (* x1 y2) (* x2 y1))
+                                      (max (* x1 y1) (* x2 y2)))))))))
 
 (mul-interval (make-interval 1 2) (make-interval 3 4)) => '(3 . 8)
 
