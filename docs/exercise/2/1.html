@@ -528,13 +528,13 @@ Imports:
                  (<span class="kw">else</span> (make-interval (<span class="fu">*</span> x2 y1) (<span class="fu">*</span> x2 y2)))))
           ((<span class="fu">&lt;</span> x2 <span class="cn">0</span>)
            (<span class="kw">cond</span> ((<span class="fu">&gt;</span> y1 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x2 y1)))
-                 ((<span class="fu">&lt;</span> y2 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x2 y2) (x1 y1)))
+                 ((<span class="fu">&lt;</span> y2 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x2 y2) (<span class="fu">*</span> x1 y1)))
                  (<span class="kw">else</span> (make-interval (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x1 y1)))))
           (<span class="kw">else</span>
            (<span class="kw">cond</span> ((<span class="fu">&gt;</span> y1 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x2 y2)))
                  ((<span class="fu">&lt;</span> y2 <span class="cn">0</span>) (make-interval (<span class="fu">*</span> x2 y1) (<span class="fu">*</span> x1 y1)))
-                 (<span class="kw">else</span> (make-interval (<span class="fu">min</span> (<span class="fu">*</span> x1 y2) (x2 y1))
-                                      (<span class="fu">max</span> (<span class="fu">*</span> x1 y1) (x2 y2)))))))))
+                 (<span class="kw">else</span> (make-interval (<span class="fu">min</span> (<span class="fu">*</span> x1 y2) (<span class="fu">*</span> x2 y1))
+                                      (<span class="fu">max</span> (<span class="fu">*</span> x1 y1) (<span class="fu">*</span> x2 y2)))))))))
 
 (mul-interval (make-interval <span class="cn">1 2</span>) (make-interval <span class="cn">3 4</span>)) <span class="op">=&gt;</span> <span class="qu">'(3 . 8)</span></code></pre>
 <h3 id="ex2.12" class="anchor">
