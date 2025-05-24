@@ -831,7 +831,11 @@ Imports:
 (fold-left <span class="fu">/</span> <span class="cn">1</span> (<span class="fu">list</span> <span class="cn">1 2 3</span>)) <span class="op">=&gt;</span> <span class="cn">1/6</span>
 (fold-right <span class="fu">list</span> <span class="qu">'()</span> (<span class="fu">list</span> <span class="cn">1 2 3</span>)) <span class="op">=&gt;</span> <span class="qu">'(1 (2 (3 ())))</span>
 (fold-left <span class="fu">list</span> <span class="qu">'()</span> (<span class="fu">list</span> <span class="cn">1 2 3</span>)) <span class="op">=&gt;</span> <span class="qu">'(((() 1) 2) 3)</span></code></pre>
-<p>For <code>fold-left</code> and <code>fold-right</code> to produce the same value on any sequence, <code>op</code> must satisfy the commutative property <code>(<span class="fu">=</span> (op x y) (op y x))</code>.</p>
+<p>For <code>fold-left</code> and <code>fold-right</code> to produce the same value on any sequence, <code>op</code> must satisfy the following two properties:</p>
+<ul>
+<li>Commutative: <code>(<span class="fu">=</span> (op x y) (op y x))</code></li>
+<li>Associative: <code>(<span class="fu">=</span> (op x (op y z)) (op (op x y) z))</code></li>
+</ul>
 <h3 id="ex2.39" class="anchor">
 <a class="anchor__link link" href="#ex2.39" aria-hidden="true">#</a> <a class="link" href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-15.html#%25_thm_2.39">Exercise 2.39<span class="nowrap">⁠<svg class="external" width="24" height="24" aria-hidden="true"><use xlink:href="#external"/></svg></span></a>
 </h3>

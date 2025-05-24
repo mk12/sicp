@@ -1108,7 +1108,10 @@ one-through-four => '(1 2 3 4)
 (fold-left list '() (list 1 2 3)) => '(((() 1) 2) 3)
 
 ;; For `fold-left` and `fold-right` to produce the same value on any sequence,
-;; `op` must satisfy the commutative property `(= (op x y) (op y x))`.
+;; `op` must satisfy the following two properties:
+;;
+;; - Commutative: `(= (op x y) (op y x))`
+;; - Associative: `(= (op x (op y z)) (op (op x y) z))`
 
 (Exercise ?2.39
   (use (?2.38 fold-left fold-right)))
