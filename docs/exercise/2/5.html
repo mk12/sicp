@@ -2232,17 +2232,6 @@ Imports:
 <code>adjoin-term</code>
 </li>
 <li class="flat__item nowrap">
-<code>make-polynomial</code>
-</li>
-<li class="flat__item nowrap">
-<code>make-term</code>,
-</li>
-</ul>
-</li>
-<li class="flat__item">
-<a href="#2.5.3.2">2.5.3.2</a>
-<ul class="flat">
-<li class="flat__item nowrap">
 <code>coeff</code>
 </li>
 <li class="flat__item nowrap">
@@ -2250,6 +2239,12 @@ Imports:
 </li>
 <li class="flat__item nowrap">
 <code>first-term</code>
+</li>
+<li class="flat__item nowrap">
+<code>make-polynomial</code>
+</li>
+<li class="flat__item nowrap">
+<code>make-term</code>
 </li>
 <li class="flat__item nowrap">
 <code>order</code>
@@ -3317,7 +3312,7 @@ Imports:
   (<span class="kw">let</span> ((reduced (reduce n d)))
     (<span class="fu">cons</span> (<span class="fu">car</span> reduced) (<span class="fu">cadr</span> reduced))))
 
-(<span class="kw">paste</span> (<a href="#ex2.93">?2.93</a> add-rat div-rat mul-rat sub-rat) (<a href="#2.5.1">:2.5.1</a> rational-pkg))
+(<span class="kw">paste</span> (<a href="#2.5.1">:2.5.1</a> rational-pkg) (<a href="#ex2.93">?2.93</a> add-rat div-rat mul-rat sub-rat))
 
 (using scheme-number-pkg polynomial-pkg zero-pkg negate-pkg polynomial-div-pkg
        rational-pkg reduce-pkg)</code></pre>
