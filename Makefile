@@ -23,7 +23,8 @@ endef
 
 CFLAGS := -std=c11 -W -Wall $(if $(DEBUG),-O0 -g,-O3)
 OBJCFLAGS := -fmodules -fobjc-arc
-DENOFLAGS := --allow-{read,write}=render.sock,render.fifo --allow-run=svgbob
+DENOFLAGS := --allow-{read,write}=render.sock,render.fifo --allow-run=svgbob \
+    --allow-import
 
 LUA_VERSION := 5.4
 export LUA_CPATH := ./lib/?.so
