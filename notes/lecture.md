@@ -305,7 +305,7 @@ Move an $n$-high tower from spike `from` to spike `to` using spike `spare` as a 
     ((= n 0) "DONE")
     (else (move (-1+ n) from spare to)
           (print-move from to)
-          (move (-1+ m) spare to from))))
+          (move (-1+ n) spare to from))))
 ```
 
 # 2A: Higher-Order Procedures
